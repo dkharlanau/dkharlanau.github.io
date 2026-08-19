@@ -39,6 +39,9 @@ semantic_links:
     title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
   - type: "same_domain"
+    title: "AI Platform Building Blocks — Capability Roles, Minimum Set and Control Boundaries"
+    url: "/labs/business-ai/platform-building-blocks/"
+  - type: "same_domain"
     title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
     url: "/labs/business-ai/document-to-erp-ai/"
   - type: "same_domain"
@@ -50,9 +53,6 @@ semantic_links:
   - type: "same_domain"
     title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
-  - type: "same_domain"
-    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
-    url: "/labs/business-ai/pilots/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

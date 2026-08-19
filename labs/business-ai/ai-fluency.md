@@ -37,6 +37,9 @@ semantic_links:
   - type: "related_topic"
     title: "AI Ready — Practical AI Architecture Lab"
     url: "/labs/ai-ready/"
+  - type: "related_topic"
+    title: "AI Platform Building Blocks — Capability Roles, Minimum Set and Control Boundaries"
+    url: "/labs/business-ai/platform-building-blocks/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

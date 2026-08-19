@@ -35,19 +35,26 @@ career_skills:
   - ai-security
 # ai-discovery-managed:start
 primary_topic: "business-ai"
+ai_sidecar: "/ai/pages/labs--business-ai--platform-building-blocks.json"
 semantic_links:
+  - type: "same_domain"
+    title: "AI Model Selection — Model Classes, Context, Latency, Cost and Evals"
+    url: "/labs/business-ai/model-selection/"
   - type: "parent_context"
     title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
-  - type: "previous_step"
-    title: "AI Fluency: Early Technical Judgment, Confidence and Tradeoffs"
-    url: "/labs/ai-fluency/"
-  - type: "next_step"
-    title: "AI Model Selection — Model Classes, Context, Latency, Cost and Evals"
-    url: "/labs/business-ai/model-selection/"
-  - type: "next_step"
+  - type: "same_domain"
+    title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
+    url: "/labs/business-ai/erp-agent-gateway/"
+  - type: "same_domain"
     title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
     url: "/labs/business-ai/implementation-readiness/"
+  - type: "same_domain"
+    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
+    url: "/labs/business-ai/pilots/"
+  - type: "same_domain"
+    title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
+    url: "/labs/business-ai/document-to-erp-ai/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">
