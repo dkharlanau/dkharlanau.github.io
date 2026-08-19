@@ -40,6 +40,64 @@
     </tbody>
   </table>
 
+  <h3>Choose a first workflow that can be governed</h3>
+
+  <p>A good first workflow is narrow enough to govern and meaningful enough to produce evidence. The team should be able to describe its target, access, review path, evidence ceiling, success metrics, and stop conditions without relying on broad assumptions.</p>
+
+  <p><strong>Strong starting points often include:</strong></p>
+  <ul>
+    <li>a specific pull request or small change set with a named reviewer;</li>
+    <li>a bounded repository or service slice tied to a known security concern;</li>
+    <li>a backlog slice where the bottleneck is triage, validation, or evidence gathering;</li>
+    <li>an already validated finding that needs bounded remediation and revalidation;</li>
+    <li>a source-supported review where the evidence ceiling is explicit from the start.</li>
+  </ul>
+
+  <p>A first workflow does not need to demonstrate every capability. It should create a reviewable path from approved scope to useful evidence and a customer-owned decision.</p>
+
+  <h3>Design access in three categories</h3>
+
+  <p>Access is part of solution design, not an administrative detail. Use three access categories to keep the conversation precise: <strong>people</strong>, <strong>systems</strong>, and <strong>actions</strong>.</p>
+
+  <p>This model is not a new compliance framework. It is a practical way to confirm whether the workflow’s permissions match the approved scope.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Access category</th>
+        <th>Define explicitly</th>
+        <th>Questions to ask</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>People</strong></td>
+        <td>Named operators, reviewers, approvers, owners, and escalation contacts.</td>
+        <td>Who may start the workflow? Who can see sensitive evidence? Who can approve a risky step? Who owns the final decision?</td>
+      </tr>
+      <tr>
+        <td><strong>Systems</strong></td>
+        <td>Approved repositories, scanners, ticket systems, logs, test environments, data sources, and systems of record.</td>
+        <td>Which exact systems and environments are in scope? Which are read-only? Which contain sensitive data? Which systems must remain unreachable?</td>
+      </tr>
+      <tr>
+        <td><strong>Actions</strong></td>
+        <td>Allowed reads, searches, analysis, tests, prepared changes, writes, approvals, remediation steps, and closure actions.</td>
+        <td>What may the workflow read, prepare, execute, or change? Which actions require approval? Which actions are prohibited even when the tool technically supports them?</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pre><code>named person or role
+-&gt; approved system and environment
+-&gt; allowed action
+-&gt; required approval when applicable
+-&gt; observable evidence trail</code></pre>
+
+  <p>Do not grant access by product name alone. “Daybreak can access GitHub” is too vague to govern. A useful access statement says which identity can access which repositories, through which permission level, for which allowed actions, in which environment, and under which approval rule.</p>
+
+  <p>The access model should match the charter. If scope expands, permissions should not expand silently with it. Reconfirm people, systems, and actions before the workflow crosses a new boundary.</p>
+
   <h3>Use three enterprise operating-model layers</h3>
 
   <p>For a governed Daybreak workflow, separate the operating model into <strong>context</strong>, <strong>agentic runtime</strong>, and <strong>observability</strong>. The layers answer different governance questions and should not be collapsed into one generic “platform” discussion.</p>
@@ -61,7 +119,7 @@
       <tr>
         <td><strong>Agentic runtime</strong></td>
         <td>What the workflow is allowed to do.</td>
-        <td>Which tools can be called? Which actions are read-only, preparatory, or write-capable? Which environment is approved? What permissions, approvals, budgets, stop conditions, and human checkpoints apply?</td>
+        <td>Which people or service identities can invoke it? Which systems can be reached? Which actions are read-only, preparatory, or write-capable? Which environment is approved? What permissions, approvals, budgets, stop conditions, and human checkpoints apply?</td>
       </tr>
       <tr>
         <td><strong>Observability</strong></td>
@@ -79,7 +137,7 @@
 
   <h3>Agentic runtime</h3>
 
-  <p>The runtime layer converts the charter into enforceable behavior. It should define tool allowlists, credentials, environment boundaries, allowed actions, approval points, and stop conditions.</p>
+  <p>The runtime layer converts the charter and access model into enforceable behavior. It should define tool allowlists, identities and credentials, approved systems, environment boundaries, allowed actions, approval points, and stop conditions.</p>
 
   <pre><code>read evidence
 -&gt; analyze finding
