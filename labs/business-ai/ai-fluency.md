@@ -2,7 +2,7 @@
 layout: default
 title: "AI Fluency: Four Layers for Early Technical Judgment"
 description: "A practical Business AI guide for early technical judgment: user and workflow, context and data, runtime and tools, governance and observability, plus evals and guardrails."
-permalink: /labs/business-ai/ai-fluency/
+permalink: /labs/ai-fluency/
 status: reviewed
 verified: true
 robots: index,follow
@@ -14,27 +14,22 @@ review_method: "authored practical framework with SAP workflow application"
 evidence_review_mode: "authored_heuristic"
 hide_global_cta: true
 tags:
-  - business-ai
   - ai-fluency
-  - discovery
-  - ai-governance
-  - evals
-  - guardrails
+  - early-technical-judgment
+  - workflow-context-control
 structured_data:
   type: TechArticle
+# ai-discovery-managed:start
+primary_topic: "ai-fluency"
+ai_sidecar: "/ai/pages/labs--ai-fluency.json"
 semantic_links:
-  - type: "parent"
-    title: "Business AI Lab"
+  - type: "parent_context"
+    title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
   - type: "related_topic"
-    title: "AI Ready Architecture Lab"
+    title: "AI Ready — Practical AI Architecture Lab"
     url: "/labs/ai-ready/"
-  - type: "deep_dive"
-    title: "Evals and Reliability"
-    url: "/labs/ai-ready/evals-reliability/"
-  - type: "deep_dive"
-    title: "Security and Governance"
-    url: "/labs/ai-ready/security-governance/"
+# ai-discovery-managed:end
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -234,6 +229,6 @@ semantic_links:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
-    <p><strong>Continue the reasoning:</strong> use the <a href="/labs/business-ai/">Business AI Lab</a> to connect the workflow to AI patterns, technology choices, business value, controls, and evidence. Use <a href="/labs/ai-ready/evals-reliability/">Evals and Reliability</a> for deeper production testing.</p>
+    <p><strong>Continue the reasoning:</strong> use the <a href="/labs/business-ai/">Business AI Lab</a> to connect the workflow to AI patterns, technology choices, business value, controls, and evidence. Use the <a href="/labs/ai-ready/">AI Ready Lab</a> for deeper architecture, evals, security, and production decisions.</p>
   </section>
 </div>
