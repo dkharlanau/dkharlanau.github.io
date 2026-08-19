@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-18
+last_modified_at: 2026-08-19
 hide_global_cta: true
 tags: [ai, security, governance, prompt-injection, authorization, pii]
 ---
