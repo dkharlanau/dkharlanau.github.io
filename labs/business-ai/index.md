@@ -36,14 +36,14 @@ semantic_links:
     title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
     url: "/labs/business-ai/implementation-readiness/"
   - type: "deep_dive"
+    title: "AI Model Selection — Model Classes, Context, Latency, Cost and Evals"
+    url: "/labs/business-ai/model-selection/"
+  - type: "deep_dive"
     title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
   - type: "deep_dive"
     title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
     url: "/labs/business-ai/pilots/"
-  - type: "related_topic"
-    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
-    url: "/labs/enterprise-context/business-ai/"
 # ai-discovery-managed:end
 ---
 {% assign catalog = site.data.labs.business_ai.catalog %}

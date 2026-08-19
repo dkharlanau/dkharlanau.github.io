@@ -45,14 +45,14 @@ semantic_links:
     title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
     url: "/labs/business-ai/erp-agent-gateway/"
   - type: "same_domain"
+    title: "AI Model Selection — Model Classes, Context, Latency, Cost and Evals"
+    url: "/labs/business-ai/model-selection/"
+  - type: "same_domain"
     title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
   - type: "same_domain"
     title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
     url: "/labs/business-ai/pilots/"
-  - type: "related_topic"
-    title: "AI Ready — Practical AI Architecture Lab"
-    url: "/labs/ai-ready/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

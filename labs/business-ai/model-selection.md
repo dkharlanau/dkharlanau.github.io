@@ -33,25 +33,28 @@ career_skills:
   - ai-evaluation
 # ai-discovery-managed:start
 primary_topic: "business-ai"
+ai_sidecar: "/ai/pages/labs--business-ai--model-selection.json"
 semantic_links:
   - type: "parent_context"
     title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
-  - type: "related_topic"
-    title: "AI API Fluency — Request, Response, Identity and Control"
-    url: "/labs/business-ai/#ai-api-fluency"
-  - type: "next_step"
+  - type: "same_domain"
+    title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
+    url: "/labs/business-ai/document-to-erp-ai/"
+  - type: "same_domain"
+    title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
+    url: "/labs/business-ai/erp-agent-gateway/"
+  - type: "same_domain"
     title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
     url: "/labs/business-ai/implementation-readiness/"
-  - type: "related_topic"
-    title: "Enterprise AI Technology Landscape — Business AI Lab"
-    url: "/labs/business-ai/technologies/"
-  - type: "related_topic"
-    title: "AI Ready — Practical AI Architecture Lab"
-    url: "/labs/ai-ready/"
+  - type: "same_domain"
+    title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
+    url: "/labs/business-ai/open-research/"
+  - type: "same_domain"
+    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
+    url: "/labs/business-ai/pilots/"
 # ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/business-ai/">Business AI</a></li><li aria-current="page">Model Selection</li></ol>
 </nav>
