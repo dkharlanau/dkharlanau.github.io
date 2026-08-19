@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-08-19
 hide_global_cta: true
 tags:
   - business-ai
@@ -85,6 +85,36 @@ semantic_links:
     <p><strong>Context:</strong> this lab covers corporate scenarios across commercial, supply-chain, manufacturing, finance, people, service, IT, legal, data, and knowledge processes. Failed pilots and bad outcomes are part of the evidence model, not an embarrassing appendix.</p>
     <p><strong>Working rule.</strong> A model or platform name is metadata, not a use case. First define the process step, business job, system boundary, KPI, cost of error, and control model.</p>
     <a href="/labs/business-ai/processes/">Start from end-to-end processes <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="ai-opportunity-qualification" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Opportunity qualification</p>
+      <h2>How strong AI opportunities become visible.</h2>
+      <p>Customers often begin with broad AI requests. These requests can sound promising, but they usually need translation before they can be assessed.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Translate interest into evidence</h3>
+        <p>Strong AI opportunities become visible through business evidence, not through interest in AI alone.</p>
+        <p>Instead of asking <em>“Does this customer want AI?”</em>, effective partners ask:</p>
+        <ul>
+          <li>What business problem or decision needs to improve?</li>
+          <li>Where does the problem appear in the process or workflow?</li>
+          <li>Who performs the work, makes the decision, or owns the outcome?</li>
+          <li>What data and business context are available?</li>
+          <li>Why is AI suitable here instead of standard automation or process redesign?</li>
+          <li>What measurable value could the AI use case create?</li>
+          <li>What risks, controls, or human approvals are required?</li>
+          <li>Has the customer agreed to validate the use case through a workshop, prototype, pilot, or another meaningful next step?</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Qualification chain</h3>
+        <p>A strong AI opportunity connects <strong>business problem → workflow → data → AI capability → measurable value → controlled validation</strong>.</p>
+        <p>This keeps the conversation grounded in a business outcome. AI is a possible capability inside the solution, not the starting requirement.</p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
