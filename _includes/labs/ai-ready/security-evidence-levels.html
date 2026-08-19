@@ -15,6 +15,26 @@
 
   <p>A bounded evaluation should define the target, timing, allowed evidence sources, review path, permissions, success metrics, and stop conditions before work begins. This keeps the evaluation useful, reviewable, and safe while still giving the customer enough evidence to decide whether broader adoption is justified.</p>
 
+  <h3>Decision quality</h3>
+
+  <p><strong>Decision quality</strong> means the customer has better evidence to decide what should happen to a finding. The goal is not to maximize the number of findings. The goal is to make each disposition more defensible.</p>
+
+  <ul>
+    <li><strong>Confirm</strong> when the available evidence is strong enough to support the finding.</li>
+    <li><strong>Suppress</strong> when the signal is a false positive, duplicate, accepted pattern, or otherwise not actionable under the agreed review rules.</li>
+    <li><strong>Defer</strong> when the finding is credible but remediation is intentionally postponed.</li>
+    <li><strong>Remediate</strong> when the issue is sufficiently supported and a bounded fix is justified.</li>
+    <li><strong>Escalate</strong> when the impact, uncertainty, ownership, or required authority exceeds the current review boundary.</li>
+    <li><strong>Leave unresolved</strong> when more proof is needed and the available evidence does not justify a stronger conclusion.</li>
+  </ul>
+
+  <pre><code>candidate finding
+-&gt; collect and classify evidence
+-&gt; assess decision quality
+-&gt; confirm / suppress / defer / remediate / escalate / unresolved</code></pre>
+
+  <p>Good decision quality does not require every candidate finding to become a confirmed issue. A review is useful when it helps the customer distinguish what is proven, what is plausible, what can be safely dismissed, what needs action now, and what still has a proof gap.</p>
+
   <h3>Ask five review questions</h3>
 
   <p>Do not begin with a scanner, a model, or a fix. First define what the customer needs to know and what evidence would be strong enough to support a decision.</p>
