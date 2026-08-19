@@ -322,6 +322,91 @@ semantic_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="ai-use-case-design" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Use-case design</p>
+      <h2>Turn a workflow problem into a testable AI job.</h2>
+      <p>Discovery shows where work is slow, inconsistent, risky, expensive, or difficult. Use-case design asks a narrower question: where could AI improve one part of that workflow without losing sight of ownership, control, and business value?</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Problem statement</h3>
+        <p>Describe the current state: where the workflow breaks down, who is affected, and why the issue matters.</p>
+        <p><strong>Example:</strong> Contract reviewers spend too much time finding relevant clauses, and similar agreements are reviewed inconsistently.</p>
+      </div>
+      <div>
+        <h3>Use-case statement</h3>
+        <p>Describe one improvement AI may support inside that workflow. Keep it specific enough to validate and clear about what people still decide or approve.</p>
+        <p><strong>Example:</strong> At clause review, AI retrieves and summarizes relevant approved guidance for the reviewer, who decides whether the clause needs action.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Common AI jobs in a workflow</h3>
+      <p>Start with the output the workflow needs. The technology label comes later.</p>
+      <table>
+        <thead><tr><th scope="col">AI job</th><th scope="col">Useful output</th><th scope="col">Example</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Retrieval</th><td>Grounded answer, comparison, summary, or synthesis.</td><td>Find relevant guidance across approved policy sources.</td></tr>
+          <tr><th scope="row">Extraction</th><td>Structured facts or fields from unstructured content.</td><td>Turn submitted forms into the fields needed for processing.</td></tr>
+          <tr><th scope="row">Classification and routing</th><td>Category, priority, queue, or routing suggestion.</td><td>Route service requests by issue type and urgency.</td></tr>
+          <tr><th scope="row">Generation</th><td>Draft, message, summary, plan, or report.</td><td>Prepare a first customer response using approved case context.</td></tr>
+          <tr><th scope="row">Review</th><td>Flags, missing items, quality checks, or findings.</td><td>Check a draft for required information before human approval.</td></tr>
+          <tr><th scope="row">Recommendation</th><td>Suggested next action or ranked options.</td><td>Rank follow-up actions for a manager to review.</td></tr>
+          <tr><th scope="row">Monitoring and coordination</th><td>Status signal, exception, reminder, or alert.</td><td>Surface onboarding tasks that are delayed or incomplete.</td></tr>
+        </tbody>
+      </table>
+      <p>A strong use case describes the workflow improvement in business terms. “Use an LLM” is an implementation choice, not a use-case definition.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>One-line use-case frame</h3>
+        <p><strong>At [workflow step], [user] uses AI to [produce or prepare an output] from [work object]. [Human role] reviews, decides, approves, or acts on it so [business outcome] can improve.</strong></p>
+        <p>The sentence is useful because it forces the use case to name the work, the output, the human boundary, and the intended result.</p>
+      </div>
+      <div>
+        <h3>Keep the boundary visible</h3>
+        <p>If the sentence cannot explain who acts on the AI output, the design is probably still too vague. In sensitive workflows, the human or system authority should be explicit before validation begins.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Use-case anatomy</h3>
+      <table>
+        <thead><tr><th scope="col">Element</th><th scope="col">Capture</th><th scope="col">Why it matters</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Workflow location</th><td>The exact step, decision, handoff, or review point.</td><td>Keeps the idea attached to real work.</td></tr>
+          <tr><th scope="row">User</th><td>The person who uses, reviews, or benefits from the output.</td><td>Makes adoption and ownership visible.</td></tr>
+          <tr><th scope="row">Work object</th><td>The document, request, case, order, ticket, record, or other item being processed.</td><td>Makes the scope concrete.</td></tr>
+          <tr><th scope="row">AI output</th><td>What AI retrieves, extracts, classifies, drafts, checks, recommends, or flags.</td><td>Defines what the AI actually does.</td></tr>
+          <tr><th scope="row">Human or system control</th><td>Who reviews, approves, decides, posts, or commits the result.</td><td>Protects authority and accountability.</td></tr>
+          <tr><th scope="row">Business outcome</th><td>The result expected to improve: time, quality, risk, cost, service, throughput, or another measurable signal.</td><td>Connects the use case to value.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Choose a first use case you can actually validate</h3>
+      <p>The best first use case is not always the biggest idea. It is the one that can produce credible evidence without requiring half the company to redesign itself first.</p>
+      <table>
+        <thead><tr><th scope="col">Factor</th><th scope="col">Good signal</th><th scope="col">Warning</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Workflow clarity</th><td>The target step and current pain are understood.</td><td>The team is still debating what work the use case belongs to.</td></tr>
+          <tr><th scope="row">Stakeholder access</th><td>Users, owner, and required reviewers can participate.</td><td>The people needed to validate the workflow are unavailable.</td></tr>
+          <tr><th scope="row">Process stability</th><td>The current process is stable enough to compare before and after.</td><td>The process itself is being redesigned at the same time.</td></tr>
+          <tr><th scope="row">Input availability</th><td>Representative examples and source material can be reviewed appropriately.</td><td>Validation depends on inputs nobody can access or explain.</td></tr>
+          <tr><th scope="row">Data readiness</th><td>Inputs are representative, usable, and permissioned for the test.</td><td>Data quality, access, or permission is still unknown.</td></tr>
+          <tr><th scope="row">Risk and control</th><td>Errors are manageable, and review, fallback, or approval can be designed.</td><td>A bad output could create material harm with no realistic control.</td></tr>
+          <tr><th scope="row">Measurement</th><td>The team can observe whether time, quality, risk, cost, or another outcome improves.</td><td>Success can only be described as “people liked it.”</td></tr>
+          <tr><th scope="row">Scope</th><td>The test is bounded and has limited dependencies.</td><td>The first validation requires enterprise-wide change or unclear ownership.</td></tr>
+        </tbody>
+      </table>
+      <p>A use case does not need perfect readiness. It needs enough clarity, access, control, and measurement to learn something trustworthy from the next step.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Knowledge map</p>
