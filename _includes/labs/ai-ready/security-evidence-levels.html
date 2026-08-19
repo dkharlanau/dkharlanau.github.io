@@ -43,6 +43,22 @@
   <p>During analysis, ask: What input triggers the problem? Where is the first incorrect state or decision? Is the issue local or caused upstream? Can another control still block the path? Is the behavior reproducible? What evidence would disprove the current theory? This prevents a suspicious pattern from being promoted into a confident claim just because it looks dramatic.</p>
 
   <p>For AI-assisted review, use agents to widen the search surface, correlate evidence, and test hypotheses. Keep the final claim tied to code, configuration, logs, tests, scanner output, or explicitly approved runtime evidence. The goal is not to produce more findings. The goal is to reduce uncertainty without inventing certainty.</p>
+
+  <h3>Remediation terminology</h3>
+
+  <p><strong>Bounded fix</strong> means a targeted change that addresses the specific finding without broad refactoring, unrelated changes, or unapproved expansion of scope.</p>
+
+  <p>A bounded fix should have a clear relationship to the evidence that justified the finding. If the proposed change requires a wider architectural rewrite, new product behavior, unrelated cleanup, or a larger permission boundary, treat that work as a separate scope decision rather than quietly attaching it to the remediation.</p>
+
+  <p><strong>Revalidation</strong> means checking the original finding again after a proposed fix. The team should verify that the original failure path, unsafe behavior, or evidence condition is no longer present and that the fix did not merely move or hide the symptom.</p>
+
+  <pre><code>validated finding
+-&gt; bounded fix
+-&gt; targeted verification
+-&gt; revalidate original finding
+-&gt; close, revise, or reopen</code></pre>
+
+  <p>Do not close a finding only because code changed or a patch was proposed. Closure should follow revalidation against the original evidence and acceptance criteria.</p>
 </section>
 
 <section id="ai-security-evidence-levels">
