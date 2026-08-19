@@ -100,7 +100,7 @@ semantic_links:
           <tr><th scope="row">4. Model class</th><td>Select the smallest credible capability class.</td><td>How much reasoning, modality support, speed, context, or specialization does the task require?</td></tr>
           <tr><th scope="row">5. Architecture</th><td>Add retrieval, ranking, tools, safety, state, or deployment controls where needed.</td><td>Which requirements belong outside the model itself?</td></tr>
           <tr><th scope="row">6. Success criteria</th><td>Choose two or three measures that can change the recommendation.</td><td>What would make one option clearly better or unacceptable?</td></tr>
-          <tr><th scope="row">7. Representative eval</th><td>Run the same realistic examples across the options.</td><td>Which choice meets the required quality and control level at acceptable latency and cost?</td></tr>
+          <tr><th scope="row">7. Representative eval</th><td>Build a small seed set and run the same realistic examples across the options.</td><td>Which choice meets the required quality and control level at acceptable latency and cost?</td></tr>
         </tbody>
       </table>
     </div>
@@ -229,6 +229,63 @@ semantic_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="eval-seed-set" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Eval seed set</p>
+      <h2>Start small, but make the difficult cases visible.</h2>
+      <p>An eval seed set is a small group of test cases that represents the workflow well enough to compare options. It should be small enough for the team to inspect manually and broad enough to expose failure modes that could change the recommendation.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Normal cases show baseline fit</h3>
+        <p>Include realistic examples of the main workflow path. These cases show whether the model, prompt, context, retrieval, and output design can perform the work users will see most often.</p>
+      </div>
+      <div>
+        <h3>Difficult cases reveal the decision boundary</h3>
+        <p>Difficult cases show what happens when information is incomplete, the request is ambiguous, risk increases, the output format is strict, or the workflow depends on retrieval or tools.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Seed-set coverage</h3>
+      <table>
+        <thead><tr><th scope="col">Case type</th><th scope="col">What it tests</th><th scope="col">Expected behavior to define</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Typical case</th><td>The normal business path with representative inputs.</td><td>Produce the expected useful result with the required quality and format.</td></tr>
+          <tr><th scope="row">Edge case</th><td>A valid but unusual input, limit, combination, or exception.</td><td>Handle the case without losing important constraints or silently degrading the result.</td></tr>
+          <tr><th scope="row">Ambiguous input</th><td>More than one interpretation is plausible.</td><td>Ask for clarification, qualify the answer, or choose a safe bounded interpretation according to the workflow design.</td></tr>
+          <tr><th scope="row">Missing information</th><td>A required field, fact, source, or business condition is absent.</td><td>Identify the gap instead of inventing the missing information.</td></tr>
+          <tr><th scope="row">Sensitive or high-risk case</th><td>The consequence of an incorrect answer or action is materially higher.</td><td>Apply the required safeguard, review, refusal, or escalation path.</td></tr>
+          <tr><th scope="row">Format-constrained case</th><td>The result must follow a schema, field list, allowed values, or another machine-readable contract.</td><td>Return a valid result or fail clearly when the required structure cannot be produced.</td></tr>
+          <tr><th scope="row">Retrieval-dependent case</th><td>The answer depends on approved external or enterprise knowledge.</td><td>Use the right evidence, respect permissions, and show uncertainty when the required evidence is missing or conflicting.</td></tr>
+          <tr><th scope="row">Tool-use case</th><td>The workflow must select or call a function, API, calculation, or enterprise action.</td><td>Choose the right tool, produce valid arguments, stay inside authority limits, and handle tool failure safely.</td></tr>
+        </tbody>
+      </table>
+      <p>Not every workflow needs every category. Include the difficult cases that match the real task, risk, data, output, retrieval, and tool boundaries.</p>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Define each case before running it</h3>
+      <table>
+        <thead><tr><th scope="col">Case field</th><th scope="col">Capture</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Input</th><td>The user request, document, event, record, or other work object being tested.</td></tr>
+          <tr><th scope="row">Approved context</th><td>The information, permissions, retrieval sources, state, and tools available for this case.</td></tr>
+          <tr><th scope="row">Expected behavior</th><td>What a good result should do, including any required clarification, escalation, tool call, or output structure.</td></tr>
+          <tr><th scope="row">Must not happen</th><td>A critical failure such as inventing a fact, crossing an access boundary, using the wrong tool, hiding uncertainty, or producing an invalid downstream payload.</td></tr>
+          <tr><th scope="row">Grading signal</th><td>The success criterion, rule, human review, or automated check used to judge the result.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+      <p><strong>Seed-set rule:</strong> do not make the first set large just to look rigorous. Make it representative enough to expose meaningful differences between options.</p>
+      <p>When a pilot, review, or production trace reveals a new failure mode, add that case to the eval set. The seed set should grow from evidence, not from imagination alone.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="representative-examples" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Representative comparison</p>
@@ -335,7 +392,7 @@ semantic_links:
       <li><span>03</span><strong>Capability</strong><p>Choose the smallest credible model class and supporting architecture.</p></li>
       <li><span>04</span><strong>Context</strong><p>Define what information, permissions, tools, and state the workflow needs.</p></li>
       <li><span>05</span><strong>Criteria</strong><p>Choose two or three measures that can change the recommendation.</p></li>
-      <li><span>06</span><strong>Eval</strong><p>Compare options on representative examples under equivalent conditions.</p></li>
+      <li><span>06</span><strong>Eval</strong><p>Build a small representative seed set and compare options under equivalent conditions.</p></li>
       <li><span>07</span><strong>Trade-off</strong><p>Select the option that meets quality and control needs at acceptable latency, cost, and scale.</p></li>
     </ol>
   </section>
