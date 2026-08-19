@@ -169,6 +169,39 @@ semantic_links:
         </ul>
       </div>
     </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Stakeholder visibility</h3>
+      <p>Stakeholder visibility means understanding who is connected to the problem and who may influence whether the opportunity can move forward. Start with the people closest to the work, then identify the person who owns the outcome and the teams that can enable or constrain validation and adoption.</p>
+      <table>
+        <thead><tr><th scope="col">Stakeholder</th><th scope="col">What they can tell you</th><th scope="col">Why they matter</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Operators</th><td>What happens today, where friction appears, which exceptions occur, and how the problem affects daily work.</td><td>They experience the pain and provide workflow evidence.</td></tr>
+          <tr><th scope="row">Outcome owner</th><td>Which result matters: turnaround time, quality, risk, cost, service, or another business measure.</td><td>A team lead, department head, process owner, or sponsor can connect the problem to an accountable business outcome.</td></tr>
+          <tr><th scope="row">Enabling and control teams</th><td>What must be true for access, validation, approval, procurement, compliance, security, or adoption.</td><td>IT, security, procurement, legal, compliance, and similar teams may not own the pain, but they can shape whether the solution can proceed.</td></tr>
+          <tr><th scope="row">Interested contact</th><td>Initial context, internal interest, and possible introductions.</td><td>Interest is useful, but it is weak evidence if the contact does not experience the pain, own the outcome, or have a path to the people who do.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Customer commitment</h3>
+        <p>Customer commitment means the customer has shown credible willingness to keep moving. It is stronger when the customer contributes time, access, evidence, people, or decisions rather than only expressing interest.</p>
+        <p>Useful signals include:</p>
+        <ul>
+          <li>Agreeing to a specific discovery workshop, validation session, prototype, or pilot.</li>
+          <li>Bringing the workflow owner, operators, or required control teams into the discussion.</li>
+          <li>Sharing approved process examples, requirements, data samples, or current-state evidence.</li>
+          <li>Helping define success criteria, constraints, ownership, and a next decision point.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Do not confuse interest with movement</h3>
+        <p>A curious contact can open the door, but the opportunity becomes stronger when there is a path from interest to the people, evidence, and decisions required to validate it.</p>
+        <p>Commitment does not prove that AI is the right solution. It shows that the customer is willing to do the work required to find out.</p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
