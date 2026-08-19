@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Machine Layer — Data, Agent Tools, and AI-Readable Sources"
-description: "A technical entry point to datasets, machine-readable exports, agent skills, agent tools, local MCP packages, and professional intelligence contracts."
+description: "A technical entry point to datasets, machine-readable exports, agent skills, agent tools, local MCP packages, professional intelligence contracts, and SAP Lead drill routes."
 permalink: /machine/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-18
+last_modified_at: 2026-08-19
 hide_global_cta: true
 tags:
   - datasets
@@ -54,6 +54,7 @@ tags:
       <a href="/datasets/"><span>DATA</span><strong>Datasets</strong><small>Canonical structured collections, manifests, schemas, and domain-specific data packages.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/ai/"><span>AI</span><strong>AI-readable sources</strong><small>Generated and curated JSON, YAML, discovery maps, indexes, and expert evidence surfaces.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/ai/professional-intelligence.json"><span>MODEL</span><strong>Professional Intelligence Contract</strong><small>Readiness dimensions, the Lead decision chain, evidence levels, pressure routes, and privacy boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/interview-readiness/drills/"><span>DRILL</span><strong>SAP Lead Drill Layer</strong><small>Human-facing Decision Cards, progressive diagnostics, Boss Battles, and project-evidence coverage connected to the Professional Intelligence model.</small><i class="material-symbols-outlined" aria-hidden="true">fitness_center</i></a>
       <a href="/skill-hub/"><span>SKILL</span><strong>Skill Hub</strong><small>Human-readable map of reusable analysis, architecture, development, and decision skills.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       <a href="/agent-tools/"><span>TOOL</span><strong>Agent Tools</strong><small>Static tool descriptions for SAP diagnostics, ABAP, integration, data analysis, evaluation, and related work.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
       <a href="/machine/assessment/"><span>ASSESS</span><strong>SAP Lead Assessment Access</strong><small>Case manifest, schemas, practice contracts, JSONL case sets, and the local read-only assessment MCP route.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
