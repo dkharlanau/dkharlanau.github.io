@@ -202,6 +202,63 @@ semantic_links:
         <p>Commitment does not prove that AI is the right solution. It shows that the customer is willing to do the work required to find out.</p>
       </div>
     </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Watch for red flags</h3>
+      <p>Red flags do not always mean the opportunity should stop. They show where discovery is too weak, too broad, or too risky to support the next decision.</p>
+      <table>
+        <thead><tr><th scope="col">Red flag area</th><th scope="col">What it may sound like</th><th scope="col">Why it matters</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Unclear problem definition</th><td><em>“We want to do something with AI.”</em></td><td>The problem is vague, and the partner may end up defining the customer’s problem for them.</td></tr>
+          <tr><th scope="row">Workflow uncertainty</th><td><em>“We need an AI assistant.”</em></td><td>The label does not explain which workflow changes, who uses it, or what output improves.</td></tr>
+          <tr><th scope="row">Unclear ownership</th><td><em>“One contact is interested, but they do not own the process.”</em></td><td>The opportunity may stall if no operator, outcome owner, or sponsor path is visible.</td></tr>
+          <tr><th scope="row">Sensitive workflow without boundaries</th><td><em>“We want AI for compliance decisions.”</em></td><td>The workflow may need clear ownership, oversight, approval paths, and validation boundaries before it can progress.</td></tr>
+          <tr><th scope="row">No customer commitment</th><td><em>“Let’s check back later.”</em></td><td>Without a credible next step, there may not be enough engagement to move forward.</td></tr>
+          <tr><th scope="row">Value is implied but not stated</th><td><em>“AI should improve the business somehow.”</em></td><td>The opportunity lacks a testable reason to act.</td></tr>
+          <tr><th scope="row">First use case is too broad or risky</th><td><em>“We want AI to transform the whole compliance process.”</em></td><td>Early validation needs a bounded workflow, owner, and approval path.</td></tr>
+          <tr><th scope="row">Stakeholders cannot support validation</th><td><em>“No one can join a discovery session or share workflow details.”</em></td><td>Without participation, the opportunity cannot build credible evidence.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Create clarity through discovery</h3>
+        <p>Strong discovery helps the customer move from broad statements to specific evidence. Do not accept <em>“we need AI”</em> as a complete requirement. Help the customer explain the workflow, pain, people involved, business impact, and next validation step.</p>
+        <p>Effective discovery should answer:</p>
+        <ul>
+          <li>What problem is the customer trying to solve?</li>
+          <li>Where does the problem appear in the workflow?</li>
+          <li>Who owns or experiences the problem?</li>
+          <li>Why does the problem matter?</li>
+          <li>What evidence supports deeper validation?</li>
+          <li>What next step would improve understanding?</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Map where the problem appears</h3>
+        <p>A workflow is the sequence of activities that turns an input into an output. It usually combines people, systems, decisions, handoffs, reviews, and approvals.</p>
+        <p>Business problems rarely affect every step equally. Locating the friction makes the opportunity easier to understand and helps determine whether deeper investigation is worthwhile.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Workflow mapping questions</h3>
+      <p>Map enough of the current workflow to find the problem boundary before discussing the target AI capability.</p>
+      <table>
+        <thead><tr><th scope="col">Workflow element</th><th scope="col">Discovery question</th><th scope="col">Evidence to look for</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Input</th><td>What starts the work, and what information arrives with it?</td><td>Documents, requests, records, events, messages, or system states.</td></tr>
+          <tr><th scope="row">Activity</th><td>What work is performed, and by whom?</td><td>Manual steps, system actions, repeated tasks, and exception handling.</td></tr>
+          <tr><th scope="row">Decision</th><td>Where must someone interpret, classify, compare, approve, or choose?</td><td>Decision rules, judgment points, uncertainty, and escalation criteria.</td></tr>
+          <tr><th scope="row">Handoff</th><td>Where does responsibility or information move between people, teams, or systems?</td><td>Queues, integrations, emails, ownership changes, and waiting time.</td></tr>
+          <tr><th scope="row">Review or approval</th><td>Which steps require oversight before the work can continue?</td><td>Control points, approvers, legal or compliance checks, and audit evidence.</td></tr>
+          <tr><th scope="row">Output</th><td>What business result should the workflow produce?</td><td>Completed transaction, decision, document, recommendation, response, or measurable outcome.</td></tr>
+          <tr><th scope="row">Friction</th><td>Where does time, inconsistency, rework, risk, cost, or poor quality appear?</td><td>Delays, error rates, backlog, repeated corrections, escalations, or user complaints.</td></tr>
+          <tr><th scope="row">Owner</th><td>Who is accountable for improving the result at the problem boundary?</td><td>Named process owner, team lead, department head, sponsor, or control owner.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
