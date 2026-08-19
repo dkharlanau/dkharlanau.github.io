@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Interview Drills — Decisions, Diagnostics, Pressure, Evidence"
-description: "Practice SAP Lead decisions, production diagnostics, pressure cases, and project evidence in one interview drill hub."
+description: "Practice SAP Lead decisions, diagnostics, pressure cases, and project evidence in realistic interview context."
 permalink: /labs/interview-readiness/drills/
 status: draft
 verified: false

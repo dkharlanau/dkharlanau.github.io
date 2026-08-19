@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Decision Cards — Architecture Trade-offs for Interviews"
-description: "Practice SAP Lead architecture decisions with decision drivers, trade-offs, failure modes, and pressure questions."
+description: "Practice SAP Lead architecture problems through decisions, trade-offs, failure modes, and pressure questions."
 permalink: /labs/interview-readiness/decision-cards/
 status: draft
 verified: false

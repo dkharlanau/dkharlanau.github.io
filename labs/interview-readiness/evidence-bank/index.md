@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Evidence Bank — Project Story Coverage"
-description: "Check whether SAP interview stories support Lead-level claims with decisions, trade-offs, results, lessons, and broad project coverage."
+description: "Check the evidence problem behind SAP Lead claims through decisions, trade-offs, results, lessons, and project coverage."
 permalink: /labs/interview-readiness/evidence-bank/
 status: draft
 verified: false

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Machine Layer — Data, Agent Tools, and AI-Readable Sources"
-description: "A technical entry point to datasets, machine-readable exports, agent skills, agent tools, local MCP packages, professional intelligence contracts, and SAP Lead drill routes."
+description: "Technical entry point for datasets, AI-readable exports, agent tools, MCP packages, professional intelligence, and SAP Lead drills."
 permalink: /machine/
 status: draft
 verified: false
