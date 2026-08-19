@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-19
 hide_global_cta: true
 tags:
   - business-ai
@@ -45,7 +45,7 @@ tags:
     <p><strong>Problem:</strong> enterprise AI architecture becomes vendor-led when teams select a platform before separating prediction, language, workflow, integration, deterministic rules, and process ownership.</p>
     <p><strong>Selection rule:</strong> start from the business pattern and required controls. Then map the smallest technology set that can implement it.</p>
     <p><strong>Composition rule:</strong> a serious solution often combines several families. Example: document extraction → deterministic validation → workflow → human approval → ERP posting.</p>
-    <a href="/labs/business-ai/domains/">Map technologies to business domains <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a href="/labs/business-ai/model-selection/">Choose model classes from workflow evidence <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="family-list" data-reveal>
