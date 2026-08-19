@@ -139,6 +139,8 @@ Reviewed source: [NIST AI RMF: Generative AI Profile](https://www.nist.gov/publi
 
 {% include labs/ai-ready/security-operating-model.html %}
 
+{% include labs/ai-ready/security-evidence-completeness.html %}
+
 ## Minimum production controls
 
 - explicit tool allowlists;
