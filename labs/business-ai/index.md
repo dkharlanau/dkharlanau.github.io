@@ -303,6 +303,23 @@ semantic_links:
         </tbody>
       </table>
     </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Discovery evidence summary</h3>
+      <p>After discovery, capture only what helps the next decision. The summary should make evidence gaps visible, not hide them behind polished wording.</p>
+      <table>
+        <thead><tr><th scope="col">Evidence area</th><th scope="col">Capture this</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Problem</th><td>The customer challenge in one clear sentence. Avoid product names unless they are part of the current environment.</td></tr>
+          <tr><th scope="row">Workflow friction</th><td>The step where the problem appears and what goes wrong there: delay, rework, inconsistency, risk, cost, or another concrete pain.</td></tr>
+          <tr><th scope="row">People and ownership</th><td>Who feels the pain, who owns the result, and who can enable, shape, approve, or block progress.</td></tr>
+          <tr><th scope="row">Why it matters</th><td>The strongest available signal that the problem deserves attention, such as time lost, backlog, quality issues, risk, cost, or service impact.</td></tr>
+          <tr><th scope="row">Readiness and constraints</th><td>What is known about participation, data access, approvals, security, governance, operating limits, and willingness to validate.</td></tr>
+          <tr><th scope="row">Next proof</th><td>The next activity that should reduce uncertainty, who needs to join, and which question it should answer.</td></tr>
+        </tbody>
+      </table>
+      <p>If an area cannot be supported with facts yet, mark it as a gap. That gap becomes part of the next discovery step rather than an invitation to guess.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
