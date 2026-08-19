@@ -141,6 +141,8 @@ Reviewed source: [NIST AI RMF: Generative AI Profile](https://www.nist.gov/publi
 
 {% include labs/ai-ready/security-evidence-completeness.html %}
 
+{% include labs/ai-ready/security-monitoring-auditability.html %}
+
 ## Minimum production controls
 
 - explicit tool allowlists;
