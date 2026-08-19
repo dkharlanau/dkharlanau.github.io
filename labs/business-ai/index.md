@@ -205,6 +205,114 @@ semantic_links:
     <div class="research-canvas__table-wrap"><h3>Compare use cases without fake precision</h3><p>Do not turn early discovery into a numerical scorecard. Compare options with the same questions, discuss the evidence, and make the gaps visible. The goal is a better decision, not a decimal point.</p><table><thead><tr><th scope="col">Comparison lens</th><th scope="col">Question</th><th scope="col">What a useful answer reveals</th></tr></thead><tbody><tr><th scope="row">Business value</th><td>What could improve if this works?</td><td>The outcome worth testing: time, quality, cost, risk, service, throughput, or another business result.</td></tr><tr><th scope="row">Workflow readiness</th><td>Do we understand the target step well enough to test a change?</td><td>Whether the use case is grounded in a stable, observable part of the process.</td></tr><tr><th scope="row">Data readiness</th><td>Can we use representative, permissioned inputs for validation?</td><td>Whether the test can run on evidence that resembles real work.</td></tr><tr><th scope="row">Risk and control</th><td>What can go wrong, and how would review, fallback, or approval contain it?</td><td>Whether errors are manageable and authority remains clear.</td></tr><tr><th scope="row">Stakeholder support</th><td>Who cares enough to participate in the test and act on the result?</td><td>Whether users, owners, reviewers, and sponsors can support validation.</td></tr><tr><th scope="row">Measurement</th><td>How will we know the workflow improved?</td><td>Whether the outcome can be observed instead of described only through opinion.</td></tr><tr><th scope="row">Expansion potential</th><td>If this works, what useful capability or evidence could be reused next?</td><td>Whether the first use case can teach something that supports broader adoption without pretending the pilot proves everything.</td></tr></tbody></table><p>For each option, capture three things: <strong>what is known, what is weak, and what needs proof next</strong>. That is usually enough to compare use cases consistently without inventing certainty.</p></div>
   </section>
 
+  <section class="research-canvas__inventory" id="ai-api-fluency" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">API fluency</p>
+      <h2>Treat an AI API call as a controlled workflow contract.</h2>
+      <p>The request is more than the user’s sentence. In a production workflow, it is the complete package of instructions, approved context, tools, state, identity, permissions, and output requirements needed to perform one controlled step.</p>
+    </header>
+
+    <div class="research-canvas__table-wrap">
+      <h3>The request contract</h3>
+      <p>Before discussing the model, make the full request boundary visible. A useful design review can explain where every important input comes from and who is allowed to supply it.</p>
+      <table>
+        <thead><tr><th scope="col">Request part</th><th scope="col">What it provides</th><th scope="col">Lead question</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">User or application input</th><td>The immediate task, question, event, or business data.</td><td>What did the caller actually request, and which parts are untrusted input?</td></tr>
+          <tr><th scope="row">System-level instructions</th><td>Stable rules, role, policy, and operating boundaries.</td><td>Which instructions are controlled by the application, and which may come from the user?</td></tr>
+          <tr><th scope="row">Approved context</th><td>Enterprise facts, documents, records, or retrieved knowledge needed for the task.</td><td>Is the context relevant, current, permissioned, and traceable to a source?</td></tr>
+          <tr><th scope="row">Files or structured data</th><td>Work objects such as documents, orders, tickets, records, images, or tables.</td><td>Are format, size, quality, sensitivity, and validation rules understood?</td></tr>
+          <tr><th scope="row">Tools and retrieval</th><td>Controlled ways to read data, call services, search sources, or perform actions.</td><td>Which tools only read, which can write, and what side effects can each tool create?</td></tr>
+          <tr><th scope="row">Output contract</th><td>The expected response shape for a person or downstream system.</td><td>Does the consumer need prose, a classification, a tool decision, or a schema-constrained result?</td></tr>
+          <tr><th scope="row">State</th><td>Prior response, workflow state, or business context needed to continue the process.</td><td>What must persist across turns or steps, where is it stored, and who owns it?</td></tr>
+          <tr><th scope="row">Identity and permissions</th><td>The user, application, tenant, role, and business authority behind the request.</td><td>Whose authority is being exercised when data is returned or an action is taken?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>The response contract</h3>
+      <p>The response is also more than a paragraph. The application must know what the result means and what should happen next.</p>
+      <table>
+        <thead><tr><th scope="col">Response shape</th><th scope="col">What it may contain</th><th scope="col">Why it matters</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Human-readable content</th><td>An answer, explanation, summary, or generated draft.</td><td>A person can review or use the result directly.</td></tr>
+          <tr><th scope="row">Structured result</th><td>Fields that follow a defined schema for downstream processing.</td><td>The next system can validate and consume the result without parsing free text.</td></tr>
+          <tr><th scope="row">Decision signal</th><td>A classification, recommendation, ranking, or proposed next action.</td><td>The workflow can separate advice from authority to execute.</td></tr>
+          <tr><th scope="row">Tool interaction</th><td>A tool request, tool result, retrieved evidence, or action outcome.</td><td>The orchestrator can track what happened outside the model.</td></tr>
+          <tr><th scope="row">Workflow status</th><td>Completion, continuation, missing information, approval request, or another state.</td><td>The caller knows whether to stop, continue, retry, or ask for review.</td></tr>
+          <tr><th scope="row">Refusal or escalation</th><td>A controlled stop when policy, permission, confidence, or business rules do not allow the requested path.</td><td>A safe workflow needs an explicit failure path, not a vague answer that looks successful.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Authentication</h3>
+        <p>Authentication proves that a person, application, or system is allowed to connect. It answers <strong>“Who or what is calling?”</strong></p>
+        <p>A valid credential opens the door. It does not grant unlimited business authority.</p>
+      </div>
+      <div>
+        <h3>Access control and authorization</h3>
+        <p>Access control decides what the authenticated caller may read, create, change, approve, or execute. It answers <strong>“What is this identity allowed to do here?”</strong></p>
+        <p>Keep this decision outside the model wherever possible. The model may help choose an action, but enterprise policy should decide whether that action is permitted.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+      <p><strong>Control chain:</strong> identity → authentication → authorization → context filtering → model or tool decision → approval when required → execution → result validation → audit and recovery.</p>
+      <p>If any step is missing, the system may still produce an impressive answer while exercising the wrong authority. Enterprise software has spent decades discovering that “it connected successfully” is not the same as “it was allowed to do that.”</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Structured output is an interface contract</h3>
+        <p>When a downstream system needs a reliable machine-readable result, define the expected fields with an appropriate JSON Schema and use schema-constrained output where the API supports it.</p>
+        <p>Do not rely on a prompt that merely asks for “valid JSON.” The schema should define required fields, allowed values, data types, and the structure the next system expects.</p>
+      </div>
+      <div>
+        <h3>State is part of architecture</h3>
+        <p>Multi-step AI workflows need an explicit answer to what continues across turns: conversation context, business object status, previous tool results, approval state, and retry information.</p>
+        <p>State should not quietly become hidden memory. Define what is stored, where it is stored, how long it is needed, and which identity may read or change it.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Lead questions before production</h3>
+      <table>
+        <thead><tr><th scope="col">Area</th><th scope="col">Question to resolve</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Trust boundary</th><td>Which input is controlled by the application, and which input can be influenced by a user, document, retrieved source, or external system?</td></tr>
+          <tr><th scope="row">Data access</th><td>Which sources may be retrieved for this user and business purpose?</td></tr>
+          <tr><th scope="row">Tool authority</th><td>Which tools are read-only, which can change business state, and which actions require approval?</td></tr>
+          <tr><th scope="row">Output consumer</th><td>Will a person read the result, or will another system consume it automatically?</td></tr>
+          <tr><th scope="row">Validation</th><td>How are schema, business rules, missing fields, unsupported values, and low-confidence outcomes checked?</td></tr>
+          <tr><th scope="row">Failure handling</th><td>What happens on timeout, tool failure, partial completion, refusal, or a business-system rejection?</td></tr>
+          <tr><th scope="row">Retry and idempotency</th><td>Can the workflow retry safely without creating duplicate transactions or repeating side effects?</td></tr>
+          <tr><th scope="row">Audit</th><td>Can the team reconstruct who requested the action, what context and tools were used, what was approved, and what the business system returned?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Example: AI prepares a sales-order proposal</h3>
+      <p>Consider a workflow where a user asks AI to prepare a sales-order proposal from a customer request. The first API step should prepare a controlled result, not silently create an SAP transaction.</p>
+      <table>
+        <thead><tr><th scope="col">Step</th><th scope="col">Controlled design</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Request</th><td>Include the user identity, customer request, approved sales context, relevant files or records, read-only retrieval tools, and an explicit output schema.</td></tr>
+          <tr><th scope="row">AI result</th><td>Return proposed order fields, missing information, warnings, and evidence needed for review. Keep proposal generation separate from transaction authority.</td></tr>
+          <tr><th scope="row">Authorization</th><td>Check whether this user and workflow are allowed to create or change the relevant business object before exposing a write tool.</td></tr>
+          <tr><th scope="row">Approval</th><td>Require human or policy approval where the business risk demands it, especially before a side effect is committed.</td></tr>
+          <tr><th scope="row">Execution</th><td>Call the SAP-facing tool with validated fields and duplicate protection. Treat the SAP response as the transaction result, not the model’s earlier proposal.</td></tr>
+          <tr><th scope="row">Continuation</th><td>Record the business result, errors, approval state, and retry status so the next step continues from evidence rather than guessing what happened.</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Lead lens:</strong> the model can help interpret and prepare. Identity, authorization, validation, approval, transaction integrity, and recovery still belong to the application and enterprise control model.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="ai-value-story" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Value story</p>
