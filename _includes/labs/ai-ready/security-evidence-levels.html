@@ -8,6 +8,7 @@
   <pre><code>customer interest
 -&gt; evaluation question and hypothesis
 -&gt; approved workflow and target
+-&gt; evaluation charter
 -&gt; bounded evaluation
 -&gt; evidence and review
 -&gt; decision
@@ -80,6 +81,92 @@ without reducing [evidence, safety, or review-quality guardrail].</code></pre>
   </table>
 
   <p>If several of these criteria are weak, narrow the scope or choose a different first target. A difficult target may be valuable later, but the first evaluation should make evidence quality easy to judge.</p>
+
+  <h3>Write an evaluation charter</h3>
+
+  <p>A strong evaluation charter should define exactly what is in scope and what is out of scope. A bounded evaluation also needs named people, not only named tools.</p>
+
+  <p>The charter should identify who is accountable for each part of the workflow. At minimum, name the customer owner, security reviewer, engineering reviewer, evaluation operator, and the person who can approve any change in scope or permitted activity. One person may hold more than one role, but accountability should still be explicit.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Charter area</th>
+        <th>Define before starting</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>In scope</strong></td>
+        <td>Approved repositories, services, backlog items, pull requests, environments, workflows, and evidence sources.</td>
+      </tr>
+      <tr>
+        <td><strong>Out of scope</strong></td>
+        <td>Systems, data, actions, testing methods, or remediation work that are not approved for this evaluation.</td>
+      </tr>
+      <tr>
+        <td><strong>People</strong></td>
+        <td>Named owners, reviewers, operators, approvers, and escalation contacts.</td>
+      </tr>
+      <tr>
+        <td><strong>Expected evidence</strong></td>
+        <td>The findings, source references, review notes, tests, traces, scanner correlations, remediation guidance, or revalidation evidence the evaluation should produce.</td>
+      </tr>
+      <tr>
+        <td><strong>Evidence ceiling</strong></td>
+        <td>The highest level of proof the team can responsibly claim from the permitted activity.</td>
+      </tr>
+      <tr>
+        <td><strong>Metrics</strong></td>
+        <td>The measures tied to the customer bottleneck, plus any quality, safety, or governance guardrails.</td>
+      </tr>
+      <tr>
+        <td><strong>Stop conditions</strong></td>
+        <td>Conditions that pause or end the evaluation, including scope ambiguity, missing authorization, unsafe activity, or evidence limits.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Evidence ceiling</strong> is the highest level of proof the team can responsibly claim based on the activity that is actually permitted. For example, a source-only review may support source facts and supported inferences, but it cannot claim runtime proof. Approved staging tests may raise the ceiling for the tested path, but not for untested systems or production behavior.</p>
+
+  <p>The evidence ceiling should be agreed before the evaluation starts and repeated in the final report. This keeps a useful inference from quietly becoming an exploit claim after it passes through three meetings and a slide deck.</p>
+
+  <h3>Tie metrics to the customer bottleneck</h3>
+
+  <p>Start by asking where the customer’s workflow is slow, noisy, or difficult to govern. Then select metrics that show whether the bounded evaluation improves that specific problem.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Metric area</th>
+        <th>Use when</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Finding quality</strong></td>
+        <td>The customer struggles with triage, validation, prioritization, or evidence gathering.</td>
+      </tr>
+      <tr>
+        <td><strong>Developer handoff</strong></td>
+        <td>Security findings are not clear enough for engineering teams to act on.</td>
+      </tr>
+      <tr>
+        <td><strong>Fix progress</strong></td>
+        <td>The customer needs safer movement from confirmed finding to reviewed remediation, testing, and revalidation.</td>
+      </tr>
+      <tr>
+        <td><strong>Reviewer effort</strong></td>
+        <td>The customer wants to reduce review burden while preserving human judgment.</td>
+      </tr>
+      <tr>
+        <td><strong>Operating control</strong></td>
+        <td>The customer needs confidence that outputs can be reviewed, retained, recorded, and used inside existing systems. Remediation and review metrics help show whether the workflow supports movement from finding to reviewed action.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Do not use all metric areas by default. Choose the smallest set that answers the evaluation question. A metric is useful when it changes a customer decision, not when it merely gives the dashboard another rectangle.</p>
 
   <h3>Decision quality</h3>
 
@@ -167,6 +254,8 @@ without reducing [evidence, safety, or review-quality guardrail].</code></pre>
   <h2>Evidence levels for AI security review</h2>
 
   <p>Not every security statement carries the same evidentiary weight. For Codex Security and similar AI-assisted reviews, label findings by how strong the evidence is.</p>
+
+  <p>The evaluation charter should also define the <strong>evidence ceiling</strong>: the highest evidence level the permitted activity can support. Never report a claim above that ceiling.</p>
 
   <h3>Source fact</h3>
   <p>Something directly visible in code, configuration, logs, test output, scanner output, or provided materials.</p>
