@@ -13,6 +13,12 @@ search_intent: "AI fluency early technical judgment evals guardrails enterprise 
 review_method: "authored practical framework with SAP workflow application"
 evidence_review_mode: "authored_heuristic"
 hide_global_cta: true
+career_impact: mapped
+career_skills:
+  - ai-readiness
+  - ai-business-value
+  - ai-evaluation
+  - ai-security
 tags:
   - ai-fluency
   - early-technical-judgment
