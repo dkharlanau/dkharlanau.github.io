@@ -135,6 +135,8 @@ NIST AI RMF and the Generative AI Profile are useful references for organizing r
 
 Reviewed source: [NIST AI RMF: Generative AI Profile](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence), reviewed 15 Aug 2026.
 
+{% include labs/ai-ready/security-case-reading.html %}
+
 {% include labs/ai-ready/security-evidence-levels.html %}
 
 {% include labs/ai-ready/security-operating-model.html %}
