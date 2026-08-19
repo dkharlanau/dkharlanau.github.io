@@ -1,0 +1,165 @@
+version: 1
+updated_at: 2026-08-19
+title: Business AI Solution Routing
+summary: A machine-readable routing model for turning broad customer labels into an explainable OpenAI solution path.
+
+definition: >-
+  Routing is the process of determining the most appropriate OpenAI solution path to explore by separating where the work happens, what capabilities are required, how the solution will run and be controlled, and what should happen next.
+
+principle: A customer label can start the conversation. It should not finish the architecture.
+
+customer_labels:
+  - id: agent
+    label: Agent
+    signal: The customer expects several steps, tool use, or adaptive coordination.
+    questions:
+      - Which actions are required?
+      - Which systems can the solution call?
+      - What state must it keep?
+      - What may it do without approval?
+      - How does it stop, recover, or escalate?
+  - id: chatbot
+    label: Chatbot
+    signal: The customer imagines a conversational interface.
+    questions:
+      - Where should the conversation live?
+      - Is the job only to answer, or also to take action?
+      - Which sources should ground the answer?
+      - Who can see which data?
+  - id: copilot
+    label: Copilot
+    signal: The customer expects human-in-the-loop assistance.
+    questions:
+      - Which role is assisted?
+      - Which task becomes easier?
+      - What output is prepared?
+      - What must the human still review, decide, or approve?
+  - id: automation
+    label: Automation
+    signal: The customer wants to reduce manual work.
+    questions:
+      - Which steps are deterministic today?
+      - Where is judgment actually needed?
+      - Could normal workflow automation solve most of the problem without AI?
+  - id: api
+    label: API
+    signal: The customer is already thinking about integration or a custom application.
+    questions:
+      - Which business job consumes the API?
+      - What latency, state, tools, and data boundaries are required?
+      - What happens when the model or integration fails?
+  - id: migration
+    label: Migration
+    signal: The customer has an existing implementation that must move to a supported path.
+    questions:
+      - What is the current product or endpoint?
+      - Which features and stored state are used?
+      - What changes in the target path?
+      - How will regression, cutover, and rollback be tested?
+
+routing_lenses:
+  - id: work-surface
+    label: Work surface
+    question: Where should the user or workflow meet the AI capability?
+    capture:
+      - ChatGPT
+      - Existing business application
+      - Customer-facing product
+      - Backend workflow
+      - Developer environment
+  - id: capability
+    label: Capability
+    question: What must the solution actually do?
+    capture:
+      - Retrieve
+      - Generate
+      - Extract
+      - Classify
+      - Reason
+      - Use tools
+      - Analyze files
+      - Coordinate steps
+  - id: runtime-control
+    label: Runtime and control
+    question: How will the solution run, access systems, and stay inside its authority?
+    capture:
+      - Identity
+      - Permissions
+      - Source-of-truth systems
+      - State
+      - Tool access
+      - Human approval
+      - Logging
+      - Evaluation
+      - Fallback
+      - Stop conditions
+  - id: next-proof
+    label: Next proof
+    question: What is the smallest useful step that reduces uncertainty?
+    capture:
+      - Workspace trial
+      - Architecture workshop
+      - Prototype
+      - Migration assessment
+      - Bounded pilot
+      - Decision review
+
+solution_paths:
+  - id: managed-chatgpt-workspace
+    label: Managed ChatGPT workspace
+    fit: Employees can perform the work directly in ChatGPT and the organization prefers a managed workspace instead of building a separate user experience.
+    boundary: Workspace adoption does not remove the need to define approved data, ownership, controls, and success measures.
+  - id: chatgpt-app
+    label: App inside ChatGPT
+    fit: The work should stay in ChatGPT but needs custom interaction with external tools, data, or a backend.
+    boundary: A conversational surface does not automatically make the underlying business action safe or authorized.
+  - id: responses-api-application
+    label: Custom application or service through the Responses API
+    fit: The user experience or workflow lives in the customer's own product, portal, ERP extension, service, or backend.
+    boundary: The API is a delivery mechanism. Business ownership, tool contracts, evaluation, and recovery still need design.
+  - id: agents-sdk-orchestration
+    label: Agent orchestration with the Agents SDK
+    fit: A custom backend needs multi-step orchestration, tool use, approvals, or handoffs between specialized agents.
+    boundary: More orchestration is not automatically more value. Each tool call and authority boundary still needs a reason and a control.
+  - id: assistants-api-migration
+    label: Migration from the Assistants API to the Responses API
+    fit: An existing implementation still uses the deprecated Assistants API.
+    boundary: Preserve required behavior, state, permissions, tests, cutover, and rollback while changing the technical path.
+    sunset_date: 2026-08-26
+
+routing_sequence:
+  - Freeze the customer label without designing from it.
+  - Restate the use case in workflow terms.
+  - Choose the work surface.
+  - Choose the minimum capability pattern.
+  - Define runtime, authority, identity, and failure handling.
+  - Select the solution path to explore.
+  - Agree the next proof and decision point.
+
+lead_output:
+  - Business problem and target workflow step
+  - User and outcome owner
+  - Work surface
+  - Required AI capabilities
+  - Systems, tools, and source-of-truth boundaries
+  - Identity, permissions, and human authority
+  - Recommended solution path to explore
+  - Open evidence gaps
+  - Next proof, owner, and decision point
+
+sources:
+  - id: openai-api-quickstart
+    publisher: OpenAI
+    title: Developer quickstart
+    url: https://platform.openai.com/docs/quickstart
+    checked_at: 2026-08-19
+  - id: openai-apps-sdk
+    publisher: OpenAI
+    title: Build with the Apps SDK
+    url: https://help.openai.com/en/articles/12515353-build-with-the-apps-sdk
+    checked_at: 2026-08-19
+  - id: openai-assistants-deprecation
+    publisher: OpenAI
+    title: Assistants API deep dive
+    url: https://platform.openai.com/docs/assistants/deep-dive
+    checked_at: 2026-08-19
