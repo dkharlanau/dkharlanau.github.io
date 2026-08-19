@@ -1,0 +1,514 @@
+version: "1.0"
+updated_at: "2026-08-19"
+principle: "Use one simple term for one idea. Define it once, then use the same meaning across discovery, architecture, governance, model selection, and implementation work."
+
+journey:
+  - key: discover
+    label: "Discover"
+    question: "What work should improve, for whom, and why?"
+    meaning: "Understand the business problem, workflow, users, context, and evidence before choosing a solution."
+    pages:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+  - key: shape
+    label: "Shape"
+    question: "What is the smallest useful solution shape?"
+    meaning: "Choose the minimum capabilities and a reusable architecture pattern, then turn them into a lightweight first-pass blueprint."
+    pages:
+      - title: "Platform Building Blocks"
+        url: "/labs/business-ai/platform-building-blocks/"
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+  - key: bound
+    label: "Bound"
+    question: "What may the workflow see, do, and escalate?"
+    meaning: "Define data use, access, authority, approval gates, ownership, and validation needs."
+    pages:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - key: choose
+    label: "Choose"
+    question: "Which model and technical options fit the work?"
+    meaning: "Compare credible model classes and supporting options using task fit, quality, latency, cost, scale, and evidence."
+    pages:
+      - title: "Model Selection"
+        url: "/labs/business-ai/model-selection/"
+  - key: prove
+    label: "Prove"
+    question: "What evidence shows the workflow behaves well enough?"
+    meaning: "Use representative evals, safeguards, review, and operating evidence to support or reject the next step."
+    pages:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - key: release
+    label: "Release"
+    question: "How do we introduce, observe, recover, and improve it?"
+    meaning: "Define a controlled release path, monitoring, ownership, fallback, rollback, and improvement loop."
+    pages:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+
+terms:
+  - id: ai-supported-workflow
+    term: "AI-supported workflow"
+    group: "Core language"
+    plain: "A business workflow where AI helps with one or more steps, while people, systems, rules, and controls still matter."
+    preferred_use: "Use this as the main umbrella term when the exact product shape is not important."
+    do_not_confuse: "It does not automatically mean agent, chatbot, copilot, or full automation."
+    used_in:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: workflow
+    term: "Workflow"
+    group: "Core language"
+    plain: "The sequence of work from a trigger or request to an outcome."
+    preferred_use: "Describe who does the work, what happens, which systems are involved, and what good outcome looks like."
+    do_not_confuse: "A workflow is not the same as a product feature or model capability."
+    used_in:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+  - id: business-problem
+    term: "Business problem"
+    group: "Core language"
+    plain: "The specific issue in the current work that creates delay, cost, risk, poor quality, or another unwanted result."
+    preferred_use: "State the problem before discussing AI features."
+    do_not_confuse: "A request such as 'we need an agent' is a solution label, not a business problem."
+    used_in:
+      - title: "Business AI Lab"
+        url: "/labs/business-ai/"
+  - id: outcome-owner
+    term: "Outcome owner"
+    group: "Core language"
+    plain: "The person accountable for the business result that should improve."
+    preferred_use: "Name the role that can judge whether the change creates value."
+    do_not_confuse: "The outcome owner may not be the person who performs the daily task."
+    used_in:
+      - title: "Business AI Lab"
+        url: "/labs/business-ai/"
+  - id: context
+    term: "Context"
+    group: "Core language"
+    plain: "The information the AI needs to understand the task and produce a useful result."
+    preferred_use: "Use context for documents, records, instructions, history, and other approved information needed for the work."
+    do_not_confuse: "Context is broader than retrieval. Retrieval is one way to supply context."
+    used_in:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+      - title: "Platform Building Blocks"
+        url: "/labs/business-ai/platform-building-blocks/"
+  - id: source
+    term: "Source"
+    group: "Core language"
+    plain: "A place where information comes from, such as a policy document, SAP record, knowledge base, contract, or approved system."
+    preferred_use: "Name the source when its quality, ownership, freshness, or permission changes the recommendation."
+    do_not_confuse: "A reachable source is not automatically an approved source."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: approved-source
+    term: "Approved source"
+    group: "Core language"
+    plain: "A source that the accountable owner has accepted for this workflow and use."
+    preferred_use: "Use this when grounding answers, retrieval, or decisions in enterprise information."
+    do_not_confuse: "Technical access does not prove approved use."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: evidence
+    term: "Evidence"
+    group: "Core language"
+    plain: "Information that supports a decision, claim, recommendation, or release step."
+    preferred_use: "Evidence can come from source material, tests, system records, approved owners, or observed results."
+    do_not_confuse: "A confident opinion is not evidence."
+    used_in:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: tradeoff
+    term: "Tradeoff"
+    group: "Core language"
+    plain: "A choice where improving one priority may make another priority harder, slower, more expensive, or more complex."
+    preferred_use: "Name the competing priorities and explain how they change the route."
+    do_not_confuse: "A tradeoff is not a defect. It is a decision that needs an explicit balance."
+    used_in:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+  - id: recommendation-confidence
+    term: "Recommendation confidence"
+    group: "Core language"
+    plain: "How mature the evidence is behind a recommendation."
+    preferred_use: "Use confidence levels to show whether the current answer is preliminary, validated, or ready for implementation planning."
+    do_not_confuse: "It is not how strongly a person feels about the idea."
+    used_in:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+
+  - id: platform-building-block
+    term: "Platform building block"
+    group: "Solution shape"
+    plain: "A reusable capability that performs one role inside a larger workflow."
+    preferred_use: "Examples include retrieval, structured output, tool use, orchestration, evaluation, and monitoring."
+    do_not_confuse: "A building block is one part of a solution, not the full architecture."
+    used_in:
+      - title: "Platform Building Blocks"
+        url: "/labs/business-ai/platform-building-blocks/"
+  - id: capability-role
+    term: "Capability role"
+    group: "Solution shape"
+    plain: "The job a capability performs in the workflow."
+    preferred_use: "Use the roles interaction, context, action, orchestration, evaluation, developer workflow, and governance and observability."
+    do_not_confuse: "A role explains why the capability is needed, not which product provides it."
+    used_in:
+      - title: "Platform Building Blocks"
+        url: "/labs/business-ai/platform-building-blocks/"
+  - id: minimum-capability-set
+    term: "Minimum capability set"
+    group: "Solution shape"
+    plain: "The smallest responsible combination of capabilities needed for the workflow to create value and stay controlled."
+    preferred_use: "Start here for the first version and add more only when the workflow proves it needs more."
+    do_not_confuse: "Minimum does not mean careless. Required controls still belong in the set."
+    used_in:
+      - title: "Platform Building Blocks"
+        url: "/labs/business-ai/platform-building-blocks/"
+  - id: architecture-pattern
+    term: "Architecture pattern"
+    group: "Solution shape"
+    plain: "A reusable way to describe how an AI-supported solution may work."
+    preferred_use: "Use it to describe the general solution shape before implementation details."
+    do_not_confuse: "A pattern is not a customer-specific blueprint or a final technical design."
+    used_in:
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+  - id: first-pass-blueprint
+    term: "First-pass blueprint"
+    group: "Solution shape"
+    plain: "A lightweight explanation of how one or more architecture patterns may apply to a specific workflow."
+    preferred_use: "Keep it easy to review: workflow, pattern, context, tools, review, evals, risks, assumptions, and next step."
+    do_not_confuse: "It is not a full architecture diagram, deployment plan, security design, or final integration map."
+    used_in:
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+  - id: final-technical-design
+    term: "Final technical design"
+    group: "Solution shape"
+    plain: "A validated implementation design owned by the appropriate technical specialists."
+    preferred_use: "Use this only after the important architecture, integration, security, data, and operating decisions are validated."
+    do_not_confuse: "A first-pass blueprint should not claim to be a final design."
+    used_in:
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+  - id: retrieval-grounded-generation
+    term: "Retrieval-grounded generation"
+    group: "Solution shape"
+    plain: "An AI response that uses selected source content as supporting context for the answer."
+    preferred_use: "Use it when the workflow needs answers based on approved documents or records."
+    do_not_confuse: "Retrieval does not make weak, outdated, or unauthorized source content trustworthy."
+    used_in:
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+  - id: structured-output
+    term: "Structured output"
+    group: "Solution shape"
+    plain: "An output that follows a defined structure so another person or system can use it consistently."
+    preferred_use: "Use it when downstream work needs named fields, a schema, or another predictable format."
+    do_not_confuse: "Correct structure does not prove correct business meaning."
+    used_in:
+      - title: "Platform Building Blocks"
+        url: "/labs/business-ai/platform-building-blocks/"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: tool
+    term: "Tool"
+    group: "Solution shape"
+    plain: "A connected function or service the workflow can use to look something up, calculate, prepare, update, or trigger work."
+    preferred_use: "State what the tool can read, write, trigger, or expose."
+    do_not_confuse: "A tool is a capability the workflow can call. It is not the same as an agent."
+    used_in:
+      - title: "Platform Building Blocks"
+        url: "/labs/business-ai/platform-building-blocks/"
+  - id: agentic-orchestration
+    term: "Agentic orchestration"
+    group: "Solution shape"
+    plain: "A workflow where AI chooses or continues several steps, often using tools, state, and changing conditions."
+    preferred_use: "Use it only when the work needs more than one fixed response or retrieval step."
+    do_not_confuse: "Do not call every chatbot, assistant, or automation an agentic workflow."
+    used_in:
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+  - id: human-review
+    term: "Human review"
+    group: "Solution shape"
+    plain: "A point where a person checks, decides, approves, corrects, or takes ownership of the next step."
+    preferred_use: "Use this plain term in site prose. Use 'human in the loop' only when explaining the common industry phrase."
+    do_not_confuse: "Human review should name who reviews what and why. A generic box is not an operating control."
+    used_in:
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+
+  - id: governance
+    term: "Governance"
+    group: "Control and risk"
+    plain: "The way AI-supported work is controlled, reviewed, monitored, and improved."
+    preferred_use: "Connect governance to real owners, data, access, authority, review, evidence, and escalation."
+    do_not_confuse: "Governance is not a single approval meeting or policy document."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: action-authority
+    term: "Action authority"
+    group: "Control and risk"
+    plain: "What the workflow is allowed to do, from reading information to changing business state."
+    preferred_use: "Use the ladder read-only, draft, recommend, act with approval, restricted."
+    do_not_confuse: "Access to information and authority to change a system are different permissions."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: read-only
+    term: "Read-only"
+    group: "Control and risk"
+    plain: "The workflow may retrieve or summarize information but may not change another system."
+    preferred_use: "Use this as the default starting authority when useful value can be created without write access."
+    do_not_confuse: "Read-only still needs correct access control and data-use approval."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: approval-gate
+    term: "Approval gate"
+    group: "Control and risk"
+    plain: "A point where explicit human permission is required before the workflow continues."
+    preferred_use: "Name the approver, the exact decision, the evidence shown, and the action that follows."
+    do_not_confuse: "An approval gate is more specific than general human review."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: access-boundary
+    term: "Access boundary"
+    group: "Control and risk"
+    plain: "The limit on which users, data, systems, or records a workflow may access."
+    preferred_use: "Preserve source-system permissions unless a validated design says otherwise."
+    do_not_confuse: "A system being technically reachable does not mean every user may use its data."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: tool-boundary
+    term: "Tool boundary"
+    group: "Control and risk"
+    plain: "The clear limit on what a connected tool may read, write, trigger, or expose."
+    preferred_use: "Use it when tools or agents connect to enterprise systems."
+    do_not_confuse: "The AI deciding to call a tool does not replace tool-side authorization or business validation."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: safeguard
+    term: "Safeguard"
+    group: "Control and risk"
+    plain: "Any control that reduces a known workflow risk or limits the effect of failure."
+    preferred_use: "Use safeguard as the broad term for input checks, output checks, tool scoping, approval gates, and similar controls."
+    do_not_confuse: "A safeguard does not replace testing, ownership, authorization, or recovery."
+    used_in:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: guardrail
+    term: "Guardrail"
+    group: "Control and risk"
+    plain: "A safeguard that guides, restricts, or checks behavior against workflow rules and risk boundaries."
+    preferred_use: "Use guardrail when the control is specifically about behavior limits."
+    do_not_confuse: "A guardrail is not an eval. The guardrail controls behavior; the eval tests whether behavior is acceptable."
+    used_in:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: eval
+    term: "Eval"
+    group: "Control and risk"
+    plain: "A repeatable test that checks whether an AI-supported workflow behaves as expected."
+    preferred_use: "Use representative cases and connect results to a decision, review, or release consequence."
+    do_not_confuse: "An eval measures behavior. It does not itself restrict behavior."
+    used_in:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: observability
+    term: "Observability"
+    group: "Control and risk"
+    plain: "The ability to monitor activity, quality, errors, escalations, and other signals while the workflow operates."
+    preferred_use: "Use it for ongoing visibility across real runs."
+    do_not_confuse: "Observability is not the same as auditability."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: auditability
+    term: "Auditability"
+    group: "Control and risk"
+    plain: "The ability to reconstruct what happened in a specific case after it happened."
+    preferred_use: "Be able to trace the request, relevant context, output, review, approval, and action where required."
+    do_not_confuse: "Auditability explains a past event; observability helps monitor operation over time."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: validation-need
+    term: "Validation need"
+    group: "Control and risk"
+    plain: "An open question that needs evidence or accountable review before the recommendation can become stronger."
+    preferred_use: "Name the evidence, owner, or specialist needed to resolve it."
+    do_not_confuse: "Identifying a validation need is not the same as claiming the answer is already known."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: escalation-question
+    term: "Escalation question"
+    group: "Control and risk"
+    plain: "A decision-ready question sent to the right owner or specialist when an important assumption cannot be resolved from current evidence."
+    preferred_use: "State the assumption, impact, risk area, validator, needed evidence, and next step."
+    do_not_confuse: "Escalation is not a substitute for thinking. Explain what is already known and how the answer changes the recommendation."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+  - id: proof-gap
+    term: "Proof gap"
+    group: "Control and risk"
+    plain: "Something important that remains unproven."
+    preferred_use: "Use it when the team can state what is missing and what evidence would close the gap."
+    do_not_confuse: "A proof gap is not proof that the opposite claim is true."
+    used_in:
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+
+  - id: model-class
+    term: "Model class"
+    group: "Model choice"
+    plain: "A stable category used to discuss what kind of model capability a task needs."
+    preferred_use: "Examples include reasoning-oriented, general-purpose, efficient, multimodal, audio or real-time, and embedding models."
+    do_not_confuse: "A model class is not a specific model name or version."
+    used_in:
+      - title: "Model Selection"
+        url: "/labs/business-ai/model-selection/"
+  - id: reasoning-depth
+    term: "Reasoning depth"
+    group: "Model choice"
+    plain: "How much planning, analysis, or multi-step problem solving the task needs."
+    preferred_use: "Use it to describe the work before deciding how much model capability to buy."
+    do_not_confuse: "More reasoning is not always better if the task is simple, high-volume, or latency-sensitive."
+    used_in:
+      - title: "Model Selection"
+        url: "/labs/business-ai/model-selection/"
+  - id: latency
+    term: "Latency"
+    group: "Model choice"
+    plain: "How long the user or system waits for a result."
+    preferred_use: "Discuss it as a workflow requirement, especially for interactive or real-time work."
+    do_not_confuse: "Low latency is not the same as high throughput."
+    used_in:
+      - title: "Model Selection"
+        url: "/labs/business-ai/model-selection/"
+  - id: modality
+    term: "Modality"
+    group: "Model choice"
+    plain: "The form of information the workflow receives or produces, such as text, image, document, audio, or video."
+    preferred_use: "Choose modalities from the real working environment, not novelty."
+    do_not_confuse: "A multimodal model does not make every workflow a multimodal workflow."
+    used_in:
+      - title: "Model Selection"
+        url: "/labs/business-ai/model-selection/"
+
+  - id: implementation-readiness
+    term: "Implementation readiness"
+    group: "Delivery"
+    plain: "The point where the team can explain how the workflow will be tested, controlled, operated, released, and recovered."
+    preferred_use: "Use it for the full workflow, not only the model."
+    do_not_confuse: "A working demo is not proof of implementation readiness."
+    used_in:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: representative-eval
+    term: "Representative eval"
+    group: "Delivery"
+    plain: "A test set that reflects the kinds of normal, difficult, failing, and risky cases the real workflow is expected to face."
+    preferred_use: "Use the same representative cases when comparing options."
+    do_not_confuse: "A few hand-picked successful examples are not representative evidence."
+    used_in:
+      - title: "Model Selection"
+        url: "/labs/business-ai/model-selection/"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: release
+    term: "Release"
+    group: "Delivery"
+    plain: "The controlled step of making a workflow available to a defined group with clear entry criteria and support."
+    preferred_use: "Start narrow when evidence or authority is still limited."
+    do_not_confuse: "Release is not an all-or-nothing move to full production use."
+    used_in:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: fallback
+    term: "Fallback"
+    group: "Delivery"
+    plain: "A safer alternative path used when the preferred AI-supported path cannot continue reliably."
+    preferred_use: "Examples include human handling, read-only mode, a simpler process, or a deterministic rule."
+    do_not_confuse: "Fallback is not always rollback. It may handle one case without changing the released version."
+    used_in:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: rollback
+    term: "Rollback"
+    group: "Delivery"
+    plain: "Returning a released workflow or configuration to an earlier safe state."
+    preferred_use: "Define who can trigger it and what safe state the workflow returns to."
+    do_not_confuse: "Rollback changes the released state; fallback handles work through another path."
+    used_in:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+  - id: operating-owner
+    term: "Operating owner"
+    group: "Delivery"
+    plain: "The person or team responsible for support, monitoring, incidents, controlled change, and improvement after release."
+    preferred_use: "Name this owner before calling the solution ready to operate."
+    do_not_confuse: "The operating owner may be different from the outcome owner or technical builder."
+    used_in:
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+
+non_synonyms:
+  - left: "Architecture pattern"
+    right: "First-pass blueprint"
+    rule: "Pattern = reusable solution shape. Blueprint = how the pattern applies to one workflow."
+  - left: "First-pass blueprint"
+    right: "Final technical design"
+    rule: "Blueprint = lightweight early view. Final design = validated specialist implementation design."
+  - left: "Eval"
+    right: "Guardrail"
+    rule: "Eval = test. Guardrail = behavior control."
+  - left: "Observability"
+    right: "Auditability"
+    rule: "Observability = monitor operation over time. Auditability = reconstruct a specific past event."
+  - left: "Technical access"
+    right: "Approved use"
+    rule: "A system can be reachable while its data is still not approved for the workflow."
+  - left: "Tool"
+    right: "Agent"
+    rule: "Tool = callable capability. Agentic workflow = multi-step work that may choose and use tools."
+  - left: "Fallback"
+    right: "Rollback"
+    rule: "Fallback = alternative path for work. Rollback = return the released solution to an earlier safe state."
+  - left: "Validated architecture"
+    right: "Deployment-ready plan"
+    rule: "Validated architecture has tested key assumptions. Deployment-ready planning also needs operating, release, recovery, and ownership decisions."
+
+writing_rules:
+  - "Start from the workflow and business problem, not a model, agent, or product label."
+  - "Use 'AI-supported workflow' as the umbrella term when a more specific shape is not needed."
+  - "Use Discover, Shape, Bound, Choose, Prove, Release only for the overall Business AI journey. Keep local page sequences for detailed reasoning inside a phase."
+  - "Use one preferred term for one idea. If an industry synonym is useful, explain it once and return to the preferred term."
+  - "Define action authority with the same ladder: read-only, draft, recommend, act with approval, restricted."
+  - "Describe uncertainty with the same states: known, assumption, validation need, specialist decision."
+  - "When evidence is missing, create an escalation question rather than inventing assurance."
+  - "Use 'safeguard' as the broad control term and 'guardrail' for a safeguard that restricts or checks behavior."
+  - "Keep first-pass blueprints lightweight. Do not turn them into final architecture, deployment, security, or product configuration documents."
+  - "Link the first important use of a defined term to this glossary when it helps the reader move between frameworks."
