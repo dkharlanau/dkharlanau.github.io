@@ -405,6 +405,24 @@ semantic_links:
       </table>
       <p>A use case does not need perfect readiness. It needs enough clarity, access, control, and measurement to learn something trustworthy from the next step.</p>
     </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Compare use cases without fake precision</h3>
+      <p>Do not turn early discovery into a numerical scorecard. Compare options with the same questions, discuss the evidence, and make the gaps visible. The goal is a better decision, not a decimal point.</p>
+      <table>
+        <thead><tr><th scope="col">Comparison lens</th><th scope="col">Question</th><th scope="col">What a useful answer reveals</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Business value</th><td>What could improve if this works?</td><td>The outcome worth testing: time, quality, cost, risk, service, throughput, or another business result.</td></tr>
+          <tr><th scope="row">Workflow readiness</th><td>Do we understand the target step well enough to test a change?</td><td>Whether the use case is grounded in a stable, observable part of the process.</td></tr>
+          <tr><th scope="row">Data readiness</th><td>Can we use representative, permissioned inputs for validation?</td><td>Whether the test can run on evidence that resembles real work.</td></tr>
+          <tr><th scope="row">Risk and control</th><td>What can go wrong, and how would review, fallback, or approval contain it?</td><td>Whether errors are manageable and authority remains clear.</td></tr>
+          <tr><th scope="row">Stakeholder support</th><td>Who cares enough to participate in the test and act on the result?</td><td>Whether users, owners, reviewers, and sponsors can support validation.</td></tr>
+          <tr><th scope="row">Measurement</th><td>How will we know the workflow improved?</td><td>Whether the outcome can be observed instead of described only through opinion.</td></tr>
+          <tr><th scope="row">Expansion potential</th><td>If this works, what useful capability or evidence could be reused next?</td><td>Whether the first use case can teach something that supports broader adoption without pretending the pilot proves everything.</td></tr>
+        </tbody>
+      </table>
+      <p>For each option, capture three things: <strong>what is known, what is weak, and what needs proof next</strong>. That is usually enough to compare use cases consistently without inventing certainty.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
