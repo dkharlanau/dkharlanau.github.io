@@ -8,6 +8,10 @@ verified: true
 robots: index,follow
 sitemap: true
 last_modified_at: 2026-08-19
+last_reviewed: 2026-08-19
+search_intent: "AI fluency early technical judgment evals guardrails enterprise AI discovery"
+review_method: "authored practical framework with SAP workflow application"
+evidence_review_mode: "authored_heuristic"
 hide_global_cta: true
 tags:
   - business-ai
@@ -18,7 +22,6 @@ tags:
   - guardrails
 structured_data:
   type: TechArticle
-primary_topic: "ai-fluency"
 semantic_links:
   - type: "parent"
     title: "Business AI Lab"
