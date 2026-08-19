@@ -145,6 +145,8 @@ Reviewed source: [NIST AI RMF: Generative AI Profile](https://www.nist.gov/publi
 
 {% include labs/ai-ready/security-next-step-options.html %}
 
+{% include labs/ai-ready/security-value-story-executive-readout.html %}
+
 ## Minimum production controls
 
 - explicit tool allowlists;
