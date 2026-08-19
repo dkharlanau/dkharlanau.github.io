@@ -38,6 +38,9 @@ semantic_links:
   - type: "deep_dive"
     title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
     url: "/labs/business-ai/pilots/"
+  - type: "deep_dive"
+    title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
+    url: "/labs/business-ai/implementation-readiness/"
   - type: "related_topic"
     title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
     url: "/labs/enterprise-context/business-ai/"
@@ -479,7 +482,7 @@ semantic_links:
     <div class="research-route-list">
       <a href="/labs/business-ai/processes/"><span>01</span><strong>End-to-End Enterprise Processes</strong><small>{{ process_map.processes | size }} process chains with stages, AI jobs, patterns, technology families, and control points.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       <a href="/labs/business-ai/domains/"><span>02</span><strong>Enterprise Domains</strong><small>{{ domain_map.domains | size }} ownership views with business jobs, system touchpoints, technology families, architecture questions, and evidence gaps.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
-      <a href="/labs/business-ai/patterns/"><span>03</span><strong>Reusable AI Patterns</strong><small>Decision and workflow shapes that survive a vendor change: extraction, forecasting, recommendation, exception management, copilots, optimization, and more.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/patterns/"><span>03</span><strong>Reusable AI Patterns</strong><small>Decision and workflow shapes that survive a vendor change: extraction, forecasting, prediction, optimization, recommendation, generation, and adaptive orchestration.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/business-ai/technologies/"><span>04</span><strong>Enterprise AI Technology Landscape</strong><small>{{ tech.families | size }} capability families and {{ tech.platforms | size }} platform examples compared by architecture role.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
       <a href="/labs/business-ai/cases/"><span>05</span><strong>Implementation Cases</strong><small>Who changed which process, what technology was disclosed, what result was reported, and what remains uncertain.</small><i class="material-symbols-outlined" aria-hidden="true">cases</i></a>
       <a href="/labs/business-ai/scenarios/"><span>06</span><strong>Scenario Outcomes</strong><small>{{ scenario_library.scenarios | size }} strong, mixed, and failed scenarios compared by process, controls, results, failure mode, and reusable lesson.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
@@ -487,6 +490,7 @@ semantic_links:
       <a href="/labs/business-ai/matrix/"><span>08</span><strong>Assessment Decision Matrix</strong><small>{{ assessment_matrix.profiles | size }} process profiles linking AI job, autonomy, risk, KPI, system authority, controls, failure patterns, and evidence.</small><i class="material-symbols-outlined" aria-hidden="true">grid_view</i></a>
       <a href="/labs/business-ai/model/"><span>09</span><strong>Graph Model</strong><small>Nodes and edges for companies, processes, domains, patterns, technologies, outcomes, controls, metrics, evidence, limitations, and decision profiles.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/labs/business-ai/pilots/"><span>10</span><strong>Open Enterprise AI Pilots</strong><small>Vendor-neutral pilots for document-to-ERP automation, ERP agent access, safety benchmarks, readiness, and open evidence.</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
+      <a href="/labs/business-ai/implementation-readiness/"><span>11</span><strong>AI Implementation Readiness</strong><small>Evals, safeguards, observability, release, rollback, and a compact readiness snapshot for controlled production decisions.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/business-ai/data/processes.json"><span>PROC</span><strong>Process Data</strong><small>Machine-readable stages, AI jobs, patterns, technologies, controls, and owning domains.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/labs/business-ai/data/domains.json"><span>DOM</span><strong>Domain Data</strong><small>Machine-readable business jobs, enterprise systems, technology families, architecture questions, and case IDs.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/labs/business-ai/data/technologies.json"><span>TECH</span><strong>Technology Data</strong><small>Machine-readable capability families, platform roles, fit conditions, limits, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
