@@ -287,6 +287,83 @@ semantic_links:
       </table>
       <p>A credible value story is usually narrower than a sales pitch: one workflow problem, one plausible improvement, one observable outcome, one customer priority, and the evidence needed to test the connection.</p>
     </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Turn the story into a value hypothesis</h3>
+        <p>A value hypothesis is a claim the customer can test, not a promise. It connects a workflow change to one expected outcome and makes the assumption visible.</p>
+        <p><strong>Useful frame:</strong> If AI helps [user] improve [workflow step] by [specific change], then [indicator] may improve, supporting [business priority]. We will test this against [baseline or evidence] and validate [key assumption].</p>
+      </div>
+      <div>
+        <h3>Measure only what supports the claim</h3>
+        <p>More metrics do not make a value story stronger. Choose the smallest set that can confirm or challenge the hypothesis.</p>
+        <ul>
+          <li>Which business outcome are we trying to support?</li>
+          <li>Which indicator would show movement?</li>
+          <li>What baseline do we need?</li>
+          <li>Which assumption are we testing?</li>
+          <li>What evidence would justify further investment?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Match indicators to the outcome</h3>
+      <table>
+        <thead><tr><th scope="col">Outcome</th><th scope="col">Indicators worth considering</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Speed</th><td>Cycle time, turnaround time, wait time, and backlog age.</td></tr>
+          <tr><th scope="row">Productivity and capacity</th><td>Manual effort, cases handled, review hours, queue size, and throughput.</td></tr>
+          <tr><th scope="row">Cost</th><td>Cost per case, rework cost, external spend, overtime, or avoided future spend.</td></tr>
+          <tr><th scope="row">Quality</th><td>Error rate, rework rate, consistency, completeness, and quality review findings.</td></tr>
+          <tr><th scope="row">Risk</th><td>Escalation rate, policy exceptions, audit findings, control failures, and risk flags.</td></tr>
+          <tr><th scope="row">Customer experience</th><td>Response time, resolution rate, repeat contacts, complaints, and satisfaction signals.</td></tr>
+          <tr><th scope="row">Employee experience</th><td>Workload, repetitive-task time, handoffs, satisfaction, and capacity for higher-value work.</td></tr>
+        </tbody>
+      </table>
+      <p>The indicator should match the claim. A faster workflow is not automatically a cheaper workflow, and saved time is not automatically cash savings.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Directional benefit estimate</h3>
+        <p>Early in the opportunity, a range can be useful if the assumptions are visible. Start with baseline performance, work volume, expected improvement, adoption, and the part of the workflow actually affected.</p>
+        <p>Call it a directional estimate until the customer has validated both the operational change and how that change converts into business value.</p>
+      </div>
+      <div>
+        <h3>Before calling it ROI</h3>
+        <p>ROI needs the economics, not just the benefit side. Include solution, implementation, integration, enablement, change-management, operating, support, and governance costs.</p>
+        <p>Also make the time horizon, adoption rate, baseline, benefit conversion, risk adjustment, and confidence level explicit. A productivity gain may create capacity, service improvement, cost reduction, or none of those unless the operating model turns the time into value.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Same evidence, different stakeholder emphasis</h3>
+      <p>Tailoring changes the emphasis, not the facts. Use the same evidence base and lead with the part each stakeholder is accountable for.</p>
+      <table>
+        <thead><tr><th scope="col">Stakeholder</th><th scope="col">Lead with</th><th scope="col">Keep visible</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">CFO</th><td>Financial exposure, unit cost, capacity, investment assumptions, and confidence in the estimate.</td><td>Cost conversion assumptions, full investment, timing, adoption, and uncertainty.</td></tr>
+          <tr><th scope="row">COO</th><td>Throughput, cycle time, operating burden, exceptions, and service quality.</td><td>Process stability, handoffs, capacity, and operational controls.</td></tr>
+          <tr><th scope="row">CIO or CTO</th><td>Integration fit, scalability, data access, governance, security, and operational control.</td><td>System authority, dependencies, support model, and production constraints.</td></tr>
+          <tr><th scope="row">Workflow owner</th><td>Usability, quality, effort, adoption, exceptions, and handoffs.</td><td>Day-to-day workflow impact and whether users can trust and act on the output.</td></tr>
+          <tr><th scope="row">Executive sponsor</th><td>Strategic priority, urgency, business impact, risk of inaction, and expansion potential.</td><td>What is proven, what is still assumed, and why this deserves the next investment decision.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Keep the seller narrative clean</h3>
+      <table>
+        <thead><tr><th scope="col">Statement</th><th scope="col">Keep it focused on</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Value hypothesis</th><td>What outcome may improve, which priority it supports, and which assumption connects the two.</td></tr>
+          <tr><th scope="row">Solution direction</th><td>The likely workflow, AI, data, and integration approach, but only where discovery supports it.</td></tr>
+          <tr><th scope="row">Validation need</th><td>The evidence, baseline, stakeholder input, control, or technical question that must be resolved next.</td></tr>
+        </tbody>
+      </table>
+      <p>Keeping these statements separate makes the conversation easier to trust: the value hypothesis explains the possible benefit, the solution direction explains how it may be achieved, and the validation need explains what is still unknown.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
