@@ -38,6 +38,9 @@ primary_topic: "business-ai"
 ai_sidecar: "/ai/pages/labs--business-ai--platform-building-blocks.json"
 semantic_links:
   - type: "same_domain"
+    title: "Business AI Glossary — Plain Language for Discovery, Architecture, Governance and Delivery"
+    url: "/labs/business-ai/glossary/"
+  - type: "same_domain"
     title: "AI Architecture Patterns — From Reusable Shapes to First-Pass Blueprints"
     url: "/labs/business-ai/architecture-patterns/"
   - type: "same_domain"
@@ -52,9 +55,6 @@ semantic_links:
   - type: "same_domain"
     title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
     url: "/labs/business-ai/implementation-readiness/"
-  - type: "same_domain"
-    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
-    url: "/labs/business-ai/pilots/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

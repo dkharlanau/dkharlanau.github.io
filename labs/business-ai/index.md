@@ -33,6 +33,9 @@ semantic_links:
     title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
     url: "/labs/business-ai/erp-agent-gateway/"
   - type: "deep_dive"
+    title: "Business AI Glossary — Plain Language for Discovery, Architecture, Governance and Delivery"
+    url: "/labs/business-ai/glossary/"
+  - type: "deep_dive"
     title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
     url: "/labs/business-ai/implementation-readiness/"
   - type: "deep_dive"
@@ -41,9 +44,6 @@ semantic_links:
   - type: "deep_dive"
     title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
-  - type: "deep_dive"
-    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
-    url: "/labs/business-ai/pilots/"
 # ai-discovery-managed:end
 ---
 {% assign catalog = site.data.labs.business_ai.catalog %}

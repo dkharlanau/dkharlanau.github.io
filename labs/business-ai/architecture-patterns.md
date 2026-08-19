@@ -46,14 +46,14 @@ semantic_links:
     title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
   - type: "same_domain"
+    title: "Business AI Glossary — Plain Language for Discovery, Architecture, Governance and Delivery"
+    url: "/labs/business-ai/glossary/"
+  - type: "same_domain"
     title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
     url: "/labs/business-ai/document-to-erp-ai/"
   - type: "same_domain"
     title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
     url: "/labs/business-ai/erp-agent-gateway/"
-  - type: "same_domain"
-    title: "AI Governance and Data Boundaries — Ownership, Access, Action Risk and Validation"
-    url: "/labs/business-ai/governance-data-boundaries/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">
