@@ -34,19 +34,26 @@ career_skills:
   - delivery-lifecycle
 # ai-discovery-managed:start
 primary_topic: "business-ai"
+ai_sidecar: "/ai/pages/labs--business-ai--governance-data-boundaries.json"
 semantic_links:
   - type: "parent_context"
     title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
-  - type: "previous_step"
-    title: "AI Architecture Patterns — From Reusable Shapes to First-Pass Blueprints"
-    url: "/labs/business-ai/architecture-patterns/"
-  - type: "related_topic"
-    title: "AI Platform Building Blocks — Capability Roles, Minimum Set and Control Boundaries"
-    url: "/labs/business-ai/platform-building-blocks/"
-  - type: "next_step"
+  - type: "same_domain"
+    title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
+    url: "/labs/business-ai/document-to-erp-ai/"
+  - type: "same_domain"
     title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
     url: "/labs/business-ai/implementation-readiness/"
+  - type: "same_domain"
+    title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
+    url: "/labs/business-ai/open-research/"
+  - type: "same_domain"
+    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
+    url: "/labs/business-ai/pilots/"
+  - type: "same_domain"
+    title: "AI Architecture Patterns — From Reusable Shapes to First-Pass Blueprints"
+    url: "/labs/business-ai/architecture-patterns/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

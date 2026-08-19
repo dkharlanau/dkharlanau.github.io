@@ -47,8 +47,8 @@ semantic_links:
     title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
     url: "/labs/business-ai/erp-agent-gateway/"
   - type: "same_domain"
-    title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
-    url: "/labs/business-ai/implementation-readiness/"
+    title: "AI Governance and Data Boundaries — Ownership, Access, Action Risk and Validation"
+    url: "/labs/business-ai/governance-data-boundaries/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">
