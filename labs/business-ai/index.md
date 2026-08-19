@@ -222,6 +222,31 @@ semantic_links:
       </div>
     </div>
 
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Keep discovery useful</h3>
+        <p>A good discovery conversation feels like joint problem-solving, not a product pitch or a checklist interview.</p>
+        <ul>
+          <li><strong>Ask before prescribing.</strong> Understand the work before suggesting a solution.</li>
+          <li><strong>Stay close to the workflow.</strong> Follow tasks, decisions, handoffs, and outcomes rather than product labels.</li>
+          <li><strong>Check the evidence.</strong> Separate what the customer knows from what still needs validation.</li>
+          <li><strong>Build the picture together.</strong> Use questions to create shared clarity, not to test the customer.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Signs the opportunity is ready to move</h3>
+        <p>Readiness becomes visible through action. Look for a combination of:</p>
+        <ul>
+          <li>A named owner and a problem that can be explained clearly.</li>
+          <li>The right users and decision-makers joining the discussion.</li>
+          <li>Enough workflow detail to define a realistic validation scope.</li>
+          <li>Customer willingness to share approved examples, context, or process evidence.</li>
+          <li>A concrete validation activity or next meeting with the people needed to make progress.</li>
+        </ul>
+        <p>No single signal is enough. Together, they show whether the opportunity is becoming testable rather than simply interesting.</p>
+      </div>
+    </div>
+
     <div class="research-canvas__table-wrap">
       <h3>Watch for red flags</h3>
       <p>Red flags do not always mean the opportunity should stop. They show where discovery is too weak, too broad, or too risky to support the next decision.</p>
