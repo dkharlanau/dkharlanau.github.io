@@ -39,6 +39,9 @@ semantic_links:
     title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
   - type: "same_domain"
+    title: "AI Architecture Patterns — From Reusable Shapes to First-Pass Blueprints"
+    url: "/labs/business-ai/architecture-patterns/"
+  - type: "same_domain"
     title: "AI Platform Building Blocks — Capability Roles, Minimum Set and Control Boundaries"
     url: "/labs/business-ai/platform-building-blocks/"
   - type: "same_domain"
@@ -50,9 +53,6 @@ semantic_links:
   - type: "same_domain"
     title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
     url: "/labs/business-ai/implementation-readiness/"
-  - type: "same_domain"
-    title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
-    url: "/labs/business-ai/open-research/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

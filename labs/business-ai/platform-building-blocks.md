@@ -38,6 +38,9 @@ primary_topic: "business-ai"
 ai_sidecar: "/ai/pages/labs--business-ai--platform-building-blocks.json"
 semantic_links:
   - type: "same_domain"
+    title: "AI Architecture Patterns — From Reusable Shapes to First-Pass Blueprints"
+    url: "/labs/business-ai/architecture-patterns/"
+  - type: "same_domain"
     title: "AI Model Selection — Model Classes, Context, Latency, Cost and Evals"
     url: "/labs/business-ai/model-selection/"
   - type: "parent_context"
@@ -52,9 +55,6 @@ semantic_links:
   - type: "same_domain"
     title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
     url: "/labs/business-ai/pilots/"
-  - type: "same_domain"
-    title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
-    url: "/labs/business-ai/document-to-erp-ai/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">
