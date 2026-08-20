@@ -8,6 +8,7 @@ PUBLIC_PAGES = [
 ]
 
 UTILITY_PAGES = [
+    ROOT / "labs/interview-readiness/today/index.md",
     ROOT / "labs/interview-readiness/questions/index.md",
     ROOT / "labs/interview-readiness/stories/index.md",
     ROOT / "labs/interview-readiness/practice/index.md",
@@ -38,7 +39,7 @@ def test_interview_readiness_utility_pages_remain_working_noindex_surfaces():
 
 def test_interview_readiness_has_all_primary_routes():
     hub = (ROOT / "labs/interview-readiness/index.md").read_text(encoding="utf-8")
-    for route in ("roadmap", "questions", "stories", "practice", "progress"):
+    for route in ("today", "roadmap", "questions", "stories", "practice", "progress"):
         assert f'/labs/interview-readiness/{route}/' in hub
 
 
