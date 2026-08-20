@@ -1,0 +1,25 @@
+version: 2
+updated_at: 2026-08-20
+title: SAP Lead Retrieval Scheduler
+summary: A lapse-aware spacing contract that advances only after successful retrieval separated by real time.
+
+storage_compatibility: sapLeadMasteryHistoryV1
+min_delayed_gap_hours: 12
+intervals_days: [1, 3, 7, 14, 30]
+lapse_interval_days: 1
+retained_successes: 3
+retained_span_days: 7
+
+rules:
+  - id: first-pass
+    rule: A first successful retrieval schedules the next review after one day.
+  - id: delayed-stage
+    rule: A spacing stage advances only when a successful retrieval occurs at least 12 hours after the previous attempt on that skill.
+  - id: same-session
+    rule: Repeated success inside the minimum gap can repair fluency but does not advance the spacing stage.
+  - id: lapse
+    rule: A failed or major-mismatch retrieval resets the spacing stage; prior defence evidence remains visible but retained status must be rebuilt.
+  - id: retention
+    rule: Retained requires successful defence or review retrievals across at least seven days after the most recent lapse.
+  - id: precision-boundary
+    rule: Intervals are operational defaults, not a biological estimate of an individual's forgetting curve.
