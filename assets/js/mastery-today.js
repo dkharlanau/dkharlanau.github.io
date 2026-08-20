@@ -12,19 +12,33 @@
     return;
   }
 
+  let SCHEDULER = {};
+  const schedulerNode = document.getElementById('scheduler-data');
+  if (schedulerNode) {
+    try {
+      SCHEDULER = JSON.parse(schedulerNode.textContent) || {};
+    } catch (error) {
+      console.error('Scheduler data could not be parsed.', error);
+    }
+  }
+
   const contract = DATA.contract || {};
   const cards = Array.isArray(DATA.cards) ? DATA.cards : [];
   const STORAGE_KEY = contract.storage_key || 'sapLeadMasteryHistoryV1';
   const PASS_SCORE = Number(contract.pass_score ?? 2);
   const SESSION_SIZE = Number(contract.session_size ?? 5);
-  const REVIEW_INTERVALS = Array.isArray(contract.review_intervals_days) ? contract.review_intervals_days.map(Number) : [1, 3, 7, 14, 30];
-  const RETAINED_SUCCESSES = Number(contract.retained_successes ?? 3);
-  const RETAINED_SPAN_DAYS = Number(contract.retained_span_days ?? 7);
+  const REVIEW_INTERVALS = Array.isArray(SCHEDULER.intervals_days)
+    ? SCHEDULER.intervals_days.map(Number)
+    : (Array.isArray(contract.review_intervals_days) ? contract.review_intervals_days.map(Number) : [1, 3, 7, 14, 30]);
+  const RETAINED_SUCCESSES = Number(SCHEDULER.retained_successes ?? contract.retained_successes ?? 3);
+  const RETAINED_SPAN_DAYS = Number(SCHEDULER.retained_span_days ?? contract.retained_span_days ?? 7);
+  const MIN_DELAYED_GAP_HOURS = Number(SCHEDULER.min_delayed_gap_hours ?? 12);
   const MODES = new Set(['recall', 'connect', 'apply', 'defend', 'review']);
   const TRACK_LABELS = {sales:'Sales', logistics:'Procurement & Logistics', integration:'Integration & Architecture', ai:'AI & Data'};
   const MODE_LABELS = {recall:'Recall', connect:'Connect', apply:'Apply', defend:'Defend', review:'Retain'};
   const STATE_LABELS = Object.fromEntries((contract.states || []).map(item => [item.id, item.label]));
   const DAY = 86400000;
+  const HOUR = 3600000;
   const $ = id => document.getElementById(id);
   let currentSkillId = null;
   let committedConfidence = null;
@@ -64,11 +78,52 @@
     return Boolean(row && row.score >= PASS_SCORE && Number(row.mismatch || 0) < 2);
   }
 
+  function lastLapseIndex(attempts) {
+    for (let i = attempts.length - 1; i >= 0; i -= 1) {
+      if (!attemptPassed(attempts[i])) return i;
+    }
+    return -1;
+  }
+
+  function attemptsAfterLastLapse(attempts) {
+    return attempts.slice(lastLapseIndex(attempts) + 1);
+  }
+
+  function delayedGapHours(previous, current) {
+    if (!previous || !current) return 0;
+    return (Date.parse(current.reviewed_at) - Date.parse(previous.reviewed_at)) / HOUR;
+  }
+
+  function delayedSuccessCount(card, rows = history()) {
+    const active = attemptsAfterLastLapse(rowsFor(card.skill_id, rows));
+    let count = 0;
+    for (let i = 1; i < active.length; i += 1) {
+      const previous = active[i - 1];
+      const current = active[i];
+      if (attemptPassed(previous) && attemptPassed(current) && delayedGapHours(previous, current) >= MIN_DELAYED_GAP_HOURS) count += 1;
+    }
+    return count;
+  }
+
+  function spacingStage(card, rows = history()) {
+    return Math.min(delayedSuccessCount(card, rows), Math.max(REVIEW_INTERVALS.length - 1, 0));
+  }
+
+  function nextIntervalDays(card, rows = history()) {
+    const stage = spacingStage(card, rows);
+    return Number(REVIEW_INTERVALS[stage] || REVIEW_INTERVALS[0] || 1);
+  }
+
   function crossedCalendarDay(row) {
     if (!row?.reviewed_at) return false;
     const then = new Date(row.reviewed_at);
     const now = new Date();
     return then.getFullYear() !== now.getFullYear() || then.getMonth() !== now.getMonth() || then.getDate() !== now.getDate();
+  }
+
+  function lastAttempt(card, rows = history()) {
+    const attempts = rowsFor(card.skill_id, rows);
+    return attempts.length ? attempts[attempts.length - 1] : null;
   }
 
   function repairDeferred(card, rows = history()) {
@@ -87,8 +142,10 @@
     const attempts = rowsFor(card.skill_id, rows);
     if (!attempts.length) return 'new';
     const passed = new Set(attempts.filter(attemptPassed).map(row => row.mode));
-    const advanced = attempts.filter(row => attemptPassed(row) && (row.mode === 'defend' || row.mode === 'review'));
-    if (passed.has('defend') && advanced.length >= RETAINED_SUCCESSES && spanDays(advanced) >= RETAINED_SPAN_DAYS) return 'retained';
+    const active = attemptsAfterLastLapse(attempts);
+    const advanced = active.filter(row => attemptPassed(row) && (row.mode === 'defend' || row.mode === 'review'));
+    const last = attempts[attempts.length - 1];
+    if (attemptPassed(last) && passed.has('defend') && advanced.length >= RETAINED_SUCCESSES && spanDays(advanced) >= RETAINED_SPAN_DAYS) return 'retained';
     if (passed.has('defend')) return 'defended';
     if (passed.has('apply')) return 'applied';
     if (passed.has('connect')) return 'connected';
@@ -96,23 +153,12 @@
     return 'new';
   }
 
-  function lastAttempt(card, rows = history()) {
-    const attempts = rowsFor(card.skill_id, rows);
-    return attempts.length ? attempts[attempts.length - 1] : null;
-  }
-
   function dueAt(card, rows = history()) {
     const attempts = rowsFor(card.skill_id, rows);
     if (!attempts.length) return null;
     const last = attempts[attempts.length - 1];
     if (!attemptPassed(last)) return new Date(0);
-    let streak = 0;
-    for (let i = attempts.length - 1; i >= 0; i -= 1) {
-      if (!attemptPassed(attempts[i])) break;
-      streak += 1;
-    }
-    const interval = REVIEW_INTERVALS[Math.min(Math.max(streak - 1, 0), REVIEW_INTERVALS.length - 1)] || 1;
-    return new Date(Date.parse(last.reviewed_at) + interval * DAY);
+    return new Date(Date.parse(last.reviewed_at) + nextIntervalDays(card, rows) * DAY);
   }
 
   function isDue(card, rows = history(), now = Date.now()) {
@@ -206,6 +252,11 @@
     return `due in ${delta} days`;
   }
 
+  function spacingLabel(card, rows = history()) {
+    if (!lastAttempt(card, rows)) return '—';
+    return `S${spacingStage(card, rows)} · ${nextIntervalDays(card, rows)}d`;
+  }
+
   function calibrationGap(row) {
     if (!row || !Number.isInteger(row.confidence)) return null;
     const performance = (row.score / 3) * 100;
@@ -242,10 +293,12 @@
     const states = cards.map(card => stateFor(card, rows));
     const gap = averageCalibrationGap(rows);
     const repairs = cards.filter(card => repairDeferred(card, rows) || repairReady(card, rows)).length;
+    const delayedSkills = cards.filter(card => spacingStage(card, rows) > 0).length;
     metrics.replaceChildren(
       createMetric(rows.length, 'Scored retrievals'),
       createMetric(cards.filter(card => isDue(card, rows)).length, 'Due reviews'),
       createMetric(repairs, 'Repair items'),
+      createMetric(delayedSkills, 'Delayed-stage skills'),
       createMetric(states.filter(state => state === 'retained').length, 'Retained skills'),
       createMetric(gap == null ? '—' : `${gap} pp`, 'Calibration gap'),
       createMetric(states.filter(state => state !== 'new').length, `Covered of ${cards.length}`)
@@ -338,7 +391,7 @@
     const state = stateFor(card, rows);
     panel.hidden = false;
     $('mt-title').textContent = card.title;
-    $('mt-meta').textContent = `${TRACK_LABELS[card.track] || card.track} · ${MODE_LABELS[mode]} · ${formatDue(card, rows)}`;
+    $('mt-meta').textContent = `${TRACK_LABELS[card.track] || card.track} · ${MODE_LABELS[mode]} · ${formatDue(card, rows)} · ${spacingLabel(card, rows)}`;
     $('mt-track').textContent = TRACK_LABELS[card.track] || card.track;
     $('mt-mode').textContent = MODE_LABELS[mode];
     $('mt-state').textContent = STATE_LABELS[state] || state;
@@ -417,7 +470,7 @@
     table.className = 'mastery-table';
     const thead = document.createElement('thead');
     const headRow = document.createElement('tr');
-    ['Skill', 'State', 'Last score', 'Confidence', 'Calibration', 'Review'].forEach(label => {
+    ['Skill', 'State', 'Spacing', 'Last score', 'Confidence', 'Calibration', 'Review'].forEach(label => {
       const th = document.createElement('th');
       th.textContent = label;
       headRow.appendChild(th);
@@ -430,6 +483,7 @@
       [
         card.title,
         STATE_LABELS[stateFor(card, rows)] || stateFor(card, rows),
+        spacingLabel(card, rows),
         last ? `${last.score} / 3` : '—',
         last && Number.isInteger(last.confidence) ? `${last.confidence}%` : '—',
         calibrationLabel(last),
@@ -478,7 +532,8 @@
   $('mt-export')?.addEventListener('click', () => {
     const payload = {
       schema: 'dkharlanau.sap-lead-mastery-history',
-      version: 2,
+      version: 3,
+      scheduler_version: Number(SCHEDULER.version || 2),
       exported_at: new Date().toISOString(),
       attempts: history()
     };
