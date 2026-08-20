@@ -86,10 +86,9 @@ def test_mastery_engine_prioritises_retrieval_and_due_review():
     assert "REVIEW_INTERVALS" in script
     assert "retained" in script
     assert "Cold review" in script
-    assert "answer" not in ""  # keeps this test intentionally focused on engine contracts
 
 
-def test_mastery_assets_exist_and_page_does_not_store_answer_text():
+def test_mastery_assets_exist_and_answer_text_is_not_persisted():
     script = SCRIPT.read_text(encoding="utf-8")
     style = STYLE.read_text(encoding="utf-8")
     assert "mt-answer" in script
