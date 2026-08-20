@@ -1,0 +1,252 @@
+version: 1
+updated_at: 2026-08-20
+title: SAP Lead Contrast Engine
+summary: Objective discrimination practice for boundaries that are easy to confuse but lead to different diagnostic or design decisions.
+
+contract:
+  storage_key: sapLeadContrastHistoryV1
+  session_size: 8
+  confidence_default: 50
+  confidence_step: 5
+  pair_repeat_gap: 2
+
+pairs:
+  - id: stock-vs-availability
+    title: Stock vs ATP availability
+    left:
+      skill_id: logistics-inventory
+      label: Inventory state
+      source: /labs/enterprise-context/inventory-management/
+    right:
+      skill_id: sales-atp
+      label: ATP promise
+      source: /labs/enterprise-context/atp/
+    discriminator: Inventory answers what stock state exists. ATP answers what quantity can be promised under checking scope, dates, receipts and requirements.
+    failure_if_confused: Treating visible stock as automatically available can hide stock category, date, checking-scope or competing-requirement constraints.
+    items:
+      - id: stock-atp-01
+        prompt: Warehouse users can see 80 units in stock, but a new sales order confirms zero. Which model should lead the first diagnostic step?
+        answer: right
+        explanation: The symptom is a customer confirmation problem. First separate physical stock from the ATP scope, dates, receipts and requirements.
+      - id: stock-atp-02
+        prompt: After a posting, ERP quantity is 40 units higher than the warehouse physical count. Which model owns the first reconciliation question?
+        answer: left
+        explanation: The mismatch is between book stock and physical stock. Reconcile movements and inventory state before discussing customer promise.
+      - id: stock-atp-03
+        prompt: A sales manager wants blocked stock included so more orders confirm. Which model contains the business rule being challenged?
+        answer: right
+        explanation: The request changes what supply can support a promise. ATP scope and business policy are the decision boundary.
+      - id: stock-atp-04
+        prompt: A goods movement used the wrong stock type and downstream processes now see the quantity differently. Which model should be corrected first?
+        answer: left
+        explanation: The incorrect state transition is an inventory movement issue. ATP may show the consequence, but it is not the first boundary.
+
+  - id: master-data-vs-transaction
+    title: Master data vs inventory transaction
+    left:
+      skill_id: logistics-master-data
+      label: Master data control
+      source: /labs/enterprise-context/master-data/
+    right:
+      skill_id: logistics-inventory
+      label: Inventory movement
+      source: /labs/enterprise-context/inventory-management/
+    discriminator: Master data defines durable process control. Inventory documents represent business events that change stock state.
+    failure_if_confused: Correcting transaction data repeatedly can hide a durable master-data defect; changing master data can also be unsafe when the problem is one bad posting.
+    items:
+      - id: md-tx-01
+        prompt: Every movement for one material group posts with an unexpected control behaviour, while other groups are correct. Where should the first hypothesis point?
+        answer: left
+        explanation: Repeated behaviour by material group is a strong signal to inspect governed material settings before treating each movement as an isolated event.
+      - id: md-tx-02
+        prompt: One goods receipt was posted to the wrong stock type during an outage recovery. Which model should lead correction?
+        answer: right
+        explanation: This is a specific stock-state transition. Prove the document and movement evidence before changing durable master data.
+      - id: md-tx-03
+        prompt: A material works in one plant but is blocked in another because an organisational view is missing. Which model owns the root control?
+        answer: left
+        explanation: The failure follows organisational master-data completeness rather than a single movement event.
+      - id: md-tx-04
+        prompt: Physical quantity and ERP quantity diverged after duplicate movement messages. Which model leads the operational reconciliation?
+        answer: right
+        explanation: Reconcile material documents and stock transitions first. Master data may be relevant later, but the observed divergence is transactional.
+
+  - id: o2c-vs-billing
+    title: O2C fulfilment vs billing eligibility
+    left:
+      skill_id: sales-o2c
+      label: End-to-end O2C state
+      source: /labs/enterprise-context/sales-processes/
+    right:
+      skill_id: sales-billing
+      label: Billing eligibility
+      source: /labs/enterprise-context/billing/
+    discriminator: O2C traces the full customer process. Billing isolates the controls that make an executed commercial obligation invoiceable and postable.
+    failure_if_confused: A completed logistics step does not prove that billing relevance, blocks, copy rules or accounting prerequisites are satisfied.
+    items:
+      - id: o2c-bill-01
+        prompt: Goods issue is complete but no invoice was created. Which model should lead after fulfilment is already proven?
+        answer: right
+        explanation: Once logistics completion is established, the next boundary is billing eligibility, due-list state, blocks, copy control and accounting prerequisites.
+      - id: o2c-bill-02
+        prompt: An order never reached delivery creation because confirmation and shipping readiness were missing. Which model should lead?
+        answer: left
+        explanation: The failure is earlier in the end-to-end O2C sequence. Billing is downstream and cannot explain a missing delivery.
+      - id: o2c-bill-03
+        prompt: The business wants to automate removal of recurring invoice blocks. Which model contains the direct commercial control decision?
+        answer: right
+        explanation: Billing blocks are explicit invoice controls. Their owner and purpose must be understood before automation.
+      - id: o2c-bill-04
+        prompt: A customer complaint spans order promise, delivery delay and invoice timing. Which model should frame the executive diagnosis first?
+        answer: left
+        explanation: Start with the end-to-end O2C state and ownership chain, then drill into the specific billing boundary if evidence points there.
+
+  - id: pattern-vs-recovery
+    title: Integration pattern vs recovery
+    left:
+      skill_id: integration-patterns
+      label: Pattern selection
+      source: /labs/enterprise-context/integrations/
+    right:
+      skill_id: integration-recovery
+      label: Recovery control
+      source: /labs/enterprise-context/integration-operations/
+    discriminator: Pattern selection decides how systems should exchange state. Recovery decides what to do when the outcome is failed, uncertain, duplicated or out of order.
+    failure_if_confused: Choosing a better transport does not resolve an unknown business outcome; retry policy cannot compensate for a pattern that violates latency or coupling needs.
+    items:
+      - id: pattern-recovery-01
+        prompt: The target can be unavailable for four hours, but the proposed design requires the caller to wait synchronously. Which model should lead the design challenge?
+        answer: left
+        explanation: This is primarily a latency, coupling and resilience requirement that should change the integration pattern.
+      - id: pattern-recovery-02
+        prompt: A create request timed out and nobody knows whether the target committed it. Which model should lead the next action?
+        answer: right
+        explanation: The problem is an unknown outcome. Idempotency, correlation and reconciliation are safer than blind retry.
+      - id: pattern-recovery-03
+        prompt: An architecture board wants every interface implemented as an API. Which model should frame the objection?
+        answer: left
+        explanation: Technology choice must follow business latency, coupling, ordering, volume, recovery and ownership needs.
+      - id: pattern-recovery-04
+        prompt: Automatic retries produced duplicate business documents after intermittent timeouts. Which model contains the missing control?
+        answer: right
+        explanation: Duplicate creation under uncertain outcomes is a recovery and idempotency failure.
+
+  - id: pattern-vs-clean-core
+    title: Integration pattern vs clean-core boundary
+    left:
+      skill_id: integration-patterns
+      label: Exchange pattern
+      source: /labs/enterprise-context/integrations/
+    right:
+      skill_id: integration-cleancore
+      label: Extension boundary
+      source: /labs/assessment/core-boundaries/
+    discriminator: Integration pattern chooses how systems communicate. Clean-core reasoning chooses where change and custom responsibility should live across lifecycle and operating boundaries.
+    failure_if_confused: Moving logic outside SAP does not automatically select the right interface, and selecting an API does not prove the extension belongs outside the core.
+    items:
+      - id: pattern-core-01
+        prompt: A validation rule changes every month and is deeply embedded in ERP custom code. Which model should lead the architectural decision?
+        answer: right
+        explanation: The first question is where rapidly changing custom responsibility should live and how that affects lifecycle, coupling and operations.
+      - id: pattern-core-02
+        prompt: Two already-approved components need low-latency request and response with a clear contract. Which model chooses the communication mechanism?
+        answer: left
+        explanation: The component boundary is already decided. Now latency, coupling and failure behaviour drive the exchange pattern.
+      - id: pattern-core-03
+        prompt: A stakeholder says all custom logic must move outside SAP because that is clean core. Which model should challenge the claim?
+        answer: right
+        explanation: Clean core is a lifecycle and boundary decision, not a rule that all custom logic must be physically external.
+      - id: pattern-core-04
+        prompt: A side-by-side service must consume business events with ordering and replay requirements. Which model should specify the transport behaviour?
+        answer: left
+        explanation: Once the side-by-side boundary is accepted, event contract, ordering, replay and delivery semantics belong to integration pattern design.
+
+  - id: ai-readiness-vs-retrieval
+    title: AI use-case readiness vs retrieval architecture
+    left:
+      skill_id: ai-readiness
+      label: Use-case readiness
+      source: /labs/ai-ready/
+    right:
+      skill_id: ai-retrieval
+      label: Retrieval architecture
+      source: /labs/ai-ready/
+    discriminator: Readiness decides whether AI is justified and controllable. Retrieval decides how permitted, current enterprise knowledge reaches the model.
+    failure_if_confused: Better retrieval cannot rescue a use case with no measurable job or owner; rejecting a valuable use case because retrieval is imperfect can hide an engineering problem.
+    items:
+      - id: ai-ready-ret-01
+        prompt: A sponsor wants an autonomous agent but cannot define a measurable outcome or production owner. Which model should stop the project first?
+        answer: left
+        explanation: The use case is not qualified. Model or retrieval design is premature until job, value, control and ownership are explicit.
+      - id: ai-ready-ret-02
+        prompt: A qualified support assistant gives stale answers after documentation changed yesterday. Which model should lead diagnosis?
+        answer: right
+        explanation: The business case exists. Inspect source freshness, ingestion, indexing, retrieval and context assembly.
+      - id: ai-ready-ret-03
+        prompt: The proposed feature is technically feasible but requires access to data the user is not permitted to see. Which model owns the first go/no-go question?
+        answer: left
+        explanation: Permission and control are readiness constraints before architecture optimisation.
+      - id: ai-ready-ret-04
+        prompt: Correct documents exist and permissions are valid, but the wrong chunks are repeatedly selected. Which model should lead?
+        answer: right
+        explanation: This is a retrieval-layer problem involving chunking, indexing, ranking or filters.
+
+  - id: retrieval-vs-evaluation
+    title: AI retrieval failure vs evaluation failure
+    left:
+      skill_id: ai-retrieval
+      label: Retrieval diagnosis
+      source: /labs/ai-ready/
+    right:
+      skill_id: ai-evaluation
+      label: Evaluation and release evidence
+      source: /labs/ai-ready/
+    discriminator: Retrieval diagnosis finds why context was wrong or missing. Evaluation defines whether observed behaviour is acceptable across representative risks and cases.
+    failure_if_confused: Changing retrieval because one aggregate metric is poor can target the wrong layer; a perfect retrieval trace does not prove the product is safe to release.
+    items:
+      - id: ret-eval-01
+        prompt: The expected policy document was never present in the context sent to the model. Which model should lead failure analysis?
+        answer: left
+        explanation: The evidence already localises the problem before generation. Inspect retrieval and permission layers.
+      - id: ret-eval-02
+        prompt: An assistant scores 92 percent overall but fails a small high-risk class of production-support questions. Which model decides whether it can ship?
+        answer: right
+        explanation: Release needs risk-weighted evaluation by task and failure class, not one average score.
+      - id: ret-eval-03
+        prompt: A ranking change improved top-k retrieval but nobody knows whether end-user decisions improved. Which model is missing?
+        answer: right
+        explanation: Retrieval metrics are component evidence. Product release still needs representative task and outcome evaluation.
+      - id: ret-eval-04
+        prompt: Answer quality dropped only for one permission group because relevant sources are filtered out. Which model should lead diagnosis?
+        answer: left
+        explanation: The failure is in retrieval permissions or filtering. Evaluation can detect the slice, but retrieval explains the mechanism.
+
+  - id: p2p-vs-inventory
+    title: P2P process control vs inventory movement
+    left:
+      skill_id: logistics-p2p
+      label: P2P control
+      source: /labs/enterprise-context/procurement/
+    right:
+      skill_id: logistics-inventory
+      label: Inventory movement
+      source: /labs/enterprise-context/inventory-management/
+    discriminator: P2P owns demand-to-supplier-to-invoice process state. Inventory owns the stock-state transition created by receipt and movement events.
+    failure_if_confused: A correct goods movement does not prove supplier or invoice process completion; a missing acknowledgement should not be diagnosed as stock movement.
+    items:
+      - id: p2p-inv-01
+        prompt: The supplier says the purchase order was accepted, but SAP has no acknowledgement. Which model should lead?
+        answer: left
+        explanation: The missing state is in purchasing and supplier response before inventory receipt exists.
+      - id: p2p-inv-02
+        prompt: Goods receipt posted, but quantity went into the wrong stock category. Which model owns the direct state error?
+        answer: right
+        explanation: The purchasing event occurred, but the inventory transition is wrong. Inspect movement and stock-type logic.
+      - id: p2p-inv-03
+        prompt: Invoice matching is blocked although receipt quantity is correct. Which model should frame the end-to-end diagnosis?
+        answer: left
+        explanation: The issue is downstream in P2P invoice control, not the inventory quantity itself.
+      - id: p2p-inv-04
+        prompt: After duplicate inbound messages, ERP book stock is higher than physical stock. Which model leads reconciliation?
+        answer: right
+        explanation: Reconcile movement documents and stock state first, then trace the upstream integration cause.
