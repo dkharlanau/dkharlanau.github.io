@@ -45,8 +45,8 @@ jobs:
       - name: Check source heading hierarchy
         run: python3 scripts/normalize_heading_hierarchy.py --check
 
-      - name: Materialize Career Factory inventory for validation
-        run: python3 scripts/generate_career_factory.py
+      - name: Materialize deterministic repository state for validation
+        run: python3 scripts/sync_repository_state.py
 
       - name: Run Python tests
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
