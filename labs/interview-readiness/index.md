@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 sitemap: true
-last_modified_at: 2026-08-18
+last_modified_at: 2026-08-20
 last_reviewed: 2026-08-18
 publication_wave: "career-search-wave-01"
 review_method: "editorial review + route validation + Career Factory coverage"
@@ -25,6 +25,9 @@ semantic_links:
   - type: "deep_dive"
     title: "SAP Lead Career Roadmap — Skills, Labs, Evidence, Practice"
     url: "/labs/interview-readiness/roadmap/"
+  - type: "deep_dive"
+    title: "SAP Lead Mastery Today — Recall, Apply, Retain"
+    url: "/labs/interview-readiness/today/"
   - type: "related_topic"
     title: "Sales Order Decision Map — Enterprise Context Lab"
     url: "/labs/enterprise-context/sales-order/"
@@ -52,8 +55,9 @@ semantic_links:
       <p class="research-canvas__eyebrow">Interview Readiness / SAP Lead</p>
       <h1>Know it.<br />Explain it. Defend it.</h1>
       <p>Interview readiness is not a reading list. It is a working map of what you can explain, connect, defend, and prove when another senior person starts asking follow-up questions.</p>
-      <a class="research-canvas__button" href="#today">Start today's session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="/labs/interview-readiness/today/">Start today's mastery session <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
       <nav class="ir-nav" aria-label="Interview Readiness sections">
+        <a href="/labs/interview-readiness/today/">Mastery Today</a>
         <a href="#intelligence">Professional Intelligence</a>
         <a href="/labs/interview-readiness/roadmap/">Career Roadmap</a>
         <a href="/labs/interview-readiness/questions/">Questions</a>
@@ -75,6 +79,7 @@ semantic_links:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">route</span>
     <p><strong>Labs hold the source material.</strong> The <a href="/labs/interview-readiness/roadmap/">Career Roadmap</a> translates it into skills, interview signals, and evidence routes across six Lead tracks.</p>
+    <p><strong>Mastery adds retrieval.</strong> Use <a href="/labs/interview-readiness/today/">Mastery Today</a> to rebuild useful models before opening the source, then return to them through spaced review.</p>
     <p><strong>Assessment adds pressure.</strong> When a skill looks solid, use the <a href="/labs/assessment/">SAP Lead Assessment</a> to test diagnosis, design, challenge, and evidence.</p>
   </section>
 
@@ -87,9 +92,9 @@ semantic_links:
   </section>
 
   <section class="research-canvas__inventory" id="today" data-reveal>
-    <header><p class="research-canvas__eyebrow">Today</p><h2>Work on the weakest useful topics, not the longest chapter.</h2><p>The daily set starts with low-readiness practice topics and spreads work across several domains. Use the Career Roadmap for the complete skills picture.</p></header>
+    <header><p class="research-canvas__eyebrow">Today</p><h2>Work on the weakest useful topics, not the longest chapter.</h2><p>The lightweight plan below ranks low-readiness topics. The mastery session adds cold recall, Five-Link reconstruction, delayed review, and retention evidence.</p></header>
     <div class="ir-daily" id="ir-daily-plan"></div>
-    <div class="ir-toolbar"><a class="ir-button ir-button--primary" href="/labs/interview-readiness/roadmap/">Open career roadmap</a><a class="ir-button" href="/labs/interview-readiness/practice/">Run interview mode</a><a class="ir-button" href="#intelligence">Review weak points</a></div>
+    <div class="ir-toolbar"><a class="ir-button ir-button--primary" href="/labs/interview-readiness/today/">Open mastery session</a><a class="ir-button" href="/labs/interview-readiness/roadmap/">Open career roadmap</a><a class="ir-button" href="/labs/interview-readiness/practice/">Run interview mode</a><a class="ir-button" href="#intelligence">Review weak points</a></div>
   </section>
 
   <section class="research-canvas__inventory" id="intelligence" data-reveal>

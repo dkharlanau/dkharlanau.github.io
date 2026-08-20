@@ -1,0 +1,201 @@
+version: 1
+updated_at: 2026-08-20
+title: SAP Lead Mastery Loop
+summary: A retrieval-first learning contract that turns career skills into recall, connection, application, defence, and delayed retention evidence.
+
+contract:
+  storage_key: sapLeadMasteryHistoryV1
+  session_size: 5
+  pass_score: 2
+  retained_successes: 3
+  retained_span_days: 7
+  review_intervals_days: [1, 3, 7, 14, 30]
+  states:
+    - id: new
+      label: New
+      evidence: No scored retrieval attempt yet.
+    - id: recalled
+      label: Recalled
+      evidence: The Five-Link model was rebuilt from memory with a passing score.
+    - id: connected
+      label: Connected
+      evidence: The skill was connected to neighbouring process, data, or ownership boundaries.
+    - id: applied
+      label: Applied
+      evidence: The skill was used in a new scenario with a passing score.
+    - id: defended
+      label: Defended
+      evidence: A Lead-level decision or trade-off was explained under challenge.
+    - id: retained
+      label: Retained
+      evidence: Successful retrieval was repeated across time after the skill had reached defence level.
+  scores:
+    - id: 0
+      label: Forgot
+      meaning: I could not rebuild the useful model without the reference.
+    - id: 1
+      label: Partial
+      meaning: I remembered parts, but important links or decisions were missing.
+    - id: 2
+      label: Solid
+      meaning: I produced a usable consultant answer before opening the reference.
+    - id: 3
+      label: Lead-level
+      meaning: I explained the model, boundary, evidence, and decision clearly under pressure.
+
+cards:
+  - skill_id: sales-o2c
+    track: sales
+    title: Order-to-Cash control
+    source: /labs/enterprise-context/sales-processes/
+    trigger: Customer demand must become a controlled promise, fulfilment, invoice, and accounting impact.
+    flow: Demand -> Sales order -> pricing and ATP -> delivery -> goods issue -> billing -> finance hand-off.
+    objects_rules: Sales documents, partners, item and schedule-line logic, commercial conditions, statuses, and document flow.
+    failure_boundary: Find the first expected business state that did not happen. Separate commercial rules, availability, logistics execution, billing controls, and finance hand-off.
+    lead_decision: Start from business impact and ownership, trace evidence through the document flow, then change configuration or process only at the proven boundary.
+    connect_prompt: Where does ownership move from Sales to Logistics and then to Finance in the O2C flow?
+    apply_prompt: Goods issue is complete, but no invoice was created. What evidence sequence do you use before proposing a fix?
+    defend_prompt: The business wants a background job to clear recurring order or billing blocks. What do you challenge before accepting it?
+
+  - skill_id: sales-atp
+    track: sales
+    title: ATP and business promise
+    source: /labs/enterprise-context/atp/
+    trigger: The business needs a reliable promise for what quantity can be confirmed and when.
+    flow: Requirement -> checking scope -> stock, receipts, and requirements -> confirmation -> delivery readiness.
+    objects_rules: Checking group and rule, scope of check, stock categories, receipts, requirements, dates, and confirmation logic.
+    failure_boundary: Physical stock can exist while the relevant stock category, date, or supply is excluded from the availability check.
+    lead_decision: Explain stock versus availability first. Change the ATP rule only when the business policy is wrong, not because users expected a different number.
+    connect_prompt: How do inventory state, planned supply, sales requirements, and delivery dates combine into one customer promise?
+    apply_prompt: Warehouse users can see stock, but the sales order confirms zero. What do you separate before blaming ATP configuration?
+    defend_prompt: A sales manager asks to include every stock category in ATP. Which risks and business rules do you put on the table?
+
+  - skill_id: sales-billing
+    track: sales
+    title: Billing and accounting hand-off
+    source: /labs/enterprise-context/billing/
+    trigger: A fulfilled commercial obligation must become an invoice and the correct accounting consequence.
+    flow: Sales and delivery state -> billing relevance and due list -> billing document -> accounting hand-off.
+    objects_rules: Billing relevance, billing blocks, copy control, document status, pricing result, partner and accounting dependencies.
+    failure_boundary: A completed logistics step does not prove billing eligibility. Check due-list state, blocks, document flow, and accounting prerequisites.
+    lead_decision: Restore billing only after confirming who owns the commercial control and whether the block or rule behaved as designed.
+    connect_prompt: Which O2C states must be true before billing, and where does Finance become the next owner?
+    apply_prompt: A delivery is complete and visible in the billing due list but is excluded from invoicing. How do you diagnose it?
+    defend_prompt: Would you automate removal of a recurring billing block? What evidence would you require first?
+
+  - skill_id: logistics-p2p
+    track: logistics
+    title: Procure-to-Pay control
+    source: /labs/enterprise-context/procurement/
+    trigger: External demand must become an owned sourcing, purchasing, receipt, invoice, and payment process.
+    flow: Demand -> source and supplier -> purchase order -> confirmation -> goods receipt -> invoice -> finance hand-off.
+    objects_rules: Purchase requisition and order, source data, material and supplier master, confirmations, movement logic, invoice tolerances, and statuses.
+    failure_boundary: Find the first missing or inconsistent business state across demand, purchasing, supplier response, receipt, invoice, or finance.
+    lead_decision: Keep process ownership visible and prove the boundary before changing purchasing data, message handling, or financial controls.
+    connect_prompt: Where do Materials Management, supplier integration, inventory, and Finance exchange ownership in P2P?
+    apply_prompt: The supplier says the order was accepted, but SAP shows no acknowledgement. What must be proven before chasing connectivity?
+    defend_prompt: A programme wants one purchasing process with no local exceptions. What would you validate before supporting that decision?
+
+  - skill_id: logistics-inventory
+    track: logistics
+    title: Inventory and movement logic
+    source: /labs/enterprise-context/inventory-management/
+    trigger: A business event changes the quantity, status, location, or value of stock and must be represented consistently.
+    flow: Movement event -> material document -> stock category and quantity -> valuation or status effect -> downstream availability.
+    objects_rules: Movement type, plant and storage location, stock type, batch or special stock, reservation, material document, and posting rules.
+    failure_boundary: Separate physical stock, book stock, usable stock, warehouse execution state, and downstream availability before correcting quantities.
+    lead_decision: Reconcile the missing state transition first. Avoid manual stock correction until the document and integration evidence are understood.
+    connect_prompt: How does an inventory movement affect warehouse execution, ATP, planning, and Finance without making them one ownership domain?
+    apply_prompt: Warehouse quantity and ERP stock do not match after an outage. What evidence do you collect before adjusting stock?
+    defend_prompt: Operations wants a manual stock correction to restore picking immediately. When would you allow it, and what controls are required?
+
+  - skill_id: logistics-master-data
+    track: logistics
+    title: Material and master data behaviour
+    source: /labs/enterprise-context/master-data/
+    trigger: Stable process behaviour depends on governed data that controls rules across organisational levels and systems.
+    flow: Create or change -> approval and ownership -> replication -> process consumption -> monitoring and correction.
+    objects_rules: Material views, organisational levels, statuses, units, purchasing and sales controls, source ownership, replication, and change governance.
+    failure_boundary: Data can be missing, wrong, stale, approved incorrectly, or replicated inconsistently even when the transaction logic is correct.
+    lead_decision: Treat master data as process control. Fix ownership and change lifecycle when repeated transaction failures come from the same data weakness.
+    connect_prompt: Which downstream sales, purchasing, inventory, warehouse, and finance behaviours can one material change affect?
+    apply_prompt: A movement posts differently only for one material group. How do you separate master data, configuration, and enhancement effects?
+    defend_prompt: The programme wants a single global material template with almost no local variation. What evidence would you request before agreeing?
+
+  - skill_id: integration-patterns
+    track: integration
+    title: Integration pattern selection
+    source: /labs/enterprise-context/integrations/
+    trigger: Two systems need to exchange a business request, state change, or document with clear operational behaviour.
+    flow: Business event or request -> contract -> transport -> target processing -> business acknowledgement or reconciliation.
+    objects_rules: API, IDoc, event, file, synchronous or asynchronous behaviour, schema, ordering, idempotency, latency, SLA, and ownership.
+    failure_boundary: A technically delivered message can still fail contract validation, target processing, business rules, or downstream completion.
+    lead_decision: Choose the pattern from business latency, coupling, volume, recovery, ordering, security, and ownership needs rather than technology habit.
+    connect_prompt: How do latency, coupling, ordering, recoverability, and ownership change the choice between API, IDoc, event, and file?
+    apply_prompt: A team proposes a synchronous API for a process that must survive a four-hour target outage. What do you change in the design?
+    defend_prompt: An architecture board wants one integration technology for every use case. How do you frame the trade-off?
+
+  - skill_id: integration-recovery
+    track: integration
+    title: Integration recovery and idempotency
+    source: /labs/enterprise-context/integration-operations/
+    trigger: A failed or uncertain integration outcome must be recovered without duplicate, lost, or out-of-order business state.
+    flow: Detect -> classify outcome -> contain -> retry or reprocess -> reconcile business state -> prevent recurrence.
+    objects_rules: Stable business key, idempotency, queue or dead-letter state, correlation ID, retry policy, ordering, monitoring, and reconciliation.
+    failure_boundary: Timeout, transport failure, and business failure are different states. Blind retry can create duplicates when the original outcome is unknown.
+    lead_decision: Treat unknown outcomes explicitly, recover a bounded set, preserve business order, and verify the final business state rather than only message status.
+    connect_prompt: Which responsibilities belong to the caller, middleware, target application, and business operations during recovery?
+    apply_prompt: The caller timed out and wants to retry immediately, but the original create may still finish. What is the safe sequence?
+    defend_prompt: Operations wants aggressive automatic retries to reduce backlog. Which failure modes make that dangerous?
+
+  - skill_id: integration-cleancore
+    track: integration
+    title: Clean core and side-by-side architecture
+    source: /labs/assessment/core-boundaries/
+    trigger: The business needs change while the ERP core must remain supportable, upgradeable, and operationally controlled.
+    flow: Requirement -> standard fit -> extension boundary -> contract and implementation -> operate -> review during upgrade or change.
+    objects_rules: Standard capability, released extension points, APIs and events, side-by-side service, custom code, lifecycle, coupling, security, and ownership.
+    failure_boundary: A slogan-driven boundary can move complexity outside the core without reducing total cost, latency, data duplication, or operational risk.
+    lead_decision: Defend the boundary through business value, change frequency, coupling, lifecycle, operations, and reversibility instead of treating clean core as a location rule.
+    connect_prompt: How do extension frequency, data gravity, latency, upgrade risk, and operating ownership change the core-versus-side-by-side decision?
+    apply_prompt: A custom validation changes every month and currently sits deep in the ERP core. How would you evaluate relocation options?
+    defend_prompt: A stakeholder says all custom logic must move outside SAP. Which trade-offs and exceptions do you explain?
+
+  - skill_id: ai-readiness
+    track: ai
+    title: AI readiness and use-case qualification
+    source: /labs/ai-ready/
+    trigger: A business job may benefit from AI assistance, but value and control must be proven before model selection.
+    flow: Business job -> process boundary -> source data -> AI pattern -> controls -> evaluation -> production ownership.
+    objects_rules: User job, outcome metric, source quality, permissions, human approval, tool boundary, evaluation set, logging, fallback, and owner.
+    failure_boundary: Weak use cases usually lack a clear job, measurable outcome, reliable data, acceptable control model, or production owner.
+    lead_decision: Reject or reshape the use case before implementation when the process, evidence, risk, or ownership does not justify AI.
+    connect_prompt: How do process ownership, source data, access control, evaluation, and operations combine into one AI readiness decision?
+    apply_prompt: A sponsor wants an autonomous agent because a manual process is slow. What evidence do you require before reducing human approval?
+    defend_prompt: The proposed AI feature is technically possible but has no measurable business outcome. How do you challenge the investment?
+
+  - skill_id: ai-retrieval
+    track: ai
+    title: Retrieval, grounding, and context
+    source: /labs/ai-ready/
+    trigger: An AI assistant needs current, permitted enterprise knowledge rather than relying only on model memory.
+    flow: Source -> ingest and chunk -> index -> retrieve -> permission filter -> context -> generation -> citation and evaluation.
+    objects_rules: Documents, chunks, metadata, index or embeddings, ranking, filters, permissions, context window, citations, and retrieval metrics.
+    failure_boundary: A wrong answer can come from source quality, ingestion, chunking, indexing, permissions, retrieval, context assembly, or generation.
+    lead_decision: Diagnose the failing layer with evidence before changing the model. Keep permissions and source ownership inside the retrieval design.
+    connect_prompt: Which retrieval layers can fail while the model itself is behaving normally?
+    apply_prompt: Answer quality dropped after a documentation update. How do you isolate source, indexing, retrieval, permission, and generation causes?
+    defend_prompt: A team wants to solve poor retrieval by switching to a larger model. What evidence do you request first?
+
+  - skill_id: ai-evaluation
+    track: ai
+    title: AI evaluation
+    source: /labs/ai-ready/
+    trigger: A team needs an explicit definition of acceptable AI behaviour before release and after change.
+    flow: Task definition -> representative test set -> metric or rubric -> evaluation run -> failure analysis -> release gate -> production monitoring.
+    objects_rules: Test cases, expected outcome or rubric, failure classes, slices, thresholds, human review, version, regression history, and business risk.
+    failure_boundary: One average score can hide severe failures in a critical task, user group, permission boundary, or rare scenario.
+    lead_decision: Tie evaluation thresholds to business consequence and release decisions, then keep the same evidence model for regression and production change.
+    connect_prompt: How do business risk, task type, test-set coverage, human review, and release gates shape an evaluation plan?
+    apply_prompt: An assistant scores 92 percent overall but fails a small set of high-risk production-support questions. Can it ship?
+    defend_prompt: The business measures success by the number of generated answers. Which evaluation and outcome measures do you replace that with?

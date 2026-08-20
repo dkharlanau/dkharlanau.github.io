@@ -7,8 +7,10 @@ on:
       - '_data/career/**'
       - 'assets/js/career-roadmap.js'
       - 'assets/js/interview-question-bank.js'
+      - 'assets/js/mastery-today.js'
       - 'assets/css/career-roadmap.css'
       - 'assets/css/interview-readiness.css'
+      - 'assets/css/mastery-today.css'
       - 'ai/career-roadmap.json'
       - 'ai/career-factory.json'
       - 'scripts/check_career_factory.py'
@@ -16,6 +18,7 @@ on:
       - 'tests/test_career_factory.py'
       - 'tests/test_interview_readiness.py'
       - 'tests/test_question_bank_v2.py'
+      - 'tests/test_mastery_loop.py'
       - '.github/workflows/career-factory.yml'
   push:
     branches: [main]
@@ -24,8 +27,10 @@ on:
       - '_data/career/**'
       - 'assets/js/career-roadmap.js'
       - 'assets/js/interview-question-bank.js'
+      - 'assets/js/mastery-today.js'
       - 'assets/css/career-roadmap.css'
       - 'assets/css/interview-readiness.css'
+      - 'assets/css/mastery-today.css'
       - 'ai/career-roadmap.json'
       - 'ai/career-factory.json'
       - 'scripts/check_career_factory.py'
@@ -33,6 +38,7 @@ on:
       - 'tests/test_career_factory.py'
       - 'tests/test_interview_readiness.py'
       - 'tests/test_question_bank_v2.py'
+      - 'tests/test_mastery_loop.py'
       - '.github/workflows/career-factory.yml'
 
 permissions:
@@ -62,8 +68,11 @@ jobs:
         if: github.event_name == 'pull_request'
         run: python3 scripts/check_career_factory.py --changed-from origin/${{ github.base_ref }}
 
+      - name: Materialize Career Factory inventory for validation
+        run: python3 scripts/generate_career_factory.py
+
       - name: Check Career Factory inventory freshness
         run: python3 scripts/generate_career_factory.py --check
 
       - name: Run Career Factory tests
-        run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_career_factory.py tests/test_interview_readiness.py tests/test_question_bank_v2.py
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_career_factory.py tests/test_interview_readiness.py tests/test_question_bank_v2.py tests/test_mastery_loop.py
