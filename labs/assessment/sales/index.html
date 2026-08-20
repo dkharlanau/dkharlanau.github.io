@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-18
+last_modified_at: 2026-08-20
 hide_global_cta: true
 tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
 ---
@@ -76,6 +76,112 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="professional-services-billing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Priority deep dive / Professional Services Billing</p>
+      <h2>Project billing changes what the billable event means.</h2>
+      <p>For services and customer projects, the invoice may be driven by actual resources, an agreed fixed amount, a billing plan, or project milestones. Start by naming the commercial model. Only then explain the SAP mechanics.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>45-second Lead answer</h3>
+        <p>Professional Services Billing starts with the contract model. For Time &amp; Material, the billable amount is based on eligible time, expense, material, service, or other project postings. For fixed price, the customer charge follows the agreed contract amount and billing plan rather than actual cost volume. Milestone billing releases agreed percentages or amounts when planned billing dates or project milestones become billable. The project or WBS structure links execution and financial postings to the commercial scope.</p>
+        <p>I separate two solution families. In modern S/4HANA Professional Services Project Billing, billing elements and project billing requests control preparation before a billing document request is created. In classic resource-related billing, the Dynamic Item Processor selects source expenditure, summarizes it into dynamic items, determines billing materials, and hands the result to SD pricing. The Lead decision is to keep source-cost selection, customer pricing, billing approval, and revenue recognition as separate controls.</p>
+      </div>
+      <div>
+        <h3>Do not collapse these concepts</h3>
+        <ul>
+          <li><strong>Actual cost is not automatically customer price.</strong> Source postings explain consumed resources; Sales pricing can calculate a different customer charge.</li>
+          <li><strong>Billing is not revenue recognition.</strong> Customer invoicing and accounting recognition can follow different timing and rules.</li>
+          <li><strong>WBS is not the billing method.</strong> It structures project responsibility and account assignment; the contract model still decides how the customer is billed.</li>
+          <li><strong>Classic RRB/DIP and modern Project Billing are not one identical engine.</strong> Deployment and process architecture matter.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Billing models</h3>
+    <div class="ecg-input-grid">
+      <article><span>T&amp;M</span><h3>Time &amp; Material / Time &amp; Expenses</h3><p>Bill eligible actual postings such as labor, expenses, materials, and services. The design must define which postings are billable, how they are grouped, which rate applies, and what can be postponed or written off.</p><p><strong>Lead question:</strong> how do we prove that every customer charge can be traced back to an approved source posting?</p></article>
+      <article><span>FIX</span><h3>Fixed price</h3><p>Bill the agreed commercial amount according to a billing plan. Actual project cost is still important for margin and project control, but it does not directly define the customer invoice value.</p><p><strong>Lead question:</strong> what event or date makes each planned amount due, and how are scope changes controlled?</p></article>
+      <article><span>MILE</span><h3>Milestone billing</h3><p>Distribute the contract value across billing dates, percentages, or amounts. In classic Project System scenarios, project milestones can control whether milestone-related billing dates are released.</p><p><strong>Lead question:</strong> who confirms milestone completion and what prevents early billing?</p></article>
+      <article><span>WBS</span><h3>WBS-based billing</h3><p>Use the project structure to connect execution, cost and revenue postings, work packages, and customer billing scope. A billing element can be a project or WBS element depending on the solution.</p><p><strong>Lead question:</strong> is the WBS structure designed for project delivery only, or also for commercial and reporting responsibility?</p></article>
+    </div>
+
+    <h3>Modern Project Billing: end-to-end process</h3>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>contract</small></div><h3>Define the commercial model</h3><p class="ecg-question">What has the customer agreed to pay for?</p></header><div class="ecg-decision-columns"><div><h4>Decisions</h4><ul><li>Fixed Price or Time &amp; Expenses</li><li>billing item and billing plan</li><li>due dates, amounts, on-account or down-payment logic where applicable</li></ul></div><div><h4>Proof</h4><p>The project billing item has the intended contract type and billing schedule.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>structure</small></div><h3>Connect work to billing elements</h3><p class="ecg-question">Which project work and postings belong to this customer billing scope?</p></header><div class="ecg-decision-columns"><div><h4>Decisions</h4><ul><li>billing element / WBS structure</li><li>work-package assignment</li><li>project stage and billing readiness</li></ul></div><div><h4>Proof</h4><p>The billing element represents the intended commercial scope and is eligible for project billing.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>execute</small></div><h3>Post project execution</h3><p class="ecg-question">Which time, expense, material, or service postings should influence billing?</p></header><div class="ecg-decision-columns"><div><h4>Time &amp; Expenses</h4><p>Actual postings up to the relevant billing date are candidates for billing.</p></div><div><h4>Fixed price</h4><p>The billing plan drives the customer amount; actual postings remain project cost and margin evidence.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>prepare</small></div><h3>Prepare project billing</h3><p class="ecg-question">What should be billed now, postponed, or written off?</p></header><div class="ecg-decision-columns"><div><h4>Control</h4><ul><li>billing due date</li><li>eligible postings or fixed-price plan items</li><li>amount to bill</li><li>postpone / write-off decisions for supported methods</li></ul></div><div><h4>Output</h4><p>A project billing request captures the prepared commercial decision.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>bill</small></div><h3>Create the billing request and invoice</h3><p class="ecg-question">How does approved project billing become a customer invoice?</p></header><div class="ecg-decision-columns"><div><h4>Flow</h4><p>Project billing request → billing document request → billing document → FI/customer-facing output.</p></div><div><h4>Completion proof</h4><p>Reconcile project billing state, billing document, accounting result, and the remaining unbilled amount.</p></div></div></article>
+    </div>
+
+    <h3>Classic Resource-Related Billing / DIP</h3>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Memory path:</strong> SOURCE → SELECT → CHARACTERIZE → DETERMINE MATERIAL → AGGREGATE → PRICE → REVIEW → BILL.</p>
+      <p>The Dynamic Item Processor does not simply copy cost lines into an invoice. The DIP profile controls which source data is relevant and how detailed source information becomes customer-facing billing items.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>1. Source expenditure</h3><p>Actual project, order, service, material, activity, personnel, travel, or other supported expenditure provides the source facts. The first question is whether the posting exists in the expected account-assignment object.</p></div>
+      <div><h3>2. Source selection</h3><p>The DIP profile defines which expenditure is relevant. A posting can exist correctly in CO or the project and still never become billable because it does not match the source selection.</p></div>
+      <div><h3>3. Characteristics</h3><p>Characteristics describe source information used for structuring and summarizing dynamic items. Choose them to preserve the invoice transparency the business needs without creating unnecessary line volume.</p></div>
+      <div><h3>4. Material determination</h3><p>Relevant source information is mapped to a sales material or service representation used by the billing document. Missing or wrong determination can stop billing or produce the wrong customer-facing item.</p></div>
+      <div><h3>5. Aggregation</h3><p>The processor summarizes selected data into dynamic items. Too much aggregation hides traceability; too little aggregation creates noisy invoices and high processing volume.</p></div>
+      <div><h3>6. SD pricing</h3><p>After dynamic items exist, Sales pricing determines the commercial price according to the configured pricing context. Cost selection and customer pricing are related, but they are not the same decision.</p></div>
+      <div><h3>7. Billing review</h3><p>Depending on the scenario, billable quantity or amount can be reviewed and items can be rejected or postponed. The design needs a clear audit trail for what was excluded and why.</p></div>
+      <div><h3>8. Billing request and invoice</h3><p>The reviewed result becomes the relevant billing request and then follows Sales Billing into the final customer document and FI handoff.</p></div>
+    </div>
+
+    <h3>DIP configuration model</h3>
+    <div class="ecg-input-grid">
+      <article><span>SRC</span><h3>Source</h3><p>Which actual or planned source records are eligible? Define the expenditure types and account-assignment scope intentionally.</p></article>
+      <article><span>CHAR</span><h3>Characteristics</h3><p>Which attributes must remain visible for grouping, determination, invoice explanation, and later troubleshooting?</p></article>
+      <article><span>MAT</span><h3>Material determination</h3><p>How are source characteristics converted into sales materials or service items that SD can price and bill?</p></article>
+      <article><span>AGG</span><h3>Structuring and aggregation</h3><p>What invoice granularity is required by the customer, contract, tax, and internal reconciliation process?</p></article>
+      <article><span>USE</span><h3>Usage and process context</h3><p>Use the DIP profile for the intended process. Do not assume a profile built for quotation or one service scenario is automatically correct for another billing flow.</p></article>
+      <article><span>PRICE</span><h3>Pricing handoff</h3><p>Define which pricing procedure and conditions produce customer value after dynamic-item creation. Do not hard-code the assumption that cost equals price.</p></article>
+    </div>
+
+    <h3>Troubleshooting: start from the first missing state</h3>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>!</span><small>no items</small></div><h3>Costs exist, but RRB finds nothing</h3></header><div class="ecg-decision-columns"><div><h4>Check first</h4><ul><li>correct project/order/service reference</li><li>actual posting and account assignment</li><li>DIP profile and intended usage</li><li>source selection and billing relevance</li><li>whether the source has already been processed</li></ul></div><div><h4>Lead trap</h4><p>Changing pricing cannot fix a posting that never became a dynamic item.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>!</span><small>wrong item</small></div><h3>Dynamic items exist, but the billing material is wrong</h3></header><div class="ecg-decision-columns"><div><h4>Check first</h4><ul><li>source characteristics</li><li>material determination</li><li>aggregation level</li><li>customer-facing description and unit</li></ul></div><div><h4>Lead trap</h4><p>Do not repair the invoice manually before proving why the source mapped to the wrong sales item.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>!</span><small>wrong value</small></div><h3>Correct resource is selected, but customer value is wrong</h3></header><div class="ecg-decision-columns"><div><h4>Check first</h4><ul><li>pricing context and procedure</li><li>rate or condition record</li><li>quantity / unit conversion</li><li>manual or contractual adjustments</li><li>billing-date pricing effect</li></ul></div><div><h4>Lead trap</h4><p>Do not change DIP source selection when the dynamic item is correct and only the commercial price is wrong.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>!</span><small>invoice noise</small></div><h3>The invoice has too many or too few lines</h3></header><div class="ecg-decision-columns"><div><h4>Check first</h4><ul><li>characteristics used for grouping</li><li>aggregation rules</li><li>customer traceability requirement</li><li>volume and performance impact</li></ul></div><div><h4>Lead trade-off</h4><p>Balance invoice readability and auditability against runtime volume. “More detail” is not automatically better.</p></div></div></article>
+    </div>
+
+    <h3>Integration and ownership boundaries</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Project / WBS</h3><p>Owns project structure, execution scope, account assignment, and the relationship between work packages and billing responsibility.</p></div>
+      <div><h3>Time, expense, MM and service postings</h3><p>Provide source evidence. Their approval and posting quality determine whether T&amp;M billing has trustworthy input.</p></div>
+      <div><h3>Sales / Billing</h3><p>Owns customer-facing commercial value, billing document creation, pricing handoff, tax context, and the customer charge.</p></div>
+      <div><h3>FI/CO</h3><p>Owns accounting state, receivable, project cost/revenue evidence, settlement or recognition processes where applicable, and reconciliation.</p></div>
+    </div>
+
+    <h3>Assessment questions</h3>
+    <ol>
+      <li><strong>Explain Time &amp; Material billing from a consultant time posting to the customer invoice.</strong> Start with the source posting, billability, grouping/material representation, pricing, billing preparation, invoice, and accounting proof.</li>
+      <li><strong>What does the DIP profile actually control?</strong> Explain source selection, characteristics, material determination, structuring/aggregation, process usage, and the handoff to pricing.</li>
+      <li><strong>A cost is visible on the project but does not appear in resource-related billing. Why?</strong> Separate posting existence from DIP source eligibility, billing relevance, processed state, and material determination.</li>
+      <li><strong>Why can customer price differ from project cost?</strong> DIP selects and structures resource data; SD pricing determines the commercial charge. Markup, rate cards, discounts, and other conditions can change value.</li>
+      <li><strong>Fixed price versus T&amp;M: what changes technically and financially?</strong> Explain billing basis, due logic, dependence on actual postings, margin visibility, and correction/change-order handling.</li>
+      <li><strong>How does milestone billing work?</strong> Explain billing plan dates/percentages or amounts, milestone confirmation where used, billing blocks, and release into billing.</li>
+      <li><strong>What is the role of the WBS or billing element?</strong> Explain account assignment and project structure first, then how the commercial billing method is assigned to that scope.</li>
+      <li><strong>How do you avoid duplicate billing?</strong> Use document/process status and processed-source state, controlled billing preparation, correction history, and reconciliation. Do not rely on user memory.</li>
+      <li><strong>How do you design DIP aggregation?</strong> Start from customer invoice transparency, audit trail, tax/commercial needs, and expected transaction volume.</li>
+      <li><strong>When would you discuss modern Project Billing instead of classic RRB/DIP?</strong> First identify the deployment and Professional Services process. Do not present Public Cloud Project Billing and classic PS/CS resource-related billing as one configuration model.</li>
+    </ol>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Source boundary:</strong> the modern Project Billing notes below use SAP S/4HANA Cloud Professional Services documentation. The classic DIP/RRB notes use SAP S/4HANA on-premise Project System / Customer Service documentation. Check the target deployment and release before translating the model into configuration steps.</p>
+      <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/29cf986299714386847f4d4c9bb86994/09bddf5612e54600a06539c2e4250d30.html">SAP Help: Manage Project Billing</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/29cf986299714386847f4d4c9bb86994/855903f8d7614ee092e6d998ff450325.html">SAP Help: Billing for Projects FAQ</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/4dd8cb7b1c484b4b93af84d00f60fdb8/6618c353b677b44ce10000000a174cb4.html">SAP Help: Billing Process (PS)</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25de5f7eadc94d688aa3ce34de0cd09b/1ac8df533fbf424de10000000a174cb4.html">SAP Help: Dynamic Items</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/4e18c353b677b44ce10000000a174cb4.html">SAP Help: Resource-Related Billing</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/10aab6531de6b64ce10000000a174cb4.html">SAP Help: Milestone Billing</a>.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="core-routes" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Priority / Core</p>
@@ -88,8 +194,8 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
       <a href="/labs/enterprise-context/pricing/"><span>03</span><strong>Pricing Engine</strong><small>Procedure, condition technique, runtime keys, records, calculation, and billing handoff.</small><i class="material-symbols-outlined" aria-hidden="true">price_check</i></a>
       <a href="/labs/enterprise-context/atp/"><span>04</span><strong>ATP / aATP</strong><small>Requirement, supply and demand, confirmation policy, prioritization, and promise evidence.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
       <a href="/labs/enterprise-context/credit/"><span>05</span><strong>Credit Management</strong><small>Account and segment, exposure, check rule, block, release, recheck, and ownership.</small><i class="material-symbols-outlined" aria-hidden="true">credit_score</i></a>
-      <a href="/labs/enterprise-context/shipping/"><span>06</span><strong>Shipping & Scheduling</strong><small>Plant, shipping point, route, dates, delivery due logic, EWM/TM boundaries, and execution.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
-      <a href="/labs/enterprise-context/billing/"><span>07</span><strong>Billing & Revenue Handoff</strong><small>Due state, copy control, split, pricing transfer, correction, tax and FI handoff.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="/labs/enterprise-context/shipping/"><span>06</span><strong>Shipping &amp; Scheduling</strong><small>Plant, shipping point, route, dates, delivery due logic, EWM/TM boundaries, and execution.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      <a href="/labs/enterprise-context/billing/"><span>07</span><strong>Billing &amp; Revenue Handoff</strong><small>Due state, copy control, split, pricing transfer, correction, tax and FI handoff.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
       <a href="/labs/enterprise-context/finance-logistics/"><span>08</span><strong>FI/CO Logistics Bridge</strong><small>Goods issue and COGS, receivable and revenue, account determination, settlement, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
       <a href="/labs/enterprise-context/sales-diagnostics/"><span>09</span><strong>Sales Diagnostic Casebook</strong><small>Business symptom → hypotheses → first wrong decision → evidence → owner → proof of fix.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
     </div>
@@ -102,10 +208,11 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
       <p>These routes matter for a Lead answer, but they do not need equal memory weight for every question.</p>
     </header>
     <div class="research-route-list">
+      <a href="#professional-services-billing"><span>PSB</span><strong>Professional Services Billing</strong><small>Time &amp; Material, fixed price, milestone and WBS-based billing, plus classic Resource-Related Billing and DIP.</small><i class="material-symbols-outlined" aria-hidden="true">work_history</i></a>
       <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Business partner, product, customer-material data, organization, defaults, governance, and downstream impact.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
       <a href="/labs/enterprise-context/tax/"><span>TAX</span><strong>Tax</strong><small>Tax determination boundary, master data dependency, pricing relationship, and financial consequence.</small><i class="material-symbols-outlined" aria-hidden="true">percent</i></a>
       <a href="/labs/enterprise-context/sales-processes/integrations/"><span>INT</span><strong>Sales Integration Map</strong><small>IDocs, APIs, events, handoffs, ownership, and process-specific integration choices.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/enterprise-context/integration-operations/"><span>OPS</span><strong>Integration Operations & Recovery</strong><small>Identity, commit state, retries, idempotency, ordering, recovery, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">sync_problem</i></a>
+      <a href="/labs/enterprise-context/integration-operations/"><span>OPS</span><strong>Integration Operations &amp; Recovery</strong><small>Identity, commit state, retries, idempotency, ordering, recovery, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">sync_problem</i></a>
       <a href="/labs/enterprise-context/sales-analytics/"><span>ANA</span><strong>Sales Analytics</strong><small>Operational and analytical evidence for throughput, blocks, backlog, service, and business outcome.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
       <a href="/labs/assessment/cross-process/"><span>X</span><strong>Cross-Process Lead Cases</strong><small>Third-party, intercompany, make-to-order, returns, stock transfer, and other ownership-changing scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
     </div>
