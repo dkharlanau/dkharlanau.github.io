@@ -1,0 +1,188 @@
+version: 1
+updated_at: 2026-08-20
+title: SAP Lead Memory Atlas
+summary: A reconstruction-first map of the core process and integration spines used in SAP Lead assessment practice.
+
+contract:
+  storage_key: sapLeadMemoryAtlasV1
+  mastery_storage_key: sapLeadMasteryHistoryV1
+  pass_accuracy: 1.0
+  max_saved_runs: 120
+
+maps:
+  - id: o2c
+    label: O2C
+    title: Order to Cash
+    statement: Rebuild the customer-demand path from commercial intent to logistics execution, billing, and the Finance hand-off.
+    source: /labs/enterprise-context/sales-processes/
+    skills: [sales-o2c, sales-pricing, sales-atp, sales-shipping, sales-billing, logistics-inventory]
+    nodes:
+      - id: demand
+        label: Customer demand
+        owner: Sales / business
+        skill_id: sales-o2c
+        source: /labs/enterprise-context/sales-processes/
+        cue: Start with what the customer is asking the business to promise.
+      - id: order
+        label: Sales order
+        owner: Sales
+        skill_id: sales-o2c
+        source: /labs/enterprise-context/sales-processes/
+        cue: The commercial request becomes a controlled SAP document and status flow.
+      - id: pricing
+        label: Pricing
+        owner: Sales / commercial
+        skill_id: sales-pricing
+        source: /labs/enterprise-context/pricing/
+        cue: Commercial conditions determine the value and may introduce blocks or exceptions.
+      - id: atp
+        label: ATP confirmation
+        owner: Sales + supply boundary
+        skill_id: sales-atp
+        source: /labs/enterprise-context/atp/
+        cue: Physical stock is not the same thing as a confirmed customer promise.
+      - id: delivery
+        label: Delivery & PGI
+        owner: Logistics / warehouse
+        skill_id: sales-shipping
+        source: /labs/enterprise-context/shipping/
+        cue: Execution moves from order readiness into picking, shipment, and goods issue.
+      - id: billing
+        label: Billing
+        owner: Sales / billing
+        skill_id: sales-billing
+        source: /labs/enterprise-context/billing/
+        cue: Logistics completion does not by itself prove billing eligibility.
+      - id: finance
+        label: Finance hand-off
+        owner: Finance
+        skill_id: sales-billing
+        source: /labs/enterprise-context/billing/
+        cue: The commercial outcome becomes an accounting consequence and receivable.
+    edges:
+      - {from: demand, to: order, type: creates, label: creates controlled demand}
+      - {from: order, to: pricing, type: depends_on, label: commercial rules}
+      - {from: pricing, to: atp, type: continues_to, label: promise check}
+      - {from: atp, to: delivery, type: hands_off_to, label: execution readiness}
+      - {from: delivery, to: billing, type: enables, label: billing relevance}
+      - {from: billing, to: finance, type: hands_off_to, label: accounting impact}
+    boundary_prompt: Stock exists and the order is priced, but the customer has no usable confirmation. Which boundary do you inspect before shipping?
+    lead_prompt: Where does ownership change in this map, and which evidence proves each hand-off completed?
+
+  - id: p2p
+    label: P2P
+    title: Procure to Pay
+    statement: Rebuild the external-supply path from business demand through purchasing, receipt, invoice control, and the Finance hand-off.
+    source: /labs/enterprise-context/procurement/
+    skills: [logistics-p2p, logistics-inventory, logistics-master-data]
+    nodes:
+      - id: demand
+        label: Business demand
+        owner: Requesting process
+        skill_id: logistics-p2p
+        source: /labs/enterprise-context/procurement/
+        cue: Start with the need for external supply, not with the purchase order transaction.
+      - id: source
+        label: Source & supplier
+        owner: Procurement
+        skill_id: logistics-p2p
+        source: /labs/enterprise-context/procurement/
+        cue: Source data, supplier capability, and ownership shape how demand can be fulfilled.
+      - id: po
+        label: Purchase order
+        owner: Procurement
+        skill_id: logistics-p2p
+        source: /labs/enterprise-context/procurement/
+        cue: The external commitment becomes a controlled purchasing document.
+      - id: confirmation
+        label: Supplier confirmation
+        owner: Supplier + procurement boundary
+        skill_id: logistics-p2p
+        source: /labs/enterprise-context/procurement/
+        cue: Technical message delivery is not the same as a supplier business acknowledgement.
+      - id: gr
+        label: Goods receipt
+        owner: Logistics / receiving
+        skill_id: logistics-inventory
+        source: /labs/enterprise-context/inventory-management/
+        cue: Receipt changes inventory state and creates evidence for downstream control.
+      - id: invoice
+        label: Invoice verification
+        owner: Procurement + Finance boundary
+        skill_id: logistics-p2p
+        source: /labs/enterprise-context/procurement/
+        cue: Quantity, value, tolerances, and document state meet before payment readiness.
+      - id: finance
+        label: Finance hand-off
+        owner: Finance
+        skill_id: logistics-p2p
+        source: /labs/enterprise-context/procurement/
+        cue: The verified liability becomes a Finance-owned payment and accounting outcome.
+    edges:
+      - {from: demand, to: source, type: requires, label: source decision}
+      - {from: source, to: po, type: creates, label: external commitment}
+      - {from: po, to: confirmation, type: integrates_with, label: supplier response}
+      - {from: confirmation, to: gr, type: continues_to, label: expected receipt}
+      - {from: gr, to: invoice, type: provides_evidence_for, label: quantity and receipt}
+      - {from: invoice, to: finance, type: hands_off_to, label: payment readiness}
+    boundary_prompt: The supplier says the PO is accepted, but SAP has no confirmation. Which business and integration evidence do you separate first?
+    lead_prompt: Which controls belong to Procurement, Logistics, the supplier, and Finance instead of one generic P2P owner?
+
+  - id: integration
+    label: Integration
+    title: Integration Spine
+    statement: Rebuild a cross-system business outcome from trigger through contract, transport, target processing, acknowledgement, and reconciliation.
+    source: /labs/enterprise-context/integrations/
+    skills: [integration-patterns, integration-recovery, integration-observability, integration-ownership]
+    nodes:
+      - id: trigger
+        label: Business trigger
+        owner: Business process
+        skill_id: integration-patterns
+        source: /labs/enterprise-context/integrations/
+        cue: Start from the business event or request that requires another system to act.
+      - id: source
+        label: Source processing
+        owner: Source application
+        skill_id: integration-ownership
+        source: /labs/enterprise-context/integrations/
+        cue: The source decides what business state is ready to leave its boundary.
+      - id: contract
+        label: Interface contract
+        owner: Shared design ownership
+        skill_id: integration-patterns
+        source: /labs/enterprise-context/integrations/
+        cue: Schema, semantics, keys, ordering, security, and expected outcome must be explicit.
+      - id: transport
+        label: Transport / middleware
+        owner: Integration platform
+        skill_id: integration-patterns
+        source: /labs/enterprise-context/integrations/
+        cue: Delivery infrastructure moves the message but does not prove the business outcome.
+      - id: target
+        label: Target processing
+        owner: Target application
+        skill_id: integration-recovery
+        source: /labs/enterprise-context/integration-operations/
+        cue: Technical receipt can still fail validation, application logic, or downstream state change.
+      - id: ack
+        label: Business acknowledgement
+        owner: Cross-system boundary
+        skill_id: integration-observability
+        source: /labs/enterprise-context/end-to-end-analytics/
+        cue: Confirm the business result, not only HTTP, IDoc, queue, or transport status.
+      - id: reconcile
+        label: Recovery & reconciliation
+        owner: Operations + business owner
+        skill_id: integration-recovery
+        source: /labs/enterprise-context/integration-operations/
+        cue: Unknown outcomes, retries, duplicates, ordering, and final business state need an owned recovery path.
+    edges:
+      - {from: trigger, to: source, type: initiates, label: process event}
+      - {from: source, to: contract, type: governed_by, label: shared contract}
+      - {from: contract, to: transport, type: transported_by, label: delivery pattern}
+      - {from: transport, to: target, type: hands_off_to, label: target receipt}
+      - {from: target, to: ack, type: proves_with, label: business acknowledgement}
+      - {from: ack, to: reconcile, type: closes_or_recovers, label: final state control}
+    boundary_prompt: The middleware is green, but the business document is missing. Which boundaries remain unproven?
+    lead_prompt: Who owns the business outcome when source, middleware, and target teams can each show a green technical status?
