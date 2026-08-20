@@ -34,7 +34,7 @@ tags:
       <h1>Close the notes.<br />Build the answer.</h1>
       <p>Reading creates familiarity. This session checks whether the useful model can be rebuilt from memory, connected to neighbouring processes, applied to a new case, and defended under challenge.</p>
       <a class="research-canvas__button" href="#session">Start today's session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/roadmap/">Career Roadmap</a><a href="/labs/assessment/practice-engine/">Assessment Practice</a><a href="/labs/assessment/progress/">Assessment Progress</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a><a href="/labs/interview-readiness/roadmap/">Career Roadmap</a><a href="/labs/assessment/practice-engine/">Assessment Practice</a><a href="/labs/assessment/progress/">Assessment Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Mastery loop">
       <p>Mastery loop</p>
@@ -89,6 +89,11 @@ tags:
     <header><p class="research-canvas__eyebrow">Retention evidence</p><h2>Let old knowledge become due again.</h2><p>A defended topic becomes retained only after successful retrieval across time. A failed review makes it weak again.</p></header>
     <div class="mastery-profile" id="mt-profile"></div>
     <div class="mastery-actions"><button type="button" class="ir-button" id="mt-export">Export mastery history</button><button type="button" class="ir-button" id="mt-clear">Clear mastery history</button></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Process reconstruction:</strong> Five-Link recall tests one skill. The <a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a> tests whether you can rebuild the O2C, P2P, and integration spine and explain the ownership hand-offs between nodes.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
