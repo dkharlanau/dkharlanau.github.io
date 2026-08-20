@@ -1,0 +1,220 @@
+version: 1
+updated_at: 2026-08-20
+title: Evidence Learning Engine
+summary: A learning-science contract for SAP Lead preparation that turns memory research into explicit product rules, evidence signals, and backlog items.
+
+principles:
+  - id: retrieval
+    label: Retrieval before review
+    evidence: strong
+    rule: Ask the learner to produce an answer before showing the reference.
+    product_use: Cold recall, map reconstruction, case answers, delayed reviews.
+    avoid: Treating rereading or opening a page as learning evidence.
+    sources:
+      - title: Retrieval Practice Versus Elaborative Encoding
+        year: 2025
+        href: https://doi.org/10.1007/s10648-025-10076-6
+      - title: The science of effective learning with spacing and retrieval practice
+        year: 2022
+        href: https://doi.org/10.1038/s44159-022-00089-1
+
+  - id: spacing
+    label: Delayed retrieval
+    evidence: strong
+    rule: Re-test useful knowledge after increasing delays instead of repeating it in one sitting.
+    product_use: Due reviews, retained state, overnight and multi-day review gaps.
+    avoid: Counting repeated same-session success as durable retention.
+    sources:
+      - title: The science of effective learning with spacing and retrieval practice
+        year: 2022
+        href: https://doi.org/10.1038/s44159-022-00089-1
+
+  - id: interleaving
+    label: Contrast confusable boundaries
+    evidence: strong_when_confusable
+    rule: Mix similar concepts when the assessment requires the learner to distinguish them.
+    product_use: Stock versus availability, transport success versus business success, configuration versus master data, retrieval versus generation failure.
+    avoid: Randomly mixing unrelated topics just to make practice harder.
+    sources:
+      - title: Why Do Learners (Under)Utilize Interleaving in Learning Confusable Categories?
+        year: 2024
+        href: https://doi.org/10.1007/s10648-024-09902-0
+
+  - id: pretesting
+    label: Predict before instruction
+    evidence: moderate
+    rule: For new material, ask a bounded question before the learner opens the explanation, then provide the correct model.
+    product_use: New-skill prediction, diagnostic baseline, first-pass cases.
+    avoid: Treating the failed pretest as a capability score.
+    sources:
+      - title: Prequestioning and Pretesting Effects
+        year: 2024
+        href: https://doi.org/10.1007/s10648-023-09814-5
+
+  - id: feedback
+    label: Explain the correction
+    evidence: strong
+    rule: Give the correct answer quickly; for transfer tasks also explain the principle and boundary behind the answer.
+    product_use: Five-Link reveal, case feedback, error repair, contrast explanation.
+    avoid: Showing only red or green status for complex reasoning.
+    sources:
+      - title: Conditions for Effective Learning Without Upfront Instruction
+        year: 2026
+        href: https://doi.org/10.1007/s10648-025-10103-6
+      - title: A meta-analysis of digitally delivered instructional feedback
+        year: 2024
+        href: https://doi.org/10.1007/s10984-024-09501-4
+
+  - id: error_contrast
+    label: Learn from wrong models
+    evidence: moderate
+    rule: Ask the learner to identify, correct, explain, or compare an important wrong answer against the correct model.
+    product_use: Common SAP misconceptions, unsafe recovery actions, architecture anti-patterns.
+    avoid: Presenting errors without explanation or without enough prior knowledge to process them.
+    sources:
+      - title: Conditions for Effective Learning from Erroneous Examples
+        year: 2025
+        href: https://doi.org/10.1007/s10648-025-10071-x
+
+  - id: confidence
+    label: Calibrate confidence against performance
+    evidence: strong_for_monitoring
+    rule: Capture confidence before feedback and compare it with scored performance.
+    product_use: Overconfidence gap, underconfidence gap, readiness evidence, review priority.
+    avoid: Asking confidence only after the correct answer is visible.
+    sources:
+      - title: Metacognition and Confidence — A Review and Synthesis
+        year: 2024
+        href: https://doi.org/10.1146/annurev-psych-022423-032425
+      - title: Let Learners Monitor the Learning Content and Their Learning Behavior!
+        year: 2023
+        href: https://doi.org/10.1007/s10648-023-09718-4
+
+  - id: mismatch
+    label: Use surprise as an update prompt
+    evidence: promising
+    rule: After feedback, ask what differed from the learner's prediction and use that mismatch to trigger repair practice.
+    product_use: Mismatch reflection, repair queue, misconception tags.
+    avoid: Calling a simple UI rating a direct biological prediction-error measurement.
+    sources:
+      - title: How prediction error drives memory updating
+        year: 2025
+        href: https://doi.org/10.1016/j.tins.2025.09.003
+
+  - id: sleep
+    label: Respect consolidation time
+    evidence: strong_context
+    rule: Use real time gaps and next-day retrieval as part of retention evidence; do not infer sleep quality from learning data.
+    product_use: Overnight gap marker, next-day review, retained evidence across dates.
+    avoid: Bedtime optimisation claims or sleep tracking without validated data.
+    sources:
+      - title: Memory consolidation during sleep — a facilitator of new learning?
+        year: 2026
+        href: https://doi.org/10.1016/j.neuropsychologia.2025.109320
+
+  - id: movement
+    label: Optional movement before demanding practice
+    evidence: moderate_context
+    rule: Offer movement as an optional preparation cue, not as a learning requirement or score.
+    product_use: Optional pre-session cue for long diagnostic or mock-assessment blocks.
+    avoid: Claiming a short walk guarantees better memory for one learner.
+    sources:
+      - title: Effects of acute exercise on cognitive function — a meta-review
+        year: 2025
+        href: https://doi.org/10.1037/bul0000460
+
+  - id: biometrics_boundary
+    label: Do not score learning from biometrics
+    evidence: boundary
+    rule: Learning evidence comes from behaviour and delayed performance, not HR, HRV, cortisol, or similar physiological markers.
+    product_use: Product safety and evidence policy.
+    avoid: Neuro-score, stress-score, brain-readiness score, or biometric mastery claims.
+    sources:
+      - title: Neurobiological stress markers in educational research
+        year: 2024
+        href: https://doi.org/10.1016/j.tine.2024.100242
+
+backlog:
+  - id: els-001
+    priority: P0
+    status: in_progress
+    title: Evidence registry
+    outcome: Keep each learning mechanic tied to evidence strength, product use, and a clear boundary.
+  - id: els-002
+    priority: P0
+    status: in_progress
+    title: Confidence before reveal
+    outcome: Capture 0–100 confidence before feedback and store it with the scored retrieval attempt.
+  - id: els-003
+    priority: P0
+    status: in_progress
+    title: Calibration gap
+    outcome: Compare confidence with actual performance and expose overconfidence or underconfidence as a separate readiness signal.
+  - id: els-004
+    priority: P0
+    status: in_progress
+    title: Mismatch repair
+    outcome: After reveal, capture expected versus surprising feedback and require a short explanation before a weak attempt is closed.
+  - id: els-005
+    priority: P0
+    status: in_progress
+    title: Delayed repair queue
+    outcome: Revisit failed or high-mismatch skills after intervening items instead of repeating them immediately.
+
+  - id: els-006
+    priority: P1
+    status: planned
+    title: Adaptive contrast pairs
+    outcome: Interleave confusable SAP boundaries using explicit pairs and comparison prompts.
+  - id: els-007
+    priority: P1
+    status: planned
+    title: Scheduler v2
+    outcome: Base spacing on delayed successful retrievals, lapse history, difficulty, and mastery stage rather than one success streak.
+  - id: els-008
+    priority: P1
+    status: planned
+    title: Pretest new skills
+    outcome: Add prediction-first prompts before source study without treating pretest failure as capability evidence.
+  - id: els-009
+    priority: P1
+    status: planned
+    title: Error contrast library
+    outcome: Add common wrong SAP Lead answers and require identify, correct, explain, and compare tasks.
+  - id: els-010
+    priority: P1
+    status: planned
+    title: Unseen transfer cases
+    outcome: Test whether a learned principle survives a changed scenario, owner, failure point, or integration pattern.
+
+  - id: els-011
+    priority: P2
+    status: planned
+    title: Oral defence mode
+    outcome: Add a 90-second answer timer with claim, evidence, trade-off, owner, and next action structure.
+  - id: els-012
+    priority: P2
+    status: planned
+    title: Effort versus learning signal
+    outcome: Capture perceived effort separately from performance so hard practice is not mistaken for poor learning.
+  - id: els-013
+    priority: P2
+    status: planned
+    title: Overnight gap evidence
+    outcome: Mark successful retrievals that cross a calendar-day boundary without asking for sleep or health data.
+  - id: els-014
+    priority: P2
+    status: planned
+    title: Cross-engine readiness
+    outcome: Combine retained retrieval, Atlas reconstruction, unseen transfer, confidence calibration, and assessment defence into one evidence profile.
+
+  - id: els-015
+    priority: P3
+    status: planned
+    title: Personal retention model
+    outcome: Estimate a local forgetting and lapse profile per skill from actual delayed retrieval history.
+  - id: els-016
+    priority: P3
+    status: planned
+    title: Learning experiment framework
+    outcome: Compare learning mechanics with local A/B or alternating-condition experiments without uploading private answer text.
