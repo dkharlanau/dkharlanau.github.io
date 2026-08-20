@@ -27,9 +27,15 @@
   const DAY = 86400000;
   const $ = id => document.getElementById(id);
   let currentSkillId = null;
+  let committedConfidence = null;
 
   function validAttempt(row) {
-    return row && typeof row === 'object' && typeof row.skill_id === 'string' && MODES.has(row.mode) && Number.isInteger(row.score) && row.score >= 0 && row.score <= 3 && typeof row.reviewed_at === 'string' && !Number.isNaN(Date.parse(row.reviewed_at));
+    if (!(row && typeof row === 'object' && typeof row.skill_id === 'string' && MODES.has(row.mode) && Number.isInteger(row.score) && row.score >= 0 && row.score <= 3 && typeof row.reviewed_at === 'string' && !Number.isNaN(Date.parse(row.reviewed_at)))) return false;
+    if (row.confidence != null && !(Number.isInteger(row.confidence) && row.confidence >= 0 && row.confidence <= 100)) return false;
+    if (row.mismatch != null && !(Number.isInteger(row.mismatch) && row.mismatch >= 0 && row.mismatch <= 2)) return false;
+    if (row.ordinal != null && !(Number.isInteger(row.ordinal) && row.ordinal >= 1)) return false;
+    if (row.repair_after != null && !(Number.isInteger(row.repair_after) && row.repair_after >= 1)) return false;
+    return true;
   }
 
   function history() {
@@ -54,11 +60,34 @@
     return (Date.parse(rows[rows.length - 1].reviewed_at) - Date.parse(rows[0].reviewed_at)) / DAY;
   }
 
+  function attemptPassed(row) {
+    return Boolean(row && row.score >= PASS_SCORE && Number(row.mismatch || 0) < 2);
+  }
+
+  function crossedCalendarDay(row) {
+    if (!row?.reviewed_at) return false;
+    const then = new Date(row.reviewed_at);
+    const now = new Date();
+    return then.getFullYear() !== now.getFullYear() || then.getMonth() !== now.getMonth() || then.getDate() !== now.getDate();
+  }
+
+  function repairDeferred(card, rows = history()) {
+    const last = lastAttempt(card, rows);
+    if (!last || !Number.isInteger(last.repair_after)) return false;
+    return rows.length < last.repair_after && !crossedCalendarDay(last);
+  }
+
+  function repairReady(card, rows = history()) {
+    const last = lastAttempt(card, rows);
+    if (!last || !Number.isInteger(last.repair_after)) return false;
+    return rows.length >= last.repair_after || crossedCalendarDay(last);
+  }
+
   function stateFor(card, rows = history()) {
     const attempts = rowsFor(card.skill_id, rows);
     if (!attempts.length) return 'new';
-    const passed = new Set(attempts.filter(row => row.score >= PASS_SCORE).map(row => row.mode));
-    const advanced = attempts.filter(row => row.score >= PASS_SCORE && (row.mode === 'defend' || row.mode === 'review'));
+    const passed = new Set(attempts.filter(attemptPassed).map(row => row.mode));
+    const advanced = attempts.filter(row => attemptPassed(row) && (row.mode === 'defend' || row.mode === 'review'));
     if (passed.has('defend') && advanced.length >= RETAINED_SUCCESSES && spanDays(advanced) >= RETAINED_SPAN_DAYS) return 'retained';
     if (passed.has('defend')) return 'defended';
     if (passed.has('apply')) return 'applied';
@@ -76,10 +105,10 @@
     const attempts = rowsFor(card.skill_id, rows);
     if (!attempts.length) return null;
     const last = attempts[attempts.length - 1];
-    if (last.score < PASS_SCORE) return new Date(0);
+    if (!attemptPassed(last)) return new Date(0);
     let streak = 0;
     for (let i = attempts.length - 1; i >= 0; i -= 1) {
-      if (attempts[i].score < PASS_SCORE) break;
+      if (!attemptPassed(attempts[i])) break;
       streak += 1;
     }
     const interval = REVIEW_INTERVALS[Math.min(Math.max(streak - 1, 0), REVIEW_INTERVALS.length - 1)] || 1;
@@ -87,14 +116,18 @@
   }
 
   function isDue(card, rows = history(), now = Date.now()) {
+    if (repairDeferred(card, rows)) return false;
+    if (repairReady(card, rows)) return true;
     const due = dueAt(card, rows);
     return Boolean(due && due.getTime() <= now);
   }
 
   function priority(card, rows, now) {
+    if (repairReady(card, rows)) return 0;
+    if (repairDeferred(card, rows)) return 5;
     const last = lastAttempt(card, rows);
     if (isDue(card, rows, now)) return 0;
-    if (last && last.score < PASS_SCORE) return 1;
+    if (last && !attemptPassed(last)) return 1;
     if (!last) return 2;
     return 3;
   }
@@ -110,26 +143,27 @@
       if (da !== db) return da - db;
       return a.skill_id.localeCompare(b.skill_id);
     });
+    const eligible = ranked.filter(card => !repairDeferred(card, rows));
 
     const selected = [];
     const selectedIds = new Set();
     const tracks = new Set();
 
-    ranked.filter(card => priority(card, rows, now) <= 1).forEach(card => {
+    eligible.filter(card => priority(card, rows, now) <= 1).forEach(card => {
       if (selected.length >= SESSION_SIZE) return;
       selected.push(card);
       selectedIds.add(card.skill_id);
       tracks.add(card.track);
     });
 
-    ranked.forEach(card => {
+    eligible.forEach(card => {
       if (selected.length >= SESSION_SIZE || selectedIds.has(card.skill_id) || tracks.has(card.track)) return;
       selected.push(card);
       selectedIds.add(card.skill_id);
       tracks.add(card.track);
     });
 
-    ranked.forEach(card => {
+    eligible.forEach(card => {
       if (selected.length >= SESSION_SIZE || selectedIds.has(card.skill_id)) return;
       selected.push(card);
       selectedIds.add(card.skill_id);
@@ -139,7 +173,8 @@
 
   function modeFor(card, rows = history()) {
     const last = lastAttempt(card, rows);
-    if (last && last.score < PASS_SCORE) return last.mode === 'review' ? 'recall' : last.mode;
+    if (last && Number.isInteger(last.repair_after)) return last.mode;
+    if (last && !attemptPassed(last)) return last.mode === 'review' ? 'recall' : last.mode;
     const state = stateFor(card, rows);
     if (state === 'new') return 'recall';
     if (state === 'recalled') return 'connect';
@@ -157,12 +192,38 @@
   }
 
   function formatDue(card, rows = history()) {
+    if (repairDeferred(card, rows)) {
+      const last = lastAttempt(card, rows);
+      const remaining = Math.max(1, Number(last.repair_after) - rows.length);
+      return `repair after ${remaining} more item${remaining === 1 ? '' : 's'}`;
+    }
+    if (repairReady(card, rows)) return 'repair due';
     const due = dueAt(card, rows);
     if (!due) return 'new';
     const delta = Math.ceil((due.getTime() - Date.now()) / DAY);
     if (delta <= 0) return 'due now';
     if (delta === 1) return 'due tomorrow';
     return `due in ${delta} days`;
+  }
+
+  function calibrationGap(row) {
+    if (!row || !Number.isInteger(row.confidence)) return null;
+    const performance = (row.score / 3) * 100;
+    return Math.round(row.confidence - performance);
+  }
+
+  function averageCalibrationGap(rows) {
+    const gaps = rows.map(calibrationGap).filter(value => value != null).map(Math.abs);
+    if (!gaps.length) return null;
+    return Math.round(gaps.reduce((sum, value) => sum + value, 0) / gaps.length);
+  }
+
+  function calibrationLabel(row) {
+    const gap = calibrationGap(row);
+    if (gap == null) return '—';
+    if (Math.abs(gap) <= 15) return `${Math.abs(gap)} pp close`;
+    if (gap > 0) return `${gap} pp over`;
+    return `${Math.abs(gap)} pp under`;
   }
 
   function createMetric(value, label) {
@@ -179,10 +240,14 @@
     const metrics = $('mt-metrics');
     if (!metrics) return;
     const states = cards.map(card => stateFor(card, rows));
+    const gap = averageCalibrationGap(rows);
+    const repairs = cards.filter(card => repairDeferred(card, rows) || repairReady(card, rows)).length;
     metrics.replaceChildren(
       createMetric(rows.length, 'Scored retrievals'),
       createMetric(cards.filter(card => isDue(card, rows)).length, 'Due reviews'),
+      createMetric(repairs, 'Repair items'),
       createMetric(states.filter(state => state === 'retained').length, 'Retained skills'),
+      createMetric(gap == null ? '—' : `${gap} pp`, 'Calibration gap'),
       createMetric(states.filter(state => state !== 'new').length, `Covered of ${cards.length}`)
     );
   }
@@ -247,6 +312,20 @@
     host.appendChild(article);
   }
 
+  function resetPracticeControls() {
+    committedConfidence = null;
+    const confidence = $('mt-confidence');
+    if (confidence) {
+      confidence.value = '50';
+      confidence.disabled = false;
+    }
+    if ($('mt-confidence-value')) $('mt-confidence-value').textContent = '50%';
+    if ($('mt-mismatch')) $('mt-mismatch').value = '0';
+    if ($('mt-repair-note')) $('mt-repair-note').value = '';
+    if ($('mt-repair-status')) $('mt-repair-status').textContent = '';
+    if ($('mt-source')) $('mt-source').hidden = true;
+  }
+
   function renderPractice(rows, session) {
     const card = cards.find(item => item.skill_id === currentSkillId) || session[0];
     const panel = $('mt-card');
@@ -263,13 +342,14 @@
     $('mt-track').textContent = TRACK_LABELS[card.track] || card.track;
     $('mt-mode').textContent = MODE_LABELS[mode];
     $('mt-state').textContent = STATE_LABELS[state] || state;
-    $('mt-prompt-title').textContent = mode === 'review' ? 'Delayed retrieval' : `${MODE_LABELS[mode]} task`;
-    $('mt-prompt').textContent = promptFor(card, mode);
+    $('mt-prompt-title').textContent = repairReady(card, rows) ? 'Repair retrieval' : mode === 'review' ? 'Delayed retrieval' : `${MODE_LABELS[mode]} task`;
+    $('mt-prompt').textContent = repairReady(card, rows) ? `Repair the model without reopening the previous reference. ${promptFor(card, mode)}` : promptFor(card, mode);
     $('mt-source').href = card.source;
 
     const reference = $('mt-reference');
     reference.hidden = true;
     $('mt-answer').value = '';
+    resetPracticeControls();
     const five = $('mt-five-link');
     five.replaceChildren();
     [
@@ -291,21 +371,40 @@
       strong.textContent = `${score.id} · ${score.label}`;
       small.textContent = score.meaning;
       button.append(strong, small);
-      button.addEventListener('click', () => recordAttempt(card, mode, Number(score.id)));
+      button.addEventListener('click', () => {
+        const numericScore = Number(score.id);
+        const mismatch = Number($('mt-mismatch')?.value || 0);
+        const repairNote = $('mt-repair-note')?.value.trim() || '';
+        const needsExplanation = numericScore < PASS_SCORE || mismatch === 2;
+        if (needsExplanation && repairNote.length < 12) {
+          $('mt-repair-status').textContent = 'Explain the important mismatch in one short sentence before scoring this attempt.';
+          $('mt-repair-note')?.focus();
+          return;
+        }
+        recordAttempt(card, mode, numericScore, mismatch);
+      });
       scores.appendChild(button);
     });
   }
 
-  function recordAttempt(card, mode, score) {
+  function recordAttempt(card, mode, score, mismatch) {
     const rows = history();
-    rows.push({
+    const ordinal = rows.length + 1;
+    const confidence = Number.isInteger(committedConfidence) ? committedConfidence : Number($('mt-confidence')?.value || 50);
+    const repairRequired = score < PASS_SCORE || mismatch === 2;
+    const row = {
       id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
       skill_id: card.skill_id,
       track: card.track,
       mode,
       score,
+      confidence,
+      mismatch,
+      ordinal,
       reviewed_at: new Date().toISOString()
-    });
+    };
+    if (repairRequired) row.repair_after = ordinal + 2;
+    rows.push(row);
     saveHistory(rows);
     currentSkillId = null;
     render();
@@ -318,7 +417,7 @@
     table.className = 'mastery-table';
     const thead = document.createElement('thead');
     const headRow = document.createElement('tr');
-    ['Skill', 'Track', 'State', 'Last score', 'Review'].forEach(label => {
+    ['Skill', 'State', 'Last score', 'Confidence', 'Calibration', 'Review'].forEach(label => {
       const th = document.createElement('th');
       th.textContent = label;
       headRow.appendChild(th);
@@ -330,9 +429,10 @@
       const last = lastAttempt(card, rows);
       [
         card.title,
-        TRACK_LABELS[card.track] || card.track,
         STATE_LABELS[stateFor(card, rows)] || stateFor(card, rows),
         last ? `${last.score} / 3` : '—',
+        last && Number.isInteger(last.confidence) ? `${last.confidence}%` : '—',
+        calibrationLabel(last),
         formatDue(card, rows)
       ].forEach(value => {
         const td = document.createElement('td');
@@ -353,16 +453,32 @@
     renderProfile(rows);
   }
 
+  $('mt-confidence')?.addEventListener('input', event => {
+    $('mt-confidence-value').textContent = `${event.target.value}%`;
+  });
+
   $('mt-reveal')?.addEventListener('click', () => {
+    const confidence = $('mt-confidence');
+    committedConfidence = Number(confidence?.value || 50);
+    if (confidence) confidence.disabled = true;
+    if ($('mt-source')) $('mt-source').hidden = false;
     const reference = $('mt-reference');
     reference.hidden = false;
     reference.scrollIntoView({behavior:'smooth', block:'nearest'});
   });
 
+  $('mt-mismatch')?.addEventListener('change', () => {
+    if ($('mt-repair-status')) $('mt-repair-status').textContent = '';
+  });
+
+  $('mt-repair-note')?.addEventListener('input', () => {
+    if ($('mt-repair-status')) $('mt-repair-status').textContent = '';
+  });
+
   $('mt-export')?.addEventListener('click', () => {
     const payload = {
       schema: 'dkharlanau.sap-lead-mastery-history',
-      version: 1,
+      version: 2,
       exported_at: new Date().toISOString(),
       attempts: history()
     };
