@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Mastery Today — Recall, Apply, Retain"
-description: "A retrieval-first SAP Lead practice session that turns Sales, Logistics, Integration and AI knowledge into recall, application, defence and delayed retention evidence."
+description: "A retrieval-first SAP Lead practice session for Sales, Logistics, Integration and AI, focused on recall, application, defence and delayed retention."
 permalink: /labs/interview-readiness/today/
 status: draft
 verified: false
@@ -49,6 +49,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">psychology_alt</span>
+    <p><strong>Context:</strong> use this after studying a Lab or roadmap skill, when you need to test retrieval instead of rereading.</p>
     <p><strong>Rule:</strong> answer before you reveal the reference. Familiarity is not evidence that you can retrieve the model in an assessment.</p>
     <p><strong>Scoring:</strong> self-score is a practice signal, not certification. Use Assessment Practice and human review when you need stronger evidence.</p>
   </section>
