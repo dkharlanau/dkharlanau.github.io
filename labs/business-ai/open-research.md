@@ -46,9 +46,9 @@ semantic_links:
   - type: "related_topic"
     title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
     url: "/labs/business-ai/erp-agent-gateway/"
-  - type: "related_topic"
-    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
-    url: "/labs/enterprise-context/business-ai/"
+  - type: "same_domain"
+    title: "AI Governance and Data Boundaries — Ownership, Access, Action Risk and Validation"
+    url: "/labs/business-ai/governance-data-boundaries/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

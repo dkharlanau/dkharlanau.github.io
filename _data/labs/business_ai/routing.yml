@@ -1,0 +1,289 @@
+version: 2
+updated_at: 2026-08-19
+title: Business AI Solution Routing
+summary: A machine-readable routing model that separates customer language, solution fit, readiness, tradeoffs, controls, and next-step ownership.
+
+definition: >-
+  Routing is the process of determining the most appropriate OpenAI solution path to explore by separating where the work happens, what capabilities are required, how the solution will run and be controlled, and what should happen next.
+
+principle: A customer label can start the conversation. It should not finish the architecture.
+
+customer_labels:
+  - id: agent
+    label: Agent
+    signal: The customer expects several steps, tool use, or adaptive coordination.
+    questions:
+      - Which actions are required?
+      - Which systems can the solution call?
+      - What state must it keep?
+      - What may it do without approval?
+      - How does it stop, recover, or escalate?
+  - id: chatbot
+    label: Chatbot
+    signal: The customer imagines a conversational interface.
+    questions:
+      - Where should the conversation live?
+      - Is the job only to answer, or also to take action?
+      - Which sources should ground the answer?
+      - Who can see which data?
+  - id: copilot
+    label: Copilot
+    signal: The customer expects human-in-the-loop assistance.
+    questions:
+      - Which role is assisted?
+      - Which task becomes easier?
+      - What output is prepared?
+      - What must the human still review, decide, or approve?
+  - id: automation
+    label: Automation
+    signal: The customer wants to reduce manual work.
+    questions:
+      - Which steps are deterministic today?
+      - Where is judgment actually needed?
+      - Could normal workflow automation solve most of the problem without AI?
+  - id: api
+    label: API
+    signal: The customer is already thinking about integration or a custom application.
+    questions:
+      - Which business job consumes the API?
+      - What latency, state, tools, and data boundaries are required?
+      - What happens when the model or integration fails?
+  - id: migration
+    label: Migration
+    signal: The customer has an existing implementation that must move to a supported path.
+    questions:
+      - What is the current product or endpoint?
+      - Which features and stored state are used?
+      - What changes in the target path?
+      - How will regression, cutover, and rollback be tested?
+
+routing_lenses:
+  - id: work-surface
+    label: Work surface
+    question: Where should the user or workflow meet the AI capability?
+    capture:
+      - ChatGPT
+      - Workspace Agent
+      - Existing business application
+      - Customer-facing product
+      - Backend workflow
+      - Developer environment
+  - id: capability
+    label: Capability
+    question: What must the solution actually do?
+    capture:
+      - Retrieve
+      - Generate
+      - Extract
+      - Classify
+      - Reason
+      - Use tools
+      - Analyze files
+      - Coordinate steps
+  - id: runtime-control
+    label: Runtime and control
+    question: How will the solution run, access systems, and stay inside its authority?
+    capture:
+      - Identity
+      - Permissions
+      - Source-of-truth systems
+      - State
+      - Tool access
+      - Human approval
+      - Logging
+      - Evaluation
+      - Fallback
+      - Stop conditions
+  - id: next-proof
+    label: Next proof
+    question: What is the smallest useful step that reduces uncertainty?
+    capture:
+      - Continue discovery
+      - Validation session
+      - Technical review
+      - Migration assessment
+      - Prototype
+      - Bounded pilot
+      - Structured handoff
+
+solution_paths:
+  - id: managed-chatgpt-workspace
+    label: Managed ChatGPT workspace
+    fit: Employees can perform the work directly in ChatGPT and the organization prefers a managed workspace instead of building a separate user experience.
+    boundary: Workspace adoption does not remove the need to define approved data, ownership, controls, and success measures.
+  - id: workspace-agent
+    label: ChatGPT Workspace Agent
+    fit: The work is repeatable, belongs in a managed ChatGPT workspace, and may use approved apps or tools with workspace-level controls.
+    boundary: Easy creation does not prove that the workflow is ready for autonomy. Permissions, approvals, monitoring, and operating ownership remain required.
+  - id: chatgpt-app
+    label: App inside ChatGPT
+    fit: The work should stay in ChatGPT but needs a custom interface or interaction with external tools, data, or a backend through the Apps SDK and MCP.
+    boundary: A conversational surface does not automatically make the underlying business action safe or authorized.
+  - id: responses-api-application
+    label: Custom application or service through the Responses API
+    fit: The user experience or workflow lives in the customer's own product, portal, ERP extension, service, or backend.
+    boundary: The API is a delivery mechanism. Business ownership, tool contracts, evaluation, integration, and recovery still need design.
+  - id: agents-sdk-orchestration
+    label: Agent orchestration with the Agents SDK
+    fit: A custom backend needs multi-step orchestration, tool use, approvals, or handoffs between specialized agents.
+    boundary: More orchestration is not automatically more value. Each tool call and authority boundary still needs a reason and a control.
+  - id: open-weight-self-managed
+    label: Self-managed open-weight deployment
+    fit: The customer has a material reason to run an OpenAI open-weight model such as gpt-oss on infrastructure they control.
+    boundary: Infrastructure, capacity, security, lifecycle, evaluation, and operations become customer responsibilities. gpt-oss is not served through the OpenAI API or ChatGPT.
+  - id: assistants-api-migration
+    label: Migration from the Assistants API to the Responses API
+    fit: An existing implementation still uses the deprecated Assistants API.
+    boundary: Preserve required behavior, state, permissions, tests, cutover, and rollback while changing the technical path.
+    sunset_date: 2026-08-26
+
+fit_readiness:
+  solution_fit:
+    question: Does this direction match the workflow, use case, value hypothesis, capability, and operating boundary?
+    evidence:
+      - Work surface fits the daily workflow.
+      - Required capability matches the AI job.
+      - Authority and source-of-truth boundaries are feasible.
+      - The route supports the value hypothesis with proportional complexity.
+  readiness:
+    question: Is the customer prepared to move this direction forward?
+    evidence:
+      - Workflow is clear enough to validate.
+      - Outcome owner is named.
+      - Relevant data can be accessed appropriately.
+      - Required stakeholders can participate.
+      - Success measures and decision criteria are visible.
+  rule: A route can fit the use case but still be premature. When readiness is weak, improve the evidence before strengthening the recommendation.
+
+tradeoffs:
+  - id: cost
+    label: Cost
+    seller_question: Will this be expensive to build, run, govern, or scale?
+    may_affect: Value justification, scope, phasing, and operating model.
+  - id: latency
+    label: Latency
+    seller_question: Does the workflow need real-time or near-real-time responses?
+    may_affect: Model choice, architecture, hosting, integration, and technical validation.
+  - id: integration
+    label: Integration
+    seller_question: Does the solution need apps, tools, system integration, or an embedded experience?
+    may_affect: Workspace Agent, ChatGPT app, API application, combined route, or technical handoff.
+  - id: data
+    label: Data
+    seller_question: What data is required, where does it live, and how sensitive is it?
+    may_affect: Access, governance, security, retrieval, hosted controls, or self-managed open-weight validation.
+  - id: governance
+    label: Governance
+    seller_question: What approvals, policies, audit needs, or oversight requirements apply?
+    may_affect: Permissions, action controls, logging, approval, validation, and deployment ownership.
+  - id: adoption
+    label: Adoption
+    seller_question: Who needs to use the solution, and what behavior must change?
+    may_affect: Work surface, change effort, training, and whether value can appear in practice.
+  - id: complexity
+    label: Complexity
+    seller_question: Is the route proportional to maturity, urgency, and expected value?
+    may_affect: Simplification, phasing, or whether the route is premature.
+  - id: human-role-reversibility
+    label: Human role and reversibility
+    seller_question: Does a person need to review, approve, override, or supervise the output, and can mistakes be corrected easily?
+    may_affect: Autonomy, approvals, escalation, audit, rollback, and safe validation scope.
+
+next_step_logic:
+  - id: continue-discovery
+    when: Customer problem or stakeholder evidence is weak.
+    action: Continue discovery.
+    purpose: Clarify workflow, affected users, outcome owner, priority, and value before recommending a route.
+  - id: validation-session
+    when: Use case and value are clear, but requirements are uncertain.
+    action: Run a validation session.
+    purpose: Confirm workflow details, success measures, data needs, approvals, capabilities, architecture, deployment, and operating requirements.
+  - id: technical-handoff
+    when: Technical feasibility, integration, governance, data, or security questions are material.
+    action: Involve the appropriate technical, security, data, or deployment owner.
+    purpose: Resolve questions that should not be guessed or carried by sales alone.
+  - id: migration-discovery
+    when: Migration signals are present.
+    action: Start current-state and target-state discovery.
+    purpose: Clarify what is moving, why, what must continue working, and which cutover or regression risks need validation.
+  - id: structured-handoff
+    when: Evidence, value, readiness, and routing are clear.
+    action: Prepare a structured handoff.
+    purpose: Give the next owner enough context to validate or deliver the opportunity without restarting discovery.
+
+handoff_fields:
+  - id: workflow-use-case
+    label: Workflow and priority use case
+    capture: What workflow is being improved, and which use case appears most important?
+  - id: ownership
+    label: Customer owner and partner owner
+    capture: Who owns the business outcome on the customer side, and who owns the opportunity on the partner side?
+  - id: evidence
+    label: Evidence gathered
+    capture: What has the customer shared about the problem, workflow, stakeholders, value, readiness, and next step?
+  - id: value-hypothesis
+    label: Value hypothesis
+    capture: What improvement may matter, which indicator could move, and why is it worth pursuing?
+  - id: surface-alternatives
+    label: Likely surface and alternatives considered
+    capture: Which surface appears most credible, which alternatives were considered, and why are they weaker, premature, or dependent on validation?
+  - id: requirements
+    label: Capability, architecture, and operating requirements
+    capture: Which app, tool, Workspace Agent, retrieval, structured output, automation, API, open-weight, governance, data, integration, adoption, or operating requirements may shape the solution?
+  - id: risks-open-questions
+    label: Risks, assumptions, and open questions
+    capture: What is known, what is assumed, and what still needs validation?
+  - id: next-action-owner
+    label: Recommended next action and next owner
+    capture: What should happen next, which decision should it support, and who owns it?
+
+routing_sequence:
+  - Freeze the customer label without designing from it.
+  - Restate the use case in workflow terms.
+  - Choose the work surface.
+  - Choose the minimum capability pattern.
+  - Define runtime, authority, identity, and failure handling.
+  - Check solution fit.
+  - Check readiness and route-changing tradeoffs.
+  - Select the next proof or handoff and name the owner.
+
+lead_output:
+  - Business problem and target workflow step
+  - User and outcome owner
+  - Value hypothesis and success signal
+  - Work surface and required AI capabilities
+  - Systems, tools, and source-of-truth boundaries
+  - Identity, permissions, and human authority
+  - Solution fit
+  - Readiness
+  - Route-changing tradeoffs
+  - Alternatives considered
+  - Open evidence gaps
+  - Next action, owner, and decision point
+
+sources:
+  - id: openai-workspace-agents
+    publisher: OpenAI
+    title: ChatGPT Workspace Agents for Enterprise and Business
+    url: https://help.openai.com/en/articles/20001143
+    checked_at: 2026-08-19
+  - id: openai-apps-sdk
+    publisher: OpenAI
+    title: Build with the Apps SDK
+    url: https://help.openai.com/en/articles/12515353-build-with-the-apps-sdk
+    checked_at: 2026-08-19
+  - id: openai-agent-tools
+    publisher: OpenAI
+    title: New tools for building agents
+    url: https://openai.com/index/new-tools-for-building-agents/
+    checked_at: 2026-08-19
+  - id: openai-open-weight
+    publisher: OpenAI
+    title: OpenAI open-weight models
+    url: https://help.openai.com/en/articles/11870455
+    checked_at: 2026-08-19
+  - id: openai-assistants-deprecation
+    publisher: OpenAI
+    title: Assistants API deep dive
+    url: https://platform.openai.com/docs/assistants/deep-dive
+    checked_at: 2026-08-19

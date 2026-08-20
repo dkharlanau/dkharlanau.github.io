@@ -1,0 +1,76 @@
+<section id="ai-security-evidence-completeness">
+  <h2>Use an evidence completeness check when the workflow matures</h2>
+
+  <p>You do not need to collect every element in every first workflow. Use this as a completeness check when the workflow becomes sensitive, repeated, or ready to expand.</p>
+
+  <p>The goal is to make the workflow reconstructable. A reviewer should be able to understand what ran, what was in scope, what evidence supported the conclusion, what remained unproven, what decision was made, and where that decision was recorded.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Evidence element</th>
+        <th>What it should capture</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Workflow or run identifier</strong></td>
+        <td>The run, scan, review, or workflow instance being discussed.</td>
+      </tr>
+      <tr>
+        <td><strong>Scope boundary</strong></td>
+        <td>What was reviewed and what was out of scope.</td>
+      </tr>
+      <tr>
+        <td><strong>Approved artifact</strong></td>
+        <td>Repository, branch, commit, path, ticket, scanner finding, or code slice.</td>
+      </tr>
+      <tr>
+        <td><strong>Environment</strong></td>
+        <td>Local checkout, sandbox, lower-level environment, CI-style worker, or another approved runtime.</td>
+      </tr>
+      <tr>
+        <td><strong>Source fact</strong></td>
+        <td>What the code, finding, log, diff, test output, or artifact directly shows.</td>
+      </tr>
+      <tr>
+        <td><strong>Validation method</strong></td>
+        <td>How the claim was checked, such as source review, approved test, scanner comparison, or human review.</td>
+      </tr>
+      <tr>
+        <td><strong>Supported inference</strong></td>
+        <td>A reasonable conclusion drawn from the available evidence.</td>
+      </tr>
+      <tr>
+        <td><strong>Proof gap</strong></td>
+        <td>What has not been tested, reviewed, reproduced, or approved.</td>
+      </tr>
+      <tr>
+        <td><strong>Proposed action</strong></td>
+        <td>Investigate, suppress, defer, remediate, re-test, escalate, or record.</td>
+      </tr>
+      <tr>
+        <td><strong>Reviewer disposition</strong></td>
+        <td>The human reviewer’s decision or required next review.</td>
+      </tr>
+      <tr>
+        <td><strong>System-of-record entry</strong></td>
+        <td>Where the decision, owner, status, and next action are recorded.</td>
+      </tr>
+      <tr>
+        <td><strong>Retention and cleanup status</strong></td>
+        <td>What evidence is retained and what temporary artifacts must be removed.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>This checklist improves traceability, but it does not raise the evidence ceiling. Recording a proof gap more carefully does not turn it into runtime proof. The permitted activity still determines the strongest claim the team can responsibly make.</p>
+
+  <pre><code>identify the run
+-&gt; confirm scope and approved artifact
+-&gt; capture source evidence and validation method
+-&gt; separate inference from proof gap
+-&gt; record proposed action and human disposition
+-&gt; write the decision to the system of record
+-&gt; retain or clean up evidence according to policy</code></pre>
+</section>

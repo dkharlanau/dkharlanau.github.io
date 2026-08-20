@@ -1,0 +1,58 @@
+<section id="ai-security-monitoring-auditability">
+  <h2>Monitoring and auditability</h2>
+
+  <p>The customer should be able to trace what happened in a Daybreak workflow. Monitoring is useful only when the workflow can be reconstructed well enough for security, engineering, risk, or audit teams to understand the evidence and the final decision.</p>
+
+  <p><strong>A traceable workflow should show:</strong></p>
+  <ul>
+    <li>what workflow, run, scan, or review was executed;</li>
+    <li>who approved it;</li>
+    <li>what asset and scope boundary were approved;</li>
+    <li>what environment was used;</li>
+    <li>what tools, identities, and permissions were used;</li>
+    <li>what evidence was produced and at what evidence level;</li>
+    <li>who reviewed the output;</li>
+    <li>what decision or disposition was made;</li>
+    <li>where that decision was recorded.</li>
+  </ul>
+
+  <pre><code>approved workflow
+-&gt; observable run
+-&gt; evidence trail
+-&gt; human review
+-&gt; customer decision
+-&gt; approved system of record</code></pre>
+
+  <p>This is the practical auditability layer of the operating model. It should connect workflow identity, scope, access, evidence, review, and disposition without requiring the customer to reconstruct the story from unrelated screenshots, chat messages, and temporary logs.</p>
+
+  <h3>Support existing control systems</h3>
+
+  <p>Daybreak and similar advanced security workflows should not be positioned as replacing the customer’s scanners, ticketing systems, policy systems, risk registers, CI systems, approval workflows, or audit processes by default.</p>
+
+  <p>The workflow can enrich those systems with better evidence, correlations, remediation context, and revalidation results. The customer operating model should define which existing system remains authoritative for each type of decision.</p>
+
+  <p>A workflow trace is not automatically an audit record. A proposed finding is not automatically an official finding. A generated patch is not automatically an accepted fix. Promotion into an official record should follow the customer’s review and approval path.</p>
+
+  <h3>The customer decides what becomes official</h3>
+
+  <p>The customer decides whether workflow output becomes an official:</p>
+  <ul>
+    <li><strong>Finding</strong> — a reviewed security issue accepted into the customer’s finding process;</li>
+    <li><strong>Ticket</strong> — a work item created in the approved ticketing or engineering system;</li>
+    <li><strong>Accepted fix</strong> — remediation that has passed the required review, testing, and revalidation path;</li>
+    <li><strong>Exception</strong> — an approved deviation from the normal policy or remediation path;</li>
+    <li><strong>Risk acceptance</strong> — a customer-owned decision to accept a documented risk;</li>
+    <li><strong>Backlog item</strong> — deferred work recorded with an owner, status, and next action;</li>
+    <li><strong>Audit record</strong> — evidence formally retained under the customer’s audit and retention rules.</li>
+  </ul>
+
+  <pre><code>workflow output != official record
+
+workflow output
+-&gt; named reviewer
+-&gt; customer-owned disposition
+-&gt; approved system of record
+-&gt; official status</code></pre>
+
+  <p>This separation preserves human accountability and prevents an AI-assisted workflow from silently becoming the system that defines risk, policy, remediation status, or audit truth simply because it produced the first draft.</p>
+</section>

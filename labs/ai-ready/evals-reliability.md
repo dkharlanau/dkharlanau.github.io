@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-19
 hide_global_cta: true
 tags: [ai, evals, testing, reliability, observability]
 ---
@@ -118,6 +118,30 @@ cost/request <= budget
 
 Do not chase one global score. Some cases should be hard gates.
 
+## Revalidate after remediation
+
+A proposed fix is not the end of the finding lifecycle. After remediation, rerun the narrowest test or evidence path that originally demonstrated the problem.
+
+Use this sequence:
+
+```text
+original finding
+-> bounded fix
+-> focused verification
+-> revalidate original evidence path
+-> regression check
+-> close, revise, or reopen
+```
+
+Revalidation should answer two different questions:
+
+1. Is the original finding actually addressed?
+2. Did the fix introduce a regression, move the failure to another path, or weaken a nearby control?
+
+Keep the original reproduction case, trace, failing test, scanner evidence, or approved runtime proof when possible. It becomes the strongest starting point for revalidation and should usually become a regression case after the issue is fixed.
+
+Do not mark a finding resolved only because the patch merged or the implementation looks plausible. The evidence that justified the finding should also provide the basis for closing it.
+
 ## Trace every evaluated run
 
 Store enough information to explain why the result changed:
@@ -161,6 +185,7 @@ Expected output is not only the root cause. It can include required evidence, al
 - Production failure never becomes a regression case.
 - Dataset is edited without version history.
 - Average score hides a critical failure.
+- A finding is closed because a patch merged, without revalidating the original evidence path.
 
 ## Build checklist
 
@@ -170,7 +195,8 @@ Expected output is not only the root cause. It can include required evidence, al
 4. Evaluate retrieval and generation separately.
 5. Test tool trajectories and stop reasons.
 6. Keep critical cases as release gates.
-7. Add failures back into the dataset.
-8. Track quality, latency, and cost together.
+7. Revalidate the original finding after remediation.
+8. Add fixed failures back into the regression dataset.
+9. Track quality, latency, and cost together.
 
 Related: [Sample Eval Dataset](/labs/ai-ready/data/eval-sample.jsonl) · [Data and RAG](/labs/ai-ready/data-rag/) · [Production Readiness Lab](/labs/ai-ready/labs/production-readiness/)

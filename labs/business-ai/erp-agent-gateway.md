@@ -48,6 +48,9 @@ semantic_links:
   - type: "related_topic"
     title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
+  - type: "same_domain"
+    title: "Business AI Glossary — Plain Language for Discovery, Architecture, Governance and Delivery"
+    url: "/labs/business-ai/glossary/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

@@ -22,7 +22,7 @@ The global navigation should stay product-level. Deep domain navigation belongs 
 
 The six product areas are connected by the canonical [SAP Enterprise & Business AI Decision Lab thesis](docs/decision-lab-product-thesis.md). Its north-star chain links a business problem to process, decision, evidence, architecture/control, outcome, and a reusable Lead recommendation.
 
-Business AI graph and data work must use [`_data/labs/business_ai/contract.yml`](_data/labs/business_ai/contract.yml), explained in [`docs/business-ai-data-contract.md`](docs/business-ai-data-contract.md). New graph artifacts, analytics, and agent context are views over this contract, not new sources of truth.
+Business AI graph and data work must use `_data/labs/business_ai/contract.yml`, explained in [`docs/business-ai-data-contract.md`](docs/business-ai-data-contract.md). New graph artifacts, analytics, and agent context are views over this contract, not new sources of truth.
 
 ## Canonical Route Rules
 

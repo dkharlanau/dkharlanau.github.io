@@ -1,0 +1,20 @@
+---
+layout: null
+permalink: /ai/business-ai-glossary.json
+sitemap: false
+---
+{% assign core = site.data.labs.business_ai.glossary %}
+{% assign extension = site.data.labs.business_ai.glossary_extensions %}
+{% assign terms = core.terms | concat: extension.terms %}
+{% assign non_synonyms = core.non_synonyms | concat: extension.non_synonyms %}
+{% assign writing_rules = core.writing_rules | concat: extension.writing_rules %}
+{
+  "version": {{ extension.version | jsonify }},
+  "updated_at": {{ extension.updated_at | jsonify }},
+  "principle": {{ core.principle | jsonify }},
+  "journey": {{ core.journey | jsonify }},
+  "terms": {{ terms | jsonify }},
+  "connections": {{ extension.connections | jsonify }},
+  "non_synonyms": {{ non_synonyms | jsonify }},
+  "writing_rules": {{ writing_rules | jsonify }}
+}

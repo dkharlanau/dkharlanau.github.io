@@ -121,6 +121,13 @@ def test_approved_requires_identified_human_reviewer():
         validate_case(case, CONTRACT, {"source-1"})
 
 
+def test_approved_inherits_the_full_case_schema_gate():
+    case = review_ready_case(state="approved")
+    case["process_id"] = ""
+    with pytest.raises(CaseContractError, match="missing process_id"):
+        validate_case(case, CONTRACT, {"source-1"})
+
+
 def test_valid_approved_case_passes_when_human_review_is_present():
     case = review_ready_case(state="approved")
     validated = validate_case(case, CONTRACT, {"source-1"})

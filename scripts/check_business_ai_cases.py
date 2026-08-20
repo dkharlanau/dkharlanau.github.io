@@ -171,7 +171,13 @@ def validate_case(record: dict, contract: dict, known_source_ids: set[str]) -> d
 
     state = case["review_state"]
     gate = contract["review_lifecycle"]["gates"].get(state, {})
-    for field in gate.get("require", []):
+    schema_required = {
+        field
+        for field, definition in contract["case_schema"]["fields"].items()
+        if state in definition.get("required_for", [])
+    }
+    required_fields = schema_required | set(gate.get("require", []))
+    for field in sorted(required_fields):
         if not _has_value(case.get(field)):
             raise CaseContractError(
                 f"{case_id} cannot be {state}: missing {field}"

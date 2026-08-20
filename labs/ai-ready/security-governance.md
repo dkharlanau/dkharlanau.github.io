@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-18
+last_modified_at: 2026-08-19
 hide_global_cta: true
 tags: [ai, security, governance, prompt-injection, authorization, pii]
 ---
@@ -19,6 +19,8 @@ tags: [ai, security, governance, prompt-injection, authorization, pii]
 # Security and Governance
 
 AI security starts from one uncomfortable assumption: text can be hostile. A user message, document, email, ticket, webpage, tool result, or retrieved chunk may contain instructions that try to change system behavior. Treat content as data. Do not let content become authority.
+
+**Shared language:** use the [Business AI Glossary](/labs/business-ai/glossary/) for the canonical plain-English meanings of [trust boundary](/labs/business-ai/glossary/#trust-boundary), [authentication](/labs/business-ai/glossary/#authentication), [authorization](/labs/business-ai/glossary/#authorization), [approval gate](/labs/business-ai/glossary/#approval-gate), [evidence ceiling](/labs/business-ai/glossary/#evidence-ceiling), [proof gap](/labs/business-ai/glossary/#proof-gap), and [revalidation](/labs/business-ai/glossary/#revalidation). This page adds the security-specific operating detail without redefining those terms.
 
 ## The trust boundary
 
@@ -135,7 +137,19 @@ NIST AI RMF and the Generative AI Profile are useful references for organizing r
 
 Reviewed source: [NIST AI RMF: Generative AI Profile](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence), reviewed 15 Aug 2026.
 
+{% include labs/ai-ready/security-case-reading.html %}
+
 {% include labs/ai-ready/security-evidence-levels.html %}
+
+{% include labs/ai-ready/security-operating-model.html %}
+
+{% include labs/ai-ready/security-evidence-completeness.html %}
+
+{% include labs/ai-ready/security-monitoring-auditability.html %}
+
+{% include labs/ai-ready/security-next-step-options.html %}
+
+{% include labs/ai-ready/security-value-story-executive-readout.html %}
 
 ## Minimum production controls
 
@@ -159,4 +173,4 @@ Reviewed source: [NIST AI RMF: Generative AI Profile](https://www.nist.gov/publi
 - Approval cannot be linked to the exact action that was executed.
 - Security testing checks jailbreaks but ignores tool abuse and data exfiltration.
 
-Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [Tools and MCP](/labs/ai-ready/tools-mcp/) · [Build and Operate](/labs/ai-ready/build-operate/)
+Related: [Business AI Glossary](/labs/business-ai/glossary/) · [Governance and Data Boundaries](/labs/business-ai/governance-data-boundaries/) · [Implementation Readiness](/labs/business-ai/implementation-readiness/) · [Practical Use Cases](/labs/ai-ready/use-cases/) · [Tools and MCP](/labs/ai-ready/tools-mcp/) · [Build and Operate](/labs/ai-ready/build-operate/)

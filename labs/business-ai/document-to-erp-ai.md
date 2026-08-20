@@ -47,9 +47,9 @@ semantic_links:
   - type: "related_topic"
     title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
-  - type: "related_topic"
-    title: "SAP Decision Cards — Enterprise Context Lab"
-    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "AI Governance and Data Boundaries — Ownership, Access, Action Risk and Validation"
+    url: "/labs/business-ai/governance-data-boundaries/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

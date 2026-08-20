@@ -29,7 +29,7 @@ Profile is reached through `/`, `/about/`, and `/cv/`.
 
 The six product areas work together as one evidence-backed SAP Enterprise and Business AI Decision Lab. The canonical product thesis, evidence chain, authority themes, and non-goals are defined in [`docs/decision-lab-product-thesis.md`](docs/decision-lab-product-thesis.md).
 
-Business AI structured data follows the canonical contract in [`_data/labs/business_ai/contract.yml`](_data/labs/business_ai/contract.yml), with implementation guidance in [`docs/business-ai-data-contract.md`](docs/business-ai-data-contract.md). New graph, agent, analysis, and evidence views must extend or consume that contract instead of creating a parallel source model.
+Business AI structured data follows the canonical contract at `_data/labs/business_ai/contract.yml`, with implementation guidance in [`docs/business-ai-data-contract.md`](docs/business-ai-data-contract.md). New graph, agent, analysis, and evidence views must extend or consume that contract instead of creating a parallel source model.
 
 ## Stable URL principle
 

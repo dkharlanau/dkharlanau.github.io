@@ -1,7 +1,261 @@
+<section id="ai-security-review-intake">
+  <h2>Start with a bounded evaluation</h2>
+
+  <p>A customer may be excited about Daybreak, Codex Security, or advanced cyber capability. That interest is useful, but it is not yet an evaluation plan.</p>
+
+  <p><strong>Bounded evaluation</strong> means a deliberately limited evaluation focused on one approved workflow, target, review path, and success metric set. The purpose is to learn whether the workflow produces evidence that security and engineering teams can trust without expanding the exercise into an open-ended security program.</p>
+
+  <pre><code>customer interest
+-&gt; evaluation question and hypothesis
+-&gt; approved workflow and target
+-&gt; evaluation charter
+-&gt; bounded evaluation
+-&gt; evidence and review
+-&gt; decision
+-&gt; bounded fix when justified
+-&gt; revalidation</code></pre>
+
+  <p>A bounded evaluation should define the target, timing, allowed evidence sources, review path, permissions, success metrics, and stop conditions before work begins. This keeps the evaluation useful, reviewable, and safe while still giving the customer enough evidence to decide whether broader adoption is justified.</p>
+
+  <h3>Evaluation question and hypothesis</h3>
+
+  <p>Every bounded evaluation should start with a clear question.</p>
+
+  <p>A good evaluation question connects the customer’s workflow bottleneck to a measurable improvement. It should make clear what the team wants to learn, where the improvement should happen, and what evidence would support the conclusion.</p>
+
+  <p><strong>Evaluation question pattern:</strong> Can this workflow improve <em>[specific bottleneck]</em> for <em>[bounded target]</em> while preserving <em>[required quality or safety condition]</em>?</p>
+
+  <p><strong>Hypothesis</strong> turns that question into a testable expectation. It should name the expected change, the metric used to observe it, the comparison point, and any guardrail that must not get worse.</p>
+
+  <pre><code>If we use [approved workflow] on [bounded target],
+then [measurable outcome] should improve compared with [baseline],
+without reducing [evidence, safety, or review-quality guardrail].</code></pre>
+
+  <p>This prevents an evaluation from becoming a product demonstration with no decision rule. The team should know before the work starts what result would support the hypothesis, what would weaken it, and what would remain unresolved.</p>
+
+  <h3>Choose a strong first evaluation target</h3>
+
+  <p>A strong first evaluation target meets these criteria:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>What it means</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Owned</strong></td>
+        <td>The customer controls the repository, application, backlog, or environment.</td>
+      </tr>
+      <tr>
+        <td><strong>Authorized</strong></td>
+        <td>Security and engineering stakeholders approve the review.</td>
+      </tr>
+      <tr>
+        <td><strong>Bounded</strong></td>
+        <td>The scope can be clearly described and enforced.</td>
+      </tr>
+      <tr>
+        <td><strong>Relevant</strong></td>
+        <td>The target connects to a real security bottleneck or business-relevant risk.</td>
+      </tr>
+      <tr>
+        <td><strong>Reviewable</strong></td>
+        <td>A named reviewer can assess findings, evidence, and proposed actions.</td>
+      </tr>
+      <tr>
+        <td><strong>Measurable</strong></td>
+        <td>The team can define success metrics before the evaluation starts.</td>
+      </tr>
+      <tr>
+        <td><strong>Context-rich</strong></td>
+        <td>The workflow includes enough code, system, test, scanner, ticket, or architecture context to support useful analysis.</td>
+      </tr>
+      <tr>
+        <td><strong>Safe</strong></td>
+        <td>The activity avoids unapproved production testing, exploit-heavy behavior, unclear data handling, or unclear ownership.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>If several of these criteria are weak, narrow the scope or choose a different first target. A difficult target may be valuable later, but the first evaluation should make evidence quality easy to judge.</p>
+
+  <h3>Write an evaluation charter</h3>
+
+  <p>A strong evaluation charter should define exactly what is in scope and what is out of scope. A bounded evaluation also needs named people, not only named tools.</p>
+
+  <p>The charter should identify who is accountable for each part of the workflow. At minimum, name the customer owner, security reviewer, engineering reviewer, evaluation operator, and the person who can approve any change in scope or permitted activity. One person may hold more than one role, but accountability should still be explicit.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Charter area</th>
+        <th>Define before starting</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>In scope</strong></td>
+        <td>Approved repositories, services, backlog items, pull requests, environments, workflows, and evidence sources.</td>
+      </tr>
+      <tr>
+        <td><strong>Out of scope</strong></td>
+        <td>Systems, data, actions, testing methods, or remediation work that are not approved for this evaluation.</td>
+      </tr>
+      <tr>
+        <td><strong>People</strong></td>
+        <td>Named owners, reviewers, operators, approvers, and escalation contacts.</td>
+      </tr>
+      <tr>
+        <td><strong>Expected evidence</strong></td>
+        <td>The findings, source references, review notes, tests, traces, scanner correlations, remediation guidance, or revalidation evidence the evaluation should produce.</td>
+      </tr>
+      <tr>
+        <td><strong>Evidence ceiling</strong></td>
+        <td>The highest level of proof the team can responsibly claim from the permitted activity.</td>
+      </tr>
+      <tr>
+        <td><strong>Metrics</strong></td>
+        <td>The measures tied to the customer bottleneck, plus any quality, safety, or governance guardrails.</td>
+      </tr>
+      <tr>
+        <td><strong>Stop conditions</strong></td>
+        <td>Conditions that pause or end the evaluation, including scope ambiguity, missing authorization, unsafe activity, or evidence limits.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Evidence ceiling</strong> is the highest level of proof the team can responsibly claim based on the activity that is actually permitted. For example, a source-only review may support source facts and supported inferences, but it cannot claim runtime proof. Approved staging tests may raise the ceiling for the tested path, but not for untested systems or production behavior.</p>
+
+  <p>The evidence ceiling should be agreed before the evaluation starts and repeated in the final report. This keeps a useful inference from quietly becoming an exploit claim after it passes through three meetings and a slide deck.</p>
+
+  <h3>Tie metrics to the customer bottleneck</h3>
+
+  <p>Start by asking where the customer’s workflow is slow, noisy, or difficult to govern. Then select metrics that show whether the bounded evaluation improves that specific problem.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Metric area</th>
+        <th>Use when</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Finding quality</strong></td>
+        <td>The customer struggles with triage, validation, prioritization, or evidence gathering.</td>
+      </tr>
+      <tr>
+        <td><strong>Developer handoff</strong></td>
+        <td>Security findings are not clear enough for engineering teams to act on.</td>
+      </tr>
+      <tr>
+        <td><strong>Fix progress</strong></td>
+        <td>The customer needs safer movement from confirmed finding to reviewed remediation, testing, and revalidation.</td>
+      </tr>
+      <tr>
+        <td><strong>Reviewer effort</strong></td>
+        <td>The customer wants to reduce review burden while preserving human judgment.</td>
+      </tr>
+      <tr>
+        <td><strong>Operating control</strong></td>
+        <td>The customer needs confidence that outputs can be reviewed, retained, recorded, and used inside existing systems. Remediation and review metrics help show whether the workflow supports movement from finding to reviewed action.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Do not use all metric areas by default. Choose the smallest set that answers the evaluation question. A metric is useful when it changes a customer decision, not when it merely gives the dashboard another rectangle.</p>
+
+  <h3>Decision quality</h3>
+
+  <p><strong>Decision quality</strong> means the customer has better evidence to decide what should happen to a finding. The goal is not to maximize the number of findings. The goal is to make each disposition more defensible.</p>
+
+  <ul>
+    <li><strong>Confirm</strong> when the available evidence is strong enough to support the finding.</li>
+    <li><strong>Suppress</strong> when the signal is a false positive, duplicate, accepted pattern, or otherwise not actionable under the agreed review rules.</li>
+    <li><strong>Defer</strong> when the finding is credible but remediation is intentionally postponed.</li>
+    <li><strong>Remediate</strong> when the issue is sufficiently supported and a bounded fix is justified.</li>
+    <li><strong>Escalate</strong> when the impact, uncertainty, ownership, or required authority exceeds the current review boundary.</li>
+    <li><strong>Leave unresolved</strong> when more proof is needed and the available evidence does not justify a stronger conclusion.</li>
+  </ul>
+
+  <pre><code>candidate finding
+-&gt; collect and classify evidence
+-&gt; assess decision quality
+-&gt; confirm / suppress / defer / remediate / escalate / unresolved</code></pre>
+
+  <p>Good decision quality does not require every candidate finding to become a confirmed issue. A review is useful when it helps the customer distinguish what is proven, what is plausible, what can be safely dismissed, what needs action now, and what still has a proof gap.</p>
+
+  <h3>Ask five review questions</h3>
+
+  <p>Do not begin with a scanner, a model, or a fix. First define what the customer needs to know and what evidence would be strong enough to support a decision.</p>
+
+  <ol>
+    <li>
+      <strong>What is the target?</strong>
+      Is the customer asking about a whole repository or service, a backlog slice, a specific pull request, or an already validated finding?
+    </li>
+    <li>
+      <strong>What is the timing?</strong>
+      First assessment, high-risk review, pre-merge review, backlog triage, or post-validation remediation?
+    </li>
+    <li>
+      <strong>What evidence is needed?</strong>
+      Candidate findings, validated findings, attack-path evidence, source-supported review, remediation guidance, or revalidation?
+    </li>
+    <li>
+      <strong>Is remediation ready?</strong>
+      Is there enough evidence to prepare a bounded fix, or does the team need more validation first?
+    </li>
+    <li>
+      <strong>How will we search for and analyze errors?</strong>
+      Which signals should be checked first: changed code, tests, logs, configuration, scanner output, data flows, authorization paths, integration boundaries, or approved runtime behavior? Define how a suspicious signal becomes a reproducible defect or a documented proof gap.
+    </li>
+  </ol>
+
+  <h3>Error search and analysis loop</h3>
+
+  <p>Finding an error is not the same as understanding it. A useful review traces a signal to the smallest supported explanation before anyone starts writing a fix.</p>
+
+  <pre><code>symptom or risk signal
+-&gt; locate evidence
+-&gt; reproduce or trace the behavior
+-&gt; isolate the smallest failure surface
+-&gt; test alternative explanations
+-&gt; classify the evidence
+-&gt; decide: validate, remediate, or stop</code></pre>
+
+  <p>Good search starts from observable signals. Review the diff for changed assumptions, follow failing tests to the responsible branch, connect log errors to the request or job that produced them, inspect authorization and data-flow boundaries, and compare scanner findings with the actual code path.</p>
+
+  <p>During analysis, ask: What input triggers the problem? Where is the first incorrect state or decision? Is the issue local or caused upstream? Can another control still block the path? Is the behavior reproducible? What evidence would disprove the current theory? This prevents a suspicious pattern from being promoted into a confident claim just because it looks dramatic.</p>
+
+  <p>For AI-assisted review, use agents to widen the search surface, correlate evidence, and test hypotheses. Keep the final claim tied to code, configuration, logs, tests, scanner output, or explicitly approved runtime evidence. The goal is not to produce more findings. The goal is to reduce uncertainty without inventing certainty.</p>
+
+  <h3>Remediation terminology</h3>
+
+  <p><strong>Bounded fix</strong> means a targeted change that addresses the specific finding without broad refactoring, unrelated changes, or unapproved expansion of scope.</p>
+
+  <p>A bounded fix should have a clear relationship to the evidence that justified the finding. If the proposed change requires a wider architectural rewrite, new product behavior, unrelated cleanup, or a larger permission boundary, treat that work as a separate scope decision rather than quietly attaching it to the remediation.</p>
+
+  <p><strong>Revalidation</strong> means checking the original finding again after a proposed fix. The team should verify that the original failure path, unsafe behavior, or evidence condition is no longer present and that the fix did not merely move or hide the symptom.</p>
+
+  <pre><code>validated finding
+-&gt; bounded fix
+-&gt; targeted verification
+-&gt; revalidate original finding
+-&gt; close, revise, or reopen</code></pre>
+
+  <p>Do not close a finding only because code changed or a patch was proposed. Closure should follow revalidation against the original evidence and acceptance criteria.</p>
+</section>
+
 <section id="ai-security-evidence-levels">
   <h2>Evidence levels for AI security review</h2>
 
   <p>Not every security statement carries the same evidentiary weight. For Codex Security and similar AI-assisted reviews, label findings by how strong the evidence is.</p>
+
+  <p>The evaluation charter should also define the <strong>evidence ceiling</strong>: the highest evidence level the permitted activity can support. Never report a claim above that ceiling.</p>
 
   <h3>Source fact</h3>
   <p>Something directly visible in code, configuration, logs, test output, scanner output, or provided materials.</p>

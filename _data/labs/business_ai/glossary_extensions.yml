@@ -1,0 +1,275 @@
+version: "1.1"
+updated_at: "2026-08-19"
+
+terms:
+  - id: assumption
+    term: "Assumption"
+    group: "Core language"
+    plain: "A working belief used to move the design forward before it has been confirmed."
+    preferred_use: "State important assumptions explicitly and show what would validate or change them."
+    do_not_confuse: "An assumption should not be written as a fact because it sounds reasonable."
+    used_in:
+      - title: "AI Fluency"
+        url: "/labs/ai-fluency/"
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+
+  - id: success-criteria
+    term: "Success criteria"
+    group: "Core language"
+    plain: "The observable conditions used to decide whether a test, design, or release is good enough to continue."
+    preferred_use: "Choose criteria that can change a decision, not metrics collected only because they are available."
+    do_not_confuse: "Success criteria are not the same as a general business aspiration."
+    used_in:
+      - title: "Model Selection"
+        url: "/labs/business-ai/model-selection/"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/"
+
+  - id: state
+    term: "State"
+    group: "Solution shape"
+    plain: "Information that must carry from one step to the next so the workflow continues from the correct business situation."
+    preferred_use: "Define what state is stored, where it lives, how long it lasts, and who may change it."
+    do_not_confuse: "State should not quietly become unowned or unlimited memory."
+    used_in:
+      - title: "Platform Building Blocks"
+        url: "/labs/business-ai/platform-building-blocks/"
+      - title: "Architecture Patterns"
+        url: "/labs/business-ai/architecture-patterns/"
+
+  - id: authentication
+    term: "Authentication"
+    group: "Control and risk"
+    plain: "The check that confirms who or what is connecting."
+    preferred_use: "Use it for user, application, service, or workload identity before access is considered."
+    do_not_confuse: "Authentication proves identity. It does not decide what that identity may do."
+    used_in:
+      - title: "Business AI Lab"
+        url: "/labs/business-ai/#ai-api-fluency"
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/"
+
+  - id: authorization
+    term: "Authorization"
+    group: "Control and risk"
+    plain: "The decision about what an authenticated identity is allowed to read, change, approve, or execute."
+    preferred_use: "Keep authorization in trusted application or enterprise controls rather than asking the model to invent permission."
+    do_not_confuse: "Authorization is not the same as authentication or a conversational approval."
+    used_in:
+      - title: "Business AI Lab"
+        url: "/labs/business-ai/#ai-api-fluency"
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/"
+
+  - id: trust-boundary
+    term: "Trust boundary"
+    group: "Control and risk"
+    plain: "The point where information or actions move between parts of the workflow that have different levels of trust."
+    preferred_use: "Use it to show where untrusted content must not become authority, policy, or permission."
+    do_not_confuse: "A trust boundary is not only a box on a diagram. It changes how input and action are controlled."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#the-trust-boundary"
+      - title: "Governance and Data Boundaries"
+        url: "/labs/business-ai/governance-data-boundaries/"
+
+  - id: prompt-injection
+    term: "Prompt injection"
+    group: "Control and risk"
+    plain: "Untrusted content that tries to make the AI ignore, replace, or misuse the workflow's intended instructions or authority."
+    preferred_use: "Treat user, file, web, retrieval, and tool content as data that may contain hostile instructions."
+    do_not_confuse: "Prompt injection is not solved by telling the model to ignore bad prompts. System boundaries and tool permissions still matter."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#prompt-injection-is-a-system-problem"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/#evals"
+
+  - id: bounded-evaluation
+    term: "Bounded evaluation"
+    group: "Evidence and validation"
+    plain: "A deliberately limited evaluation of one approved workflow, target, review path, and success measure set."
+    preferred_use: "Use it to learn whether the workflow produces trustworthy evidence without turning the exercise into an open-ended program."
+    do_not_confuse: "A bounded evaluation is not a product demo and is not permission to expand scope."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-review-intake"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+
+  - id: evaluation-charter
+    term: "Evaluation charter"
+    group: "Evidence and validation"
+    plain: "A short agreement that defines what an evaluation may cover, who owns it, what evidence is expected, and when it must stop."
+    preferred_use: "Define scope, people, evidence, metrics, permissions, evidence ceiling, and stop conditions before work starts."
+    do_not_confuse: "A charter is not the final technical design or a broad project plan."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-review-intake"
+
+  - id: evidence-ceiling
+    term: "Evidence ceiling"
+    group: "Evidence and validation"
+    plain: "The strongest level of proof the permitted activity can responsibly support."
+    preferred_use: "Agree the ceiling before testing and do not report a claim above it."
+    do_not_confuse: "A source-only review cannot become runtime proof just because the conclusion sounds likely."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-review-intake"
+
+  - id: source-fact
+    term: "Source fact"
+    group: "Evidence and validation"
+    plain: "Something directly visible in approved source material such as code, configuration, logs, tests, scanner output, records, or documents."
+    preferred_use: "Use it for statements that can be pointed to directly in the available evidence."
+    do_not_confuse: "A source fact does not automatically prove runtime behavior or business impact."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-evidence-levels"
+
+  - id: supported-inference
+    term: "Supported inference"
+    group: "Evidence and validation"
+    plain: "A reasonable conclusion drawn from one or more source facts."
+    preferred_use: "Use it when the evidence supports a likely explanation but stronger proof is still missing."
+    do_not_confuse: "An inference should not be reported as an observed runtime fact."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-evidence-levels"
+
+  - id: runtime-proof
+    term: "Runtime proof"
+    group: "Evidence and validation"
+    plain: "Evidence observed from explicitly approved runtime testing."
+    preferred_use: "Use this label only for the path, environment, and behavior that were actually authorized and observed."
+    do_not_confuse: "Runtime proof for one tested path does not prove every environment, user, or production condition."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-evidence-levels"
+
+  - id: unsupported-claim
+    term: "Unsupported claim"
+    group: "Evidence and validation"
+    plain: "A statement that goes further than the available evidence supports."
+    preferred_use: "Downgrade, remove, or turn the statement into a validation need."
+    do_not_confuse: "A plausible story is still unsupported if the required evidence does not exist."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-evidence-levels"
+
+  - id: stop-condition
+    term: "Stop condition"
+    group: "Evidence and validation"
+    plain: "A pre-agreed condition that pauses or ends an evaluation or release step."
+    preferred_use: "Use it for missing authorization, scope ambiguity, unsafe activity, evidence limits, unacceptable quality, or another defined boundary."
+    do_not_confuse: "A stop condition is not a failure of the process. It prevents unjustified continuation."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-review-intake"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+
+  - id: decision-quality
+    term: "Decision quality"
+    group: "Evidence and validation"
+    plain: "How well the available evidence supports a clear and defensible next decision."
+    preferred_use: "Use it to distinguish confirm, suppress, defer, remediate, escalate, and unresolved outcomes."
+    do_not_confuse: "Decision quality is not the number of findings or the confidence of the reviewer."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-review-intake"
+
+  - id: bounded-fix
+    term: "Bounded fix"
+    group: "Evidence and validation"
+    plain: "A targeted change that addresses a supported finding without quietly expanding into unrelated redesign or refactoring."
+    preferred_use: "Keep the change tied to the evidence and agreed scope."
+    do_not_confuse: "A larger architecture change may be justified, but it should be treated as a separate scope decision."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-review-intake"
+
+  - id: revalidation
+    term: "Revalidation"
+    group: "Evidence and validation"
+    plain: "Checking the original finding, failure, or acceptance condition again after a change."
+    preferred_use: "Verify that the original problem is no longer present and that the change did not only move or hide it."
+    do_not_confuse: "Code or configuration change alone is not proof that the issue is closed."
+    used_in:
+      - title: "Security and Governance"
+        url: "/labs/ai-ready/security-governance/#ai-security-review-intake"
+      - title: "Implementation Readiness"
+        url: "/labs/business-ai/implementation-readiness/"
+
+connections:
+  - from: "business-problem"
+    to: ["workflow", "outcome-owner", "success-criteria"]
+    why: "Start from the problem, locate it in the workflow, name ownership, and define what improvement would count."
+  - from: "context"
+    to: ["approved-source", "retrieval-grounded-generation", "access-boundary"]
+    why: "Useful context depends on source quality, the way context is supplied, and who is allowed to use it."
+  - from: "architecture-pattern"
+    to: ["minimum-capability-set", "first-pass-blueprint", "final-technical-design"]
+    why: "Choose the reusable shape, apply it to the workflow, then validate the specialist design."
+  - from: "tool"
+    to: ["tool-boundary", "authorization", "action-authority"]
+    why: "A callable capability becomes risky when its permissions and business authority are unclear."
+  - from: "human-review"
+    to: ["approval-gate", "escalation-question", "operating-owner"]
+    why: "Human involvement should have a named purpose, decision, and owner."
+  - from: "evidence"
+    to: ["source-fact", "supported-inference", "runtime-proof", "proof-gap"]
+    why: "Keep direct facts, inferences, observed runtime behavior, and missing proof separate."
+  - from: "bounded-evaluation"
+    to: ["evaluation-charter", "evidence-ceiling", "stop-condition", "decision-quality"]
+    why: "A useful evaluation needs a boundary, a maximum claim level, a stop rule, and a decision it can support."
+  - from: "source-fact"
+    to: ["supported-inference", "runtime-proof", "unsupported-claim"]
+    why: "A direct observation may support an inference, but stronger claims need stronger proof."
+  - from: "eval"
+    to: ["representative-eval", "guardrail", "safeguard", "success-criteria"]
+    why: "Tests measure behavior; controls constrain behavior; criteria decide whether the result is good enough."
+  - from: "validation-need"
+    to: ["escalation-question", "proof-gap", "assumption"]
+    why: "When evidence is missing, state the gap, keep the assumption visible, and ask the right owner a decision-ready question."
+  - from: "observability"
+    to: ["auditability", "operating-owner", "revalidation"]
+    why: "Ongoing visibility, case reconstruction, ownership, and repeat checking support controlled operation."
+  - from: "release"
+    to: ["fallback", "rollback", "stop-condition", "operating-owner"]
+    why: "A release is controlled only when the team knows how to narrow, stop, recover, and own it."
+  - from: "bounded-fix"
+    to: ["revalidation", "proof-gap", "final-technical-design"]
+    why: "A targeted fix should close the supported finding; wider design work remains a separate decision."
+
+non_synonyms:
+  - left: "Authentication"
+    right: "Authorization"
+    rule: "Authentication = who or what is connecting. Authorization = what that identity may do."
+  - left: "Human review"
+    right: "Approval gate"
+    rule: "Human review = broad review point. Approval gate = explicit permission before a defined action continues."
+  - left: "Source fact"
+    right: "Supported inference"
+    rule: "Source fact = directly visible evidence. Supported inference = a reasonable conclusion drawn from facts."
+  - left: "Supported inference"
+    right: "Runtime proof"
+    rule: "Inference = evidence-backed conclusion. Runtime proof = behavior actually observed in approved testing."
+  - left: "Proof gap"
+    right: "Unsupported claim"
+    rule: "Proof gap = missing evidence kept visible. Unsupported claim = statement that already goes beyond the evidence."
+  - left: "Bounded fix"
+    right: "Final technical design"
+    rule: "Bounded fix = targeted remediation. Final technical design = validated design for the wider implementation."
+
+writing_rules:
+  - "Keep authentication, authorization, approval, and action authority separate. They answer different control questions."
+  - "When evidence is missing, create an escalation question or proof gap rather than inventing assurance."
+  - "Use source fact, supported inference, runtime proof, unsupported claim, and proof gap when evidence strength changes what may be claimed."
+  - "Agree an evidence ceiling before a bounded evaluation when the permitted activity limits what can be proved."
+  - "Prefer direct links to the relevant glossary term anchor rather than linking only to the top of the glossary."
