@@ -31,7 +31,7 @@ def test_business_ai_graph_integrity_validator_passes_repository_model():
 def test_business_ai_graph_report_separates_structural_errors_from_coverage_gaps():
     report = build_report()
     assert report["schema"] == "dkharlanau.business-ai.graph-integrity"
-    assert report["contract_version"] == "1.2.0"
+    assert report["contract_version"] == "1.3.0"
     assert report["structural_errors"] == 0
     assert report["counts"]["processes"] > 0
     assert report["counts"]["process_stages"] >= 12
@@ -99,5 +99,7 @@ def test_machine_graph_endpoint_is_contract_driven_and_exposes_proof_gaps():
     assert '"domain-supports-case"' in endpoint
     assert '"case-uses-pattern"' in endpoint
     assert '"proof_gaps"' in endpoint
+    assert '"legacy_case_kind": "unknown"' in endpoint
     assert '"legacy_source_confidence": "unknown"' in endpoint
+    assert '"case_contract"' in endpoint
     assert "ai/business-ai-graph.json" in contract

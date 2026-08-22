@@ -1,9 +1,9 @@
 contract:
   id: business-ai-graph
-  version: "1.2.0"
+  version: "1.3.0"
   schema_version: "1"
   compatibility: additive-minor
-  purpose: "Canonical contract for Business AI entities, relationships, evidence fields, review state, and generated views."
+  purpose: "Canonical contract for Business AI entities, relationships, evidence fields, case intelligence, review state, and generated views."
 
 source_of_truth:
   contract: _data/labs/business_ai/contract.yml
@@ -63,6 +63,7 @@ vocabularies:
     - ai_implementation
     - ai_foundation
     - solution_evidence
+    - unknown
   evidence_grade:
     - A
     - B
@@ -72,6 +73,16 @@ vocabularies:
     - high
     - medium
     - low
+    - unknown
+  source_type:
+    - customer_first_party
+    - vendor_first_party
+    - official_documentation
+    - implementation_partner
+    - research
+    - analyst
+    - media
+    - community
     - unknown
   review_state:
     - candidate
@@ -89,6 +100,14 @@ vocabularies:
     - L3
     - L4
     - L5
+  implementation_maturity:
+    - announced
+    - pilot
+    - production
+    - scaled
+    - stopped
+    - unclear
+    - unknown
   outcome_state:
     - positive
     - mixed
@@ -100,15 +119,151 @@ vocabularies:
     - runtime_proof
     - unsupported_claim
     - proof_gap
+  transferability:
+    - high
+    - medium
+    - low
+    - unknown
+  measurement_state:
+    - baseline_and_period
+    - reported_metric
+    - qualitative_only
+    - no_public_measurement
+    - unknown
 
 field_vocabularies:
   case_kind: case_kind
   evidence_grade: evidence_grade
   source_confidence: source_confidence
+  source_type: source_type
   review_state: review_state
   autonomy_level: autonomy_level
+  implementation_maturity: implementation_maturity
   outcome_state: outcome_state
   evidence_level: evidence_level
+  transferability: transferability
+  measurement_state: measurement_state
+
+case_schema:
+  version: "2.0"
+  migration_policy: "Legacy cases remain valid structured records. Missing normalized fields stay missing or unknown and become proof gaps; migration must not invent facts."
+  fields:
+    id:
+      required_for: [candidate, sourced, structured, challenged, review_ready, approved]
+    title:
+      required_for: [candidate, sourced, structured, challenged, review_ready, approved]
+    case_kind:
+      vocabulary: case_kind
+      required_for: [challenged, review_ready, approved]
+    business_problem:
+      required_for: [challenged, review_ready, approved]
+    process_id:
+      reference: EndToEndProcess
+      required_for: [review_ready, approved]
+    process_stage_ids:
+      reference: ProcessStage
+      required_for: [review_ready, approved]
+    ai_job:
+      required_for: [review_ready, approved]
+    pattern_ids:
+      reference: Pattern
+      required_for: [structured, challenged, review_ready, approved]
+    implementation_maturity:
+      vocabulary: implementation_maturity
+      required_for: [challenged, review_ready, approved]
+    autonomy_level:
+      vocabulary: autonomy_level
+      required_for: [review_ready, approved]
+    systems_of_record:
+      required_for: [review_ready, approved]
+    data_dependencies:
+      required_for: [review_ready, approved]
+    integration_boundaries:
+      required_for: [review_ready, approved]
+    authority_boundary:
+      required_for: [review_ready, approved]
+    controls:
+      required_for: [review_ready, approved]
+    human_review:
+      required_for: [review_ready, approved]
+    metrics:
+      required_for: [review_ready, approved]
+    measurement_state:
+      vocabulary: measurement_state
+      required_for: [review_ready, approved]
+    evidence_grade:
+      vocabulary: evidence_grade
+      required_for: [structured, challenged, review_ready, approved]
+    evidence_claims:
+      required_for: [challenged, review_ready, approved]
+    source_ids:
+      reference: EvidenceSource
+      required_for: [sourced, structured, challenged, review_ready, approved]
+    source_types:
+      vocabulary: source_type
+      required_for: [review_ready, approved]
+    limitations:
+      required_for: [challenged, review_ready, approved]
+    proof_gaps:
+      required_for: [challenged, review_ready, approved]
+    transferability:
+      vocabulary: transferability
+      required_for: [review_ready, approved]
+    failure_notes:
+      required_for: []
+    consultant_interpretation:
+      required_for: [challenged, review_ready, approved]
+  legacy_aliases:
+    pattern: pattern_ids
+    process: process_label
+    reported_metrics: metrics
+    limits: limitations
+    consultant_note: consultant_interpretation
+    implementation: implementation_summary
+  claim_contract:
+    required_fields: [statement, level]
+    runtime_proof_requires: [runtime_authorized, runtime_observed]
+    rule: "A runtime_proof claim is invalid unless approved runtime activity was explicitly authorized and observed."
+
+review_lifecycle:
+  initial_state: candidate
+  human_approval_state: approved
+  agent_maximum_state: review_ready
+  transitions:
+    candidate: [sourced, rejected]
+    sourced: [structured, needs_more_evidence, rejected]
+    structured: [challenged, needs_more_evidence, rejected]
+    challenged: [review_ready, needs_more_evidence, rejected]
+    review_ready: [approved, needs_more_evidence, rejected]
+    needs_more_evidence: [sourced, structured, challenged, rejected]
+    approved: [challenged, needs_more_evidence]
+    rejected: []
+  gates:
+    sourced:
+      require: [source_ids]
+    structured:
+      require: [source_ids, pattern_ids, evidence_grade]
+    challenged:
+      require: [business_problem, pattern_ids, implementation_maturity, evidence_grade, evidence_claims, limitations, proof_gaps, consultant_interpretation]
+      block_evidence_levels: []
+    review_ready:
+      require: [business_problem, process_id, process_stage_ids, ai_job, pattern_ids, implementation_maturity, autonomy_level, systems_of_record, data_dependencies, integration_boundaries, authority_boundary, controls, human_review, metrics, measurement_state, evidence_grade, evidence_claims, source_ids, source_types, limitations, proof_gaps, transferability, consultant_interpretation]
+      block_evidence_levels: [unsupported_claim]
+    approved:
+      require: [human_review]
+      block_evidence_levels: [unsupported_claim]
+      human_review:
+        kind: human
+        require: [reviewed_by, reviewed_at]
+  freshness:
+    approved_case_recheck_days: 180
+    stale_action: challenged
+  rules:
+    - "Agents may prepare, structure, challenge, and move a record to review_ready."
+    - "Only an identified human reviewer may move a record to approved."
+    - "Duplicate evidence updates the existing case when it describes the same implementation; it does not create a new case for volume."
+    - "A case can move back to challenged or needs_more_evidence when evidence becomes stale or contradictory."
+    - "Rejected records are retained for traceability but are not promoted as public implementation evidence."
 
 entity_types:
   - BusinessDomain
@@ -233,6 +388,6 @@ consumers:
 
 compatibility_rules:
   - "Patch changes may clarify descriptions without changing meaning."
-  - "Minor changes may add optional fields, entity types, relationships, or vocabulary values."
+  - "Minor changes may add optional fields, entity types, relationships, vocabulary values, or review gates for states not yet reached by legacy records."
   - "Removing or renaming IDs, required fields, or vocabulary values requires a major contract version."
   - "Generated views declare the contract version they were built from."
