@@ -41,7 +41,7 @@ next_actions:
     <p class="note-subtitle">Anthropic's Model Context Protocol as a standard for connecting AI agents to enterprise tools.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

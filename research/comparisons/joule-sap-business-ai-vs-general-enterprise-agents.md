@@ -42,7 +42,7 @@ next_actions:
     <p class="note-subtitle">SAP's embedded AI versus Microsoft Copilot, Salesforce Agentforce, and general platforms.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

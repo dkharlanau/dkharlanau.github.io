@@ -2,6 +2,7 @@ import html
 import json
 import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pytest
 
@@ -154,6 +155,23 @@ def test_breadcrumbs_are_contiguous_and_end_at_canonical():
                         f"{html_path.relative_to(SITE_DIR)}: breadcrumb positions {positions}"
                     )
                     continue
+                item_urls = [
+                    item.get("item")
+                    for item in items
+                    if isinstance(item, dict) and isinstance(item.get("item"), str)
+                ]
+                normalized_urls = [item_url.rstrip("/") for item_url in item_urls]
+                if len(normalized_urls) != len(set(normalized_urls)):
+                    failures.append(
+                        f"{html_path.relative_to(SITE_DIR)}: breadcrumb contains duplicate URLs {item_urls}"
+                    )
+                malformed_urls = [
+                    item_url for item_url in item_urls if "//" in urlparse(item_url).path
+                ]
+                if malformed_urls:
+                    failures.append(
+                        f"{html_path.relative_to(SITE_DIR)}: breadcrumb contains double-slash paths {malformed_urls}"
+                    )
                 if canonical and items:
                     terminal = items[-1].get("item") if isinstance(items[-1], dict) else None
                     if terminal != canonical:
@@ -161,6 +179,37 @@ def test_breadcrumbs_are_contiguous_and_end_at_canonical():
                             f"{html_path.relative_to(SITE_DIR)}: breadcrumb ends at {terminal!r}, canonical is {canonical!r}"
                         )
     assert not failures, "Invalid breadcrumb chains:\n" + "\n".join(failures[:50])
+
+
+def test_reviewed_scenario_emits_techarticle_and_product_breadcrumb():
+    scenario_path = (
+        SITE_DIR
+        / "scenarios"
+        / "ai-pilots-for-sap-support-fail-before-value"
+        / "index.html"
+    )
+    if not scenario_path.exists():
+        pytest.skip("Reviewed scenario not present in the current _site build")
+
+    content = scenario_path.read_text(encoding="utf-8", errors="ignore")
+    blocks = _jsonld_blocks(content, scenario_path.relative_to(SITE_DIR))
+    articles = [
+        block
+        for block in blocks
+        if isinstance(block, dict) and block.get("@type") == "TechArticle"
+    ]
+    breadcrumbs = [
+        block for block in blocks if isinstance(block, dict) and block.get("@type") == "BreadcrumbList"
+    ]
+
+    assert len(articles) == 1
+    assert articles[0]["articleSection"] == "Scenarios"
+    assert len(breadcrumbs) == 1
+    assert [item["name"] for item in breadcrumbs[0]["itemListElement"][:3]] == [
+        "Home",
+        "Knowledge",
+        "Scenarios",
+    ]
 
 
 def test_faq_page_schema_matches_visible_questions():

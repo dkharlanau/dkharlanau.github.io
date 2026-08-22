@@ -1,6 +1,12 @@
 (() => {
   const normalise = (value) => value.replace(/\s+/g, " ").trim().toLowerCase();
   const sectionForPath = (path) => {
+    if (path.startsWith("/labs/interview-readiness/")) return { label: "Career", href: "/labs/interview-readiness/" };
+    if (path.startsWith("/labs/assessment/")) return { label: "Career", href: "/labs/interview-readiness/" };
+    if (path.startsWith("/labs/")) return { label: "Labs", href: "/labs/" };
+    if (path.startsWith("/frameworks/")) return { label: "Frameworks", href: "/frameworks/" };
+    if (path.startsWith("/triz/") || path.startsWith("/ddd/") || path.startsWith("/reusable-data-procedures/")) return { label: "Frameworks", href: "/frameworks/" };
+    if (path.startsWith("/machine/") || path.startsWith("/ai/") || path.startsWith("/agent-tools/") || path.startsWith("/agent-skills/") || path.startsWith("/mcp/")) return { label: "Machine", href: "/machine/" };
     if (path.startsWith("/services/")) return { label: "Services", href: "/services/" };
     if (path.startsWith("/scenarios/")) return { label: "Scenarios", href: "/scenarios/" };
     if (path.startsWith("/atlas/")) return { label: "Knowledge Atlas", href: "/atlas/" };
@@ -8,10 +14,10 @@
     if (path.startsWith("/notes/")) return { label: "Notes", href: "/notes/" };
     if (path.startsWith("/research/")) return { label: "Research", href: "/research/" };
     if (path.startsWith("/datasets/")) return { label: "Datasets", href: "/datasets/" };
-    if (path.startsWith("/skill-hub/")) return { label: "Skill Hub", href: "/skill-hub/" };
+    if (path.startsWith("/skill-hub/")) return { label: "Machine", href: "/machine/" };
     if (path.startsWith("/news/")) return { label: "Signals", href: "/news/" };
     if (path.startsWith("/radar/")) return { label: "Radar", href: "/radar/" };
-    if (path === "/about/") return { label: "Profile", href: "/about/" };
+    if (path === "/about/" || path.startsWith("/cv/") || path === "/certifications/" || path === "/education/" || path === "/publications/") return { label: "Profile", href: "/about/" };
     return null;
   };
 

@@ -83,51 +83,61 @@ related:
 
 <section class="section">
   <header class="section-heading">
-    <p class="eyebrow">Pilot Diagnostic</p>
-    <h2>Reviewed diagnostic page</h2>
+    <p class="eyebrow">Selected diagnostics</p>
+    <h2>Reviewed and review-candidate pages</h2>
   </header>
+  <p>The reviewed page is identified below. The remaining pages are useful working diagnostics that still require human review before they can be indexed or treated as verified evidence.</p>
   <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">
+      <p class="eyebrow">Reviewed</p>
+      <h2>SAP Goods Receipt Diagnostics</h2>
+      <p>Investigate where physical receipt, stock, invoice matching, and accounting diverge.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
     <a class="atlas-card" href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">
+      <p class="eyebrow">Review candidate</p>
       <h2>SAP Sales Order Block Diagnosis</h2>
       <p>A practical split between incompletion, credit, delivery, billing, master data, and governance blockers.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
     <a class="atlas-card" href="/atlas/diagnostics/sap-invoice-split-analysis/">
+      <p class="eyebrow">Review candidate</p>
       <h2>SAP Invoice Split Analysis</h2>
       <p>Trace why billing creates multiple invoices instead of one consolidated document.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
-    <a class="atlas-card" href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">
-      <h2>SAP Goods Receipt Diagnostics</h2>
-      <p>Investigate where physical receipt, stock, invoice matching, and accounting diverge.</p>
-      <span class="link-arrow">Read diagnostic</span>
-    </a>
     <a class="atlas-card" href="/atlas/diagnostics/pos-sales-not-reflected-in-sap/">
+      <p class="eyebrow">Review candidate</p>
       <h2>POS Sales Not Reflected in SAP</h2>
       <p>Trace missing retail sales from POS transmission to downstream posting.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
     <a class="atlas-card" href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">
+      <p class="eyebrow">Review candidate</p>
       <h2>IDoc and AIF Integration Diagnostics</h2>
       <p>Trace interface failures to partner profiles, segments, master data, or timing issues.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
     <a class="atlas-card" href="/atlas/diagnostics/sap-credit-management-diagnostics/">
+      <p class="eyebrow">Review candidate</p>
       <h2>SAP Credit Management Diagnostics</h2>
       <p>A first-pass structure for separating credit block causes from delivery, billing, and master data issues.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
     <a class="atlas-card" href="/atlas/diagnostics/sap-delivery-block-analysis/">
+      <p class="eyebrow">Review candidate</p>
       <h2>SAP Delivery Block Analysis</h2>
       <p>A first-pass structure for understanding why a sales order cannot create a delivery.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
     <a class="atlas-card" href="/atlas/diagnostics/sap-billing-block-analysis/">
+      <p class="eyebrow">Review candidate</p>
       <h2>SAP Billing Block Analysis</h2>
       <p>A first-pass structure for understanding why a sales document cannot be billed.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
     <a class="atlas-card" href="/atlas/diagnostics/sap-incompletion-procedure-diagnostics/">
+      <p class="eyebrow">Review candidate</p>
       <h2>SAP Incompletion Procedure Diagnostics</h2>
       <p>A first-pass structure for finding why a sales document is incomplete and what that blocks downstream.</p>
       <span class="link-arrow">Read diagnostic</span>

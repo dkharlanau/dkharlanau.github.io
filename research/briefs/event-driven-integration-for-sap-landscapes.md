@@ -43,7 +43,7 @@ next_actions:
     <p class="note-subtitle">Business events, Event Mesh, and CloudEvents for S/4HANA and satellite systems.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

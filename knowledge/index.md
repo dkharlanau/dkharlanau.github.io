@@ -65,4 +65,17 @@ tags:
       <li><span>03</span><strong>Promote</strong><p>Move durable, reviewed knowledge into Atlas and link back to its evidence.</p></li>
     </ol>
   </section>
+
+  <section class="research-canvas__inventory" data-reveal aria-labelledby="related-products-title">
+    <header>
+      <p class="research-canvas__eyebrow">Related products</p>
+      <h2 id="related-products-title">Move from published knowledge to active work.</h2>
+      <p>Use a Lab to explore a live system, a Framework to reuse a method, or the Machine layer when a tool needs structured access.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/"><span>LAB</span><strong>Labs</strong><small>Active SAP, AI, operational, interview, and assessment workspaces.</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
+      <a href="/frameworks/"><span>METHOD</span><strong>Frameworks</strong><small>Reusable ways to analyse problems, make decisions, and execute repeatable work.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/machine/"><span>DATA</span><strong>Machine layer</strong><small>Datasets, AI-readable exports, skills, tools, and public MCP packages.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    </div>
+  </section>
 </div>

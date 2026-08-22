@@ -52,12 +52,12 @@ def test_career_sidecars_exist():
     assert (ROOT / "ai" / "pages" / "labs--interview-readiness--roadmap.json").exists()
 
 
-def test_primary_navigation_exposes_career_route():
-    text = (ROOT / "_includes" / "header.html").read_text(encoding="utf-8")
-    assert 'href="/labs/interview-readiness/"' in text
-    assert ">Career</a>" in text
-    assert "career_nav_active" in text
-    assert "/labs/assessment/" in text
+def test_labs_hub_exposes_career_route_without_expanding_global_navigation():
+    header = (ROOT / "_includes" / "header.html").read_text(encoding="utf-8")
+    labs = (ROOT / "labs" / "index.md").read_text(encoding="utf-8")
+    assert 'href="/labs/interview-readiness/"' not in header
+    assert 'href="/labs/interview-readiness/"' in labs
+    assert "/labs/assessment/" in labs
 
 
 def test_ci_enforces_career_factory_contract_and_inventory():

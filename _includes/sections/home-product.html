@@ -1,179 +1,70 @@
-{% assign product_locale = page.locale | default: site.lang | default: 'en' %}
-{% assign product_locale_data = site.data.home_i18n[product_locale] %}
-{% assign home_content = site.data.home %}
-{% if product_locale_data.content %}{% assign home_content = product_locale_data.content %}{% endif %}
-{% assign product_ui = site.data.home_product[product_locale] | default: site.data.home_product.en %}
-{% assign home_surface = site.data.home_surface[product_locale] | default: site.data.home_surface.en %}
-{% assign mcp = product_ui.mcp | default: site.data.home_product.en.mcp %}
-{% assign hero = home_content.hero %}
-{% assign secondary_action = hero.profile.contacts[1] %}
-{% assign profile = home_content.credibility %}
-{% assign faq = home_content.faq %}
-{% assign trust_items = hero.trust_line | split: '|' %}
-{% assign service_routes = '/services/sap-ams-consulting/|/services/ams-cost-center-catalyst/|/services/sap-master-data-stability-assessment/|/services/sap-integration-architecture/' | split: '|' %}
-{% assign service_icons = 'monitor_heart|conversion_path|database|account_tree' | split: '|' %}
+{% assign home_consulting_view = true %}
+{% assign product_locale = page.locale | default: 'en' %}
+{% assign portal = site.data.home_portal[product_locale] | default: site.data.home_portal.en %}
 
-<section class="focus-hero section" aria-labelledby="home-title">
-  <div class="focus-hero__copy" data-reveal>
-    <p class="signal-kicker"><span aria-hidden="true"></span>{{ hero.person_meta }}</p>
-    <h1 id="home-title">{% if product_locale == 'en' %}Reduce repeated<br />SAP work.{% else %}{{ hero.title }}{% endif %}</h1>
-    <p>{% if product_locale == 'en' %}Transformation assessment, AMS improvement, TCO reduction, and AI readiness for SAP operations.{% else %}{{ hero.lead }}{% endif %}</p>
-    <a class="focus-hero__action" href="/atlas/diagnostics/">{{ home_surface.start_diagnostic }}<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+<div class="consulting-hero" role="region" aria-labelledby="home-title">
+  <picture>
+    <source srcset="{{ '/assets/img/diagnostic-portal-texture.webp' | relative_url }}" type="image/webp" />
+    <img class="consulting-hero__texture" src="{{ '/assets/img/diagnostic-portal-texture.png' | relative_url }}" alt="" width="1448" height="1086" fetchpriority="high" />
+  </picture>
+  <div class="consulting-hero__content">
+    <p class="portal-kicker">{{ portal.hero.kicker }}</p>
+    <h1 id="home-title">{{ portal.hero.title }}</h1>
+    <p class="consulting-hero__lead">{{ portal.hero.lead }}</p>
+    <div class="consulting-hero__actions">
+      <a class="portal-primary-link" href="/services/">{{ portal.hero.primary_action }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="portal-text-link" href="/knowledge/">{{ portal.hero.secondary_action }} <span aria-hidden="true">→</span></a>
+    </div>
   </div>
-  <div class="focus-hero__visual" data-op-flow data-reveal>
-    <svg class="focus-hero__map" viewBox="0 0 640 640" fill="none" aria-hidden="true" focusable="false">
-      <g class="focus-hero__field">
-        <circle class="focus-hero__field-ring" cx="320" cy="320" r="276" />
-        <circle class="focus-hero__field-ring focus-hero__field-ring--dash" cx="320" cy="320" r="196" />
-        <path class="focus-hero__field-grid" d="M54 320H586M320 54V586M132 132L508 508M508 132L132 508" />
-      </g>
-      <circle class="focus-hero__ring" cx="320" cy="320" r="236" />
-      <path class="focus-hero__line" d="M107 178H212C236 178 250 194 250 218V278C250 302 266 318 290 318H472" />
-      <path class="focus-hero__line" d="M107 320H290" />
-      <path class="focus-hero__line" d="M107 462H212C236 462 250 446 250 422V362C250 338 266 322 290 322H472" />
-      <path class="focus-hero__line focus-hero__line--dashed" d="M180 245C220 245 233 273 233 306C233 339 249 372 290 372H430" />
-      <path class="focus-hero__trace focus-hero__trace--one" d="M107 178H212C236 178 250 194 250 218V278C250 302 266 318 290 318H472" />
-      <path class="focus-hero__trace focus-hero__trace--two" d="M107 320H290" />
-      <path class="focus-hero__trace focus-hero__trace--three" d="M107 462H212C236 462 250 446 250 422V362C250 338 266 322 290 322H472" />
-      <path class="focus-hero__handoff focus-hero__handoff--one" d="M290 320H472C505 320 519 298 519 272V205" />
-      <path class="focus-hero__handoff focus-hero__handoff--two" d="M290 320H472C505 320 519 342 519 368V435" />
-      <path class="focus-hero__cost-loop" d="M290 320C290 245 390 222 430 274C470 326 413 390 352 372C313 361 300 341 290 320" />
-      <circle class="focus-hero__node" cx="107" cy="178" r="6" />
-      <circle class="focus-hero__node" cx="107" cy="320" r="6" />
-      <circle class="focus-hero__node" cx="107" cy="462" r="6" />
-      <circle class="focus-hero__node" cx="290" cy="320" r="8" />
-      <circle class="focus-hero__node focus-hero__node--signal" cx="472" cy="320" r="8" />
-      <circle class="focus-hero__target" cx="472" cy="320" r="20" />
-      <circle class="focus-hero__outcome" cx="519" cy="205" r="6" />
-      <circle class="focus-hero__outcome focus-hero__outcome--delayed" cx="519" cy="435" r="6" />
-      <g class="focus-hero__operator" transform="translate(290 320)">
-        <circle class="focus-hero__operator-halo" r="34" />
-        <circle class="focus-hero__operator-core" r="14" />
-        <path class="focus-hero__operator-mark" d="M-5-1L0 4 7-6" />
-      </g>
-    </svg>
+  <div class="signal-trace" aria-label="{{ portal.trace.aria_label }}">
+    <p class="signal-trace__label">{{ portal.trace.label }}</p>
+    <ol>
+      {% for item in portal.trace.items %}
+      <li><span>{{ item.number }}</span><strong>{{ item.title }}</strong><small>{{ item.detail }}</small></li>
+      {% endfor %}
+    </ol>
   </div>
-  <nav class="focus-hero__routes" aria-label="{{ hero.visual.title }}">
-    <a href="/atlas/diagnostics/"><span>{{ home_surface.routes.diagnostics }}</span><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-    <a href="/atlas/"><span>{{ home_surface.routes.atlas }}</span><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-    <a href="/research/"><span>{{ home_surface.routes.research }}</span><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-  </nav>
-</section>
+</div>
 
-<section class="manager-path section" aria-label="Operating path" data-reveal>
-  <p class="signal-kicker"><span aria-hidden="true"></span>{{ home_surface.path.label }}</p>
-  <ol class="manager-path__steps">
-    {% for item in home_surface.path.items %}<li><span>0{{ forloop.index }}</span><strong>{{ item.title }}</strong><p>{{ item.detail }}</p></li>{% endfor %}
-  </ol>
-</section>
-
-<section class="entry-points section" id="entry-points" aria-labelledby="priority-title" data-reveal>
-  <header class="signal-section-head">
-    <p class="signal-kicker"><span aria-hidden="true"></span>{{ hero.visual.header_label | strip_html }}</p>
-    <div><h2 id="priority-title">{{ hero.visual.title }}</h2><p>{{ hero.visual.signal_detail }}</p></div>
+<div class="consulting-focus portal-section" role="region" aria-labelledby="focus-title">
+  <header class="portal-section__heading portal-section__heading--split">
+    <div><p class="portal-kicker">{{ portal.focus.kicker }}</p><h2 id="focus-title">{{ portal.focus.title }}</h2></div>
+    <p>{{ portal.focus.lead }}</p>
   </header>
-  <div class="entry-points__list">
-    {% for item in hero.visual.items %}
-    {% assign route_url = service_routes[forloop.index0] %}
-    {% assign route_icon = service_icons[forloop.index0] %}
-    <a class="entry-point" href="{{ route_url }}">
-      <span class="entry-point__number">0{{ forloop.index }}</span>
-      <span class="material-symbols-outlined entry-point__icon" aria-hidden="true">{{ route_icon }}</span>
-      <span class="entry-point__copy"><strong>{{ item.title }}</strong><small>{{ item.detail }}</small></span>
-      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-    </a>
+  <div class="consulting-focus__grid">
+    {% for card in portal.focus.cards %}
+    <a href="/services/"><span>{{ card.number }}</span><strong>{{ card.title }}</strong><small>{{ card.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
     {% endfor %}
   </div>
-</section>
+</div>
 
-<section class="impact-model section" data-incident-calculator aria-labelledby="calculator-title" data-reveal>
-  <header class="signal-section-head">
-    <p class="signal-kicker"><span aria-hidden="true"></span>{{ product_ui.calculator.eyebrow }}</p>
-    <div><h2 id="calculator-title">{{ product_ui.calculator.title }}</h2><p>{{ product_ui.calculator.lead }}</p></div>
+<div class="consulting-method portal-section" role="region" aria-labelledby="method-title">
+  <header class="portal-section__heading"><p class="portal-kicker">{{ portal.method.kicker }}</p><h2 id="method-title">{{ portal.method.title }}</h2></header>
+  <ol class="consulting-method__steps">
+    {% for step in portal.method.steps %}
+    <li><span>{{ step.number }}</span><strong>{{ step.title }}</strong><p>{{ step.detail }}</p></li>
+    {% endfor %}
+  </ol>
+</div>
+
+<div class="portal-evidence portal-section" role="region" aria-labelledby="evidence-title">
+  <header class="portal-section__heading portal-section__heading--split">
+    <div><p class="portal-kicker">{{ portal.evidence.kicker }}</p><h2 id="evidence-title">{{ portal.evidence.title }}</h2></div>
+    <p>{{ portal.evidence.lead }}</p>
   </header>
-  <div class="impact-model__surface">
-    <div class="impact-model__result" aria-live="polite">
-      <span>{{ product_ui.calculator.modelled_result | default: product_ui.calculator.addressable_value }}</span>
-      <output data-result="addressableValue">€0</output>
-      <small>{{ product_ui.calculator.disclaimer }}</small>
-    </div>
-    <div class="impact-model__outputs">
-      <div><span>{{ product_ui.calculator.annual_incidents }}</span><output data-result="annualIncidents">0</output></div>
-      <div><span>{{ product_ui.calculator.repeat_exposure }}</span><output data-result="repeatExposure">€0</output></div>
-      <div><span>{{ product_ui.calculator.hours_recovered }}</span><output data-result="hoursRecovered">0</output></div>
-    </div>
-    <details class="impact-model__controls">
-      <summary>{{ product_ui.calculator.assumptions }} <span class="material-symbols-outlined" aria-hidden="true">tune</span></summary>
-      <fieldset>
-        <label><span>{{ product_ui.calculator.incidents }}</span><input type="number" min="0" max="1000" step="1" value="18" inputmode="numeric" data-calc="incidents" /></label>
-        <label><span>{{ product_ui.calculator.people }}</span><input type="number" min="0" max="10000" step="1" value="8" inputmode="numeric" data-calc="people" /></label>
-        <label><span>{{ product_ui.calculator.minutes }}</span><input type="number" min="0" max="1440" step="5" value="75" inputmode="numeric" data-calc="minutes" /></label>
-        <label><span>{{ product_ui.calculator.business_rate }}</span><input type="number" min="0" max="10000" step="5" value="55" inputmode="decimal" data-calc="businessRate" /></label>
-        <label><span>{{ product_ui.calculator.support_hours }}</span><input type="number" min="0" max="1000" step="0.5" value="3" inputmode="decimal" data-calc="supportHours" /></label>
-        <label><span>{{ product_ui.calculator.support_rate }}</span><input type="number" min="0" max="10000" step="5" value="95" inputmode="decimal" data-calc="supportRate" /></label>
-        <label><span>{{ product_ui.calculator.repeat_share }}</span><input type="number" min="0" max="100" step="1" value="45" inputmode="decimal" data-calc="repeatShare" /></label>
-        <label><span>{{ product_ui.calculator.improvement }}</span><input type="number" min="0" max="100" step="1" value="30" inputmode="decimal" data-calc="improvement" /></label>
-        <label><span>{{ product_ui.calculator.currency }}</span><select data-calc="currency"><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option></select></label>
-      </fieldset>
-    </details>
+  <div class="portal-evidence__list">
+    {% for item in portal.evidence.items %}
+    <a href="{{ item.href }}"><span class="portal-evidence__type">{{ item.type }}</span><strong>{{ item.title }}</strong><small>{{ item.status }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
+    {% endfor %}
   </div>
-</section>
+  <a class="portal-text-link" href="/knowledge/">{{ portal.evidence.all_action }} <span aria-hidden="true">→</span></a>
+</div>
 
-<section class="knowledge-system section" aria-labelledby="knowledge-title" data-reveal>
-  <header class="signal-section-head">
-    <p class="signal-kicker"><span aria-hidden="true"></span>{{ home_surface.knowledge.label }}</p>
-    <div><h2 id="knowledge-title">{{ home_surface.knowledge.title }}</h2><p>{{ home_surface.knowledge.lead }}</p></div>
-  </header>
-  <div class="knowledge-system__rail">
-    <a href="/atlas/diagnostics/"><span class="material-symbols-outlined" aria-hidden="true">manage_search</span><strong>{{ home_surface.knowledge.diagnostics.title }}</strong><small>{{ home_surface.knowledge.diagnostics.detail }}</small><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-    <a href="/atlas/"><span class="material-symbols-outlined" aria-hidden="true">account_tree</span><strong>{{ home_surface.knowledge.atlas.title }}</strong><small>{{ home_surface.knowledge.atlas.detail }}</small><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-    <a href="/blog/"><span class="material-symbols-outlined" aria-hidden="true">menu_book</span><strong>{{ product_ui.writing.title }}</strong><small>{{ product_ui.writing.lead }}</small><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-    <a href="/agent-tools/sap-diagnostics-mcp/"><span class="material-symbols-outlined" aria-hidden="true">memory</span><strong>{{ home_surface.knowledge.mcp.title }}</strong><small>{{ home_surface.knowledge.mcp.detail }}</small><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+<div class="consulting-close portal-section" role="region" aria-labelledby="close-title">
+  <p class="portal-kicker">{{ portal.close.kicker }}</p>
+  <h2 id="close-title">{{ portal.close.title }}</h2>
+  <div class="consulting-close__actions">
+    <a class="portal-primary-link" href="/services/">{{ portal.close.primary_action }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a class="portal-text-link" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">{{ portal.close.secondary_action }} <span aria-hidden="true">↗</span></a>
   </div>
-</section>
-
-<section class="agent-use section" aria-labelledby="agent-use-title" data-reveal>
-  <header class="signal-section-head">
-    <p class="signal-kicker"><span aria-hidden="true"></span>{{ home_surface.agents.label }}</p>
-    <div><h2 id="agent-use-title">{{ home_surface.agents.title }}</h2><p>{{ home_surface.agents.lead }}</p></div>
-  </header>
-  <div class="agent-use__list">
-    <a href="/atlas/diagnostics/"><span>01</span><strong>{{ home_surface.agents.team.title }}</strong><small>{{ home_surface.agents.team.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-    <a href="/agent-tools/atlas-agents/"><span>02</span><strong>{{ home_surface.agents.agent.title }}</strong><small>{{ home_surface.agents.agent.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-    <a href="/agent-tools/sap-diagnostics-mcp/"><span>03</span><strong>{{ home_surface.agents.mcp.title }}</strong><small>{{ home_surface.agents.mcp.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-  </div>
-</section>
-
-<section class="proof-and-notes section" data-reveal>
-  <article class="proof-card" aria-labelledby="profile-title">
-    <picture><source srcset="{{ hero.profile.image_avif }}" type="image/avif" /><source srcset="{{ hero.profile.image_webp }}" type="image/webp" /><img src="{{ hero.profile.image }}" alt="{{ profile.portrait_alt | default: hero.profile.alt }}" width="180" height="180" loading="lazy" /></picture>
-    <div><p class="signal-kicker"><span aria-hidden="true"></span>{{ hero.person_meta }}</p><h2 id="profile-title">Dzmitryi Kharlanau</h2><p class="proof-card__role">SAP Consultant · <a href="https://www.epam.com/" target="_blank" rel="noopener noreferrer">EPAM Systems</a> · ex‑abat</p><p class="proof-card__employment">{{ home_surface.employment_prefix }}<a href="https://www.epam.com/" target="_blank" rel="noopener noreferrer">EPAM Systems</a>{{ home_surface.employment_suffix }}</p><p>{{ product_ui.profile.note }}</p><a class="signal-inline-link" href="/about/">{% if product_locale == 'en' %}View profile{% else %}{{ locale_data.ui.navigation.about | default: 'Profile' }}{% endif %} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
-  </article>
-  <article class="notes-card" aria-labelledby="writing-title">
-    <p class="signal-kicker"><span aria-hidden="true"></span>{{ product_ui.writing.eyebrow }}</p><h2 id="writing-title">{{ product_ui.writing.title }}</h2>
-    {% assign posts = site.blog | sort: 'date' | reverse %}
-    <ol>{% for post in posts limit: 3 %}<li><a href="{{ post.url | relative_url }}"><span>{{ post.title }}</span><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%d %b %Y' }}</time></a></li>{% endfor %}</ol>
-    <a class="signal-inline-link" href="/blog/">{{ product_ui.writing.all }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-  </article>
-</section>
-
-<section class="open-source-note section" aria-labelledby="martenweave-title" data-reveal>
-  <div>
-    <p class="signal-kicker"><span aria-hidden="true"></span>{{ home_surface.open_source.label }}</p>
-    <h2 id="martenweave-title">{{ home_surface.open_source.title }}</h2>
-    <p>{{ home_surface.open_source.lead }}</p>
-  </div>
-  <div class="open-source-note__detail">
-    <p>{{ home_surface.open_source.detail }}</p>
-    <a class="signal-inline-link" href="https://martenweave.github.io/" target="_blank" rel="noopener noreferrer">{{ home_surface.open_source.action }} <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
-  </div>
-</section>
-
-<section class="signal-cta section" data-reveal aria-labelledby="home-cta-title">
-  <p class="signal-kicker"><span aria-hidden="true"></span>{% if product_locale == 'en' %}Start with one problem{% else %}{{ product_ui.cta_eyebrow }}{% endif %}</p>
-  <div>
-    <h2 id="home-cta-title">{% if product_locale == 'en' %}Discuss an SAP problem.{% else %}{{ home_content.analysis_problem.cta.title }}{% endif %}</h2>
-    <p>{% if product_locale == 'en' %}Bring a repeated incident, failed interface, master-data defect, or change decision. Define the evidence, scope, and next step.{% else %}{{ home_content.analysis_problem.cta.detail }}{% endif %}</p>
-  </div>
-  <a class="signal-button signal-button--light" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">{% if product_locale == 'en' %}Discuss on LinkedIn{% else %}{{ locale_data.content.hero.profile.contacts[0].label | default: 'Contact on LinkedIn' }}{% endif %}<span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
-</section>
+</div>

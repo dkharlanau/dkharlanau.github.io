@@ -42,7 +42,7 @@ next_actions:
     <p class="note-subtitle">Graph databases and semantic layers for persistent, queryable operational memory.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

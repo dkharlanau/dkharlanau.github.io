@@ -140,8 +140,18 @@ def normalize_structured(text: str) -> str:
     "url": "{{ author_profile_url }}",
     "sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"]
   },'''
-    new_author = '''  "author": {"@id": "{{ author_id }}"},
-  "publisher": {"@id": "{{ author_id }}"},'''
+    new_author = '''  "author": {
+    "@type": "Person",
+    "@id": "{{ author_id }}",
+    "name": {{ resume.name | jsonify }},
+    "url": "{{ author_profile_url }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "@id": "{{ author_id }}",
+    "name": {{ resume.name | jsonify }},
+    "url": "{{ author_profile_url }}"
+  },'''
     text = patch_once(text, old_author, new_author, "canonical Article author reference")
 
     old_about = '''  "url": "{{ canonical_url }}"

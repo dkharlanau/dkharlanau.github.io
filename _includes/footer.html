@@ -1,90 +1,19 @@
-{% assign footer_ui = locale_data.ui.footer %}
-{% assign nav_ui = locale_data.ui.navigation %}
-{% assign footer_content = site.data.home %}
-{% if locale_data.content %}{% assign footer_content = locale_data.content %}{% endif %}
-{% assign footer_cta = footer_content.analysis_problem.cta %}
-<div class="wrapper footer-shell">
-  <div class="footer-lead">
-    <div class="footer-lead__copy">
-      <p class="footer-kicker">{{ footer_content.hero.person_meta | default: 'SAP operations · transformation · AI readiness' }}</p>
-      <h2>{{ footer_cta.title | default: 'Make the next SAP decision easier to defend.' }}</h2>
-      <p>{{ footer_cta.detail | default: 'Independent diagnostic thinking for operating cost, process reliability, integration, master data, and practical AI.' }}</p>
-    </div>
-    <a class="footer-cta" href="{{ footer_cta.url | default: '/services/ams-cost-center-catalyst/' }}">
-      <span>{{ footer_cta.label | default: 'Start SAP analysis' }}</span>
-      <span class="material-symbols-outlined" aria-hidden="true">north_east</span>
-    </a>
-  </div>
-
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a class="footer-brand__row" href="/about/">
-        <img class="footer-brand__avatar" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="" width="44" height="44" loading="lazy" />
-        <span>
-          <strong class="footer-brand__name">Dzmitryi Kharlanau</strong>
-          <span class="footer-brand__note">{{ footer_content.hero.subtitle | default: 'Senior SAP consultant · independent public knowledge' }}</span>
-        </span>
-      </a>
-      <div class="footer-social" aria-label="Professional and social profiles">
-        {% for item in site.data.social.links limit: 8 %}
-        {% assign social_icon = 'link' %}
-        {% case item.id %}
-          {% when 'linkedin' %}{% assign social_icon = 'badge' %}
-          {% when 'x' %}{% assign social_icon = 'forum' %}
-          {% when 'hashnode' %}{% assign social_icon = 'article' %}
-          {% when 'medium' %}{% assign social_icon = 'edit_note' %}
-          {% when 'huggingface' %}{% assign social_icon = 'neurology' %}
-          {% when 'devto' %}{% assign social_icon = 'terminal' %}
-          {% when 'substack' %}{% assign social_icon = 'mail' %}
-          {% when 'reddit' %}{% assign social_icon = 'groups' %}
-        {% endcase %}
-        <a href="{{ item.url }}" target="_blank" rel="me noopener noreferrer" aria-label="{{ item.label }} — {{ item.handle }}" title="{{ item.label }}">
-          <span class="material-symbols-outlined" aria-hidden="true">{{ social_icon }}</span>
-        </a>
-        {% endfor %}
-      </div>
-    </div>
-
-    <nav class="footer-col" aria-label="{{ footer_ui.label | default: 'Footer' }}">
-      <p class="footer-col__heading">Explore</p>
-      <a href="/knowledge/">Knowledge</a>
-      <a href="/labs/">{{ nav_ui.labs | default: 'Labs' }}</a>
-      <a href="/labs/interview-readiness/">Career</a>
-      <a href="/frameworks/">Frameworks</a>
-      <a href="/services/">{{ footer_ui.services | default: 'Services' }}</a>
-      <a href="/about/">{{ footer_ui.about | default: 'About' }}</a>
-    </nav>
-    <nav class="footer-col" aria-label="Knowledge resources">
-      <p class="footer-col__heading">Knowledge</p>
-      <a href="/atlas/">{{ footer_ui.atlas | default: 'Atlas' }}</a>
-      <a href="/scenarios/">{{ nav_ui.scenarios | default: 'Scenarios' }}</a>
-      <a href="/research/">Research</a>
-      <a href="/blog/">{{ footer_ui.journal | default: 'Journal' }}</a>
-      <a href="/search/">{{ footer_ui.search | default: 'Search' }}</a>
-    </nav>
-    <nav class="footer-col" aria-label="Machine resources">
-      <p class="footer-col__heading">Machine layer</p>
-      <a href="/machine/">Machine map</a>
-      <a href="/datasets/">{{ footer_ui.datasets | default: 'Datasets' }}</a>
-      <a href="/ai/">{{ footer_ui.ai_sources | default: 'AI sources' }}</a>
-      <a href="/skill-hub/">Skill Hub</a>
-      <a href="/agent-tools/">Agent Tools</a>
-    </nav>
-    <nav class="footer-col" aria-label="Legal">
-      <p class="footer-col__heading">{{ footer_ui.legal | default: 'Legal' }}</p>
-      <a href="/legal/professional-disclosure/">{{ footer_ui.disclosure | default: 'Disclosure' }}</a>
-      <a href="/legal/research-attribution/">Research and attribution</a>
-      <a href="/legal/responsible-ai/">{{ footer_ui.ai_policy | default: 'AI policy' }}</a>
-      <a href="/legal/accessibility/">Accessibility</a>
-      <a href="/legal/privacy/">{{ footer_ui.privacy | default: 'Privacy' }}</a>
-    </nav>
-  </div>
-
-  <div class="footer-meta">
-    <p>&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau. Personal, independent views.</p>
-    <a href="https://github.com/dkharlanau/dkharlanau.github.io" target="_blank" rel="noopener noreferrer">
-      <span class="material-symbols-outlined" aria-hidden="true">code</span>
-      View site source
-    </a>
+{% assign portal_locale = site.data.home_portal[page_locale] | default: site.data.home_portal.en %}
+{% assign portal_nav = portal_locale.navigation %}
+{% assign portal_footer = portal_locale.footer %}
+<div class="wrapper portal-footer portal-footer--consulting">
+  <a class="portal-footer__brand footer-brand" href="/about/">
+    <img src="{{ '/assets/img/logo-d.svg' | relative_url }}?v={{ site.time | date: '%s' }}" alt="" width="30" height="30" loading="lazy" />
+    <span><strong>Dzmitryi Kharlanau</strong><span>{{ portal_footer.descriptor | default: 'SAP operations · transformation · practical AI' }}</span></span>
+  </a>
+  <nav class="portal-footer__nav" aria-label="{{ portal_footer.label | default: 'Footer navigation' }}">
+    <a href="/services/">{{ portal_footer.work | default: portal_nav.work | default: 'Services' }}</a>
+    <a href="/about/">{{ portal_footer.about | default: portal_nav.about | default: 'Profile' }}</a>
+    <a href="/knowledge/">{{ portal_footer.knowledge | default: portal_nav.knowledge | default: 'Knowledge' }}</a>
+    <a href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="me noopener noreferrer">{{ portal_footer.linkedin | default: 'LinkedIn' }} <span aria-hidden="true">↗</span></a>
+  </nav>
+  <div class="portal-footer__meta">
+    <p>&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau. {{ portal_footer.personal_site | default: 'Personal site.' }}</p>
+    <p><a href="/legal/privacy/">{{ portal_footer.privacy | default: 'Privacy' }}</a><a href="/legal/accessibility/">{{ portal_footer.accessibility | default: 'Accessibility' }}</a></p>
   </div>
 </div>

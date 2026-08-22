@@ -43,7 +43,7 @@ next_actions:
     <p class="note-subtitle">Managed iPaaS versus native event mesh and streaming.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

@@ -493,9 +493,11 @@ def test_article_publisher_references_canonical_site_author():
     article_block = text.split(
         "{% comment %} Article / TechArticle", 1
     )[1].split("{% comment %} ProfilePage entities", 1)[0]
-    publisher = article_block.split('"publisher":', 1)[1].split("},", 1)[0]
+    publisher = article_block.split('"publisher":', 1)[1].split('"inLanguage"', 1)[0]
     assert '"@id": "{{ author_id }}"' in publisher
-    assert '"@type": "Person"' not in publisher
+    assert '"@type": "Person"' in publisher
+    assert '"name": {{ resume.name | jsonify }}' in publisher
+    assert '"url": "{{ author_profile_url }}"' in publisher
     assert '"sameAs"' not in publisher
     assert "resume.schema.worksFor" not in publisher
 
@@ -659,7 +661,13 @@ def test_verified_articles_connect_author_website_collection_and_related_pages()
     )
     parent_ids = {item["@id"] for item in article["isPartOf"]}
     assert article["author"]["@id"] == "https://dkharlanau.github.io/#dkharlanau"
+    assert article["author"]["@type"] == "Person"
+    assert article["author"]["name"] == "Dzmitryi Kharlanau"
+    assert article["author"]["url"] == "https://dkharlanau.github.io/about/"
     assert article["publisher"]["@id"] == "https://dkharlanau.github.io/#dkharlanau"
+    assert article["publisher"]["@type"] == "Person"
+    assert article["publisher"]["name"] == "Dzmitryi Kharlanau"
+    assert article["publisher"]["url"] == "https://dkharlanau.github.io/about/"
     assert article["inLanguage"] == "en"
     assert article["articleSection"] == "diagnostics"
     assert "https://dkharlanau.github.io/#website" in parent_ids
@@ -729,6 +737,3 @@ def test_head_html_links_sitemap():
     text = path.read_text(encoding="utf-8")
     assert "sitemap.xml" in text
     assert 'rel="sitemap"' in text
-
-
-

@@ -1,24 +1,30 @@
 (() => {
   const header = document.querySelector("[data-site-header]");
   const toggle = header?.querySelector(".site-nav__toggle");
+  const toggleLabel = toggle?.querySelector(".site-nav__toggle-label");
   const navigation = header?.querySelector(".nav-links");
 
   if (header) {
     const focusableMenuItems = () => navigation
       ? [...navigation.querySelectorAll("a[href], button:not([disabled]), summary")]
       : [];
-    const closeMenu = () => {
-      header.classList.remove("site-header--menu-open");
-      toggle?.setAttribute("aria-expanded", "false");
+    const setMenu = (open) => {
+      header.classList.toggle("site-header--menu-open", open);
+      document.documentElement.classList.toggle("site-menu-open", open);
+      toggle?.setAttribute("aria-expanded", String(open));
+      if (toggleLabel) toggleLabel.textContent = open
+        ? (toggle?.dataset.closeLabel || "Close")
+        : (toggle?.dataset.menuLabel || "Menu");
     };
+    const closeMenu = () => setMenu(false);
 
     const updateHeader = () => header.classList.toggle("site-header--scrolled", window.scrollY > 12);
     window.addEventListener("scroll", updateHeader, { passive: true });
     updateHeader();
 
     toggle?.addEventListener("click", () => {
-      const open = header.classList.toggle("site-header--menu-open");
-      toggle.setAttribute("aria-expanded", String(open));
+      const open = !header.classList.contains("site-header--menu-open");
+      setMenu(open);
       if (open) window.requestAnimationFrame(() => focusableMenuItems()[0]?.focus());
     });
     navigation?.addEventListener("click", (event) => {

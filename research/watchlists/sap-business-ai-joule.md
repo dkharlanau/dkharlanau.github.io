@@ -42,7 +42,7 @@ next_actions:
     <p class="note-subtitle">Tracking SAP's AI copilot, agentic scenarios, and the Business AI stack.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

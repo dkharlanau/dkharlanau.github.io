@@ -54,12 +54,14 @@ def test_interview_readiness_shared_state_model_is_stable():
         assert f"{track}:" in script
 
 
-def test_homepage_exposes_crawlable_interview_entry_points():
+def test_interview_readiness_stays_in_the_labs_product_not_homepage_chrome():
     home = (ROOT / "index.md").read_text(encoding="utf-8")
-    assert "SAP Lead interview preparation" in home
-    assert 'href="/labs/interview-readiness/"' in home
-    assert 'href="/labs/interview-readiness/roadmap/"' in home
-    assert 'href="/labs/interview-readiness/questions/"' in home
+    header = (ROOT / "_includes" / "header.html").read_text(encoding="utf-8")
+    footer = (ROOT / "_includes" / "footer.html").read_text(encoding="utf-8")
+    labs = (ROOT / "labs" / "index.md").read_text(encoding="utf-8")
+    assert "SAP Lead interview preparation" not in home
+    assert 'href="/labs/interview-readiness/"' not in header + footer
+    assert 'href="/labs/interview-readiness/"' in labs
 
 
 def test_labs_hub_exposes_interview_readiness():

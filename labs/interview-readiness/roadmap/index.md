@@ -135,5 +135,5 @@ semantic_links:
 </div>
 
 <script id="career-roadmap-data" type="application/json">{{ site.data.career.roadmap | jsonify }}</script>
-<script src="/assets/js/interview-readiness.js"></script>
+<script src="/assets/js/interview-readiness.js?v={{ site.time | date: '%s' }}"></script>
 <script src="/assets/js/career-roadmap.js"></script>

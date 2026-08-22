@@ -43,7 +43,7 @@ next_actions:
     <p class="note-subtitle">SAP Integration Suite, event mesh, API management, and integration standards.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

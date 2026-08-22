@@ -42,7 +42,7 @@ next_actions:
     <p class="note-subtitle">Decentralization, centralization, and semantic linking for enterprise data.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

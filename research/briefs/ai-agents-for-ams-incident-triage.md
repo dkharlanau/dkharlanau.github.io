@@ -42,7 +42,7 @@ next_actions:
     <p class="note-subtitle">Agentic AI applied to SAP AMS incident classification, routing, and first-pass resolution.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 
