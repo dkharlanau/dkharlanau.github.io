@@ -27,8 +27,10 @@ def test_structured_data_uses_one_person_identity():
     article_block = structured.split(
         "{% comment %} Article / TechArticle", 1
     )[1].split("{% comment %} ProfilePage entities", 1)[0]
-    assert '"author": {"@id": "{{ author_id }}"}' in article_block
-    assert '"publisher": {"@id": "{{ author_id }}"}' in article_block
+    assert article_block.count('"@id": "{{ author_id }}"') == 2
+    assert article_block.count('"@type": "Person"') == 2
+    assert article_block.count('"name": {{ resume.name | jsonify }}') == 2
+    assert article_block.count('"url": "{{ author_profile_url }}"') == 2
     assert '"sameAs"' not in article_block
 
 

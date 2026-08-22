@@ -42,7 +42,7 @@ next_actions:
     <p class="note-subtitle">Data mesh principles, event-driven standards, and modern data architecture patterns.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

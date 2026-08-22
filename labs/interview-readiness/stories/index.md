@@ -79,7 +79,7 @@ tags:
   </section>
 </div>
 
-<script src="/assets/js/interview-readiness.js"></script>
+<script src="/assets/js/interview-readiness.js?v={{ site.time | date: '%s' }}"></script>
 <script>
 (() => {
   'use strict';

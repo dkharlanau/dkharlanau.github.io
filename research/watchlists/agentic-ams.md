@@ -42,7 +42,7 @@ next_actions:
     <p class="note-subtitle">AI agents for IT operations, incident triage, and application management services.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

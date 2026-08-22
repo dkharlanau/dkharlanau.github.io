@@ -27,12 +27,12 @@ def header_product_urls():
 def footer_explore_urls():
     html = FOOTER_PATH.read_text(encoding="utf-8")
     match = re.search(
-        r'<p class="footer-col__heading">Explore</p>(.*?)</nav>',
+        r'<nav class="portal-footer__nav"[^>]*>(.*?)</nav>',
         html,
         flags=re.DOTALL,
     )
-    assert match, "Footer Explore navigation was not found"
-    return re.findall(r'<a href="([^"]+)">', match.group(1))
+    assert match, "Compact footer navigation was not found"
+    return [url for url in re.findall(r'<a href="([^"]+)"', match.group(1)) if url.startswith("/")]
 
 
 def test_primary_navigation_matches_cluster_registry():
@@ -40,7 +40,7 @@ def test_primary_navigation_matches_cluster_registry():
     expected = primary_urls(registry)
 
     assert header_product_urls() == expected
-    assert footer_explore_urls() == expected
+    assert set(footer_explore_urls()) == set(expected)
 
 
 def test_primary_navigation_routes_are_owned_by_product_clusters():
@@ -72,3 +72,9 @@ def test_primary_navigation_has_unique_labels_and_routes():
 
     assert len(labels) == len(set(labels))
     assert len(urls) == len(set(urls))
+
+
+def test_secondary_product_hubs_are_reachable_from_knowledge():
+    knowledge = (REPO_ROOT / "knowledge/index.md").read_text(encoding="utf-8")
+    for route in ("/labs/", "/frameworks/", "/machine/"):
+        assert f'href="{route}"' in knowledge

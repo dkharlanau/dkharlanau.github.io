@@ -14,6 +14,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 ROADMAP_PATH = ROOT / "_data" / "career" / "roadmap.yml"
 EXCLUDED_DIRS = {".git", "_site", "vendor", "node_modules", ".bundle", ".jekyll-cache"}
+EXCLUDED_PREFIXES = {("docs", "templates")}
 LAB_POLICY_FILES = {"labs/AGENTS.md"}
 
 
@@ -44,6 +45,8 @@ def discover_permalink_map() -> dict[str, str]:
     for path in ROOT.rglob("*.md"):
         rel = path.relative_to(ROOT)
         if any(part in EXCLUDED_DIRS or part.startswith(".") for part in rel.parts):
+            continue
+        if any(rel.parts[:len(prefix)] == prefix for prefix in EXCLUDED_PREFIXES):
             continue
         permalink = str(parse_frontmatter(path).get("permalink") or "").strip()
         if permalink:

@@ -242,6 +242,31 @@
     return selected.sort(() => Math.random() - .5).slice(0,count);
   }
 
+  function normaliseSectionNavigation() {
+    const sections = [
+      ['Dashboard', '/labs/interview-readiness/'],
+      ['Roadmap', '/labs/interview-readiness/roadmap/'],
+      ['Questions', '/labs/interview-readiness/questions/'],
+      ['Stories', '/labs/interview-readiness/stories/'],
+      ['Practice', '/labs/interview-readiness/practice/'],
+      ['Progress', '/labs/interview-readiness/progress/']
+    ];
+    const currentPath = window.location.pathname.replace(/index\.html$/, '');
+    document.querySelectorAll('.ir-nav').forEach((nav) => {
+      nav.replaceChildren();
+      sections.forEach(([label, href]) => {
+        const link = document.createElement('a');
+        link.href = href;
+        link.textContent = label;
+        if (currentPath === href) link.setAttribute('aria-current', 'page');
+        nav.appendChild(link);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', normaliseSectionNavigation, { once: true });
+  else normaliseSectionNavigation();
+
   window.InterviewReadiness = {
     STORAGE_KEY,PRACTICE_KEY,STORY_KEY,STATUSES,TRACKS,TOPICS,QUESTIONS,
     getState,getStatus,setStatus,cycleStatus,statusObject,readinessFor,summary,dailyPlan,resetReadiness,

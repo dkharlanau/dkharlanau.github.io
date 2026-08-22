@@ -1,8 +1,10 @@
-# CV AI Design System
+# CV AI Design System — legacy reference
+
+> Historical reference only. The current blue diagnostic-signal system, navigation, accessibility, typography, and acceptance criteria are defined in [`DESIGN.md`](DESIGN.md) and implemented last in `assets/diagnostic-portal.css`. Do not use the coral/Inter tokens below for new work.
 
 Compact design guidance for extending this site without drifting away from the current homepage style.
 
-This is the canonical visual reference for new pages, sections, and components. If a new page looks noticeably more playful, more product-like, or more generic than the homepage, it is off-system.
+Use this document only to understand older route-canvas patterns that have not yet been migrated. New work must follow `DESIGN.md`.
 
 ## Design Intent
 

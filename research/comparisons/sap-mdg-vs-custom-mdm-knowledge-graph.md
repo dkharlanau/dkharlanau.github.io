@@ -43,7 +43,7 @@ next_actions:
     <p class="note-subtitle">Central governance versus decentralized semantic data layers.</p>
   </header>
 
-  <div class="note-body">
+  <div class="note-body" markdown="1">
 
 ## Research question
 

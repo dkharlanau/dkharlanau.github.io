@@ -20,7 +20,7 @@ Rules:
 {% assign author_linkedin_url = 'https://www.linkedin.com/in/dkharlanau/' %}
 {% assign author_github_url = 'https://github.com/dkharlanau' %}
 {% assign organization_id = resume.schema.worksFor.url | default: 'https://www.epam.com' | append: '#organization' %}
-{% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
+{% assign og_image = page.og_image | default: '/assets/og/diagnostic-signal-default.jpg' | absolute_url %}
 {% assign article_image = '' %}
 {% if page.og_image %}{% assign article_image = page.og_image | absolute_url %}{% endif %}
 {% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
@@ -82,6 +82,8 @@ Rules:
   {% assign page_type = 'Article' %}
 {% elsif page.url contains '/atlas/' and page.verified == true and page.status == 'reviewed' %}
   {% assign page_type = 'TechArticle' %}
+{% elsif page.url contains '/scenarios/' and page.url != '/scenarios/' and page.verified == true and page.status == 'reviewed' %}
+  {% assign page_type = 'TechArticle' %}
 {% elsif page.url contains '/skill-hub/' %}
   {% assign page_type = 'Article' %}
 {% elsif page.collection == 'glossary' and page.defined_term %}
@@ -124,6 +126,9 @@ Rules:
 {% elsif page.collection == 'radar' %}
   {% assign article_section_url = '/radar/' | absolute_url %}
   {% assign article_section_name = 'Radar' %}
+{% elsif page.url contains '/scenarios/' and page.url != '/scenarios/' %}
+  {% assign article_section_url = '/scenarios/' | absolute_url %}
+  {% assign article_section_name = 'Scenarios' %}
 {% elsif page.url contains '/skill-hub/' and url_parts.size > 3 %}
   {% assign article_section_path = '/skill-hub/' | append: url_parts[2] | append: '/' %}
   {% assign article_section_url = article_section_path | absolute_url %}
@@ -268,8 +273,18 @@ Rules:
   "@id": "{{ canonical_url }}#article",
   "headline": {{ page_title | jsonify }},
   "description": {{ page_description | truncate: 160, '' | jsonify }},
-  "author": {"@id": "{{ author_id }}"},
-  "publisher": {"@id": "{{ author_id }}"},
+  "author": {
+    "@type": "Person",
+    "@id": "{{ author_id }}",
+    "name": {{ resume.name | jsonify }},
+    "url": "{{ author_profile_url }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "@id": "{{ author_id }}",
+    "name": {{ resume.name | jsonify }},
+    "url": "{{ author_profile_url }}"
+  },
   "inLanguage": "{{ structured_language }}",
   "isAccessibleForFree": true,
   "isPartOf": [
@@ -545,7 +560,8 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Notes", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Notes", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -557,8 +573,9 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Notes", "item": "{{ '/notes/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Notes", "item": "{{ '/notes/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -570,7 +587,8 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Blog", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -582,8 +600,9 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ '/blog/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Blog", "item": "{{ '/blog/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -595,7 +614,8 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "News", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "News", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -607,8 +627,9 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "News", "item": "{{ '/news/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "News", "item": "{{ '/news/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -620,7 +641,8 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Radar", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Radar", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -632,8 +654,9 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Radar", "item": "{{ '/radar/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Radar", "item": "{{ '/radar/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -645,13 +668,20 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Knowledge Atlas", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Knowledge Atlas", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
 {% elsif page.url contains '/atlas/' and page.url != '/atlas/' %}
-{% assign atlas_section_url = '/atlas/' | append: page.atlas_section | append: '/' | absolute_url %}
-{% assign atlas_section_name = page.atlas_section | default: 'Atlas' | capitalize %}
+{% assign atlas_parts = page.url | split: '/' %}
+{% assign atlas_section_slug = page.atlas_section | default: atlas_parts[2] %}
+{% assign atlas_section_path = '/atlas/' | append: atlas_section_slug | append: '/' %}
+{% assign atlas_section_page = site.pages | where: 'permalink', atlas_section_path | first %}
+{% assign atlas_section_name = atlas_section_page.title | default: atlas_section_slug | replace: '-', ' ' | capitalize %}
+{% assign atlas_section_url = atlas_section_path | absolute_url %}
+{% assign atlas_is_section_hub = false %}
+{% if page.url == atlas_section_path %}{% assign atlas_is_section_hub = true %}{% endif %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -659,9 +689,10 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Knowledge Atlas", "item": "{{ '/atlas/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ atlas_section_name | jsonify }}, "item": "{{ atlas_section_url }}"},
-    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Knowledge Atlas", "item": "{{ '/atlas/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {% if atlas_is_section_hub %}{{ page_title | jsonify }}{% else %}{{ atlas_section_name | jsonify }}{% endif %}, "item": "{% if atlas_is_section_hub %}{{ canonical_url }}{% else %}{{ atlas_section_url }}{% endif %}"}{% unless atlas_is_section_hub %},
+    {"@type": "ListItem", "position": 5, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}{% endunless %}
   ]
 }
 </script>
@@ -673,7 +704,8 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Skill Hub", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Skill Hub", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -682,8 +714,14 @@ Rules:
 {% assign sh_section_slug = sh_parts[2] %}
 {% assign sh_parent_path = '/skill-hub/' | append: sh_section_slug | append: '/' %}
 {% assign sh_parent_page = site.pages | where: 'permalink', sh_parent_path | first %}
-{% assign sh_parent_title = sh_parent_page.title | default: sh_section_slug | capitalize %}
+{% assign sh_parent_title = sh_parent_page.title | default: sh_section_slug | replace: '-', ' ' | capitalize %}
 {% assign sh_parent_url = sh_parent_path | absolute_url %}
+{% assign sh_is_section_hub = false %}
+{% assign sh_terminal_position = 5 %}
+{% if page.url == sh_parent_path %}
+  {% assign sh_is_section_hub = true %}
+  {% assign sh_terminal_position = 4 %}
+{% endif %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -691,8 +729,23 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Skill Hub", "item": "{{ '/skill-hub/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ sh_parent_title | jsonify }}, "item": "{{ sh_parent_url }}"},
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Skill Hub", "item": "{{ '/skill-hub/' | absolute_url }}"},
+    {% unless sh_is_section_hub %}{"@type": "ListItem", "position": 4, "name": {{ sh_parent_title | jsonify }}, "item": "{{ sh_parent_url }}"},{% endunless %}
+    {"@type": "ListItem", "position": {{ sh_terminal_position }}, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url contains '/scenarios/' and page.url != '/scenarios/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Knowledge", "item": "{{ '/knowledge/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Scenarios", "item": "{{ '/scenarios/' | absolute_url }}"},
     {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
@@ -705,7 +758,8 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Datasets", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -717,8 +771,9 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": "Types", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": "Types", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -730,9 +785,10 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": "Types", "item": "{{ '/datasets/types/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": "Types", "item": "{{ '/datasets/types/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 5, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -750,9 +806,10 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ ds_parent_title | jsonify }}, "item": "{{ ds_parent_url }}"},
-    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ ds_parent_title | jsonify }}, "item": "{{ ds_parent_url }}"},
+    {"@type": "ListItem", "position": 5, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -764,8 +821,9 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -802,7 +860,8 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "AI Sources", "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "AI Sources", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -814,8 +873,9 @@ Rules:
   "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
-    {"@type": "ListItem", "position": 2, "name": "AI Sources", "item": "{{ '/ai/' | absolute_url }}"},
-    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 2, "name": "Machine", "item": "{{ '/machine/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "AI Sources", "item": "{{ '/ai/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>

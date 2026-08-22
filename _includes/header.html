@@ -1,41 +1,30 @@
 {% assign nav_ui = locale_data.ui.navigation %}
-{% assign career_nav_active = false %}
-{% if page.url contains '/labs/interview-readiness/' or page.url contains '/labs/assessment/' %}
-  {% assign career_nav_active = true %}
-{% endif %}
-{% assign labs_nav_active = false %}
-{% if page.url == '/lab/' %}
-  {% assign labs_nav_active = true %}
-{% elsif page.url contains '/labs/' and career_nav_active != true %}
-  {% assign labs_nav_active = true %}
-{% endif %}
+{% assign portal_locale = site.data.home_portal[page_locale] | default: site.data.home_portal.en %}
+{% assign portal_nav = portal_locale.navigation %}
+{% assign work_nav_active = false %}
+{% if page.url contains '/services/' %}{% assign work_nav_active = true %}{% endif %}
+{% assign knowledge_nav_active = false %}
+{% if page.url contains '/knowledge/' or page.url contains '/atlas/' or page.url contains '/scenarios/' or page.url contains '/research/' or page.url contains '/blog/' or page.url contains '/notes/' or page.url contains '/radar/' or page.url contains '/news/' or page.url contains '/glossary/' or page.url contains '/faq/' %}{% assign knowledge_nav_active = true %}{% endif %}
+{% assign profile_nav_active = false %}
+{% if page.url contains '/about/' or page.url contains '/cv/' or page.url contains '/certifications/' or page.url contains '/education/' or page.url contains '/publications/' %}{% assign profile_nav_active = true %}{% endif %}
 <header class="site-header" data-site-header>
   <div class="wrapper site-header__inner">
-    <a class="site-brand" href="/" aria-label="{{ nav_ui.home | default: 'Home' }} — Dzmitryi Kharlanau">
-      <img class="site-brand__mark" src="{{ '/assets/img/logo-d.svg' | relative_url }}" alt="" width="30" height="30" />
+    <a class="site-brand" href="/" aria-label="{{ portal_nav.home | default: nav_ui.home | default: 'Home' }} — Dzmitryi Kharlanau">
+      <img class="site-brand__mark" src="{{ '/assets/img/logo-d.svg' | relative_url }}?v={{ site.time | date: '%s' }}" alt="" width="37" height="37" />
     </a>
-
-    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-navigation">
-      <span class="site-nav__toggle-label">{{ nav_ui.menu | default: 'Menu' }}</span>
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-menu-label="{{ portal_nav.menu | default: nav_ui.menu | default: 'Menu' }}" data-close-label="{{ nav_ui.close | default: 'Close' }}">
+      <span class="site-nav__toggle-label">{{ portal_nav.menu | default: nav_ui.menu | default: 'Menu' }}</span>
       <span class="site-nav__toggle-mark" aria-hidden="true"></span>
     </button>
-
-    <nav class="site-nav" aria-label="{{ nav_ui.label | default: 'Primary navigation' }}">
+    <nav class="site-nav" aria-label="{{ portal_nav.label | default: nav_ui.label | default: 'Primary navigation' }}">
       <div class="nav-links" id="site-navigation">
-        {% if page.home_locale %}
-        {% include home-language-switcher.html %}
-        {% else %}
-        <a href="/knowledge/" class="nav-link{% if page.url contains '/knowledge/' or page.url contains '/atlas/' or page.url contains '/scenarios/' or page.url contains '/research/' or page.url contains '/blog/' or page.url contains '/notes/' or page.url contains '/radar/' or page.url contains '/news/' %} is-active{% endif %}"{% if page.url contains '/knowledge/' %} aria-current="page"{% endif %}>Knowledge</a>
-        <a href="/labs/" class="nav-link{% if labs_nav_active %} is-active{% endif %}"{% if page.url == '/labs/' %} aria-current="page"{% endif %}>{{ nav_ui.labs | default: 'Labs' }}</a>
-        <a href="/labs/interview-readiness/" class="nav-link{% if career_nav_active %} is-active{% endif %}"{% if page.url == '/labs/interview-readiness/' %} aria-current="page"{% endif %}>Career</a>
-        <a href="/frameworks/" class="nav-link{% if page.url contains '/frameworks/' or page.url contains '/triz/' or page.url contains '/ddd/' or page.url contains '/reusable-data-procedures/' %} is-active{% endif %}"{% if page.url contains '/frameworks/' %} aria-current="page"{% endif %}>Frameworks</a>
-        <a href="/services/" class="nav-link{% if page.url contains '/services/' %} is-active{% endif %}"{% if page.url contains '/services/' %} aria-current="page"{% endif %}>{{ nav_ui.services | default: 'Services' }}</a>
-        <a href="/about/" class="nav-link{% if page.url contains '/about/' or page.url contains '/cv/' %} is-active{% endif %}"{% if page.url contains '/about/' %} aria-current="page"{% endif %}>{{ nav_ui.about | default: 'About' }}</a>
-        <a href="/search/" class="nav-link nav-link--utility{% if page.url == '/search/' %} is-active{% endif %}" aria-label="{{ nav_ui.search | default: 'Search' }}"{% if page.url == '/search/' %} aria-current="page"{% endif %}>
-          <span class="material-symbols-outlined" aria-hidden="true">search</span>
-          <span class="nav-link__search-label">{{ nav_ui.search | default: 'Search' }}</span>
+        <a href="/services/" class="nav-link nav-link--work{% if work_nav_active %} is-active{% endif %}"{% if page.url == '/services/' %} aria-current="page"{% endif %}>{{ portal_nav.work | default: 'Work' }}</a>
+        <a href="/knowledge/" class="nav-link{% if knowledge_nav_active %} is-active{% endif %}"{% if page.url == '/knowledge/' %} aria-current="page"{% endif %}>{{ portal_nav.knowledge | default: 'Knowledge' }}</a>
+        <a href="/about/" class="nav-link{% if profile_nav_active %} is-active{% endif %}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>{{ portal_nav.about | default: nav_ui.about | default: 'About' }}</a>
+        <a href="/search/" class="nav-link nav-link--utility{% if page.url == '/search/' %} is-active{% endif %}" aria-label="{{ portal_nav.search | default: nav_ui.search | default: 'Search' }}"{% if page.url == '/search/' %} aria-current="page"{% endif %}>
+          <span class="material-symbols-outlined" aria-hidden="true">search</span><span class="nav-link__search-label">{{ portal_nav.search | default: nav_ui.search | default: 'Search' }}</span>
         </a>
-        {% endif %}
+        {% if page.home_locale %}{% include home-language-switcher.html %}{% endif %}
       </div>
     </nav>
   </div>

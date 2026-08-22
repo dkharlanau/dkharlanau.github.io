@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "SAP Consulting Services — Dzmitryi Kharlanau | AMS, O2C, Integration"
-description: "SAP consulting path for diagnosing SAP transformation friction, stabilizing O2C and integration operations, structuring operational memory, and extending with side-by-side AI and automation."
+description: "SAP consulting for transformation friction, O2C and integration stability, operational memory, and controlled AI and automation around SAP."
 permalink: /services/
-last_modified_at: 2026-08-17
+last_modified_at: 2026-08-22
 ---
 
 <div class="service-canvas" data-service-canvas>

@@ -10,7 +10,7 @@ Checks:
 - No localhost or private-path leaks inside JSON-LD.
 - Type-specific required fields:
   - Article: headline, author.name, publisher.name, url
-  - BreadcrumbList: itemListElement with >= 2 items, each with name/position
+  - BreadcrumbList: contiguous items with unique, well-formed URLs that end at the page canonical
   - Dataset: name, description, distribution (non-empty)
   - Event: name, startDate, location
   - Course: name, description, provider
@@ -39,6 +39,10 @@ SCRIPT_RE = re.compile(
 )
 ROBOTS_RE = re.compile(
     r'<meta[^>]+name=["\']robots["\'][^>]+content=["\'](.*?)["\']',
+    re.IGNORECASE | re.DOTALL,
+)
+CANONICAL_RE = re.compile(
+    r'<link[^>]+rel=["\']canonical["\'][^>]+href=["\'](.*?)["\']',
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -149,7 +153,12 @@ def has_localhost(text: str) -> bool:
     return any(pattern.lower() in lower for pattern in LOCALHOST_PATTERNS)
 
 
-def validate_item(item: dict, errors: list[str], file_label: str) -> None:
+def validate_item(
+    item: dict,
+    errors: list[str],
+    file_label: str,
+    canonical_url: str = "",
+) -> None:
     if not isinstance(item, dict):
         return
 
@@ -172,7 +181,7 @@ def validate_item(item: dict, errors: list[str], file_label: str) -> None:
                     errors.append(f"{file_label}: non-HTTP(S) URL '{key}={value}'")
 
     # Type-specific checks
-    if item_type in {"Article", "NewsArticle", "BlogPosting"}:
+    if item_type in {"Article", "TechArticle", "NewsArticle", "BlogPosting"}:
         if not item.get("headline"):
             errors.append(f"{file_label}: Article missing headline")
         author = item.get("author")
@@ -189,14 +198,40 @@ def validate_item(item: dict, errors: list[str], file_label: str) -> None:
         if not isinstance(elements, list) or len(elements) < 2:
             errors.append(f"{file_label}: BreadcrumbList needs >= 2 items")
         else:
+            positions: list[object] = []
+            breadcrumb_urls: list[str] = []
             for idx, element in enumerate(elements, start=1):
                 if not isinstance(element, dict):
                     errors.append(f"{file_label}: BreadcrumbList item {idx} is not an object")
                     continue
                 if not element.get("name"):
                     errors.append(f"{file_label}: BreadcrumbList item {idx} missing name")
-                if element.get("position") is None:
+                position = element.get("position")
+                positions.append(position)
+                if position is None:
                     errors.append(f"{file_label}: BreadcrumbList item {idx} missing position")
+
+                item_url = element.get("item")
+                if isinstance(item_url, str) and item_url:
+                    breadcrumb_urls.append(item_url.rstrip("/"))
+                    if "//" in urlparse(item_url).path:
+                        errors.append(
+                            f"{file_label}: BreadcrumbList item {idx} has a double-slash path '{item_url}'"
+                        )
+
+            if positions != list(range(1, len(elements) + 1)):
+                errors.append(
+                    f"{file_label}: BreadcrumbList positions must be contiguous from 1; got {positions}"
+                )
+
+            if len(breadcrumb_urls) != len(set(breadcrumb_urls)):
+                errors.append(f"{file_label}: BreadcrumbList contains duplicate item URLs")
+
+            terminal = elements[-1].get("item") if isinstance(elements[-1], dict) else None
+            if canonical_url and terminal != canonical_url:
+                errors.append(
+                    f"{file_label}: BreadcrumbList ends at '{terminal}', canonical is '{canonical_url}'"
+                )
 
     elif item_type == "Dataset":
         if not item.get("name"):
@@ -270,6 +305,8 @@ def main() -> int:
         robots_match = ROBOTS_RE.search(content)
         robots = robots_match.group(1).lower() if robots_match else ""
         is_noindex = "noindex" in robots
+        canonical_match = CANONICAL_RE.search(content)
+        canonical_url = html.unescape(canonical_match.group(1)).strip() if canonical_match else ""
 
         blocks = SCRIPT_RE.findall(content)
         if not blocks:
@@ -304,7 +341,7 @@ def main() -> int:
             collect_top_level_ids(data, page_ids)
 
             for item in iter_items(data):
-                validate_item(item, errors, block_label)
+                validate_item(item, errors, block_label, canonical_url)
 
         seen = set()
         for item_id in page_ids:

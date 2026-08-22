@@ -80,10 +80,15 @@ robots: "noindex,follow"
     return (value || '').toLowerCase().split(/\s+/).filter(Boolean);
   }
 
-  function matches(item, terms) {
-    if (!terms.length) return false;
-    const haystack = (item.title + ' ' + (item.description || '')).toLowerCase();
-    return terms.every(term => haystack.includes(term));
+  function score(item, terms) {
+    if (!terms.length) return 0;
+    const title = item.title.toLowerCase();
+    const description = (item.description || '').toLowerCase();
+    return terms.reduce((total, term) => {
+      if (title.includes(term)) return total + 3;
+      if (description.includes(term)) return total + 1;
+      return total;
+    }, 0);
   }
 
   function render(items, query) {
@@ -129,7 +134,11 @@ robots: "noindex,follow"
     return;
   }
 
-  const results = SEARCH_INDEX.filter(item => matches(item, terms));
+  const results = SEARCH_INDEX
+    .map(item => ({ item, relevance: score(item, terms) }))
+    .filter(result => result.relevance > 0)
+    .sort((a, b) => b.relevance - a.relevance || a.item.title.localeCompare(b.item.title))
+    .map(result => result.item);
   helpEl.style.display = 'none';
   render(results, query);
 })();
