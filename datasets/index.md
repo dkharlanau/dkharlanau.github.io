@@ -20,6 +20,10 @@ hide_global_cta: true
         <a class="dataset-canvas__text-link" href="/datasets/types/">Browse by type <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
       </div>
     </div>
+    <figure class="system-opening-visual dataset-canvas__visual">
+      <img src="/assets/img/systems/master-data-lineage-field.webp" alt="Multiple data sources passing through identity, quality, lineage, and ownership checks into one governed record for trusted reuse." width="1728" height="1106" decoding="async" fetchpriority="high" />
+      <figcaption>Reusable data needs a visible source trail, quality gate, and ownership boundary.</figcaption>
+    </figure>
     <dl class="dataset-canvas__inventory" aria-label="Dataset inventory">
       <div><dt>Total entries</dt><dd>150</dd><small>Across all collections</small></div>
       <div><dt>Collections</dt><dd>6</dd><small>Browse by topic</small></div>

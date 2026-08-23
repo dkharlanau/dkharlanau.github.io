@@ -2,15 +2,23 @@
 {% assign portal_nav = portal_locale.navigation %}
 {% assign portal_footer = portal_locale.footer %}
 <div class="wrapper portal-footer portal-footer--consulting">
-  <a class="portal-footer__brand footer-brand" href="/about/">
-    <img src="{{ '/assets/img/logo-d.svg' | relative_url }}?v={{ site.time | date: '%s' }}" alt="" width="30" height="30" loading="lazy" />
-    <span><strong>Dzmitryi Kharlanau</strong><span>{{ portal_footer.descriptor | default: 'SAP operations · transformation · practical AI' }}</span></span>
-  </a>
+  <div class="portal-footer__primary">
+    <a class="portal-footer__brand footer-brand" href="/about/">
+      <picture>
+        <source srcset="{{ '/assets/img/DzmitryiKharlanau.avif' | relative_url }}" type="image/avif" />
+        <img class="portal-footer__avatar" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="" width="56" height="56" loading="lazy" />
+      </picture>
+      <span><strong>Dzmitryi Kharlanau</strong><span>{{ portal_footer.descriptor | default: 'SAP operations · transformation · practical AI' }}</span></span>
+    </a>
+    <nav class="portal-footer__social" aria-label="{{ portal_footer.social_profiles | default: 'Social profiles' }}">
+      <a href="{{ site.data.identity.profiles.linkedin }}" target="_blank" rel="me noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+      <a href="{{ site.data.identity.profiles.github }}" target="_blank" rel="me noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
   <nav class="portal-footer__nav" aria-label="{{ portal_footer.label | default: 'Footer navigation' }}">
     <a href="/services/">{{ portal_footer.work | default: portal_nav.work | default: 'Services' }}</a>
     <a href="/about/">{{ portal_footer.about | default: portal_nav.about | default: 'Profile' }}</a>
     <a href="/knowledge/">{{ portal_footer.knowledge | default: portal_nav.knowledge | default: 'Knowledge' }}</a>
-    <a href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="me noopener noreferrer">{{ portal_footer.linkedin | default: 'LinkedIn' }} <span aria-hidden="true">↗</span></a>
   </nav>
   <div class="portal-footer__meta">
     <p>&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau. {{ portal_footer.personal_site | default: 'Personal site.' }}</p>

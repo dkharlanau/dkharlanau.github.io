@@ -47,7 +47,7 @@ semantic_links:
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Interview Readiness</li></ol></nav>
 
 <div class="research-canvas ir-shell" id="interview-readiness">
-  <header class="research-canvas__hero" data-reveal>
+  <header class="research-canvas__hero research-canvas__hero--visual" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Interview Readiness / SAP Lead</p>
       <h1>Know it.<br />Explain it. Defend it.</h1>
@@ -63,6 +63,10 @@ semantic_links:
         <a href="/labs/interview-readiness/progress/">Progress</a>
       </nav>
     </div>
+    <figure class="research-canvas__visual">
+      <img src="/assets/img/labs/interview-readiness-field.webp" alt="Six SAP Lead preparation routes converging into one decision and evidence chain." width="1664" height="936" fetchpriority="high" decoding="async" />
+      <figcaption>Six tracks. One answer chain. Evidence at every hand-off.</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Interview readiness model">
       <p>Readiness model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Refresh</strong><small>Recall the process and vocabulary</small></div>

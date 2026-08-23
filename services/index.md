@@ -28,6 +28,10 @@ last_modified_at: 2026-08-22
       <a href="/services/sap-ai-ml-enablement/"><span>05</span><strong>AI around SAP</strong><small>One controlled task with evidence and human review.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/services/enterprise-ai-pilot-design/"><span>06</span><strong>Enterprise AI pilot</strong><small>ERP, document, or agent workflow with controls and evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </nav>
+    <figure class="service-canvas__visual" data-reveal>
+      <img src="/assets/img/systems/workflow-exception-field.webp" alt="An operating workflow with one exception routed into an evidence review loop before it returns to a controlled outcome." width="1728" height="1081" decoding="async" fetchpriority="high" />
+      <figcaption>Start with the blocked work. Trace the exception, evidence, decision, and return path.</figcaption>
+    </figure>
   </section>
 
   <section class="service-paths" aria-labelledby="service-paths-title">

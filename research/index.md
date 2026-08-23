@@ -17,7 +17,7 @@ hide_global_cta: true
   </ol>
 </nav>
 
-<div class="research-canvas">
+<div class="research-canvas hub-canvas hub-canvas--research">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Research / working evidence</p>
@@ -25,6 +25,10 @@ hide_global_cta: true
       <p>Source-backed signals for SAP operations, AI, data, and integration. The material is for orientation and comparison—not a recommendation or a substitute for landscape-specific validation.</p>
       <a class="research-canvas__button" href="#research-inventory">Open the research inventory <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
+    <figure class="hub-canvas__visual">
+      <img src="/assets/img/hubs/research-signal-field.webp" alt="Many weak research signals passing through comparison into a few stronger decision lines." width="1728" height="1024" decoding="async" fetchpriority="high" />
+      <figcaption>Signal → comparison → verified guidance</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Research inventory: four watchlists, four comparisons, and four briefs">
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Watchlists</small></div>

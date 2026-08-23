@@ -7,8 +7,9 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-19
+last_modified_at: 2026-08-22
 hide_global_cta: true
+hide_site_share: true
 tags:
   - datasets
   - ai-agents
@@ -20,14 +21,18 @@ tags:
   <ol><li><a href="/">Home</a></li><li aria-current="page">Machine Layer</li></ol>
 </nav>
 
-<div class="research-canvas">
+<div class="research-canvas hub-canvas hub-canvas--machine">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Machine layer / structured access</p>
-      <h1>Human pages explain.<br />Machine endpoints expose structure.</h1>
-      <p>This layer groups datasets, JSON and YAML exports, portable agent skills, tool descriptions, local MCP packages, and reasoning contracts. It supports retrieval and automation without turning the public site into a runtime platform.</p>
+      <h1>Turn public knowledge into usable machine context.</h1>
+      <p>Datasets, AI exports, skills, tool descriptions, and local MCP packages expose stable structure for retrieval and automation. Credentials and private context stay outside the public site.</p>
       <a class="research-canvas__button" href="#machine-routes">Open technical routes <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
+    <figure class="hub-canvas__visual">
+      <img src="/assets/img/systems/master-data-lineage-field.webp" alt="Several public data sources passing through identity, validation, and governance gates into one structured core with controlled downstream routes." width="1728" height="1106" decoding="async" fetchpriority="high" />
+      <figcaption>Public sources → validation and structure → controlled reuse</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Machine layer">
       <p>Access types</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Data</strong><small>Canonical datasets</small></div>

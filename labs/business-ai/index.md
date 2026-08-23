@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-19
+last_modified_at: 2026-08-22
 hide_global_cta: true
 tags:
   - business-ai
@@ -63,13 +63,17 @@ semantic_links:
 </nav>
 
 <div class="research-canvas">
-  <header class="research-canvas__hero" data-reveal>
+  <header class="research-canvas__hero research-canvas__hero--visual" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Lab 03 / Business AI</p>
       <h1>Process first.<br />Pattern second. Technology third.</h1>
       <p>This lab maps Business AI across the enterprise. It starts from business work and decisions, connects them to reusable AI patterns, compares technology families and platforms, and keeps both successful and failed implementation evidence attached.</p>
       <a class="research-canvas__button" href="#business-ai-map">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
+    <figure class="research-canvas__visual">
+      <img src="/assets/img/systems/ai-evidence-boundary-field.webp" alt="Documents, system events, structured records, and data entering an AI synthesis boundary, then separating into approved action and human-review routes with an audit trail." width="1728" height="1081" fetchpriority="high" decoding="async" />
+      <figcaption>Evidence enters the model boundary. Only reviewed output becomes action.</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Business AI catalog status">
       <p>Current catalog</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ process_map.processes | size }}</strong><small>End-to-end processes</small></div>

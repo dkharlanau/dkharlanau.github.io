@@ -20,7 +20,7 @@ tags:
   <ol><li><a href="/">Home</a></li><li aria-current="page">Frameworks</li></ol>
 </nav>
 
-<div class="research-canvas">
+<div class="research-canvas hub-canvas hub-canvas--frameworks">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Frameworks / reusable reasoning</p>
@@ -28,6 +28,10 @@ tags:
       <p>These frameworks are reusable ways to analyse a problem, make a decision, or execute repeated work. They are not product catalogs and they do not belong inside one SAP or AI lab.</p>
       <a class="research-canvas__button" href="#framework-routes">Open the frameworks <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
+    <figure class="hub-canvas__visual">
+      <img src="/assets/img/hubs/framework-instruments-field.webp" alt="Four different reasoning instruments connected by one evidence spine." width="1728" height="1024" decoding="async" fetchpriority="high" />
+      <figcaption>Stable method → changing case → reusable outcome</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Framework inventory">
       <p>Current set</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>TRIZ</strong><small>Contradictions</small></div>

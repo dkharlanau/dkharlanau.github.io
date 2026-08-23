@@ -66,19 +66,26 @@ def test_page_builder_registers_sections():
 def test_home_uses_the_shared_portal_theme_and_optimised_texture():
     layout = (REPO_ROOT / "_layouts/default.html").read_text(encoding="utf-8")
     partial = (REPO_ROOT / "_includes/sections/home-product.html").read_text(encoding="utf-8")
+    css = (REPO_ROOT / "assets/diagnostic-portal.css").read_text(encoding="utf-8")
     assert "diagnostic-portal.css" in layout
     assert "diagnostic-portal-texture.webp" in partial
+    assert re.search(r"\.portal-text-link\s*\{[^}]*min-height:\s*44px", css)
 
 
-def test_product_home_has_problem_evidence_decision_flow_and_public_proof():
+def test_product_home_has_ams_tco_workflow_ai_flow_and_public_proof():
     text = (REPO_ROOT / "_includes/sections/home-product.html").read_text(encoding="utf-8")
     copy = yaml.safe_load((REPO_ROOT / "_data/home_portal.yml").read_text(encoding="utf-8"))["en"]
     assert "consulting-hero" in text
     assert "signal-trace" in text
-    assert [item["title"] for item in copy["trace"]["items"]] == ["Symptom", "Evidence", "Decision"]
+    assert [item["title"] for item in copy["trace"]["items"]] == ["TCO", "Workflow", "AI control"]
+    assert "next generation of SAP AMS" in copy["hero"]["title"]
+    assert "context" not in copy["hero"]
+    assert copy["close"]["role"] == "Senior SAP Consultant at EPAM Systems"
+    assert copy["hero"]["secondary_href"] == "#pilots"
+    assert [item["label"].split(" · ")[0] for item in copy["clusters"]["items"][:3]] == ["Pilot 01", "Pilot 02", "Pilot 03"]
     assert "portal-evidence" in text
-    assert 'href="/services/"' in text
-    assert 'href="/knowledge/"' in text
+    assert "portal.hero.primary_href" in text
+    assert "portal.hero.secondary_href" in text
     assert "metric" not in text, "unused percentage claims must not be rendered as proof"
 
 
@@ -147,10 +154,13 @@ def test_reader_tools_have_sharing_and_personal_local_reaction():
 def test_footer_is_compact_and_trust_oriented():
     text = (REPO_ROOT / "_includes/footer.html").read_text(encoding="utf-8")
     assert "portal-footer__nav" in text
+    assert "portal-footer__social" in text
     assert "footer-brand" in text
+    assert "DzmitryiKharlanau.avif" in text
     assert 'href="/services/"' in text
     assert 'href="/knowledge/"' in text
-    assert "linkedin.com/in/dkharlanau" in text
+    assert "site.data.identity.profiles.linkedin" in text
+    assert "site.data.identity.profiles.github" in text
     assert 'href="/atlas/"' not in text
 
 

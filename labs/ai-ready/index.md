@@ -47,6 +47,10 @@ semantic_links:
       <p>This lab is technology-first, not industry-first. Learn how to use models for research, knowledge work, coding, data analysis, automation, tool use, and agents. Then learn how to make those systems testable, secure, and deployable.</p>
       <a class="research-canvas__button" href="/labs/ai-ready/use-cases/">Start from a use case <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
+    <figure class="system-opening-visual">
+      <img src="/assets/img/systems/ai-evidence-boundary-field.webp" alt="Heterogeneous evidence entering a bounded AI synthesis layer, then separating into approved action, human review, and a retained audit trail." width="1728" height="1081" decoding="async" fetchpriority="high" />
+      <figcaption>The model handles uncertainty; normal software keeps authority, state, and evidence.</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Review status">
       <p>Current baseline</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>7</strong><small>Architecture areas</small></div>

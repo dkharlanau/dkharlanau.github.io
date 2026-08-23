@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-18
+last_modified_at: 2026-08-22
 hide_global_cta: true
 tags:
   - sap
@@ -21,7 +21,7 @@ tags:
   <ol><li><a href="/">Home</a></li><li aria-current="page">Labs</li></ol>
 </nav>
 
-<div class="research-canvas">
+<div class="research-canvas hub-canvas hub-canvas--labs">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Labs / learn by tracing decisions</p>
@@ -29,6 +29,10 @@ tags:
       <p>Labs are working environments for topics that need exploration, practice, and structured reasoning. Stable methods live under Frameworks. Reviewed reference knowledge lives in the Atlas.</p>
       <a class="research-canvas__button" href="#lab-routes">Open the lab map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
+    <figure class="hub-canvas__visual">
+      <img src="/assets/img/systems/workflow-exception-field.webp" alt="A workflow moving across operating stages, with an exception routed through evidence review before a controlled decision and reusable outcome." width="1728" height="1081" decoding="async" fetchpriority="high" />
+      <figcaption>Process → exception → evidence review → controlled re-entry</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Lab structure">
       <p>Core workspaces</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>SAP</strong><small>Enterprise processes</small></div>

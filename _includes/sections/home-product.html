@@ -12,8 +12,8 @@
     <h1 id="home-title">{{ portal.hero.title }}</h1>
     <p class="consulting-hero__lead">{{ portal.hero.lead }}</p>
     <div class="consulting-hero__actions">
-      <a class="portal-primary-link" href="/services/">{{ portal.hero.primary_action }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-      <a class="portal-text-link" href="/knowledge/">{{ portal.hero.secondary_action }} <span aria-hidden="true">→</span></a>
+      <a class="portal-primary-link" href="{{ portal.hero.primary_href | default: '/services/' }}">{{ portal.hero.primary_action }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="portal-text-link" href="{{ portal.hero.secondary_href | default: '/knowledge/' }}">{{ portal.hero.secondary_action }} <span aria-hidden="true">→</span></a>
     </div>
   </div>
   <div class="signal-trace" aria-label="{{ portal.trace.aria_label }}">
@@ -31,20 +31,53 @@
     <div><p class="portal-kicker">{{ portal.focus.kicker }}</p><h2 id="focus-title">{{ portal.focus.title }}</h2></div>
     <p>{{ portal.focus.lead }}</p>
   </header>
-  <div class="consulting-focus__grid">
-    {% for card in portal.focus.cards %}
-    <a href="/services/"><span>{{ card.number }}</span><strong>{{ card.title }}</strong><small>{{ card.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
-    {% endfor %}
+  <div class="consulting-focus__layout">
+    <figure class="consulting-focus__visual" aria-label="An AMS workflow that routes a recurring exception through evidence, human review, recovery, and prevention.">
+      <img src="{{ '/assets/img/systems/workflow-exception-field.webp' | relative_url }}" alt="A recurring SAP exception routed through evidence review, an explicit decision gate, controlled recovery, and prevention." width="1728" height="1081" loading="lazy" decoding="async" />
+    </figure>
+    <div class="consulting-focus__grid">
+      {% for card in portal.focus.cards %}
+      <a href="{{ card.href | default: '/services/' }}"><span>{{ card.number }}</span><strong>{{ card.title }}</strong><small>{{ card.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
+      {% endfor %}
+    </div>
   </div>
 </div>
 
+{% if portal.clusters %}
+<section id="pilots" class="portal-clusters portal-section" aria-labelledby="clusters-title">
+  <header class="portal-section__heading portal-section__heading--split">
+    <div><p class="portal-kicker">{{ portal.clusters.kicker }}</p><h2 id="clusters-title">{{ portal.clusters.title }}</h2></div>
+    <p>{{ portal.clusters.lead }}</p>
+  </header>
+  <div class="portal-clusters__grid">
+    {% for item in portal.clusters.items %}
+    <a class="portal-cluster-card{% if forloop.index == 1 or forloop.index == 6 %} portal-cluster-card--wide{% endif %}" href="{{ item.href }}">
+      <img src="{{ item.image | relative_url }}" alt="" loading="lazy" decoding="async" />
+      <span class="portal-cluster-card__scrim" aria-hidden="true"></span>
+      <span class="portal-cluster-card__content">
+        <small>{{ item.label }}</small>
+        <strong>{{ item.title }}</strong>
+        <span>{{ item.detail }}</span>
+        <i class="material-symbols-outlined" aria-hidden="true">arrow_outward</i>
+      </span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 <div class="consulting-method portal-section" role="region" aria-labelledby="method-title">
   <header class="portal-section__heading"><p class="portal-kicker">{{ portal.method.kicker }}</p><h2 id="method-title">{{ portal.method.title }}</h2></header>
-  <ol class="consulting-method__steps">
-    {% for step in portal.method.steps %}
-    <li><span>{{ step.number }}</span><strong>{{ step.title }}</strong><p>{{ step.detail }}</p></li>
-    {% endfor %}
-  </ol>
+  <div class="consulting-method__layout">
+    <figure class="consulting-method__visual" aria-label="A workflow that routes an exception through evidence review before it rejoins the controlled operating path.">
+      <img src="{{ '/assets/img/systems/workflow-exception-field.webp' | relative_url }}" alt="A workflow moving through three operating stages, with one exception routed through evidence review before a controlled outcome." width="1728" height="1081" loading="lazy" decoding="async" />
+    </figure>
+    <ol class="consulting-method__steps">
+      {% for step in portal.method.steps %}
+      <li><span>{{ step.number }}</span><strong>{{ step.title }}</strong><p>{{ step.detail }}</p></li>
+      {% endfor %}
+    </ol>
+  </div>
 </div>
 
 <div class="portal-evidence portal-section" role="region" aria-labelledby="evidence-title">
@@ -52,19 +85,33 @@
     <div><p class="portal-kicker">{{ portal.evidence.kicker }}</p><h2 id="evidence-title">{{ portal.evidence.title }}</h2></div>
     <p>{{ portal.evidence.lead }}</p>
   </header>
-  <div class="portal-evidence__list">
-    {% for item in portal.evidence.items %}
-    <a href="{{ item.href }}"><span class="portal-evidence__type">{{ item.type }}</span><strong>{{ item.title }}</strong><small>{{ item.status }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
-    {% endfor %}
+  <div class="portal-evidence__layout">
+    <figure class="portal-evidence__visual" aria-label="Master-data sources passing through quality gates into a governed record and trusted downstream use.">
+      <img src="{{ '/assets/img/systems/master-data-lineage-field.webp' | relative_url }}" alt="Multiple master-data sources passing through identity and quality checks into one governed record used by downstream processes." width="1728" height="1106" loading="lazy" decoding="async" />
+    </figure>
+    <div class="portal-evidence__content">
+      <div class="portal-evidence__list">
+        {% for item in portal.evidence.items %}
+        <a href="{{ item.href }}"><span class="portal-evidence__type">{{ item.type }}</span><strong>{{ item.title }}</strong><small>{{ item.status }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
+        {% endfor %}
+      </div>
+      <a class="portal-text-link" href="/knowledge/">{{ portal.evidence.all_action }} <span aria-hidden="true">→</span></a>
+    </div>
   </div>
-  <a class="portal-text-link" href="/knowledge/">{{ portal.evidence.all_action }} <span aria-hidden="true">→</span></a>
 </div>
 
 <div class="consulting-close portal-section" role="region" aria-labelledby="close-title">
-  <p class="portal-kicker">{{ portal.close.kicker }}</p>
-  <h2 id="close-title">{{ portal.close.title }}</h2>
-  <div class="consulting-close__actions">
-    <a class="portal-primary-link" href="/services/">{{ portal.close.primary_action }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-    <a class="portal-text-link" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">{{ portal.close.secondary_action }} <span aria-hidden="true">↗</span></a>
+  <picture class="consulting-close__portrait">
+    <img src="{{ '/assets/img/DzmitryiKharlanau.png' | relative_url }}" alt="Dzmitryi Kharlanau" width="400" height="400" loading="lazy" decoding="async" />
+  </picture>
+  <div class="consulting-close__content">
+    <p class="portal-kicker">{{ portal.close.kicker }}</p>
+    <h2 id="close-title">Dzmitryi Kharlanau</h2>
+    <p class="consulting-close__role">{{ portal.close.role | default: portal.hero.kicker }}</p>
+    <p class="consulting-close__statement">{{ portal.close.title }}</p>
+    <div class="consulting-close__actions">
+      <a class="portal-primary-link" href="/services/">{{ portal.close.primary_action }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="portal-text-link" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">{{ portal.close.secondary_action }} <span aria-hidden="true">↗</span></a>
+    </div>
   </div>
 </div>

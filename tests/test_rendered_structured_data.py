@@ -23,7 +23,7 @@ CANONICAL_RE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 SUMMARY_QUESTION_RE = re.compile(
-    r'<summary\b[^>]*>.*?<h2\b[^>]*>(.*?)</h2>.*?</summary>',
+    r'<summary\b[^>]*>(?:(?!</summary>).)*?<h2\b[^>]*>(.*?)</h2>(?:(?!</summary>).)*?</summary>',
     re.IGNORECASE | re.DOTALL,
 )
 TAG_RE = re.compile(r"<[^>]+>")

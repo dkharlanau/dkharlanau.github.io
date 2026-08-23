@@ -34,6 +34,10 @@ tags:
       <p>{{ lab.purpose }}</p>
       <a class="research-canvas__button" href="#lab-model">See the working model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
+    <figure class="system-opening-visual">
+      <img src="/assets/img/systems/erp-document-flow-field.webp" alt="An ERP operating flow connecting demand, documents, availability and master-data checks, warehouse execution, and a completed delivery." width="1728" height="1106" decoding="async" fetchpriority="high" />
+      <figcaption>Enterprise context as a traceable path from business signal to operating outcome.</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Lab status">
       <p>Research status</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ lab.first_vertical.gates_complete }}/{{ lab.first_vertical.gates_total }}</strong><small>First-topic gates</small></div>
