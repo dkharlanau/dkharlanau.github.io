@@ -56,6 +56,10 @@ semantic_links:
       <a class="research-canvas__button" href="#career-tracks">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
       <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
+    <figure class="system-opening-visual">
+      <img src="/assets/img/labs/interview-readiness-field.webp" alt="Six SAP Lead preparation routes converging into one evidence and decision chain that can be defended in an interview." width="1664" height="936" decoding="async" fetchpriority="high" />
+      <figcaption>Knowledge becomes career evidence through mapping, proof, and pressure testing.</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Career Factory model">
       <p>Career Factory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Discover</strong><small>Labs and Assessment change</small></div>

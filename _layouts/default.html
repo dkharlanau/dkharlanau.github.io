@@ -77,7 +77,7 @@
   {% endif %}
   <!-- The portal theme is deliberately last: route-specific canvases provide
        structure, while this layer owns the sitewide visual language. -->
-  <link rel="stylesheet" href="{{ '/assets/diagnostic-portal.css' | relative_url }}?v={{ site.time | date: '%s' }}&theme=2" />
+  <link rel="stylesheet" href="{{ '/assets/diagnostic-portal.css' | relative_url }}?v={{ site.time | date: '%s' }}&theme=4" />
 </head>
 
 {% assign is_home = false %}
@@ -99,7 +99,7 @@
   {% assign page_context = 'page-context--dataset' %}
 {% endif %}
 
-<body class="site {{ page_context }}">
+<body class="site {{ page_context }}" data-page="{{ page.url | escape }}">
   <a class="skip-link" href="#content">{{ locale_data.ui.skip_to_content | default: 'Skip to main content' }}</a>
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
@@ -148,7 +148,9 @@
     {% unless page.hide_global_cta %}
     {% include cta-global.html %}
     {% endunless %}
+    {% unless page.hide_site_share %}
     {% include site-share-widget.html %}
+    {% endunless %}
   </main>
   <footer class="site-footer" id="site-footer">
     {% include footer.html %}

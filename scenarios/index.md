@@ -3,13 +3,14 @@ layout: default
 title: "SAP Process & Integration Scenarios"
 description: "Scenario-based business pain library connecting SAP process failures to diagnostic workflows, cost drivers, and AI-ready support knowledge."
 permalink: /scenarios/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-08-22
 status: needs_verification
 verified: false
 author: Dzmitryi Kharlanau
 robots: noindex,follow
 sitemap: false
 hide_global_cta: true
+hide_site_share: true
 ---
 
 <div class="scenario-canvas">
@@ -18,12 +19,16 @@ hide_global_cta: true
   </nav>
 
   <section class="scenario-canvas__hero" aria-labelledby="scenario-title" data-reveal>
-    <div>
+    <div class="scenario-canvas__hero-copy">
       <p class="scenario-canvas__eyebrow">SAP operating scenarios</p>
-      <h1 id="scenario-title">Start with the business failure.</h1>
-      <p>Choose the visible problem. The scenario then connects it to the SAP context, evidence, and diagnostic route needed to investigate it.</p>
+      <h1 id="scenario-title">Trace the business failure to a defensible decision.</h1>
+      <p>Choose the visible problem first. Each route connects business impact to the SAP process, the evidence that matters, and the next decision.</p>
       <div class="scenario-canvas__actions"><a class="scenario-canvas__button" href="#scenario-routes">Choose a problem area <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a><a class="scenario-canvas__text-link" href="/atlas/diagnostics/">Open Diagnostics <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
     </div>
+    <figure class="scenario-canvas__visual">
+      <img src="/assets/img/systems/erp-document-flow-field.webp" alt="A business signal moving through ERP documents, master-data and availability checks, warehouse execution, integration, and delivery confirmation." width="1728" height="1106" decoding="async" fetchpriority="high" />
+      <figcaption>One symptom can cross documents, data, warehouse, and integration boundaries. Follow the operating flow before choosing the fix.</figcaption>
+    </figure>
     <ol class="scenario-canvas__sequence" aria-label="Scenario structure">
       <li><span>01</span><strong>Business impact</strong><small>What is delayed, repeated, or blocked?</small></li>
       <li><span>02</span><strong>SAP context</strong><small>Which process, object, or handoff is involved?</small></li>

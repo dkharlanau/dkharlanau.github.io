@@ -65,8 +65,9 @@
   }
 
   document.querySelectorAll(".home-language-switcher, .hc-langs").forEach((switcher) => {
+    const disclosure = switcher.matches("details") ? switcher : switcher.querySelector("details");
     document.addEventListener("click", (event) => {
-      if (switcher.open && !switcher.contains(event.target)) switcher.open = false;
+      if (disclosure?.open && !switcher.contains(event.target)) disclosure.open = false;
     });
   });
 

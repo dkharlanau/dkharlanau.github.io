@@ -23,6 +23,10 @@ hide_global_cta: true
       <p>SAP Diagnostics MCP is a local-first, credential-free, read-only learning project. It exposes deterministic retrieval over public SAP Atlas artifacts through small diagnostic tools.</p>
       <a class="research-canvas__button" href="https://github.com/dkharlanau/dkharlanau.github.io/tree/main/mcp/sap-diagnostics-mcp" target="_blank" rel="noopener">Open the source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
     </div>
+    <figure class="system-opening-visual">
+      <img src="/assets/img/systems/ai-evidence-boundary-field.webp" alt="Documents, system events, and structured records entering a bounded AI retrieval layer, then splitting into approved action and human-review routes with an audit trail." width="1728" height="1081" decoding="async" fetchpriority="high" />
+      <figcaption>Read-only retrieval before credentials, writes, or production authority.</figcaption>
+    </figure>
     <div class="research-canvas__signal" aria-label="Lab characteristics">
       <p>Lab boundary</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Read</strong><small>No write tools</small></div>

@@ -5,13 +5,22 @@ description: "Search across SAP O2C articles, notes, CV highlights, FAQs, and ma
 permalink: /search/
 sitemap: false
 robots: "noindex,follow"
+last_modified_at: 2026-08-22
+hide_global_cta: true
+hide_site_share: true
 ---
 
 <section class="search-canvas">
   <header class="search-canvas__hero">
-    <p class="search-canvas__eyebrow">Search / site knowledge</p>
-    <h1>Find the SAP problem, route, or proof.</h1>
-    <p>Search across services, diagnostics, scenarios, technical writing, profile evidence, and public datasets.</p>
+    <div class="search-canvas__hero-copy">
+      <p class="search-canvas__eyebrow">Search / site knowledge</p>
+      <h1>Find the SAP problem, route, or proof.</h1>
+      <p>Search services, diagnostics, scenarios, labs, research, profile evidence, and public datasets.</p>
+    </div>
+    <figure class="search-canvas__visual">
+      <img src="/assets/img/systems/erp-document-flow-field.webp" alt="An ERP operating signal branching through document, data, warehouse, and integration evidence routes." width="1728" height="1106" decoding="async" fetchpriority="high" />
+      <figcaption>One operating question, several evidence boundaries.</figcaption>
+    </figure>
   </header>
 
   <form class="search-canvas__form" role="search" method="get" action="/search/">
@@ -19,17 +28,29 @@ robots: "noindex,follow"
     <div><input type="search" id="search-query" name="q" placeholder="Try delivery block, IDoc, duplicate business partner" autocomplete="off" /><button type="submit">Search <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
   </form>
 
-  <nav class="search-canvas__routes" aria-label="Start routes">
-    <a href="/atlas/diagnostics/"><span>Diagnostics</span><small>Trace a SAP symptom</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-    <a href="/scenarios/"><span>Scenarios</span><small>Start from business impact</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-    <a href="/services/"><span>Services</span><small>Choose an improvement route</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-  </nav>
-
   <div class="search-canvas__result-area">
     <div id="search-status" class="search-canvas__status" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="search-filters" class="search-canvas__filters" aria-label="Filter search results" hidden></div>
     <ul id="search-results" class="search-result-list"></ul>
-    <p id="search-help" class="search-canvas__help">Search reads public titles and descriptions. Use the business symptom, SAP object, or decision area rather than broad terms.</p>
+    <div id="search-help" class="search-canvas__help">
+      <p>Use a business symptom, SAP object, integration signal, or decision area. Search reads public titles and descriptions.</p>
+      <nav aria-label="Suggested searches">
+        <a href="/search/?q=delivery%20block">Delivery block</a>
+        <a href="/search/?q=IDoc">IDoc</a>
+        <a href="/search/?q=business%20partner">Business partner</a>
+        <a href="/search/?q=AMS%20cost">AMS cost</a>
+      </nav>
+    </div>
   </div>
+
+  <section class="search-canvas__browse" aria-labelledby="search-browse-title">
+    <header><p class="search-canvas__eyebrow">Browse instead</p><h2 id="search-browse-title">Start from the kind of work.</h2></header>
+    <nav class="search-canvas__routes" aria-label="Start routes">
+      <a href="/atlas/diagnostics/"><span>Diagnostics</span><small>Trace a SAP symptom</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/scenarios/"><span>Scenarios</span><small>Start from business impact</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/services/"><span>Services</span><small>Choose an improvement route</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </nav>
+  </section>
 </section>
 
 <script>
@@ -38,6 +59,7 @@ robots: "noindex,follow"
   const queryInput = document.getElementById('search-query');
   const resultsList = document.getElementById('search-results');
   const statusEl = document.getElementById('search-status');
+  const filtersEl = document.getElementById('search-filters');
   const helpEl = document.getElementById('search-help');
 
   {% assign first_entry = true %}
@@ -50,7 +72,7 @@ robots: "noindex,follow"
         {% assign first_entry = false %}
         {
           "title": {{ page.title | strip_html | normalize_whitespace | jsonify }},
-          "url": {{ page_path | absolute_url | jsonify }},
+          "url": {{ page_path | relative_url | jsonify }},
           "description": {{ page.description | default: page.summary | default: page.excerpt | strip_html | normalize_whitespace | truncate: 200 | jsonify }},
           "type": "page"
         }
@@ -65,7 +87,7 @@ robots: "noindex,follow"
           {% assign first_entry = false %}
           {
             "title": {{ doc.title | strip_html | normalize_whitespace | jsonify }},
-            "url": {{ doc.url | absolute_url | jsonify }},
+            "url": {{ doc.url | relative_url | jsonify }},
             "description": {{ doc.description | default: doc.summary | default: doc.excerpt | strip_html | normalize_whitespace | truncate: 200 | jsonify }},
             "type": "{{ collection.label }}",
             "date": "{{ doc.date | default: doc.published | date_to_xmlschema }}"
@@ -91,14 +113,50 @@ robots: "noindex,follow"
     }, 0);
   }
 
-  function render(items, query) {
+  function sectionFor(url) {
+    const path = new URL(url, window.location.origin).pathname;
+    if (path.startsWith('/atlas/')) return 'Atlas';
+    if (path.startsWith('/scenarios/')) return 'Scenarios';
+    if (path.startsWith('/services/')) return 'Services';
+    if (path.startsWith('/labs/')) return 'Labs';
+    if (path.startsWith('/research/') || path.startsWith('/radar/') || path.startsWith('/news/')) return 'Research';
+    if (path.startsWith('/datasets/')) return 'Datasets';
+    if (path.startsWith('/machine/') || path.startsWith('/agent-tools/') || path.startsWith('/agent-skills/') || path.startsWith('/mcp/')) return 'Machine';
+    if (path.startsWith('/about/') || path.startsWith('/cv/') || path.startsWith('/certifications/') || path.startsWith('/education/')) return 'Profile';
+    return 'Knowledge';
+  }
+
+  function renderFilters(items, query) {
+    filtersEl.innerHTML = '';
+    const counts = items.reduce((map, item) => map.set(item.section, (map.get(item.section) || 0) + 1), new Map());
+    const entries = [['All', items.length], ...[...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))];
+    entries.forEach(([section, count], index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = `${section} ${count}`;
+      button.setAttribute('aria-pressed', String(index === 0));
+      button.addEventListener('click', () => {
+        filtersEl.querySelectorAll('button').forEach(control => control.setAttribute('aria-pressed', 'false'));
+        button.setAttribute('aria-pressed', 'true');
+        render(section === 'All' ? items : items.filter(item => item.section === section), query, section);
+      });
+      filtersEl.appendChild(button);
+    });
+    filtersEl.hidden = entries.length <= 2;
+  }
+
+  function render(items, query, section = 'All') {
     resultsList.innerHTML = '';
     if (!items.length) {
       statusEl.textContent = `No results for “${query}”. Try another keyword.`;
+      filtersEl.hidden = true;
+      helpEl.style.display = '';
       return;
     }
 
-    statusEl.textContent = `Found ${items.length} result${items.length === 1 ? '' : 's'} for “${query}”:`;
+    statusEl.textContent = section === 'All'
+      ? `Found ${items.length} result${items.length === 1 ? '' : 's'} for “${query}”.`
+      : `${items.length} ${section.toLowerCase()} result${items.length === 1 ? '' : 's'} for “${query}”.`;
     items.slice(0, 30).forEach(item => {
       const li = document.createElement('li');
       li.className = 'search-result';
@@ -106,7 +164,7 @@ robots: "noindex,follow"
       link.href = item.url;
       const meta = document.createElement('p');
       meta.className = 'search-result__meta';
-      meta.textContent = item.type ? item.type.toUpperCase() : 'PAGE';
+      meta.textContent = item.section;
       const title = document.createElement('strong');
       title.textContent = item.title;
       const desc = document.createElement('p');
@@ -129,7 +187,7 @@ robots: "noindex,follow"
 
   const terms = tokenize(query);
   if (!terms.length) {
-    statusEl.textContent = 'Enter a query to search notes, blog, and CV.';
+    statusEl.textContent = 'Enter a query to search the public knowledge system.';
     helpEl.style.display = '';
     return;
   }
@@ -138,8 +196,9 @@ robots: "noindex,follow"
     .map(item => ({ item, relevance: score(item, terms) }))
     .filter(result => result.relevance > 0)
     .sort((a, b) => b.relevance - a.relevance || a.item.title.localeCompare(b.item.title))
-    .map(result => result.item);
+    .map(result => ({ ...result.item, section: sectionFor(result.item.url) }));
   helpEl.style.display = 'none';
+  renderFilters(results, query);
   render(results, query);
 })();
 </script>
