@@ -1,0 +1,344 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Home" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary navigation" [ref=e6]:
+        - generic [ref=e7]:
+          - link "Knowledge" [ref=e8] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Work" [ref=e9] [cursor=pointer]:
+            - /url: /services/
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /about/
+          - link "Search" [ref=e11] [cursor=pointer]:
+            - /url: /search/
+            - generic [ref=e12]: search
+  - main [ref=e14]:
+    - navigation "Breadcrumb" [ref=e15]:
+      - list [ref=e16]:
+        - listitem [ref=e17]:
+          - link "Home" [ref=e18] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e19]:
+          - text: /
+          - link "Research" [ref=e20] [cursor=pointer]:
+            - /url: /research/
+        - listitem [ref=e21]: / Knowledge Graphs for Support Memory
+    - article [ref=e22]:
+      - generic [ref=e23]:
+        - paragraph [ref=e24]: Research Brief
+        - heading "Knowledge Graphs for Support Memory" [level=1] [ref=e25]
+        - paragraph [ref=e26]: Graph databases and semantic layers for persistent, queryable operational memory.
+      - navigation "On this page" [ref=e27]:
+        - group [ref=e28]:
+          - generic "On this page (10) −" [ref=e29] [cursor=pointer]
+          - list [ref=e30]:
+            - listitem [ref=e31]:
+              - link "Research question" [ref=e32] [cursor=pointer]:
+                - /url: "#research-question"
+            - listitem [ref=e33]:
+              - link "Short answer" [ref=e34] [cursor=pointer]:
+                - /url: "#short-answer"
+            - listitem [ref=e35]:
+              - link "What changed" [ref=e36] [cursor=pointer]:
+                - /url: "#what-changed"
+            - listitem [ref=e37]:
+              - link "Evidence" [ref=e38] [cursor=pointer]:
+                - /url: "#evidence"
+            - listitem [ref=e39]:
+              - link "Why it matters" [ref=e40] [cursor=pointer]:
+                - /url: "#why-it-matters"
+            - listitem [ref=e41]:
+              - link "Practical implications" [ref=e42] [cursor=pointer]:
+                - /url: "#practical-implications"
+            - listitem [ref=e43]:
+              - link "Risks and unknowns" [ref=e44] [cursor=pointer]:
+                - /url: "#risks-and-unknowns"
+            - listitem [ref=e45]:
+              - link "Related Atlas links" [ref=e46] [cursor=pointer]:
+                - /url: "#related-atlas-links"
+            - listitem [ref=e47]:
+              - link "Next actions" [ref=e48] [cursor=pointer]:
+                - /url: "#next-actions"
+            - listitem [ref=e49]:
+              - link "Sources" [ref=e50] [cursor=pointer]:
+                - /url: "#sources"
+      - generic [ref=e51]:
+        - heading "Research question" [level=2] [ref=e52]
+        - paragraph [ref=e53]: Can knowledge graphs improve how SAP AMS teams store, query, and reason about operational memory compared to traditional document stores or vector databases?
+        - heading "Short answer" [level=2] [ref=e54]
+        - paragraph [ref=e55]: "Knowledge graphs excel at relationship-heavy queries that span multiple entities and systems: “Which customers are affected by this supplier delay?” or “What incidents involved both material master changes and pricing procedure updates?” For these queries, graph traversals outperform vector similarity or keyword search. However, building a knowledge graph requires upfront schema design (ontology), which is a barrier for teams used to unstructured document stores. The pragmatic approach is: keep runbooks and KEDB in a document/vector store for similarity search, and add a knowledge graph layer for cross-domain relationship queries and AI reasoning (GraphRAG)."
+        - heading "What changed" [level=2] [ref=e56]
+        - list [ref=e57]:
+          - listitem [ref=e58]:
+            - strong [ref=e59]: Neo4j AI memory launch (2025).
+            - text: Neo4j launched dedicated AI memory and context graph capabilities, positioning graph databases as persistent reasoning engines for agentic AI.
+            - 'link "Neo4j: 2025 Year of AI and Scalability" [ref=e60] [cursor=pointer]':
+              - /url: https://neo4j.com/blog/news/2025-ai-scalability/
+          - listitem [ref=e61]:
+            - strong [ref=e62]: Graphiti framework for agent memory.
+            - text: Zep AI’s Graphiti framework, built on Neo4j, introduced temporally-aware knowledge graphs for real-time agent memory, achieving P95 query latency of 300ms.
+            - 'link "Neo4j: Graphiti Knowledge Graph Memory" [ref=e63] [cursor=pointer]':
+              - /url: https://neo4j.com/blog/developer/graphiti-knowledge-graph-memory/
+          - listitem [ref=e64]:
+            - strong [ref=e65]: Neo4j agent-memory open-source project.
+            - text: Neo4j Labs released
+            - code [ref=e66]: neo4j-labs/agent-memory
+            - text: ", a graph-native memory system for AI agents with multi-stage entity extraction, relationship extraction, and integrations with LangChain, Pydantic AI, and CrewAI."
+            - 'link "GitHub: neo4j-labs/agent-memory" [ref=e67] [cursor=pointer]':
+              - /url: https://github.com/neo4j-labs/agent-memory
+          - listitem [ref=e68]:
+            - strong [ref=e69]: Microsoft GraphRAG approach.
+            - text: Microsoft Research’s GraphRAG builds entity-centric knowledge graphs from documents, precomputing community summaries for query-focused summarization. It excels at static datasets but is less effective for frequently updated data.
+            - 'link "Neo4j: Graphiti vs GraphRAG comparison" [ref=e70] [cursor=pointer]':
+              - /url: https://neo4j.com/blog/developer/graphiti-knowledge-graph-memory/
+          - listitem [ref=e71]:
+            - strong [ref=e72]: Knowledge Graph of Thoughts (KGoT).
+            - text: Academic research demonstrated that representing LLM reasoning as knowledge graphs (property graphs, RDF, adjacency lists) reduces noise, mitigates bias, and improves transparency.
+            - 'link "arXiv: Knowledge Graph of Thoughts" [ref=e73] [cursor=pointer]':
+              - /url: https://arxiv.org/abs/2504.02670
+        - heading "Evidence" [level=2] [ref=e74]
+        - table [ref=e75]:
+          - rowgroup [ref=e76]:
+            - row [ref=e77]:
+              - columnheader "Signal" [ref=e78]
+              - columnheader "Source" [ref=e79]
+              - columnheader "Confidence" [ref=e80]
+          - rowgroup [ref=e81]:
+            - row [ref=e82]:
+              - cell "Neo4j AI memory capabilities" [ref=e83]
+              - cell "Neo4j official blog" [ref=e84]
+              - cell "High" [ref=e85]
+            - row [ref=e86]:
+              - cell "Graphiti 300ms P95 latency" [ref=e87]
+              - cell "Neo4j / Zep AI blog" [ref=e88]
+              - cell "Medium" [ref=e89]
+            - row [ref=e90]:
+              - cell "Neo4j agent-memory open source" [ref=e91]
+              - cell "GitHub repository" [ref=e92]
+              - cell "High" [ref=e93]
+            - row [ref=e94]:
+              - cell "Microsoft GraphRAG approach" [ref=e95]
+              - cell "Neo4j comparison blog" [ref=e96]
+              - cell "Medium" [ref=e97]
+            - row [ref=e98]:
+              - cell "KGoT reasoning improvement" [ref=e99]
+              - cell "arXiv paper" [ref=e100]
+              - cell "Medium" [ref=e101]
+        - heading "Why it matters" [level=2] [ref=e102]
+        - paragraph [ref=e103]: "SAP support memory is traditionally stored in documents: Word files, wikis, KEDB entries, ticket comments. These are searchable by keyword or vector similarity, but they do not capture relationships. When an analyst asks “Which incidents last quarter involved both customer master changes and delivery block issues?”—a document store cannot answer this without exhaustive manual review. A knowledge graph that links incidents, systems, transactions, error types, and resolutions can answer this in a single query."
+        - heading "Practical implications" [level=2] [ref=e104]
+        - list [ref=e105]:
+          - listitem [ref=e106]:
+            - strong [ref=e107]: Entity extraction from tickets.
+            - text: "Use NLP or LLM-based extraction to identify entities from incident tickets: system, client, transaction, error code, material, customer, vendor, user. Store these as graph nodes."
+          - listitem [ref=e108]:
+            - strong [ref=e109]: Relationship linking.
+            - text: "Link entities with relationships:"
+            - code [ref=e110]: INCIDENT-1234
+            - text: →
+            - code [ref=e111]: affects
+            - text: →
+            - code [ref=e112]: CUSTOMER-5678
+            - text: ","
+            - code [ref=e113]: INVOLVES
+            - text: →
+            - code [ref=e114]: TRANSACTION-VA01
+            - text: ","
+            - code [ref=e115]: RESOLVED_BY
+            - text: →
+            - code [ref=e116]: RUNBOOK-42
+            - text: . This creates a queryable network.
+          - listitem [ref=e117]:
+            - strong [ref=e118]: GraphRAG for complex queries.
+            - text: For questions that require multi-hop reasoning (“Find all customers with open orders for materials from supplier X that had quality issues in plant Y”), GraphRAG uses the graph structure to retrieve relevant context more accurately than vector-only RAG.
+          - listitem [ref=e119]:
+            - strong [ref=e120]: Temporal memory.
+            - text: "Graphiti’s bi-temporal model tracks when events occurred and when they were ingested. This enables historical queries: “What did we know about this customer on March 1st?” Useful for audit and regression analysis."
+          - listitem [ref=e121]:
+            - strong [ref=e122]: Hybrid architecture.
+            - text: Do not replace your document store with a graph. Use documents for full-text search and vector similarity, and the graph for relationship queries and AI reasoning. The two complement each other.
+        - heading "Risks and unknowns" [level=2] [ref=e123]
+        - list [ref=e124]:
+          - listitem [ref=e125]:
+            - strong [ref=e126]: Schema design burden.
+            - text: Knowledge graphs require an ontology or schema. Defining entity types and relationship types for SAP support is non-trivial. A bad schema limits usefulness. Invest in graph modeling expertise.
+          - listitem [ref=e127]:
+            - strong [ref=e128]: Entity resolution complexity.
+            - text: The same customer may appear as “Customer 1234” in SAP, “CUST-5678” in the CRM, and “Acme Corp” in a ticket comment. Entity resolution (deduplication) is required to build a clean graph. This is a hard problem.
+          - listitem [ref=e129]:
+            - strong [ref=e130]: Update latency.
+            - text: If the graph is built from historical tickets, it reflects the past. Real-time graph updates from live SAP systems require CDC pipelines, which add infrastructure complexity.
+          - listitem [ref=e131]:
+            - strong [ref=e132]: Graph scale.
+            - text: Very large graphs (millions of nodes) require careful indexing, partitioning, and query optimization. Neo4j, Amazon Neptune, and TigerGraph handle this, but operational expertise is needed.
+          - listitem [ref=e133]:
+            - strong [ref=e134]: ROI unproven for support.
+            - text: While knowledge graphs are proven for fraud detection, recommendation systems, and drug discovery, their ROI for IT support memory is less documented. Start with a pilot.
+        - heading "Related Atlas links" [level=2] [ref=e135]
+        - list [ref=e136]:
+          - listitem [ref=e137]:
+            - link "Operational Memory for SAP AMS" [ref=e138] [cursor=pointer]:
+              - /url: /atlas/automation/operational-memory-for-sap-ams/
+          - listitem [ref=e139]:
+            - link "SAP Master Data Quality" [ref=e140] [cursor=pointer]:
+              - /url: /atlas/data-quality/sap-master-data-quality/
+        - heading "Next actions" [level=2] [ref=e141]
+        - list [ref=e142]:
+          - listitem [ref=e143]:
+            - checkbox [disabled] [ref=e144]
+            - text: "Prototype a Neo4j graph built from 1,000 historical KEDB entries and incident tickets. Define entity types: incident, system, transaction, error, material, customer, resolution."
+          - listitem [ref=e145]:
+            - checkbox [disabled] [ref=e146]
+            - text: Evaluate GraphRAG versus vector-only RAG for a set of realistic SAP support queries. Measure accuracy and latency.
+          - listitem [ref=e147]:
+            - checkbox [disabled] [ref=e148]
+            - text: "Define an entity schema for the SAP support domain. Start small: 5–10 entity types and 10–15 relationship types."
+          - listitem [ref=e149]:
+            - checkbox [disabled] [ref=e150]
+            - text: Do not commit to a full knowledge graph project without a 90-day pilot and measurable success criteria.
+        - heading "Sources" [level=2] [ref=e151]
+        - list [ref=e152]:
+          - listitem [ref=e153]:
+            - 'link "2025: Year of AI and Scalability — Neo4j" [ref=e154] [cursor=pointer]':
+              - /url: https://neo4j.com/blog/news/2025-ai-scalability/
+            - list [ref=e155]:
+              - listitem [ref=e156]: "type: official"
+              - listitem [ref=e157]: "accessed: 2026-06-07"
+              - listitem [ref=e158]: "confidence: high"
+              - listitem [ref=e159]: "used for: Neo4j AI memory, context graphs, agent ecosystem integrations"
+          - listitem [ref=e160]:
+            - 'link "Graphiti: Knowledge graph memory for an agentic world — Neo4j" [ref=e161] [cursor=pointer]':
+              - /url: https://neo4j.com/blog/developer/graphiti-knowledge-graph-memory/
+            - list [ref=e162]:
+              - listitem [ref=e163]: "type: official"
+              - listitem [ref=e164]: "accessed: 2026-06-07"
+              - listitem [ref=e165]: "confidence: medium"
+              - listitem [ref=e166]: "used for: Graphiti framework, temporal knowledge graphs, latency benchmarks"
+          - listitem [ref=e167]:
+            - link "neo4j-labs/agent-memory — GitHub" [ref=e168] [cursor=pointer]:
+              - /url: https://github.com/neo4j-labs/agent-memory
+            - list [ref=e169]:
+              - listitem [ref=e170]: "type: repository"
+              - listitem [ref=e171]: "accessed: 2026-06-07"
+              - listitem [ref=e172]: "confidence: high"
+              - listitem [ref=e173]: "used for: Open-source graph-native memory system, entity extraction, framework integrations"
+          - listitem [ref=e174]:
+            - link "Knowledge Graph of Thoughts — arXiv 2025" [ref=e175] [cursor=pointer]:
+              - /url: https://arxiv.org/abs/2504.02670
+            - list [ref=e176]:
+              - listitem [ref=e177]: "type: paper"
+              - listitem [ref=e178]: "accessed: 2026-06-07"
+              - listitem [ref=e179]: "confidence: medium"
+              - listitem [ref=e180]: "used for: KGoT reasoning, bias mitigation, graph representations"
+          - listitem [ref=e181]:
+            - link "Knowledge Graph Construction AI Market Research Report 2034 — DataIntelo" [ref=e182] [cursor=pointer]:
+              - /url: https://dataintelo.com/report/knowledge-graph-construction-ai-market
+            - list [ref=e183]:
+              - listitem [ref=e184]: "type: weak_signal"
+              - listitem [ref=e185]: "accessed: 2026-06-07"
+              - listitem [ref=e186]: "confidence: low"
+              - listitem [ref=e187]: "used for: Enterprise knowledge graph platform landscape, selection criteria (market research aggregation; treat as orientation only, not investment guidance)"
+      - complementary [ref=e188]:
+        - paragraph [ref=e189]: About
+        - heading "Dzmitryi Kharlanau" [level=2] [ref=e190]
+        - paragraph [ref=e191]: SAP consultant and AI-assisted systems builder, working across operations, integration, master data, and delivery.
+        - generic [ref=e192]:
+          - generic [ref=e193]:
+            - term [ref=e194]: Focus
+            - definition [ref=e195]: Diagnostics, operational clarity, and reusable delivery systems.
+          - generic [ref=e196]:
+            - term [ref=e197]: Approach
+            - definition [ref=e198]: Evidence first. Practical next steps. Clear ownership.
+        - generic [ref=e199]:
+          - link "About" [ref=e200] [cursor=pointer]:
+            - /url: /about/
+          - link "LinkedIn" [ref=e201] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/dkharlanau
+          - link "SAP operations" [ref=e202] [cursor=pointer]:
+            - /url: /services/sap-ams-consulting/
+      - complementary [ref=e203]:
+        - paragraph [ref=e204]: Independent research
+        - paragraph [ref=e205]:
+          - text: This is not official SAP documentation or training material. Public vendor sources are used to verify facts; explanations, models, comparisons, and examples are independently written from public information, professional experience, and reasoning. No SAP affiliation or endorsement is implied.
+          - link "Research and Attribution Policy" [ref=e206] [cursor=pointer]:
+            - /url: /legal/research-attribution/
+          - text: .
+    - complementary [ref=e207]:
+      - generic [ref=e208]:
+        - paragraph [ref=e209]: Share
+        - heading "Send this page to a colleague" [level=2] [ref=e210]
+        - paragraph [ref=e211]: Copy the link, share it, or mark it useful for later.
+      - generic "Share this page" [ref=e212]:
+        - button "Share" [ref=e213]:
+          - generic [ref=e214]: ios_share
+        - button "Copy link" [ref=e216]:
+          - generic [ref=e217]: link
+        - link "Send by email" [ref=e219] [cursor=pointer]:
+          - /url: mailto:?subject=Knowledge%20Graphs%20for%20Support%20Memory&body=http%3A%2F%2F127.0.0.1%3A4100%2Fresearch%2Fbriefs%2Fknowledge-graphs-for-support-memory%2F
+          - generic [ref=e220]: mail
+        - button "Helpful" [ref=e222]:
+          - generic [ref=e223]: thumb_up
+      - paragraph [ref=e225]: Helpful marks are stored only on this device.
+  - contentinfo [ref=e226]:
+    - generic [ref=e227]:
+      - generic [ref=e229]:
+        - strong [ref=e230]: Dzmitryi Kharlanau
+        - generic [ref=e231]: SAP operations · transformation · practical AI
+      - generic "Footer navigation" [ref=e232]:
+        - navigation "Explore" [ref=e233]:
+          - paragraph [ref=e234]: Explore
+          - link "Knowledge" [ref=e235] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Labs" [ref=e236] [cursor=pointer]:
+            - /url: /labs/
+          - link "Career" [ref=e237] [cursor=pointer]:
+            - /url: /labs/interview-readiness/
+          - link "Frameworks" [ref=e238] [cursor=pointer]:
+            - /url: /frameworks/
+          - link "Services" [ref=e239] [cursor=pointer]:
+            - /url: /services/
+          - link "About" [ref=e240] [cursor=pointer]:
+            - /url: /about/
+        - generic [ref=e241]:
+          - strong [ref=e242]: Knowledge
+          - link "Knowledge map" [ref=e243] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Atlas" [ref=e244] [cursor=pointer]:
+            - /url: /atlas/
+          - link "Research" [ref=e245] [cursor=pointer]:
+            - /url: /research/
+          - link "Journal" [ref=e246] [cursor=pointer]:
+            - /url: /blog/
+        - generic [ref=e247]:
+          - strong [ref=e248]: About
+          - link "Profile" [ref=e249] [cursor=pointer]:
+            - /url: /about/
+          - link "CV" [ref=e250] [cursor=pointer]:
+            - /url: /cv/
+          - link "Labs" [ref=e251] [cursor=pointer]:
+            - /url: /labs/
+          - link "Frameworks" [ref=e252] [cursor=pointer]:
+            - /url: /frameworks/
+        - generic [ref=e253]:
+          - strong [ref=e254]: For agents & tools
+          - link "Machine map" [ref=e255] [cursor=pointer]:
+            - /url: /machine/
+          - link "Datasets" [ref=e256] [cursor=pointer]:
+            - /url: /datasets/
+          - link "Skill Hub" [ref=e257] [cursor=pointer]:
+            - /url: /skill-hub/
+          - link "Agent tools" [ref=e258] [cursor=pointer]:
+            - /url: /agent-tools/
+      - generic [ref=e259]:
+        - paragraph [ref=e260]: © 2026 Dzmitryi Kharlanau. Personal, independent views.
+        - paragraph [ref=e261]:
+          - link "Privacy" [ref=e262] [cursor=pointer]:
+            - /url: /legal/privacy/
+          - link "Accessibility" [ref=e263] [cursor=pointer]:
+            - /url: /legal/accessibility/
+          - link "Responsible AI" [ref=e264] [cursor=pointer]:
+            - /url: /legal/responsible-ai/

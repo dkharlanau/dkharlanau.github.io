@@ -11,9 +11,9 @@
 
 {% assign computed_title = page.seo_title | default: page.title | default: site.title %}
 {% if page.home_locale %}
-{% assign computed_title = locale_meta.title | default: 'SAP Transformation, AMS and AI Readiness Consultant | Dzmitryi Kharlanau' %}
+{% assign computed_title = locale_meta.title | default: computed_title %}
 {% elsif page.url == '/' or page.permalink == '/' %}
-{% assign computed_title = 'SAP Transformation, AMS and AI Readiness Consultant | Dzmitryi Kharlanau' %}
+{% assign computed_title = page.title | default: 'Dzmitryi Kharlanau — SAP, Enterprise Knowledge and Practical AI' %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
 {% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP AMS, Integration & Process Optimization' %}
 {% elsif page.collection == 'notes' %}
@@ -22,9 +22,9 @@
 
 {% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
 {% if page.home_locale %}
-{% assign default_description = locale_meta.description | default: 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
+{% assign default_description = locale_meta.description | default: page.description | default: default_description %}
 {% elsif page.url == '/' or page.permalink == '/' %}
-{% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
+{% assign default_description = page.description | default: default_description %}
 {% elsif page.collection == 'notes' and page.description %}
 {% assign default_description = page.description %}
 {% elsif page.collection == 'blog' and page.description %}
@@ -38,9 +38,9 @@
 normalize_whitespace %}
 {% assign social_title = computed_title %}
 {% if page.home_locale %}
-{% assign social_title = locale_meta.social_title | default: 'SAP Transformation, AMS and AI Readiness | Dzmitryi Kharlanau' %}
+{% assign social_title = locale_meta.social_title | default: computed_title %}
 {% elsif page.url == '/' or page.permalink == '/' %}
-{% assign social_title = 'SAP Transformation, AMS and AI Readiness | Dzmitryi Kharlanau' %}
+{% assign social_title = computed_title %}
 {% endif %}
 {% assign meta_description_short = meta_description | truncatewords: 24, '…' %}
 {% assign social_description = meta_description | truncatewords: 32, '…' %}

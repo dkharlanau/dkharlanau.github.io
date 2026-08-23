@@ -63,30 +63,30 @@ def test_page_builder_registers_sections():
         assert f"when '{key}'" not in text, key
 
 
-def test_home_uses_the_shared_portal_theme_and_optimised_texture():
+def test_home_uses_the_shared_portal_theme_and_real_portrait():
     layout = (REPO_ROOT / "_layouts/default.html").read_text(encoding="utf-8")
     partial = (REPO_ROOT / "_includes/sections/home-product.html").read_text(encoding="utf-8")
     css = (REPO_ROOT / "assets/diagnostic-portal.css").read_text(encoding="utf-8")
     assert "diagnostic-portal.css" in layout
-    assert "diagnostic-portal-texture.webp" in partial
+    assert "DzmitryiKharlanau.avif" in partial
     assert re.search(r"\.portal-text-link\s*\{[^}]*min-height:\s*44px", css)
 
 
-def test_product_home_has_ams_tco_workflow_ai_flow_and_public_proof():
+def test_product_home_leads_with_person_learning_and_machine_access():
     text = (REPO_ROOT / "_includes/sections/home-product.html").read_text(encoding="utf-8")
     copy = yaml.safe_load((REPO_ROOT / "_data/home_portal.yml").read_text(encoding="utf-8"))["en"]
-    assert "consulting-hero" in text
-    assert "signal-trace" in text
-    assert [item["title"] for item in copy["trace"]["items"]] == ["TCO", "Workflow", "AI control"]
-    assert "next generation of SAP AMS" in copy["hero"]["title"]
-    assert "context" not in copy["hero"]
-    assert copy["close"]["role"] == "Senior SAP Consultant at EPAM Systems"
-    assert copy["hero"]["secondary_href"] == "#pilots"
-    assert [item["label"].split(" · ")[0] for item in copy["clusters"]["items"][:3]] == ["Pilot 01", "Pilot 02", "Pilot 03"]
-    assert "portal-evidence" in text
-    assert "portal.hero.primary_href" in text
-    assert "portal.hero.secondary_href" in text
-    assert "metric" not in text, "unused percentage claims must not be rendered as proof"
+    assert "personal-hero" in text
+    assert "personal-machine" in text
+    assert copy["personal"]["hero"]["title"] == "Dzmitryi Kharlanau"
+    assert copy["personal"]["hero"]["primary_href"] == "/about/"
+    assert copy["personal"]["hero"]["secondary_href"] == "/knowledge/"
+    assert [item["title"] for item in copy["personal"]["start"]["items"]] == [
+        "Understand my work", "Learn and prepare", "Use the knowledge with AI"
+    ]
+    assert [item["label"] for item in copy["personal"]["map"]["items"]] == [
+        "Knowledge", "Labs", "Frameworks", "Machine"
+    ]
+    assert "systems/" not in text.split("{% else %}", 1)[0]
 
 
 def test_home_hero_data():

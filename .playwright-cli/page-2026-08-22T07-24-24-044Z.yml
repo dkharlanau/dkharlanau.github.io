@@ -1,0 +1,320 @@
+- generic [active] [ref=f18e1]:
+  - link "Skip to main content" [ref=f18e2] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=f18e3]:
+    - generic [ref=f18e4]:
+      - link "Home" [ref=f18e5] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary navigation" [ref=f18e6]:
+        - generic [ref=f18e7]:
+          - link "Knowledge" [ref=f18e8] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Work" [ref=f18e9] [cursor=pointer]:
+            - /url: /services/
+          - link "About" [ref=f18e10] [cursor=pointer]:
+            - /url: /about/
+          - link "Search" [ref=f18e11] [cursor=pointer]:
+            - /url: /search/
+            - generic [ref=f18e12]: search
+  - main [ref=f18e14]:
+    - navigation "Breadcrumb" [ref=f18e15]:
+      - list [ref=f18e16]:
+        - listitem [ref=f18e17]:
+          - link "Home" [ref=f18e18] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=f18e19]:
+          - text: /
+          - link "Scenarios" [ref=f18e20] [cursor=pointer]:
+            - /url: /scenarios/
+        - listitem [ref=f18e21]: / How IDoc and API integration failures create unclear ownership
+    - article [ref=f18e22]:
+      - generic [ref=f18e23]:
+        - paragraph [ref=f18e24]: Scenario — Integration & Monitoring Pain
+        - heading "How IDoc and API integration failures create unclear ownership" [level=1] [ref=f18e25]
+        - paragraph [ref=f18e26]: IDoc errors, API timeouts, and middleware queue failures create incidents where no single team owns resolution, escalating cost and delaying business transactions.
+        - generic [ref=f18e27]:
+          - generic [ref=f18e28]: ● Needs verification
+          - generic [ref=f18e29]: ● Conservative summary
+      - complementary [ref=f18e30]:
+        - generic [ref=f18e31]:
+          - generic [ref=f18e32]:
+            - term [ref=f18e33]: Process
+            - definition [ref=f18e34]: Integration operations
+          - generic [ref=f18e35]:
+            - term [ref=f18e36]: SAP area
+            - definition [ref=f18e37]: IDoc / AIF / API / middleware
+          - generic [ref=f18e38]:
+            - term [ref=f18e39]: Indexing
+            - definition [ref=f18e40]: Noindex until scenario claims are verified against public SAP docs.
+        - navigation "On this page" [ref=f18e41]:
+          - group [ref=f18e42]:
+            - generic "On this page (13) −" [ref=f18e43] [cursor=pointer]
+            - list [ref=f18e44]:
+              - listitem [ref=f18e45]:
+                - link "Business pain" [ref=f18e46] [cursor=pointer]:
+                  - /url: "#reader-section-1"
+              - listitem [ref=f18e47]:
+                - link "Process context" [ref=f18e48] [cursor=pointer]:
+                  - /url: "#reader-section-2"
+              - listitem [ref=f18e49]:
+                - link "Typical symptoms" [ref=f18e50] [cursor=pointer]:
+                  - /url: "#reader-section-3"
+              - listitem [ref=f18e51]:
+                - link "SAP touchpoints" [ref=f18e52] [cursor=pointer]:
+                  - /url: "#reader-section-4"
+              - listitem [ref=f18e53]:
+                - link "Master data / configuration / integration touchpoints" [ref=f18e54] [cursor=pointer]:
+                  - /url: "#reader-section-5"
+              - listitem [ref=f18e55]:
+                - link "Cost drivers" [ref=f18e56] [cursor=pointer]:
+                  - /url: "#reader-section-6"
+              - listitem [ref=f18e57]:
+                - link "Root cause patterns" [ref=f18e58] [cursor=pointer]:
+                  - /url: "#reader-section-7"
+              - listitem [ref=f18e59]:
+                - link "Diagnostic workflow" [ref=f18e60] [cursor=pointer]:
+                  - /url: "#reader-section-8"
+              - listitem [ref=f18e61]:
+                - link "Solution patterns" [ref=f18e62] [cursor=pointer]:
+                  - /url: "#reader-section-9"
+              - listitem [ref=f18e63]:
+                - link "AI / automation / workflow opportunity" [ref=f18e64] [cursor=pointer]:
+                  - /url: "#reader-section-10"
+              - listitem [ref=f18e65]:
+                - link "Related Atlas pages" [ref=f18e66] [cursor=pointer]:
+                  - /url: "#reader-section-11"
+              - listitem [ref=f18e67]:
+                - link "Public references" [ref=f18e68] [cursor=pointer]:
+                  - /url: "#reader-section-12"
+              - listitem [ref=f18e69]:
+                - link "Verification status and limitations" [ref=f18e70] [cursor=pointer]:
+                  - /url: "#reader-section-13"
+      - generic [ref=f18e71]:
+        - heading "Business pain" [level=2] [ref=f18e72]
+        - paragraph [ref=f18e73]: When an IDoc fails or an API times out, three teams point at each other. The SAP team says "it is the interface." The integration team says "SAP rejected the payload." The business team says "just fix it — the order is stuck." No one owns end-to-end resolution, so the incident escalates through multiple tiers before anyone identifies which layer actually failed.
+        - heading "Process context" [level=2] [ref=f18e74]
+        - paragraph [ref=f18e75]: The pain appears at the boundary between SAP and external systems. Inbound IDocs from EDI partners or middleware land in SAP and fail during posting. Outbound IDocs generated by SAP transactions stall in dispatch queues. API calls — whether REST, SOAP, or RFC-based — return errors that are interpreted differently by each team. Middleware platforms (SAP PI/PO, CPI, MuleSoft, Boomi) add their own queue and transformation layers, each with separate monitoring tools.
+        - heading "Typical symptoms" [level=2] [ref=f18e76]
+        - list [ref=f18e77]:
+          - listitem [ref=f18e78]: IDoc status 51, 56, 62, or 64 stuck in queue for hours.
+          - listitem [ref=f18e79]: API returns HTTP 500 or timeout with no business-readable error mapping.
+          - listitem [ref=f18e80]: Middleware queue backlog visible only in the integration tool, not in SAP.
+          - listitem [ref=f18e81]: Business transaction (order, invoice, goods movement) completed in source system but missing in SAP or vice versa.
+          - listitem [ref=f18e82]: Multiple manual reprocessing attempts creating duplicate IDocs or data inconsistencies.
+          - listitem [ref=f18e83]: Incident bridges with three or more teams and no agreed runbook.
+        - heading "SAP touchpoints" [level=2] [ref=f18e84]
+        - list [ref=f18e85]:
+          - listitem [ref=f18e86]:
+            - strong [ref=f18e87]: WE02 / WE05
+            - text: — IDoc display and list.
+          - listitem [ref=f18e88]:
+            - strong [ref=f18e89]: BD87
+            - text: — Status monitor for ALE messages; primary reprocessing tool.
+          - listitem [ref=f18e90]:
+            - strong [ref=f18e91]: WE20
+            - text: — Partner profiles; defines message type, direction, and processing logic.
+          - listitem [ref=f18e92]:
+            - strong [ref=f18e93]: WE21
+            - text: — Port definitions; links partner to RFC destination or file path.
+          - listitem [ref=f18e94]:
+            - strong [ref=f18e95]: SM58
+            - text: — Asynchronous RFC error log.
+          - listitem [ref=f18e96]:
+            - strong [ref=f18e97]: SMQ1 / SMQ2
+            - text: — qRFC queue monitors.
+          - listitem [ref=f18e98]:
+            - strong [ref=f18e99]: SXI_MONITOR / PIFlow
+            - text: — PI/PO/CPI message monitoring.
+          - listitem [ref=f18e100]:
+            - strong [ref=f18e101]: /AIF/ERR
+            - text: — AIF error handling and reprocessing.
+          - listitem [ref=f18e102]:
+            - strong [ref=f18e103]: SOAMANAGER
+            - text: — Web service configuration and payload tracing.
+        - heading "Master data / configuration / integration touchpoints" [level=2] [ref=f18e104]
+        - list [ref=f18e105]:
+          - listitem [ref=f18e106]: Partner profile mismatch between sender and receiver (WE20).
+          - listitem [ref=f18e107]: Port definition pointing to inactive RFC destination or wrong file path (WE21 / SM59).
+          - listitem [ref=f18e108]: IDoc segment version or custom field mismatch between systems.
+          - listitem [ref=f18e109]: Message type mapping error in middleware transformation.
+          - listitem [ref=f18e110]: Missing or misconfigured AIF error handling rules.
+          - listitem [ref=f18e111]: API metadata mismatch (WSDL, OpenAPI schema, or payload structure).
+          - listitem [ref=f18e112]: qRFC queue registration failure or resource lock preventing dequeue.
+        - heading "Cost drivers" [level=2] [ref=f18e113]
+        - list [ref=f18e114]:
+          - listitem [ref=f18e115]: Incident escalation time across SAP, integration, and business teams — often hours per ticket.
+          - listitem [ref=f18e116]: "Delayed business transactions: orders not created, invoices not posted, shipments not confirmed."
+          - listitem [ref=f18e117]: Manual IDoc reprocessing via BD87 or WE19, including segment-level correction.
+          - listitem [ref=f18e118]: Emergency data correction in production after failed reprocessing attempts.
+          - listitem [ref=f18e119]: Overtime and bridge-call cost for cross-team coordination.
+        - heading "Root cause patterns" [level=2] [ref=f18e120]
+        - list [ref=f18e121]:
+          - listitem [ref=f18e122]:
+            - strong [ref=f18e123]: Partner profile mismatch.
+            - text: Sender and receiver disagree on message type, process code, or direction.
+          - listitem [ref=f18e124]:
+            - strong [ref=f18e125]: Segment errors.
+            - text: IDoc segment contains unexpected values due to version difference or custom field extension.
+          - listitem [ref=f18e126]:
+            - strong [ref=f18e127]: Master data gaps.
+            - text: Target system missing material, customer, or vendor required for posting.
+          - listitem [ref=f18e128]:
+            - strong [ref=f18e129]: Queue failures.
+            - text: tRFC or qRFC queue stops due to resource locks, database issues, or max runtime.
+          - listitem [ref=f18e130]:
+            - strong [ref=f18e131]: Missing monitoring.
+            - text: No single pane showing IDoc status, middleware queue depth, and API response code together.
+          - listitem [ref=f18e132]:
+            - strong [ref=f18e133]: API timeout.
+            - text: Payload too large, network latency, or downstream system unavailable; retry logic missing or excessive.
+        - heading "Diagnostic workflow" [level=2] [ref=f18e134]
+        - paragraph [ref=f18e135]: "A practical first-pass approach to reduce escalation time:"
+        - list [ref=f18e136]:
+          - listitem [ref=f18e137]: "Identify direction: inbound to SAP, outbound from SAP, or API bidirectional."
+          - listitem [ref=f18e138]: Check IDoc status in WE02 / WE05 or API response logs for error code and timestamp.
+          - listitem [ref=f18e139]: Verify partner profile (WE20) and port (WE21) or API endpoint configuration.
+          - listitem [ref=f18e140]: "Inspect queue status: SMQ1 / SMQ2 for qRFC, SM58 for tRFC errors."
+          - listitem [ref=f18e141]: Review segment-level errors or API payload validation failures.
+          - listitem [ref=f18e142]: Validate that required master data exists in the target system.
+          - listitem [ref=f18e143]: Determine whether the failure is SAP-side, middleware-side, or partner-side.
+          - listitem [ref=f18e144]: Document ownership assignment in the incident record before closing.
+        - heading "Solution patterns" [level=2] [ref=f18e145]
+        - list [ref=f18e146]:
+          - listitem [ref=f18e147]: "Define an end-to-end interface ownership matrix: who owns the contract, the mapping, the SAP config, and the business outcome."
+          - listitem [ref=f18e148]: Implement AIF or a centralized error monitoring dashboard that correlates IDoc, queue, and API status.
+          - listitem [ref=f18e149]: "Standardize partner profile governance: change control for WE20 / WE21 / SM59."
+          - listitem [ref=f18e150]: Automate queue depth and error-count alerting with escalation rules tied to ownership.
+          - listitem [ref=f18e151]: Create a runbook mapping common IDoc status codes to owner team and first action.
+          - listitem [ref=f18e152]: Align API error codes to business-readable messages so business users can self-serve status checks.
+        - heading "AI / automation / workflow opportunity" [level=2] [ref=f18e153]
+        - paragraph [ref=f18e154]: Structured interface error data enables real workflow improvement. Automated classification of IDoc status codes and API response patterns can route incidents to the correct team without manual triage. Queue depth alerts with predicted backlog time let operations act before business impact. NLP-based summarization of error logs reduces handoff time between SAP and integration teams. A simple chatbot or status portal can answer "Is my order in SAP yet?" without opening a support ticket.
+        - heading "Related Atlas pages" [level=2] [ref=f18e155]
+        - list [ref=f18e156]:
+          - listitem [ref=f18e157]:
+            - link "IDoc and AIF Integration Diagnostics" [ref=f18e158] [cursor=pointer]:
+              - /url: /atlas/diagnostics/idoc-aif-integration-diagnostics/
+            - text: — Deep-dive into IDoc status codes, AIF error handling, and reprocessing procedures.
+          - listitem [ref=f18e159]:
+            - link "SAP IDoc Status Diagnostics" [ref=f18e160] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-idoc-status-diagnostics/
+            - text: — Status code reference and typical resolution paths.
+          - listitem [ref=f18e161]:
+            - link "SAP Inbound Processing Diagnostics" [ref=f18e162] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-inbound-processing-diagnostics/
+            - text: — Inbound function module, posting, and validation errors.
+          - listitem [ref=f18e163]:
+            - link "SAP Outbound Processing Diagnostics" [ref=f18e164] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-outbound-processing-diagnostics/
+            - text: — Outbound dispatch, port, and partner profile issues.
+          - listitem [ref=f18e165]:
+            - link "SAP qRFC and tRFC Diagnostics" [ref=f18e166] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+            - text: — Queue monitoring, lock analysis, and retry management.
+          - listitem [ref=f18e167]:
+            - link "Integration Ownership Model" [ref=f18e168] [cursor=pointer]:
+              - /url: /atlas/concepts/integration-ownership-model/
+            - text: — Framework for assigning end-to-end interface accountability.
+        - heading "Public references" [level=2] [ref=f18e169]
+        - paragraph [ref=f18e170]: No verified public references included. Validate specific transaction behavior and error codes in your SAP landscape and official SAP documentation.
+        - heading "Verification status and limitations" [level=2] [ref=f18e171]
+        - paragraph [ref=f18e172]: This scenario is a structured working hypothesis based on operational patterns observed in SAP AMS support. Specific cost figures, transaction behavior, and configuration details vary by SAP release, industry solution, and custom enhancement. Validate in your own landscape and official SAP documentation before acting on diagnostic recommendations.
+    - complementary [ref=f18e173]:
+      - paragraph [ref=f18e174]: About
+      - heading "Dzmitryi Kharlanau" [level=2] [ref=f18e175]
+      - paragraph [ref=f18e176]: SAP consultant and AI-assisted systems builder, working across operations, integration, master data, and delivery.
+      - generic [ref=f18e177]:
+        - generic [ref=f18e178]:
+          - term [ref=f18e179]: Focus
+          - definition [ref=f18e180]: Diagnostics, operational clarity, and reusable delivery systems.
+        - generic [ref=f18e181]:
+          - term [ref=f18e182]: Approach
+          - definition [ref=f18e183]: Evidence first. Practical next steps. Clear ownership.
+      - generic [ref=f18e184]:
+        - link "About" [ref=f18e185] [cursor=pointer]:
+          - /url: /about/
+        - link "LinkedIn" [ref=f18e186] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/dkharlanau
+        - link "SAP operations" [ref=f18e187] [cursor=pointer]:
+          - /url: /services/sap-ams-consulting/
+    - complementary [ref=f18e188]:
+      - paragraph [ref=f18e189]: Independent research
+      - paragraph [ref=f18e190]:
+        - text: This is not official SAP documentation or training material. Public vendor sources are used to verify facts; explanations, models, comparisons, and examples are independently written from public information, professional experience, and reasoning. No SAP affiliation or endorsement is implied.
+        - link "Research and Attribution Policy" [ref=f18e191] [cursor=pointer]:
+          - /url: /legal/research-attribution/
+        - text: .
+    - complementary [ref=f18e192]:
+      - generic [ref=f18e193]:
+        - paragraph [ref=f18e194]: Share
+        - heading "Send this page to a colleague" [level=2] [ref=f18e195]
+        - paragraph [ref=f18e196]: Copy the link, share it, or mark it useful for later.
+      - generic "Share this page" [ref=f18e197]:
+        - button "Share" [ref=f18e198]:
+          - generic [ref=f18e199]: ios_share
+        - button "Copy link" [ref=f18e201]:
+          - generic [ref=f18e202]: link
+        - link "Send by email" [ref=f18e204] [cursor=pointer]:
+          - /url: mailto:?subject=How%20IDoc%20and%20API%20integration%20failures%20create%20unclear%20ownership&body=http%3A%2F%2F127.0.0.1%3A4100%2Fscenarios%2Fidoc-api-integration-failures-ownership%2F
+          - generic [ref=f18e205]: mail
+        - button "Helpful" [ref=f18e207]:
+          - generic [ref=f18e208]: thumb_up
+      - paragraph [ref=f18e210]: Helpful marks are stored only on this device.
+  - contentinfo [ref=f18e211]:
+    - generic [ref=f18e212]:
+      - generic [ref=f18e214]:
+        - strong [ref=f18e215]: Dzmitryi Kharlanau
+        - generic [ref=f18e216]: SAP operations · transformation · practical AI
+      - generic "Footer navigation" [ref=f18e217]:
+        - navigation "Explore" [ref=f18e218]:
+          - paragraph [ref=f18e219]: Explore
+          - link "Knowledge" [ref=f18e220] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Labs" [ref=f18e221] [cursor=pointer]:
+            - /url: /labs/
+          - link "Career" [ref=f18e222] [cursor=pointer]:
+            - /url: /labs/interview-readiness/
+          - link "Frameworks" [ref=f18e223] [cursor=pointer]:
+            - /url: /frameworks/
+          - link "Services" [ref=f18e224] [cursor=pointer]:
+            - /url: /services/
+          - link "About" [ref=f18e225] [cursor=pointer]:
+            - /url: /about/
+        - generic [ref=f18e226]:
+          - strong [ref=f18e227]: Knowledge
+          - link "Knowledge map" [ref=f18e228] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Atlas" [ref=f18e229] [cursor=pointer]:
+            - /url: /atlas/
+          - link "Research" [ref=f18e230] [cursor=pointer]:
+            - /url: /research/
+          - link "Journal" [ref=f18e231] [cursor=pointer]:
+            - /url: /blog/
+        - generic [ref=f18e232]:
+          - strong [ref=f18e233]: About
+          - link "Profile" [ref=f18e234] [cursor=pointer]:
+            - /url: /about/
+          - link "CV" [ref=f18e235] [cursor=pointer]:
+            - /url: /cv/
+          - link "Labs" [ref=f18e236] [cursor=pointer]:
+            - /url: /labs/
+          - link "Frameworks" [ref=f18e237] [cursor=pointer]:
+            - /url: /frameworks/
+        - generic [ref=f18e238]:
+          - strong [ref=f18e239]: For agents & tools
+          - link "Machine map" [ref=f18e240] [cursor=pointer]:
+            - /url: /machine/
+          - link "Datasets" [ref=f18e241] [cursor=pointer]:
+            - /url: /datasets/
+          - link "Skill Hub" [ref=f18e242] [cursor=pointer]:
+            - /url: /skill-hub/
+          - link "Agent tools" [ref=f18e243] [cursor=pointer]:
+            - /url: /agent-tools/
+      - generic [ref=f18e244]:
+        - paragraph [ref=f18e245]: © 2026 Dzmitryi Kharlanau. Personal, independent views.
+        - paragraph [ref=f18e246]:
+          - link "Privacy" [ref=f18e247] [cursor=pointer]:
+            - /url: /legal/privacy/
+          - link "Accessibility" [ref=f18e248] [cursor=pointer]:
+            - /url: /legal/accessibility/
+          - link "Responsible AI" [ref=f18e249] [cursor=pointer]:
+            - /url: /legal/responsible-ai/

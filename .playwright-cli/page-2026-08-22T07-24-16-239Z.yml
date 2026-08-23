@@ -1,0 +1,334 @@
+- generic [active] [ref=f17e1]:
+  - link "Skip to main content" [ref=f17e2] [cursor=pointer]:
+    - /url: "#content"
+  - banner [ref=f17e3]:
+    - generic [ref=f17e4]:
+      - link "Home" [ref=f17e5] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary navigation" [ref=f17e6]:
+        - generic [ref=f17e7]:
+          - link "Knowledge" [ref=f17e8] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Work" [ref=f17e9] [cursor=pointer]:
+            - /url: /services/
+          - link "About" [ref=f17e10] [cursor=pointer]:
+            - /url: /about/
+          - link "Search" [ref=f17e11] [cursor=pointer]:
+            - /url: /search/
+            - generic [ref=f17e12]: search
+  - main [ref=f17e14]:
+    - navigation "Breadcrumb" [ref=f17e15]:
+      - list [ref=f17e16]:
+        - listitem [ref=f17e17]:
+          - link "Home" [ref=f17e18] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=f17e19]:
+          - text: /
+          - link "Knowledge Atlas" [ref=f17e20] [cursor=pointer]:
+            - /url: /atlas/
+        - listitem [ref=f17e21]:
+          - text: /
+          - link "Diagnostics" [ref=f17e22] [cursor=pointer]:
+            - /url: /atlas/diagnostics/
+        - listitem [ref=f17e23]: / SAP IDoc Diagnostics
+    - article [ref=f17e24]:
+      - generic [ref=f17e25]:
+        - paragraph [ref=f17e26]: Atlas Diagnostic
+        - heading "SAP IDoc diagnostics" [level=1] [ref=f17e27]
+        - paragraph [ref=f17e28]: Treat the IDoc as a message journey. Find the last step that worked, then investigate the first step that did not.
+        - generic [ref=f17e29]: ● Reviewed
+      - complementary [ref=f17e31]:
+        - generic [ref=f17e32]:
+          - generic [ref=f17e33]:
+            - term [ref=f17e34]: Process
+            - definition [ref=f17e35]: Cross-system integration
+          - generic [ref=f17e36]:
+            - term [ref=f17e37]: SAP area
+            - definition [ref=f17e38]: IDoc / ALE
+          - generic [ref=f17e39]:
+            - term [ref=f17e40]: Reviewed
+            - definition [ref=f17e41]: 13 Jun 2026
+          - generic [ref=f17e42]:
+            - term [ref=f17e43]: Indexing
+            - definition [ref=f17e44]: Index, reviewed
+        - navigation "On this page" [ref=f17e45]:
+          - group [ref=f17e46]:
+            - generic "On this page (8) −" [ref=f17e47] [cursor=pointer]
+            - list [ref=f17e48]:
+              - listitem [ref=f17e49]:
+                - link "Do not start with the status code alone" [ref=f17e50] [cursor=pointer]:
+                  - /url: "#reader-section-1"
+              - listitem [ref=f17e51]:
+                - link "Split the problem by the last confirmed step" [ref=f17e52] [cursor=pointer]:
+                  - /url: "#reader-section-2"
+              - listitem [ref=f17e53]:
+                - link "A useful diagnostic path" [ref=f17e54] [cursor=pointer]:
+                  - /url: "#reader-section-3"
+              - listitem [ref=f17e55]:
+                - link "Useful SAP tools" [ref=f17e56] [cursor=pointer]:
+                  - /url: "#reader-section-4"
+              - listitem [ref=f17e57]:
+                - link "What to capture before escalation" [ref=f17e58] [cursor=pointer]:
+                  - /url: "#reader-section-5"
+              - listitem [ref=f17e59]:
+                - link "Reprocessing needs a business check" [ref=f17e60] [cursor=pointer]:
+                  - /url: "#reader-section-6"
+              - listitem [ref=f17e61]:
+                - link "The end of the diagnosis" [ref=f17e62] [cursor=pointer]:
+                  - /url: "#reader-section-7"
+              - listitem [ref=f17e63]:
+                - link "Related diagnostics" [ref=f17e64] [cursor=pointer]:
+                  - /url: "#reader-section-8"
+      - generic [ref=f17e65]:
+        - heading "Do not start with the status code alone" [level=2] [ref=f17e66]
+        - paragraph [ref=f17e67]: "An IDoc status is evidence, but it is not the whole incident. First define the business message: what should have left the source system, where should it have gone, and which business document or update should have appeared in the target?"
+        - paragraph [ref=f17e68]: Then trace the message through the actual landscape. The failure can happen before an IDoc is created, during dispatch, in RFC or queue processing, after the target receives the IDoc, or inside the target application. The same user symptom can therefore belong to very different owners.
+        - complementary "Expert context" [ref=f17e69]:
+          - paragraph [ref=f17e70]: Expert context
+          - paragraph [ref=f17e71]:
+            - text: This material was prepared by
+            - link "Dzmitryi Kharlanau" [ref=f17e72] [cursor=pointer]:
+              - /url: https://dkharlanau.github.io/
+            - text: ", a Senior SAP Consultant working with SAP integration diagnostics, interface monitoring, IDoc and API failure analysis, and controlled incident resolution."
+          - paragraph [ref=f17e73]:
+            - link "Profile and experience" [ref=f17e74] [cursor=pointer]:
+              - /url: /about/
+            - link "LinkedIn" [ref=f17e75] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/dkharlanau/
+        - heading "Split the problem by the last confirmed step" [level=2] [ref=f17e76]
+        - generic [ref=f17e77]:
+          - text: Scroll horizontally to compare every column
+          - table [ref=f17e78]:
+            - rowgroup [ref=f17e79]:
+              - row [ref=f17e80]:
+                - columnheader "Evidence" [ref=f17e81]
+                - columnheader "What it tells you" [ref=f17e82]
+                - columnheader "Next place to look" [ref=f17e83]
+            - rowgroup [ref=f17e84]:
+              - row [ref=f17e85]:
+                - cell "No expected outbound IDoc exists" [ref=f17e86]
+                - cell "The problem may be in the business trigger, output/change logic, distribution model, or selection before IDoc creation." [ref=f17e87]
+                - cell "Source document, trigger logic, change pointers or application-specific generation path." [ref=f17e88]
+              - row [ref=f17e89]:
+                - cell "IDoc exists but was not transferred as expected" [ref=f17e90]
+                - cell "The message was created, so move downstream to partner, port, RFC, queue, or scheduling evidence." [ref=f17e91]
+                - cell "IDoc status history, partner profile, port, RFC/tRFC/qRFC evidence." [ref=f17e92]
+              - row [ref=f17e93]:
+                - cell "Target received the IDoc but no business document was posted" [ref=f17e94]
+                - cell "Transport worked far enough for application processing to begin." [ref=f17e95]
+                - cell "Inbound status text, segment values, master data, mapping, application validation." [ref=f17e96]
+              - row [ref=f17e97]:
+                - cell "IDoc reached a success status but the business result is still wrong" [ref=f17e98]
+                - cell "The technical message path may be healthy while the application result or follow-on process is not." [ref=f17e99]
+                - cell "Created business document, application log, follow-on status, business rules." [ref=f17e100]
+              - row [ref=f17e101]:
+                - cell "The same business message appears more than once" [ref=f17e102]
+                - cell "Do not assume “duplicate IDoc” is the cause. Find whether the source sent twice, middleware retried, or the target processed twice." [ref=f17e103]
+                - cell "Message identifiers, timestamps, source trigger, middleware/retry history, target document references." [ref=f17e104]
+        - heading "A useful diagnostic path" [level=2] [ref=f17e105]
+        - list [ref=f17e106]:
+          - listitem [ref=f17e107]:
+            - strong [ref=f17e108]: Capture the business context.
+            - text: Source and target systems, direction, message type, business object, expected result, time window, and one concrete example.
+          - listitem [ref=f17e109]:
+            - strong [ref=f17e110]: Find the IDoc and read its status history.
+            - text: Use the sequence and timestamps, not only the latest status. The first meaningful error often explains more than later reprocessing statuses.
+          - listitem [ref=f17e111]:
+            - strong [ref=f17e112]: Check the control record.
+            - text: Confirm sender/receiver partner information, message type, IDoc type, and basic routing context.
+          - listitem [ref=f17e113]:
+            - strong [ref=f17e114]: Inspect the failed layer.
+            - text: For transport problems, follow partner, port, RFC, tRFC, or qRFC evidence as used in this landscape. For application errors, read the target error text and the relevant segment values.
+          - listitem [ref=f17e115]:
+            - strong [ref=f17e116]: Compare with a successful message.
+            - text: A working IDoc of the same business scenario gives you routing, segment, and timing evidence without guessing.
+          - listitem [ref=f17e117]:
+            - strong [ref=f17e118]: Correct the cause before reprocessing.
+            - text: Reprocessing is a recovery step, not a diagnosis.
+          - listitem [ref=f17e119]:
+            - strong [ref=f17e120]: Confirm the business result.
+            - text: The incident is closed when the expected target document or update exists and the integration path is stable again.
+        - heading "Useful SAP tools" [level=2] [ref=f17e121]
+        - paragraph [ref=f17e122]: "The exact tool set depends on direction and architecture. Common starting points in classic IDoc/ALE landscapes include:"
+        - list [ref=f17e123]:
+          - listitem [ref=f17e124]:
+            - strong [ref=f17e125]: WE02 / WE05
+            - text: for IDoc content and status history.
+          - listitem [ref=f17e126]:
+            - strong [ref=f17e127]: WE20
+            - text: for partner-profile context.
+          - listitem [ref=f17e128]:
+            - strong [ref=f17e129]: WE21
+            - text: for port definitions.
+          - listitem [ref=f17e130]:
+            - strong [ref=f17e131]: BD87
+            - text: for controlled IDoc reprocessing where applicable.
+          - listitem [ref=f17e132]:
+            - strong [ref=f17e133]: SM58
+            - text: when transactional RFC processing is part of the failed path.
+          - listitem [ref=f17e134]:
+            - strong [ref=f17e135]: SMQ1 / SMQ2
+            - text: when qRFC queues are part of the integration design.
+        - paragraph [ref=f17e136]: Do not open every monitor because an IDoc failed. Use the IDoc history to decide which layer deserves attention.
+        - heading "What to capture before escalation" [level=2] [ref=f17e137]
+        - list [ref=f17e138]:
+          - listitem [ref=f17e139]: IDoc number, direction, message type, sender and receiver.
+          - listitem [ref=f17e140]: Business document or object reference and expected target result.
+          - listitem [ref=f17e141]: Status sequence with the first relevant error text and timestamp.
+          - listitem [ref=f17e142]: Relevant segment/value that failed application validation, if known.
+          - listitem [ref=f17e143]: RFC or queue evidence only when that layer is part of the failure.
+          - listitem [ref=f17e144]: A successful comparison message when available.
+        - heading "Reprocessing needs a business check" [level=2] [ref=f17e145]
+        - paragraph [ref=f17e146]: Before reprocessing, confirm whether the message is safe to repeat. Some inbound processes have duplicate protection; others can create a second business effect if the original result already exists outside the status you are looking at. Check the target business object and the landscape's restart design before pressing the convenient button humans invented for making yesterday's problem happen twice.
+        - heading "The end of the diagnosis" [level=2] [ref=f17e147]
+        - paragraph [ref=f17e148]: "A strong IDoc incident says where the chain broke: generation, routing, transport, queue, mapping/data, or application posting. “Status 51 fixed” is not enough. The status is the symptom. The reusable knowledge is why the application rejected the message and what control prevents the same failure next time."
+        - heading "Related diagnostics" [level=2] [ref=f17e149]
+        - list [ref=f17e150]:
+          - listitem [ref=f17e151]:
+            - link "SAP IDoc Status Diagnostics" [ref=f17e152] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-idoc-status-diagnostics/
+          - listitem [ref=f17e153]:
+            - link "SAP ALE Distribution Model Diagnostics" [ref=f17e154] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
+          - listitem [ref=f17e155]:
+            - link "SAP qRFC / tRFC Diagnostics" [ref=f17e156] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+    - complementary "Professional support and related evidence" [ref=f17e157]:
+      - paragraph [ref=f17e158]: Working on a related SAP problem?
+      - paragraph [ref=f17e159]: Dzmitryi Kharlanau provides focused diagnostics, architecture reviews, improvement planning, and practical implementation support.
+      - paragraph [ref=f17e160]:
+        - link "Professional website" [ref=f17e161] [cursor=pointer]:
+          - /url: https://dkharlanau.github.io/
+        - link "Profile and experience" [ref=f17e162] [cursor=pointer]:
+          - /url: /about/
+        - link "LinkedIn" [ref=f17e163] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/dkharlanau/
+        - link "Related service" [ref=f17e164] [cursor=pointer]:
+          - /url: /services/sap-integration-reliability-assessment/
+      - region [ref=f17e165]:
+        - heading "Related evidence" [level=2] [ref=f17e166]
+        - list [ref=f17e167]:
+          - listitem [ref=f17e168]:
+            - link "SAP IDoc Status Diagnostics" [ref=f17e169] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-idoc-status-diagnostics/
+          - listitem [ref=f17e170]:
+            - link "SAP ALE Distribution Model Diagnostics" [ref=f17e171] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
+          - listitem [ref=f17e172]:
+            - link "SAP qRFC and tRFC Diagnostics" [ref=f17e173] [cursor=pointer]:
+              - /url: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+    - complementary "Why trust this page" [ref=f17e174]:
+      - paragraph [ref=f17e175]: Why trust this page
+      - paragraph [ref=f17e176]:
+        - strong [ref=f17e177]: Reviewed and verified.
+        - text: "This page has been human-reviewed for factual accuracy and public safety. Last reviewed:"
+        - time [ref=f17e178]: 13 Jun 2026
+        - text: .
+      - paragraph [ref=f17e179]:
+        - text: The content is based on practical SAP support experience and public documentation where cited. It is
+        - strong [ref=f17e180]: not official SAP documentation
+        - text: . Always validate system-specific behavior in your own SAP landscape and against official vendor documentation.
+      - list [ref=f17e181]:
+        - listitem [ref=f17e182]: No client names, ticket numbers, or proprietary details.
+        - listitem [ref=f17e183]: Claims are conservative and include landscape-dependent caveats.
+        - listitem [ref=f17e184]: Related links are checked at the time of review.
+    - complementary [ref=f17e185]:
+      - paragraph [ref=f17e186]: About
+      - heading "Dzmitryi Kharlanau" [level=2] [ref=f17e187]
+      - paragraph [ref=f17e188]: SAP consultant and AI-assisted systems builder, working across operations, integration, master data, and delivery.
+      - generic [ref=f17e189]:
+        - generic [ref=f17e190]:
+          - term [ref=f17e191]: Focus
+          - definition [ref=f17e192]: Diagnostics, operational clarity, and reusable delivery systems.
+        - generic [ref=f17e193]:
+          - term [ref=f17e194]: Approach
+          - definition [ref=f17e195]: Evidence first. Practical next steps. Clear ownership.
+      - generic [ref=f17e196]:
+        - link "About" [ref=f17e197] [cursor=pointer]:
+          - /url: /about/
+        - link "LinkedIn" [ref=f17e198] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/dkharlanau
+        - link "SAP operations" [ref=f17e199] [cursor=pointer]:
+          - /url: /services/sap-ams-consulting/
+    - complementary [ref=f17e200]:
+      - paragraph [ref=f17e201]: Independent research
+      - paragraph [ref=f17e202]:
+        - text: This is not official SAP documentation or training material. Public vendor sources are used to verify facts; explanations, models, comparisons, and examples are independently written from public information, professional experience, and reasoning. No SAP affiliation or endorsement is implied.
+        - link "Research and Attribution Policy" [ref=f17e203] [cursor=pointer]:
+          - /url: /legal/research-attribution/
+        - text: .
+    - complementary [ref=f17e204]:
+      - generic [ref=f17e205]:
+        - paragraph [ref=f17e206]: Share
+        - heading "Send this page to a colleague" [level=2] [ref=f17e207]
+        - paragraph [ref=f17e208]: Copy the link, share it, or mark it useful for later.
+      - generic "Share this page" [ref=f17e209]:
+        - button "Share" [ref=f17e210]:
+          - generic [ref=f17e211]: ios_share
+        - button "Copy link" [ref=f17e213]:
+          - generic [ref=f17e214]: link
+        - link "Send by email" [ref=f17e216] [cursor=pointer]:
+          - /url: mailto:?subject=SAP%20IDoc%20Diagnostics&body=http%3A%2F%2F127.0.0.1%3A4100%2Fatlas%2Fdiagnostics%2Fsap-idoc-diagnostics%2F
+          - generic [ref=f17e217]: mail
+        - button "Helpful" [ref=f17e219]:
+          - generic [ref=f17e220]: thumb_up
+      - paragraph [ref=f17e222]: Helpful marks are stored only on this device.
+  - contentinfo [ref=f17e223]:
+    - generic [ref=f17e224]:
+      - generic [ref=f17e226]:
+        - strong [ref=f17e227]: Dzmitryi Kharlanau
+        - generic [ref=f17e228]: SAP operations · transformation · practical AI
+      - generic "Footer navigation" [ref=f17e229]:
+        - navigation "Explore" [ref=f17e230]:
+          - paragraph [ref=f17e231]: Explore
+          - link "Knowledge" [ref=f17e232] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Labs" [ref=f17e233] [cursor=pointer]:
+            - /url: /labs/
+          - link "Career" [ref=f17e234] [cursor=pointer]:
+            - /url: /labs/interview-readiness/
+          - link "Frameworks" [ref=f17e235] [cursor=pointer]:
+            - /url: /frameworks/
+          - link "Services" [ref=f17e236] [cursor=pointer]:
+            - /url: /services/
+          - link "About" [ref=f17e237] [cursor=pointer]:
+            - /url: /about/
+        - generic [ref=f17e238]:
+          - strong [ref=f17e239]: Knowledge
+          - link "Knowledge map" [ref=f17e240] [cursor=pointer]:
+            - /url: /knowledge/
+          - link "Atlas" [ref=f17e241] [cursor=pointer]:
+            - /url: /atlas/
+          - link "Research" [ref=f17e242] [cursor=pointer]:
+            - /url: /research/
+          - link "Journal" [ref=f17e243] [cursor=pointer]:
+            - /url: /blog/
+        - generic [ref=f17e244]:
+          - strong [ref=f17e245]: About
+          - link "Profile" [ref=f17e246] [cursor=pointer]:
+            - /url: /about/
+          - link "CV" [ref=f17e247] [cursor=pointer]:
+            - /url: /cv/
+          - link "Labs" [ref=f17e248] [cursor=pointer]:
+            - /url: /labs/
+          - link "Frameworks" [ref=f17e249] [cursor=pointer]:
+            - /url: /frameworks/
+        - generic [ref=f17e250]:
+          - strong [ref=f17e251]: For agents & tools
+          - link "Machine map" [ref=f17e252] [cursor=pointer]:
+            - /url: /machine/
+          - link "Datasets" [ref=f17e253] [cursor=pointer]:
+            - /url: /datasets/
+          - link "Skill Hub" [ref=f17e254] [cursor=pointer]:
+            - /url: /skill-hub/
+          - link "Agent tools" [ref=f17e255] [cursor=pointer]:
+            - /url: /agent-tools/
+      - generic [ref=f17e256]:
+        - paragraph [ref=f17e257]: © 2026 Dzmitryi Kharlanau. Personal, independent views.
+        - paragraph [ref=f17e258]:
+          - link "Privacy" [ref=f17e259] [cursor=pointer]:
+            - /url: /legal/privacy/
+          - link "Accessibility" [ref=f17e260] [cursor=pointer]:
+            - /url: /legal/accessibility/
+          - link "Responsible AI" [ref=f17e261] [cursor=pointer]:
+            - /url: /legal/responsible-ai/

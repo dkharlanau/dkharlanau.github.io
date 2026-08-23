@@ -1,0 +1,749 @@
+/* Landing system v2 --------------------------------------------------------
+   A final, shared presentation layer. It intentionally changes no content,
+   routes, or component markup: it unifies the existing public material into a
+   calm, low-density dark editorial surface. */
+
+:root {
+  --ls-page: #101214;
+  --ls-panel: #16191c;
+  --ls-panel-raised: #1b1f23;
+  --ls-ink: #f1eee8;
+  --ls-ink-soft: #c8c7c2;
+  --ls-ink-muted: #999b9d;
+  --ls-line: rgba(241, 238, 232, .16);
+  --ls-line-strong: rgba(241, 238, 232, .34);
+  --ls-signal: #ff5a36;
+  --ls-signal-bright: #ff795a;
+  --ls-signal-label: #ff9a83;
+  --ls-focus: #ffd3c8;
+  --ls-max: 82rem;
+  --ps-page: var(--ls-page);
+  --ps-surface: var(--ls-panel);
+  --ps-surface-strong: var(--ls-panel-raised);
+  --ps-surface-muted: #20252a;
+  --ps-ink: var(--ls-ink);
+  --ps-ink-soft: var(--ls-ink-soft);
+  --ps-ink-muted: var(--ls-ink-muted);
+  --ps-line: var(--ls-line);
+  --ps-line-strong: var(--ls-line-strong);
+  --ps-signal: var(--ls-signal);
+  --ps-signal-strong: var(--ls-signal-bright);
+  --ps-signal-soft: rgba(255, 90, 54, .16);
+  --ps-focus: var(--ls-focus);
+  --ps-max: var(--ls-max);
+  --color-page: var(--ls-page);
+  /* A number of specialised labs use these older component tokens with a
+     white fallback. Define them globally so a missing local token can never
+     create a light card with inherited light text in the dark theme. */
+  --color-card: var(--ls-panel);
+  --color-card-alt: var(--ls-panel-raised);
+  --color-ink: var(--ls-ink);
+  --color-ink-strong: var(--ls-ink);
+  --color-ink-soft: var(--ls-ink-soft);
+  --color-ink-muted: var(--ls-ink-muted);
+  --color-accent: var(--ls-signal);
+  --color-accent-strong: var(--ls-signal-bright);
+  --color-border: var(--ls-line);
+  --color-border-soft: var(--ls-line);
+  /* Legacy canvas tokens are inherited by deeply specific component rules.
+     Redirect them at the source so the dark palette does not depend on a
+     fragile selector-by-selector override. */
+  --os-paper: var(--ls-page);
+  /* `--os-ink` also paints result/CTA surfaces in the legacy home module.
+     Keep it a real dark surface; visible text is explicitly mapped below. */
+  --os-ink: #18263a;
+  --os-muted: var(--ls-ink-soft);
+  --os-line: var(--ls-line);
+  --os-blue: #b8d1e0;
+  --ps-muted: var(--ls-ink-soft);
+}
+
+html { background: var(--ls-page); }
+
+body.site,
+body.site.page-context--home {
+  background: var(--ls-page) !important;
+  color: var(--ls-ink) !important;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1rem, .18vw + .95rem, 1.08rem);
+  line-height: 1.62;
+}
+
+body.site :is(h1, h2, h3, h4, h5, h6),
+body.site :is(.site-brand, .nav-link, .ps-button, .signal-button) {
+  color: var(--ls-ink) !important;
+}
+
+body.site :is(p, li, dd, figcaption, small) { color: var(--ls-ink-soft) !important; }
+body.site a { color: var(--ls-ink) !important; }
+body.site :is(.eyebrow, .hero-kicker, .signal-kicker, .op-kicker, .site-brand__copy > span) { color: var(--ls-signal) !important; }
+
+/* A compact, stable header gives every route the same entry point. */
+.site-header,
+.site-header--scrolled,
+.site-header--menu-open,
+.page-context--knowledge .site-header,
+.page-context--home .site-header {
+  border-bottom-color: transparent !important;
+  background: color-mix(in srgb, var(--ls-page) 94%, transparent) !important;
+  box-shadow: none !important;
+}
+
+.site-header .wrapper.site-header__inner {
+  width: min(calc(100% - 2.5rem), var(--ls-max));
+  min-height: 4.5rem;
+}
+/* Home now uses the same deliberate navigation rhythm as the visual target:
+   brand at left, compact primary routes at right, then the locale control. */
+body.page-context--home .site-header__inner {
+  justify-content: space-between !important;
+}
+body.page-context--home .site-header .nav-links {
+  gap: .15rem;
+}
+body.page-context--home .site-header .nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.35rem;
+  padding: .5rem .62rem;
+}
+
+.site-brand__mark { filter: grayscale(1) brightness(3); }
+.site-brand__copy > span { color: var(--ls-ink-muted) !important; }
+.site-header .nav-link {
+  color: var(--ls-ink-soft) !important;
+  border-radius: 0 !important;
+  font-size: .72rem;
+  font-weight: 650;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+.site-header .nav-link:hover,
+.site-header .nav-link:focus-visible,
+.site-header .nav-link.is-active {
+  background: transparent !important;
+  color: var(--ls-ink) !important;
+  box-shadow: inset 0 -2px var(--ls-signal);
+}
+.site-nav__toggle { color: var(--ls-ink) !important; }
+
+/* Keep all six product areas reachable in the primary navigation. On compact
+   desktop widths Search keeps its accessible name while becoming icon-only. */
+@media (min-width: 1101px) and (max-width: 1360px) {
+  .site-header .nav-links { gap: 0 !important; }
+  .site-header .nav-link { padding-inline: .42rem !important; font-size: .68rem !important; }
+  .site-header .nav-link--utility .nav-link__search-label { display: none; }
+}
+
+/* Page rhythm: fewer visual boxes, more hierarchy and whitespace. */
+.page-content,
+.page-content--knowledge {
+  width: min(calc(100% - 2.5rem), var(--ls-max));
+  max-width: none;
+  gap: clamp(3.5rem, 8vw, 8rem);
+  padding-top: clamp(2rem, 4vw, 4rem);
+  padding-bottom: clamp(4.5rem, 8vw, 8rem);
+}
+.page-content--home { width: 100%; }
+.page-content--home > .section { width: min(calc(100% - 2.5rem), var(--ls-max)); }
+
+body.site h1 {
+  max-width: 13ch;
+  font-size: clamp(3rem, 6vw, 6.35rem) !important;
+  font-weight: 520 !important;
+  letter-spacing: -.07em !important;
+  line-height: .94 !important;
+}
+body.site :is(h2, h3) { font-weight: 600 !important; letter-spacing: -.045em !important; }
+body.site h2 { font-size: clamp(1.8rem, 3.2vw, 3.35rem) !important; line-height: 1.02 !important; }
+body.site h3 { font-size: clamp(1.08rem, 1.6vw, 1.38rem) !important; }
+body.site .lead,
+body.site p.lead { max-width: 42rem; font-size: clamp(1.08rem, 1.55vw, 1.32rem) !important; line-height: 1.6; }
+
+/* Long-form pages retain a deliberately calm reading measure. */
+body.site .note-detail:not(.atlas-page) .note-header h1,
+body.site .note-detail:not(.atlas-page) h1 {
+  max-width: 18ch;
+  font-size: clamp(2.35rem, 4vw, 4.4rem) !important;
+}
+body.site .note-detail:not(.atlas-page) .note-body :is(p, li) {
+  color: var(--ls-ink-soft) !important;
+  font-size: 1.03rem;
+  line-height: 1.78;
+}
+
+/* Existing buttons and route entries get a single clear interaction language. */
+body.site :is(.ps-button, .signal-button, .hero-actions a:first-child, .service-canvas__hero a:first-of-type, .diagnostic-desk__hero a:first-of-type) {
+  border: 1px solid var(--ls-signal) !important;
+  border-radius: 0 !important;
+  background: var(--ls-signal) !important;
+  color: #151515 !important;
+  box-shadow: none !important;
+  font-weight: 720;
+}
+body.site .focus-hero__action {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  width: max-content;
+  border: 1px solid var(--ls-signal) !important;
+  border-radius: 0 !important;
+  background: var(--ls-signal) !important;
+  color: #151515 !important;
+  padding: .8rem 1rem;
+  font-weight: 720;
+}
+body.site .focus-hero__action :is(span, .material-symbols-outlined) { color: #151515 !important; }
+/* The original Atlas buttons carried a light-paper fill into the dark system.
+   Keep a restrained secondary action and reserve the warm fill for the one
+   decisive action on a screen. */
+body.site .button {
+  border: 1px solid var(--ls-line-strong) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--ls-ink) !important;
+  box-shadow: none !important;
+}
+body.site .button--primary,
+body.site .atlas-pathfinder__panel .button {
+  border-color: var(--ls-signal) !important;
+  background: var(--ls-signal) !important;
+  color: #151515 !important;
+}
+body.site .button:hover,
+body.site .button:focus-visible {
+  border-color: var(--ls-signal) !important;
+  background: var(--ls-panel-raised) !important;
+  color: var(--ls-ink) !important;
+}
+body.site .button--primary:hover,
+body.site .button--primary:focus-visible,
+body.site .atlas-pathfinder__panel .button:hover,
+body.site .atlas-pathfinder__panel .button:focus-visible {
+  background: var(--ls-signal-bright) !important;
+  color: #151515 !important;
+}
+body.site .atlas-hero__actions a.button.button--primary,
+body.site .atlas-pathfinder__panel a.button.button--primary {
+  background-color: var(--ls-signal) !important;
+  color: #151515 !important;
+}
+body.site .atlas-hero__actions a.button:not(.button--primary) {
+  background-color: transparent !important;
+  color: var(--ls-ink) !important;
+}
+body.site :is(.ps-button, .signal-button, .hero-actions a:first-child, .service-canvas__hero a:first-of-type, .diagnostic-desk__hero a:first-of-type):hover {
+  background: var(--ls-signal-bright) !important;
+  color: #151515 !important;
+  transform: translateY(-1px);
+}
+body.site :is(.signal-inline-link, .reader-link, .note-body a, .page-content a:not(.ps-button):not(.signal-button)) {
+  text-decoration-color: color-mix(in srgb, var(--ls-signal) 70%, transparent);
+  text-underline-offset: .25em;
+}
+
+/* Strip old light panels and unify the diverse route canvases. */
+body.site :is(.focus-hero, .op-section, .op-calculator, .op-profile, .op-home-end,
+  .service-canvas, .ai-canvas, .dataset-canvas, .research-canvas, .notes-canvas,
+  .scenario-canvas, .diagnostics-canvas, .agent-tools-canvas, .search-canvas,
+  .profile-canvas, .journal-canvas, .atlas-hero, .atlas-card, .knowledge-card, .service-path,
+  .research-route-list a, .search-route, .site-footer) {
+  background: transparent !important;
+  border-color: var(--ls-line) !important;
+  box-shadow: none !important;
+}
+
+body.site :is(.focus-hero, .service-canvas__hero, .ai-canvas__hero, .dataset-canvas__hero,
+  .research-canvas__hero, .notes-canvas__hero, .scenario-canvas__hero,
+  .diagnostic-desk__hero, .agent-tools-canvas__hero, .search-canvas__hero,
+  .profile-canvas__hero, .atlas-hero) {
+  min-height: min(42rem, calc(100svh - 4.5rem)) !important;
+  align-items: end;
+  border-bottom: 1px solid var(--ls-line) !important;
+  padding-block: clamp(5rem, 10vw, 10rem) clamp(2.25rem, 5vw, 4.5rem) !important;
+}
+
+body.site :is(.atlas-card-grid, .service-paths, .research-route-list, .op-route-grid,
+  .search-route-grid, .knowledge-route-grid) {
+  gap: 0 !important;
+  border-top: 1px solid var(--ls-line) !important;
+}
+body.site :is(.atlas-card, .service-path, .research-route-list a, .op-route, .search-route) {
+  border-radius: 0 !important;
+  border-color: var(--ls-line) !important;
+  box-shadow: none !important;
+}
+body.site :is(.atlas-card, .service-path, .research-route-list a, .op-route, .search-route):hover {
+  background: var(--ls-panel-raised) !important;
+  transform: none !important;
+}
+
+/* Route-specific layers often set a light-page ink token directly. Let the
+   shared system be authoritative for link and heading contrast on dark. */
+body.site :is(.focus-hero, .op-section, .op-calculator, .op-profile, .op-home-end,
+  .service-canvas, .ai-canvas, .dataset-canvas, .research-canvas, .notes-canvas,
+  .scenario-canvas, .diagnostics-canvas, .agent-tools-canvas, .search-canvas,
+  .profile-canvas, .journal-canvas, .atlas-hero, .atlas-card, .knowledge-card, .service-path,
+  .research-route-list, .search-route, .site-footer) :is(a, strong, h1, h2, h3, h4, h5, h6) {
+  color: var(--ls-ink) !important;
+}
+body.site :is(.focus-hero, .op-section, .op-calculator, .op-profile, .op-home-end,
+  .service-canvas, .ai-canvas, .dataset-canvas, .research-canvas, .notes-canvas,
+  .scenario-canvas, .diagnostics-canvas, .agent-tools-canvas, .search-canvas,
+  .profile-canvas, .journal-canvas, .atlas-hero, .atlas-card, .knowledge-card, .service-path,
+  .research-route-list, .search-route) :is(.material-symbols-outlined, [class*="__number"], [class*="__index"], [class*="__eyebrow"]) {
+  color: var(--ls-signal) !important;
+}
+
+/* Never keep primary content invisible because a route-specific reveal script failed. */
+body.site [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+.site-footer { border-top: 1px solid var(--ls-line) !important; }
+.site-footer :is(a, p, li) { color: var(--ls-ink-soft) !important; }
+
+@media (max-width: 900px) {
+  .site-header .wrapper.site-header__inner,
+  .page-content,
+  .page-content--knowledge,
+  .page-content--home > .section { width: min(calc(100% - 1.5rem), var(--ls-max)); }
+  .site-header .nav-links { background: var(--ls-panel) !important; border-bottom-color: var(--ls-line) !important; }
+  body.page-context--home .site-nav__toggle { display: inline-flex !important; }
+  body.page-context--home .site-header .nav-links {
+    position: absolute;
+    inset: 100% 0 auto;
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    border-bottom: 1px solid var(--ls-line) !important;
+    padding: .5rem .75rem .75rem;
+  }
+  body.page-context--home .site-header--menu-open .nav-links { display: flex !important; }
+  body.page-context--home .site-header .nav-link {
+    justify-content: space-between;
+    min-height: 2.75rem;
+    padding-inline: .75rem;
+  }
+  body.page-context--home .site-header .home-language-switcher {
+    margin: .25rem .75rem 0;
+  }
+  body.site h1 { max-width: 14ch; font-size: clamp(2.7rem, 11vw, 4.8rem) !important; }
+  body.site :is(.focus-hero, .service-canvas__hero, .ai-canvas__hero, .dataset-canvas__hero,
+    .research-canvas__hero, .notes-canvas__hero, .scenario-canvas__hero,
+    .diagnostic-desk__hero, .agent-tools-canvas__hero, .search-canvas__hero,
+    .profile-canvas__hero, .atlas-hero) { min-height: 0 !important; padding-top: 5.5rem !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.site * { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+  body.page-context--home .focus-hero__workflow { animation: none !important; transform: none !important; }
+}
+
+/* UX-loop refinement -------------------------------------------------------
+   The hero is a restrained live network: the visual communicates connected
+   evidence and decisions without reading as a product dashboard. */
+body.page-context--home .focus-hero__visual {
+  width: min(100%, 48rem);
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: #111315;
+}
+body.page-context--home .focus-hero__workflow {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 58% center;
+  filter: saturate(.9) contrast(1.03);
+  animation: network-surface-drift 14s cubic-bezier(.42, 0, .18, 1) infinite alternate;
+  will-change: transform;
+}
+@keyframes network-surface-drift {
+  from { transform: scale(1.035) translate3d(-1.1%, .35%, 0); }
+  to { transform: scale(1.075) translate3d(.8%, -.45%, 0); }
+}
+body.page-context--home .focus-hero__field-ring { stroke: rgba(241, 238, 232, .26) !important; }
+body.page-context--home .focus-hero__field-grid { stroke: rgba(241, 238, 232, .10) !important; }
+body.page-context--home .focus-hero__ring { stroke: rgba(241, 238, 232, .48) !important; }
+body.page-context--home .focus-hero__line { stroke: rgba(241, 238, 232, .34) !important; }
+body.page-context--home .focus-hero__line--dashed { stroke: rgba(241, 238, 232, .22) !important; }
+body.page-context--home .focus-hero__trace {
+  stroke: var(--ls-signal) !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 7px rgba(255, 90, 54, .32));
+  animation-duration: 4.8s !important;
+}
+body.page-context--home .focus-hero__handoff {
+  stroke: rgba(241, 238, 232, .5) !important;
+  animation-duration: 4.2s !important;
+}
+body.page-context--home .focus-hero__field { animation-duration: 44s !important; }
+body.page-context--home .focus-hero__node { fill: var(--ls-ink) !important; }
+body.page-context--home .focus-hero__target { stroke: var(--ls-signal) !important; }
+body.page-context--home .focus-hero__outcome { fill: var(--ls-ink) !important; stroke: var(--ls-page) !important; }
+
+/* On long knowledge pages the author block should read as a concise identity
+   card, not as a second article. */
+body.site .atlas-page > .atlas-author:not(.atlas-trust) {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  padding: clamp(1.25rem, 2.4vw, 2rem) !important;
+  background: var(--ls-panel) !important;
+  border: 1px solid var(--ls-line-strong) !important;
+}
+body.site .atlas-page > .atlas-author:not(.atlas-trust) .eyebrow {
+  margin: 0;
+}
+body.site .atlas-page > .atlas-author:not(.atlas-trust) h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.2vw, 2rem) !important;
+}
+body.site .atlas-author__summary { margin: 0; font-size: 1rem; line-height: 1.55; }
+body.site .atlas-author__focus {
+  display: grid;
+  gap: .85rem;
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ls-line);
+}
+body.site .atlas-author__focus div { display: grid; gap: .22rem; }
+body.site .atlas-author__focus dt {
+  color: var(--ls-signal-label) !important;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+body.site .atlas-author__focus dd { margin: 0; font-size: .88rem; line-height: 1.5; }
+body.site .atlas-page > .atlas-author:not(.atlas-trust) .atlas-author__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 1.15rem;
+  margin-top: .15rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ls-line);
+}
+body.site .atlas-page > .atlas-author:not(.atlas-trust) .atlas-author__links a {
+  font-size: .82rem;
+  font-weight: 650;
+}
+
+/* Supporting legal context and sharing should be quiet utility moments, not
+   full-width landing-page sections competing with the article itself. */
+body.site .atlas-page > .atlas-disclaimer {
+  display: grid;
+  grid-template-columns: minmax(9rem, .35fr) minmax(0, 1fr);
+  gap: 1rem clamp(1.25rem, 3vw, 2.5rem);
+  align-items: start;
+  max-width: 100%;
+  padding: clamp(1.15rem, 2.4vw, 1.75rem) !important;
+  background: var(--ls-panel) !important;
+  border: 1px solid var(--ls-line-strong) !important;
+}
+body.site .atlas-page > .atlas-disclaimer .eyebrow {
+  margin: .2rem 0 0;
+  color: var(--ls-signal-label) !important;
+}
+body.site .atlas-page > .atlas-disclaimer > p:last-child {
+  max-width: 66ch;
+  margin: 0;
+  font-size: .94rem;
+  line-height: 1.62;
+}
+body.site .atlas-page > .atlas-disclaimer a {
+  color: var(--ls-ink) !important;
+  font-weight: 650;
+}
+
+body.site .site-share {
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, auto);
+  gap: 1rem clamp(1.5rem, 4vw, 3rem);
+  width: min(calc(100% - 2.5rem), 72rem);
+  margin-top: clamp(2.75rem, 5vw, 4.5rem);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  background: var(--ls-panel) !important;
+  border: 1px solid var(--ls-line-strong) !important;
+  border-top-color: var(--ls-signal) !important;
+}
+body.site .site-share h2 {
+  max-width: 17ch;
+  font-size: clamp(1.5rem, 2.6vw, 2.35rem) !important;
+  line-height: 1.05 !important;
+}
+body.site .site-share > div > p:not(.site-share__eyebrow) {
+  margin-top: .5rem;
+  font-size: .94rem;
+}
+body.site .site-share__actions {
+  justify-content: flex-end;
+  gap: .5rem;
+}
+body.site .site-share__action {
+  min-height: 2.5rem;
+  border-color: var(--ls-line-strong) !important;
+  background: transparent !important;
+  padding: .5rem .7rem;
+  font-size: .76rem;
+}
+body.site .site-share__action:hover,
+body.site .site-share__action:focus-visible,
+body.site .site-share__action[aria-pressed="true"] {
+  border-color: var(--ls-signal) !important;
+  background: rgba(255, 90, 54, .1) !important;
+  color: var(--ls-ink) !important;
+}
+body.site .site-share__status {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: .8rem;
+  border-top: 1px solid var(--ls-line);
+  font-size: .72rem;
+}
+
+@media (max-width: 760px) {
+  body.site .atlas-page > .atlas-disclaimer,
+  body.site .site-share { grid-template-columns: 1fr; }
+  body.site .atlas-page > .atlas-disclaimer .eyebrow { margin-top: 0; }
+  body.site .site-share__actions { justify-content: flex-start; }
+}
+
+/* Journal inherited a light-paper token from its standalone stylesheet. */
+body.site .journal-canvas {
+  --jc-paper: var(--ls-page);
+  --jc-ink: var(--ls-ink);
+  --jc-soft: var(--ls-ink-soft);
+  --jc-muted: var(--ls-ink-muted);
+  --jc-line: var(--ls-line);
+  --jc-signal: var(--ls-signal);
+  background: var(--ls-page) !important;
+}
+body.site .journal-canvas :is(a, strong, h1, h2, h3, time) { color: var(--ls-ink) !important; }
+body.site .journal-canvas :is(p, dd, small) { color: var(--ls-ink-soft) !important; }
+body.site .journal-canvas :is(.journal-canvas__eyebrow, .journal-canvas__featured-meta) { color: var(--ls-signal) !important; }
+
+/* The profile canvas scopes its own paper-era palette, so redirect its local
+   tokens as well; inherited prose otherwise stays blue-grey on charcoal. */
+body.site .profile-canvas {
+  --pc-paper: var(--ls-page);
+  --pc-ink: var(--ls-ink);
+  --pc-soft: var(--ls-ink-soft);
+  --pc-muted: var(--ls-ink-muted);
+  --pc-line: var(--ls-line);
+  --pc-signal: var(--ls-signal);
+}
+
+/* Search is an action surface: keep its input in the initial viewport. */
+body.site .search-canvas__hero {
+  min-height: 0 !important;
+  padding-block: clamp(3rem, 6vw, 5rem) 1.5rem !important;
+}
+body.site .search-canvas__form { padding-block: clamp(1.5rem, 3vw, 2.5rem) !important; }
+body.site .search-canvas__form button {
+  border-color: var(--ls-signal) !important;
+  background: var(--ls-signal) !important;
+  color: #151515 !important;
+}
+body.site .search-canvas__form button:hover { background: var(--ls-signal-bright) !important; }
+
+/* Contrast safety net ------------------------------------------------------
+   Route styles predate the shared dark surface and retain several muted blue
+   and ink-on-paper tokens. Make text hierarchy explicit here instead of
+   relying on inherited colours from individual canvases. */
+body.site main :is(p, li, dd, figcaption, small, label, summary, dt) {
+  color: var(--ls-ink-soft) !important;
+}
+body.site main :is(strong, b, th, legend) { color: var(--ls-ink) !important; }
+/* Route canvases retain light-theme ink in table cells. Make table foreground
+   explicit so data remains readable on the shared dark surface. */
+body.site main table {
+  color: var(--ls-ink-soft) !important;
+  border-color: var(--ls-line) !important;
+}
+body.site main :is(td, caption) { color: var(--ls-ink-soft) !important; }
+body.site main :is(tbody th, td:first-child) { color: var(--ls-ink) !important; }
+body.site main :is(.eyebrow, .hero-kicker, .signal-kicker, .op-kicker, [class*="__eyebrow"], [class*="__number"], [class*="__index"]) {
+  color: var(--ls-signal-label) !important;
+}
+
+/* Form fields, controls and utility actions need their own opaque surface;
+   otherwise legacy dark text and transparent backgrounds collide. */
+body.site main :is(input:not([type="range"]), textarea, select) {
+  color: var(--ls-ink) !important;
+  background-color: var(--ls-panel-raised) !important;
+  border-color: var(--ls-line-strong) !important;
+}
+body.site main :is(input, textarea)::placeholder { color: var(--ls-ink-muted) !important; opacity: 1; }
+body.site main :is(button, [role="button"], .site-share__action) {
+  color: var(--ls-ink) !important;
+  border-color: var(--ls-line-strong) !important;
+}
+body.site main :is(.ps-button, .signal-button, .focus-hero__action, .button--primary, .atlas-pathfinder__panel .button, .search-canvas__form button) {
+  color: #151515 !important;
+}
+body.site main :is(.ps-button, .signal-button, .focus-hero__action, .button--primary, .atlas-pathfinder__panel .button, .search-canvas__form button) :is(span, strong, b, .material-symbols-outlined) {
+  color: #151515 !important;
+}
+/* A few legacy CTA variants deliberately keep a light fill. They need dark
+   foreground text even though the general dark-site link rule is stronger. */
+body.site .profile-canvas .profile-canvas__button,
+body.site .signal-cta .signal-button--light {
+  color: #151515 !important;
+}
+body.site .profile-canvas .profile-canvas__button :is(span, strong, b, .material-symbols-outlined),
+body.site .signal-cta .signal-button--light :is(span, strong, b, .material-symbols-outlined) {
+  color: #151515 !important;
+}
+/* Section-action links are light-paper buttons in the legacy Atlas markup.
+   Give the secondary action a dark panel and explicit foreground instead. */
+body.site .section-actions .button {
+  background: var(--ls-panel-raised) !important;
+  border-color: var(--ls-line-strong) !important;
+  color: var(--ls-ink) !important;
+}
+
+/* Prevent the compact labels in the knowledge map from visually colliding. */
+body.site .research-canvas__signal-line {
+  display: grid !important;
+  grid-template-columns: 2.25rem minmax(5rem, 1fr) auto !important;
+  gap: .7rem 1rem !important;
+}
+body.site .research-canvas__signal-line small {
+  grid-column: auto !important;
+  margin-top: 0 !important;
+}
+body.site .research-canvas__signal-line strong { min-width: 0; }
+
+/* A local task switcher: restrained and horizontally scrollable instead of a
+   second row of large pills competing with the global navigation. */
+body.site .research-canvas .ir-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  overflow-x: auto;
+  margin-top: 1.75rem;
+  border-top: 1px solid var(--ls-line);
+  border-bottom: 1px solid var(--ls-line);
+  scrollbar-width: thin;
+}
+body.site .research-canvas .ir-nav a {
+  flex: 0 0 auto;
+  min-height: 2.8rem;
+  border: 0 !important;
+  border-inline-start: 1px solid var(--ls-line) !important;
+  border-radius: 0 !important;
+  color: var(--ls-ink-soft) !important;
+  padding: .7rem .85rem;
+  font-size: .76rem;
+  font-weight: 680;
+  white-space: nowrap;
+}
+body.site .research-canvas .ir-nav a:first-child { border-inline-start: 0 !important; }
+body.site .research-canvas .ir-nav a:hover,
+body.site .research-canvas .ir-nav a:focus-visible,
+body.site .research-canvas .ir-nav a[aria-current="page"] {
+  background: var(--ls-panel-raised) !important;
+  color: var(--ls-ink) !important;
+  box-shadow: inset 0 -2px var(--ls-signal);
+}
+
+/* The readiness data is written into cells at runtime. Match its specificity
+   so the old canvas ink cannot win against the dark shared theme. */
+body.site main .ir-progress-table,
+body.site main .ir-progress-table :is(td, th, a) { color: var(--ls-ink-soft) !important; }
+body.site main .ir-progress-table :is(thead th, tbody th, td:first-child) { color: var(--ls-ink) !important; }
+
+/* Readiness widgets were authored against a paper surface. Bring every state
+   surface into the dark system, including cards filled after page load. */
+body.site .research-canvas :is(.ir-card, .ir-topic, .ir-score-ring, .ir-question, .ir-story, .ir-empty, .ir-notice) {
+  background: var(--ls-panel) !important;
+  border-color: var(--ls-line-strong) !important;
+  color: var(--ls-ink) !important;
+  box-shadow: none !important;
+}
+/* Career Roadmap is populated at runtime and uses its own card names. Keep
+   its local controls on the same dark surfaces rather than relying on their
+   legacy #fff fallback. */
+body.site .research-canvas :is(.career-spine__step, .career-health > article,
+  .career-track-card, .career-skill, .career-factory-note, .career-factory-metric,
+  .career-factory-meter, .career-factory-row, .career-factory-ok, .career-empty) {
+  background: var(--ls-panel) !important;
+  border-color: var(--ls-line-strong) !important;
+  color: var(--ls-ink) !important;
+  box-shadow: none !important;
+}
+body.site .research-canvas :is(.career-track-card__bar, .career-factory-meter__bar) {
+  background: color-mix(in srgb, var(--ls-ink) 14%, transparent) !important;
+}
+body.site .research-canvas :is(.career-track-card__bar span, .career-factory-meter__bar span) {
+  background: var(--ls-signal) !important;
+}
+body.site .research-canvas :is(.career-track-card small, .career-skill small,
+  .career-health span, .career-factory-metric span, .career-factory-row small,
+  .career-capabilities span) { color: var(--ls-ink-soft) !important; }
+body.site .research-canvas :is(.ir-card, .ir-topic, .ir-score-ring, .ir-question, .ir-story, .ir-empty, .ir-notice) :is(h3, strong, b, .ir-metric) {
+  color: var(--ls-ink) !important;
+}
+body.site .research-canvas :is(.ir-card, .ir-topic, .ir-score-ring, .ir-question, .ir-story, .ir-empty, .ir-notice) :is(p, small, .ir-muted) {
+  color: var(--ls-ink-soft) !important;
+}
+
+/* At intermediate desktop widths a large signal word and its explanation were
+   fighting for the same row. Keep a legible information hierarchy. */
+@media (max-width: 1280px) {
+  body.site .research-canvas__signal-line {
+    grid-template-columns: 2rem minmax(0, 1fr) !important;
+  }
+  body.site .research-canvas__signal-line small {
+    grid-column: 2 !important;
+    margin-top: .25rem !important;
+  }
+  body.site .research-canvas__signal-line strong {
+    font-size: clamp(2rem, 4vw, 2.65rem) !important;
+  }
+}
+
+@media (max-width: 800px) {
+  body.page-context--home .focus-hero__visual { width: min(100%, 30rem); aspect-ratio: 3 / 2; }
+  body.site .research-canvas,
+  body.site .research-canvas > *,
+  body.site .research-canvas__hero,
+  body.site .research-canvas__hero-copy,
+  body.site .research-canvas__signal { min-width: 0; }
+  body.site .research-canvas :is(.research-canvas__hero, .research-canvas__inventory, .research-canvas__boundary, .research-canvas__method, .research-canvas__support) {
+    width: var(--rc-width);
+    max-width: 100%;
+  }
+  body.site .research-canvas__hero { grid-template-columns: minmax(0, 1fr) !important; }
+  body.site .research-canvas .ir-nav {
+    max-width: 100%;
+    min-width: 0;
+    overscroll-behavior-inline: contain;
+  }
+  body.site .research-canvas__signal-line {
+    grid-template-columns: 2rem minmax(0, 1fr) !important;
+  }
+  body.site .research-canvas__signal-line small {
+    grid-column: 2 !important;
+    margin-top: .2rem !important;
+  }
+}
+
+/* A mobile menu must announce its state and temporarily own the viewport.
+   The visible Close label avoids an ambiguous icon-only control. */
+@media (max-width: 640px) {
+  html.site-menu-open { overflow: hidden; }
+  .site-header--menu-open .site-nav__toggle-label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+  }
+}

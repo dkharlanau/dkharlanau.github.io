@@ -2,6 +2,104 @@
 {% assign product_locale = page.locale | default: 'en' %}
 {% assign portal = site.data.home_portal[product_locale] | default: site.data.home_portal.en %}
 
+{% if product_locale == 'en' %}
+{% assign personal = portal.personal %}
+<div class="personal-home">
+  <header class="personal-hero" aria-labelledby="home-title">
+    <div class="personal-hero__copy">
+      <p class="portal-kicker">{{ personal.hero.kicker }}</p>
+      <h1 id="home-title">{{ personal.hero.title }}</h1>
+      <p class="personal-hero__lead">{{ personal.hero.lead }}</p>
+      <div class="personal-home__actions">
+        <a class="portal-primary-link" href="{{ personal.hero.primary_href }}">{{ personal.hero.primary_action }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+        <a class="portal-text-link" href="{{ personal.hero.secondary_href }}">{{ personal.hero.secondary_action }} <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="personal-hero__identity">
+      <picture class="personal-hero__portrait">
+        <source srcset="{{ '/assets/img/DzmitryiKharlanau.avif' | relative_url }}" type="image/avif" />
+        <source srcset="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" type="image/webp" />
+        <img src="{{ '/assets/img/DzmitryiKharlanau.png' | relative_url }}" alt="{{ personal.hero.portrait_alt }}" width="400" height="400" fetchpriority="high" decoding="async" />
+      </picture>
+      <dl class="personal-hero__facts">
+        {% for fact in personal.hero.facts %}
+        <div><dt>{{ fact.value }}</dt><dd>{{ fact.label }}</dd></div>
+        {% endfor %}
+      </dl>
+    </div>
+  </header>
+
+  <section class="personal-start personal-home__section" aria-labelledby="personal-start-title">
+    <header class="personal-home__heading">
+      <p class="portal-kicker">{{ personal.start.kicker }}</p>
+      <h2 id="personal-start-title">{{ personal.start.title }}</h2>
+      <p>{{ personal.start.lead }}</p>
+    </header>
+    <div class="personal-start__grid">
+      {% for item in personal.start.items %}
+      <a href="{{ item.href }}" class="personal-start__card">
+        <span>{{ item.number }}</span>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.detail }}</p>
+        <strong>{{ item.action }} <span aria-hidden="true">→</span></strong>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="personal-map personal-home__section" aria-labelledby="personal-map-title">
+    <header class="personal-home__heading personal-home__heading--split">
+      <div><p class="portal-kicker">{{ personal.map.kicker }}</p><h2 id="personal-map-title">{{ personal.map.title }}</h2></div>
+      <p>{{ personal.map.lead }}</p>
+    </header>
+    <div class="personal-map__list">
+      {% for item in personal.map.items %}
+      <a href="{{ item.href }}">
+        <span>{{ item.label }}</span>
+        <strong>{{ item.title }}</strong>
+        <small>{{ item.detail }}</small>
+        <i class="material-symbols-outlined" aria-hidden="true">arrow_outward</i>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="personal-machine personal-home__section" aria-labelledby="personal-machine-title">
+    <header class="personal-home__heading personal-home__heading--split">
+      <div><p class="portal-kicker">{{ personal.machine.kicker }}</p><h2 id="personal-machine-title">{{ personal.machine.title }}</h2></div>
+      <p>{{ personal.machine.lead }}</p>
+    </header>
+    <div class="personal-machine__paths">
+      {% for item in personal.machine.paths %}
+      <a href="{{ item.href }}"><span>{{ item.label }}</span><strong>{{ item.title }}</strong><small>{{ item.detail }}</small><i aria-hidden="true">→</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="personal-evidence personal-home__section" aria-labelledby="personal-evidence-title">
+    <header class="personal-home__heading">
+      <p class="portal-kicker">{{ personal.evidence.kicker }}</p>
+      <h2 id="personal-evidence-title">{{ personal.evidence.title }}</h2>
+    </header>
+    <div class="personal-evidence__list">
+      {% for item in personal.evidence.items %}
+      <a href="{{ item.href }}"><span>{{ item.type }}</span><strong>{{ item.title }}</strong><small>{{ item.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="personal-close personal-home__section" aria-labelledby="personal-close-title">
+    <p class="portal-kicker">{{ personal.close.kicker }}</p>
+    <h2 id="personal-close-title">{{ personal.close.title }}</h2>
+    <p>{{ personal.close.body }}</p>
+    <div class="personal-home__actions">
+      <a class="portal-primary-link" href="/about/">{{ personal.close.profile_action }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="portal-text-link" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">{{ personal.close.linkedin_action }} <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</div>
+{% else %}
+
 <div class="consulting-hero" role="region" aria-labelledby="home-title">
   <picture>
     <source srcset="{{ '/assets/img/diagnostic-portal-texture.webp' | relative_url }}" type="image/webp" />
@@ -115,3 +213,4 @@
     </div>
   </div>
 </div>
+{% endif %}
