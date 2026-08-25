@@ -1,112 +1,72 @@
-# SAP AMS Consultant, SAP Support Diagnostics, SD/MM, Master Data & AI Agents — Dzmitryi Kharlanau
+# Dzmitryi Kharlanau — SAP Transformation, Enterprise Operations & Agentic AI
 
-## What this repository is
+This repository powers the public professional website and knowledge base of **Dzmitryi Kharlanau**, an SAP consultant and system analyst working across SAP transformation, enterprise operations, SD/MM, MDG, integrations, data governance, AMS, and practical agentic AI.
 
-This repository powers the public professional website for **Dzmitryi Kharlanau**, a Senior SAP Consultant focused on SAP AMS diagnostics, SAP support improvement, SAP SD/MM process issues, master data, integration troubleshooting, and AI-ready support knowledge systems.
+The site is designed as three things at once: a human-readable professional profile, a source-backed enterprise knowledge base, and a machine-readable discovery surface for search engines, retrieval systems, and AI agents.
 
-The site is a controlled public profile layer, a structured knowledge base, and a machine-readable discovery surface for search engines, retrieval systems, and AI agents.
-
-- **Live site:** https://dkharlanau.github.io
+- **Live site:** https://dkharlanau.github.io/
+- **LinkedIn:** https://www.linkedin.com/in/dkharlanau/
 - **About:** https://dkharlanau.github.io/about/
 - **Services:** https://dkharlanau.github.io/services/
-- **Sitemap:** https://dkharlanau.github.io/sitemap.xml
-- **robots.txt:** https://dkharlanau.github.io/robots.txt
+- **SAP / enterprise knowledge:** https://dkharlanau.github.io/atlas/
+- **Datasets:** https://dkharlanau.github.io/datasets/
+- **AI discovery:** https://dkharlanau.github.io/ai/
 - **llms.txt:** https://dkharlanau.github.io/llms.txt
 
 ## Professional focus
 
-- SAP AMS and production support improvement
-- SAP SD/MM diagnostics across sales, procurement, logistics, inventory, billing, pricing, and delivery flows
-- Business partner, customer, vendor, MDG, and master data issue analysis
-- IDoc, API, middleware, and interface monitoring diagnostics
-- Incident triage, root-cause analysis, support knowledge reuse, and handover quality
-- Practical AI-assisted workflows for documentation, retrieval, diagnostics, and operational memory
+- SAP transformation and enterprise delivery
+- SAP SD/MM, order-to-cash, procure-to-pay, logistics, pricing, billing, delivery, and inventory issues
+- Business partner, customer, vendor, MDG, master data governance, and migration
+- IDoc, API, middleware, interface monitoring, and cross-system diagnostics
+- SAP AMS, incident triage, root-cause analysis, operational handover, and support-model improvement
+- Data quality, reusable runbooks, operational memory, and enterprise knowledge systems
+- AI-assisted diagnostics, retrieval, documentation, automation, and agentic workflows
+- Safe boundaries between deterministic enterprise processes and autonomous/agentic behavior
 
-## Why this site exists
+## Public knowledge system
 
-LinkedIn is useful, but it is not enough as the only professional source.
+The repository contains reviewed public material organized around practical enterprise work rather than generic AI demos. Main areas include:
 
-This site gives the professional profile a canonical, citable, structured, and machine-readable home. It helps humans and AI systems understand the same context: what Dzmitryi works on, which knowledge areas are public, which materials are verified, and how the public content should be used.
+- **Atlas** — SAP diagnostics, concepts, maps, data quality, AI operations, and automation notes
+- **Scenarios** — business-problem-to-diagnostic-workflow mappings
+- **Skill Hub** — reusable workflows for consultants, analysts, and AI agents
+- **Research / Radar** — source-backed monitoring and comparisons
+- **Datasets** — structured public data collections and schemas
+- **AI endpoints** — machine-readable manifests, indexes, structured identity, and agent-routing surfaces
 
-The goal is professional transparency, safer discovery, and better routing for relevant SAP AMS, enterprise support, and AI-assisted operations conversations.
+## Agent-ready surfaces
 
-## Main site areas
+The site exposes controlled public interfaces intended to make the same verified knowledge understandable to humans and machines:
 
-- **Home** — positioning and trust signals
-- **About** — professional profile and public identity anchor
-- **Services** — consulting model for diagnose, stabilize, structure, and extend work
-- **Atlas** — SAP diagnostics, concepts, maps, AI operations, data quality, and automation notes
-- **Scenarios** — business-pain-to-diagnostic-workflow mappings
-- **Skill Hub** — practical workflows for consultants, analysts, and AI agents
-- **Research / Radar** — source-backed monitoring, comparisons, and watchlists
-- **Datasets** — structured public data collections
-- **AI endpoints** — `llms.txt`, `llms-full.txt`, resume exports, compact indexes, and agent-skill routing
-- **Legal / Citation** — usage, attribution, disclosure, accessibility, and responsible AI boundaries
+- `robots.txt` and sitemaps
+- `llms.txt` and reviewed Markdown resources
+- Agent Skills / `SKILL.md` packages
+- JSON/NDJSON datasets and schemas
+- structured Atlas manifests and compact retrieval indexes
+- provenance, citation, licensing, and verification metadata
+- an Agent-Ready Web Profile reference implementation
 
-Useful entry points:
+This is complementary to normal SEO and public web publishing. It is not presented as a ranking shortcut.
 
-- https://dkharlanau.github.io/atlas/
-- https://dkharlanau.github.io/skill-hub/
-- https://dkharlanau.github.io/datasets/
-- https://dkharlanau.github.io/ai/
-- https://dkharlanau.github.io/legal/professional-disclosure/
-- https://dkharlanau.github.io/CITATION/
+## Why this repository exists
 
-## What is ready for AI agents
+Professional expertise increasingly needs more than a platform profile. This repository provides a canonical, citable, version-controlled source that connects **Dzmitryi Kharlanau** with concrete SAP, enterprise-operations, data-governance, and agentic-AI work.
 
-The repository is designed for controlled public retrieval, not unrestricted scraping or exposure of private material.
+The goal is to make professional capability inspectable: architecture, research, datasets, reusable methods, and working interoperability experiments are public where they can safely be public.
 
-Available discovery surfaces include:
+## Related public projects
 
-- `robots.txt` with crawler and AI-crawler policy
-- `sitemap.xml` plus section sitemaps for pages, datasets, and verified Atlas content
-- `llms.txt` as the AI-readable entry manifest
-- `llms-full.txt` with reviewed Atlas content only
-- `.well-known/agent-skills/` for topic routing and agent discovery
-- `agent-skills/` source packages for portable agent workflows
-- `datasets/manifest.json` and dataset schema files
-- `atlas/manifest.json` and `ai/atlas-compact-index.json` for structured Atlas discovery
-- validation scripts that check public hygiene, indexing policy, links, SEO metadata, and AI-readable endpoints
+- **Agent-Ready Web Profile (ARWP):** https://github.com/dkharlanau/agent-ready-web-profile
+- **Dataset repository:** https://github.com/dkharlanau/dkharlanau-datasets
+- **AI-Ready CV Builder:** https://github.com/dkharlanau/ai-cv-builder
 
-Only public, intentionally committed content belongs here. Private client information, ticket numbers, internal incident IDs, secrets, local exports, and raw private corpus material must not be committed.
+## Trust and boundaries
 
-## Knowledge areas covered
+This is an independent personal project. It is not an official SAP, employer, or client repository.
 
-The public content is organized around practical enterprise support work:
+Only intentionally public material belongs here. Client information, internal ticket numbers, private incident data, secrets, credentials, and proprietary exports must not be committed.
 
-- SAP AMS operations and support model improvement
-- SAP SD/MM support, including order-to-cash and procure-to-pay issue patterns
-- Procurement, inventory, billing, pricing, delivery, and account-determination diagnostics
-- Business partner, customer, vendor, MDG, and master data governance issues
-- IDoc, API, middleware, and interface monitoring ownership
-- Clean-core and side-by-side automation boundaries
-- AI-assisted documentation, retrieval, analysis, and support workflows
-- Operational memory, reusable runbooks, and knowledge systems for enterprise teams
+SAP-related material is practical diagnostic and research content, not official SAP documentation. Any configuration, process, integration, or automation decision must be validated in the relevant system landscape.
 
-## Networking and collaboration
-
-Dzmitryi is open to relevant professional conversations around:
-
-- SAP AMS improvement
-- support model modernization
-- SAP consulting, delivery, and practical automation
-- AI-assisted support operations
-- knowledge systems for enterprise teams
-- agentic workflows for diagnostics, documentation, and operational memory
-
-LinkedIn: https://www.linkedin.com/in/dkharlanau/
-
-## Trust, citation, and independence
-
-This is a personal independent site. It is not an official employer, client, SAP, or vendor website.
-
-The repository contains public materials only. Content uses controlled verification levels, and unverified pages are kept out of indexing surfaces until reviewed. Citation and license files are included for attribution and reuse boundaries:
-
-- `CITATION.md`
-- `CITATION.cff`
-- `LICENSE`
-- `LICENSE-DATA`
-- `AGENTS.md`
-
-Public SAP-related notes are practical diagnostic material, not official SAP documentation. Validate any SAP process, configuration, or automation decision in the relevant landscape before acting on it.
-
+See `CITATION.md`, `CITATION.cff`, `LICENSE`, `LICENSE-DATA`, and `AGENTS.md` for attribution, licensing, and usage boundaries.
