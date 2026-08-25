@@ -53,6 +53,26 @@ Rules:
 - Do not hand-edit `ai/career-factory.json`. It is generated from Labs and `_data/career/roadmap.yml`.
 - CI/CD itself is part of Lead readiness: delivery automation, quality gates, evidence, rollback, and human-review boundaries should be mapped when a Lab demonstrates them.
 
+## Rendered markup safety
+
+Lab pages frequently mix Markdown, Liquid, and hand-written HTML. A Jekyll build can succeed even when Markdown inside an HTML wrapper is left as literal browser text.
+
+Rules:
+
+- Do not rely on `markdown="1"` for pipe tables, fenced code blocks, or large Markdown sections nested inside custom HTML components.
+- For mixed HTML pages, prefer explicit semantic HTML. When a Markdown table is materially easier to maintain, capture it with Liquid and render it explicitly with `markdownify`.
+- A successful Jekyll build is not sufficient evidence that a page is readable. Validate the rendered `_site` output.
+- Raw table delimiters such as `|---|---|`, raw triple-backtick fences, or other Markdown syntax visible in built HTML are publication failures, even when the build itself succeeds.
+- Keep wide tables inside an accessible horizontal scroll region rather than compressing many columns into unreadable text.
+
+After building the site, run:
+
+```bash
+python3 scripts/check_rendered_markdown.py --site-dir _site --source-dir .
+```
+
+The main CI workflow runs this check after Jekyll so future agent edits cannot silently reintroduce the raw-Markdown rendering failure.
+
 Run before publishing:
 
 ```bash
