@@ -198,8 +198,14 @@ def public_url_for_path(path: str) -> tuple[set[str], str | None]:
 
     abs_path = REPO_ROOT / clean
 
-    # Static well-known files
-    if clean in {"robots.txt", "llms.txt", "LLM.txt"}:
+    # robots.txt is a shared search-control file. A change can affect crawling
+    # across the public site, so re-submit the core sitemap-backed URLs.
+    if clean == "robots.txt":
+        urls.update(CORE_URLS)
+        return urls, None
+
+    # Static AI discovery files
+    if clean in {"llms.txt", "LLM.txt"}:
         urls.add(f"{BASE_URL}/{clean}")
         return urls, None
 
