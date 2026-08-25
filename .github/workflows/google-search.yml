@@ -1,0 +1,148 @@
+name: Google Search Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_inspections:
+        description: "Maximum page URLs to inspect"
+        required: false
+        default: "1900"
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+  schedule:
+    - cron: "23 5 * * *"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: google-search-pipeline
+  cancel-in-progress: true
+
+jobs:
+  google-search:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main'
+      )
+    runs-on: ubuntu-latest
+
+    env:
+      SITE_URL: "https://dkharlanau.github.io/"
+      SITEMAP_URL: "https://dkharlanau.github.io/sitemap.xml"
+      GITHUB_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Google authentication client
+        run: python -m pip install "google-auth[requests]>=2.35,<3"
+
+      - name: Restore previous indexing report
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p previous
+          previous_run_id="$(
+            gh run list \
+              --workflow google-search.yml \
+              --status success \
+              --limit 10 \
+              --json databaseId \
+              --jq '.[0].databaseId // empty' 2>/dev/null || true
+          )"
+          if [[ -n "$previous_run_id" ]]; then
+            gh run download "$previous_run_id" \
+              --name google-search-report \
+              --dir previous >/dev/null 2>&1 || true
+          fi
+
+      - name: Prepare Search Console credentials
+        id: credentials
+        shell: bash
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${SERVICE_ACCOUNT_JSON:-}" ]]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT is not configured. The workflow will validate the sitemap and write a setup report only."
+            exit 0
+          fi
+
+          credentials_path="$RUNNER_TEMP/google-search-console.json"
+          umask 077
+          printf '%s' "$SERVICE_ACCOUNT_JSON" > "$credentials_path"
+          python - "$credentials_path" <<'PY'
+          import json
+          import sys
+
+          path = sys.argv[1]
+          data = json.load(open(path, encoding="utf-8"))
+          required = {"client_email", "private_key", "token_uri"}
+          missing = sorted(required - set(data))
+          if missing:
+              raise SystemExit(f"Service account JSON is missing: {', '.join(missing)}")
+          print(f"Service account: {data['client_email']}")
+          PY
+
+          echo "path=$credentials_path" >> "$GITHUB_OUTPUT"
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run Google Search pipeline
+        shell: bash
+        env:
+          CREDENTIALS_CONFIGURED: ${{ steps.credentials.outputs.configured }}
+          CREDENTIALS_PATH: ${{ steps.credentials.outputs.path }}
+          INPUT_MAX_INSPECTIONS: ${{ github.event.inputs.max_inspections }}
+        run: |
+          set -euo pipefail
+
+          max_inspections="${INPUT_MAX_INSPECTIONS:-1900}"
+          args=(
+            --site-url "$SITE_URL"
+            --sitemap-url "$SITEMAP_URL"
+            --max-inspections "$max_inspections"
+            --output-dir reports/seo/google-search
+          )
+
+          if [[ -f previous/google-indexing.json ]]; then
+            args+=(--previous-report previous/google-indexing.json)
+          fi
+
+          if [[ "$CREDENTIALS_CONFIGURED" == "true" ]]; then
+            args+=(--credentials "$CREDENTIALS_PATH")
+          fi
+
+          python scripts/google_search_pipeline.py "${args[@]}"
+
+      - name: Add report to workflow summary
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f reports/seo/google-search/google-indexing.md ]]; then
+            cat reports/seo/google-search/google-indexing.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Google Search report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: google-search-report
+          path: reports/seo/google-search/
+          if-no-files-found: warn
+          retention-days: 90
