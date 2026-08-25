@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Tool Roadmap — SAP, Data, Integration and Operations"
-description: "Canonical roadmap for practical SAP and enterprise tools: priorities, implementation fit, repository placement, delivery status, and implementation notes."
+title: "Tool Roadmap — Portable Enterprise Tools"
+description: "Canonical roadmap for product-level tools around mappings, processes, interfaces, reconciliation, transformation graphs, cutover, evidence, and enterprise data."
 permalink: /labs/tool-roadmap/
 status: draft
 verified: false
@@ -10,11 +10,12 @@ sitemap: false
 last_modified_at: 2026-08-25
 hide_global_cta: true
 tags:
+  - enterprise-tools
   - sap
-  - tools
-  - data-quality
+  - mapping
+  - process-modeling
   - integration
-  - migration
+  - data
   - roadmap
 ---
 
@@ -25,117 +26,131 @@ tags:
 <div class="research-canvas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Lab / Tool roadmap</p>
-      <h1>Build small tools<br />around real enterprise work.</h1>
-      <p>This is the canonical backlog for public tool development. The priority is deterministic software that solves a concrete file, mapping, migration, integration, or operational task without requiring a private SAP landscape.</p>
+      <p class="research-canvas__eyebrow">Lab / Product roadmap</p>
+      <h1>Build portable models<br />around enterprise change.</h1>
+      <p>This roadmap focuses on tools that remain useful even when SAP products improve. The target is the project knowledge that companies still own themselves: mappings, process variants, interfaces, cross-system relationships, reconciliation rules, change impact, cutover dependencies, decisions, tests, and evidence.</p>
       <a class="research-canvas__button" href="#roadmap">Open the roadmap <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Roadmap rules">
+    <div class="research-canvas__signal" aria-label="Roadmap principles">
       <p>Selection rule</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>Concrete</strong><small>One observable problem</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Testable</strong><small>Deterministic where possible</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Portable</strong><small>No SAP access required</small></div>
-      <em>ChatGPT and Codex should help build the tool, not become the tool by default.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Portable</strong><small>Git, files, open formats</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Cross-system</strong><small>Not owned by one ERP</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Compounding</strong><small>Each artifact strengthens the model</small></div>
+      <em>Prefer tools that can export to SAP, Signavio, LeanIX, ALM, Jira, or agent systems rather than trying to replace them.</em>
     </div>
   </header>
 
-  <section class="research-canvas__boundary" data-reveal aria-label="Naming and product boundary">
-    <span class="material-symbols-outlined" aria-hidden="true">terminal</span>
-    <p><strong>Naming rule:</strong> use literal engineering names such as validate, compare, reconcile, lint, profile, trace, and analyze. Avoid product-name filler such as Doctor, Guard, Copilot, Assistant, Explorer, Navigator, Studio, or AI-powered.</p>
-    <p><strong>Repository rule:</strong> do not create one repository per row. Related capabilities should share a small number of strong repositories and a reusable deterministic core.</p>
-    <p><strong>Repository status:</strong> checked against the GitHub repositories owned by <code>dkharlanau</code> on 2026-08-25. “Yes — site repo” means the intended host repository already exists; it does not mean that the tool itself is implemented.</p>
-    <p><strong>Implementation:</strong> <code>Not started</code> means no tool implementation exists; <code>Foundation exists</code> means reusable site data, rules, templates or domain content already exist; <code>Partial</code> means a meaningful part of the actual capability already exists; <code>Implemented</code> is reserved for a usable tested tool.</p>
+  <section class="research-canvas__boundary" data-reveal aria-label="Product boundary">
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Product rule:</strong> a roadmap row must represent a product or a durable capability family, not a single spreadsheet check.</p>
+    <p><strong>SAP-proof rule:</strong> prioritize project-owned models and cross-system artifacts that SAP cannot fully own because they include non-SAP systems, business decisions, project context, local rules, and evidence.</p>
+    <p><strong>Implementation rule:</strong> ChatGPT and Codex should accelerate product development, tests, schemas, visualizations, documentation, and exports. Runtime AI is optional unless interpretation genuinely adds value.</p>
+    <p><strong>Naming rule:</strong> use literal engineering/category names. Avoid Doctor, Guard, Copilot, Assistant, Workbench, Explorer, Navigator, Studio, Smart, or AI-powered.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal markdown="1">
-## Delivery model
+## Strategic model
 
-| Home | Intended scope | Repo created? | Implementation |
-|---|---|:---:|---|
-| `sap-migration-tools` | SAP migration validation, templates, errors, mapping tasks, correction files and CSV packs | **No** | Not started |
-| `mapping-lint` | Mapping validation, coverage, changes, lineage and generated tests | **No** | Not started; RDP primitives can be reused |
-| `enterprise-data-utils` | Join cardinality, crosswalks, reconciliation, schema/file analysis and anonymization | **No** | Not started; RDP already defines several core blocks |
-| `idoc-contract-tests` | IDoc semantic comparison, assertions, status analysis and test fixtures | **No** | Not started; Atlas diagnostics provide domain context |
-| `dkharlanau.github.io` | Diagnostic, operational, architecture, automotive and AI decision tools that primarily use existing site knowledge | **Yes** | Foundation exists; several underlying datasets, protocols and labs already exist |
+The strongest long-term direction is an **Enterprise Transformation Model**: an open, versionable representation of how processes, systems, data, mappings, interfaces, decisions, tests, changes, owners, and evidence relate to each other.
 
-**Status:** `NEXT` = build next; `QUEUE` = strong follow-up; `CANDIDATE` = keep and validate; `BACKLOG` = useful but not current focus; `PARKED` = weak fit now; `REJECTED` = deliberately do not build.
+```text
+Process ── Step ── System
+   │         │        │
+   │         ├──── Data ── Mapping
+   │         │        │       │
+   │         └──── Interface ─┘
+   │                  │
+Decision ─────────── Test
+   │                  │
+   └──────── Change ──┘
+              │
+           Evidence
+```
+
+Individual products can share this model without becoming one monolithic application.
+
+### Suggested product families
+
+| Product family | Primary purpose | Repository strategy |
+|---|---|---|
+| `mapping-as-code` | Versionable source-to-target mappings, validation, lineage, tests and export | Standalone |
+| `transformation-graph` | Project-scoped visual graph across process, systems, data, interfaces, mappings and tests | Standalone |
+| `interface-as-code` | Versionable interface contracts with mapping, retry, monitoring, ownership and tests | Standalone |
+| `reconciliation-as-code` | Repeatable cross-system reconciliation rules and evidence | Standalone |
+| `process-as-code` | Structured process definitions with visual/BPMN/Markdown exports | Standalone |
+| `change-graph` | Model-backed enterprise change impact and regression scope | Standalone or built on transformation graph |
+| `decision-tables-as-code` | Versionable business decision tables, validation, tests and DMN export | Standalone |
+| `data-relationship-map` | Visualize cross-system business objects, IDs and relationships from files | Standalone or data module |
+| `cutover-graph` | Dependency, wave, blocker, evidence and readiness model for cutover | Standalone or transformation-graph module |
+| `project-evidence-graph` | Trace requirements, decisions, mappings, tests, defects and evidence | Standalone or transformation-graph module |
+| `dkharlanau.github.io` | Research, domain models, reference datasets, prototypes and interactive concepts | Existing repo |
+
+**Repository status checked on 2026-08-25.** `Yes — site repo` means the host repository exists; it does not mean the product is implemented.
   </section>
 
   <section class="research-canvas__inventory" id="roadmap" data-reveal markdown="1">
-## Canonical roadmap
+## Canonical product roadmap
 
-| # | Tool | Concrete task | Codex fit | Score | Status | Intended home | Repo created? | Implementation | Comments |
-|---:|---|---|:---:|---:|---|---|:---:|---|---|
-| 1 | **SAP Migration Validator** | Validate Migration Cockpit XML/CSV structure, fields, types, lengths and references before load | 5/5 | 97 | `NEXT` | `sap-migration-tools` | **No** | Not started | Best first SAP tool. Need public/synthetic Migration Cockpit fixtures and deterministic validation rules. |
-| 2 | **Mapping Lint** | Find mapping gaps, conflicts, duplicates, missing defaults and unresolved rows | 5/5 | 96 | `NEXT` | `mapping-lint` | **No** | Foundation exists | RDP already contains mapping coverage, cardinality, normalization and exception concepts. Strong standalone repo. |
-| 3 | **Join Cardinality** | Predict row multiplication, data loss and unsafe key cardinality before joining files | 5/5 | 95 | `NEXT` | `enterprise-data-utils` | **No** | Foundation exists | RDP already defines cardinality validation. Very small MVP and easy to test exhaustively. |
-| 4 | **SAP Migration Error Analysis** | Normalize migration messages, group root patterns, rank affected records and remediation work | 4/5 | 95 | `QUEUE` | `sap-migration-tools` | **No** | Not started | Needs realistic exported migration messages. Normalize dynamic variables before grouping. |
-| 5 | **ID Crosswalk** | Build and validate cross-system identifier relationships from two or more files | 5/5 | 94 | `QUEUE` | `enterprise-data-utils` | **No** | Foundation exists | Exact matching first; ambiguous/fuzzy candidates must remain separate from accepted mappings. |
-| 6 | **SAP Data Validation** | Inspect Excel/CSV exports for type drift, blanks, duplicates, identifiers, locale errors and suspicious conversions | 5/5 | 94 | `QUEUE` | `enterprise-data-utils` | **No** | Foundation exists | RDP already has cleaners, locale parsers, validators and SAP identifier normalization concepts. |
-| 7 | **SAP Migration Template Compare** | Compare two Migration Cockpit templates and report structural or field-level changes | 5/5 | 93 | `QUEUE` | `sap-migration-tools` | **No** | Not started | Excellent low-data MVP: two templates in, structural change report out. |
-| 8 | **SAP Mapping Validation** | Validate downloaded SAP mapping-task workbooks for coverage, collisions and type/length issues | 4.5/5 | 92 | `QUEUE` | `sap-migration-tools` | **No** | Not started | Requires a few representative SAP mapping-task files to lock down workbook semantics. |
-| 9 | **Mapping Change Analysis** | Compare mapping releases and identify breaking changes and affected targets | 5/5 | 92 | `QUEUE` | `mapping-lint` | **No** | Foundation exists | Natural second command after Mapping Lint; reuse the same parser and canonical mapping model. |
-| 10 | **Reference Coverage** | Measure lookup/reference coverage, unmapped values, frequency and unused reference entries | 5/5 | 92 | `QUEUE` | `mapping-lint` | **No** | Foundation exists | RDP already defines mapping coverage. Add frequency/impact ranking for practical use. |
-| 11 | **Cutover Dependencies** | Turn object dependencies into load waves, ordering constraints, blockers and cycle detection | 5/5 | 91 | `QUEUE` | `enterprise-data-utils` | **No** | Not started | Graph/topological-sort problem; strong deterministic tool with almost no SAP dependency. |
-| 12 | **IDoc Contract Tests** | Compare actual and expected IDocs using SAP-aware assertions rather than generic XML diff | 4/5 | 91 | `QUEUE` | `idoc-contract-tests` | **No** | Foundation exists | Atlas has IDoc diagnostics; implementation still needs realistic IDoc fixtures and segment matching rules. |
-| 13 | **Mapping Test Generation** | Convert mapping specifications into executable validation cases and assertions | 5/5 | 90 | `CANDIDATE` | `mapping-lint` | **No** | Not started | Build only after a stable canonical mapping model exists. |
-| 14 | **Data Reconciliation** | Compare source/target or before/after files by business key and control totals | 5/5 | 90 | `CANDIDATE` | `enterprise-data-utils` | **No** | Foundation exists | RDP already describes monthly reconciliation and control-total patterns. |
-| 15 | **SAP Correction Compare** | Verify intended and unexpected changes in correction files before reload | 4.5/5 | 89 | `CANDIDATE` | `sap-migration-tools` | **No** | Not started | Reuse Migration Cockpit parser from #1; needs correction-file fixtures. |
-| 16 | **SAP JIT Cancellation Analysis** | Determine safe cancellation/unwind sequencing for JIT/JIS process states | 4/5 | 89 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Automotive JIT knowledge already exists; needs explicit state/action model and careful functional QA. |
-| 17 | **Schema Compare** | Detect added, removed or changed columns, inferred types and formats between exports | 5/5 | 88 | `CANDIDATE` | `enterprise-data-utils` | **No** | Foundation exists | Generic but useful building block; should be a module, not its own repo. |
-| 18 | **SAP Partner Validation** | Detect self-links, missing partners, cycles and inconsistent partner relationships | 4/5 | 88 | `CANDIDATE` | `enterprise-data-utils` | **No** | Not started | Needs explicit KNVP-like input contract and conservative rules to avoid false positives. |
-| 19 | **SAP Migration CSV Validation** | Validate Migration Cockpit CSV packages, filenames, structure, references and formats | 4.5/5 | 87 | `CANDIDATE` | `sap-migration-tools` | **No** | Not started | Extension of #1 after XML/template rules are stable. |
-| 20 | **SAP Data Anonymize** | Produce structurally equivalent, relationship-preserving test fixtures from private SAP exports | 5/5 | 87 | `CANDIDATE` | `enterprise-data-utils` | **No** | Not started | Strategically valuable because it can create safe fixtures for the other public tools. |
-| 21 | **SAP Record Compare** | Compare two SAP/ALV exports by business records instead of spreadsheet cell positions | 5/5 | 87 | `CANDIDATE` | `enterprise-data-utils` | **No** | Foundation exists | Reuse canonicalization and key selection. Differentiate through SAP/business-key semantics. |
-| 22 | **Scope Reconciliation** | Compare expected scope with an actual extract and report missing, unexpected and duplicate objects | 5/5 | 87 | `CANDIDATE` | `enterprise-data-utils` | **No** | Foundation exists | Thin specialization of reconciliation; likely a command/module rather than standalone product. |
-| 23 | **Interface Contract Review** | Review an interface definition for schema, mapping, retry, monitoring, ownership and reconciliation gaps | 5/5 | 87 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Operational Templates and integration material already define many review dimensions. |
-| 24 | **SAP JIT Reference** | Search JIT/JIS actions, objects, prerequisites, dependencies and standard references | 4/5 | 87 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Best as an interactive view over the automotive-JIT dataset, not a separate repo. |
-| 25 | **SAP JIT Diagnostics** | Trace a JIT/JIS production symptom through evidence, process state and likely failed layer | 4/5 | 87 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Combine automotive knowledge with the Atlas diagnostic pattern. Domain QA is the main work. |
-| 26 | **Integration Failure Analysis** | Isolate API, IDoc, RFC, file or event failures by layer, retry risk and ownership boundary | 5/5 | 86 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Integration Failure Analysis template already provides the core reasoning protocol. |
-| 27 | **Change Impact** | Turn a proposed SAP/enterprise change into dependency, risk and regression-test scope | 5/5 | 86 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Change Impact Review template already exists; build structured input/output and reusable evidence links. |
-| 28 | **SAP Diagnostics Index** | Route a symptom or business object to the relevant Atlas diagnostic path and required evidence | 5/5 | 86 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Partial | Atlas already has a large diagnostic corpus and interactive pathfinder; next step is stronger routing/search. |
-| 29 | **Incident Patterns** | Cluster incident exports into recurring symptoms and problem candidates | 4.5/5 | 85 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Needs a CSV input contract and transparent clustering; avoid opaque LLM-only grouping. |
-| 30 | **SAP Incident Analysis** | Structure incident evidence, hypotheses, checks, unsafe actions and escalation boundaries | 5/5 | 85 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Incident Triage protocol and Atlas diagnostics already provide most of the decision structure. |
-| 31 | **Cutover Readiness** | Review cutover plans for data, interfaces, authorizations, jobs, monitoring, rollback and exit gaps | 5/5 | 85 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Cutover/Hypercare protocol exists; needs scored checklist and evidence model. |
-| 32 | **Mapping Lineage** | Visualize source → transformation → target relationships from mapping specifications | 5/5 | 84 | `CANDIDATE` | `mapping-lint` | **No** | Not started | Visualization should sit on the canonical mapping model built for #2. |
-| 33 | **Object Deduplication** | Rank duplicate business-object candidates and explain the matching evidence | 4/5 | 84 | `CANDIDATE` | `enterprise-data-utils` | **No** | Foundation exists | RDP matcher concepts help; accepted duplicates must never be inferred silently from fuzzy scores. |
-| 34 | **Retry Analysis** | Review retry and reprocessing safety, idempotency and duplicate scenarios | 5/5 | 84 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Integration Failure template already asks about idempotency, duplicates and retry risk. |
-| 35 | **Agent Context Export** | Export selected site knowledge as compact JSON/Markdown context for ChatGPT, Claude or Codex | 5/5 | 84 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Partial | Machine layer, llms exports, Agent Skills and manifests already exist; need user-selectable context packaging. |
-| 36 | **IDoc Status Analysis** | Analyze IDoc/AIF-style exports for status distribution, dominant errors and stuck patterns | 4/5 | 83 | `CANDIDATE` | `idoc-contract-tests` | **No** | Foundation exists | Atlas diagnostics provide semantics; needs standardized export fixtures and normalization. |
-| 37 | **AI Use-Case Review** | Classify a use case as deterministic, AI-assisted or human-led and define autonomy/control boundaries | 5/5 | 83 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Decision Design and Business AI already contain decision/control concepts. Keep scoring explicit and explainable. |
-| 38 | **SAP Export Profile** | Paste or upload an SAP export for immediate structural and value profiling | 5/5 | 82 | `CANDIDATE` | `enterprise-data-utils` | **No** | Foundation exists | Very small browser-local feature using the same parsing core as Data Validation. |
-| 39 | **Data Manifest** | Record file hash, schema, row counts and reconciliation controls as repeatable evidence | 5/5 | 82 | `CANDIDATE` | `enterprise-data-utils` | **No** | Foundation exists | Fits RDP evidence/contract model. Useful support primitive rather than headline product. |
-| 40 | **SAP BP Replication** | Trace BP replication through eligibility, source, mapping, channel, target and key mapping | 5/5 | 81 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Atlas already has BP/customer replication and key-mapping diagnostics. Convert them into guided flow. |
-| 41 | **Root Cause Review** | Check RCA quality against evidence, causal explanation, corrective action and recurrence controls | 5/5 | 81 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | RCA protocol already exists. Tool should review structure/evidence rather than invent a root cause. |
-| 42 | **Knowledge API** | Expose curated site datasets and reviewed knowledge through normalized machine endpoints | 4/5 | 81 | `CANDIDATE` | `dkharlanau.github.io` | **Yes — site repo** | Partial | Static JSON/YAML, manifests, llms exports and machine routes already exist; normalize and document a stable facade. |
-| 43 | **SAP ID Validation** | Detect leading-zero loss, numeric conversion, scientific notation and identifier corruption | 5/5 | 81 | `BACKLOG` | `enterprise-data-utils` | **No** | Foundation exists | SAP identifier normalization is already an RDP block concept; include inside Data Validation. |
-| 44 | **Data Quality Rules** | Define and review structured DQ rules including ownership, enforcement and remediation | 5/5 | 80 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | RDP and data-quality Atlas material already cover rules and governance. |
-| 45 | **Architecture Tradeoffs** | Compare architecture options by contradictions, assumptions, reversibility and experiments | 5/5 | 80 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | TRIZ and Decision Design are already substantial frameworks; build as a structured application over them. |
-| 46 | **Locale Validation** | Detect decimal, date and separator problems in spreadsheets and CSV files | 5/5 | 80 | `BACKLOG` | `enterprise-data-utils` | **No** | Foundation exists | RDP already names locale-specific date and decimal parsers. Module of SAP Data Validation. |
-| 47 | **SAP RFC Queue Diagnostics** | Structure qRFC/tRFC investigation and recovery order with safe intervention boundaries | 4/5 | 79 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Use Atlas/integration protocols; needs careful SAP-specific review of recovery boundaries. |
-| 48 | **SAP AMS Review** | Assess AMS operating maturity, waste and improvement backlog | 5/5 | 79 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Existing AMS/operations material can seed dimensions; value depends on a credible scoring model. |
-| 49 | **Incident Evidence** | Review support tickets/escalations for missing evidence and weak diagnostic completeness | 5/5 | 79 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Incident protocol already defines expected evidence; good deterministic checklist with optional text extraction. |
-| 50 | **Runbook Review** | Build or review runbooks for stop conditions, rollback, evidence, ownership and validation | 5/5 | 78 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Runbook template already exists; build coverage review before any generative builder. |
-| 51 | **SAP Text Validation** | Validate long-text exports for duplicates, line problems, control characters and length issues | 5/5 | 78 | `BACKLOG` | `enterprise-data-utils` | **No** | Not started | Straightforward module when a few realistic text-export fixtures are available. |
-| 52 | **SAP Output Diagnostics** | Trace output/message failures through determination, recipient, processing and delivery | 5/5 | 78 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Atlas already contains output/integration diagnostics patterns; convert to guided checks. |
-| 53 | **Spreadsheet Contract** | Apply a reusable schema/rule contract to arbitrary spreadsheets | 5/5 | 77 | `BACKLOG` | `enterprise-data-utils` | **No** | Foundation exists | Technically easy but generic/competitive. Build only if the SAP/data tools need a shared external contract format. |
-| 54 | **Requirement Review** | Review requirements for ambiguity, scope, ownership, testability and acceptance criteria | 5/5 | 76 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Business-analysis and assessment content can seed rules; weaker search differentiation than data tools. |
-| 55 | **Enterprise Test Data** | Generate synthetic enterprise datasets with relationships and deliberate quality failures | 5/5 | 76 | `BACKLOG` | `enterprise-data-utils` | **No** | Not started | Useful mainly as fixture infrastructure for the higher-priority tools. |
-| 56 | **Knowledge Export** | Turn reviewed site knowledge into checklists and structured operational artifacts | 5/5 | 75 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Partial | Agent Skills, machine exports and operational templates already exist; add controlled output schemas. |
-| 57 | **SAP Context Search** | Search SAP terms together with related processes, objects, risks, datasets and diagnostic pages | 5/5 | 74 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Partial | Site already has search and structured manifests. Improve semantic relationships before adding AI search. |
-| 58 | **SAP Lead Cases** | Generate and assess SAP Lead scenarios for explanation, diagnosis, design and challenge practice | 5/5 | 73 | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Partial | Interview Readiness and SAP Lead Assessment already implement much of this product direction. |
-| 59 | **SAP MCP Adapter** | Expose SAP APIs as generic MCP capabilities | 3/5 | 58 | `PARKED` | future repo | **No** | Not started | Requires real SAP APIs, authentication and narrow use cases; poor current fit. |
-| 60 | **SAP Operations Agent** | Generic SAP support/operations agent over systems and documents | 3/5 | 50 | `PARKED` | future only if a narrow use case proves value | **No** | Foundation exists | Related knowledge and `sap-agentic-operations` repo exist, but a generic agent is intentionally not a current build target. |
-| 61 | **SAP Migration XML Split** | Split migration XML files | 5/5 | 42 | `REJECTED` | do not build; existing SAP solution covers the core need | **N/A** | Rejected | Core need is already covered elsewhere; no reason to spend brand or maintenance effort here. |
+| # | Product | Business / consultant problem | First useful scope | Growth path | SAP-proof | Codex fit | Score | Status | Intended repo | Repo created? | Implementation | Comments |
+|---:|---|---|---|---|:---:|:---:|---:|---|---|:---:|---|---|
+| 1 | **Mapping as Code** | Mapping logic is scattered across Excel versions, comments, emails and project folders; changes are hard to review and test | Import Excel mapping → canonical YAML/JSON → validate coverage/conflicts → diff releases → visual source→rule→target lineage | Mapping contracts, value maps, generated tests, impact analysis, approvals, OpenLineage export, agent context | **5/5** | **5/5** | **100** | `NEXT` | `mapping-as-code` | **No** | Foundation exists | Strongest category candidate. RDP already provides mapping coverage, cardinality, normalization and exception concepts. |
+| 2 | **Transformation Graph** | Project knowledge about processes, systems, data, interfaces, mappings, owners and tests is fragmented across many artifacts | Load structured CSV/Excel/YAML and build an interactive project graph with filters and dependency traversal | Change impact, architecture views, migration scope, ownership, test coverage, exports to other tools, graph API | **5/5** | **5/5** | **99** | `NEXT` | `transformation-graph` | **No** | Foundation exists | Potential flagship. Use the site's SAP Enterprise, RDP, Decision Design and machine-layer structures as seed models. |
+| 3 | **Interface as Code** | Interface specifications are split between mapping sheets, Confluence, diagrams, Jira, emails and operational notes | One versioned interface contract describing source/target, trigger, schema, mapping, retry, idempotency, monitoring, ownership and reconciliation | Generate interface specs, sequence/data-flow diagrams, test cases, runbook skeletons, change diffs, agent context | **5/5** | **5/5** | **98** | `NEXT` | `interface-as-code` | **No** | Foundation exists | Operational Templates already define most review dimensions. Start vendor-neutral; add SAP IDoc/API examples as profiles. |
+| 4 | **Reconciliation as Code** | Every migration/cutover/project creates one-off Excel/Python reconciliation logic that is difficult to repeat or audit | YAML reconciliation spec + source/target files → coverage, field checks, control totals, exceptions and evidence report | Multi-system reconciliation, scheduled runs, signed manifests, historical runs, cutover evidence, CI quality gates | **5/5** | **5/5** | **97** | `NEXT` | `reconciliation-as-code` | **No** | Foundation exists | RDP already describes monthly reconciliation, control totals, evidence and exception policies. |
+| 5 | **Process as Code** | Business processes are maintained as diagrams that are hard to diff, generate, reuse and connect to data/interfaces/tests | Structured YAML/Markdown/Excel process definition → visual process map + Mermaid/BPMN/Markdown export | Process variants, RACI, systems/data/interfaces per step, version diff, Signavio export, test skeletons | **4.5/5** | **5/5** | **96** | `QUEUE` | `process-as-code` | **No** | Foundation exists | Do not build another BPMN editor. Treat BPMN/Signavio as export targets and Git-friendly text as source. |
+| 6 | **Enterprise Change Graph** | Change impact is usually assessed manually and misses downstream process/data/interface/test dependencies | Select or define a change and calculate impacted graph nodes: processes, systems, data, mappings, interfaces, tests and owners | Regression scope, risk scoring, change history, release comparison, approval evidence, Jira/ALM export | **5/5** | **5/5** | **96** | `QUEUE` | `change-graph` | **No** | Foundation exists | Best built on Transformation Graph rather than as a separate data model. Existing Change Impact protocol provides reasoning rules. |
+| 7 | **Decision Tables as Code** | Business rules often live in Excel with overlapping conditions, missing combinations and no executable tests | Import decision table → canonical model → detect overlaps/gaps/conflicts → diff → generate test cases | DMN export, simulation, coverage analysis, rule lineage, approvals, connection to processes and interfaces | **5/5** | **5/5** | **94** | `QUEUE` | `decision-tables-as-code` | **No** | Not started | Useful for pricing/determination/routing/eligibility without becoming an SAP rule engine. |
+| 8 | **Data Relationship Map** | Consultants need to understand how customer/material/vendor IDs and relationships line up across systems | Load 2–5 extracts/crosswalks → interactive object/ID relationship graph → missing/ambiguous/broken links | Semantic object profiles, master-data lineage, reconciliation, graph queries, reusable entity contracts | **5/5** | **5/5** | **94** | `QUEUE` | `data-relationship-map` | **No** | Foundation exists | Natural evolution of ID Crosswalk + partner/dependency graph ideas. Valuable far beyond SAP. |
+| 9 | **Cutover Graph** | Cutover plans are spreadsheet task lists with hidden dependencies, unclear critical paths and weak evidence | Tasks/objects/dependencies → DAG → waves → blockers → owners → readiness/evidence checkpoints | Scenario simulation, go/no-go, rollback dependencies, hypercare handoff, run history, sign-off evidence | **4.5/5** | **5/5** | **93** | `QUEUE` | `cutover-graph` | **No** | Foundation exists | Strong consultant/lead tool. Existing Cutover/Hypercare protocol can define evidence and control semantics. |
+| 10 | **Project Evidence Graph** | Requirements, decisions, mappings, tests, defects and approvals lose their relationships over a long project | Import project artifacts/IDs and show requirement→decision→mapping→test→defect→evidence trace | Coverage gaps, stale decisions, audit trail, release evidence, AI context, ALM/Jira connectors | **5/5** | **4.5/5** | **92** | `QUEUE` | `project-evidence-graph` | **No** | Foundation exists | Could become the traceability layer between Git, Jira/ALM, docs and structured artifacts. |
+| 11 | **Consulting Artifact Compiler** | Consultants repeatedly recreate the same diagrams, mapping sheets, specs, test scopes and handover documents from overlapping facts | Take one structured project folder/model and generate Markdown, diagrams, mapping views, interface specs and test scope | Artifact templates, customer-specific profiles, build pipeline, versioned releases, publish packages, agent context | **5/5** | **5/5** | **92** | `CANDIDATE` | `consulting-artifact-compiler` | **No** | Foundation exists | Meta-product over RDP, templates and the transformation model. Build after 2–3 canonical schemas stabilize. |
+| 12 | **Process Variant Compare** | Global projects need to compare country/business-unit process variants without manually inspecting diagrams | Two structured process definitions → visual delta of steps, roles, systems, controls and data | Variant library, harmonization analysis, standard-vs-local scoring, Signavio/BPMN round-trip | **4.5/5** | **5/5** | **90** | `CANDIDATE` | `process-as-code` | **No** | Not started | Product feature rather than separate repo. High consulting value in template/global rollout work. |
+| 13 | **Mapping Lineage & Impact** | A mapping change can silently affect interfaces, reconciliations and tests | Mapping change → downstream lineage → impacted targets, value maps, tests and consuming interfaces | Connect directly into Transformation Graph and Change Graph | **5/5** | **5/5** | **90** | `CANDIDATE` | `mapping-as-code` | **No** | Foundation exists | Keep as a major capability of Mapping as Code, not a separate product. |
+| 14 | **Enterprise Data Contract** | File-based project data lacks explicit schema, identifiers, reference domains, ownership and quality expectations | Define portable contract for XLSX/CSV/project extracts with types, keys, references and rules | Validation, schema drift, fixture generation, mapping integration, reconciliation, data-product export | **5/5** | **5/5** | **89** | `CANDIDATE` | `enterprise-data-contract` | **No** | Foundation exists | RDP already has source/output contracts and reusable validation blocks. Broader than Spreadsheet Contract. |
+| 15 | **Cross-System Identifier Registry** | Crosswalks are copied between projects/files and become inconsistent; there is no explicit identity graph | Versioned identity mappings between legacy/MDG/S4/other systems with ambiguity and evidence tracking | Relationship graph, API, reconciliation integration, merge/split history, migration lineage | **5/5** | **5/5** | **89** | `CANDIDATE` | `data-relationship-map` | **No** | Foundation exists | Better as a durable module of Data Relationship Map than as a tiny crosswalk utility. |
+| 16 | **Test Scope as Code** | Regression scope is often derived manually from change descriptions, resulting in inconsistent coverage | Structured change/process/interface model → generated deterministic test scope and coverage matrix | Test contracts, ALM/Jira export, automated evidence linkage, coverage history | **4.5/5** | **5/5** | **88** | `CANDIDATE` | `change-graph` | **No** | Foundation exists | Builds on existing Change Impact and assessment/test concepts. Avoid generic LLM-only test generation. |
+| 17 | **Integration Contract Tests** | Teams need regression tests for payload semantics, not just connectivity | Interface contract + actual/expected payloads → schema, mapping and business assertion tests | IDoc/XML/JSON/API profiles, fixtures, replay, CI, compatibility matrix | **4.5/5** | **4.5/5** | **88** | `CANDIDATE` | `interface-as-code` | **No** | Foundation exists | Preserve earlier IDoc Contract Tests idea as the SAP profile of a broader product. |
+| 18 | **Business Object Graph** | Functional consultants need a visual way to explain how business objects, organizational data and documents relate | Define object types/relationships from structured files → interactive object graph | SAP profiles, process overlays, master-data dependencies, migration scope, queryable graph | **5/5** | **5/5** | **87** | `CANDIDATE` | `transformation-graph` | **No** | Foundation exists | Useful visual/teaching layer; likely a view of Transformation Graph rather than its own repo. |
+| 19 | **Data Mapping Review Portal** | Business owners cannot meaningfully review giant technical mapping spreadsheets | Render mapping contracts as a focused web review: source, target, transformation, examples, unresolved decisions | Comments/approvals, release comparison, decision links, export back to mapping source | **5/5** | **4.5/5** | **87** | `CANDIDATE` | `mapping-as-code` | **No** | Not started | Strong business-facing surface for Mapping as Code; differentiates it from a CLI-only project. |
+| 20 | **Transformation Scenario Sandbox** | Architecture/process alternatives are discussed in slides but their dependency consequences are hard to compare | Clone a transformation graph, modify systems/interfaces/process steps and compare impact | Scenario cost/risk overlays, migration waves, architectural options, decision records | **5/5** | **4/5** | **86** | `CANDIDATE` | `transformation-graph` | **No** | Not started | Could make the graph genuinely useful for workshops and architecture decisions. |
+| 21 | **Operational Handover Package** | Project-to-AMS handover loses context between design, mapping, interface specs, controls and runbooks | Compile selected project model into operations package: interfaces, owners, monitoring, retries, known risks, runbooks | Automated refresh, support context packs, incident links, change history | **5/5** | **5/5** | **85** | `CANDIDATE` | `consulting-artifact-compiler` | **No** | Foundation exists | Strong commercial/consulting utility and natural bridge from implementation to AMS. |
+| 22 | **Data Exception Ledger** | Data migration and reconciliation exceptions are tracked in ad-hoc spreadsheets with poor lifecycle visibility | Standard exception records with source evidence, classification, owner, decision and resolution | Link exceptions to mappings, reconciliations, cutover, recurring patterns, dashboards | **5/5** | **5/5** | **85** | `CANDIDATE` | `reconciliation-as-code` | **No** | Foundation exists | RDP exception-policy and evidence concepts already support this direction. |
+| 23 | **Enterprise Rule Catalog** | Important business rules are spread across mapping sheets, configuration notes, decisions and process docs | Versioned catalog linking rule → condition → outcome → owner → process → system → test | Decision-table execution, change impact, rule search, audit, exports | **5/5** | **4.5/5** | **84** | `CANDIDATE` | `decision-tables-as-code` | **No** | Foundation exists | Valuable if anchored in concrete decision tables; avoid becoming a generic knowledge base. |
+| 24 | **SAP Automotive Operations Model** | JIT/JIS knowledge is highly specialized and difficult to visualize as state, action and dependency models | Structured JIT/JIS actions/states/objects → interactive state/dependency model | Cancellation planning, incident diagnostics, process simulation, interface/test overlays | **4.5/5** | **4/5** | **84** | `CANDIDATE` | `dkharlanau.github.io` initially | **Yes — site repo** | Foundation exists | Strong niche differentiation. Keep as a domain profile over the general modeling tools before creating a separate repo. |
+| 25 | **Agent Context Compiler** | Agents need small, scoped, machine-readable enterprise context rather than entire sites or document dumps | Select process/system/mapping/interface scope → compile compact JSON/Markdown context with provenance | MCP resources, skills, change-specific context packs, evaluation datasets | **5/5** | **5/5** | **83** | `CANDIDATE` | `dkharlanau.github.io` initially | **Yes — site repo** | Partial | Machine layer, llms exports, skills and manifests already exist. Becomes much stronger when backed by the transformation model. |
+| 26 | **Project Model API** | Structured transformation artifacts need one stable machine interface for tools and agents | Read-only API over canonical process/mapping/interface/reconciliation/change entities | GraphQL/REST, MCP, tool integrations, local server, connectors | **5/5** | **4/5** | **82** | `BACKLOG` | future shared core | **No** | Not started | Infrastructure, not a first product. Build only after schemas are proven in real tools. |
+| 27 | **SAP Migration File Validation** | Migration files can contain structural/data errors before load | Deterministic file validation for SAP Migration Cockpit templates | Template compare, correction checks, SAP-specific profiles | **2.5/5** | **5/5** | **69** | `BACKLOG` | future SAP profile | **No** | Not started | Useful, but intentionally demoted: SAP can improve this class of functionality. Better as a profile/module, not flagship. |
+| 28 | **SAP Incident Diagnostics** | Consultants need consistent evidence collection and diagnostic routing | Symptom → evidence checklist → likely layers → safe checks | Export/log ingestion, support context, incident patterns | **2.5/5** | **5/5** | **68** | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Valuable content/tooling, but less defensible as a standalone product because SAP/ALM/AI support tooling will improve. |
+| 29 | **SAP IDoc Analysis** | IDoc status and payload investigation is repetitive | IDoc semantic comparison/status normalization | Contract-test profile inside Interface as Code | **2/5** | **4/5** | **64** | `BACKLOG` | `interface-as-code` profile | **No** | Foundation exists | Keep the domain knowledge, but do not make IDoc analysis a primary standalone bet. |
+| 30 | **Generic SAP MCP Adapter** | Expose SAP APIs as agent tools | Narrow adapter for specific proven use cases | Broader tool surface if real demand appears | **1/5** | **3/5** | **45** | `PARKED` | future only | **No** | Not started | Commodity risk is high. Only revisit when another product has a concrete SAP action that needs MCP. |
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal markdown="1">
+## What became features instead of products
+
+The previous roadmap contained many useful ideas that should not disappear. They are now treated as capabilities inside stronger products:
+
+| Previous idea | New home |
+|---|---|
+| Mapping Lint, Mapping Change Analysis, Reference Coverage, Mapping Lineage, Mapping Test Generation | **Mapping as Code** |
+| Join Cardinality, ID Crosswalk, Schema Compare, Scope Reconciliation, Record Compare | **Reconciliation as Code / Data Relationship Map / Enterprise Data Contract** |
+| IDoc Contract Tests, Interface Contract Review, Retry Analysis | **Interface as Code / Integration Contract Tests** |
+| Cutover Dependencies, Cutover Readiness, Go/No-Go, Evidence Manifest | **Cutover Graph** |
+| Change Impact, Regression Scope | **Enterprise Change Graph / Test Scope as Code** |
+| Data Quality Rules, Identifier/Locale checks, Spreadsheet Contract | **Enterprise Data Contract** |
+| SAP JIT Reference, JIT Diagnostics, Cancellation Analysis | **SAP Automotive Operations Model** |
+| Agent Context Export, Knowledge API | **Agent Context Compiler / Project Model API** |
+| RCA/Incident/Runbook templates | Supporting protocols on `dkharlanau.github.io`, not primary standalone products |
   </section>
 
   <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Execution order</p><h2>Prove value before expanding the family.</h2></div>
+    <div><p class="research-canvas__eyebrow">Execution order</p><h2>Build the model through useful products.</h2></div>
     <ol>
-      <li><span>01</span><strong>Validate</strong><p>Build one deterministic utility with realistic fixtures and automated tests.</p></li>
-      <li><span>02</span><strong>Use</strong><p>Run it on a real or safely anonymized work artifact and record whether it removes manual effort.</p></li>
-      <li><span>03</span><strong>Publish</strong><p>Add a focused README, browser demo where appropriate, examples, tests, package/CLI surface, and one strong problem page.</p></li>
-      <li><span>04</span><strong>Expand</strong><p>Only add the next capability when it shares primitives, users, or search intent with the proven tool.</p></li>
+      <li><span>01</span><strong>Mapping</strong><p>Build Mapping as Code first: Excel import, canonical mapping schema, validation, diff and visual lineage.</p></li>
+      <li><span>02</span><strong>Graph</strong><p>Build Transformation Graph around a small shared enterprise model and ingest mapping/process/interface artifacts.</p></li>
+      <li><span>03</span><strong>Interfaces</strong><p>Add Interface as Code so mappings, contracts, operations and tests become connected rather than separate documents.</p></li>
+      <li><span>04</span><strong>Reconcile</strong><p>Add Reconciliation as Code and evidence so the model proves what changed across systems instead of only documenting intent.</p></li>
+      <li><span>05</span><strong>Expand</strong><p>Only then add Process as Code, Change Graph, Cutover Graph and Evidence Graph as views over stable schemas.</p></li>
     </ol>
   </section>
 </div>
