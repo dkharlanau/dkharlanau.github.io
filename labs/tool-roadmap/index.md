@@ -23,7 +23,104 @@ tags:
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Tool Roadmap</li></ol>
 </nav>
 
-<div class="research-canvas">
+<style>
+.tool-roadmap-page .tool-roadmap-table-scroll {
+  width: 100%;
+  margin-top: 1.6rem;
+  overflow-x: auto;
+  border-top: 1px solid var(--rc-ink);
+  border-bottom: 1px solid var(--rc-line);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+}
+.tool-roadmap-page .tool-roadmap-table-scroll table {
+  width: 100%;
+  min-width: 54rem;
+  margin: 0;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--rc-paper);
+  font-size: .82rem;
+}
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll table { min-width: 118rem; }
+.tool-roadmap-page .tool-roadmap-table-scroll :is(th, td) {
+  padding: .82rem .9rem;
+  border: 0;
+  border-bottom: 1px solid var(--rc-line);
+  color: var(--rc-soft);
+  line-height: 1.45;
+  text-align: left;
+  vertical-align: top;
+}
+.tool-roadmap-page .tool-roadmap-table-scroll thead th {
+  color: var(--rc-ink);
+  background: color-mix(in srgb, var(--rc-paper) 92%, var(--rc-line));
+  font-family: var(--ps-mono);
+  font-size: .64rem;
+  font-weight: 760;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tool-roadmap-page .tool-roadmap-table-scroll tbody tr:hover td {
+  background: color-mix(in srgb, var(--rc-signal) 4%, var(--rc-paper));
+}
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll :is(th, td):first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 3.2rem;
+  min-width: 3.2rem;
+  background: var(--rc-paper);
+}
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll :is(th, td):nth-child(2) {
+  position: sticky;
+  left: 3.2rem;
+  z-index: 2;
+  min-width: 13rem;
+  background: var(--rc-paper);
+}
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll thead :is(th, td):first-child,
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll thead :is(th, td):nth-child(2) {
+  z-index: 3;
+  background: color-mix(in srgb, var(--rc-paper) 92%, var(--rc-line));
+}
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll td:nth-child(3) { min-width: 19rem; }
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll td:nth-child(4) { min-width: 20rem; }
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll td:nth-child(5) { min-width: 18rem; }
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll td:nth-child(10) { min-width: 12rem; }
+.tool-roadmap-page #roadmap .tool-roadmap-table-scroll td:nth-child(13) { min-width: 20rem; }
+.tool-roadmap-page .tool-roadmap-table-scroll code {
+  white-space: nowrap;
+  font-size: .78rem;
+}
+.tool-roadmap-page .tool-roadmap-model {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--rc-line);
+  background: color-mix(in srgb, var(--rc-paper) 92%, var(--rc-line));
+  padding: 1rem 1.1rem;
+  color: var(--rc-ink);
+  font-family: var(--ps-mono);
+  font-size: .82rem;
+  line-height: 1.45;
+}
+.tool-roadmap-page .research-canvas__inventory > h2 { margin-bottom: 1rem; }
+.tool-roadmap-page .research-canvas__inventory > h3 { margin-top: 2.5rem; }
+.tool-roadmap-page .research-canvas__inventory > p {
+  max-width: 58rem;
+  color: var(--rc-soft);
+  line-height: 1.62;
+}
+@media (max-width: 800px) {
+  .tool-roadmap-page .tool-roadmap-table-scroll { margin-top: 1.2rem; }
+  .tool-roadmap-page #roadmap .tool-roadmap-table-scroll table { min-width: 104rem; }
+  .tool-roadmap-page .tool-roadmap-table-scroll :is(th, td) { padding: .72rem .75rem; }
+}
+</style>
+
+<div class="research-canvas tool-roadmap-page">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Lab / Product roadmap</p>
@@ -48,13 +145,11 @@ tags:
     <p><strong>Naming rule:</strong> use literal engineering/category names. Avoid Doctor, Guard, Copilot, Assistant, Workbench, Explorer, Navigator, Studio, Smart, or AI-powered.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal markdown="1">
-## Strategic model
+  <section class="research-canvas__inventory" data-reveal>
+    <h2>Strategic model</h2>
+    <p>The strongest long-term direction is an <strong>Enterprise Transformation Model</strong>: an open, versionable representation of how processes, systems, data, mappings, interfaces, decisions, tests, changes, owners, and evidence relate to each other.</p>
 
-The strongest long-term direction is an **Enterprise Transformation Model**: an open, versionable representation of how processes, systems, data, mappings, interfaces, decisions, tests, changes, owners, and evidence relate to each other.
-
-```text
-Process ── Step ── System
+<pre class="tool-roadmap-model">Process ── Step ── System
    │         │        │
    │         ├──── Data ── Mapping
    │         │        │       │
@@ -64,13 +159,12 @@ Decision ─────────── Test
    │                  │
    └──────── Change ──┘
               │
-           Evidence
-```
+           Evidence</pre>
 
-Individual products can share this model without becoming one monolithic application.
-
-### Suggested product families
-
+    <p>Individual products can share this model without becoming one monolithic application.</p>
+    <h3>Suggested product families</h3>
+    <div class="tool-roadmap-table-scroll" role="region" aria-label="Suggested product families" tabindex="0">
+{% capture product_families_table %}
 | Product family | Primary purpose | Repository strategy |
 |---|---|---|
 | `mapping-as-code` | Versionable source-to-target mappings, validation, lineage, tests and export | Standalone |
@@ -84,13 +178,17 @@ Individual products can share this model without becoming one monolithic applica
 | `cutover-graph` | Dependency, wave, blocker, evidence and readiness model for cutover | Standalone or transformation-graph module |
 | `project-evidence-graph` | Trace requirements, decisions, mappings, tests, defects and evidence | Standalone or transformation-graph module |
 | `dkharlanau.github.io` | Research, domain models, reference datasets, prototypes and interactive concepts | Existing repo |
-
-**Repository status checked on 2026-08-25.** `Yes — site repo` means the host repository exists; it does not mean the product is implemented.
+{% endcapture %}
+{{ product_families_table | markdownify }}
+    </div>
+    <p><strong>Repository status checked on 2026-08-25.</strong> <code>Yes — site repo</code> means the host repository exists; it does not mean the product is implemented.</p>
   </section>
 
-  <section class="research-canvas__inventory" id="roadmap" data-reveal markdown="1">
-## Canonical product roadmap
-
+  <section class="research-canvas__inventory" id="roadmap" data-reveal>
+    <h2>Canonical product roadmap</h2>
+    <p>The first two columns stay visible while the full roadmap scrolls horizontally. This keeps the product name readable without compressing thirteen decision fields into a narrow page.</p>
+    <div class="tool-roadmap-table-scroll" role="region" aria-label="Canonical product roadmap" tabindex="0">
+{% capture product_roadmap_table %}
 | # | Product | Business / consultant problem | First useful scope | Growth path | SAP-proof | Codex fit | Score | Status | Intended repo | Repo created? | Implementation | Comments |
 |---:|---|---|---|---|:---:|:---:|---:|---|---|:---:|---|---|
 | 1 | **Mapping as Code** | Mapping logic is scattered across Excel versions, comments, emails and project folders; changes are hard to review and test | Import Excel mapping → canonical YAML/JSON → validate coverage/conflicts → diff releases → visual source→rule→target lineage | Mapping contracts, value maps, generated tests, impact analysis, approvals, OpenLineage export, agent context | **5/5** | **5/5** | **100** | `NEXT` | `mapping-as-code` | **No** | Foundation exists | Strongest category candidate. RDP already provides mapping coverage, cardinality, normalization and exception concepts. |
@@ -123,13 +221,16 @@ Individual products can share this model without becoming one monolithic applica
 | 28 | **SAP Incident Diagnostics** | Consultants need consistent evidence collection and diagnostic routing | Symptom → evidence checklist → likely layers → safe checks | Export/log ingestion, support context, incident patterns | **2.5/5** | **5/5** | **68** | `BACKLOG` | `dkharlanau.github.io` | **Yes — site repo** | Foundation exists | Valuable content/tooling, but less defensible as a standalone product because SAP/ALM/AI support tooling will improve. |
 | 29 | **SAP IDoc Analysis** | IDoc status and payload investigation is repetitive | IDoc semantic comparison/status normalization | Contract-test profile inside Interface as Code | **2/5** | **4/5** | **64** | `BACKLOG` | `interface-as-code` profile | **No** | Foundation exists | Keep the domain knowledge, but do not make IDoc analysis a primary standalone bet. |
 | 30 | **Generic SAP MCP Adapter** | Expose SAP APIs as agent tools | Narrow adapter for specific proven use cases | Broader tool surface if real demand appears | **1/5** | **3/5** | **45** | `PARKED` | future only | **No** | Not started | Commodity risk is high. Only revisit when another product has a concrete SAP action that needs MCP. |
+{% endcapture %}
+{{ product_roadmap_table | markdownify }}
+    </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal markdown="1">
-## What became features instead of products
-
-The previous roadmap contained many useful ideas that should not disappear. They are now treated as capabilities inside stronger products:
-
+  <section class="research-canvas__inventory" data-reveal>
+    <h2>What became features instead of products</h2>
+    <p>The previous roadmap contained many useful ideas that should not disappear. They are now treated as capabilities inside stronger products:</p>
+    <div class="tool-roadmap-table-scroll" role="region" aria-label="Ideas consolidated into products" tabindex="0">
+{% capture product_features_table %}
 | Previous idea | New home |
 |---|---|
 | Mapping Lint, Mapping Change Analysis, Reference Coverage, Mapping Lineage, Mapping Test Generation | **Mapping as Code** |
@@ -141,6 +242,9 @@ The previous roadmap contained many useful ideas that should not disappear. They
 | SAP JIT Reference, JIT Diagnostics, Cancellation Analysis | **SAP Automotive Operations Model** |
 | Agent Context Export, Knowledge API | **Agent Context Compiler / Project Model API** |
 | RCA/Incident/Runbook templates | Supporting protocols on `dkharlanau.github.io`, not primary standalone products |
+{% endcapture %}
+{{ product_features_table | markdownify }}
+    </div>
   </section>
 
   <section class="research-canvas__method" data-reveal>
