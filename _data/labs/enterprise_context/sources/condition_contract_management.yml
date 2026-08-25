@@ -1,7 +1,7 @@
-updated_at: "2026-08-15"
+updated_at: "2026-08-25"
 scope: "SAP S/4HANA Settlement Management and Condition Contract Management for sales and purchasing rebates"
 policy: >-
-  Primary SAP Help sources verify product behavior and current standard apps. The Lab explanation is independently written.
+  Primary SAP Help and SAP Learning sources verify product behavior and current standard examples. The Lab explanation is independently written.
   Configuration examples are release-sensitive and must be checked against the target S/4HANA edition and release.
 
 sources:
@@ -123,6 +123,56 @@ sources:
     accessed_at: "2026-08-15"
     status: source_verified
 
+  - id: SRC-SAP-CCM-LEARNING
+    title: "Explaining Condition Contract Management"
+    publisher: "SAP"
+    source_type: "learning_content"
+    url: "https://learning.sap.com/courses/exploring-sap-s-4hana-settlement-management/explaining-condition-contract-management_afaedda8-fdf8-42cf-a6f4-abc8cc9c6dce"
+    verifies:
+      - "CCM is a core component of Settlement Management for subsequent settlement scenarios such as rebates, commissions, and royalties."
+      - "The lifecycle connects agreement terms, eligible business volume, accrual calculation, settlement, and financial posting."
+      - "Supported settlement types include delta accruals, partial settlement, final settlement, and delta settlement."
+    accessed_at: "2026-08-25"
+    status: source_verified
+
+  - id: SRC-SAP-CCM-ACCRUALS
+    title: "Accruals Processing"
+    publisher: "SAP"
+    source_type: "product_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/1f9d79fe780f4569a98575f3ef73ec8f/456bafaf76c04b90a17ae8aa94f5a930.html"
+    verifies:
+      - "Accruals can be posted with transactional documents such as billing documents or goods receipts."
+      - "Accruals can also be posted in accumulated form by Delta Accruals Settlement based on relevant business volume."
+      - "Settlement Management supports posting, updating, and reversing accruals."
+    release_scope: "SAP S/4HANA 2025 FPS01"
+    accessed_at: "2026-08-25"
+    status: source_verified
+
+  - id: SRC-SAP-CCM-CLASSIC-REBATE
+    title: "Working with Settlement Management"
+    publisher: "SAP"
+    source_type: "learning_content"
+    url: "https://learning.sap.com/courses/functions-innovations-in-sap-s-4hana-sales/working-with-settlement-management_dc9ca6aa-ad79-4047-9dae-e51c9ddfc906"
+    verifies:
+      - "Traditional SAP ERP rebate processing used the VBOX rebate index table."
+      - "VBOX is no longer used for S/4HANA rebate processing and CCM replaces traditional rebate processing."
+      - "Standard sales rebate examples use RES1 for rebate, REA1 for accruals, and RED1 in delta accrual settlement with pricing procedure A10006."
+    accessed_at: "2026-08-25"
+    status: source_verified
+
+  - id: SRC-SAP-CCM-SETTLEMENT-DOCUMENT
+    title: "Settlement Document"
+    publisher: "SAP"
+    source_type: "product_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/66f60a0b52da42d6a6d82607c65c413b/f7cfeac49a124078a70688318cfd2d37.html"
+    verifies:
+      - "Settlement processing creates one or more settlement documents according to condition contract settings."
+      - "Settlement documents calculate rebate or accrual amounts with a separate pricing procedure."
+      - "Settlement documents provide the link to financial accounting and journal entries."
+    release_scope: "SAP S/4HANA 2025 FPS01"
+    accessed_at: "2026-08-25"
+    status: source_verified
+
 source_refs:
   - SRC-SAP-CCM-OVERVIEW
   - SRC-SAP-CCM-CONTRACT
@@ -134,3 +184,7 @@ source_refs:
   - SRC-SAP-CCM-SETTLEMENT-TCODES
   - SRC-SAP-CCM-AUTH
   - SRC-SAP-CCM-CUSTOMIZING
+  - SRC-SAP-CCM-LEARNING
+  - SRC-SAP-CCM-ACCRUALS
+  - SRC-SAP-CCM-CLASSIC-REBATE
+  - SRC-SAP-CCM-SETTLEMENT-DOCUMENT
