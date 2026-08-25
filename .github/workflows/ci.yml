@@ -66,6 +66,21 @@ jobs:
       - name: Check rendered Markdown artifacts
         run: python3 scripts/check_rendered_markdown.py --site-dir _site --source-dir .
 
+      - name: Install visual smoke dependency
+        run: npm install --no-save --no-package-lock playwright-core@1.55.0
+
+      - name: Run browser visual smoke test
+        run: node scripts/visual_smoke_test.mjs --site-dir _site --output-dir reports/visual-smoke
+
+      - name: Upload visual smoke diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-smoke-${{ github.run_id }}
+          path: reports/visual-smoke/
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Check rendered structured data
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_rendered_structured_data.py
 
