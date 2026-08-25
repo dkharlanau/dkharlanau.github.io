@@ -24,6 +24,17 @@ def test_indexnow_production_waits_for_successful_ci_and_reuses_site_artifact():
     assert "Real IndexNow submission" in text
 
 
+def test_indexnow_reports_no_changes_without_claiming_network_submission():
+    text = (ROOT / ".github/workflows/indexnow.yml").read_text(encoding="utf-8")
+    assert "Resolve IndexNow result" in text
+    assert 'status="no_changes"' in text
+    assert 'network="no"' in text
+    assert 'status="submitted"' in text
+    assert 'network="yes"' in text
+    assert "steps.result.outputs.status" in text
+    assert "steps.result.outputs.network" in text
+
+
 def test_ci_publishes_built_site_for_search_workflows():
     text = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
     assert "Upload built site for downstream search workflows" in text
