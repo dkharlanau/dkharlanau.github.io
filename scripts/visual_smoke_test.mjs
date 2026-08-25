@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { chromium } from 'playwright-core';
 import { createServer } from 'node:http';
-import { createReadStream, existsSync } from 'node:fs';
+import { createReadStream, existsSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { mkdir, stat, writeFile } from 'node:fs/promises';
 import { extname, resolve, sep } from 'node:path';
 import process from 'node:process';
@@ -44,14 +45,58 @@ function parseArgs(argv) {
     siteDir: '_site',
     outputDir: 'reports/visual-smoke',
     routes: DEFAULT_ROUTES,
+    changedFrom: '',
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--site-dir') out.siteDir = argv[++i];
     else if (arg === '--output-dir') out.outputDir = argv[++i];
     else if (arg === '--routes') out.routes = argv[++i].split(',').map((v) => v.trim()).filter(Boolean);
+    else if (arg === '--changed-from') out.changedFrom = argv[++i] || '';
   }
   return out;
+}
+
+function routeFromSourcePath(sourcePath) {
+  if (!/\.(?:md|markdown|html)$/i.test(sourcePath)) return null;
+  if (/^(?:_|\.github\/|docs\/|scripts\/|tests\/|reports\/|config\/|assets\/)/.test(sourcePath)) return null;
+  if (!existsSync(sourcePath)) return null;
+
+  const content = readFileSync(sourcePath, 'utf8');
+  const frontmatter = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+  if (frontmatter) {
+    const permalink = frontmatter[1].match(/^permalink:\s*["']?([^"'\n]+)["']?\s*$/m);
+    if (permalink?.[1]?.startsWith('/')) return permalink[1].trim();
+  }
+
+  const normalized = sourcePath.replace(/\\/g, '/');
+  const parts = normalized.split('/');
+  const filename = parts.pop();
+  if (!filename || /^(?:404|sitemap|feed|robots)/i.test(filename)) return null;
+  const stem = filename.replace(/\.(?:md|markdown|html)$/i, '');
+  if (stem === 'index') return `/${parts.join('/')}${parts.length ? '/' : ''}`;
+  return `/${[...parts, stem].join('/')}/`;
+}
+
+function discoverChangedRoutes(baseRef, siteDir) {
+  if (!baseRef || /^0+$/.test(baseRef)) return [];
+  let files = [];
+  try {
+    const output = execFileSync('git', ['diff', '--name-only', `${baseRef}...HEAD`], { encoding: 'utf8' });
+    files = output.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+  } catch (error) {
+    console.warn(`Could not resolve changed routes from ${baseRef}: ${error.message}`);
+    return [];
+  }
+
+  const routes = [];
+  for (const sourcePath of files) {
+    const route = routeFromSourcePath(sourcePath);
+    if (!route || routes.includes(route)) continue;
+    const builtPath = safePath(siteDir, route);
+    if (builtPath && existsSync(builtPath)) routes.push(route);
+  }
+  return routes.slice(0, 8);
 }
 
 function slugifyRoute(route) {
@@ -253,6 +298,8 @@ async function main() {
   const siteDir = resolve(args.siteDir);
   const outputDir = resolve(args.outputDir);
   await mkdir(outputDir, { recursive: true });
+  const changedRoutes = discoverChangedRoutes(args.changedFrom, siteDir);
+  args.routes = [...new Set([...args.routes, ...changedRoutes])];
 
   const { server, baseUrl } = await startStaticServer(siteDir);
   let browser;
@@ -260,6 +307,8 @@ async function main() {
     generatedAt: new Date().toISOString(),
     siteDir,
     routes: args.routes,
+    changedFrom: args.changedFrom,
+    changedRoutes,
     viewports: VIEWPORTS,
     results: [],
   };
