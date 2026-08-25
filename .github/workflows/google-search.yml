@@ -7,6 +7,15 @@ on:
         description: "Maximum page URLs to inspect"
         required: false
         default: "1900"
+      inspection_mode:
+        description: "Inspection selection mode"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - priority
+          - rotate
   workflow_run:
     workflows:
       - CI
@@ -37,6 +46,7 @@ jobs:
       SITE_URL: "https://dkharlanau.github.io/"
       SITEMAP_URL: "https://dkharlanau.github.io/sitemap.xml"
       GITHUB_TOKEN: ${{ github.token }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout main
@@ -71,6 +81,42 @@ jobs:
               --dir previous >/dev/null 2>&1 || true
           fi
 
+      - name: Determine inspection policy
+        id: policy
+        shell: bash
+        env:
+          INPUT_MAX_INSPECTIONS: ${{ github.event.inputs.max_inspections }}
+          INPUT_INSPECTION_MODE: ${{ github.event.inputs.inspection_mode }}
+        run: |
+          set -euo pipefail
+
+          case "${{ github.event_name }}" in
+            workflow_dispatch)
+              echo "max=${INPUT_MAX_INSPECTIONS:-1900}" >> "$GITHUB_OUTPUT"
+              echo "mode=${INPUT_INSPECTION_MODE:-all}" >> "$GITHUB_OUTPUT"
+              echo "cooldown=0" >> "$GITHUB_OUTPUT"
+              echo "policy=manual full-control run" >> "$GITHUB_OUTPUT"
+              ;;
+            schedule)
+              echo "max=1200" >> "$GITHUB_OUTPUT"
+              echo "mode=rotate" >> "$GITHUB_OUTPUT"
+              echo "cooldown=0" >> "$GITHUB_OUTPUT"
+              echo "policy=daily rotating sweep" >> "$GITHUB_OUTPUT"
+              ;;
+            workflow_run)
+              echo "max=100" >> "$GITHUB_OUTPUT"
+              echo "mode=priority" >> "$GITHUB_OUTPUT"
+              echo "cooldown=6" >> "$GITHUB_OUTPUT"
+              echo "policy=post-CI priority refresh" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "max=100" >> "$GITHUB_OUTPUT"
+              echo "mode=priority" >> "$GITHUB_OUTPUT"
+              echo "cooldown=6" >> "$GITHUB_OUTPUT"
+              echo "policy=safe default" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
       - name: Prepare Search Console credentials
         id: credentials
         shell: bash
@@ -80,7 +126,7 @@ jobs:
           set -euo pipefail
           if [[ -z "${SERVICE_ACCOUNT_JSON:-}" ]]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT is not configured. The workflow will validate the sitemap and write a setup report only."
+            echo "::warning::GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT is not configured. Production Google Search checks will fail with a setup report."
             exit 0
           fi
 
@@ -108,15 +154,19 @@ jobs:
         env:
           CREDENTIALS_CONFIGURED: ${{ steps.credentials.outputs.configured }}
           CREDENTIALS_PATH: ${{ steps.credentials.outputs.path }}
-          INPUT_MAX_INSPECTIONS: ${{ github.event.inputs.max_inspections }}
+          POLICY_MAX: ${{ steps.policy.outputs.max }}
+          POLICY_MODE: ${{ steps.policy.outputs.mode }}
+          POLICY_COOLDOWN: ${{ steps.policy.outputs.cooldown }}
         run: |
           set -euo pipefail
 
-          max_inspections="${INPUT_MAX_INSPECTIONS:-1900}"
           args=(
             --site-url "$SITE_URL"
             --sitemap-url "$SITEMAP_URL"
-            --max-inspections "$max_inspections"
+            --max-inspections "$POLICY_MAX"
+            --inspection-mode "$POLICY_MODE"
+            --min-inspection-interval-hours "$POLICY_COOLDOWN"
+            --require-credentials
             --output-dir reports/seo/google-search
           )
 
@@ -127,6 +177,11 @@ jobs:
           if [[ "$CREDENTIALS_CONFIGURED" == "true" ]]; then
             args+=(--credentials "$CREDENTIALS_PATH")
           fi
+
+          echo "Inspection policy: ${{ steps.policy.outputs.policy }}"
+          echo "Inspection budget: $POLICY_MAX"
+          echo "Inspection mode: $POLICY_MODE"
+          echo "Cooldown: ${POLICY_COOLDOWN}h"
 
           python scripts/google_search_pipeline.py "${args[@]}"
 
