@@ -5,8 +5,8 @@ domain: "SAP S/4HANA Settlement Management"
 process_family: "Rebate and Subsequent Settlement"
 status: researching
 created_at: "2026-08-15"
-updated_at: "2026-08-15"
-verified_at: "2026-08-15"
+updated_at: "2026-08-25"
+verified_at: "2026-08-25"
 
 summary: >-
   Condition Contract Management (CCM) is the agreement and settlement layer for commercial conditions that are not finished inside one order, purchase order, invoice, or goods receipt. It connects a negotiated agreement to eligible business volume, accruals, partial settlement, final settlement, and accounting follow-on.
@@ -19,6 +19,84 @@ positioning:
   boundary: >-
     Pricing decides conditions inside transactional documents. CCM manages conditions whose economic result depends on accumulated business volume and later settlement. The two can interact, especially when accrual conditions are determined during sales or purchasing processing.
 
+learning_model:
+  one_sentence: >-
+    Use CCM when the final commercial value depends on what happens over time, not only on one invoice or purchase document.
+  good_fit:
+    - title: "Customer or supplier rebate"
+      explanation: "The final amount depends on eligible sales or purchasing volume collected over a period."
+    - title: "Commission or royalty"
+      explanation: "The payment is calculated later from agreed transactional evidence."
+    - title: "Retroactive commercial agreement"
+      explanation: "A contract can need to consider already-posted business volume and then update accruals or settlement."
+  not_the_main_tool:
+    - title: "Simple invoice discount"
+      explanation: "If a price or discount is final inside one sales or purchasing document, normal pricing is usually the main mechanism."
+    - title: "Business volume is not company turnover"
+      explanation: "CCM only uses transactions that match the configured source, dates, partner, organization, product, and other selection rules."
+
+classic_comparison:
+  - dimension: "Agreement object"
+    classic: "Rebate agreement in classic SAP ERP rebate processing"
+    ccm: "Condition contract inside Settlement Management"
+  - dimension: "Business-volume history"
+    classic: "Traditional processing relied on the VBOX rebate index table"
+    ccm: "S/4HANA rebate processing no longer uses VBOX; CCM works with the relevant transactional business volume"
+  - dimension: "Process scope"
+    classic: "Mainly the older SD/MM rebate model"
+    ccm: "A broader Settlement Management framework for customer, supplier, commission, royalty, and other settlement scenarios"
+  - dimension: "Correction model"
+    classic: "Retroactive changes depended on the older rebate-index processing model"
+    ccm: "Delta accrual and settlement processes recalculate the difference from the current contract and business volume"
+
+lifecycle:
+  memory_path: "CONTRACT → VOLUME → ACCRUAL → DELTA → PARTIAL → FINAL → FI"
+  steps:
+    - order: 1
+      name: "Create and release the condition contract"
+      explanation: "Define the partner, validity, eligible scope, rates or scales, accrual rules, and settlement dates. The contract must be ready for processing before settlement can use it."
+      check: "Wrong contract type or status can make every later step look broken."
+    - order: 2
+      name: "Determine eligible business volume"
+      explanation: "SAP selects the sales or purchasing transactions that match the contract rules. This is the calculation base for later accrual and settlement."
+      check: "Prove the business volume before debugging the rebate percentage."
+    - order: 3
+      name: "Post or update accruals"
+      explanation: "Expected future rebate obligations or claims can be recognized with transactional documents or in accumulated form with a delta accrual settlement run."
+      check: "Accrual is an accounting estimate before the commercial settlement is finished."
+    - order: 4
+      name: "Correct the accrual delta"
+      explanation: "If volume, rates, scales, or retroactive contract data change, the system can post only the difference between the expected accrual and the amount already posted."
+      check: "Delta accrual is a correction of the estimate, not a customer or supplier payout by itself."
+    - order: 5
+      name: "Run partial settlement"
+      explanation: "Settle part of the achieved business volume before the contract period is complete. The contract remains open for new business volume."
+      check: "Confirm what was already settled so the next run does not double-count the commercial result."
+    - order: 6
+      name: "Run final settlement"
+      explanation: "Calculate the final eligible business volume, apply the agreed conditions, settle the remaining amount, and dissolve the remaining accruals according to the configured process."
+      check: "Final settlement is the closing commercial step for the contract period."
+    - order: 7
+      name: "Trace settlement and accounting"
+      explanation: "The settlement document performs settlement pricing and connects the result to Financial Accounting. Reversal and correction processes are used when a settled result must be changed."
+      check: "If the business amount is correct but FI is wrong, move from CCM scope to settlement pricing, tax, and account determination."
+
+settlement_logic:
+  formula: "Eligible business volume × contract rate or scale = calculated settlement value"
+  note: >-
+    The exact base and scale behavior depend on the condition configuration. A threshold can apply differently depending on scale design, so do not assume that only the amount above a threshold is always rebated.
+  types:
+    - type: "Delta accrual"
+      purpose: "Bring posted accruals to the amount currently expected from business volume and contract conditions."
+      contract_state: "Contract remains open."
+    - type: "Partial settlement"
+      purpose: "Create an interim commercial settlement for achieved business volume."
+      contract_state: "Contract remains open and can collect more business volume."
+    - type: "Final settlement"
+      purpose: "Settle the final contract result and complete the period."
+      contract_state: "The contract reaches its final settlement state unless a correction or reversal reopens processing."
+  delta_formula: "Expected accrual now − accrual already posted = delta accrual to post"
+
 shared_objects:
   - object: "Condition Contract"
     role: "Commercial agreement and control object"
@@ -29,12 +107,12 @@ shared_objects:
   - object: "Settlement Calendar"
     role: "Dates and settlement types for accrual, partial, delta, or final processing"
   - object: "Settlement Document"
-    role: "Financial follow-on document created by settlement processing"
+    role: "Settlement pricing and financial follow-on object created by settlement processing"
   - object: "Condition Record"
     role: "Rate, scale, or amount used to calculate accrual or settlement value"
 
 shared_configuration:
-  memory_path: "TYPE → VOLUME → CONDITION → CALENDAR → DOCUMENT → ACCOUNT"
+  memory_path: "TYPE → VOLUME → CONDITION → CALENDAR → PROCESS → DOCUMENT → PRICING → ACCOUNT"
   steps:
     - order: 1
       area: "Condition contract type"
@@ -54,13 +132,63 @@ shared_configuration:
       purpose: "Plans partial, final, delta-accrual, or other settlement dates depending on the process."
       check: "A correct contract can still fail operationally if the expected settlement date is missing, locked, or already processed."
     - order: 5
-      area: "Settlement document control"
-      purpose: "Controls how settlement documents are created and processed."
-      check: "Trace document category, process type, pricing, tax, and reversal behavior."
+      area: "Settlement process type"
+      purpose: "Defines what kind of settlement run is executed and how the process behaves."
+      check: "Do not mix accrual-update logic with actual partner settlement."
     - order: 6
+      area: "Settlement document type"
+      purpose: "Controls the settlement document that is created, including important document-processing behavior."
+      check: "Trace document category, number range, schema group, and process assignment when document creation is wrong."
+    - order: 7
+      area: "Settlement pricing"
+      purpose: "Calculates the rebate or accrual amount inside the settlement document with a dedicated pricing procedure."
+      check: "If business volume is correct but the amount is wrong, inspect conditions, scales, base, sign, and pricing determination."
+    - order: 8
       area: "Accounting and tax"
       purpose: "Maps the commercial settlement into the correct receivable, payable, tax, accrual, and reversal postings."
       check: "A pricing-looking settlement error can actually be tax determination or account determination."
+
+standard_sales_pricing_example:
+  boundary: >-
+    These are SAP-delivered examples for a sales rebate scenario. They are useful memory anchors, not a recommendation to copy standard configuration unchanged into every project.
+  conditions:
+    - id: "RES1"
+      role: "Rebate condition"
+      remember: "Represents the commercial rebate amount used in settlement."
+    - id: "REA1"
+      role: "Rebate accrual condition"
+      remember: "Represents the expected accrual amount and is dissolved during settlement."
+    - id: "RED1"
+      role: "Delta accrual calculation condition"
+      remember: "Used in delta accrual settlement and references the accrual logic rather than acting as a normal accrual condition itself."
+  procedures:
+    - id: "A10005"
+      role: "SAP standard sales rebate settlement pricing example"
+    - id: "A10006"
+      role: "SAP standard delta accrual pricing example"
+
+accounting_model:
+  - stage: "Accrual"
+    meaning: "Recognize the expected future rebate obligation or claim before final commercial settlement."
+    lead_check: "Which event posts the accrual: each transaction or a periodic delta accrual run?"
+  - stage: "Settlement"
+    meaning: "Create the actual partner settlement and reverse the relevant accrual according to the configured process."
+    lead_check: "Which settlement document, pricing, tax treatment, and accounting direction are required?"
+  - stage: "Correction"
+    meaning: "Recalculate or reverse when business volume, conditions, or a previous settlement change."
+    lead_check: "Can the process recover without manual duplicate postings?"
+
+synthetic_example:
+  label: "Synthetic learning example"
+  scenario: "A customer receives a 3% annual rebate on all eligible billed sales."
+  facts:
+    - "Eligible annual business volume: EUR 1,200,000"
+    - "Rebate rate: 3%"
+    - "Calculated total rebate before tax and other adjustments: EUR 36,000"
+    - "Already settled in a mid-year partial settlement: EUR 15,000"
+    - "Remaining commercial amount before tax and other adjustments: EUR 21,000"
+  lesson: >-
+    The arithmetic is easy. The implementation risk is deciding which billing items form the EUR 1,200,000, when accruals are updated, how previous settlements are considered, and how the final settlement posts to accounting.
 
 transactions:
   - id: "WCOCO"
@@ -246,6 +374,19 @@ sales_vs_procurement:
     sales: "Which billing items form the business volume?"
     procurement: "Which event forms the business volume: receipt or supplier invoice?"
 
+lead_design_questions:
+  - "What business event creates the business volume: billing, goods receipt, supplier invoice, or another configured source?"
+  - "Who owns the agreement, and which partners, products, organizations, and dates are eligible?"
+  - "Is the condition a percentage, fixed amount, or scale, and what is the exact calculation base?"
+  - "Should accruals be posted with each transaction or updated periodically with delta accrual settlement?"
+  - "Which partial and final settlement dates are required, and who owns settlement execution?"
+  - "What tax treatment and settlement-document behavior are required for the target country and business model?"
+  - "How should retroactive changes, reversals, cancellations, and already-settled amounts be corrected?"
+  - "Which monitoring proves the contract sees the right volume and Finance receives the right posting?"
+
+assessment_answer: >-
+  CCM is the S/4HANA Settlement Management framework for commercial agreements that are settled later from accumulated business volume. The condition contract defines the partner, validity, eligible scope, rates or scales, accrual rules, and settlement calendar. During runtime, SAP determines the relevant sales or purchasing volume, posts or updates accruals, and creates settlement documents for partial or final settlement with FI follow-on. For customer rebates the volume is typically billing data; for supplier rebates it can be goods receipts or supplier invoices depending on the scenario. When I diagnose CCM, I go in this order: contract and status, business volume, rate and scale, settlement document and pricing, then tax and accounting.
+
 lead_assessment_notes:
   - "CCM is not a replacement for SD or MM pricing. It owns subsequent settlement over accumulated business volume."
   - "The condition contract is the agreement; business volume is the evidence; settlement is the financial execution."
@@ -264,3 +405,7 @@ source_refs:
   - SRC-SAP-CCM-SETTLEMENT-TCODES
   - SRC-SAP-CCM-AUTH
   - SRC-SAP-CCM-CUSTOMIZING
+  - SRC-SAP-CCM-LEARNING
+  - SRC-SAP-CCM-ACCRUALS
+  - SRC-SAP-CCM-CLASSIC-REBATE
+  - SRC-SAP-CCM-SETTLEMENT-DOCUMENT
