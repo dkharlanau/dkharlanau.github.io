@@ -1,0 +1,40 @@
+name: ARWP validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ai/**'
+      - 'datasets/**'
+      - '.well-known/**'
+      - 'mcp/**'
+      - 'llms.txt'
+      - 'llms-full.txt'
+      - '_includes/seo/page-machine-links.html'
+      - '.github/workflows/arwp.yml'
+  pull_request:
+    paths:
+      - 'ai/**'
+      - 'datasets/**'
+      - '.well-known/**'
+      - 'mcp/**'
+      - 'llms.txt'
+      - 'llms-full.txt'
+      - '_includes/seo/page-machine-links.html'
+      - '.github/workflows/arwp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Agent-Ready Web Profile
+        uses: dkharlanau/agent-ready-web-profile@2b9c627f9a8cbe5cae2d6aaa78012a1671c4566e
+        with:
+          profile: ai/site-profile.json
