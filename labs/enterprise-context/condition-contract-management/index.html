@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Condition Contract Management — Enterprise Context Lab"
-description: "A practical SAP S/4HANA CCM map for customer and supplier rebates: condition contracts, business volume, accruals, settlement, configuration, apps, and diagnostics."
+description: "A practical SAP S/4HANA CCM guide for customer and supplier rebates: business volume, accruals, partial and final settlement, configuration, accounting, and diagnostics."
 permalink: /labs/enterprise-context/condition-contract-management/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -32,12 +32,12 @@ tags:
       <p class="research-canvas__eyebrow">Cross-domain component / Settlement Management</p>
       <h1>CCM starts where one document is no longer enough.</h1>
       <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#ccm-memory">Open the model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#ccm-runtime">Follow the process <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="CCM model inventory">
       <p>Working model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>2</strong><small>Business sides</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.transactions | size }}</strong><small>Core SAP GUI tools</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.lifecycle.steps | size }}</strong><small>Runtime steps</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>SAP sources</small></div>
       <em>Draft research · source-tracked · no client data</em>
     </div>
@@ -45,13 +45,99 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">contract</span>
-    <p><strong>Terminology:</strong> CCM means <strong>Condition Contract Management</strong>. It is part of Settlement Management. The central object is the condition contract.</p>
+    <p><strong>Simple definition:</strong> {{ graph.learning_model.one_sentence }}</p>
     <a href="/labs/enterprise-context/data/condition-contract-management-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business boundary</p>
+      <h2>Use CCM for a result that depends on accumulated evidence.</h2>
+      <p>A normal invoice discount can be final immediately. A rebate often cannot: the final value may depend on months of sales or purchasing activity.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.learning_model.good_fit %}
+      <article class="ecg-memory-card">
+        <span>USE</span>
+        <strong>{{ item.title }}</strong>
+        <h3>{{ item.explanation }}</h3>
+      </article>
+      {% endfor %}
+      {% for item in graph.learning_model.not_the_main_tool %}
+      <article class="ecg-memory-card">
+        <span>BOUNDARY</span>
+        <strong>{{ item.title }}</strong>
+        <h3>{{ item.explanation }}</h3>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ccm-runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">End-to-end runtime</p>
+      <h2>{{ graph.lifecycle.memory_path }}</h2>
+      <p>Keep this sequence in mind. It separates commercial agreement, transactional evidence, accounting estimate, and actual settlement.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for step in graph.lifecycle.steps %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">{% if step.order < 10 %}0{% endif %}{{ step.order }}</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ step.name }}</h3>
+          <p>{{ step.explanation }}</p>
+          <p><strong>Check:</strong> {{ step.check }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Settlement logic</p>
+      <h2>{{ graph.settlement_logic.formula }}</h2>
+      <p>{{ graph.settlement_logic.note }}</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.settlement_logic.types %}
+      <article class="ecg-memory-card">
+        <span>SETTLE</span>
+        <strong>{{ item.type }}</strong>
+        <h3>{{ item.purpose }}</h3>
+        <p>{{ item.contract_state }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">difference</span>
+      <p><strong>Delta accrual in one line:</strong> {{ graph.settlement_logic.delta_formula }}.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Why S/4HANA changed the model</p>
+      <h2>Classic rebate processing and CCM are not the same architecture.</h2>
+      <p>The useful point is not the old transaction list. The useful point is that S/4HANA moved rebate processing away from the classic VBOX-based model into Settlement Management and condition contracts.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for row in graph.classic_comparison %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">{{ forloop.index }}</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">{{ row.dimension }}</p>
+          <h3>Classic: {{ row.classic }}</h3>
+          <p><strong>CCM:</strong> {{ row.ccm }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="ccm-memory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
+      <p class="research-canvas__eyebrow">Core objects</p>
       <h2>{{ graph.positioning.common_flow }}</h2>
       <p>{{ graph.positioning.boundary }}</p>
     </header>
@@ -71,7 +157,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Two business sides</p>
-      <h2>One engine, different evidence.</h2>
+      <h2>One engine, different transactional evidence.</h2>
       <p>Sales and Procurement use the same CCM idea, but they do not use the same business-volume source or commercial direction.</p>
     </header>
     <div class="research-route-list">
@@ -82,9 +168,9 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Shared configuration</p>
+      <p class="research-canvas__eyebrow">Configuration map</p>
       <h2>{{ graph.shared_configuration.memory_path }}</h2>
-      <p>Do not configure CCM as one giant switch. Each layer answers a different question.</p>
+      <p>Each layer answers a different question. This is more useful than memorizing one long SPRO path.</p>
     </header>
     <div class="ecg-determination-list">
       {% for step in graph.shared_configuration.steps %}
@@ -104,9 +190,70 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Sales pricing memory anchors</p>
+      <h2>RES1, REA1, RED1: learn the role, not only the code.</h2>
+      <p>{{ graph.standard_sales_pricing_example.boundary }}</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.standard_sales_pricing_example.conditions %}
+      <article class="ecg-memory-card">
+        <span>{{ item.id }}</span>
+        <strong>{{ item.role }}</strong>
+        <h3>{{ item.remember }}</h3>
+      </article>
+      {% endfor %}
+      {% for item in graph.standard_sales_pricing_example.procedures %}
+      <article class="ecg-memory-card">
+        <span>{{ item.id }}</span>
+        <strong>Pricing procedure</strong>
+        <h3>{{ item.role }}</h3>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Accounting model</p>
+      <h2>Accrual is the estimate. Settlement is the commercial execution.</h2>
+      <p>Keep FI direction, tax, and account determination separate from the business-volume question.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.accounting_model %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">{{ forloop.index }}</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">{{ item.stage }}</p>
+          <h3>{{ item.meaning }}</h3>
+          <p><strong>Lead check:</strong> {{ item.lead_check }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">{{ graph.synthetic_example.label }}</p>
+      <h2>{{ graph.synthetic_example.scenario }}</h2>
+      <p>This example is intentionally simple so the process logic is visible.</p>
+    </header>
+    <div class="research-route-list">
+      {% for fact in graph.synthetic_example.facts %}
+      <a href="#"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ fact }}</strong><small>Simple arithmetic; real design depends on business-volume, scale, tax, settlement, and correction rules.</small><i class="material-symbols-outlined" aria-hidden="true">calculate</i></a>
+      {% endfor %}
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">school</span>
+      <p><strong>Lesson:</strong> {{ graph.synthetic_example.lesson }}</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">SAP GUI toolbox</p>
       <h2>Use the transaction that answers the current question.</h2>
-      <p>The usual mistake is to run settlement first. The useful order is contract, business volume, settlement, then document and accounting trace.</p>
+      <p>The useful order is contract, business volume, settlement, then document and accounting trace.</p>
     </header>
     <div class="research-route-list">
       {% for tx in graph.transactions %}
@@ -136,9 +283,26 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead assessment</p>
-      <h2>Explain the separation, not only the transaction code.</h2>
+      <p class="research-canvas__eyebrow">Lead design questions</p>
+      <h2>Ask these before choosing configuration.</h2>
+      <p>They expose the real design boundary: evidence, calculation, timing, tax, correction, and ownership.</p>
     </header>
+    <div class="research-route-list">
+      {% for question in graph.lead_design_questions %}
+      <a href="#"><span>?</span><strong>{{ question }}</strong><small>Answer with business rules first, then map the rule to CCM configuration.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment answer</p>
+      <h2>Explain CCM as a flow, not as a transaction list.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p>{{ graph.assessment_answer }}</p>
+    </div>
     <div class="research-route-list">
       {% for note in graph.lead_assessment_notes %}
       <a href="#"><span>→</span><strong>{{ note }}</strong><small>Use this as an architecture statement, then support it with the Sales or Procurement runtime path.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
@@ -149,8 +313,8 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Primary evidence</p>
-      <h2>Check product behavior against SAP Help.</h2>
-      <p>Configuration names and app availability can differ by S/4HANA edition and release. These links are the current research anchors for this model.</p>
+      <h2>Check release-sensitive behavior against SAP sources.</h2>
+      <p>The explanation above is independently written. Configuration names, standard examples, and app availability can differ by S/4HANA edition and release.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
