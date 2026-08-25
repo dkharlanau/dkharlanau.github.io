@@ -13,6 +13,7 @@ jobs:
       contents: read
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      VISUAL_SMOKE_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
 
     steps:
       - name: Checkout
@@ -70,7 +71,7 @@ jobs:
         run: npm install --no-save --no-package-lock playwright-core@1.55.0
 
       - name: Run browser visual smoke test
-        run: node scripts/visual_smoke_test.mjs --site-dir _site --output-dir reports/visual-smoke
+        run: node scripts/visual_smoke_test.mjs --site-dir _site --output-dir reports/visual-smoke --changed-from "$VISUAL_SMOKE_BASE"
 
       - name: Upload visual smoke diagnostics
         if: failure()
