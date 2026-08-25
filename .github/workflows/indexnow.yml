@@ -2,42 +2,63 @@ name: IndexNow Submit
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
+    paths:
+      - "scripts/indexnow_submit.py"
+      - "tests/test_indexnow*.py"
+      - ".github/workflows/indexnow.yml"
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Run in dry-run mode (no network submission)'
+        description: "Run in dry-run mode (no network submission)"
         required: false
         default: false
         type: boolean
       use_all:
-        description: 'Submit all indexable URLs instead of only changed URLs from git diff'
+        description: "Submit all indexable URLs instead of only changed URLs from git diff"
         required: false
         default: false
         type: boolean
       max_urls:
-        description: 'Maximum number of URLs to submit'
+        description: "Maximum number of URLs to submit"
         required: false
         default: 100
         type: number
 
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: indexnow-${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   indexnow:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main'
+      )
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      GITHUB_TOKEN: ${{ github.token }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 0
 
       - name: Setup Ruby
+        if: github.event_name != 'workflow_run'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3.4"
@@ -48,14 +69,26 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Python dependencies
-        run: python3 -m pip install pytest pyyaml
-
       - name: Generate DAMA pages
+        if: github.event_name != 'workflow_run'
         run: node scripts/generate_dama_pages.js
 
       - name: Build Jekyll site
+        if: github.event_name != 'workflow_run'
         run: bundle exec jekyll build
+
+      - name: Reuse validated CI site
+        if: github.event_name == 'workflow_run'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site
+          gh run download "${{ github.event.workflow_run.id }}" \
+            --name ci-built-site \
+            --dir _site
+          test -f _site/index.html
+          echo "Reused validated site artifact from CI run ${{ github.event.workflow_run.id }}."
 
       - name: Check local links
         run: python3 scripts/check_links.py _site
@@ -65,7 +98,9 @@ jobs:
 
       - name: Determine URL scope
         id: scope
+        shell: bash
         run: |
+          set -euo pipefail
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.use_all }}" = "true" ]; then
             echo "flag=--all" >> "$GITHUB_OUTPUT"
             echo "scope=all indexable URLs" >> "$GITHUB_OUTPUT"
@@ -79,22 +114,21 @@ jobs:
         if: github.event_name != 'pull_request' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run == true)
         env:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        shell: bash
         run: |
+          set -euo pipefail
           if [ -n "$INDEXNOW_KEY" ]; then
             echo "present=true" >> "$GITHUB_OUTPUT"
             echo "IndexNow key secret is present."
           else
             echo "present=false" >> "$GITHUB_OUTPUT"
-            if [ "${{ github.event_name }}" = "push" ]; then
-              echo "::warning::INDEXNOW_KEY secret is not configured. Skipping real IndexNow submission."
-            else
-              echo "::error::INDEXNOW_KEY secret is required for real submission but is not configured in repository secrets."
-              exit 1
-            fi
+            echo "::error::INDEXNOW_KEY secret is required for a real IndexNow submission."
+            exit 1
           fi
 
       - name: Report IndexNow mode
         id: mode
+        shell: bash
         run: |
           echo "Event: ${{ github.event_name }}"
           echo "URL scope: ${{ steps.scope.outputs.scope }}"
@@ -108,8 +142,8 @@ jobs:
             echo "Mode: REAL SUBMISSION"
             echo "status=submitted" >> "$GITHUB_OUTPUT"
           else
-            echo "Mode: SKIPPED (missing secret)"
-            echo "status=skipped_missing_secret" >> "$GITHUB_OUTPUT"
+            echo "Mode: BLOCKED"
+            echo "status=blocked" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Dry-run IndexNow submission
@@ -125,7 +159,7 @@ jobs:
             ${{ steps.scope.outputs.flag }}
 
       - name: Real IndexNow submission
-        if: steps.key.outputs.present == 'true' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
+        if: steps.key.outputs.present == 'true' && (github.event_name == 'workflow_run' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
         env:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
           INDEXNOW_KEY_LOCATION: ${{ vars.INDEXNOW_KEY_LOCATION }}
@@ -145,6 +179,7 @@ jobs:
           name: indexnow-report-${{ github.run_id }}
           path: indexnow-report.json
           if-no-files-found: ignore
+          retention-days: 30
 
       - name: IndexNow status
         if: always()
@@ -153,25 +188,20 @@ jobs:
 
       - name: IndexNow report summary
         if: always()
+        shell: bash
         run: |
           echo "## IndexNow Report" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           if [ -f indexnow-report.json ]; then
-            mode=$(python3 -c "import json,sys; print(json.load(open('indexnow-report.json')).get('mode','unknown'))")
-            submitted=$(python3 -c "import json,sys; print(len(json.load(open('indexnow-report.json')).get('submitted',[])))" 2>/dev/null || echo 0)
-            skipped=$(python3 -c "import json,sys; print(len(json.load(open('indexnow-report.json')).get('skipped',[])))" 2>/dev/null || echo 0)
+            mode=$(python3 -c "import json; print(json.load(open('indexnow-report.json')).get('mode','unknown'))")
+            submitted=$(python3 -c "import json; print(len(json.load(open('indexnow-report.json')).get('submitted',[])))" 2>/dev/null || echo 0)
+            skipped=$(python3 -c "import json; print(len(json.load(open('indexnow-report.json')).get('skipped',[])))" 2>/dev/null || echo 0)
             echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
             echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
             echo "| Status | ${{ steps.mode.outputs.status }} |" >> "$GITHUB_STEP_SUMMARY"
             echo "| Mode | $mode |" >> "$GITHUB_STEP_SUMMARY"
             echo "| Submitted URLs | $submitted |" >> "$GITHUB_STEP_SUMMARY"
             echo "| Skipped URLs | $skipped |" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "<details><summary>Submitted URLs</summary>" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            python3 -c "import json,sys; [print('- '+u) for u in json.load(open('indexnow-report.json')).get('submitted',[])]" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "</details>" >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Status: ${{ steps.mode.outputs.status }}" >> "$GITHUB_STEP_SUMMARY"
             echo "No report was generated for this run." >> "$GITHUB_STEP_SUMMARY"
