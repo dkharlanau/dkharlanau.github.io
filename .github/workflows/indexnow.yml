@@ -126,7 +126,7 @@ jobs:
             exit 1
           fi
 
-      - name: Report IndexNow mode
+      - name: Report IndexNow intent
         id: mode
         shell: bash
         run: |
@@ -139,8 +139,8 @@ jobs:
             echo "Mode: DRY RUN (manual dispatch)"
             echo "status=dry_run" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.key.outputs.present }}" = "true" ]; then
-            echo "Mode: REAL SUBMISSION"
-            echo "status=submitted" >> "$GITHUB_OUTPUT"
+            echo "Mode: REAL SUBMISSION ELIGIBLE"
+            echo "status=submit_eligible" >> "$GITHUB_OUTPUT"
           else
             echo "Mode: BLOCKED"
             echo "status=blocked" >> "$GITHUB_OUTPUT"
@@ -172,6 +172,37 @@ jobs:
             --max-urls ${{ github.event_name == 'workflow_dispatch' && inputs.max_urls || 100 }} \
             ${{ steps.scope.outputs.flag }}
 
+      - name: Resolve IndexNow result
+        id: result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          intent="${{ steps.mode.outputs.status }}"
+          submitted=0
+          if [ -f indexnow-report.json ]; then
+            submitted=$(python3 -c "import json; print(len(json.load(open('indexnow-report.json')).get('submitted',[])))" 2>/dev/null || echo 0)
+          fi
+
+          if [ "$intent" = "dry_run" ]; then
+            status="dry_run"
+            network="no"
+          elif [ "$intent" = "blocked" ] || [ -z "$intent" ]; then
+            status="blocked"
+            network="no"
+          elif [ "$submitted" -gt 0 ]; then
+            status="submitted"
+            network="yes"
+          else
+            status="no_changes"
+            network="no"
+          fi
+
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "network=$network" >> "$GITHUB_OUTPUT"
+          echo "submitted=$submitted" >> "$GITHUB_OUTPUT"
+          echo "IndexNow result: $status; network request: $network; URLs: $submitted"
+
       - name: Upload IndexNow report
         if: always()
         uses: actions/upload-artifact@v4
@@ -184,7 +215,8 @@ jobs:
       - name: IndexNow status
         if: always()
         run: |
-          echo "IndexNow status: ${{ steps.mode.outputs.status }}"
+          echo "IndexNow status: ${{ steps.result.outputs.status }}"
+          echo "Network request: ${{ steps.result.outputs.network }}"
 
       - name: IndexNow report summary
         if: always()
@@ -198,11 +230,13 @@ jobs:
             skipped=$(python3 -c "import json; print(len(json.load(open('indexnow-report.json')).get('skipped',[])))" 2>/dev/null || echo 0)
             echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
             echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
-            echo "| Status | ${{ steps.mode.outputs.status }} |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Status | ${{ steps.result.outputs.status }} |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Network request | ${{ steps.result.outputs.network }} |" >> "$GITHUB_STEP_SUMMARY"
             echo "| Mode | $mode |" >> "$GITHUB_STEP_SUMMARY"
             echo "| Submitted URLs | $submitted |" >> "$GITHUB_STEP_SUMMARY"
             echo "| Skipped URLs | $skipped |" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "Status: ${{ steps.mode.outputs.status }}" >> "$GITHUB_STEP_SUMMARY"
+            echo "Status: ${{ steps.result.outputs.status }}" >> "$GITHUB_STEP_SUMMARY"
+            echo "Network request: ${{ steps.result.outputs.network }}" >> "$GITHUB_STEP_SUMMARY"
             echo "No report was generated for this run." >> "$GITHUB_STEP_SUMMARY"
           fi
