@@ -7,9 +7,13 @@ status: needs_verification
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-16
+last_modified_at: 2026-08-26
 hide_global_cta: true
 tags: [sap, mdg, drf, replication, integration, operations]
+career_impact: mapped
+career_skills:
+  - logistics-mdg
+  - integration-recovery
 ---
 
 # SAP MDG DRF Operations & Replay
@@ -79,6 +83,24 @@ Baseline population
 ```
 
 If two teams own baseline and delta without one shared cut-off, the gap becomes a small time machine where changes disappear.
+
+## Limitation: mass BP updates can overload replication
+
+Large Business Partner mass updates can create much more replication load than normal online changes. If every change is sent immediately, update work processes can stay occupied and transactions can wait on record locks. The risk is higher when BP and relationship changes are processed through web-service replication.
+
+For a planned bulk update, treat replication as a controlled batch operation:
+
+1. Before the mass change, temporarily deactivate automatic replication for the affected BP replication model in `DRFIMG`.
+2. Run the mass update without pushing every change immediately to the receiving systems.
+3. Use `DRFOUT` to replicate the changed BPs in controlled batches during a low-load business window.
+4. Adjust the batch size to the real system load. There is no useful fixed batch number for every landscape.
+5. Reconcile the selected, sent and accepted population. When the backlog is complete, activate normal replication again in `DRFIMG`.
+
+For very high volumes, consider a dedicated application server or server group for BP replication. The goal is to keep replication work from consuming the same capacity needed by normal business processing.
+
+Typical technical signs can include update work processes in wait or on-hold status, `RECORD_LOCK`, program `SAPLBS_SOA_INAPPSEQ_UPD`, and action `BSSOA_IAS_SEQ`. These are useful diagnostic clues, but they should be confirmed against the affected BP population, workload and lock evidence before deciding on the cause.
+
+**Lead takeaway:** the limitation is not that MDG cannot perform mass BP changes. The operational risk comes from combining high-volume changes with immediate replication and shared processing capacity. Control throughput, batch windows, reconciliation and infrastructure capacity as one design problem.
 
 ## Operational metrics
 
