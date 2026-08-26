@@ -6,12 +6,12 @@ domain: "Integration"
 process_family: "Master Data Distribution"
 status: researching
 created_at: "2026-08-16"
-updated_at: "2026-08-16"
+updated_at: "2026-08-26"
 verified_at: null
 human_view: "/labs/enterprise-context/mdg/replication/operations/"
 source_reviewed_at: "2026-08-16"
 
-business_question: "How do we operate MDG replication safely when messages fail, targets reject data, filters change or replay is required?"
+business_question: "How do we operate MDG replication safely when messages fail, targets reject data, filters change, mass updates create load or replay is required?"
 
 memory_model:
   phrase: "Select → Build → Send → Accept → Persist → Reconcile → Replay → Prove"
@@ -102,6 +102,23 @@ initial_load_delta_control:
     - "Define duplicate overlap behavior."
     - "Advance operational watermark only after reconciliation."
 
+mass_bp_update_control:
+  limitation: "Large BP mass updates can overload immediate replication, occupy update work processes and increase record-lock waits."
+  operating_pattern:
+    - "Temporarily deactivate automatic replication for the affected BP replication model in DRFIMG before the planned mass change."
+    - "Complete the mass update before draining the replication backlog."
+    - "Use DRFOUT to replicate changed BPs in controlled batches during a low-load business window."
+    - "Tune batch size to measured system capacity instead of using one fixed number for every landscape."
+    - "Reconcile selected, sent and accepted objects before activating normal replication again in DRFIMG."
+  capacity_option: "For very high volumes, consider a dedicated application server or server group for BP replication so replication work does not consume the same capacity as normal business processing."
+  diagnostic_signs:
+    - "Update work processes remain in wait or on-hold status."
+    - "Transactions wait on RECORD_LOCK."
+    - "Program SAPLBS_SOA_INAPPSEQ_UPD appears in the affected processing path."
+    - "Action BSSOA_IAS_SEQ appears in the affected processing path."
+  diagnostic_boundary: "These signs support the diagnosis but do not prove root cause by themselves; confirm the affected BP population, workload and lock evidence."
+  lead_principle: "The constraint is not the ability to change many BPs. The risk is uncontrolled replication throughput competing with normal business processing."
+
 monitoring_model:
   metrics:
     - selected_objects
@@ -138,6 +155,7 @@ anti_patterns:
   - "Repair a missing key map manually without checking duplicate identity."
   - "Change DRF filters in production without before/after population analysis."
   - "Replay an old update after a newer valid change has already reached the target."
+  - "Run a very large BP update with immediate replication and no throughput plan."
   - "Close the incident when DRF is green but the consumer still uses stale data."
 
 assessment_cards:
@@ -147,6 +165,8 @@ assessment_cards:
     answer: "Selected source population, sent objects, target acceptance/persistence, key mappings and the cut-off to ongoing delta."
   - prompt: "What if transport is green but the target is wrong?"
     answer: "Continue into target semantic validation, identity mapping, persistence and consumer behavior. Transport success is only one boundary."
+  - prompt: "How would you control a large BP mass update when immediate replication creates locks and high load?"
+    answer: "Pause automatic replication for the affected model, complete the bulk change, drain changes with DRFOUT in measured batches during a low-load window, reconcile the population and then restore normal replication. For very high volumes, isolate replication capacity."
 
 source_refs:
   - SRC-SAP-MDG-DRF-2025
