@@ -15,6 +15,7 @@ REQUIRED_FILES = [
     "ai/resume.json",
     "ai/resume.yml",
     "ai/business-ai-graph.json",
+    "ai/business-ai-agent-context.json",
 ]
 
 SENSITIVE_KEYS = {
@@ -118,9 +119,10 @@ def main() -> int:
         findings.extend(check_json_file(resume_json, root))
         findings.extend(check_resume_for_sensitive_data(resume_json, root))
 
-    graph_json = root / "ai" / "business-ai-graph.json"
-    if graph_json.exists():
-        findings.extend(check_json_file(graph_json, root))
+    for rel in ["ai/business-ai-graph.json", "ai/business-ai-agent-context.json"]:
+        path = root / rel
+        if path.exists():
+            findings.extend(check_json_file(path, root))
 
     resume_yml = root / "ai" / "resume.yml"
     if resume_yml.exists():
