@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-20
+last_modified_at: 2026-08-26
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -87,7 +87,7 @@ tags:
     <header><p class="research-canvas__eyebrow">Pair bank</p><h2>What the engine deliberately mixes.</h2><p>These are decision boundaries, not vocabulary pairs. Each pair links back to the Career skills and source Labs that explain the models.</p></header>
     <div class="ir-grid">
       {% for pair in site.data.career.contrast.pairs %}
-      <article class="ir-card"><p class="ir-kicker">{{ pair.left.label }} / {{ pair.right.label }}</p><h3>{{ pair.title }}</h3><p>{{ pair.discriminator }}</p><p><a href="{{ pair.left.source }}">{{ pair.left.skill_id }}</a> · <a href="{{ pair.right.source }}">{{ pair.right.skill_id }}</a></p></article>
+      <article class="ir-card"><p class="ir-kicker">{{ pair.left.label }} / {{ pair.right.label }}</p><h3>{{ pair.title }}</h3><p>{{ pair.discriminator }}</p><p class="contrast-pair-links"><a href="{{ pair.left.source }}">{{ pair.left.skill_id }}</a><span aria-hidden="true">·</span><a href="{{ pair.right.source }}">{{ pair.right.skill_id }}</a></p></article>
       {% endfor %}
     </div>
   </section>
