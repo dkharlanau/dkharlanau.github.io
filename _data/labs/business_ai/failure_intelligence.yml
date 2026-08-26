@@ -1,0 +1,209 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-18"
+purpose: "Index source-backed failures, mixed outcomes, and limited pilots without converting plausible risks into observed facts."
+
+evidence_kinds:
+  observed_failure:
+    meaning: "A public source describes an actual failed, stopped, harmful, or legally challenged outcome."
+  observed_mixed_outcome:
+    meaning: "A public source describes both value and material limitations, reversal, or course correction."
+  observed_limited_pilot:
+    meaning: "A public source describes a pilot whose evidence does not yet support production-scale value."
+  plausible_risk:
+    meaning: "A risk inferred from process, architecture, or known failure patterns. It is not evidence that the risk occurred in a named case."
+
+cause_categories:
+  - poor-source-data
+  - authority-overreach
+  - weak-evaluation
+  - workflow-mismatch
+  - integration-side-effects
+  - biased-history
+  - missing-human-review
+  - business-kpi-mismatch
+  - source-of-truth-failure
+  - policy-or-rule-defect
+  - environment-gap
+  - claims-ahead-of-evidence
+  - capital-exposure
+
+observed_records:
+  - id: "failure-air-canada-policy-chatbot"
+    scenario_id: "air-canada-policy-chatbot"
+    evidence_kind: "observed_failure"
+    failure_pattern_ids: ["fp-authoritative-hallucination"]
+    cause_categories: ["source-of-truth-failure", "authority-overreach", "missing-human-review"]
+    pattern_ids: ["conversation-resolution-automation"]
+    process_stage_ids: []
+    technology_family_ids: ["foundation-model-platform", "knowledge-rag-search"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Retrieve authoritative policy instead of treating generated text as policy."
+      - "Add conflict detection, no-answer behavior, and escalation for uncertain policy questions."
+    interpretation_boundary: "The legal decision proves the incorrect company guidance and liability in that case. It does not prove that every chatbot will fail in the same way."
+
+  - id: "failure-amazon-recruiting-bias"
+    scenario_id: "amazon-recruiting-bias"
+    evidence_kind: "observed_failure"
+    failure_pattern_ids: ["fp-biased-history"]
+    cause_categories: ["biased-history", "weak-evaluation", "authority-overreach"]
+    pattern_ids: []
+    process_stage_ids: []
+    technology_family_ids: ["predictive-ml"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Evaluate outcomes by relevant group and inspect proxy features before operational use."
+      - "Keep ranking assistance separate from the final employment decision."
+    interpretation_boundary: "The case shows that historical labels can encode prior imbalance. It does not establish that every recruiting model is biased."
+
+  - id: "failure-itutorgroup-age-filter"
+    scenario_id: "itutorgroup-age-filter"
+    evidence_kind: "observed_failure"
+    failure_pattern_ids: ["fp-bad-rule-at-scale"]
+    cause_categories: ["policy-or-rule-defect", "authority-overreach", "missing-human-review"]
+    pattern_ids: []
+    process_stage_ids: []
+    technology_family_ids: ["workflow-rpa-process"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Review automated eligibility rules for legal and policy validity before scale."
+      - "Provide appeal and human-review paths for consequential decisions."
+    interpretation_boundary: "The enforcement action concerns an encoded discriminatory rule. It is evidence about automated decision governance, not a claim about a specific generative model."
+
+  - id: "failure-zillow-forecast-execution"
+    scenario_id: "zillow-offers-forecast-execution"
+    evidence_kind: "observed_failure"
+    failure_pattern_ids: ["fp-prediction-to-capital"]
+    cause_categories: ["capital-exposure", "weak-evaluation", "business-kpi-mismatch"]
+    pattern_ids: []
+    process_stage_ids: []
+    technology_family_ids: ["predictive-ml", "optimization"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Tie action limits to forecast uncertainty, capacity, and portfolio exposure."
+      - "Use stress tests and stop conditions before prediction drives irreversible capital decisions."
+    interpretation_boundary: "The public filings support the inventory loss and wind-down. They do not isolate one model as the sole cause of the business outcome."
+
+  - id: "failure-mcdonalds-voice-pilot"
+    scenario_id: "mcdonalds-ibm-voice-ordering"
+    evidence_kind: "observed_mixed_outcome"
+    failure_pattern_ids: ["fp-demo-environment-gap"]
+    cause_categories: ["environment-gap", "workflow-mismatch", "weak-evaluation"]
+    pattern_ids: ["conversation-resolution-automation"]
+    process_stage_ids: []
+    technology_family_ids: ["foundation-model-platform"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Evaluate accents, noise, menu complexity, corrections, and handoff on real traffic."
+      - "Require confirmation before committing an order."
+    interpretation_boundary: "Ending one implementation test is evidence that the tested design did not scale as planned. It is not proof that voice ordering has no viable design."
+
+  - id: "failure-klarna-service-course-correction"
+    scenario_id: "klarna-ai-service-course-correction"
+    evidence_kind: "observed_mixed_outcome"
+    failure_pattern_ids: ["fp-metric-tunnel-vision"]
+    cause_categories: ["business-kpi-mismatch", "workflow-mismatch"]
+    pattern_ids: ["conversation-resolution-automation"]
+    process_stage_ids: []
+    technology_family_ids: ["foundation-model-platform"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Measure service quality, repeat contacts, escalation quality, and human-channel availability beside automation."
+      - "Do not use FTE-equivalent capacity as the final customer-service KPI."
+    interpretation_boundary: "The later course correction challenges a cost-only success narrative. It does not erase the earlier reported automation and speed gains."
+
+  - id: "failure-donotpay-claims"
+    scenario_id: "donotpay-ai-lawyer-claims"
+    evidence_kind: "observed_failure"
+    failure_pattern_ids: ["fp-claims-ahead-of-evidence"]
+    cause_categories: ["claims-ahead-of-evidence", "weak-evaluation", "authority-overreach"]
+    pattern_ids: []
+    process_stage_ids: []
+    technology_family_ids: ["foundation-model-platform"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Test product claims against the level of expertise being advertised."
+      - "State scope and limitations before presenting generated guidance as professional substitution."
+    interpretation_boundary: "The enforcement record supports the claim-evidence gap alleged and resolved by the regulator. It should not be generalized to all legal-assistance systems."
+
+  - id: "failure-cando-safety-grounding"
+    scenario_id: "cando-rail-safety-knowledge"
+    evidence_kind: "observed_failure"
+    failure_pattern_ids: ["fp-context-is-not-grounding"]
+    cause_categories: ["source-of-truth-failure", "weak-evaluation", "environment-gap"]
+    pattern_ids: ["enterprise-knowledge-retrieval"]
+    process_stage_ids: []
+    technology_family_ids: ["knowledge-rag-search", "foundation-model-platform"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Use clause-level retrieval, citations, and coverage tests for consequential rulebooks."
+      - "Keep explicit no-answer and expert-verification paths for safety guidance."
+    interpretation_boundary: "The reported project pause and incorrect summaries support a grounding and evaluation problem in that implementation, not a universal conclusion about retrieval systems."
+
+  - id: "failure-nichirei-business-kpi-gap"
+    scenario_id: "nichirei-warehouse-vision-pilot"
+    evidence_kind: "observed_limited_pilot"
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi"]
+    cause_categories: ["business-kpi-mismatch", "weak-evaluation"]
+    pattern_ids: []
+    process_stage_ids: ["forecast-to-fulfill-warehouse-execution"]
+    technology_family_ids: ["foundation-model-platform"]
+    decision_profile_ids: []
+    limitation_ids: []
+    control_lessons:
+      - "Add labor, search time, inventory accuracy, safety, or throughput KPIs before production-scale claims."
+      - "Treat technical tracking accuracy as an entry gate, not the business outcome."
+    interpretation_boundary: "The public pilot supports technical performance but leaves production business value unproven. The missing KPI is a proof gap, not evidence of business failure."
+
+plausible_risks:
+  - id: "risk-invoice-autopost-side-effect"
+    evidence_kind: "plausible_risk"
+    process_stage_ids: ["source-to-pay-invoice"]
+    pattern_ids: ["document-to-workflow"]
+    technology_family_ids: ["document-intelligence", "foundation-model-platform"]
+    failure_pattern_ids: ["fp-authoritative-hallucination"]
+    cause_categories: ["integration-side-effects", "authority-overreach", "poor-source-data"]
+    statement: "An extracted or inferred invoice field can create a financial side effect if the AI path can post without deterministic matching, tolerance, duplicate, and authorization controls."
+    basis: "Architecture inference from the process authority boundary and known source-of-truth failure pattern. No named failure case is asserted here."
+    controls:
+      - "ERP duplicate and tolerance checks"
+      - "Low-confidence stop state"
+      - "Posting authorization"
+      - "Reconciliation and rollback path"
+
+  - id: "risk-order-promise-overreach"
+    evidence_kind: "plausible_risk"
+    process_stage_ids: ["lead-to-cash-availability-promise"]
+    pattern_ids: ["cross-system-process-copilot"]
+    technology_family_ids: ["foundation-model-platform", "integration-tools-protocols"]
+    failure_pattern_ids: ["fp-authoritative-hallucination"]
+    cause_categories: ["authority-overreach", "source-of-truth-failure"]
+    statement: "A conversational layer can over-promise quantity or date if it generates an answer instead of reading the authoritative ATP or availability service."
+    basis: "Supported architecture inference. It is a risk condition, not evidence that a named SAP implementation failed."
+    controls:
+      - "Read confirmed quantity and date from the authoritative availability service"
+      - "No generated commitment when authoritative state is missing"
+      - "Escalation for conflicting supply signals"
+
+  - id: "risk-interface-blind-retry"
+    evidence_kind: "plausible_risk"
+    process_stage_ids: []
+    pattern_ids: ["agentic-exception-management"]
+    technology_family_ids: ["agent-runtime-orchestration", "integration-tools-protocols"]
+    failure_pattern_ids: []
+    cause_categories: ["integration-side-effects", "authority-overreach"]
+    statement: "An agent can duplicate business side effects if it retries a failed interface without proving idempotency or current message state."
+    basis: "Supported integration-control inference. It does not claim an observed customer incident."
+    controls:
+      - "Message identity and current-state check"
+      - "Idempotency proof"
+      - "Side-effect classification before retry"
+      - "Approval for non-reversible recovery actions"

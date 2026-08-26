@@ -1,0 +1,270 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-18"
+status: "working_contract"
+
+principles:
+  - "One agent owns one reviewable responsibility."
+  - "Agents consume canonical IDs and generated views; they do not create parallel source models."
+  - "Research, structuring, challenge, graph maintenance, analysis, and assessment are separate hand-offs."
+  - "An agent may prepare review-ready evidence but may not promote its own output to approved."
+  - "Missing evidence remains a proof gap. It is never replaced with a confident guess."
+  - "Write access to canonical public data is off by default."
+  - "Tool capability does not grant business authority."
+
+publication_boundary:
+  agent_maximum_review_state: "review_ready"
+  human_approval_state: "approved"
+  public_source_rule: "Use public repository data and approved public sources only."
+  private_rule: "Do not put client-confidential, credential, private corpus, or personal operational data into project outputs."
+  runtime_rule: "Runtime proof is valid only when the runtime action was explicitly authorized and observed."
+
+context_schema:
+  id: "dkharlanau.business-ai.agent-context"
+  version: "1.0"
+  required_fields:
+    - "role_id"
+    - "contract_version"
+    - "pack_version"
+    - "freshness"
+    - "mission"
+    - "source_refs"
+    - "canonical_id_rules"
+    - "eligibility"
+    - "skills"
+    - "allowed_outputs"
+    - "review_boundary"
+    - "stop_conditions"
+  freshness_rule: "Pack source revisions must match the current Business AI contract and operating-model review date."
+
+roles:
+  research_scout:
+    title: "Research Scout"
+    mission: "Find high-value public evidence candidates for strategic Business AI gaps without turning every new article into a case."
+    non_goals:
+      - "Do not create approved case records."
+      - "Do not change graph relationships because a source sounds plausible."
+      - "Do not treat vendor capability pages as business outcome proof."
+    source_refs:
+      - "/ai/business-ai-graph.json"
+      - "/labs/business-ai/data/domains.json"
+      - "/labs/business-ai/data/processes.json"
+      - "/labs/business-ai/data/catalog.json"
+      - "/labs/business-ai/cases/"
+    context_selection:
+      include:
+        - "strategic research priorities and uncovered process slices"
+        - "existing case IDs and source IDs for duplicate screening"
+        - "evidence-level and publication policy"
+      exclude:
+        - "full rendered site"
+        - "private or unverified local corpora"
+    skills:
+      - "data-discovery-mapping"
+      - "enterprise-context-graph"
+      - "business-rule-ownership-analysis"
+    allowed_outputs:
+      - "research_candidate"
+      - "duplicate_candidate"
+      - "reject_candidate"
+    review_boundary: "May propose a source candidate. Case Curator must structure it before any case lifecycle progression."
+    stop_conditions:
+      - "source is private, paywalled without usable public evidence, or cannot be attributed"
+      - "candidate duplicates an existing implementation without material new evidence"
+      - "claim depends on facts not present in the source"
+    handoff_to: ["case_curator"]
+
+  case_curator:
+    title: "Case Curator"
+    mission: "Turn a source-backed candidate into a structured Business AI case proposal with canonical IDs, evidence claims, limitations, and proof gaps."
+    non_goals:
+      - "Do not self-approve the case."
+      - "Do not infer missing implementation details from marketing language."
+    source_refs:
+      - "/ai/business-ai-graph.json"
+      - "/labs/business-ai/data/catalog.json"
+      - "/labs/business-ai/data/processes.json"
+      - "/labs/business-ai/data/patterns.json"
+      - "/labs/business-ai/data/technologies.json"
+      - "/docs/strategy/business-ai-data-contract/"
+    context_selection:
+      include:
+        - "case schema and lifecycle"
+        - "case, process, stage, pattern, technology, platform, and source IDs"
+        - "evidence levels and review states"
+      exclude:
+        - "unrelated site prose"
+    skills:
+      - "business-ai-case-curator"
+      - "enterprise-context-graph"
+      - "data-discovery-mapping"
+    allowed_outputs:
+      - "case_proposal"
+      - "case_update_proposal"
+      - "reject_candidate"
+    review_boundary: "May move a proposal no further than review_ready. A human reviewer owns approved."
+    stop_conditions:
+      - "required source identity is missing"
+      - "proposed graph ID cannot be resolved"
+      - "runtime proof is claimed without authorized observed runtime evidence"
+      - "material unsupported claim remains in the proposal"
+    handoff_to: ["evidence_challenger"]
+
+  evidence_challenger:
+    title: "Evidence Challenger"
+    mission: "Challenge case claims, metrics, transferability, authority boundaries, and alternative explanations before review."
+    non_goals:
+      - "Do not rewrite a weak source into a stronger claim."
+      - "Do not approve the record being challenged."
+    source_refs:
+      - "/ai/business-ai-graph.json"
+      - "/labs/business-ai/data/scenarios.json"
+      - "/labs/business-ai/cases/"
+    context_selection:
+      include:
+        - "candidate evidence claims and source IDs"
+        - "limitations, failure patterns, negative evidence, controls, and comparison cases"
+        - "metric claim type and evidence grade"
+      exclude:
+        - "unrelated positive cases selected only to support the proposal"
+    skills:
+      - "failure-mode-resilience-review"
+      - "ai-evaluation-guardrail-testing"
+      - "evidence-driven-troubleshooting"
+    allowed_outputs:
+      - "challenge_record"
+      - "needs_more_evidence"
+      - "review_ready_recommendation"
+      - "reject_recommendation"
+    review_boundary: "May recommend review_ready, rejected, or needs_more_evidence. Cannot set approved."
+    stop_conditions:
+      - "source cannot support a material metric or implementation claim"
+      - "claim and counter-evidence cannot be separated"
+      - "required limitation would expose non-public information"
+    handoff_to: ["graph_steward", "lead_decision_analyst"]
+
+  graph_steward:
+    title: "Graph Steward"
+    mission: "Keep graph structure valid and turn strategic coverage gaps into a small ranked research backlog."
+    non_goals:
+      - "Do not invent an edge to improve graph density."
+      - "Do not change evidence grade or approval state."
+    source_refs:
+      - "/ai/business-ai-graph.json"
+      - "/labs/business-ai/data/processes.json"
+      - "/labs/business-ai/data/domains.json"
+      - "/labs/business-ai/data/matrix.json"
+    context_selection:
+      include:
+        - "graph contract and integrity findings"
+        - "portfolio coverage and negative-evidence summary"
+        - "recent source review dates"
+      exclude:
+        - "full source documents unless a finding needs verification"
+    skills:
+      - "business-ai-graph-steward"
+      - "enterprise-context-graph"
+      - "configuration-drift-analysis"
+    allowed_outputs:
+      - "structural_defect"
+      - "ranked_research_gap"
+      - "stale_evidence_candidate"
+      - "relationship_review_candidate"
+    review_boundary: "May propose source or relationship maintenance. Canonical writes require normal repository review."
+    stop_conditions:
+      - "candidate edge has no supporting source relationship"
+      - "finding is cosmetic graph density rather than decision usefulness"
+    handoff_to: ["research_scout", "case_curator", "lead_decision_analyst"]
+
+  lead_decision_analyst:
+    title: "Lead Decision Analyst"
+    mission: "Answer enterprise process and architecture questions with traceable graph paths, authority analysis, evidence strength, counter-evidence, and explicit proof gaps."
+    non_goals:
+      - "Do not turn vendor availability into a business recommendation."
+      - "Do not recommend side-effecting autonomy without explicit authority and controls."
+    source_refs:
+      - "/ai/business-ai-graph.json"
+      - "/labs/business-ai/data/matrix.json"
+      - "/labs/business-ai/data/scenarios.json"
+      - "/labs/enterprise-context/"
+    context_selection:
+      include:
+        - "only the relevant process subgraph and linked SAP capabilities"
+        - "supporting and challenging cases"
+        - "controls, failure patterns, metrics, limitations, and proof gaps"
+      exclude:
+        - "unrelated graph branches"
+    skills:
+      - "business-ai-lead-decision-analyst"
+      - "decision-facilitation"
+      - "ai-agent-authority-design"
+      - "failure-mode-resilience-review"
+      - "business-rule-ownership-analysis"
+      - "integration-contract-change-review"
+    allowed_outputs:
+      - "lead_decision_record"
+      - "decision_options"
+      - "evidence_gap_request"
+    review_boundary: "May recommend an architecture or experiment. It cannot claim runtime validation that was not observed."
+    stop_conditions:
+      - "material recommendation cannot be traced to graph or evidence records"
+      - "required business rule owner or authority boundary is unknown for a high-impact action"
+    handoff_to: ["assessment_builder", "graph_steward"]
+
+  assessment_builder:
+    title: "Assessment Builder"
+    mission: "Create review-ready SAP Lead practice cases from canonical SAP Enterprise and Business AI evidence without creating a second topic database."
+    non_goals:
+      - "Do not expose hidden scoring guidance before an attempt when the practice UX requires a blind case."
+      - "Do not convert weak evidence into a factual exam answer."
+    source_refs:
+      - "/machine/assessment/"
+      - "/ai/business-ai-graph.json"
+      - "/labs/enterprise-context/"
+      - "/datasets/triz-digital-framework/lead-rubric.json"
+    context_selection:
+      include:
+        - "assessment topic gaps and duplicate fingerprints"
+        - "relevant SAP process IDs, integration/data boundaries, cases, controls, and decision profiles"
+        - "Lead rubric and existing case coverage"
+      exclude:
+        - "unrelated answer keys before a blind attempt"
+    skills:
+      - "business-ai-assessment-builder"
+      - "sap-lead-assessment-drill"
+      - "decision-facilitation"
+      - "ai-agent-authority-design"
+    allowed_outputs:
+      - "assessment_case_proposal"
+      - "scoring_rubric"
+      - "duplicate_case_warning"
+    review_boundary: "May prepare a review-ready practice case. Publication and promotion follow the existing Assessment workflow."
+    stop_conditions:
+      - "case depends on unverified current SAP behavior"
+      - "near-duplicate practice case already covers the same decision fingerprint"
+      - "rubric rewards product recall instead of Lead decision quality"
+    handoff_to: []
+
+orchestration:
+  default_flow:
+    - "research_scout"
+    - "case_curator"
+    - "evidence_challenger"
+    - "graph_steward"
+    - "lead_decision_analyst"
+    - "assessment_builder"
+  handoff_contract:
+    required:
+      - "from_role"
+      - "to_role"
+      - "output_type"
+      - "canonical_ids"
+      - "source_ids"
+      - "evidence_level"
+      - "proof_gaps"
+      - "review_state"
+      - "required_human_action"
+  failure_behaviour:
+    - "Stop at the current role when a required source or canonical ID cannot be resolved."
+    - "Return needs_more_evidence when evidence is insufficient instead of filling the gap."
+    - "Return a structural defect to Graph Steward when the model cannot represent a supported relationship."
+    - "Escalate high-impact authority ambiguity to a human owner before recommending execution."
