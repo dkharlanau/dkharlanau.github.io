@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Build Work Zone — Enterprise Context Lab"
-description: "A practical SAP Build Work Zone guide: system class, business goals, Standard vs Advanced, Fiori launchpad and SAP Start boundaries, federation, identity, tasks, Joule, mobile, diagnostics, and Lead-level design questions."
+description: "Learn SAP Build Work Zone: system class, goals, editions, Fiori and SAP Start boundaries, federation, identity, tasks, Joule, and Lead design."
 permalink: /labs/enterprise-context/experience-platforms/sap-build-work-zone/
 status: draft
 verified: false
