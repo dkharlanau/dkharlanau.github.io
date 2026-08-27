@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-25
+last_modified_at: 2026-08-27
 hide_global_cta: true
 tags:
   - sap
@@ -78,6 +78,7 @@ tags:
       <a href="/labs/enterprise-context/master-data/"><span>03</span><strong>Master Data and Governance</strong><small>Master data, MDG, data governance, replication dependencies, and enterprise data responsibility.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
       <a href="/labs/enterprise-context/integrations/"><span>04</span><strong>Integration and Technology</strong><small>APIs, IDocs, events, middleware, integration operations, development, analytics, and AI touchpoints.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/automotive-jit/"><span>05</span><strong>Cross-functional and Industry</strong><small>Automotive JIT, finance-logistics connections, common logistics capabilities, industries, and deployment models.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
+      <a href="/labs/enterprise-context/experience-platforms/"><span>06</span><strong>Experience Platforms</strong><small>SAP Build Work Zone, central entry points, Fiori launchpad boundaries, SAP Start, tasks, mobile, identity, and the workplace layer across systems.</small><i class="material-symbols-outlined" aria-hidden="true">space_dashboard</i></a>
     </div>
   </section>
 

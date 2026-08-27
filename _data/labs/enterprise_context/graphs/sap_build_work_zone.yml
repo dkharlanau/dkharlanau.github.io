@@ -1,0 +1,371 @@
+id: GRAPH-SAP-BUILD-WORK-ZONE
+type: knowledge_graph
+title: "SAP Build Work Zone — Enterprise Experience and Digital Workplace"
+domain: "SAP BTP / Enterprise Experience"
+process_family: "Cross-solution user experience and digital workplace"
+status: researching
+created_at: "2026-08-27"
+updated_at: "2026-08-27"
+verified_at: "2026-08-27"
+
+summary: >-
+  SAP Build Work Zone is the experience layer in front of business systems. It gives users a role-based place to find and use applications, tasks, information, and content from SAP, custom-built, and third-party systems. Standard edition is mainly an app-first business site and central entry point. Advanced edition adds a stronger digital workplace model with workspaces, collaboration, and richer content.
+
+classification:
+  official_terms:
+    - "Central entry point"
+    - "Business sites"
+    - "Digital workspace solutions"
+  architecture_class: "Enterprise experience platform / digital workplace / system-of-engagement layer"
+  evidence_class: "reasoned_interpretation"
+  one_sentence: >-
+    Work Zone owns how work is presented and reached; the source systems still own the business truth and transaction logic.
+  memory_rule: "WORK ZONE OWNS THE WORKPLACE, NOT THE BUSINESS TRUTH."
+  why_this_class: >-
+    The product sits across business applications rather than replacing them. It composes access, navigation, pages, tasks, content, and collaboration around a user role.
+  not_a:
+    - title: "System of record"
+      explanation: "S/4HANA, SuccessFactors, Ariba, and other source applications still own their business objects and authoritative data."
+    - title: "Workflow engine"
+      explanation: "SAP Build Process Automation or another workflow engine owns automation logic. Work Zone can expose tasks and entry points."
+    - title: "Integration middleware"
+      explanation: "SAP Integration Suite or another integration layer owns interfaces, transformations, events, and message recovery."
+    - title: "Identity provider"
+      explanation: "Identity Authentication, corporate identity providers, and source-system authorizations own authentication and access control."
+    - title: "Enterprise data platform"
+      explanation: "Work Zone can display data and cards, but it is not the analytical or operational data foundation."
+    - title: "ERP replacement"
+      explanation: "A sales order, purchase order, delivery, invoice, or goods movement still executes in the application that owns that process."
+
+why_it_exists:
+  problem: >-
+    A user in a modern enterprise can work across S/4HANA, SuccessFactors, Ariba, IBP, custom BTP apps, legacy systems, and third-party services. Each system can have its own home page, navigation, tasks, and permissions. The technical landscape may be correct while the user experience is fragmented.
+  answer: >-
+    Work Zone creates a controlled front door across that landscape. The goal is not to copy every application into one portal. The goal is to make the right work easy to find for the right role.
+  goals:
+    - title: "One entry point"
+      explanation: "Give users one place to reach the applications and business content they need."
+    - title: "Role-based experience"
+      explanation: "Organize access by persona and role instead of showing the full system landscape."
+    - title: "Cross-system composition"
+      explanation: "Combine content from several SAP and non-SAP sources without moving ownership of the underlying business object."
+    - title: "Less context switching"
+      explanation: "Reduce time spent searching across product home pages, bookmarks, and separate task lists."
+    - title: "Governed self-service"
+      explanation: "Allow controlled site, page, and content administration without making every UX change a backend development project."
+    - title: "Workplace collaboration"
+      explanation: "With advanced edition, add workspaces, richer content, communication, and team interaction around a business context."
+    - title: "Consistent access channels"
+      explanation: "Support browser, mobile, task aggregation, and optional Joule access as parts of the same user-entry architecture."
+
+architecture:
+  memory_path: "USER → WORK ZONE → APP / TASK / CONTENT → SOURCE SYSTEM"
+  principle: >-
+    The experience can be central while execution remains distributed. A launch tile can open an S/4HANA app, a Task Center item can represent a workflow from another system, and a card can show business information, but authorization and business processing still belong to the owning services.
+  layers:
+    - order: 1
+      layer: "User and persona"
+      owns: "Role, job-to-be-done, device, language, and the work that must be easy to reach."
+      lead_check: "Who is the site for, and which five to ten jobs matter most?"
+    - order: 2
+      layer: "Work Zone experience"
+      owns: "Site shell, navigation, spaces, pages, launch content, local composition, branding, and edition-specific workspace features."
+      lead_check: "Is the site organized around user work or around the org chart and application list?"
+    - order: 3
+      layer: "Experience services"
+      owns: "Optional task aggregation, Joule entry, cards, content federation, search, and mobile entry depending on the design."
+      lead_check: "Which service owns each experience capability? Do not call every visible feature Work Zone."
+    - order: 4
+      layer: "Identity and trust"
+      owns: "Authentication, trust, user provisioning, role mapping, and SSO across the landscape."
+      lead_check: "Can the same user identity be resolved consistently in BTP and source systems?"
+    - order: 5
+      layer: "Business applications"
+      owns: "Business objects, validations, transaction logic, process status, and source authorizations."
+      lead_check: "Which system is authoritative for the object the user is viewing or changing?"
+    - order: 6
+      layer: "Integration and connectivity"
+      owns: "APIs, events, destinations, network connectivity, transformations, and interface recovery where required."
+      lead_check: "Is the need UX federation, navigation, data integration, or all three? They are different problems."
+
+editions:
+  rule: "Choose the lightest edition that owns the required workplace behavior."
+  options:
+    - edition: "Standard"
+      short: "ACCESS + COMPOSE"
+      best_fit: "A central business site for applications, tasks, and role-based content across systems."
+      core_model:
+        - "Sites"
+        - "Roles"
+        - "Spaces and pages"
+        - "Applications, tiles, cards, and links"
+        - "Federated and local content"
+        - "Task Center integration"
+        - "Joule integration when configured"
+      choose_when:
+        - "The main problem is fragmented application access."
+        - "Users need one launchpad across several systems."
+        - "You need role-based pages and content federation but not a rich social/collaboration workplace."
+      caution: "Do not buy or design advanced collaboration if the requirement is only a better launchpad."
+    - edition: "Advanced"
+      short: "ACCESS + COMPOSE + COLLABORATE"
+      best_fit: "A digital workplace where the workplace itself must also carry collaboration, workspaces, knowledge, and rich content."
+      core_model:
+        - "Standard-edition entry and application capabilities"
+        - "Workspaces around teams, projects, subjects, or goals"
+        - "Workpages with flexible content composition"
+        - "Rich workplace content"
+        - "Feeds, blogs, wikis, events, polls, and collaboration features"
+        - "Internal and controlled external-user scenarios"
+      choose_when:
+        - "Users need to collaborate around a process or business subject inside the workplace."
+        - "Business teams need to publish and manage richer content."
+        - "The site is intended to behave more like a digital workplace or intranet, not only an application launcher."
+      caution: "Advanced edition adds governance work: content lifecycle, workspace ownership, guest access, moderation, and information architecture."
+
+concepts:
+  - term: "Site"
+    meaning: "The user-facing business site and shell."
+    remember: "The front door."
+  - term: "Role"
+    meaning: "Controls which business content is relevant and can be assigned to users."
+    remember: "Who should see the work."
+  - term: "Space"
+    meaning: "Role-oriented container that groups pages."
+    remember: "A navigation area for a role."
+  - term: "Page"
+    meaning: "A place where apps and content are arranged."
+    remember: "What the user sees inside a space."
+  - term: "Content federation"
+    meaning: "Expose launchpad content from source products and consume it in the central Work Zone site."
+    remember: "Reuse source content without manually rebuilding every app."
+  - term: "Workspace"
+    meaning: "Advanced-edition collaborative environment around a team, project, subject, event, or goal."
+    remember: "People + content + work around a shared context."
+  - term: "Workpage"
+    meaning: "Flexible page used in advanced workplace experiences."
+    remember: "Composable workplace canvas."
+
+adjacent_products:
+  - product: "SAP Fiori launchpad"
+    class: "Application launchpad / shell"
+    owns: "Role-based entry to SAP Fiori applications in its product or ABAP context."
+    relationship: >-
+      Work Zone can be the BTP cross-solution entry point and consume launchpad content from source systems. Do not treat an embedded S/4HANA launchpad and a cross-system Work Zone site as the same architecture boundary.
+    memory: "FIORI LAUNCHPAD = LAUNCHPAD; WORK ZONE = CROSS-SOLUTION WORKPLACE."
+  - product: "SAP Start"
+    class: "Predefined SAP cloud entry point"
+    owns: "Ready entry to supported SAP cloud business solutions, user-specific content, search, products, to-dos, and insights."
+    relationship: >-
+      SAP Start is more predefined and SAP-cloud-focused. Work Zone is the stronger choice when the company needs a designed business site across SAP, custom, third-party, cloud, and on-premise content.
+    memory: "SAP START = PREDEFINED; WORK ZONE = CONFIGURABLE."
+  - product: "SAP Task Center"
+    class: "Task aggregation"
+    owns: "Aggregated assigned tasks from connected applications."
+    relationship: "Work Zone can expose Task Center, but Task Center owns the cross-application task inbox."
+    memory: "TASK CENTER = TASKS; WORK ZONE = PLACE."
+  - product: "SAP Build Process Automation"
+    class: "Workflow and automation"
+    owns: "Workflow logic, process automation, decisions, and automation execution."
+    relationship: "Work Zone can provide an entry point to automated processes and tasks; it does not become the workflow engine."
+    memory: "PROCESS AUTOMATION = FLOW; WORK ZONE = EXPERIENCE."
+  - product: "SAP Integration Suite"
+    class: "Integration platform"
+    owns: "Interfaces, APIs, messages, transformations, events, and integration operations."
+    relationship: "Integration Suite connects systems; Work Zone connects the user's experience across systems."
+    memory: "INTEGRATION SUITE = SYSTEM-TO-SYSTEM; WORK ZONE = USER-TO-WORK."
+  - product: "SAP Cloud Identity Services"
+    class: "Identity and access foundation"
+    owns: "Authentication, identity provisioning, trust, and related identity functions."
+    relationship: "Work Zone relies on identity and trust; it does not replace them."
+    memory: "IDENTITY PROVES WHO; WORK ZONE DECIDES WHAT WORKPLACE THEY ENTER."
+  - product: "Joule"
+    class: "AI user experience"
+    owns: "Conversational access to supported SAP information, navigation, and actions."
+    relationship: "Joule can be enabled in a Work Zone site. The site is the experience surface; Joule is the AI interaction."
+    memory: "JOULE = CONVERSATION; WORK ZONE = WORKPLACE."
+  - product: "Joule Work mobile app"
+    class: "Native mobile entry"
+    owns: "Mobile access to business processes, tasks, data, content, and Joule."
+    relationship: "It can use content from Work Zone standard or advanced as part of the mobile experience."
+    memory: "MOBILE ENTRY, NOT A NEW SYSTEM OF RECORD."
+
+integration_patterns:
+  - pattern: "Content federation"
+    use: "Expose roles and launchpad content from a source system and consume them in Work Zone."
+    benefit: "Less duplicate content maintenance and clearer source ownership."
+    lead_check: "Which source owns the role and app definition, and how is it mapped to BTP roles?"
+  - pattern: "Launch / deep link"
+    use: "Open the source application from a tile, card, or link."
+    benefit: "Simple boundary and fewer embedding constraints."
+    lead_check: "Will navigation preserve user context and SSO?"
+  - pattern: "In-place application"
+    use: "Run a compatible application inside the Work Zone shell."
+    benefit: "More continuous user experience."
+    lead_check: "Check iframe, cookie, shell API, and target-application restrictions before promising this mode."
+  - pattern: "Task aggregation"
+    use: "Expose Task Center so users can reach assigned work from several source applications."
+    benefit: "One task inbox without moving workflow ownership."
+    lead_check: "Can every task be completed centrally, or does it navigate back to the source?"
+  - pattern: "Card / insight"
+    use: "Show a compact piece of business information or action on a page."
+    benefit: "Important context can be visible before the user opens the full application."
+    lead_check: "Who owns the data, refresh behavior, authorization, and error state?"
+  - pattern: "Workspace composition"
+    use: "Advanced edition combines applications, content, people, and collaboration around a shared business context."
+    benefit: "The workplace can support a team or topic, not only a list of apps."
+    lead_check: "Who owns the workspace lifecycle and content quality?"
+
+logistics_examples:
+  - persona: "Buyer"
+    goal: "Start the day from one purchasing workplace."
+    composition:
+      - "S/4HANA purchasing apps"
+      - "Supplier or Ariba entry points"
+      - "Approval tasks"
+      - "Open purchase-order or delivery exceptions"
+      - "Purchasing policies and team content"
+    boundary: "Purchase order logic and supplier transactions remain in the owning procurement systems."
+    lead_value: "Work Zone can reduce search and switching; it should not duplicate the procurement process."
+  - persona: "Sales operations lead"
+    goal: "See the commercial flow without opening five home pages."
+    composition:
+      - "Sales order and customer apps"
+      - "ATP and delivery exceptions"
+      - "Credit and billing entry points"
+      - "Approvals and tasks"
+      - "Sales guidance or workspace content"
+    boundary: "Pricing, ATP, credit, delivery, and billing remain authoritative in S/4HANA or their owning services."
+    lead_value: "The experience is cross-process, but the business logic stays distributed."
+  - persona: "Supply-chain manager"
+    goal: "Move from exception signal to the right execution system."
+    composition:
+      - "IBP planning content"
+      - "S/4HANA supply and inventory apps"
+      - "EWM or warehouse entry"
+      - "Exception cards and task list"
+      - "Team workspace for an active disruption"
+    boundary: "Work Zone does not become the planning engine, warehouse system, or inventory ledger."
+    lead_value: "A good central entry point shortens the route from signal to accountable action."
+  - persona: "New employee or occasional user"
+    goal: "Find the right business action without knowing the application landscape."
+    composition:
+      - "Role-based spaces and pages"
+      - "Guided links and help content"
+      - "Tasks and approvals"
+      - "Search and Joule when configured"
+    boundary: "User-friendly entry does not weaken source-system authorization."
+    lead_value: "Design around the job, not around product names."
+
+decision_questions:
+  - "What business problem are we solving: app discovery, task fragmentation, collaboration, mobile access, or all of them?"
+  - "Who are the personas, and what work should each persona reach in the first two clicks?"
+  - "Which source systems and application types must be included: SAP cloud, S/4HANA private/on-premise, custom BTP, or third party?"
+  - "Is the requirement mainly a central launchpad, or does the workplace need workspaces, rich content, and collaboration?"
+  - "Which edition is sufficient, and what extra operating cost does advanced content governance introduce?"
+  - "Which content should be federated from source systems and which content should be created locally?"
+  - "Where are roles defined, how are users provisioned, and how does SSO work end to end?"
+  - "Which actions open in place and which should open in their source product?"
+  - "Do we need a single task inbox, and is SAP Task Center in scope?"
+  - "Is Joule part of the user experience, and are its identity and product prerequisites ready?"
+  - "Do mobile users need Joule Work, responsive browser access, or a dedicated native application?"
+  - "Who owns site administration, workspace administration, content lifecycle, and role changes?"
+  - "How will we measure adoption: successful task completion, reduced navigation, search success, time-to-action, or support demand?"
+  - "What is the fallback when federation, SSO, or an embedded application fails?"
+
+failure_modes:
+  - symptom: "The app exists in S/4HANA but is missing from Work Zone."
+    likely_causes:
+      - "Content provider or federation setup is incomplete."
+      - "The source role is not exposed or consumed."
+      - "BTP role collection or site role assignment is missing."
+      - "Content synchronization or configuration is stale."
+    first_check: "Trace source role → exposed content → Work Zone content → BTP/site role → user."
+  - symptom: "The tile is visible but the user cannot open the app."
+    likely_causes:
+      - "SSO or trust is incomplete."
+      - "The user exists in Work Zone but lacks source-system authorization."
+      - "The launch target or destination is wrong."
+      - "The target application does not support the chosen launch mode."
+    first_check: "Separate visibility authorization from execution authorization."
+  - symptom: "The app works in a new tab but fails in place."
+    likely_causes:
+      - "Iframe restrictions."
+      - "Third-party cookie behavior."
+      - "Shell API or nested-frame limitations."
+    first_check: "Test the supported integration mode before redesigning authentication."
+  - symptom: "Users still keep many bookmarks."
+    likely_causes:
+      - "The site mirrors the application catalogue instead of user jobs."
+      - "Navigation is too deep."
+      - "Search, recent work, or role design is weak."
+    first_check: "Interview users about the first actions of their day; do not add more tiles first."
+  - symptom: "Advanced edition becomes a content dump."
+    likely_causes:
+      - "No workspace owner."
+      - "No archive or content lifecycle."
+      - "Org-chart navigation replaced user-task navigation."
+      - "Too many local copies of source information."
+    first_check: "Define content ownership and expiry before creating more workspaces."
+  - symptom: "A task is visible but the business action fails."
+    likely_causes:
+      - "Task Center aggregation works, but the source workflow or authorization is failing."
+      - "The task UI or target app cannot complete in the central shell."
+    first_check: "Follow the task back to its workflow and source application; Work Zone may only be the presentation layer."
+
+standard_vs_advanced_quick_test:
+  question: "If Work Zone disappeared, what capability would the business miss?"
+  answers:
+    - if_missing: "One role-based place to reach applications and tasks"
+      choice: "Start with Standard."
+    - if_missing: "Team workspaces, rich local content, collaboration, and knowledge around the work"
+      choice: "Evaluate Advanced."
+    - if_missing: "Only a ready home for a few integrated SAP cloud products"
+      choice: "Also evaluate SAP Start before designing Work Zone."
+    - if_missing: "Workflow automation itself"
+      choice: "Work Zone is not the primary product. Evaluate Process Automation."
+    - if_missing: "System-to-system integration"
+      choice: "Work Zone is not the primary product. Evaluate Integration Suite."
+
+fresh_2026_signals:
+  - signal: "Joule is a first-class entry option"
+    explanation: "Both Work Zone editions document Joule integration. Treat identity and Joule prerequisites as part of the architecture, not as a visual widget."
+  - signal: "Joule Work is the current native mobile direction"
+    explanation: "SAP documents Joule Work mobile app as the native entry to processes, data, content, tasks, and Work Zone information."
+  - signal: "New Experience uses flexible pages and cards"
+    explanation: "Current Work Zone documentation emphasizes spaces and pages with flexible layouts and cards, so the product is more than a classic tile-only launchpad."
+  - signal: "Central-entry architecture is cross-solution"
+    explanation: "Current SAP architecture guidance places SAP Start and SAP Build Work Zone together as central-entry choices with different levels of predefined versus configurable experience."
+
+memory_anchors:
+  - "Work Zone owns the workplace, not the business truth."
+  - "Standard = access and composition. Advanced = access, composition, and collaboration."
+  - "Fiori launchpad = launchpad shell. Work Zone = cross-solution experience on BTP."
+  - "SAP Start = predefined SAP cloud entry. Work Zone = configurable enterprise site."
+  - "Task Center owns aggregated tasks. Process Automation owns workflow. Integration Suite owns integration. Identity services own trust."
+  - "A tile can be central; the transaction does not become central."
+  - "Design by persona and job, not by application catalogue."
+
+assessment_answer_short: >-
+  SAP Build Work Zone is a BTP-based enterprise experience layer and central entry point. It gives users role-based access to applications, tasks, and content across SAP and non-SAP systems. I treat it as a system-of-engagement layer, not a system of record: S/4HANA and other applications still own business data and transaction logic. Standard edition is mainly for a cross-system business site and launchpad. Advanced edition adds collaborative workspaces and richer content.
+
+assessment_answer_lead: >-
+  I would position SAP Build Work Zone as the cross-solution experience layer in front of the application landscape. The main value is a role-based front door across SAP, custom, and third-party systems without moving the business objects out of their owning systems. Standard edition is my first choice when the requirement is application access, pages, federation, cards, and tasks. I move to advanced edition when the workplace itself must own collaboration, workspaces, and rich content. I also separate adjacent responsibilities: Fiori launchpad is the application shell in product contexts, SAP Start is a predefined SAP-cloud entry point, Task Center aggregates tasks, Process Automation owns workflow, Integration Suite owns interfaces, and Identity Services own trust. My design starts from personas, source ownership, identity, federation, launch mode, task needs, and operating governance.
+
+source_refs:
+  - SRC-SAP-WZ-STANDARD
+  - SRC-SAP-WZ-STANDARD-DATASHEET
+  - SRC-SAP-WZ-ADVANCED
+  - SRC-SAP-BUILD-OVERVIEW
+  - SRC-SAP-WZ-SPACES-PAGES
+  - SRC-SAP-WZ-WORKSPACES
+  - SRC-SAP-CENTRAL-ENTRY-POINT
+  - SRC-SAP-CENTRAL-ENTRY-BIG-PICTURE
+  - SRC-SAP-START
+  - SRC-SAP-FIORI-LAUNCHPAD
+  - SRC-SAP-FLP-CONTENT-WZ
+  - SRC-SAP-WZ-CONTENT-FEDERATION
+  - SRC-SAP-WZ-JOULE
+  - SRC-SAP-WZ-TASK-CENTER
+  - SRC-SAP-JOULE-WORK-MOBILE
+  - SRC-SAP-WZ-RESTRICTIONS
