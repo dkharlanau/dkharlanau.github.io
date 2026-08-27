@@ -91,7 +91,8 @@ def test_mastery_engine_stores_calibration_metadata_but_not_answer_or_repair_tex
     assert "row.answer" not in js
     assert "repair_note" not in js
     assert "repairNote," not in js
-    assert "version: 2" in js
+    assert "version: 3" in js
+    assert "scheduler_version:" in js
 
 
 def test_major_mismatch_cannot_advance_mastery_and_weak_repair_requires_explanation():

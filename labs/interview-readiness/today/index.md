@@ -34,7 +34,7 @@ tags:
       <h1>Close the notes.<br />Build the answer.</h1>
       <p>Reading creates familiarity. This session checks whether the useful model can be rebuilt from memory, connected to neighbouring processes, applied to a new case, and defended under challenge.</p>
       <a class="research-canvas__button" href="#session">Start today's session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a><a href="/labs/interview-readiness/learning-science/">Learning Science</a><a href="/labs/interview-readiness/roadmap/">Career Roadmap</a><a href="/labs/assessment/practice-engine/">Assessment Practice</a><a href="/labs/assessment/progress/">Assessment Progress</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/contrast/">Contrast Lab</a><a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a><a href="/labs/interview-readiness/learning-science/">Learning Science</a><a href="/labs/interview-readiness/roadmap/">Career Roadmap</a><a href="/labs/assessment/practice-engine/">Assessment Practice</a><a href="/labs/assessment/progress/">Assessment Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Mastery loop">
       <p>Mastery loop</p>
@@ -51,7 +51,8 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">psychology_alt</span>
     <p><strong>Context:</strong> use this after studying a Lab or roadmap skill, when you need to test retrieval instead of rereading.</p>
     <p><strong>Rule:</strong> answer and commit confidence before you reveal the reference. Familiarity is not evidence that you can retrieve the model in an assessment.</p>
-    <p><strong>Scoring:</strong> self-score is a practice signal, not certification. Use Assessment Practice and human review when you need stronger evidence.</p>
+    <p><strong>Scheduler:</strong> same-session success can repair fluency but does not advance the spacing stage. A stage grows only after a successful retrieval separated by a real delay.</p>
+    <p><strong>Scoring:</strong> self-score is a practice signal, not certification. Use Contrast Lab, Assessment Practice and human review when you need stronger evidence.</p>
   </section>
 
   <section class="research-canvas__inventory" id="position" data-reveal>
@@ -110,13 +111,14 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" id="profile" data-reveal>
-    <header><p class="research-canvas__eyebrow">Retention evidence</p><h2>Let old knowledge become due again.</h2><p>A defended topic becomes retained only after successful retrieval across time. A failed review makes it weak again. Calibration shows whether confidence tracks actual performance.</p></header>
+    <header><p class="research-canvas__eyebrow">Retention evidence</p><h2>Let old knowledge become due again.</h2><p>Retained means successful defence or review retrievals across time after the most recent lapse. A new lapse removes retained status until delayed retrieval rebuilds the evidence. Calibration remains a separate signal.</p></header>
     <div class="mastery-profile" id="mt-profile"></div>
     <div class="mastery-actions"><button type="button" class="ir-button" id="mt-export">Export mastery history</button><button type="button" class="ir-button" id="mt-clear">Clear mastery history</button></div>
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Discrimination:</strong> the <a href="/labs/interview-readiness/contrast/">Contrast Lab</a> tests whether you can choose between confusable models such as stock versus ATP availability or retrieval failure versus evaluation failure.</p>
     <p><strong>Process reconstruction:</strong> Five-Link recall tests one skill. The <a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a> tests whether you can rebuild the O2C, P2P, and integration spine and explain the ownership hand-offs between nodes.</p>
     <p><strong>Research contract:</strong> the <a href="/labs/interview-readiness/learning-science/">Learning Science Lab</a> records which learning mechanics are supported, where evidence is conditional, and which claims we deliberately avoid.</p>
   </section>
@@ -134,4 +136,5 @@ tags:
 </div>
 
 <script id="mastery-data" type="application/json">{{ site.data.career.mastery | jsonify }}</script>
+<script id="scheduler-data" type="application/json">{{ site.data.career.scheduler | jsonify }}</script>
 <script src="/assets/js/mastery-today.js"></script>
