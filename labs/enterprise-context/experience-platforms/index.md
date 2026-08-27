@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Experience Platforms — Enterprise Context Lab"
-description: "A practical map of enterprise experience platforms: central entry points, launchpads, digital workplaces, task aggregation, mobile entry, and SAP Build Work Zone."
+description: "Learn enterprise experience platforms: central entry points, digital workplaces, task access, mobile entry, and SAP Build Work Zone."
 permalink: /labs/enterprise-context/experience-platforms/
 status: draft
 verified: false
