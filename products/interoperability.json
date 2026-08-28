@@ -1,0 +1,72 @@
+{
+  "schema_version": "0.1",
+  "name": "enterprise-as-code-artifact-reference",
+  "status": "implemented-convention",
+  "scope": "Cross-repository logical artifact identity and bounded evidence binding. This is not a universal enterprise data model or network resolver.",
+  "scheme": "eac",
+  "uri_shape": "eac://<owner>/<repository>/<kind>/<local-id>[?version=<version>]",
+  "syntax": {
+    "owner": "non-empty token [A-Za-z0-9][A-Za-z0-9._-]*",
+    "repository": "non-empty token [A-Za-z0-9][A-Za-z0-9._-]*",
+    "kind": "non-empty token [A-Za-z0-9][A-Za-z0-9._-]*",
+    "local_id": "one or more non-empty percent-encoded path segments; producer-defined",
+    "query_parameters": ["version"],
+    "network_dereference": false
+  },
+  "semantics": {
+    "identity_only": true,
+    "producer_owns_kind_and_local_id": true,
+    "uri_presence_implies_existence": false,
+    "uri_presence_implies_trust": false,
+    "uri_presence_implies_positive_assurance": false,
+    "consumer_must_use_explicit_binding_for_resolution": true,
+    "unknown_kind_may_be_preserved_without_inventing_semantics": true
+  },
+  "evidence_binding": {
+    "recommended_provenance": [
+      "status",
+      "document_sha256",
+      "configuration_sha256",
+      "observed_at",
+      "producer_kind_or_version"
+    ],
+    "rule": "A logical reference becomes positive assurance only through a consumer contract that verifies the bound producer artifact according to that consumer's policy."
+  },
+  "implemented_examples": [
+    {
+      "reference": "eac://dkharlanau/cutover-graph/task/reconcile-customers",
+      "producer": "cutover-graph",
+      "kind": "task",
+      "meaning": "Cutover Graph task identity"
+    },
+    {
+      "reference": "eac://dkharlanau/cutover-graph/checkpoint/reconcile-customers",
+      "producer": "cutover-graph",
+      "kind": "checkpoint",
+      "meaning": "Cutover Graph checkpoint identity"
+    },
+    {
+      "reference": "eac://dkharlanau/reconciliation-as-code/reconciliation/customer-country/run/run-123",
+      "producer": "reconciliation-as-code",
+      "kind": "reconciliation",
+      "meaning": "Logical identity of one Reconciliation as Code run"
+    }
+  ],
+  "current_consumers": [
+    {
+      "repository": "cutover-graph",
+      "behavior": "Binds Reconciliation as Code run refs to verified local evidence registry entries before checkpoint assurance can pass."
+    },
+    {
+      "repository": "project-evidence-graph",
+      "behavior": "Canonicalizes eac refs and materializes/relates explicitly supplied external artifacts; URI syntax alone does not establish assurance."
+    }
+  ],
+  "non_goals": [
+    "global network resolver",
+    "central enterprise artifact database",
+    "universal writable graph schema",
+    "automatic trust from a syntactically valid URI",
+    "replacement for producer-specific schemas and adapters"
+  ]
+}
