@@ -6,6 +6,7 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "products" / "manifest.json"
 INTEROPERABILITY = ROOT / "products" / "interoperability.json"
+TRUST_BOUNDARIES = ROOT / "products" / "trust-boundaries.json"
 
 
 def load_manifest():
@@ -14,6 +15,10 @@ def load_manifest():
 
 def load_interoperability():
     return json.loads(INTEROPERABILITY.read_text(encoding="utf-8"))
+
+
+def load_trust_boundaries():
+    return json.loads(TRUST_BOUNDARIES.read_text(encoding="utf-8"))
 
 
 def test_portfolio_manifest_has_problem_first_entrypoints_and_unique_products():
@@ -117,3 +122,51 @@ def test_interoperability_examples_are_logical_eac_references_with_producer_owne
     assert {"cutover-graph", "project-evidence-graph"} <= current_consumers
     assert "global network resolver" in contract["non_goals"]
     assert "automatic trust from a syntactically valid URI" in contract["non_goals"]
+
+
+def test_portfolio_trust_contract_separates_identity_integrity_authority_and_assurance():
+    contract = load_trust_boundaries()
+    assert contract["schema_version"] == "0.1"
+    assert contract["scope"] == "portfolio-cross-repository-artifacts"
+
+    assert set(contract["separate_states"]) == {
+        "identity",
+        "structural_validity",
+        "content_integrity",
+        "provenance",
+        "authorization",
+        "assurance",
+    }
+
+    defaults = contract["default_posture"]
+    assert defaults["cross_repository_input_trusted_by_default"] is False
+    assert defaults["upstream_artifact_can_expand_consumer_authority"] is False
+    assert defaults["embedded_or_referenced_code_executes_by_default"] is False
+    assert defaults["secrets_are_portable_artifact_content"] is False
+
+    integrity = contract["integrity"]
+    assert integrity["sha256_proves_content_identity"] is True
+    assert integrity["sha256_implies_authorization"] is False
+    assert integrity["sha256_implies_business_approval"] is False
+    assert integrity["sha256_implies_positive_assurance"] is False
+
+
+def test_portfolio_trust_contract_fails_closed_and_keeps_public_private_data_boundary():
+    contract = load_trust_boundaries()
+    consumer = contract["consumer_requirements"]
+    assert consumer["validate_supported_contracts_only"] is True
+    assert consumer["fail_closed_on_required_missing_binding"] is True
+    assert consumer["fail_closed_on_required_ambiguous_binding"] is True
+    assert consumer["fail_closed_on_integrity_pin_mismatch"] is True
+    assert consumer["execute_upstream_scripts_by_reference"] is False
+
+    data = contract["data_boundary"]
+    assert data["enterprise_data_local_private_by_default"] is True
+    assert data["public_examples_synthetic_or_redacted"] is True
+    assert data["public_projection_may_copy_raw_enterprise_evidence_by_default"] is False
+
+    secrets = contract["secrets"]
+    assert secrets["credentials_are_runtime_inputs"] is True
+    assert secrets["portable_evidence_may_persist_passwords_tokens_or_private_keys"] is False
+
+    assert "automatic trust between repositories owned by the same account" in contract["non_goals"]

@@ -1,0 +1,66 @@
+{
+  "schema_version": "0.1",
+  "scope": "portfolio-cross-repository-artifacts",
+  "default_posture": {
+    "cross_repository_input_trusted_by_default": false,
+    "public_repository_is_enterprise_evidence_store": false,
+    "upstream_artifact_can_expand_consumer_authority": false,
+    "embedded_or_referenced_code_executes_by_default": false,
+    "secrets_are_portable_artifact_content": false
+  },
+  "separate_states": [
+    "identity",
+    "structural_validity",
+    "content_integrity",
+    "provenance",
+    "authorization",
+    "assurance"
+  ],
+  "integrity": {
+    "sha256_proves_content_identity": true,
+    "sha256_implies_authorization": false,
+    "sha256_implies_business_approval": false,
+    "sha256_implies_positive_assurance": false
+  },
+  "consumer_requirements": {
+    "validate_supported_contracts_only": true,
+    "fail_closed_on_required_missing_binding": true,
+    "fail_closed_on_required_ambiguous_binding": true,
+    "fail_closed_on_integrity_pin_mismatch": true,
+    "preserve_producer_semantic_ownership": true,
+    "retain_provenance_where_supported": true,
+    "execute_upstream_scripts_by_reference": false
+  },
+  "data_boundary": {
+    "enterprise_data_local_private_by_default": true,
+    "public_examples_synthetic_or_redacted": true,
+    "public_projection_may_copy_raw_enterprise_evidence_by_default": false,
+    "portable_evidence_should_minimize_sensitive_values": true
+  },
+  "secrets": {
+    "credentials_are_runtime_inputs": true,
+    "portable_evidence_may_persist_passwords_tokens_or_private_keys": false,
+    "non_secret_connection_references_allowed": true
+  },
+  "agent_execution_defaults": {
+    "inspection_validation_before_consequential_execution": true,
+    "dry_run_preferred_where_owner_supports_it": true,
+    "upstream_artifact_grants_write_authority": false
+  },
+  "required_explicit_failures": [
+    "missing_required_file",
+    "invalid_supported_contract",
+    "unresolved_required_reference",
+    "integrity_pin_mismatch",
+    "ambiguous_required_binding",
+    "required_evidence_does_not_satisfy_gate"
+  ],
+  "non_goals": [
+    "universal identity provider or RBAC model",
+    "shared secrets service",
+    "portfolio-wide PKI or signature scheme",
+    "central policy decision point",
+    "global network resolver for eac references",
+    "automatic trust between repositories owned by the same account"
+  ]
+}

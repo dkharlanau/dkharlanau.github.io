@@ -124,6 +124,12 @@ A consumer should:
 
 This is why Project Evidence Graph can remain structurally valid while separately reporting that an externally backed checkpoint is unverified.
 
+## Trust boundary
+
+Interoperability does not create transitive trust. Cross-repository artifacts remain untrusted structured input until the consumer validates the bounded contract it supports. A matching hash proves content identity, not authorization, business approval or positive assurance; referenced scripts/code do not execute by convention; enterprise data and credentials remain local/private by default.
+
+The portfolio baseline for validation, data handling, secrets, agent authority and fail-closed behavior is defined in [Portfolio trust boundaries](TRUST_BOUNDARIES.md) and mirrored in `products/trust-boundaries.json`.
+
 ## Machine-readable contract
 
 The bounded rules and examples above are mirrored in [`products/interoperability.json`](interoperability.json). It describes the portfolio convention; producer repositories remain authoritative for their artifact kinds and domain semantics.
