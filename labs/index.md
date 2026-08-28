@@ -1,17 +1,18 @@
 ---
 layout: default
-title: "Labs — SAP Enterprise, AI, Interview and Assessment"
-description: "Practical workspaces for SAP enterprise knowledge, AI architecture, Business AI, operational protocols, SAP Lead interview preparation, and assessment practice."
+title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
+description: "Practical workspaces for SAP enterprise knowledge, enterprise assurance, AI architecture, Business AI, operational protocols, SAP Lead interview preparation, and assessment practice."
 permalink: /labs/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-27
+last_modified_at: 2026-08-28
 hide_global_cta: true
 tags:
   - sap
   - enterprise-architecture
+  - enterprise-assurance
   - assessment
   - interview
   - business-ai
@@ -51,13 +52,14 @@ tags:
   <section class="research-canvas__inventory" id="lab-routes" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lab map</p>
-      <h2>Knowledge, interview readiness, and pressure practice.</h2>
-      <p>Start from the domain you need to understand. Use Interview Readiness to decide what to repeat and how deeply you can discuss it. Use Assessment when you want cases, scoring, review, and Board Mode.</p>
+      <h2>Knowledge, assurance, interview readiness, and pressure practice.</h2>
+      <p>Start from the domain you need to understand. Use Enterprise Assurance when the decision depends on vendor evidence and control scope. Use Interview Readiness to decide what to repeat and how deeply you can discuss it. Use Assessment when you want cases, scoring, review, and Board Mode.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/"><span>SAP</span><strong>SAP Enterprise</strong><small>Sales, procurement, logistics, master data, production, quality, integration, development, analytics, and cross-functional SAP capabilities.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture</strong><small>Data, retrieval, MCP, tools, agents, evaluations, security, deployment, and production boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       <a href="/labs/business-ai/"><span>BIZ</span><strong>Business AI</strong><small>Business process → AI job → pattern → technology → control → outcome → evidence, including failed and mixed cases.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/enterprise-assurance/"><span>RISK</span><strong>Enterprise Assurance</strong><small>ISO management systems, ISAE and SOC reports, cloud and industry schemes, vendor evidence, control scope, and practical due diligence.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
       <a href="/labs/templates/"><span>OPS</span><strong>Operational Protocols</strong><small>RCA, incident response, integration failure analysis, runbooks, change impact, cutover, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
       <a href="/labs/tool-roadmap/"><span>TOOLS</span><strong>Tool Roadmap</strong><small>Canonical backlog for practical SAP, data, mapping, migration, integration, and operations utilities.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
       <a href="/labs/interview-readiness/"><span>INTERVIEW</span><strong>SAP Lead Interview Readiness</strong><small>Track what you refreshed, what you can explain, what you can defend, which interview questions expose gaps, and which project stories are ready.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
