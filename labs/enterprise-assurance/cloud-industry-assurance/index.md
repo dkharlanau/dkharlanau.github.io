@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Cloud and Industry Assurance — Enterprise Assurance"
-description: "A practical guide to PCI DSS, TISAX, BSI C5, CSA STAR, ISO/IEC 27017 and ISO/IEC 27018 for enterprise cloud, payment and automotive assurance."
+description: "A practical guide to PCI DSS, TISAX, BSI C5, CSA STAR, ISO cloud controls, operational management standards, automotive assurance and industrial cybersecurity."
 permalink: /labs/enterprise-assurance/cloud-industry-assurance/
 status: draft
 verified: false
@@ -32,7 +32,7 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Cloud and industry / specific evidence</p>
       <h1>Generic assurance is not always enough.</h1>
-      <p>Payment data, automotive information, public cloud services, and regulated environments can require evidence that goes deeper than a general quality or security certificate.</p>
+      <p>Payment data, automotive information, public cloud services, industrial environments, and regulated operations can require evidence that goes deeper than a general quality or security certificate.</p>
       <a class="research-canvas__button" href="#sector-map">Open the sector map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Cloud and industry assurance summary">
@@ -152,9 +152,89 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Beyond cloud and IT</p>
+      <h2>A standard can drive ERP requirements without certifying the ERP system.</h2>
+      <p>Enterprise systems also support environmental, safety, energy, anti-bribery, automotive, and industrial-control obligations. These standards often shape master data, approvals, evidence, traceability, workflows, reporting, and supplier requirements.</p>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">14001</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">Environmental management</p>
+          <h3>ISO 14001:2026</h3>
+          <p><strong>Question:</strong> can the organization systematically manage environmental aspects, obligations, objectives, performance, and continual improvement?</p>
+          <p><strong>System connection:</strong> SAP EHS, waste and emissions data, purchasing requirements, material data, plant processes, compliance tasks, environmental KPIs, and audit evidence can support the management system.</p>
+          <p><strong>2026 change:</strong> ISO 14001:2026 was published in April 2026 and replaced ISO 14001:2015. This is another reason to check the edition rather than repeat an old certificate reference.</p>
+        </div>
+      </article>
+
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">45001</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">Occupational health and safety</p>
+          <h3>ISO 45001:2018</h3>
+          <p><strong>Question:</strong> does the organization manage occupational health and safety risks through a structured management system?</p>
+          <p><strong>System connection:</strong> incidents, hazards, risk assessments, training, permits, corrective actions, contractor data, and EHS workflows can become ERP or EHS-system requirements.</p>
+          <p><strong>Version note:</strong> ISO 45001:2018 is still current on 28 August 2026, but a second edition is already at Draft International Standard stage. Treat the edition as a live transition topic.</p>
+        </div>
+      </article>
+
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">50001</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">Energy management</p>
+          <h3>ISO 50001:2018</h3>
+          <p><strong>Question:</strong> can the organization systematically improve energy performance, including energy efficiency, use, and consumption?</p>
+          <p><strong>System connection:</strong> meters, equipment, production volumes, energy baselines, energy-performance indicators, maintenance data, and analytics may need integration across ERP, manufacturing, IoT, and reporting platforms.</p>
+          <p><strong>Boundary:</strong> the standard defines the management system. A dashboard alone is not an energy management system.</p>
+        </div>
+      </article>
+
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">37001</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">Anti-bribery</p>
+          <h3>ISO 37001:2025</h3>
+          <p><strong>Question:</strong> can the organization prevent, detect, and respond to bribery through policies, due diligence, financial and non-financial controls, monitoring, and improvement?</p>
+          <p><strong>System connection:</strong> supplier onboarding, third-party due diligence, approval limits, payments, gifts and benefits, conflicts, audit trails, purchasing controls, and exception workflows can support the anti-bribery control model.</p>
+          <p><strong>Version check:</strong> ISO 37001:2025 replaced the 2016 edition.</p>
+        </div>
+      </article>
+
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">AUTO</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">Automotive quality and product engineering</p>
+          <h3>IATF 16949:2016, ISO/SAE 21434:2021, and ISO 26262:2018</h3>
+          <p><strong>IATF 16949:</strong> automotive quality management and supplier-chain discipline. As of August 2026, the 2016 first edition remains published while IATF is actively preparing the second edition.</p>
+          <p><strong>ISO/SAE 21434:</strong> cybersecurity engineering across the road-vehicle lifecycle. <strong>ISO 26262:</strong> functional safety for safety-related electrical and electronic vehicle systems.</p>
+          <p><strong>System connection:</strong> SAP QM, PP, batch and serial traceability, change records, supplier quality, document control, complaints, production evidence, and integration with engineering systems can support required evidence. They do not make SAP itself “ISO 26262 certified”.</p>
+        </div>
+      </article>
+
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">62443</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">Industrial and OT cybersecurity</p>
+          <h3>IEC 62443 series</h3>
+          <p><strong>Question:</strong> how should asset owners, service providers, product suppliers, and industrial automation components manage cybersecurity across industrial automation and control systems?</p>
+          <p><strong>Useful parts:</strong> IEC 62443-2-1 covers asset-owner security programs, IEC 62443-2-4 covers IACS service providers, IEC 62443-4-1 covers secure product development lifecycle requirements, and IEC 62443-4-2 covers technical security requirements for components.</p>
+          <p><strong>System connection:</strong> this becomes important when ERP, MES, integration platforms, maintenance systems, historians, plant connectivity, or remote services cross the IT/OT boundary.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">factory</span>
+    <p><strong>Lead distinction:</strong> ISO 14001, ISO 45001, ISO 50001, IATF 16949, ISO 26262, and similar frameworks can create system requirements and audit-evidence needs. That does not mean the ERP application itself receives the organization’s management-system certification.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">SAP connection</p>
       <h2>Use the assurance scheme as one layer of the architecture decision.</h2>
-      <p>SAP Trust Center currently exposes several of these schemes across its portfolio, including PCI DSS, TISAX, BSI C5, CSA STAR and cloud-related ISO standards. The presence of a scheme in the portfolio does not mean every SAP offering has the same assessment scope.</p>
+      <p>SAP Trust Center currently exposes several cloud assurance schemes across its portfolio, including PCI DSS, TISAX, BSI C5, CSA STAR and cloud-related ISO standards. The presence of a scheme in the portfolio does not mean every SAP offering has the same assessment scope.</p>
     </header>
     <ol class="research-canvas__steps">
       <li><span>01</span><strong>Find the exact SAP offering</strong><p>Use SAP Compliance Finder rather than relying on a general SAP compliance page.</p></li>
@@ -177,6 +257,16 @@ tags:
       <li><a href="https://cloudsecurityalliance.org/star" rel="noopener">Cloud Security Alliance — STAR</a></li>
       <li><a href="https://www.iso.org/standard/76559.html" rel="noopener">ISO/IEC 27017:2026</a></li>
       <li><a href="https://www.iso.org/standard/76560.html" rel="noopener">ISO/IEC 27018:2025</a></li>
+      <li><a href="https://www.iso.org/standard/14001" rel="noopener">ISO 14001:2026</a></li>
+      <li><a href="https://www.iso.org/standard/63787.html" rel="noopener">ISO 45001:2018</a></li>
+      <li><a href="https://www.iso.org/standard/69426.html" rel="noopener">ISO 50001:2018</a></li>
+      <li><a href="https://www.iso.org/standard/37001" rel="noopener">ISO 37001:2025</a></li>
+      <li><a href="https://www.iatfglobaloversight.org/iatf-publications/" rel="noopener">IATF — IATF 16949 publications</a></li>
+      <li><a href="https://www.iatfglobaloversight.org/news/30-july-2026-iatf-stakeholder-communique-iatf-16949-2nd-edition-update-information/" rel="noopener">IATF — 2026 second-edition status</a></li>
+      <li><a href="https://www.iso.org/standard/70918.html" rel="noopener">ISO/SAE 21434:2021</a></li>
+      <li><a href="https://www.iso.org/publication/PUB200262.html" rel="noopener">ISO 26262:2018 series</a></li>
+      <li><a href="https://webstore.iec.ch/en/publication/33615" rel="noopener">IEC 62443-4-1:2018</a></li>
+      <li><a href="https://webstore.iec.ch/en/publication/67631" rel="noopener">IEC 62443-2-4:2023</a></li>
       <li><a href="https://www.sap.com/about/trust-center/certification-compliance.html" rel="noopener">SAP Trust Center — certifications and compliance</a></li>
     </ul>
   </section>
