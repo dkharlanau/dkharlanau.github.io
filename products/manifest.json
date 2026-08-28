@@ -1,33 +1,58 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "name": "enterprise-transformation-toolkit",
   "human_url": "https://dkharlanau.github.io/products/",
+  "architecture_source": "https://github.com/dkharlanau/dkharlanau.github.io/blob/main/products/ARCHITECTURE.md",
   "owner": "dkharlanau",
-  "principles": ["human-readable-first", "deterministic", "evidence-over-assertions", "composable", "agent-compatible"],
-  "agent_contract": {
-    "discovery": "Read the product agent_manifest before operating a repository.",
-    "default_mode": "inspect-before-act",
-    "safety": ["validate supplied artifacts before deriving conclusions", "never invent missing business semantics or graph links", "prefer deterministic read-only or dry-run operations", "return evidence, paths, or traces with conclusions"]
+  "principles": [
+    "human-readable-first",
+    "deterministic",
+    "evidence-over-assertions",
+    "composable",
+    "agent-compatible",
+    "one-semantic-owner"
+  ],
+  "architecture": {
+    "entry_rule": "Start from one user problem; adopting one product does not require adopting the full portfolio.",
+    "source_of_truth_rule": "A maintained business semantic has one owning product. Consumers reference it with stable identity and provenance where supported rather than maintaining a second copy.",
+    "projection_rule": "Derived artifacts identify their upstream source and remain deterministically regenerable; a projection is not automatically a new source of truth.",
+    "detached_snapshot_rule": "A self-contained copied projection is allowed for archive, fixture or handoff use only when its detached lifecycle is explicit.",
+    "graph_rule": "There is no universal writable enterprise graph; domain graphs remain bounded and connect through stable external references."
   },
+  "entrypoints": [
+    {"problem":"describe-workflow","product":"process-as-code"},
+    {"problem":"make-deterministic-business-decision","product":"decision-tables-as-code"},
+    {"problem":"document-integration-contract","product":"interface-as-code"},
+    {"problem":"govern-source-target-transformation","product":"mapping-as-code"},
+    {"problem":"prove-migration-or-replication-state","product":"reconciliation-as-code"},
+    {"problem":"coordinate-cutover-readiness","product":"cutover-graph"},
+    {"problem":"connect-claims-to-evidence","product":"project-evidence-graph"},
+    {"problem":"render-structured-business-visual","product":"visual-workbench"},
+    {"problem":"operate-sap-through-bounded-agent-capabilities","product":"sap-agentic-operations"},
+    {"problem":"turn-source-into-evidence-backed-learning","product":"signal-to-insight"},
+    {"problem":"resolve-public-agent-machine-interfaces","product":"agent-ready-web-profile"}
+  ],
   "layers": {
     "intent_contracts": ["process-as-code", "decision-tables-as-code", "mapping-as-code", "interface-as-code"],
     "relationships_impact": ["data-relationship-map", "transformation-graph", "enterprise-change-graph"],
     "assurance_execution": ["reconciliation-as-code", "cutover-graph", "project-evidence-graph", "sap-agentic-operations"],
-    "visual_learning": ["visual-workbench", "signal-to-insight"]
+    "visual_learning": ["visual-workbench", "signal-to-insight"],
+    "agent_interoperability": ["agent-ready-web-profile"]
   },
   "products": [
-    {"id":"process-as-code","layer":"intent_contracts","page":"https://dkharlanau.github.io/process-as-code/","repository":"https://github.com/dkharlanau/process-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/process-as-code/main/docs/agent-manifest.json"},
-    {"id":"decision-tables-as-code","layer":"intent_contracts","page":"https://dkharlanau.github.io/decision-tables-as-code/","repository":"https://github.com/dkharlanau/decision-tables-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/decision-tables-as-code/main/docs/agent-manifest.json"},
-    {"id":"mapping-as-code","layer":"intent_contracts","page":"https://dkharlanau.github.io/mapping-as-code/","repository":"https://github.com/dkharlanau/mapping-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/mapping-as-code/main/docs/agent-manifest.json"},
-    {"id":"interface-as-code","layer":"intent_contracts","page":"https://dkharlanau.github.io/interface-as-code/","repository":"https://github.com/dkharlanau/interface-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/interface-as-code/main/docs/agent-manifest.json"},
-    {"id":"data-relationship-map","layer":"relationships_impact","page":"https://dkharlanau.github.io/data-relationship-map/","repository":"https://github.com/dkharlanau/data-relationship-map","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/data-relationship-map/main/docs/agent-manifest.json"},
-    {"id":"transformation-graph","layer":"relationships_impact","page":"https://dkharlanau.github.io/transformation-graph/","repository":"https://github.com/dkharlanau/transformation-graph","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/transformation-graph/main/docs/agent-manifest.json"},
-    {"id":"enterprise-change-graph","layer":"relationships_impact","page":"https://dkharlanau.github.io/enterprise-change-graph/","repository":"https://github.com/dkharlanau/enterprise-change-graph","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/enterprise-change-graph/main/docs/agent-manifest.json"},
-    {"id":"reconciliation-as-code","layer":"assurance_execution","page":"https://dkharlanau.github.io/reconciliation-as-code/","repository":"https://github.com/dkharlanau/reconciliation-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/reconciliation-as-code/main/docs/agent-manifest.json"},
-    {"id":"cutover-graph","layer":"assurance_execution","page":"https://dkharlanau.github.io/cutover-graph/","repository":"https://github.com/dkharlanau/cutover-graph","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/cutover-graph/main/docs/agent-manifest.json"},
-    {"id":"project-evidence-graph","layer":"assurance_execution","page":"https://dkharlanau.github.io/project-evidence-graph/","repository":"https://github.com/dkharlanau/project-evidence-graph","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/project-evidence-graph/main/docs/agent-manifest.json"},
-    {"id":"sap-agentic-operations","layer":"assurance_execution","page":"https://dkharlanau.github.io/sap-agentic-operations/","repository":"https://github.com/dkharlanau/sap-agentic-operations","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/sap-agentic-operations/main/docs/agent-manifest.json"},
-    {"id":"visual-workbench","layer":"visual_learning","page":"https://dkharlanau.github.io/visual-workbench/","repository":"https://github.com/dkharlanau/visual-workbench","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/visual-workbench/main/docs/agent-manifest.json"},
-    {"id":"signal-to-insight","layer":"visual_learning","page":"https://dkharlanau.github.io/signal-to-insight/","repository":"https://github.com/dkharlanau/signal-to-insight","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/signal-to-insight/main/docs/agent-manifest.json"}
+    {"id":"process-as-code","layer":"intent_contracts","portfolio_role":"authoritative-contract","owns":"process steps, transitions, roles, gates and process semantics","page":"https://dkharlanau.github.io/process-as-code/","repository":"https://github.com/dkharlanau/process-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/process-as-code/main/docs/agent-manifest.json"},
+    {"id":"decision-tables-as-code","layer":"intent_contracts","portfolio_role":"authoritative-contract","owns":"deterministic facts, rules, precedence and decision traces","page":"https://dkharlanau.github.io/decision-tables-as-code/","repository":"https://github.com/dkharlanau/decision-tables-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/decision-tables-as-code/main/docs/agent-manifest.json"},
+    {"id":"mapping-as-code","layer":"intent_contracts","portfolio_role":"authoritative-contract","owns":"field and value transformation intent and mapping governance","page":"https://dkharlanau.github.io/mapping-as-code/","repository":"https://github.com/dkharlanau/mapping-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/mapping-as-code/main/docs/agent-manifest.json"},
+    {"id":"interface-as-code","layer":"intent_contracts","portfolio_role":"authoritative-contract","owns":"interface trigger, transport, ownership, retry, recovery and monitoring semantics","page":"https://dkharlanau.github.io/interface-as-code/","repository":"https://github.com/dkharlanau/interface-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/interface-as-code/main/docs/agent-manifest.json"},
+    {"id":"data-relationship-map","layer":"relationships_impact","portfolio_role":"bounded-analysis","owns":"record identity and lineage when explicitly authored","page":"https://dkharlanau.github.io/data-relationship-map/","repository":"https://github.com/dkharlanau/data-relationship-map","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/data-relationship-map/main/docs/agent-manifest.json"},
+    {"id":"transformation-graph","layer":"relationships_impact","portfolio_role":"derived-analysis","owns":"graph-specific analysis annotations, not upstream mapping/interface truth","derived_from":["mapping-as-code","interface-as-code"],"page":"https://dkharlanau.github.io/transformation-graph/","repository":"https://github.com/dkharlanau/transformation-graph","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/transformation-graph/main/docs/agent-manifest.json"},
+    {"id":"enterprise-change-graph","layer":"relationships_impact","portfolio_role":"derived-analysis","owns":"change-impact analysis annotations, not a universal enterprise CMDB","derived_from":["process-as-code","mapping-as-code","interface-as-code"],"page":"https://dkharlanau.github.io/enterprise-change-graph/","repository":"https://github.com/dkharlanau/enterprise-change-graph","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/enterprise-change-graph/main/docs/agent-manifest.json"},
+    {"id":"reconciliation-as-code","layer":"assurance_execution","portfolio_role":"evidence-producer","owns":"reconciliation controls and retained run evidence","consumes":["mapping-as-code"],"page":"https://dkharlanau.github.io/reconciliation-as-code/","repository":"https://github.com/dkharlanau/reconciliation-as-code","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/reconciliation-as-code/main/docs/agent-manifest.json"},
+    {"id":"cutover-graph","layer":"assurance_execution","portfolio_role":"evidence-aware-execution","owns":"cutover tasks, dependencies, timing, readiness and checkpoints","consumes":["reconciliation-as-code"],"page":"https://dkharlanau.github.io/cutover-graph/","repository":"https://github.com/dkharlanau/cutover-graph","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/cutover-graph/main/docs/agent-manifest.json"},
+    {"id":"project-evidence-graph","layer":"assurance_execution","portfolio_role":"assurance-graph","owns":"claims, evidence relationships and assurance freshness","consumes":["cutover-graph"],"page":"https://dkharlanau.github.io/project-evidence-graph/","repository":"https://github.com/dkharlanau/project-evidence-graph","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/project-evidence-graph/main/docs/agent-manifest.json"},
+    {"id":"sap-agentic-operations","layer":"assurance_execution","portfolio_role":"adjacent-execution-product","owns":"bounded SAP operational capability and policy contracts","page":"https://dkharlanau.github.io/sap-agentic-operations/","repository":"https://github.com/dkharlanau/sap-agentic-operations","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/sap-agentic-operations/main/docs/agent-manifest.json"},
+    {"id":"visual-workbench","layer":"visual_learning","portfolio_role":"presentation-layer","owns":"view and rendering configuration only","consumes":["process-as-code","mapping-as-code","interface-as-code","reconciliation-as-code","cutover-graph","project-evidence-graph"],"page":"https://dkharlanau.github.io/visual-workbench/","repository":"https://github.com/dkharlanau/visual-workbench","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/visual-workbench/main/docs/agent-manifest.json"},
+    {"id":"signal-to-insight","layer":"visual_learning","portfolio_role":"adjacent-knowledge-product","owns":"source model, Knowledge Delta, evidence boundaries and learning state","page":"https://dkharlanau.github.io/signal-to-insight/","repository":"https://github.com/dkharlanau/signal-to-insight","agent_manifest":"https://raw.githubusercontent.com/dkharlanau/signal-to-insight/main/docs/agent-manifest.json"},
+    {"id":"agent-ready-web-profile","layer":"agent_interoperability","portfolio_role":"adjacent-interoperability-product","owns":"public interface discovery, resolver observations and intent-specific selection evidence","page":"https://dkharlanau.github.io/agent-ready-web-profile/","repository":"https://github.com/dkharlanau/agent-ready-web-profile"}
   ]
 }
