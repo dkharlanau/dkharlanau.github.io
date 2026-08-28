@@ -6,6 +6,7 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "products" / "manifest.json"
 INTEROPERABILITY = ROOT / "products" / "interoperability.json"
+COMPATIBILITY = ROOT / "products" / "compatibility.json"
 
 
 def load_manifest():
@@ -14,6 +15,10 @@ def load_manifest():
 
 def load_interoperability():
     return json.loads(INTEROPERABILITY.read_text(encoding="utf-8"))
+
+
+def load_compatibility():
+    return json.loads(COMPATIBILITY.read_text(encoding="utf-8"))
 
 
 def test_portfolio_manifest_has_problem_first_entrypoints_and_unique_products():
@@ -117,3 +122,39 @@ def test_interoperability_examples_are_logical_eac_references_with_producer_owne
     assert {"cutover-graph", "project-evidence-graph"} <= current_consumers
     assert "global network resolver" in contract["non_goals"]
     assert "automatic trust from a syntactically valid URI" in contract["non_goals"]
+
+
+def test_compatibility_contract_requires_explicit_contract_versions_and_consumer_support():
+    policy = load_compatibility()
+    assert policy["schema_version"] == "0.1"
+    assert policy["scope"] == "portfolio-cross-repository-contract-evolution"
+
+    producer = policy["producer_rules"]
+    assert producer["public_contract_version_explicit_where_compatibility_matters"] is True
+    assert producer["reuse_same_contract_version_for_changed_semantics"] is False
+    assert producer["breaking_contract_change_requires_new_contract_version"] is True
+
+    consumer = policy["consumer_rules"]
+    assert consumer["supported_versions_explicit"] is True
+    assert consumer["assume_unknown_version_is_latest_compatible"] is False
+    assert consumer["fail_required_unsupported_version_explicitly"] is True
+    assert consumer["guess_or_coerce_unknown_semantics"] is False
+
+
+def test_compatibility_policy_treats_semantic_and_authority_changes_as_breaking():
+    policy = load_compatibility()
+    breaking = set(policy["breaking_change_examples"])
+    assert "change_identity_or_canonicalization_semantics" in breaking
+    assert "change_evidence_meaning_toward_false_positive_assurance" in breaking
+    assert "widen_execution_or_agent_authority" in breaking
+    assert "change_semantic_ownership_boundary" in breaking
+
+    adapter = policy["adapter_rules"]
+    assert adapter["explicit"] is True
+    assert adapter["deterministic"] is True
+    assert adapter["tested_against_source_and_target_versions"] is True
+    assert adapter["silent_guessing"] is False
+
+    required_tests = set(policy["cross_repo_test_minimum"])
+    assert "supported_current_fixture" in required_tests
+    assert "unsupported_future_version_fixture" in required_tests
