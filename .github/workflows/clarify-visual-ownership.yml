@@ -1,0 +1,68 @@
+name: clarify-visual-ownership
+
+on:
+  push:
+    branches:
+      - agent/portfolio-interoperability-contract
+    paths:
+      - .github/workflows/clarify-visual-ownership.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/portfolio-interoperability-contract
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Clarify Visual Workbench ownership in central architecture
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest_path = Path('products/manifest.json')
+          manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+          visual = next(item for item in manifest['products'] if item['id'] == 'visual-workbench')
+          visual['portfolio_role'] = 'visual-modeling-layer'
+          visual['owns'] = 'visual semantic model, view/render configuration and deterministic rendering; imported domain semantics remain upstream'
+          manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          architecture = Path('products/ARCHITECTURE.md')
+          text = architecture.read_text(encoding='utf-8')
+          old = '| turn structured artifacts into business visuals | Visual Workbench | rendering/view grammar only; never the underlying business truth |'
+          new = '| turn structured artifacts or a directly authored semantic visual model into business visuals | Visual Workbench | visual semantic model, views and rendering; imported domain semantics remain upstream |'
+          if old not in text:
+              raise SystemExit('Visual Workbench start-row marker not found')
+          text = text.replace(old, new, 1)
+          old = '| Visual Workbench | presentation layer | view/render configuration | structured artifacts from other products | source of business semantics |'
+          new = '| Visual Workbench | visual modeling layer | visual semantic model, view/render configuration | structured artifacts from other products | owner of imported Process/Mapping/Interface semantics |'
+          if old not in text:
+              raise SystemExit('Visual Workbench ownership-row marker not found')
+          text = text.replace(old, new, 1)
+          old = '- Mapping → Visual Workbench: a view, not mapping truth;'
+          new = '- Mapping → Visual Workbench: a derived visual model/view, not mapping truth. When a Visual Workbench model is authored directly rather than projected from another product, that visual model is its own maintained source for the visual;'
+          if old not in text:
+              raise SystemExit('Visual Workbench projection marker not found')
+          text = text.replace(old, new, 1)
+          architecture.write_text(text, encoding='utf-8')
+          PY
+      - name: Install test dependency
+        run: python -m pip install pytest
+      - name: Run portfolio architecture and interoperability tests
+        run: python -m pytest -q tests/test_product_portfolio_contract.py
+      - name: Commit verified clarification
+        run: |
+          rm .github/workflows/clarify-visual-ownership.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: distinguish visual-model ownership from imported domain truth"
+          git push origin HEAD:agent/portfolio-interoperability-contract
