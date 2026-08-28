@@ -39,7 +39,7 @@ tags:
     <div class="research-canvas__signal" aria-label="Assurance map summary">
       <p>Working model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Evidence types</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>12+</strong><small>Core standards and schemes</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>20+</strong><small>Standards and schemes</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Rule: match evidence to risk</small></div>
       <em>Checked 28 Aug 2026 · draft learning material</em>
     </div>
@@ -91,6 +91,7 @@ tags:
       <p>The cluster is organized around the questions a Lead, architect, procurement team, security team, auditor, or process owner actually needs to answer.</p>
     </header>
     <div class="research-route-list">
+      <a href="/labs/enterprise-assurance/certification-catalog/"><span>CAT</span><strong>Enterprise certification catalog</strong><small>20+ standards and schemes across quality, EHS, energy, security, privacy, AI, continuity, food, medical devices, supply chain, automotive, healthcare and government cloud — with the ERP impact of each.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-assurance/iso-management-systems/"><span>ISO</span><strong>ISO management systems</strong><small>Quality, information security, continuity, IT service management, privacy, AI, compliance, asset management, and cloud control companions.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-assurance/service-organization-reports/"><span>AUDIT</span><strong>ISAE 3402 and SOC reports</strong><small>SOC 1 vs SOC 2, Type 1 vs Type 2, report periods, exceptions, bridge letters, user controls, and subservice organizations.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-assurance/cloud-industry-assurance/"><span>SECTOR</span><strong>Cloud and industry assurance</strong><small>PCI DSS, TISAX, BSI C5, CSA STAR, and when sector-specific evidence matters more than another generic certificate.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
