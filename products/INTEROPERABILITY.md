@@ -2,6 +2,8 @@
 
 The portfolio connects bounded products without introducing one universal writable schema. Cross-repository links therefore use small explicit contracts: stable logical references, producer-owned semantics, deterministic adapters, and evidence provenance.
 
+**Status:** implemented bounded convention, currently exercised by the live Mapping → Reconciliation → Cutover → Project Evidence assurance path. It is not a proposal for a universal enterprise artifact service.
+
 ## `eac://` is a logical artifact reference
 
 Implemented portfolio integrations use references shaped as:
