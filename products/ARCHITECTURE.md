@@ -27,7 +27,7 @@ The architecture therefore distinguishes three things:
 | prove source/target or stage state | Reconciliation as Code | comparison controls and retained reconciliation evidence |
 | coordinate a migration/cutover | Cutover Graph | cutover tasks, dependencies, timing, readiness and checkpoints |
 | connect claims to supporting artifacts | Project Evidence Graph | assurance claims, evidence relationships and freshness |
-| turn structured artifacts into business visuals | Visual Workbench | rendering/view grammar only; never the underlying business truth |
+| turn structured artifacts or a directly authored semantic visual model into business visuals | Visual Workbench | visual semantic model, views and rendering; imported domain semantics remain upstream |
 | expose safe SAP operational capabilities | SAP Agentic Operations | bounded operational capability contracts and policy-gated execution evidence |
 | turn selected external material into retained understanding | Signal to Insight | source model, Knowledge Delta, evidence boundaries and learning state |
 | resolve machine/agent interfaces exposed by a public site | Agent-Ready Web Profile Resolver | discovery/resolution evidence and intent-specific interface selection |
@@ -48,7 +48,7 @@ A user does **not** need Transformation Graph, Enterprise Change Graph or Data R
 | Transformation Graph | derived analysis | graph-specific annotations only | mapping/interface projections | second mapping/interface source |
 | Enterprise Change Graph | derived analysis | change-analysis annotations only | process/data/interface/change projections | universal enterprise CMDB |
 | Data Relationship Map | bounded lineage analysis | record/identity lineage when explicitly authored | data extracts and mappings | universal data catalog |
-| Visual Workbench | presentation layer | view/render configuration | structured artifacts from other products | source of business semantics |
+| Visual Workbench | visual modeling layer | visual semantic model, view/render configuration | structured artifacts from other products | owner of imported Process/Mapping/Interface semantics |
 | SAP Agentic Operations | adjacent execution product | bounded SAP capability/policy contract | operational observations | unrestricted autonomous SAP agent |
 | Signal to Insight | adjacent knowledge product | evidence-backed learning model | selected external sources | generic summarizer/read-later store |
 | ARWP Resolver | adjacent interoperability product | resolver observation/selection evidence | public web discovery surfaces | another mandatory publisher manifest |
@@ -89,7 +89,7 @@ A derived artifact is safe when all of the following are true:
 Examples:
 
 - Mapping → Transformation Graph: derived topology, not a second mapping workbook;
-- Mapping → Visual Workbench: a view, not mapping truth;
+- Mapping → Visual Workbench: a derived visual model/view, not mapping truth. When a Visual Workbench model is authored directly rather than projected from another product, that visual model is its own maintained source for the visual;
 - Mapping → Enterprise Change Graph: impact seeds/projection, not a universal change model;
 - Cutover → Project Evidence Graph: imported evidence/change nodes, while Cutover still owns cutover semantics.
 
