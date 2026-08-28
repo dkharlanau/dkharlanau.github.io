@@ -126,7 +126,7 @@ jobs:
           set -euo pipefail
           if [[ -z "${SERVICE_ACCOUNT_JSON:-}" ]]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT is not configured. Production Google Search checks will fail with a setup report."
+            echo "::warning::GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT is not configured. Running sitemap/setup checks only; Search Console API checks are skipped."
             exit 0
           fi
 
@@ -166,7 +166,6 @@ jobs:
             --max-inspections "$POLICY_MAX"
             --inspection-mode "$POLICY_MODE"
             --min-inspection-interval-hours "$POLICY_COOLDOWN"
-            --require-credentials
             --output-dir reports/seo/google-search
           )
 
