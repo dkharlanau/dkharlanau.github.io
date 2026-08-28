@@ -3,7 +3,7 @@ layout: default
 title: "SAP Master Data Diagnostics Hub"
 description: "A review-candidate hub mapping MDG, BP, CVI, key mapping, and replication symptoms to SAP master data checks."
 permalink: /atlas/diagnostics/sap-master-data-diagnostics-hub/
-last_modified_at: 2026-06-13
+last_modified_at: 2026-08-28
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Master data and MDG
@@ -25,6 +25,7 @@ related:
   - /atlas/diagnostics/sap-cvi-synchronization-diagnostics/
   - /atlas/diagnostics/sap-key-mapping-diagnostics/
   - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  - /atlas/diagnostics/sap-bp-email-remark-update-bupa-c-changeaddress/
 robots: noindex,follow
 sitemap: false
 ---
@@ -93,6 +94,11 @@ sitemap: false
 
     <h2>Related diagnostics</h2>
     <div class="atlas-card-grid">
+      <a class="atlas-card" href="/atlas/diagnostics/sap-bp-email-remark-update-bupa-c-changeaddress/">
+        <h2>BP Email + Remark via BUPA_C_CHANGEADDRESS</h2>
+        <p>Tested pattern for updating an email address and its communication remark in one change message.</p>
+        <span class="link-arrow">Read tested solution</span>
+      </a>
       <a class="atlas-card" href="/atlas/diagnostics/sap-mdg-to-s4-replication-diagnostics/">
         <h2>MDG to S/4 Replication</h2>
         <p>Approved master data does not appear in target systems.</p>
