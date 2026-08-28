@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "scope": "portfolio-cross-repository-contract-evolution",
+  "version_dimensions": [
+    "implementation_or_package_version",
+    "portable_contract_or_schema_version",
+    "runtime_or_engine_version_where_relevant"
+  ],
+  "producer_rules": {
+    "public_contract_version_explicit_where_compatibility_matters": true,
+    "reuse_same_contract_version_for_changed_semantics": false,
+    "breaking_contract_change_requires_new_contract_version": true,
+    "document_deprecation_and_migration_path_where_practical": true
+  },
+  "consumer_rules": {
+    "supported_versions_explicit": true,
+    "assume_unknown_version_is_latest_compatible": false,
+    "fail_required_unsupported_version_explicitly": true,
+    "guess_or_coerce_unknown_semantics": false,
+    "opaque_preservation_allowed_only_when_semantically_safe": true
+  },
+  "compatible_addition_requires": [
+    "existing_required_meaning_unchanged",
+    "identity_semantics_unchanged",
+    "existing_defaults_and_validation_materially_unchanged",
+    "new_field_optional_for_existing_consumers",
+    "older_consumer_can_safely_ignore_or_preserve"
+  ],
+  "breaking_change_examples": [
+    "remove_or_rename_supported_field_or_enum",
+    "change_existing_meaning_unit_default_or_validation",
+    "change_identity_or_canonicalization_semantics",
+    "make_existing_optional_semantic_required",
+    "change_evidence_meaning_toward_false_positive_assurance",
+    "widen_execution_or_agent_authority",
+    "change_semantic_ownership_boundary"
+  ],
+  "adapter_rules": {
+    "explicit": true,
+    "deterministic": true,
+    "tested_against_source_and_target_versions": true,
+    "silent_guessing": false
+  },
+  "evidence": {
+    "retain_upstream_contract_version_where_available": true,
+    "retain_upstream_runtime_version_where_available": true,
+    "rewrite_upstream_provenance_as_consumer_version": false
+  },
+  "cross_repo_test_minimum": [
+    "supported_current_fixture",
+    "unsupported_future_version_fixture",
+    "integrity_or_provenance_mismatch_when_pinned",
+    "additive_optional_field_case_if_forward_compatible_ignoring_is_claimed"
+  ],
+  "non_goals": [
+    "one portfolio-wide semantic version",
+    "central schema registry or package manager",
+    "automatic dependency upgrades across repositories",
+    "support every historical contract forever",
+    "compatibility inferred only from repository ownership or git tag"
+  ]
+}
