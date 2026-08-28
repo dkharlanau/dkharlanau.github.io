@@ -39,7 +39,7 @@ def test_every_product_declares_a_bounded_semantic_owner():
         "evidence-producer",
         "evidence-aware-execution",
         "assurance-graph",
-        "presentation-layer",
+        "visual-modeling-layer",
         "adjacent-execution-product",
         "adjacent-knowledge-product",
         "adjacent-interoperability-product",
@@ -51,7 +51,7 @@ def test_every_product_declares_a_bounded_semantic_owner():
         assert product["id"] in manifest["layers"][product["layer"]]
 
 
-def test_derived_products_declare_sources_and_visuals_are_not_business_truth():
+def test_derived_products_declare_sources_and_visuals_do_not_take_imported_domain_ownership():
     manifest = load_manifest()
     products = {product["id"]: product for product in manifest["products"]}
 
@@ -60,8 +60,11 @@ def test_derived_products_declare_sources_and_visuals_are_not_business_truth():
             assert product.get("derived_from")
             assert all(source in products for source in product["derived_from"])
 
-    assert products["visual-workbench"]["portfolio_role"] == "presentation-layer"
-    assert "only" in products["visual-workbench"]["owns"].lower()
+    visual = products["visual-workbench"]
+    assert visual["portfolio_role"] == "visual-modeling-layer"
+    assert "visual semantic model" in visual["owns"].lower()
+    assert "imported domain semantics remain upstream" in visual["owns"].lower()
+    assert set(visual["consumes"]) >= {"process-as-code", "mapping-as-code", "interface-as-code"}
 
 
 def test_cross_repo_ownership_direction_is_explicit():
