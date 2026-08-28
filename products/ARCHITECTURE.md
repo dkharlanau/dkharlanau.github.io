@@ -27,7 +27,7 @@ The architecture therefore distinguishes three things:
 | prove source/target or stage state | Reconciliation as Code | comparison controls and retained reconciliation evidence |
 | coordinate a migration/cutover | Cutover Graph | cutover tasks, dependencies, timing, readiness and checkpoints |
 | connect claims to supporting artifacts | Project Evidence Graph | assurance claims, evidence relationships and freshness |
-| turn structured artifacts into business visuals | Visual Workbench | rendering/view grammar only; never the underlying business truth |
+| turn structured artifacts or a directly authored semantic visual model into business visuals | Visual Workbench | visual semantic model, views and rendering; imported domain semantics remain upstream |
 | expose safe SAP operational capabilities | SAP Agentic Operations | bounded operational capability contracts and policy-gated execution evidence |
 | turn selected external material into retained understanding | Signal to Insight | source model, Knowledge Delta, evidence boundaries and learning state |
 | resolve machine/agent interfaces exposed by a public site | Agent-Ready Web Profile Resolver | discovery/resolution evidence and intent-specific interface selection |
@@ -48,7 +48,7 @@ A user does **not** need Transformation Graph, Enterprise Change Graph or Data R
 | Transformation Graph | derived analysis | graph-specific annotations only | mapping/interface projections | second mapping/interface source |
 | Enterprise Change Graph | derived analysis | change-analysis annotations only | process/data/interface/change projections | universal enterprise CMDB |
 | Data Relationship Map | bounded lineage analysis | record/identity lineage when explicitly authored | data extracts and mappings | universal data catalog |
-| Visual Workbench | presentation layer | view/render configuration | structured artifacts from other products | source of business semantics |
+| Visual Workbench | visual modeling layer | visual semantic model, view/render configuration | structured artifacts from other products | owner of imported Process/Mapping/Interface semantics |
 | SAP Agentic Operations | adjacent execution product | bounded SAP capability/policy contract | operational observations | unrestricted autonomous SAP agent |
 | Signal to Insight | adjacent knowledge product | evidence-backed learning model | selected external sources | generic summarizer/read-later store |
 | ARWP Resolver | adjacent interoperability product | resolver observation/selection evidence | public web discovery surfaces | another mandatory publisher manifest |
@@ -74,6 +74,8 @@ Cutover checkpoint
 
 The Mapping artifact remains the transformation source of truth. RAC owns the reconciliation control and the evidence produced from it. Cutover owns the decision about whether that evidence satisfies a checkpoint.
 
+The implemented `eac://` convention is a logical producer-owned artifact reference, not a network URL or trust assertion. Its syntax, ownership, evidence-binding rules and non-goals are defined in [Portfolio interoperability contract](INTEROPERABILITY.md). A valid reference identifies an artifact; positive assurance still requires an explicit verified binding.
+
 ## Projection rule
 
 A derived artifact is safe when all of the following are true:
@@ -87,7 +89,7 @@ A derived artifact is safe when all of the following are true:
 Examples:
 
 - Mapping → Transformation Graph: derived topology, not a second mapping workbook;
-- Mapping → Visual Workbench: a view, not mapping truth;
+- Mapping → Visual Workbench: a derived visual model/view, not mapping truth. When a Visual Workbench model is authored directly rather than projected from another product, that visual model is its own maintained source for the visual;
 - Mapping → Enterprise Change Graph: impact seeds/projection, not a universal change model;
 - Cutover → Project Evidence Graph: imported evidence/change nodes, while Cutover still owns cutover semantics.
 
@@ -117,6 +119,8 @@ Cross-product integration should therefore use:
 - small adapters at boundaries;
 - deterministic projections where appropriate.
 
+These references remain intentionally bounded. The portfolio does not currently define a universal `eac://` dereference service or central artifact registry; producer/consumer adapters resolve only the contracts they actually support.
+
 ## One golden scenario
 
 The reference portfolio scenario is a synthetic customer migration:
@@ -131,6 +135,8 @@ The reference portfolio scenario is a synthetic customer migration:
 8. **Visual Workbench** can render selected artifacts for a human review without becoming their source.
 
 Not every step must live in one demo repository. The contract between steps is the product: stable IDs, provenance, deterministic evidence and explicit ownership.
+
+The currently executable assurance slice is tested across current repository heads: Mapping as Code → Reconciliation as Code → Cutover Graph → Project Evidence Graph. The test includes both the verified path and the same external checkpoint without its verification registry, which must remain unverified.
 
 ## Maturity is not architecture
 
