@@ -74,6 +74,8 @@ Cutover checkpoint
 
 The Mapping artifact remains the transformation source of truth. RAC owns the reconciliation control and the evidence produced from it. Cutover owns the decision about whether that evidence satisfies a checkpoint.
 
+The implemented `eac://` convention is a logical producer-owned artifact reference, not a network URL or trust assertion. Its syntax, ownership, evidence-binding rules and non-goals are defined in [Portfolio interoperability contract](INTEROPERABILITY.md). A valid reference identifies an artifact; positive assurance still requires an explicit verified binding.
+
 ## Projection rule
 
 A derived artifact is safe when all of the following are true:
@@ -117,6 +119,8 @@ Cross-product integration should therefore use:
 - small adapters at boundaries;
 - deterministic projections where appropriate.
 
+These references remain intentionally bounded. The portfolio does not currently define a universal `eac://` dereference service or central artifact registry; producer/consumer adapters resolve only the contracts they actually support.
+
 ## One golden scenario
 
 The reference portfolio scenario is a synthetic customer migration:
@@ -131,6 +135,8 @@ The reference portfolio scenario is a synthetic customer migration:
 8. **Visual Workbench** can render selected artifacts for a human review without becoming their source.
 
 Not every step must live in one demo repository. The contract between steps is the product: stable IDs, provenance, deterministic evidence and explicit ownership.
+
+The currently executable assurance slice is tested across current repository heads: Mapping as Code → Reconciliation as Code → Cutover Graph → Project Evidence Graph. The test includes both the verified path and the same external checkpoint without its verification registry, which must remain unverified.
 
 ## Maturity is not architecture
 
