@@ -1,0 +1,68 @@
+name: build-portfolio-architecture
+
+on:
+  push:
+    branches:
+      - agent/portfolio-architecture-contract
+    paths:
+      - .github/workflows/build-portfolio-architecture.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/portfolio-architecture-contract
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Add problem-first portfolio navigation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('products/index.html')
+          text = path.read_text(encoding='utf-8')
+
+          css_marker = 'footer{padding:32px 0;color:var(--muted);font-size:13px;background:var(--bg2)}'
+          css = '''.chooser{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}.choice{background:white;padding:20px 22px;text-decoration:none}.choice b{display:block;font-size:15px;margin-bottom:4px}.choice span{font-size:13px;color:var(--muted)}.architecture-note{margin-top:20px;color:var(--muted);font-size:14px}.architecture-note a{color:var(--blue);font-weight:700;text-decoration:none}'''
+          if css_marker not in text:
+              raise SystemExit('CSS marker not found')
+          text = text.replace(css_marker, css + css_marker, 1)
+          text = text.replace('.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}', '.grid{grid-template-columns:1fr}.chooser{grid-template-columns:1fr}.flow{grid-template-columns:1fr}', 1)
+
+          nav_old = '<header class="wrap top"><a class="brand" href="/">DZMITRYI KHARLANAU</a><nav><a href="#contracts">Contracts</a><a href="#graphs">Graphs</a><a href="#assurance">Assurance</a><a href="#visual">Visual</a></nav></header>'
+          nav_new = '<header class="wrap top"><a class="brand" href="/">DZMITRYI KHARLANAU</a><nav><a href="#start">Start</a><a href="#contracts">Contracts</a><a href="#assurance">Assurance</a><a href="#visual">Visual</a></nav></header>'
+          if nav_old not in text:
+              raise SystemExit('nav marker not found')
+          text = text.replace(nav_old, nav_new, 1)
+
+          marker = '''    </section>\n\n    <section class="section" id="contracts">'''
+          start = '''    </section>\n\n    <section class="section" id="start"><div class="wrap">\n      <div class="section-head"><h2>Start with the problem</h2><p>You do not need to learn the whole toolkit. Pick the product that owns the problem; connect another only when the next boundary becomes useful.</p></div>\n      <div class="chooser">\n        <a class="choice" href="https://dkharlanau.github.io/process-as-code/"><b>I need to describe how work should flow</b><span>Process as Code owns process steps, transitions, roles and gates.</span></a>\n        <a class="choice" href="https://dkharlanau.github.io/interface-as-code/"><b>I need to make an integration operable</b><span>Interface as Code owns trigger, transport, ownership, retry, recovery and monitoring semantics.</span></a>\n        <a class="choice" href="https://dkharlanau.github.io/mapping-as-code/"><b>I need to govern source → target transformation</b><span>Mapping as Code owns field and value transformation intent.</span></a>\n        <a class="choice" href="https://dkharlanau.github.io/reconciliation-as-code/"><b>I need to prove migrated or replicated state</b><span>Reconciliation as Code owns comparison controls and retained run evidence.</span></a>\n        <a class="choice" href="https://dkharlanau.github.io/cutover-graph/"><b>I need to coordinate cutover readiness</b><span>Cutover Graph owns task dependencies, timing, checkpoints and readiness.</span></a>\n        <a class="choice" href="https://dkharlanau.github.io/project-evidence-graph/"><b>I need to show what supports a project claim</b><span>Project Evidence Graph owns assurance relationships between claims and evidence.</span></a>\n      </div>\n      <p class="architecture-note">One semantic owner, references before copies, derived views stay derived. <a href="https://github.com/dkharlanau/dkharlanau.github.io/blob/main/products/ARCHITECTURE.md">Read the portfolio architecture →</a></p>\n    </div></section>\n\n    <section class="section" id="contracts">'''
+          if marker not in text:
+              raise SystemExit('start section marker not found')
+          text = text.replace(marker, start, 1)
+
+          visual_end = '''    </div></section>\n\n    <section class="section agent"><div class="wrap">'''
+          interop = '''    </div></section>\n\n    <section class="section" id="interoperability"><div class="wrap">\n      <div class="section-head"><h2>Agent interoperability</h2><p>A separate research/product track resolves the machine and agent interfaces a public website actually exposes. It is not a required step in the transformation chain.</p></div>\n      <div class="grid">\n        <a class="card" href="https://dkharlanau.github.io/agent-ready-web-profile/"><span class="num">14 / RESOLVER</span><span class="arrow">↗</span><h3>Agent-Ready Web Profile Resolver</h3><p>Discover public machine/agent surfaces, preserve source authority and conflicts, and select an interface for a concrete intent.</p></a>\n      </div>\n    </div></section>\n\n    <section class="section agent"><div class="wrap">'''
+          if visual_end not in text:
+              raise SystemExit('interoperability insertion marker not found')
+          text = text.replace(visual_end, interop, 1)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Validate portfolio contract
+        run: python -m pytest -q tests/test_product_portfolio_contract.py
+      - name: Commit verified page
+        run: |
+          rm .github/workflows/build-portfolio-architecture.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: make portfolio problem-first and ownership-explicit"
+          git push origin HEAD:agent/portfolio-architecture-contract
