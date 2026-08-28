@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-19
+last_modified_at: 2026-08-28
 hide_global_cta: true
 tags:
   - business-ai
@@ -94,6 +94,17 @@ tags:
         <a href="#platforms"><span>SYS</span><strong>{{ platform.name }}</strong><small>{{ platform.role }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
         {% endif %}
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="platform-case-studies" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Platform case study</p>
+      <h2>Microsoft Fabric IQ through an SAP lens.</h2>
+      <p>Fabric IQ is a useful example of how a data platform can combine semantic models, ontology, graph relationships, and agents. The case study keeps the SAP integration and transaction boundary separate from the semantic layer.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/ai-ready/labs/semantic-knowledge/#platform-case-study-microsoft-fabric-iq"><span>IQ</span><strong>Fabric IQ: ontology, graph, agents, SAP boundary</strong><small>OneLake → semantic model → ontology → Graph → data and operations agents, with O2C/P2P examples and Lead-level risks.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>
 
