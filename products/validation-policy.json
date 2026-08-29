@@ -1,0 +1,67 @@
+{
+  "schema_version": "0.1",
+  "scope": "portfolio-external-validation",
+  "purpose": "Define the minimum evidence required for scoped external-validation claims across public portfolio products.",
+  "validation_dimensions": [
+    "usability",
+    "correctness",
+    "production_suitability"
+  ],
+  "qualifying_attempt_requires": {
+    "participant_independent_from_implementation": true,
+    "participant_did_not_author_test_fixture": true,
+    "concrete_relevant_task": true,
+    "real_or_independently_prepared_representative_input": true,
+    "pinned_product_commit": true,
+    "outcome_retained": true,
+    "limitations_retained": true,
+    "privacy_safe_retention": true
+  },
+  "outcome_statuses": [
+    "passed",
+    "partial",
+    "failed",
+    "inconclusive"
+  ],
+  "non_qualifying_alone": [
+    "author_run_demo",
+    "ci_success",
+    "author_owned_synthetic_fixture",
+    "self_or_agent_review",
+    "documentation_or_pages_deployment",
+    "stars_clones_or_downloads",
+    "unobserved_friendly_feedback",
+    "non_independently_reviewed_author_benchmark"
+  ],
+  "promotion_rules": {
+    "validated_is_scoped_not_universal": true,
+    "at_least_one_qualifying_external_record_for_claimed_dimension": true,
+    "all_known_qualifying_attempts_in_stated_cohort_retained": true,
+    "failed_partial_and_inconclusive_attempts_remain_in_denominator": true,
+    "public_status_must_name_dimension_and_sample_or_scope": true,
+    "limitations_and_assistance_level_visible": true,
+    "one_successful_run_does_not_imply_broad_validation": true,
+    "usability_or_correctness_does_not_imply_production_suitability": true,
+    "universal_minimum_sample_size": null
+  },
+  "assistance_rule": "Author assistance is recorded and narrows what the attempt proves; it does not silently disappear from the record.",
+  "negative_evidence_rule": "A failed qualifying attempt remains historical evidence and is never mutated into a pass after a fix; re-tests create new records.",
+  "privacy": {
+    "allowed_retention_classes": [
+      "private_local",
+      "secure_org_system",
+      "public_sanitized"
+    ],
+    "public_record_should_not_require": [
+      "participant_name",
+      "participant_email",
+      "employer_or_client_identifier",
+      "raw_enterprise_export",
+      "recording",
+      "credential",
+      "confidential_screenshot"
+    ]
+  },
+  "record_schema": "validation-record.schema.json",
+  "example_record": "validation-record.example.json"
+}
