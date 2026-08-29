@@ -5,6 +5,7 @@ This repository powers the public professional website and knowledge base of **D
 The site is designed as three things at once: a human-readable professional profile, a source-backed enterprise knowledge base, and a machine-readable discovery surface for search engines, retrieval systems, and AI agents.
 
 - **Live site:** https://dkharlanau.github.io/
+- **Open-source products:** https://dkharlanau.github.io/products/
 - **LinkedIn:** https://www.linkedin.com/in/dkharlanau/
 - **About:** https://dkharlanau.github.io/about/
 - **Services:** https://dkharlanau.github.io/services/
@@ -23,6 +24,30 @@ The site is designed as three things at once: a human-readable professional prof
 - Data quality, reusable runbooks, operational memory, and enterprise knowledge systems
 - AI-assisted diagnostics, retrieval, documentation, automation, and agentic workflows
 - Safe boundaries between deterministic enterprise processes and autonomous/agentic behavior
+
+## Open-source product system
+
+The public repositories form a composable **Enterprise Transformation Toolkit**. Each product has one bounded job and can be adopted independently; cross-product composition is based on explicit ownership, stable references, deterministic projections, and retained evidence.
+
+Start from the problem rather than from the portfolio:
+
+| Need | Product |
+| --- | --- |
+| Describe and govern a business process | [Process as Code](https://github.com/dkharlanau/process-as-code) |
+| Make business rules executable and reviewable | [Decision Tables as Code](https://github.com/dkharlanau/decision-tables-as-code) |
+| Govern source-to-target mappings | [Mapping as Code](https://github.com/dkharlanau/mapping-as-code) |
+| Make enterprise integrations operable and reviewable | [Interface as Code](https://github.com/dkharlanau/interface-as-code) |
+| Prove migration or replication state | [Reconciliation as Code](https://github.com/dkharlanau/reconciliation-as-code) |
+| Analyze transformation dependencies | [Transformation Graph](https://github.com/dkharlanau/transformation-graph) |
+| Analyze the blast radius of a concrete change | [Enterprise Change Graph](https://github.com/dkharlanau/enterprise-change-graph) |
+| Coordinate cutover readiness and contingency | [Cutover Graph](https://github.com/dkharlanau/cutover-graph) |
+| Connect project claims to fresh evidence | [Project Evidence Graph](https://github.com/dkharlanau/project-evidence-graph) |
+| Diagnose SAP-heavy operations from bounded evidence | [SAP Agentic Operations](https://github.com/dkharlanau/sap-agentic-operations) |
+| Generate business-readable visuals from semantic models | [Visual Workbench](https://github.com/dkharlanau/visual-workbench) |
+| Turn sources into evidence-backed cumulative learning | [Signal to Insight](https://github.com/dkharlanau/signal-to-insight) |
+| Resolve public web interfaces for agent/tool use | [Agent-Ready Web Profile](https://github.com/dkharlanau/agent-ready-web-profile) |
+
+The canonical portfolio map, product boundaries, and interoperability contracts live at **https://dkharlanau.github.io/products/** and in [`products/manifest.json`](products/manifest.json). The portfolio deliberately avoids a universal writable enterprise graph: domain semantics remain owned by their source products and are referenced or projected into analysis layers.
 
 ## Public knowledge system
 
@@ -55,11 +80,10 @@ Professional expertise increasingly needs more than a platform profile. This rep
 
 The goal is to make professional capability inspectable: architecture, research, datasets, reusable methods, and working interoperability experiments are public where they can safely be public.
 
-## Related public projects
+## Supporting and earlier projects
 
-- **Agent-Ready Web Profile (ARWP):** https://github.com/dkharlanau/agent-ready-web-profile
 - **Dataset repository:** https://github.com/dkharlanau/dkharlanau-datasets
-- **AI-Ready CV Builder:** https://github.com/dkharlanau/ai-cv-builder
+- **AI-Ready CV Builder:** https://github.com/dkharlanau/ai-cv-builder — an earlier experimental professional-identity prototype; the main site and ARWP now cover the broader use cases.
 
 ## Trust and boundaries
 
