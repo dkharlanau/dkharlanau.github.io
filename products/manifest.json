@@ -40,8 +40,20 @@
       "product": "mapping-as-code"
     },
     {
+      "problem": "investigate-cross-system-identity-lineage",
+      "product": "data-relationship-map"
+    },
+    {
       "problem": "prove-migration-or-replication-state",
       "product": "reconciliation-as-code"
+    },
+    {
+      "problem": "materialize-transformation-dependencies",
+      "product": "transformation-graph"
+    },
+    {
+      "problem": "analyze-concrete-change-impact",
+      "product": "enterprise-change-graph"
     },
     {
       "problem": "coordinate-cutover-readiness",
@@ -135,7 +147,7 @@
       "id": "data-relationship-map",
       "layer": "relationships_impact",
       "portfolio_role": "bounded-analysis",
-      "owns": "record identity and lineage when explicitly authored",
+      "owns": "record identity, explicit relationship semantics, lineage and relationship findings derived from supplied exports",
       "page": "https://dkharlanau.github.io/data-relationship-map/",
       "repository": "https://github.com/dkharlanau/data-relationship-map",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/data-relationship-map/main/docs/agent-manifest.json"
@@ -144,8 +156,9 @@
       "id": "transformation-graph",
       "layer": "relationships_impact",
       "portfolio_role": "derived-analysis",
-      "owns": "graph-specific analysis annotations, not upstream mapping/interface truth",
+      "owns": "materialized project graph, graph governance and analysis annotations, not upstream process/mapping/interface truth",
       "derived_from": [
+        "process-as-code",
         "mapping-as-code",
         "interface-as-code"
       ],
@@ -157,7 +170,7 @@
       "id": "enterprise-change-graph",
       "layer": "relationships_impact",
       "portfolio_role": "derived-analysis",
-      "owns": "change-impact analysis annotations, not a universal enterprise CMDB",
+      "owns": "change-specific propagation, inclusion/exclusion explanation, regression scope and release-impact analysis, not a universal enterprise CMDB",
       "derived_from": [
         "process-as-code",
         "mapping-as-code",
@@ -183,7 +196,7 @@
       "id": "cutover-graph",
       "layer": "assurance_execution",
       "portfolio_role": "evidence-aware-execution",
-      "owns": "cutover tasks, dependencies, timing, readiness and checkpoints",
+      "owns": "cutover tasks, dependencies, timing, checkpoints, contingencies, trusted snapshots and readiness state",
       "consumes": [
         "reconciliation-as-code"
       ],
@@ -195,8 +208,9 @@
       "id": "project-evidence-graph",
       "layer": "assurance_execution",
       "portfolio_role": "assurance-graph",
-      "owns": "claims, evidence relationships and assurance freshness",
+      "owns": "project assurance relationships, freshness/risk state, bounded evidence packs and historical assurance drift",
       "consumes": [
+        "reconciliation-as-code",
         "cutover-graph"
       ],
       "page": "https://dkharlanau.github.io/project-evidence-graph/",
