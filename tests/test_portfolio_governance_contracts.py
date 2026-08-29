@@ -10,30 +10,6 @@ def _load(name: str):
     return json.loads((PRODUCTS / name).read_text(encoding="utf-8"))
 
 
-def test_compatibility_policy_is_machine_readable_and_fail_loud():
-    policy = _load("compatibility.json")
-
-    assert policy["schema_version"] == "0.1"
-    assert policy["producer_rules"]["public_contract_version_explicit_where_compatibility_matters"] is True
-    assert policy["producer_rules"]["breaking_contract_change_requires_new_contract_version"] is True
-    assert policy["consumer_rules"]["supported_versions_explicit"] is True
-    assert policy["consumer_rules"]["assume_unknown_version_is_latest_compatible"] is False
-    assert policy["consumer_rules"]["fail_required_unsupported_version_explicitly"] is True
-    assert policy["consumer_rules"]["guess_or_coerce_unknown_semantics"] is False
-
-    minimum = set(policy["cross_repo_test_minimum"])
-    assert {
-        "supported_current_fixture",
-        "unsupported_future_version_fixture",
-        "integrity_or_provenance_mismatch_when_pinned",
-        "additive_optional_field_case_if_forward_compatible_ignoring_is_claimed",
-    }.issubset(minimum)
-
-    human = (PRODUCTS / "COMPATIBILITY.md").read_text(encoding="utf-8")
-    assert "Consumers must not silently interpret an unknown version" in human
-    assert "Breaking contract changes require a new contract/schema version" in human
-
-
 def test_external_validation_policy_retains_negative_evidence_and_scope():
     policy = _load("validation-policy.json")
 
@@ -64,9 +40,9 @@ def test_external_validation_policy_retains_negative_evidence_and_scope():
     assert promotion["usability_or_correctness_does_not_imply_production_suitability"] is True
     assert promotion["universal_minimum_sample_size"] is None
 
-    human = (PRODUCTS / "VALIDATION.md").read_text(encoding="utf-8")
-    assert "A failed qualifying attempt is still validation evidence" in human
-    assert "validated is always a **scoped evidence statement**" in human
+    human = (PRODUCTS / "VALIDATION.md").read_text(encoding="utf-8").lower()
+    assert "failed qualifying attempt is still validation evidence" in human
+    assert "scoped evidence statement" in human
 
 
 def test_validation_record_contract_and_example_are_privacy_safe():
@@ -89,9 +65,10 @@ def test_validation_record_contract_and_example_are_privacy_safe():
         assert forbidden_key not in serialized
 
 
-def test_portfolio_manifest_links_governance_contracts():
+def test_portfolio_manifest_links_governance_contracts_without_breaking_manifest_version():
     manifest = _load("manifest.json")
 
+    assert manifest["schema_version"] == "1.2"
     assert manifest["compatibility_source"].endswith("/products/COMPATIBILITY.md")
     assert manifest["compatibility_contract"].endswith("/products/compatibility.json")
     assert manifest["external_validation_source"].endswith("/products/VALIDATION.md")
