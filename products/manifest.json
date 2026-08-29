@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "name": "enterprise-transformation-toolkit",
   "human_url": "https://dkharlanau.github.io/products/",
   "architecture_source": "https://github.com/dkharlanau/dkharlanau.github.io/blob/main/products/ARCHITECTURE.md",
@@ -20,91 +20,31 @@
     "projection_rule": "Derived artifacts identify their upstream source and remain deterministically regenerable; a projection is not automatically a new source of truth.",
     "detached_snapshot_rule": "A self-contained copied projection is allowed for archive, fixture or handoff use only when its detached lifecycle is explicit.",
     "graph_rule": "There is no universal writable enterprise graph; domain graphs remain bounded and connect through stable external references.",
-    "reference_scheme": "eac:// is a logical producer-owned artifact identity, not a network URL or trust assertion; positive assurance requires an explicit verified binding."
+    "reference_scheme": "eac:// is a logical producer-owned artifact identity, not a network URL or trust assertion; positive assurance requires an explicit verified binding.",
+    "publication_rule": "The `page` field is always a currently reachable human entry point. A not-yet-enabled project site is recorded separately as `planned_page` and must not replace `page` until deployment is verified."
   },
   "entrypoints": [
-    {
-      "problem": "describe-workflow",
-      "product": "process-as-code"
-    },
-    {
-      "problem": "make-deterministic-business-decision",
-      "product": "decision-tables-as-code"
-    },
-    {
-      "problem": "document-integration-contract",
-      "product": "interface-as-code"
-    },
-    {
-      "problem": "govern-source-target-transformation",
-      "product": "mapping-as-code"
-    },
-    {
-      "problem": "investigate-cross-system-identity-lineage",
-      "product": "data-relationship-map"
-    },
-    {
-      "problem": "prove-migration-or-replication-state",
-      "product": "reconciliation-as-code"
-    },
-    {
-      "problem": "materialize-transformation-dependencies",
-      "product": "transformation-graph"
-    },
-    {
-      "problem": "analyze-concrete-change-impact",
-      "product": "enterprise-change-graph"
-    },
-    {
-      "problem": "coordinate-cutover-readiness",
-      "product": "cutover-graph"
-    },
-    {
-      "problem": "connect-claims-to-evidence",
-      "product": "project-evidence-graph"
-    },
-    {
-      "problem": "render-structured-business-visual",
-      "product": "visual-workbench"
-    },
-    {
-      "problem": "operate-sap-through-bounded-agent-capabilities",
-      "product": "sap-agentic-operations"
-    },
-    {
-      "problem": "turn-source-into-evidence-backed-learning",
-      "product": "signal-to-insight"
-    },
-    {
-      "problem": "resolve-public-agent-machine-interfaces",
-      "product": "agent-ready-web-profile"
-    }
+    {"problem": "describe-workflow", "product": "process-as-code"},
+    {"problem": "make-deterministic-business-decision", "product": "decision-tables-as-code"},
+    {"problem": "document-integration-contract", "product": "interface-as-code"},
+    {"problem": "govern-source-target-transformation", "product": "mapping-as-code"},
+    {"problem": "investigate-cross-system-identity-lineage", "product": "data-relationship-map"},
+    {"problem": "prove-migration-or-replication-state", "product": "reconciliation-as-code"},
+    {"problem": "materialize-transformation-dependencies", "product": "transformation-graph"},
+    {"problem": "analyze-concrete-change-impact", "product": "enterprise-change-graph"},
+    {"problem": "coordinate-cutover-readiness", "product": "cutover-graph"},
+    {"problem": "connect-claims-to-evidence", "product": "project-evidence-graph"},
+    {"problem": "render-structured-business-visual", "product": "visual-workbench"},
+    {"problem": "operate-sap-through-bounded-agent-capabilities", "product": "sap-agentic-operations"},
+    {"problem": "turn-source-into-evidence-backed-learning", "product": "signal-to-insight"},
+    {"problem": "resolve-public-agent-machine-interfaces", "product": "agent-ready-web-profile"}
   ],
   "layers": {
-    "intent_contracts": [
-      "process-as-code",
-      "decision-tables-as-code",
-      "mapping-as-code",
-      "interface-as-code"
-    ],
-    "relationships_impact": [
-      "data-relationship-map",
-      "transformation-graph",
-      "enterprise-change-graph"
-    ],
-    "assurance_execution": [
-      "reconciliation-as-code",
-      "cutover-graph",
-      "project-evidence-graph",
-      "sap-agentic-operations"
-    ],
-    "visual_learning": [
-      "visual-workbench",
-      "signal-to-insight"
-    ],
-    "agent_interoperability": [
-      "agent-ready-web-profile"
-    ]
+    "intent_contracts": ["process-as-code", "decision-tables-as-code", "mapping-as-code", "interface-as-code"],
+    "relationships_impact": ["data-relationship-map", "transformation-graph", "enterprise-change-graph"],
+    "assurance_execution": ["reconciliation-as-code", "cutover-graph", "project-evidence-graph", "sap-agentic-operations"],
+    "visual_learning": ["visual-workbench", "signal-to-insight"],
+    "agent_interoperability": ["agent-ready-web-profile"]
   },
   "products": [
     {
@@ -112,7 +52,9 @@
       "layer": "intent_contracts",
       "portfolio_role": "authoritative-contract",
       "owns": "process steps, transitions, roles, gates and process semantics",
-      "page": "https://dkharlanau.github.io/process-as-code/",
+      "page": "https://github.com/dkharlanau/process-as-code",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/process-as-code/",
       "repository": "https://github.com/dkharlanau/process-as-code",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/process-as-code/main/docs/agent-manifest.json"
     },
@@ -121,7 +63,9 @@
       "layer": "intent_contracts",
       "portfolio_role": "authoritative-contract",
       "owns": "deterministic facts, rules, precedence and decision traces",
-      "page": "https://dkharlanau.github.io/decision-tables-as-code/",
+      "page": "https://github.com/dkharlanau/decision-tables-as-code",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/decision-tables-as-code/",
       "repository": "https://github.com/dkharlanau/decision-tables-as-code",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/decision-tables-as-code/main/docs/agent-manifest.json"
     },
@@ -130,7 +74,9 @@
       "layer": "intent_contracts",
       "portfolio_role": "authoritative-contract",
       "owns": "field and value transformation intent and mapping governance",
-      "page": "https://dkharlanau.github.io/mapping-as-code/",
+      "page": "https://github.com/dkharlanau/mapping-as-code",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/mapping-as-code/",
       "repository": "https://github.com/dkharlanau/mapping-as-code",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/mapping-as-code/main/docs/agent-manifest.json"
     },
@@ -139,7 +85,9 @@
       "layer": "intent_contracts",
       "portfolio_role": "authoritative-contract",
       "owns": "interface trigger, transport, ownership, retry, recovery and monitoring semantics",
-      "page": "https://dkharlanau.github.io/interface-as-code/",
+      "page": "https://github.com/dkharlanau/interface-as-code",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/interface-as-code/",
       "repository": "https://github.com/dkharlanau/interface-as-code",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/interface-as-code/main/docs/agent-manifest.json"
     },
@@ -148,7 +96,9 @@
       "layer": "relationships_impact",
       "portfolio_role": "bounded-analysis",
       "owns": "record identity, explicit relationship semantics, lineage and relationship findings derived from supplied exports",
-      "page": "https://dkharlanau.github.io/data-relationship-map/",
+      "page": "https://github.com/dkharlanau/data-relationship-map",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/data-relationship-map/",
       "repository": "https://github.com/dkharlanau/data-relationship-map",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/data-relationship-map/main/docs/agent-manifest.json"
     },
@@ -157,12 +107,10 @@
       "layer": "relationships_impact",
       "portfolio_role": "derived-analysis",
       "owns": "materialized project graph, graph governance and analysis annotations, not upstream process/mapping/interface truth",
-      "derived_from": [
-        "process-as-code",
-        "mapping-as-code",
-        "interface-as-code"
-      ],
-      "page": "https://dkharlanau.github.io/transformation-graph/",
+      "derived_from": ["process-as-code", "mapping-as-code", "interface-as-code"],
+      "page": "https://github.com/dkharlanau/transformation-graph",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/transformation-graph/",
       "repository": "https://github.com/dkharlanau/transformation-graph",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/transformation-graph/main/docs/agent-manifest.json"
     },
@@ -171,12 +119,10 @@
       "layer": "relationships_impact",
       "portfolio_role": "derived-analysis",
       "owns": "change-specific propagation, inclusion/exclusion explanation, regression scope and release-impact analysis, not a universal enterprise CMDB",
-      "derived_from": [
-        "process-as-code",
-        "mapping-as-code",
-        "interface-as-code"
-      ],
-      "page": "https://dkharlanau.github.io/enterprise-change-graph/",
+      "derived_from": ["process-as-code", "mapping-as-code", "interface-as-code"],
+      "page": "https://github.com/dkharlanau/enterprise-change-graph",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/enterprise-change-graph/",
       "repository": "https://github.com/dkharlanau/enterprise-change-graph",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/enterprise-change-graph/main/docs/agent-manifest.json"
     },
@@ -185,10 +131,10 @@
       "layer": "assurance_execution",
       "portfolio_role": "evidence-producer",
       "owns": "reconciliation controls and retained run evidence",
-      "consumes": [
-        "mapping-as-code"
-      ],
-      "page": "https://dkharlanau.github.io/reconciliation-as-code/",
+      "consumes": ["mapping-as-code"],
+      "page": "https://github.com/dkharlanau/reconciliation-as-code",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/reconciliation-as-code/",
       "repository": "https://github.com/dkharlanau/reconciliation-as-code",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/reconciliation-as-code/main/docs/agent-manifest.json"
     },
@@ -197,10 +143,10 @@
       "layer": "assurance_execution",
       "portfolio_role": "evidence-aware-execution",
       "owns": "cutover tasks, dependencies, timing, checkpoints, contingencies, trusted snapshots and readiness state",
-      "consumes": [
-        "reconciliation-as-code"
-      ],
-      "page": "https://dkharlanau.github.io/cutover-graph/",
+      "consumes": ["reconciliation-as-code"],
+      "page": "https://github.com/dkharlanau/cutover-graph",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/cutover-graph/",
       "repository": "https://github.com/dkharlanau/cutover-graph",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/cutover-graph/main/docs/agent-manifest.json"
     },
@@ -209,11 +155,10 @@
       "layer": "assurance_execution",
       "portfolio_role": "assurance-graph",
       "owns": "project assurance relationships, freshness/risk state, bounded evidence packs and historical assurance drift",
-      "consumes": [
-        "reconciliation-as-code",
-        "cutover-graph"
-      ],
-      "page": "https://dkharlanau.github.io/project-evidence-graph/",
+      "consumes": ["reconciliation-as-code", "cutover-graph"],
+      "page": "https://github.com/dkharlanau/project-evidence-graph",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/project-evidence-graph/",
       "repository": "https://github.com/dkharlanau/project-evidence-graph",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/project-evidence-graph/main/docs/agent-manifest.json"
     },
@@ -223,6 +168,7 @@
       "portfolio_role": "adjacent-execution-product",
       "owns": "bounded SAP operational capability and policy contracts",
       "page": "https://dkharlanau.github.io/sap-agentic-operations/",
+      "page_status": "live",
       "repository": "https://github.com/dkharlanau/sap-agentic-operations",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/sap-agentic-operations/main/docs/agent-manifest.json"
     },
@@ -231,15 +177,10 @@
       "layer": "visual_learning",
       "portfolio_role": "visual-modeling-layer",
       "owns": "visual semantic model, view/render configuration and deterministic rendering; imported domain semantics remain upstream",
-      "consumes": [
-        "process-as-code",
-        "mapping-as-code",
-        "interface-as-code",
-        "reconciliation-as-code",
-        "cutover-graph",
-        "project-evidence-graph"
-      ],
-      "page": "https://dkharlanau.github.io/visual-workbench/",
+      "consumes": ["process-as-code", "mapping-as-code", "interface-as-code", "reconciliation-as-code", "cutover-graph", "project-evidence-graph"],
+      "page": "https://github.com/dkharlanau/visual-workbench",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/visual-workbench/",
       "repository": "https://github.com/dkharlanau/visual-workbench",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/visual-workbench/main/docs/agent-manifest.json"
     },
@@ -248,7 +189,9 @@
       "layer": "visual_learning",
       "portfolio_role": "adjacent-knowledge-product",
       "owns": "source model, Knowledge Delta, evidence boundaries and learning state",
-      "page": "https://dkharlanau.github.io/signal-to-insight/",
+      "page": "https://github.com/dkharlanau/signal-to-insight",
+      "page_status": "repository",
+      "planned_page": "https://dkharlanau.github.io/signal-to-insight/",
       "repository": "https://github.com/dkharlanau/signal-to-insight",
       "agent_manifest": "https://raw.githubusercontent.com/dkharlanau/signal-to-insight/main/docs/agent-manifest.json"
     },
@@ -258,6 +201,7 @@
       "portfolio_role": "adjacent-interoperability-product",
       "owns": "public interface discovery, resolver observations and intent-specific selection evidence",
       "page": "https://dkharlanau.github.io/agent-ready-web-profile/",
+      "page_status": "live",
       "repository": "https://github.com/dkharlanau/agent-ready-web-profile"
     }
   ]
