@@ -37,6 +37,7 @@ Start from the problem rather than from the portfolio:
 | Make business rules executable and reviewable | [Decision Tables as Code](https://github.com/dkharlanau/decision-tables-as-code) |
 | Govern source-to-target mappings | [Mapping as Code](https://github.com/dkharlanau/mapping-as-code) |
 | Make enterprise integrations operable and reviewable | [Interface as Code](https://github.com/dkharlanau/interface-as-code) |
+| Investigate cross-system identity, linkage and lineage | [Data Relationship Map](https://github.com/dkharlanau/data-relationship-map) |
 | Prove migration or replication state | [Reconciliation as Code](https://github.com/dkharlanau/reconciliation-as-code) |
 | Analyze transformation dependencies | [Transformation Graph](https://github.com/dkharlanau/transformation-graph) |
 | Analyze the blast radius of a concrete change | [Enterprise Change Graph](https://github.com/dkharlanau/enterprise-change-graph) |
