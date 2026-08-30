@@ -3,7 +3,7 @@ layout: default
 title: "SAP Master Data Diagnostics Hub"
 description: "A review-candidate hub mapping MDG, BP, CVI, key mapping, and replication symptoms to SAP master data checks."
 permalink: /atlas/diagnostics/sap-master-data-diagnostics-hub/
-last_modified_at: 2026-08-28
+last_modified_at: 2026-08-30
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Master data and MDG
@@ -19,6 +19,8 @@ tags:
   - master-data
   - mdg
   - cvi
+  - drf
+  - locks
 related:
   - /atlas/data-quality/
   - /atlas/diagnostics/sap-mdg-to-s4-replication-diagnostics/
@@ -30,12 +32,12 @@ robots: noindex,follow
 sitemap: false
 ---
 
-**Source:** Practical pattern derived from SAP support experience. Not yet verified against public SAP documentation.
-**Date checked:** 2026-06-13
+**Source:** Practical pattern derived from SAP support experience and checked against SAP lock and mass-processing support references.
+**Date checked:** 2026-08-30
 **Confidence:** medium
 **Related page/topic:** /atlas/data-quality/sap-master-data-quality/
-**Practical implication:** Separate governance (MDG), synchronization (CVI), and replication (distribution) before collecting evidence; each layer has different owners and tools.
-**Tags:** sap-ams, master-data, mdg, cvi
+**Practical implication:** Separate governance (MDG), synchronization (CVI), replication (distribution), and lock ownership before collecting evidence; each layer has different owners and tools.
+**Tags:** sap-ams, master-data, mdg, cvi, drf, locks
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
@@ -50,7 +52,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic Hub</p>
     <h1>SAP Master Data Diagnostics Hub</h1>
-    <p class="note-subtitle">A first-pass workflow for MDG activation, BP/customer/vendor replication, CVI synchronization, key mapping, and duplicate detection.</p>
+    <p class="note-subtitle">A first-pass workflow for MDG activation, BP/customer/vendor replication, CVI synchronization, key mapping, duplicate detection, and mass-change lock contention.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -64,7 +66,7 @@ sitemap: false
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>Master data incidents usually fall into three layers: governance (MDG change request, approval, activation), synchronization (CVI between BP and customer/vendor), and replication (distribution to downstream systems). Duplicates and key mapping failures cut across all three. This hub helps the responder decide which layer to investigate first.</p>
+    <p>Master data incidents usually fall into three layers: governance (MDG change request, approval, activation), synchronization (CVI between BP and customer/vendor), and replication (distribution to downstream systems). Duplicates, key mapping failures, and lock contention can cut across these layers. This hub helps the responder decide which layer to investigate first.</p>
 
     <h2>Symptom-to-check matrix</h2>
     <table>
@@ -75,6 +77,7 @@ sitemap: false
         <tr><td>Change request stuck or activation fails</td><td>MDG governance</td><td>MDG change request, workflow log, staging, validation messages</td></tr>
         <tr><td>BP created but customer/vendor not synchronized</td><td>CVI synchronization</td><td>BP role, CVI link tables, direction settings</td></tr>
         <tr><td>Record not replicated to target system</td><td>Replication</td><td>Distribution model, IDoc/ALE, replication log, key mapping</td></tr>
+        <tr><td>Bulk update creates repeated replication locks</td><td>Replication / mass change</td><td>SM12, DRFIMG, DRFLOG, IDoc or service monitor</td></tr>
         <tr><td>Same real-world object has multiple keys</td><td>Duplicate detection</td><td>Duplicate check rules, match codes, key mapping tables</td></tr>
         <tr><td>Different keys for the same object across systems</td><td>Key mapping</td><td>Key mapping tables, ID mapping, cross-system identifiers</td></tr>
         <tr><td>Missing organizational assignment</td><td>Master data extension</td><td>Org-level views, roles, authorization</td></tr>
@@ -89,8 +92,21 @@ sitemap: false
       <li>MDG change request status and workflow step when governance is involved.</li>
       <li>CVI link status and direction for BP/customer/vendor issues.</li>
       <li>Distribution model, message type, and IDoc or replication log reference.</li>
+      <li>Lock owner, lock object, affected key, and timing from SM12 when the symptom is contention.</li>
       <li>Duplicate-check rule and match-code result.</li>
     </ul>
+
+    <h2>Bulk changes and DRF lock contention</h2>
+    <p>Backend or custom mass updates can still trigger automatic replication when the object is configured for direct output. With a large population, the master-data update and outbound processing can overlap. SAP support references document lock conflicts during replication and mass processing, and duplicate outbound messages can occur in some mass-processing scenarios.</p>
+    <ol>
+      <li><strong>Prove the lock.</strong> Check SM12 for the object, key, owner, and timing. Do not assume DRF is the cause only because replication is active.</li>
+      <li><strong>Trace replication.</strong> Check the active replication model and output mode in DRFIMG, then use DRFLOG and the channel-specific monitor to see whether outbound processing overlaps with the bulk update.</li>
+      <li><strong>Control the window.</strong> If replication is proven to cause the contention, temporarily deactivate only the affected replication model in DRFIMG for an approved maintenance window.</li>
+      <li><strong>Run the bulk change.</strong> Execute the controlled update while the affected automatic replication path is paused.</li>
+      <li><strong>Restore and reconcile.</strong> Reactivate the model, run the planned catch-up replication, and compare source and target completeness before closing the activity.</li>
+    </ol>
+    <p><strong>Boundary:</strong> this is an operational workaround, not a universal lock solution. DRFIMG controls replication-model configuration. Record the original state, obtain the correct owner approval, restore it after the bulk change, and prove that no downstream records were missed.</p>
+    <p><strong>SAP support references:</strong> KBA 2833282 documents object locks during BP replication; KBA 3624653 documents lock issues during MDG mass-change activation; KBA 3389106 documents duplicate outbound IDocs in an MDG mass-processing scenario.</p>
 
     <h2>Related diagnostics</h2>
     <div class="atlas-card-grid">
@@ -149,10 +165,10 @@ sitemap: false
     </ul>
 
     <h2>Boundaries and escalation</h2>
-    <p>This hub is for diagnostic triage only. MDG workflow changes, CVI direction changes, key-mapping corrections, and duplicate merges are operational or functional changes that need owner approval and often data governance sign-off. Escalate when the issue affects multiple systems, involves legal-entity data, or requires mass correction.</p>
+    <p>This hub is for diagnostic triage only. MDG workflow changes, CVI direction changes, replication-model changes, key-mapping corrections, and duplicate merges are operational or functional changes that need owner approval and often data governance sign-off. Escalate when the issue affects multiple systems, involves legal-entity data, or requires mass correction.</p>
 
     <h2>Safe automation opportunity</h2>
-    <p>A support agent can compare BP, customer, and vendor keys across linked systems and flag missing CVI links or potential duplicates for human review. It should not create, change, or merge master data records.</p>
+    <p>A support agent can compare BP, customer, and vendor keys across linked systems and flag missing CVI links or potential duplicates for human review. It should not create, change, merge, or silently suppress replication of master data records.</p>
   </div>
 
   {% include atlas/author-block.html %}
