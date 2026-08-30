@@ -1,19 +1,19 @@
 {
   "schema": "dkharlanau.markdown_clusters",
   "schema_version": "1.0",
-  "generated_at": "2026-08-28T00:00:00Z",
+  "generated_at": "2026-08-30T00:00:00Z",
   "canonical_url": "https://dkharlanau.github.io/ai/markdown-clusters.json",
   "source": "scripts/generate_atlas_artifacts.py",
   "description": "Cluster-aware Markdown inventory for AI search routing. Readiness is structural; retrieval eligibility still requires the repository's reviewed, verified, indexable policy.",
   "summary": {
-    "markdown_pages": 915,
+    "markdown_pages": 916,
     "indexable_pages": 404,
     "reviewed_retrieval_pages": 182,
     "routing_pages": 7,
     "ready_pages": 387,
     "needs_metadata": 5,
     "needs_depth": 12,
-    "deferred_pages": 511
+    "deferred_pages": 512
   },
   "clusters": [
     {
@@ -268,7 +268,7 @@
     {
       "id": "sap-integration",
       "label": "SAP integration and interoperability",
-      "page_count": 203,
+      "page_count": 204,
       "indexable_count": 59,
       "retrieval_count": 40,
       "ready_count": 57,
@@ -411,6 +411,7 @@
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/replication/",
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/replication/operations/",
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/scenario/",
+        "https://dkharlanau.github.io/labs/enterprise-context/performance/",
         "https://dkharlanau.github.io/labs/interview-readiness/boss-battles/",
         "https://dkharlanau.github.io/labs/interview-readiness/contrast/",
         "https://dkharlanau.github.io/labs/interview-readiness/decision-cards/",
@@ -12989,7 +12990,9 @@
         "sap-ams",
         "master-data",
         "mdg",
-        "cvi"
+        "cvi",
+        "drf",
+        "locks"
       ],
       "related_urls": [
         "/atlas/data-quality/",
@@ -13009,12 +13012,13 @@
         "permalink_present": true,
         "h1_present": true,
         "substantive": true,
-        "body_characters": 4691,
+        "body_characters": 6810,
         "heading_count": 16,
         "headings": [
           "Core idea",
           "Symptom-to-check matrix",
           "Evidence to collect",
+          "Bulk changes and DRF lock contention",
           "Related diagnostics",
           "BP Email + Remark via BUPA_C_CHANGEADDRESS",
           "MDG to S/4 Replication",
@@ -13026,8 +13030,7 @@
           "Customer Master Replication",
           "Material Master Extension",
           "Related maps and concepts",
-          "Boundaries and escalation",
-          "Safe automation opportunity"
+          "Boundaries and escalation"
         ],
         "internal_link_count": 14,
         "decision": "deferred",
@@ -33715,7 +33718,7 @@
         "permalink_present": true,
         "h1_present": true,
         "substantive": true,
-        "body_characters": 2451,
+        "body_characters": 3438,
         "heading_count": 4,
         "headings": [
           "Pick the capability by the problem.",
@@ -33723,7 +33726,7 @@
           "Governance needs a clear place for inactive and active data.",
           "Before changing workflow, ask what is failing."
         ],
-        "internal_link_count": 11,
+        "internal_link_count": 12,
         "decision": "deferred",
         "reason": "Noindex or sitemap-disabled content is not exposed as a retrieval candidate.",
         "indexable": false,
@@ -33973,6 +33976,70 @@
       }
     },
     {
+      "source_file": "labs/enterprise-context/performance/index.md",
+      "canonical_url": "https://dkharlanau.github.io/labs/enterprise-context/performance/",
+      "title": "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting",
+      "description": "A practical SAP performance playbook covering SM50, SM66, SM51, SM12, SM13, SM04, ST03N, STAD, ST05, SAT, HANA, tRFC, qRFC, bgRFC, traces, queues, logs, and S/4HANA Cloud Public Edition differences.",
+      "content_type": "labs",
+      "section": "enterprise-context",
+      "clusters": [
+        "sap-integration"
+      ],
+      "primary_cluster": "sap-integration",
+      "tags": [
+        "sap",
+        "s4hana",
+        "performance",
+        "basis",
+        "troubleshooting",
+        "monitoring",
+        "trfc",
+        "qrfc",
+        "bgrfc",
+        "hana",
+        "integration",
+        "cloud-alm"
+      ],
+      "related_urls": [],
+      "permalink": "/labs/enterprise-context/performance/",
+      "status": "needs_verification",
+      "verified": false,
+      "sitemap": false,
+      "readiness": {
+        "title_present": true,
+        "description_present": true,
+        "permalink_present": true,
+        "h1_present": true,
+        "substantive": true,
+        "body_characters": 30787,
+        "heading_count": 16,
+        "headings": [
+          "Determine the scope before collecting deep traces.",
+          "Follow one request through the technical layers.",
+          "Know whether you are looking at one instance or the whole system.",
+          "Read work processes as a live queue of system pressure.",
+          "Type tells you what pool is under pressure.",
+          "SM12 and SM13 protect consistency. Treat them carefully.",
+          "A safe lock investigation has four checks.",
+          "First identify the RFC type. The monitor depends on it.",
+          "When the caller waits, follow both sides.",
+          "SM58 is an exception monitor, not a history of successful calls.",
+          "The first blocked LUW can stop everything behind it.",
+          "Read the status as a failure class, not as a color.",
+          "Restart is a business action with technical buttons.",
+          "Use the log that belongs to the failing layer.",
+          "Use statistics before expensive tracing when possible.",
+          "Choose the smallest tool that can answer the question."
+        ],
+        "internal_link_count": 2,
+        "decision": "deferred",
+        "reason": "Noindex or sitemap-disabled content is not exposed as a retrieval candidate.",
+        "indexable": false,
+        "reviewed_retrieval_eligible": false,
+        "routing_eligible": false
+      }
+    },
+    {
       "source_file": "labs/index.md",
       "canonical_url": "https://dkharlanau.github.io/labs/",
       "title": "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment",
@@ -34002,14 +34069,14 @@
         "permalink_present": true,
         "h1_present": true,
         "substantive": true,
-        "body_characters": 4965,
+        "body_characters": 5167,
         "heading_count": 3,
         "headings": [
           "Knowledge, assurance, interview readiness, and pressure practice.",
           "Business domain first. SAP component second.",
           "Do not duplicate a method just because a case uses it."
         ],
-        "internal_link_count": 20,
+        "internal_link_count": 21,
         "decision": "deferred",
         "reason": "Noindex or sitemap-disabled content is not exposed as a retrieval candidate.",
         "indexable": false,
