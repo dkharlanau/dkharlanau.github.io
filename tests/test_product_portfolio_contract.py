@@ -23,7 +23,7 @@ def load_trust_boundaries():
 
 def test_portfolio_manifest_has_problem_first_entrypoints_and_unique_products():
     manifest = load_manifest()
-    assert manifest["schema_version"] == "1.2"
+    assert manifest["schema_version"] == "1.3"
     products = manifest["products"]
     ids = [product["id"] for product in products]
     assert len(ids) == len(set(ids))
