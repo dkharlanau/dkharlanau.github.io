@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-30
 hide_global_cta: true
 tags: [sap, mdg, workflow, data-quality, mass-processing]
 ---
@@ -64,6 +64,14 @@ tags: [sap, mdg, workflow, data-quality, mass-processing]
     <span class="material-symbols-outlined" aria-hidden="true">difference</span>
     <p><strong>Central Governance vs Consolidation:</strong> governance controls future creation and change. Consolidation resolves what already exists across sources by standardizing, matching, merging, and selecting the best record.</p>
     <p><strong>Mass Processing:</strong> scales controlled change across many records. It should keep validation and ownership, not become a respectable name for bulk bypass.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+    <p><strong>Bulk-change limitation:</strong> master-data changes outside the governed Fiori flow — for example with backend transactions, MASS, custom ABAP, APIs, or BAPIs — can still trigger automatic DRF replication when direct output is active. With a large population, repeated outbound processing can overlap with the update and create enqueue contention, target-side locks, or duplicate outbound messages.</p>
+    <p><strong>Operational workaround:</strong> first prove that replication is the source of the lock in SM12 and the relevant replication logs. For a controlled maintenance window, temporarily deactivate only the affected replication model in DRFIMG, run the bulk change, then reactivate the model and execute the planned catch-up replication and source-to-target reconciliation.</p>
+    <p><strong>Boundary:</strong> do not treat this as a universal lock fix. DRFIMG controls replication-model configuration, so use owner approval and record the before-and-after state.</p>
+    <a href="/atlas/diagnostics/sap-master-data-diagnostics-hub/">Open master-data diagnostics <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
