@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP ATP and aATP Promise Engine — Enterprise Context Lab"
-description: "A practical SAP ATP and aATP map: scope, PAC, PAL, SUP, BOP, ABC, extensions, integrations, failure patterns, and diagnostics."
+description: "A practical SAP ATP and aATP playbook: control chain, PAC, Product Allocation design, Supply Protection, BOP, ABC, Release for Delivery, extensions, and diagnostics."
 permalink: /labs/enterprise-context/atp/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-01
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -20,6 +20,8 @@ tags:
   - product-allocation
   - supply-protection
   - alternative-based-confirmation
+  - release-for-delivery
+  - availability-change-log
   - troubleshooting
 last_reviewed: 2026-08-16
 publication_wave: "logistics-search-wave-01"
@@ -81,6 +83,17 @@ source_links:
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.atp %}
 {% assign evidence = site.data.labs.enterprise_context.sources.atp %}
+{% assign atp_cfg = site.data.labs.enterprise_context.atp_playbook.configuration %}
+{% assign atp_pal = site.data.labs.enterprise_context.atp_playbook.pal_supply %}
+{% assign atp_bop = site.data.labs.enterprise_context.atp_playbook.bop %}
+{% assign atp_abc = site.data.labs.enterprise_context.atp_playbook.abc_delivery %}
+{% assign atp_assessment = site.data.labs.enterprise_context.atp_playbook.assessment %}
+{% assign atp_extensions = graph.extension_layers | concat: atp_abc.extension_layers %}
+{% assign atp_heuristics = graph.practitioner_heuristics | concat: atp_assessment.practitioner_heuristics %}
+{% assign atp_failures = graph.failure_modes | concat: atp_assessment.failure_modes %}
+{% assign atp_traces = graph.impact_traces | concat: atp_assessment.impact_traces %}
+{% assign atp_cases = graph.synthetic_cases | concat: atp_assessment.synthetic_cases %}
+{% assign atp_drills = graph.assessment_drills | concat: atp_assessment.assessment_drills %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">ATP / aATP</li></ol>
@@ -97,7 +110,7 @@ source_links:
     <div class="research-canvas__signal" aria-label="ATP deep-dive inventory">
       <p>Reviewed model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.advanced_capabilities | size }}</strong><small>aATP capability blocks</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.advanced_capabilities | size | plus: 2 }}</strong><small>aATP capability blocks</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
       <em>Reviewed model · source-tracked · no client data</em>
     </div>
@@ -177,6 +190,30 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Configuration playbook</p>
+      <h2>Configure aATP as a chain, not as a pile of switches.</h2>
+      <p>{{ atp_cfg.configuration_playbook.principle }}</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for layer in atp_cfg.configuration_playbook.layers %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>CFG 0{{ forloop.index }}</span><small>control layer</small></div>
+          <h3>{{ layer.title }}</h3>
+          <p class="ecg-question">{{ layer.business_question }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Controls</h4><ul>{% for value in layer.controls %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Failure pattern</h4><p>{{ layer.failure_pattern }}</p></div>
+          <div><h4>Lead check</h4><p>Prove this layer before changing the next one.</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Runtime path</p>
       <h2>Follow the promise in the same order it can fail.</h2>
       <p>The final confirmed quantity hides too much. I separate ATP relevance, requirement context, scheduling, scope, PAC, delivery proposal, business restrictions, alternatives, and later reconfirmation.</p>
@@ -202,8 +239,8 @@ source_links:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">aATP capability map</p>
-      <h2>Five different business questions hide behind the word "availability".</h2>
-      <p>I keep these capability blocks separate because each solves a different problem. Using the wrong one produces configuration that works technically and makes no business sense, a surprisingly popular enterprise tradition.</p>
+      <h2>Different business questions hide behind the word "availability".</h2>
+      <p>I keep these capability blocks separate because each solves a different problem. PAC calculates, PAL limits, SUP protects, BOP redistributes, ABC searches alternatives, Release for Delivery handles the last operational decision, and ACL narrows change-driven processing.</p>
     </header>
     <div class="ecg-view-grid">
       {% for capability in graph.advanced_capabilities %}
@@ -214,6 +251,18 @@ source_links:
         <p><strong>Remember:</strong> {{ capability.remember }}</p>
       </article>
       {% endfor %}
+      <article class="ecg-view-card">
+        <span>R4D</span>
+        <h3>Release for Delivery</h3>
+        <p class="ecg-question">Which final due-order confirmations need controlled manual adjustment before logistics execution?</p>
+        <p><strong>Remember:</strong> Last operational promise gate.</p>
+      </article>
+      <article class="ecg-view-card">
+        <span>ACL</span>
+        <h3>Availability Change Log</h3>
+        <p class="ecg-question">Which availability situations actually changed and should drive a focused BOP run?</p>
+        <p><strong>Remember:</strong> Change-driven runtime scope.</p>
+      </article>
     </div>
   </section>
 
@@ -232,6 +281,46 @@ source_links:
       </div>
     </div>
     <p class="ecg-caption">The exact execution design depends on active methods and configuration. The mental model is about intent: protection and allocation are policy constraints, not inventory creation.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Product Allocation design</p>
+      <h2>PAL is a chain from business characteristic to consumed time bucket.</h2>
+      <p>{{ atp_pal.pal_design.lead_formula }}</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in atp_pal.pal_design.objects %}
+      <article>
+        <span>PAL {{ forloop.index }}</span>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.purpose }}</p>
+        <p class="ecg-question"><strong>Trap:</strong> {{ item.trap }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>Parameters that change the result</h3><ul>{% for value in atp_pal.pal_design.parameters %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Sequence logic</h3><ul>{% for value in atp_pal.pal_design.sequence_logic %}<li><strong>{{ value.title }}:</strong> {{ value.explanation }}</li>{% endfor %}</ul></div>
+      <div><h3>Operate it</h3><ul>{% for value in atp_pal.pal_design.operations %}<li>{{ value }}</li>{% endfor %}</ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Supply Protection guardrails</p>
+      <h2>Protection only works if every demand path respects the boundary.</h2>
+      <p>Supply Protection is powerful because it creates a commercial boundary over physical supply. That also means a bypass path or overprotection can become a serious fulfillment defect.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in atp_pal.supply_protection_guardrails.items %}
+      <article>
+        <span>SUP {{ forloop.index }}</span>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.lesson }}</p>
+      </article>
+      {% endfor %}
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -255,6 +344,28 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">BOP configuration and operations</p>
+      <h2>The variant defines both business priority and operational blast radius.</h2>
+      <p>I separate who is selected, who is processed first, what happens on an exception, and whether the run should revisit the whole population or only availability situations that changed.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for block in atp_bop.bop_design.blocks %}
+      <article>
+        <span>BOP {{ forloop.index }}</span>
+        <h3>{{ block.title }}</h3>
+        <p>{{ block.purpose }}</p>
+        <p class="ecg-question"><strong>Check:</strong> {{ block.check }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+      <p><strong>Lead rules:</strong> {{ atp_bop.bop_design.lead_rules | join: " · " }}</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Alternative-Based Confirmation</p>
       <h2>Availability can change the sourcing decision.</h2>
       <p>ABC can evaluate substitute products, plants, or storage locations. That can improve the confirmation and still create new freight, route, tax, warehouse, or margin consequences. I therefore treat alternative selection as an Order-to-Cash design decision, not as an isolated ATP feature.</p>
@@ -268,6 +379,44 @@ source_links:
         <span class="ecg-node ecg-node--output">Alternative Confirmation</span>
       </div>
     </div>
+    <div class="ecg-decision-columns">
+      <div><h3>What current ABC can do</h3><ul>{% for value in atp_abc.abc_current_design.capabilities %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Design chain</h3><ol>{% for value in atp_abc.abc_current_design.design_chain %}<li>{{ value }}</li>{% endfor %}</ol></div>
+      <div><h3>Lead boundary</h3><p>Availability-based substitution is not free. Validate customer acceptance and downstream route, shipping point, freight, tax, warehouse, and margin consequences.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Release for Delivery</p>
+      <h2>The last scarce-supply decision can be operational.</h2>
+      <p>{{ atp_abc.release_for_delivery.purpose }}</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for value in atp_abc.release_for_delivery.capabilities %}
+      <article>
+        <span>R4D {{ forloop.index }}</span>
+        <h3>{{ value }}</h3>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>Extension boundary:</strong> {{ atp_abc.release_for_delivery.extensibility | join: " · " }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Release-sensitive guardrails</p>
+      <h2>Do not memorize early aATP limitations as permanent product facts.</h2>
+      <p>aATP has changed substantially. For assessment work and project design, I separate stable concepts from release-sensitive capabilities, app setup, and restrictions.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in atp_cfg.release_guardrails.items %}
+      <article>
+        <span>VERIFY {{ forloop.index }}</span>
+        <p>{{ item.statement }}</p>
+      </article>
+      {% endfor %}
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -277,7 +426,7 @@ source_links:
       <p>I prefer standard BOP segments, sorting, confirmation strategies, and ABC determination first. When they cannot express the rule, released BAdIs are easier to govern if the business decision remains explicit and testable.</p>
     </header>
     <div class="ecg-determination-list">
-      {% for ext in graph.extension_layers %}
+      {% for ext in atp_extensions %}
       <article class="ecg-determination-detail">
         <header>
           <div><span>EXT {{ forloop.index }}</span><small>released enhancement</small></div>
@@ -314,11 +463,11 @@ source_links:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead reasoning</p>
-      <h2>Five habits that keep availability analysis grounded.</h2>
+      <h2>Lead habits that keep availability analysis grounded.</h2>
       <p>These are practitioner heuristics, not SAP configuration rules. They make the diagnostic path explainable to Sales, Supply Chain, and technical teams at the same time.</p>
     </header>
     <div class="ecg-heuristic-grid">
-      {% for heuristic in graph.practitioner_heuristics %}
+      {% for heuristic in atp_heuristics %}
       <article>
         <span>HEURISTIC {{ forloop.index }}</span>
         <h3>{{ heuristic.statement }}</h3>
@@ -329,6 +478,10 @@ source_links:
       </article>
       {% endfor %}
     </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">conversion_path</span>
+      <p><strong>Migration / redesign rule:</strong> {{ atp_cfg.migration_heuristic.statement }}</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -338,7 +491,7 @@ source_links:
       <p>I treat symptoms as routing hints, not root causes. The goal is to find the first point where actual context differs from the intended design.</p>
     </header>
     <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}
+      {% for failure in atp_failures %}
       <article class="ecg-determination-detail">
         <header>
           <div><span>SYMPTOM</span><small>triage</small></div>
@@ -361,7 +514,7 @@ source_links:
       <p>These traces are useful in design workshops because they stop the conversation from treating ATP as an isolated checkbox.</p>
     </header>
     <div class="ecg-traces">
-      {% for trace in graph.impact_traces %}
+      {% for trace in atp_traces %}
       <article class="ecg-trace">
         <div class="ecg-trace__head"><span>TRACE {{ forloop.index }}</span><h3>{{ trace.title }}</h3></div>
         <div class="ecg-trace__path">{% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
@@ -371,7 +524,7 @@ source_links:
     </div>
   </section>
 
-  {% for scenario in graph.synthetic_cases %}
+  {% for scenario in atp_cases %}
   <section class="ecg-case" data-reveal>
     <div class="ecg-case__intro">
       <p class="research-canvas__eyebrow">Synthetic exercise {{ forloop.index }}</p>
@@ -393,7 +546,7 @@ source_links:
       <p>A Lead answer should explain what is known, what is missing, which control layer owns the behavior, and what downstream process can change if the proposed fix is applied.</p>
     </header>
     <div class="ecg-drill-list">
-      {% for drill in graph.assessment_drills %}
+      {% for drill in atp_drills %}
       <details>
         <summary><span>0{{ forloop.index }}</span><strong>{{ drill.question }}</strong><small>Open expected dimensions</small></summary>
         <div><p>Expected reasoning dimensions</p><ol>{% for value in drill.expected_dimensions %}<li>{{ value }}</li>{% endfor %}</ol></div>
@@ -406,7 +559,7 @@ source_links:
     <header>
       <p class="research-canvas__eyebrow">Evidence</p>
       <h2>Availability behavior and enhancement points stay source-tracked.</h2>
-      <p>Primary SAP documentation is used to verify ATP control, PAC, scope, scheduling, PAL, SUP, BOP, ABC, released BAdIs, and the availability-check API. The diagnostic method remains independently written.</p>
+      <p>Primary SAP documentation is used to verify ATP control, PAC, scope, scheduling, PAL sequence design, SUP guardrails, BOP and ACL behavior, ABC, Release for Delivery, released BAdIs, and the availability-check API. The diagnostic method remains independently written.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
@@ -419,10 +572,11 @@ source_links:
     <div>
       <p class="research-canvas__eyebrow">For tools and AI</p>
       <h2>The promise model is machine-readable too.</h2>
-      <p>The control chain, runtime stages, aATP capability blocks, extensions, failures, traces, heuristics, synthetic cases, and assessment drills are exposed as JSON for later graph views and grounded evaluation.</p>
+      <p>The control chain, configuration playbook, PAL/BOP/ABC design, Release for Delivery, extensions, failures, traces, heuristics, synthetic cases, and assessment drills are exposed as JSON for later graph views and grounded evaluation.</p>
     </div>
     <div class="ecg-machine__actions">
       <a class="research-canvas__button" href="/labs/enterprise-context/data/atp-graph.json">ATP graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+      <a href="/labs/enterprise-context/data/atp-playbook.json">aATP playbook JSON</a>
       <a href="/labs/enterprise-context/data/atp-sources.json">ATP sources JSON</a>
     </div>
   </section>
