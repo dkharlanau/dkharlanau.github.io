@@ -1,0 +1,192 @@
+/* Public project map — three reader-first routes over one structured portfolio source. */
+.portfolio-map__tracks {
+  width: var(--rc-width);
+  margin: 0 auto;
+  padding-block: clamp(4rem, 8vw, 7.5rem);
+}
+
+.portfolio-map__intro {
+  display: grid;
+  grid-template-columns: minmax(12rem, .55fr) minmax(20rem, 1fr);
+  gap: 1rem 2rem;
+  margin-bottom: clamp(3rem, 7vw, 5rem);
+}
+
+.portfolio-map__intro .research-canvas__eyebrow { margin-top: .35rem; }
+.portfolio-map__intro h2 { max-width: 15ch; }
+.portfolio-map__intro > p:last-child {
+  grid-column: 2;
+  max-width: 38rem;
+  margin: 0;
+  color: var(--rc-soft);
+  line-height: 1.6;
+}
+
+.portfolio-track {
+  border-top: 1px solid var(--rc-ink);
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+.portfolio-track:last-child { border-bottom: 1px solid var(--rc-line); }
+
+.portfolio-track__header {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  max-width: 58rem;
+}
+
+.portfolio-track__header > span {
+  color: var(--rc-signal);
+  font-family: var(--ps-mono);
+  font-size: .68rem;
+  font-weight: 750;
+  letter-spacing: .08em;
+}
+
+.portfolio-track__header h2 { margin-top: .55rem; }
+.portfolio-track__header p:last-child {
+  max-width: 45rem;
+  margin: 1rem 0 0;
+  color: var(--rc-soft);
+  line-height: 1.6;
+}
+
+.portfolio-track__question {
+  margin: 0;
+  color: var(--rc-ink);
+  font-size: .95rem;
+  font-weight: 720;
+}
+
+.portfolio-track__primary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 2.5rem;
+  border: 1px solid var(--rc-line);
+  background: var(--rc-line);
+}
+
+.portfolio-track__primary--single { grid-template-columns: 1fr; }
+.portfolio-track__primary--single .portfolio-project-card { min-height: 17rem; }
+
+.portfolio-project-card {
+  display: flex;
+  min-height: 20rem;
+  flex-direction: column;
+  background: #fff;
+  padding: clamp(1.35rem, 3vw, 2.2rem);
+}
+
+.portfolio-project-card > p:first-child {
+  margin: 0;
+  color: var(--rc-signal);
+  font-family: var(--ps-mono);
+  font-size: .64rem;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.portfolio-project-card h3 {
+  max-width: 16ch;
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(1.7rem, 3vw, 2.65rem) !important;
+}
+
+.portfolio-project-card > p:not(:first-child) {
+  max-width: 35rem;
+  margin: 1rem 0 0;
+  color: var(--rc-soft);
+  font-size: .9rem;
+  line-height: 1.58;
+}
+
+.portfolio-project-card > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem 1.2rem;
+  margin-top: auto;
+  padding-top: 2rem;
+}
+
+.portfolio-project-card a,
+.portfolio-supporting-project__repo {
+  color: var(--rc-ink);
+  font-size: .78rem;
+  font-weight: 730;
+  text-decoration: none;
+}
+
+.portfolio-project-card a:first-child { color: var(--rc-signal); }
+.portfolio-project-card a:hover,
+.portfolio-supporting-project__repo:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.portfolio-track__supporting { margin-top: clamp(2.5rem, 6vw, 4.5rem); }
+.portfolio-track__supporting > header {
+  display: grid;
+  grid-template-columns: minmax(12rem, .55fr) minmax(20rem, 1fr);
+  gap: 2rem;
+  margin-bottom: 1.4rem;
+}
+
+.portfolio-track__supporting h3 {
+  max-width: 22ch;
+  font-size: clamp(1.35rem, 2.3vw, 2rem) !important;
+}
+
+.portfolio-track__supporting ul {
+  margin: 0;
+  border-top: 1px solid var(--rc-ink);
+  padding: 0;
+  list-style: none;
+}
+
+.portfolio-track__supporting li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  border-bottom: 1px solid var(--rc-line);
+  padding: 1rem 0;
+}
+
+.portfolio-supporting-project__main {
+  display: grid;
+  grid-template-columns: minmax(12rem, .65fr) minmax(18rem, 1fr);
+  gap: 1.5rem;
+  color: var(--rc-ink);
+  text-decoration: none;
+}
+
+.portfolio-supporting-project__main strong { font-size: .96rem; line-height: 1.3; }
+.portfolio-supporting-project__main span {
+  color: var(--rc-soft);
+  font-size: .8rem;
+  line-height: 1.5;
+}
+
+.portfolio-supporting-project__main:hover strong { color: var(--rc-signal); }
+.portfolio-map__method { margin-bottom: clamp(4rem, 8vw, 7rem); }
+
+@media (max-width: 800px) {
+  .portfolio-map__intro,
+  .portfolio-track__supporting > header { display: block; }
+  .portfolio-map__intro > p:last-child { margin-top: 1rem; }
+  .portfolio-track__primary { grid-template-columns: 1fr; }
+  .portfolio-project-card { min-height: 17rem; }
+  .portfolio-track__header { grid-template-columns: 2rem minmax(0, 1fr); }
+  .portfolio-supporting-project__main { grid-template-columns: 1fr; gap: .45rem; }
+}
+
+@media (max-width: 520px) {
+  .portfolio-track__supporting li { grid-template-columns: 1fr; }
+  .portfolio-supporting-project__repo { justify-self: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-map *,
+  .portfolio-map *::before,
+  .portfolio-map *::after { transition-duration: .01ms !important; }
+}

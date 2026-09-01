@@ -20,6 +20,7 @@ The architecture therefore distinguishes three things:
 
 | I need to… | Start with | It owns |
 | --- | --- | --- |
+| compose architecture options from explicit context and constraints | Enterprise Architecture Composer | candidate composition, decision trace, constraint evaluation and alternative comparison |
 | describe how work should flow | Process as Code | process steps, transitions, roles, gates and process semantics |
 | make a deterministic business decision | Decision Tables as Code | facts, rules, precedence and decision trace semantics |
 | document how systems exchange something | Interface as Code | trigger, transport, ownership, retry/recovery, monitoring and operational interface semantics |
@@ -31,6 +32,8 @@ The architecture therefore distinguishes three things:
 | expose safe SAP operational capabilities | SAP Agentic Operations | bounded operational capability contracts and policy-gated execution evidence |
 | turn selected external material into retained understanding | Signal to Insight | source model, Knowledge Delta, evidence boundaries and learning state |
 | resolve machine/agent interfaces exposed by a public site | Agent-Ready Web Profile Resolver | discovery/resolution evidence and intent-specific interface selection |
+| publish a portable professional profile | AI CV Builder | profile input and deterministic HTML, JSON and JSON-LD outputs |
+| cite or reuse a public structured evidence collection | Dkharlanau Datasets | dataset records, schemas, releases and citation context |
 
 A user does **not** need Transformation Graph, Enterprise Change Graph or Data Relationship Map merely because they use Mapping as Code. Those graph products are useful when the graph itself answers a concrete analysis question.
 
@@ -38,6 +41,7 @@ A user does **not** need Transformation Graph, Enterprise Change Graph or Data R
 
 | Product | Portfolio role | Maintained truth | May consume | Must not become |
 | --- | --- | --- | --- | --- |
+| Enterprise Architecture Composer | architecture composer | architecture candidates, constraints and decision traces | explicit business and technical context | universal enterprise architecture repository |
 | Process as Code | authoritative contract | process intent | decision/interface references | project-status database |
 | Decision Tables as Code | authoritative contract | deterministic business rules | explicit facts | process engine |
 | Interface as Code | authoritative contract | interface operational contract | mapping refs, schemas | mapping authoring system |
@@ -52,6 +56,26 @@ A user does **not** need Transformation Graph, Enterprise Change Graph or Data R
 | SAP Agentic Operations | adjacent execution product | bounded SAP capability/policy contract | operational observations | unrestricted autonomous SAP agent |
 | Signal to Insight | adjacent knowledge product | evidence-backed learning model | selected external sources | generic summarizer/read-later store |
 | ARWP Resolver | adjacent interoperability product | resolver observation/selection evidence | public web discovery surfaces | another mandatory publisher manifest |
+| AI CV Builder | adjacent profile product | profile input and deterministic public outputs | explicit profile data | inferred credential or employment authority |
+| Dkharlanau Datasets | adjacent evidence product | dataset records, schemas and release metadata | public, citable source material | proof that every downstream claim is verified |
+
+## Reader map and Jekyll projection
+
+`products/manifest.json` is the sole editable source for the 17-project inventory, its
+three reader tracks, project summaries, URLs, ownership, and claim boundaries. The
+human-readable Machine route needs the same data through Jekyll, so a deterministic
+projection is generated at `_data/public_portfolio.yml`.
+
+```sh
+python3 scripts/generate_public_portfolio.py
+python3 scripts/generate_public_portfolio.py --check
+```
+
+Do not edit the `_data` projection by hand. The generator records the canonical
+manifest schema and SHA-256 digest; tests also compare every projected project and
+track with the manifest. `/ai/public-portfolio.json` renders this projection for
+machine clients, while `/machine/portfolio/` is the reader-facing map. Classification
+is navigation, not evidence of interoperability, adoption, or production readiness.
 
 ## Reference before copy
 

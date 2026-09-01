@@ -75,6 +75,8 @@ def test_home_uses_the_shared_portal_theme_and_real_portrait():
 def test_product_home_leads_with_person_learning_and_machine_access():
     text = (REPO_ROOT / "_includes/sections/home-product.html").read_text(encoding="utf-8")
     copy = yaml.safe_load((REPO_ROOT / "_data/home_portal.yml").read_text(encoding="utf-8"))["en"]
+    portfolio = yaml.safe_load((REPO_ROOT / "_data/public_portfolio.yml").read_text(encoding="utf-8"))
+    english_home = text.split("{% else %}", 1)[0]
     assert "personal-hero" in text
     assert "personal-machine" in text
     assert copy["personal"]["hero"]["title"] == "Dzmitryi Kharlanau"
@@ -86,7 +88,11 @@ def test_product_home_leads_with_person_learning_and_machine_access():
     assert [item["label"] for item in copy["personal"]["map"]["items"]] == [
         "Knowledge", "Labs", "Frameworks", "Machine"
     ]
-    assert "systems/" not in text.split("{% else %}", 1)[0]
+    assert "systems/" not in english_home
+    assert "site.data.public_portfolio" in english_home
+    assert portfolio["homepage"]["entry_href"] == "/machine/portfolio/"
+    assert "Thirteen small" not in english_home
+    assert 'href="/products/"' not in english_home
 
 
 def test_home_hero_data():

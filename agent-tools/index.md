@@ -8,6 +8,7 @@ sitemap: false
 status: needs_verification
 verified: false
 last_reviewed: 2026-07-14
+last_modified_at: 2026-09-01
 tags: [sap, mcp, agent-tools]
 ---
 
@@ -29,6 +30,7 @@ tags: [sap, mcp, agent-tools]
     <a href="/agent-tools/incident-lab/"><span>02</span><strong>Incident Lab</strong><small>Diagnostic material for repeat support work.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     <a href="/agent-tools/security/"><span>03</span><strong>Security boundaries</strong><small>Credentials, permissions, and production risk.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     <a href="/agent-tools/skills/"><span>04</span><strong>SAP AI skills</strong><small>Portable instructions for repeatable work.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    <a href="/machine/portfolio/"><span>05</span><strong>Public project map</strong><small>Choose a repository by its enterprise design, assurance, or practical AI job.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
   </nav>
 
   <section class="agent-tool-workbench" aria-labelledby="tool-catalogue-title">

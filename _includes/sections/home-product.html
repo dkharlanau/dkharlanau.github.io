@@ -4,6 +4,7 @@
 
 {% if product_locale == 'en' %}
 {% assign personal = portal.personal %}
+{% assign public_portfolio = site.data.public_portfolio %}
 <div class="personal-home">
   <header class="personal-hero" aria-labelledby="home-title">
     <div class="personal-hero__copy">
@@ -85,16 +86,7 @@
       {% for item in personal.evidence.items %}
       <a href="{{ item.href }}"><span>{{ item.type }}</span><strong>{{ item.title }}</strong><small>{{ item.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
       {% endfor %}
-    </div>
-  </section>
-
-  <section class="personal-evidence personal-home__section" aria-labelledby="personal-toolkit-title">
-    <header class="personal-home__heading personal-home__heading--split">
-      <div><p class="portal-kicker">Open source toolkit</p><h2 id="personal-toolkit-title">Enterprise change, made inspectable.</h2></div>
-      <p>Fourteen small, composable products for process and interface contracts, identity and lineage, transformation and change graphs, reconciliation, cutover, project evidence, SAP operations, and business-readable visuals.</p>
-    </header>
-    <div class="personal-evidence__list">
-      <a href="/products/"><span>PRODUCT SYSTEM</span><strong>Enterprise Transformation Toolkit</strong><small>Start with one product, or follow the links across contracts → relationships → assurance → execution → visual learning.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_outward</i></a>
+      <a href="{{ public_portfolio.homepage.entry_href }}"><span>{{ public_portfolio.homepage.entry_type }} · {{ public_portfolio.scope.repository_count }} repositories</span><strong>{{ public_portfolio.homepage.entry_title }}</strong><small>{{ public_portfolio.homepage.entry_detail }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_outward</i></a>
     </div>
   </section>
 

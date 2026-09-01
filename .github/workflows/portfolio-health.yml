@@ -1,0 +1,40 @@
+name: Public Portfolio Health
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  portfolio-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check public portfolio health
+        run: python3 scripts/portfolio_health.py --strict
+
+      - name: Upload public-safe health report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-portfolio-health
+          path: reports/portfolio-health/
+          if-no-files-found: warn
+          retention-days: 7

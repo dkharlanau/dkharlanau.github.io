@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-22
+last_modified_at: 2026-09-01
 hide_global_cta: true
 hide_site_share: true
 tags:
@@ -56,6 +56,7 @@ tags:
       <p>The source collections keep their existing URLs and schemas.</p>
     </header>
     <div class="research-route-list">
+      <a href="/machine/portfolio/"><span>MAP</span><strong>Public Project Map</strong><small>Seventeen public repositories grouped into enterprise design, transformation assurance, and SAP and practical AI routes.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/datasets/"><span>DATA</span><strong>Datasets</strong><small>Canonical structured collections, manifests, schemas, and domain-specific data packages.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/ai/"><span>AI</span><strong>AI-readable sources</strong><small>Generated and curated JSON, YAML, discovery maps, indexes, and expert evidence surfaces.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/ai/professional-intelligence.json"><span>MODEL</span><strong>Professional Intelligence Contract</strong><small>Readiness dimensions, the Lead decision chain, evidence levels, pressure routes, and privacy boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
@@ -64,6 +65,7 @@ tags:
       <a href="/agent-tools/"><span>TOOL</span><strong>Agent Tools</strong><small>Static tool descriptions for SAP diagnostics, ABAP, integration, data analysis, evaluation, and related work.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
       <a href="/machine/assessment/"><span>ASSESS</span><strong>SAP Lead Assessment Access</strong><small>Case manifest, schemas, practice contracts, JSONL case sets, and the local read-only assessment MCP route.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
       <a href="/mcp/sap-diagnostics-mcp/"><span>MCP</span><strong>SAP Diagnostics MCP</strong><small>A local, read-only package that consumes committed public artifacts. GitHub Pages publishes it but does not execute it.</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
+      <a href="/ai/public-portfolio.json"><span>JSON</span><strong>Public Portfolio Endpoint</strong><small>Machine-readable tracks, project roles, repository links, public entry points, observation date, and claim boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 </div>

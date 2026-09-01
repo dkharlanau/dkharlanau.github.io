@@ -1,12 +1,38 @@
 import json
+import hashlib
 from pathlib import Path
+import subprocess
+import sys
 from urllib.parse import urlsplit
+
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "products" / "manifest.json"
 INTEROPERABILITY = ROOT / "products" / "interoperability.json"
 TRUST_BOUNDARIES = ROOT / "products" / "trust-boundaries.json"
+JEKYLL_PROJECTION = ROOT / "_data" / "public_portfolio.yml"
+
+EXPECTED_PUBLIC_REPOSITORIES = {
+    "agent-ready-web-profile",
+    "ai-cv-builder",
+    "cutover-graph",
+    "data-relationship-map",
+    "decision-tables-as-code",
+    "dkharlanau-datasets",
+    "enterprise-architecture-composer",
+    "enterprise-change-graph",
+    "interface-as-code",
+    "mapping-as-code",
+    "process-as-code",
+    "project-evidence-graph",
+    "reconciliation-as-code",
+    "sap-agentic-operations",
+    "signal-to-insight",
+    "transformation-graph",
+    "visual-workbench",
+}
 
 
 def load_manifest():
@@ -21,13 +47,17 @@ def load_trust_boundaries():
     return json.loads(TRUST_BOUNDARIES.read_text(encoding="utf-8"))
 
 
+def load_jekyll_projection():
+    return yaml.safe_load(JEKYLL_PROJECTION.read_text(encoding="utf-8"))
+
+
 def test_portfolio_manifest_has_problem_first_entrypoints_and_unique_products():
     manifest = load_manifest()
     assert manifest["schema_version"] == "1.3"
     products = manifest["products"]
     ids = [product["id"] for product in products]
     assert len(ids) == len(set(ids))
-    assert "agent-ready-web-profile" in ids
+    assert set(ids) == EXPECTED_PUBLIC_REPOSITORIES
 
     entrypoints = manifest["entrypoints"]
     assert len(entrypoints) >= 8
@@ -48,12 +78,129 @@ def test_every_product_declares_a_bounded_semantic_owner():
         "adjacent-execution-product",
         "adjacent-knowledge-product",
         "adjacent-interoperability-product",
+        "architecture-composer",
+        "adjacent-profile-product",
+        "adjacent-evidence-product",
     }
     for product in manifest["products"]:
         assert product["portfolio_role"] in allowed_roles
+        assert product["title"].strip()
+        assert product["summary"].strip()
         assert product["owns"].strip()
         assert product["layer"] in manifest["layers"]
         assert product["id"] in manifest["layers"][product["layer"]]
+
+
+def test_reader_map_classifies_all_17_projects_without_equal_card_priority():
+    manifest = load_manifest()
+    reader_map = manifest["reader_map"]
+    tracks = {track["id"]: track for track in reader_map["tracks"]}
+
+    assert reader_map["repository_count"] == 17
+    assert set(tracks) == {
+        "enterprise-design",
+        "transformation-assurance",
+        "sap-practical-ai",
+    }
+    assert tracks["enterprise-design"]["primary_projects"] == [
+        "enterprise-architecture-composer",
+        "visual-workbench",
+    ]
+    assert tracks["transformation-assurance"]["primary_projects"] == [
+        "project-evidence-graph"
+    ]
+    assert tracks["sap-practical-ai"]["primary_projects"] == [
+        "sap-agentic-operations",
+        "signal-to-insight",
+    ]
+
+    classified = []
+    primary = []
+    for track in tracks.values():
+        classified.extend(track["primary_projects"])
+        classified.extend(track["supporting_projects"])
+        primary.extend(track["primary_projects"])
+
+    assert len(classified) == len(set(classified)) == 17
+    assert set(classified) == EXPECTED_PUBLIC_REPOSITORIES
+    assert len(primary) == 5
+    assert "not evidence of external adoption" in reader_map["boundaries"]["adoption"]
+    assert "not implied" in reader_map["boundaries"]["compatibility"]
+
+
+def test_jekyll_portfolio_data_is_a_checked_projection_of_the_canonical_manifest():
+    manifest = load_manifest()
+    projection = load_jekyll_projection()
+    projection_meta = projection["projection"]
+
+    assert projection_meta["canonical_source"] == "/products/manifest.json"
+    assert projection_meta["canonical_schema_version"] == manifest["schema_version"]
+    assert projection_meta["canonical_sha256"] == hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
+
+    reader_map = manifest["reader_map"]
+    assert projection["observed_at"] == reader_map["observed_at"]
+    assert projection["scope"]["repository_count"] == reader_map["repository_count"]
+    assert projection["scope"]["selection"] == reader_map["selection"]
+    assert projection["boundaries"] == reader_map["boundaries"]
+    assert projection["homepage"] == reader_map["homepage"]
+    assert projection["tracks"] == reader_map["tracks"]
+
+    manifest_products = {product["id"]: product for product in manifest["products"]}
+    projected_products = {product["id"]: product for product in projection["projects"]}
+    assert set(projected_products) == set(manifest_products) == EXPECTED_PUBLIC_REPOSITORIES
+    for project_id, projected in projected_products.items():
+        canonical = manifest_products[project_id]
+        assert projected["title"] == canonical["title"]
+        assert projected["description"] == canonical["summary"]
+        assert projected["repository_url"] == canonical["repository"]
+        assert projected["public_url"] == canonical["page"]
+
+        track = next(
+            item for item in reader_map["tracks"]
+            if project_id in item["primary_projects"] + item["supporting_projects"]
+        )
+        expected_role = "primary" if project_id in track["primary_projects"] else "supporting"
+        assert projected["track_id"] == track["id"]
+        assert projected["role"] == expected_role
+
+
+def test_public_portfolio_projection_generator_check_passes():
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "generate_public_portfolio.py"), "--check"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "projection is current" in result.stdout
+
+
+def test_public_project_map_uses_the_projection_and_preserves_verification_boundary():
+    page = (ROOT / "machine" / "portfolio" / "index.md").read_text(encoding="utf-8")
+    endpoint = (ROOT / "ai" / "public-portfolio.json").read_text(encoding="utf-8")
+    machine = (ROOT / "machine" / "index.md").read_text(encoding="utf-8")
+    agent_tools = (ROOT / "agent-tools" / "index.md").read_text(encoding="utf-8")
+    ai_hub = (ROOT / "ai" / "index.md").read_text(encoding="utf-8")
+
+    assert "{% assign portfolio = site.data.public_portfolio %}" in page
+    assert 'status: needs_verification' in page
+    assert 'verified: false' in page
+    assert 'robots: noindex,follow' in page
+    assert 'sitemap: false' in page
+    assert 'ai_sidecar: /ai/public-portfolio.json' in page
+    assert 'where: "role", "primary"' in page
+    assert 'where: "role", "supporting"' in page
+    assert "portfolio-track__primary--single" in page
+    assert "not a compatibility claim" in page
+    assert "Open public entry" in page
+    assert "project.public_action" not in page
+
+    assert "{{ site.data.public_portfolio | jsonify }}" in endpoint
+    assert "/machine/portfolio/" in machine
+    assert "/ai/public-portfolio.json" in machine
+    assert "/machine/portfolio/" in agent_tools
+    assert "/ai/public-portfolio.json" in ai_hub
 
 
 def test_derived_products_declare_sources_and_visuals_do_not_take_imported_domain_ownership():
