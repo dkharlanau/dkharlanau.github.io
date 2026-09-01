@@ -1,0 +1,287 @@
+---
+layout: default
+title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+description: "A practical SAP S/4HANA Business Partner guide for Lead-level design: roles, groupings, account groups, CVI, number ranges, field control, partner functions, customer and supplier extensions, APIs, governance, and validation."
+permalink: /labs/enterprise-context/business-partner/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-01
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - business-partner
+  - cvi
+  - customer-master
+  - supplier-master
+  - sap-sd
+  - sap-mm
+  - sap-fi
+  - master-data
+  - integration
+  - mdg
+  - assessment
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.business_partner %}
+{% assign evidence = site.data.labs.enterprise_context.sources.master_data %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/master-data/">Master Data</a></li><li aria-current="page">Business Partner</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / SAP Business Partner</p>
+      <h1>One identity.<br />Several business contexts.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#bp-role-model">Start with the role model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Business Partner deep-dive inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.configuration_layers | size }}</strong><small>Configuration layers</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.limitations_and_guardrails | size }}</strong><small>Guardrails</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.assessment_drills | size }}</strong><small>Lead drills</small></div>
+      <em>Draft research · independent synthesis · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <div>
+      <p><strong>Lead thesis:</strong> {{ graph.lead_thesis }}</p>
+      <p><strong>Source boundary:</strong> {{ graph.source_policy }}</p>
+    </div>
+    <a href="/labs/enterprise-context/master-data/#evidence">Current SAP source registry <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-role-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Role model</p>
+      <h2>Do not ask whether the BP is complete. Ask: complete for which role and level?</h2>
+      <p>The standard role codes are useful assessment anchors because they show how one legal identity becomes process-ready in Finance, Sales, and Procurement.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.role_model %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{{ item.role }}</span><small>BP role</small></div><h3>{{ item.name }}</h3><p class="ecg-question">{{ item.scope }}</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Typical data</h4><p>{{ item.typical_data }}</p></div>
+          <div><h4>Lead question</h4><p>{{ item.lead_question }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration stack</p>
+      <h2>Ten layers explain most BP design and support incidents.</h2>
+      <p>Use the stack as a trace. If a document fails, identify the first layer that does not match the intended business context.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.configuration_layers %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if item.order < 10 %}0{% endif %}{{ item.order }}</span><small>layer</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.failure_signal }}</p></header>
+        <div><h4>What it controls</h4><ul>{% for value in item.controls %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Number design</p>
+      <h2>{{ graph.number_strategy.decision }}</h2>
+      <p>{{ graph.number_strategy.lead_rule }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% for option in graph.number_strategy.options %}
+      <div>
+        <h3>{{ option.name }}</h3>
+        <p>{{ option.value }}</p>
+        <h4>Benefits</h4><ul>{% for value in option.benefits %}<li>{{ value }}</li>{% endfor %}</ul>
+        <h4>Constraints</h4><ul>{% for value in option.constraints %}<li>{{ value }}</li>{% endfor %}</ul>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Field control</p>
+      <h2>One missing field can be controlled by more than one layer.</h2>
+      <p>{{ graph.field_control_model.lead_rule }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Possible states</h3><ul>{% for value in graph.field_control_model.states %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Trace when the field looks wrong</h3><ul>{% for value in graph.field_control_model.inspect_when_wrong %}<li>{{ value }}</li>{% endfor %}</ul></div>
+    </div>
+    <div class="ecg-diagnostic">
+      <div><h4>Shared-data guardrail</h4><p>{{ graph.shared_data_guardrail.principle }}</p><ul>{% for value in graph.shared_data_guardrail.high_impact_examples %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h4>Controls</h4><ul>{% for value in graph.shared_data_guardrail.controls %}<li>{{ value }}</li>{% endfor %}</ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Partner model</p>
+      <h2>Relationship and partner function are different ideas.</h2>
+      <p>{{ graph.partner_model.distinction }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Customer functions</h3><ul>{% for item in graph.partner_model.customer_functions %}<li><strong>{{ item.code }} — {{ item.name }}:</strong> {{ item.business_meaning }}</li>{% endfor %}</ul></div>
+      <div><h3>Supplier functions</h3><ul>{% for item in graph.partner_model.supplier_functions %}<li><strong>{{ item.code }} — {{ item.name }}:</strong> {{ item.business_meaning }}</li>{% endfor %}</ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Supplier / Procurement</p><h2>The supplier role can change pricing, confirmation, receipt, and invoice behavior.</h2></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.supplier_controls %}
+      <article class="ecg-determination-detail">
+        <header><div><span>MM</span><small>supplier</small></div><h3>{{ item.area }}</h3><p class="ecg-question">{{ item.lead_question }}</p></header>
+        <div><h4>Important controls</h4><ul>{% for value in item.important_fields %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Customer / Sales</p><h2>The customer role is a commercial and fulfillment control plane.</h2></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.customer_controls %}
+      <article class="ecg-determination-detail">
+        <header><div><span>SD</span><small>customer</small></div><h3>{{ item.area }}</h3><p class="ecg-question">{{ item.lead_question }}</p></header>
+        <div><h4>Important controls</h4><ul>{% for value in item.important_fields %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Finance integration</p><h2>Company-code data is part of the BP design, not a later accounting detail.</h2><p>{{ graph.finance_controls.lead_rule }}</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Customer and supplier</h3><ul>{% for value in graph.finance_controls.shared_customer_supplier %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Supplier-sensitive fields</h3><ul>{% for value in graph.finance_controls.supplier_specific_attention %}<li>{{ value }}</li>{% endfor %}</ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Extensions</p>
+      <h2>Extend the semantic model, not only the screen.</h2>
+      <p>Each extension needs a consumer. A field or relationship with no process, API, governance, or analytical consumer becomes maintenance debt.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.extensions %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>extension</small></div><h3>{{ item.title }}</h3></header>
+        <div class="ecg-decision-columns"><div><h4>Value</h4><p>{{ item.value }}</p></div><div><h4>Guardrail</h4><p>{{ item.guardrail }}</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Limitations & guardrails</p><h2>What the BP model does not solve automatically.</h2></header>
+    <div class="ecg-input-grid">
+      {% for value in graph.limitations_and_guardrails %}<article><span>!</span><p>{{ value }}</p></article>{% endfor %}
+    </div>
+    <div class="ecg-diagnostic"><div><h4>Deployment boundary</h4><p>{{ graph.deployment_boundary.principle }}</p></div><div><h4>One-time accounts</h4><p>{{ graph.one_time_account_policy.warning }}</p></div></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">One-time policy</p><h2>Make the exception measurable.</h2><p>{{ graph.one_time_account_policy.use_when }}</p></header>
+    <div><ul>{% for value in graph.one_time_account_policy.policy_questions %}<li>{{ value }}</li>{% endfor %}</ul></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead decisions</p><h2>Five design choices that should be explicit before migration or build.</h2></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.design_decisions %}
+      <article class="ecg-determination-detail">
+        <header><div><span>?</span><small>decision</small></div><h3>{{ item.question }}</h3></header>
+        <div class="ecg-decision-columns"><div><h4>Default direction</h4><p>{{ item.preferred }}</p></div><div><h4>When to split</h4><p>{{ item.split_when }}</p></div><div><h4>Risk</h4><p>{{ item.risk }}</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">CVI diagnostics</p><h2>Trace the mapping before blaming the application.</h2></header>
+    <div class="ecg-determination-list">
+      {% for step in graph.cvi_diagnostic_sequence %}
+      <article class="ecg-determination-detail"><header><div><span>{% if step.order < 10 %}0{% endif %}{{ step.order }}</span><small>{{ step.check }}</small></div><h3>{{ step.question }}</h3></header></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Validation</p><h2>BP save → mapping proof → process proof.</h2><p>{{ graph.validation_flow.proof_rule }}</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Master data</h3><ul>{% for value in graph.validation_flow.master_data_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Procure-to-Pay</h3><ul>{% for value in graph.validation_flow.procure_to_pay %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Order-to-Cash</h3><ul>{% for value in graph.validation_flow.order_to_cash %}<li>{{ value }}</li>{% endfor %}</ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>Symptoms become useful when tied to the controlling layer.</h2></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.failure_modes %}
+      <article class="ecg-determination-detail">
+        <header><div><span>ERR</span><small>{{ item.likely_layer }}</small></div><h3>{{ item.title }}</h3></header>
+        <div><h4>Trace</h4><ul>{% for value in item.trace %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Anti-patterns</p><h2>Fast fixes that create long BP projects.</h2></header>
+    <div><ul>{% for value in graph.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Answer with layers, trade-offs, and a proof path.</h2></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.assessment_drills %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>Lead drill</small></div><h3>{{ item.question }}</h3></header>
+        <div><h4>Strong answer should mention</h4><ul>{% for value in item.expected %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Study filter</p><h2>What is worth keeping — and what stays in 2019.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Keep the concepts</h3><ul>{% for value in graph.study_filter.keep %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Do not copy blindly</h3><ul>{% for value in graph.study_filter.do_not_treat_as_current_standard %}<li>{{ value }}</li>{% endfor %}</ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="evidence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Current SAP references are reused from the Master Data source registry.</h2>
+      <p>The book is a secondary study input. Product behavior and modern extensibility should be verified against current primary SAP documentation.</p>
+    </header>
+    <div class="ecg-source-list">
+      {% for ref in graph.current_primary_source_refs %}
+        {% for source in evidence.sources %}
+          {% if source.id == ref %}
+          <article><span>{{ source.publisher }}</span><h3>{{ source.title }}</h3><p>{{ source.product_scope }} · {{ source.release_scope }}</p><a href="{{ source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>Secondary study input:</strong> Jawad Akhtar, <em>Business Partners and Customer-Vendor Integration (CVI) in SAP S/4HANA</em>, SAP PRESS, 2019. This page uses independent wording and does not reproduce the publication.</p>
+  </section>
+</div>
