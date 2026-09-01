@@ -755,3 +755,15 @@ def test_head_html_links_sitemap():
     text = path.read_text(encoding="utf-8")
     assert "sitemap.xml" in text
     assert 'rel="sitemap"' in text
+
+
+def test_head_loads_research_canvas_for_pages_that_use_it():
+    path = REPO_ROOT / "_includes" / "head.html"
+    text = path.read_text(encoding="utf-8")
+    assert "page.content contains 'research-canvas'" in text
+    assert "/assets/research-canvas.css" in text
+
+
+def test_jekyll_excludes_local_node_dependencies():
+    config = yaml.safe_load((REPO_ROOT / "_config.yml").read_text(encoding="utf-8"))
+    assert "node_modules" in config["exclude"]
