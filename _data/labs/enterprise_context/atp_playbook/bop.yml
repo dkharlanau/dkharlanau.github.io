@@ -1,0 +1,39 @@
+id: AATP-PLAYBOOK-BOP
+title: Backorder Processing Design
+updated_at: '2026-09-01'
+release_scope:
+- SAP S/4HANA 2025 FPS01 where cited
+bop_design:
+  title: Backorder Processing — selection, priority, exceptions, and runtime scope
+  blocks:
+  - title: Segment
+    purpose: Selects requirements and defines their prioritization sequence.
+    check: Which filters and prioritizers put this requirement into the segment?
+  - title: Confirmation strategy
+    purpose: Defines whether the requirement must win, retain, improve, redistribute, fill, lose, or be skipped.
+    check: What is the intended business promise if supply is insufficient?
+  - title: Variant
+    purpose: Combines segments, strategies, global filters, runtime options, and exception handling into one executable
+      policy.
+    check: Which variant actually ran, in simulation or update mode?
+  - title: Global segment
+    purpose: Defines the overall set of requirements in scope and the remainder group behavior.
+    check: Are requirements outside the intended business population accidentally included or excluded?
+  - title: Fallback variant
+    purpose: Provides a second policy when Win or Gain expectations cannot be fulfilled.
+    check: Should processing stop, isolate failed material-plant combinations, or continue with a fallback?
+  - title: Availability Change Log filter
+    purpose: Limits BOP to material-plant-MRP-area combinations whose supply, demand, or relevant master-data situation
+      changed since the previous successful run.
+    check: Does the run need a full population or only changed availability situations?
+  lead_rules:
+  - Use simulation before a new or materially changed priority policy updates productive confirmations.
+  - For Win and Gain, define exception and fallback behavior deliberately; SAP recommends fallback handling for
+    these strategies.
+  - Keep selection and priority explainable before adding BAdIs.
+  - Use ACL filtering when the business wants change-driven processing rather than repeated full-scope BOP.
+  source_refs:
+  - SRC-SAP-AATP-BOP-CONCEPTS
+  - SRC-SAP-AATP-BOP-STRATEGIES
+  - SRC-SAP-AATP-BOP-CONFIG
+  - SRC-SAP-AATP-BOP-ACL
