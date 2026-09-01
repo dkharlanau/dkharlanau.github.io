@@ -1,0 +1,541 @@
+id: GRAPH-S4-BUSINESS-PARTNER-DESIGN
+type: knowledge_graph
+title: "SAP Business Partner — Configuration, CVI, Guardrails & Extensions"
+summary: >-
+  A Lead-level working model for SAP S/4HANA Business Partner design. It separates
+  identity, roles, organizational views, account groups, number ranges, CVI mappings,
+  field control, partner functions, relationships, supplier and customer behavior,
+  extensibility, governance, and validation. The goal is to understand what controls
+  the runtime result and where a design can break, not to memorize one IMG path.
+domain: "SAP S/4HANA Cross-Application Master Data"
+process_family: "Order-to-Cash / Procure-to-Pay / Finance Integration"
+process_step: "Design and Govern Business Partner Master Data"
+status: researching
+created_at: "2026-09-01"
+updated_at: "2026-09-01"
+verified_at: null
+
+source_policy: >-
+  The study input is Jawad Akhtar, Business Partners and Customer-Vendor Integration
+  (CVI) in SAP S/4HANA, SAP PRESS, 2019. This graph is an independent paraphrase and
+  design synthesis. It does not reproduce book text, screenshots, tables, or company
+  examples. Current SAP product facts should be checked against the primary-source
+  registry already used by the Master Data Lab.
+
+current_primary_source_refs:
+  - SRC-SAP-MD-BP-STRUCTURE
+  - SRC-SAP-MD-BP-ROLES
+  - SRC-SAP-MD-BP-PARTNER-PROCEDURE
+  - SRC-SAP-MD-BP-EXTENSIBILITY
+  - SRC-SAP-MD-BP-API
+  - SRC-SAP-MD-BP-DRF
+  - SRC-SAP-MD-MDG-BP
+  - SRC-SAP-MD-MDG-DRF
+
+study_filter:
+  keep:
+    - "the layered BP mental model and the separation of general, FI, sales, and purchasing data"
+    - "CVI key mapping and number-assignment design"
+    - "field-control, partner-function, relationship, blocking, and organizational-view concepts"
+    - "supplier purchasing controls and customer sales controls that materially change process behavior"
+    - "end-to-end validation through both Procure-to-Pay and Order-to-Cash"
+  do_not_treat_as_current_standard:
+    - "exact 2019 IMG menu paths or transaction shortcuts"
+    - "custom copies of standard BP roles as a default design choice"
+    - "example transaction-count or annual-spend limits for one-time accounts"
+    - "legacy reporting workarounds as the preferred reporting model"
+    - "country-specific legal or tax examples without current local validation"
+
+lead_thesis: >-
+  A Business Partner is not one flat customer or supplier record. It is one identity
+  with roles and organizational views. Most design errors come from mixing these
+  layers: treating a BP grouping as an account group, treating a role as a sales area,
+  or assuming that a successful BP save proves that customer, supplier, FI, sales, and
+  purchasing segments are all complete.
+
+role_model:
+  - role: "000000"
+    name: "Business Partner (General)"
+    scope: "Shared identity"
+    typical_data: "name, addresses, communication, identification, bank data, relationships"
+    lead_question: "Which values are truly global and therefore have the widest blast radius?"
+  - role: "FLCU00"
+    name: "FI Customer"
+    scope: "Company code"
+    typical_data: "reconciliation account, payment and correspondence controls, withholding tax where relevant"
+    lead_question: "Is the customer ready for FI-AR in the required company code?"
+  - role: "FLCU01"
+    name: "Customer"
+    scope: "Sales area"
+    typical_data: "sales, shipping, billing, pricing defaults and partner functions"
+    lead_question: "Is the BP extended to the exact sales organization, distribution channel, and division used by the document?"
+  - role: "FLVN00"
+    name: "FI Supplier"
+    scope: "Company code"
+    typical_data: "reconciliation account, payment controls, withholding tax and accounting data"
+    lead_question: "Is the supplier financially ready in the company code that will post the liability?"
+  - role: "FLVN01"
+    name: "Supplier"
+    scope: "Purchasing organization"
+    typical_data: "order currency, purchasing conditions, invoice-verification and confirmation behavior"
+    lead_question: "Is the supplier extended to the purchasing organization that creates the purchasing document?"
+
+configuration_layers:
+  - order: 1
+    title: "BP category and identity"
+    controls:
+      - "Person, Organization, or Group determines the identity shape."
+      - "General data is shared across later business roles."
+      - "Naming, tax-identification, and search conventions are duplicate-prevention controls, not cosmetic fields."
+    failure_signal: "Duplicate partners, wrong identity type, or a global address change affects several processes."
+  - order: 2
+    title: "BP grouping and BP number range"
+    controls:
+      - "Grouping determines the BP number-range strategy."
+      - "Internal and external numbering are design choices; overlapping ranges must be avoided."
+      - "Using readable alignment between grouping and customer/supplier account-group design reduces support ambiguity, but matching codes are a convention, not a business requirement."
+    failure_signal: "A BP is created with an unexpected number or cannot map cleanly to the customer/supplier number strategy."
+  - order: 3
+    title: "Customer and supplier account groups"
+    controls:
+      - "Account groups classify customer or supplier segments and carry legacy FI/logistics controls."
+      - "They influence number assignment and field status."
+      - "Create separate account groups only when numbering, field control, reporting, or process behavior is genuinely different."
+    failure_signal: "Too many account groups make CVI mapping, migration, authorization, and support harder without adding business value."
+  - order: 4
+    title: "BP roles, role categories, and BP views"
+    controls:
+      - "Roles expose a business context; role categories and views control which role-specific screens and fields are available."
+      - "Standard customer and supplier roles should be the first design choice."
+      - "A custom role is justified only when a real process or UI-control requirement cannot be expressed with the standard model."
+    failure_signal: "The BP opens, but customer- or supplier-specific fields are missing because the role/view design is wrong."
+  - order: 5
+    title: "CVI direction and key mapping"
+    controls:
+      - "CVI links the BP object with the customer and supplier technical master-data objects used by downstream processes."
+      - "Design must cover BP-to-customer/supplier and customer/supplier-to-BP mapping where those directions are used."
+      - "Grouping-to-account-group assignment and role-category behavior must agree with the number strategy."
+    failure_signal: "The BP exists, but the expected customer or supplier record is missing, mismatched, or created with the wrong key."
+  - order: 6
+    title: "Organizational extensions"
+    controls:
+      - "General BP data alone does not make a partner process-ready."
+      - "FI requires company-code data; sales requires sales-area data; procurement requires purchasing-organization data."
+      - "One BP can be complete in one organizational unit and incomplete in another."
+    failure_signal: "The partner works in one company code, sales area, or purchasing organization and fails in another."
+  - order: 7
+    title: "Field-control layers"
+    controls:
+      - "Customer/supplier account groups can suppress, require, allow, or display fields."
+      - "BP role/category field attributes can add another control layer."
+      - "Company-code-specific screen control can introduce an additional organizational rule."
+    failure_signal: "A field is unexpectedly hidden, mandatory, or display-only. Trace every applicable control layer instead of changing the first screen you find."
+  - order: 8
+    title: "Partner functions and BP relationships"
+    controls:
+      - "Partner functions drive process roles such as sold-to, ship-to, bill-to, payer, vendor, goods supplier, ordering address, and invoicing party."
+      - "BP relationships connect separate BP identities; they are not the same object as SD/MM partner determination."
+      - "Use separate BPs when the related party is a distinct legal or operational identity that needs its own master data."
+    failure_signal: "The correct sold-to or supplier is used, but delivery, invoice, payment, ordering, or goods-supplier behavior points to the wrong party."
+  - order: 9
+    title: "Authorization, block, and lifecycle controls"
+    controls:
+      - "Authorization groups can restrict who may maintain sensitive partner data."
+      - "Blocks can exist at different scopes and should be chosen according to the business risk being stopped."
+      - "Bank, payment, tax, and status changes need stronger governance because they can create direct financial impact."
+    failure_signal: "A user can see the BP but cannot change a field, or a process is stopped by a block at a different organizational scope than expected."
+  - order: 10
+    title: "Distribution and extensibility"
+    controls:
+      - "A source BP is only useful to another system after the required roles, keys, organizational views, relationships, and extension fields arrive."
+      - "Released APIs, DRF/MDG distribution, and released custom-field contexts should be preferred over hidden table dependencies."
+      - "An extension is complete only when UI, persistence, API/event payload, replication, and consuming logic agree."
+    failure_signal: "The field looks correct in the source UI but is absent or semantically different in a downstream application."
+
+number_strategy:
+  decision: "Should BP, customer, and supplier use identical numbers?"
+  options:
+    - name: "Same-number strategy"
+      value: "One visible key across BP and the mapped customer/supplier object."
+      benefits:
+        - "simpler operational communication and reconciliation"
+        - "easier migration checks and support conversations"
+      constraints:
+        - "number ranges must be deliberately aligned"
+        - "target-side assignment settings must support the chosen direction"
+        - "legacy number collisions can make the design expensive"
+    - name: "Different-number strategy"
+      value: "BP and customer/supplier use different technical keys linked by CVI."
+      benefits:
+        - "easier coexistence with legacy numbering"
+        - "less pressure to redesign historical customer or supplier ranges"
+      constraints:
+        - "support and integrations must never assume the numbers are identical"
+        - "cross-object reconciliation becomes a first-class diagnostic step"
+  lead_rule: >-
+    Same numbers are convenient, not inherently superior. Decide before migration, document
+    the mapping, test both creation directions, and never use key equality as the only proof
+    that CVI is correct.
+
+field_control_model:
+  states:
+    - "hidden / suppressed"
+    - "required"
+    - "optional"
+    - "display-only"
+  inspect_when_wrong:
+    - "BP role and role-category field attributes"
+    - "customer or supplier account-group field status"
+    - "company-code-specific screen control where configured"
+    - "organizational extension actually selected in the BP"
+    - "custom-field business context and UI adaptation"
+  lead_rule: >-
+    Do not solve a field-status incident by making every field optional. First decide which
+    business event needs the value, who owns it, and at which level it must be complete.
+
+shared_data_guardrail:
+  principle: "General BP data is reused across roles, so it has the largest change radius."
+  high_impact_examples:
+    - "legal name and addresses"
+    - "tax and identification numbers"
+    - "communication details"
+    - "bank data"
+    - "relationships"
+  controls:
+    - "define ownership for general versus role-specific data"
+    - "use duplicate checks and naming/search conventions"
+    - "apply approval or sensitive-field controls to bank, payment, and tax changes"
+    - "regression-test both customer and supplier processes when one legal entity uses both roles"
+
+partner_model:
+  customer_functions:
+    - code: "AG / SP"
+      name: "Sold-to party"
+      business_meaning: "commercial ordering relationship"
+    - code: "WE / SH"
+      name: "Ship-to party"
+      business_meaning: "physical delivery recipient"
+    - code: "RE / BP"
+      name: "Bill-to party"
+      business_meaning: "invoice recipient"
+    - code: "RG / PY"
+      name: "Payer"
+      business_meaning: "payment responsibility"
+  supplier_functions:
+    - code: "VN"
+      name: "Vendor / supplier"
+      business_meaning: "main purchasing partner"
+    - code: "GS"
+      name: "Goods supplier"
+      business_meaning: "party physically supplying the goods"
+    - code: "PI"
+      name: "Invoicing party"
+      business_meaning: "party that sends the supplier invoice"
+    - code: "OA"
+      name: "Ordering address"
+      business_meaning: "address or entity that receives the purchase order"
+  distinction: >-
+    Partner functions answer “who performs this process role?”. BP relationships answer
+    “how are these two BP identities related?”. Keep both models explicit.
+
+supplier_controls:
+  - area: "Commercial defaults"
+    important_fields:
+      - "order currency"
+      - "Incoterms"
+      - "supplier schema group / pricing determination inputs"
+      - "minimum order value where relevant"
+    lead_question: "Which values should default from supplier master data, and which belong to a more specific purchasing-info or document level?"
+  - area: "Receipt and invoice behavior"
+    important_fields:
+      - "GR-based invoice verification"
+      - "evaluated receipt settlement (ERS)"
+      - "service-based invoice verification"
+      - "duplicate-invoice check in FI supplier data"
+    lead_question: "Does the master-data switch match the real invoice and receipt process, or are users compensating manually?"
+  - area: "Supplier confirmations and automation"
+    important_fields:
+      - "acknowledgment requirement"
+      - "confirmation control key"
+      - "automatic purchase order eligibility"
+      - "planned delivery time"
+    lead_question: "Which supplier response is expected and which date or automation will consume it?"
+  - area: "Partner and quality model"
+    important_fields:
+      - "goods supplier / invoicing party / ordering address"
+      - "supplier subrange where product-range segmentation is required"
+      - "quality-management system and validity where the business requires it"
+    lead_question: "Is the master data describing one company, or several operational parties hidden behind one supplier number?"
+
+customer_controls:
+  - area: "Commercial and pricing defaults"
+    important_fields:
+      - "customer pricing procedure"
+      - "customer price group / price list type"
+      - "terms of payment"
+      - "Incoterms"
+    lead_question: "Which commercial key builds pricing and billing behavior for this sales area?"
+  - area: "Shipping and delivery policy"
+    important_fields:
+      - "shipping conditions"
+      - "delivery priority"
+      - "delivering plant default where used"
+      - "complete versus partial delivery"
+      - "under- and overdelivery tolerances"
+      - "proof-of-delivery relevance in the wider process design"
+    lead_question: "Which customer rule changes the fulfillment plan before ATP, delivery, or billing is blamed?"
+  - area: "Billing and finance integration"
+    important_fields:
+      - "billing calendar / invoice-date logic where used"
+      - "invoice-list schedule where used"
+      - "account assignment group"
+      - "credit-management relationship and payment-guarantee controls where relevant"
+    lead_question: "Can the sales area create the document while the payer or company-code view remains incomplete?"
+  - area: "Partner model"
+    important_fields:
+      - "sold-to"
+      - "ship-to"
+      - "bill-to"
+      - "payer"
+    lead_question: "Which partner actually owns delivery, invoice receipt, payment, and credit exposure?"
+
+finance_controls:
+  shared_customer_supplier:
+    - "reconciliation account"
+    - "payment terms"
+    - "payment methods and payment blocks where relevant"
+    - "dunning / correspondence controls"
+    - "withholding-tax data where legally required"
+    - "authorization group"
+  supplier_specific_attention:
+    - "duplicate-invoice check"
+    - "alternative payee and bank-account governance"
+    - "payment release / block controls"
+  lead_rule: >-
+    FI data is not an appendix to logistics master data. A BP design is incomplete until
+    SD/MM and FI ownership agree on company-code creation, sensitive-field approval, and
+    the posting behavior expected from the partner.
+
+extensions:
+  - title: "Multiple addresses and address usages"
+    value: "Represent different legal, delivery, ordering, or correspondence locations without cloning the whole partner."
+    guardrail: "Use address purpose and validity deliberately; do not create duplicate BPs only to store another address."
+  - title: "Time-dependent subentities"
+    value: "Roles, addresses, relationships, and bank data can require validity over time."
+    guardrail: "A future-dated change needs downstream consumers that understand the same validity semantics."
+  - title: "Relationships"
+    value: "Connect headquarters, branches, contacts, or other related BP identities."
+    guardrail: "Do not confuse a relationship with the partner function that a sales or purchasing document needs."
+  - title: "Supplier subranges"
+    value: "Segment a broad supplier portfolio into product ranges when purchasing behavior needs that distinction."
+    guardrail: "Use only when the range changes a real purchasing process or output; avoid a classification layer with no consumer."
+  - title: "External and legacy identifiers"
+    value: "Retain previous account numbers or integration keys during migration and coexistence."
+    guardrail: "Define one reconciliation rule; do not allow every interface to invent its own cross-reference."
+  - title: "Released custom fields"
+    value: "Add business-specific attributes in an allowed customer, supplier, or BP business context."
+    guardrail: "Confirm the field is released for the UI, API, replication, analytics, and business logic that must consume it."
+  - title: "API / DRF / MDG distribution"
+    value: "Move governed BP changes to consuming applications through supported interfaces."
+    guardrail: "Interface success is not semantic success; reconcile role, key, organizational view, relationship, and extension-field completeness."
+
+limitations_and_guardrails:
+  - "CVI is part of the S/4HANA Business Partner model; a saved BP does not by itself prove that the mapped customer or supplier object is complete."
+  - "BP grouping and customer/supplier account group solve different problems. Do not merge the concepts in design documentation."
+  - "A business role does not replace the organizational extension. FLCU01 still needs sales-area data; FLVN01 still needs purchasing-organization data; FI roles need company-code data."
+  - "General BP fields are shared. A change made for procurement can affect sales when the same legal entity also has customer roles."
+  - "Same-number mapping has prerequisites and migration consequences. Treat it as an architecture decision, not a checkbox to enable late in the project."
+  - "One-time customer or supplier accounts are governance exceptions. Thresholds are company policy, not universal SAP rules."
+  - "Custom account groups and custom BP roles increase mapping and test combinations. Standard-first is the safer baseline."
+  - "Country-specific tax, bank, and legal fields require current local validation; examples from older training material are not legal guidance."
+  - "Exact transactions, IMG paths, Fiori apps, and configuration activities differ by S/4HANA release and deployment model."
+
+one_time_account_policy:
+  use_when: "The business intentionally accepts a controlled, low-frequency relationship without maintaining a full reusable master record."
+  policy_questions:
+    - "How many transactions are allowed before conversion to a normal BP?"
+    - "What annual value or risk threshold triggers full onboarding?"
+    - "Which tax, bank, sanctions, or approval checks are still mandatory?"
+    - "Who reviews accumulated spend or revenue to prevent permanent use of the exception?"
+  warning: >-
+    The 2019 study source gives example thresholds. Those numbers are illustrations only.
+    The site intentionally keeps the thresholds as policy questions rather than SAP defaults.
+
+design_decisions:
+  - question: "One legal entity is both customer and supplier. One BP or two?"
+    preferred: "Usually one BP with customer and supplier roles when it is the same governed legal identity."
+    split_when: "Use separate BPs when the parties are genuinely different legal/operational identities or governance requires independent lifecycles."
+    risk: "Duplicating the same legal entity can create conflicting addresses, tax IDs, bank data, and integration keys."
+  - question: "Create a new account group?"
+    preferred: "Only when number range, field control, reporting, authorization, or process behavior needs a durable distinction."
+    split_when: "Do not create a group only because the business has another reporting label; use a more suitable classification if no master-data behavior changes."
+    risk: "Account-group proliferation multiplies CVI mapping, migration, testing, and support paths."
+  - question: "Create a custom BP role?"
+    preferred: "Start with standard roles and views."
+    split_when: "Create a custom role only for a real role-specific process or UI-control requirement with a clear owner and test case."
+    risk: "A copied role can look harmless but introduce hidden field-view and CVI behavior differences."
+  - question: "Use same numbers?"
+    preferred: "Choose based on migration, integration, and support simplicity before build starts."
+    split_when: "Keep different numbers when legacy ranges or coexistence make forced alignment high-risk."
+    risk: "Late number harmonization can collide with existing keys and interface assumptions."
+  - question: "Where should a new field live?"
+    preferred: "Place it at the narrowest semantic level that owns the meaning: general BP, company code, sales area, purchasing organization, or another released context."
+    split_when: "Do not put an organizational value into general BP data merely because it is easy to display there."
+    risk: "Wrong-level custom fields create contradictory values and replication ambiguity."
+
+cvi_diagnostic_sequence:
+  - order: 1
+    check: "Identity"
+    question: "Does the BP exist with the expected category and general data?"
+  - order: 2
+    check: "Role"
+    question: "Is the required standard customer or supplier role present?"
+  - order: 3
+    check: "Organizational view"
+    question: "Is the exact company code, sales area, or purchasing organization maintained?"
+  - order: 4
+    check: "Grouping and account group"
+    question: "Does the CVI key mapping connect this BP grouping to the intended customer/supplier account group?"
+  - order: 5
+    check: "Number strategy"
+    question: "Do internal/external assignment and same-number settings match the configured ranges?"
+  - order: 6
+    check: "Role-category integration"
+    question: "Should the mapped customer/supplier be created automatically for this role category, and is that behavior configured?"
+  - order: 7
+    check: "Field completeness"
+    question: "Are required fields blocked by field status, missing organizational data, or a wrong BP view?"
+  - order: 8
+    check: "Downstream object"
+    question: "Was the expected customer/supplier object created with the right key and segment data?"
+  - order: 9
+    check: "Distribution"
+    question: "Did the same roles, keys, relationships, and extensions reach every consuming system?"
+
+validation_flow:
+  master_data_checks:
+    - "Run the BP completeness/check function and resolve errors before process testing."
+    - "Verify expected BP roles plus customer/supplier IDs."
+    - "Verify company-code, sales-area, and purchasing-organization extensions separately."
+    - "Verify partner functions and BP relationships with the intended parties."
+    - "Verify blocks, payment data, tax data, bank data, and sensitive-field approvals at the correct scope."
+  procure_to_pay:
+    - "Create or display a purchase order using the supplier in the intended purchasing organization and company code."
+    - "Post the goods receipt or service acceptance according to the process design."
+    - "Post supplier invoice verification and confirm that GR-based IV, ERS, service-based IV, or duplicate checks behave as designed."
+  order_to_cash:
+    - "Create a sales order in the intended sales area and inspect sold-to, ship-to, bill-to, and payer."
+    - "Process delivery / goods issue and confirm shipping defaults and delivery policy."
+    - "Create billing and confirm FI customer readiness, partner responsibility, and account assignment."
+  proof_rule: >-
+    A successful BP save is configuration evidence. A successful P2P and O2C document flow
+    is process evidence. Use both before calling the design complete.
+
+failure_modes:
+  - title: "BP exists, sales order says customer is not defined for the sales area"
+    likely_layer: "FLCU01 organizational extension"
+    trace:
+      - "confirm role FLCU01"
+      - "confirm sales organization / distribution channel / division"
+      - "check field status and mandatory data for that sales area"
+  - title: "BP exists, purchase order cannot use the supplier in one purchasing organization"
+    likely_layer: "FLVN01 purchasing-organization extension"
+    trace:
+      - "confirm role FLVN01"
+      - "confirm purchasing organization"
+      - "compare supplier purchasing data with a working organization"
+  - title: "Customer or supplier number differs from expectation"
+    likely_layer: "grouping, account group, and CVI number mapping"
+    trace:
+      - "check BP grouping and BP number range"
+      - "check customer/supplier account group and number range"
+      - "check same-number and internal/external assignment design"
+  - title: "Customer/supplier fields are not visible in BP"
+    likely_layer: "role, role category, or BP view"
+    trace:
+      - "confirm selected role"
+      - "confirm role-category and view assignment"
+      - "check role-specific field attributes"
+  - title: "Wrong payer, ship-to, invoicing party, or goods supplier appears"
+    likely_layer: "partner determination or BP relationship model"
+    trace:
+      - "identify the process partner function that is wrong"
+      - "check partner-determination procedure and master-data assignment"
+      - "only then inspect BP relationships if they are part of the design"
+  - title: "Source BP is correct, downstream system is incomplete"
+    likely_layer: "API / DRF / MDG distribution contract"
+    trace:
+      - "compare keys and roles"
+      - "compare organizational views and relationships"
+      - "compare custom-field publication and mapping"
+      - "reconcile source and target rather than relying on message success"
+
+anti_patterns:
+  - "Treating BP as a renamed XD01/XK01 screen instead of a role-based master-data model."
+  - "Creating one account group per business label with no change in numbering or process control."
+  - "Copying FLVN01 or FLCU01 into custom roles before proving that standard behavior is insufficient."
+  - "Making fields optional to get migration through without defining data ownership."
+  - "Assuming one BP number proves that customer and supplier mappings are correct."
+  - "Using one-time accounts as a permanent onboarding shortcut."
+  - "Changing shared bank, tax, or address data without checking the other BP roles that reuse it."
+  - "Testing only BP creation instead of running one real P2P and O2C flow."
+  - "Using old transaction or IMG-path memory as the design specification for every deployment model."
+
+assessment_drills:
+  - question: "Explain the difference between BP grouping, customer/supplier account group, and BP role."
+    expected:
+      - "grouping is primarily a BP number-assignment construct"
+      - "account group classifies the mapped customer/supplier object and influences its number/field controls"
+      - "role exposes a business context such as FI, Sales, or Purchasing"
+      - "CVI links the layers; they are related but not interchangeable"
+  - question: "Why can one BP work in one sales area but fail in another?"
+    expected:
+      - "FLCU01 is organizationally extended by sales area"
+      - "general BP data can be correct while the sales-area segment is missing or incomplete"
+      - "field status and partner functions may also differ by the relevant configuration"
+  - question: "What must you decide before selecting same-number CVI?"
+    expected:
+      - "BP and customer/supplier number ranges"
+      - "internal versus external assignment in the chosen direction"
+      - "legacy collisions and migration mapping"
+      - "integration assumptions and reconciliation method"
+  - question: "Why is copying a standard BP role a risk?"
+    expected:
+      - "role category, BP view, field attributes, and CVI behavior can diverge"
+      - "custom roles increase test combinations and support effort"
+      - "standard-first keeps the model easier to upgrade and explain"
+  - question: "A supplier is also a customer. How would you model it?"
+    expected:
+      - "start from legal identity, not process labels"
+      - "normally use one BP with customer and supplier roles for the same legal entity"
+      - "separate only when identities or governance lifecycles are genuinely different"
+      - "regression-test shared general data across both process families"
+  - question: "A custom BP field is visible in S/4HANA but missing in a downstream system. What do you check?"
+    expected:
+      - "business context and semantic level"
+      - "API/event/DRF exposure"
+      - "mapping and target support"
+      - "role and organizational-view completeness"
+      - "source-target reconciliation"
+  - question: "How do you validate BP configuration after customizing?"
+    expected:
+      - "BP completeness plus role and organizational-view checks"
+      - "CVI customer/supplier key verification"
+      - "partner-function and sensitive-field checks"
+      - "P2P purchase order → receipt/service → invoice"
+      - "O2C sales order → delivery/goods issue → billing"
+  - question: "What from a 2019 BP/CVI guide should not be copied blindly into a 2026 design?"
+    expected:
+      - "exact transactions and IMG paths"
+      - "custom role copies as a default"
+      - "example one-time-account thresholds as SAP rules"
+      - "legacy reporting shortcuts"
+      - "country-specific legal examples without current validation"
+
+deployment_boundary:
+  principle: >-
+    The identity/role/organizational-view model is useful across S/4HANA deployments, but
+    the configuration surface is not identical. On-premise or private-cloud systems may
+    expose classic IMG and transaction paths, while Public Cloud uses released configuration
+    activities, apps, APIs, and extensibility. Keep the concept in the knowledge model and
+    resolve the exact tool in the target release.
