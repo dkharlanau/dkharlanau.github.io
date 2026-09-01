@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0.0",
+  "case_id": "enterprise-change-evidence-pack",
+  "title": "Enterprise change evidence pack",
+  "classification": "synthetic_public_reference_case",
+  "client_free": true,
+  "language": "en",
+  "inventory": {
+    "expected_artifacts": "expected-artifacts.json",
+    "local_validator": "validate.py",
+    "local_test": "test_validate.py"
+  },
+  "products": [
+    {
+      "id": "enterprise-change-evidence-pack",
+      "role": "case-local producer of synthetic fixtures, detached identities, and digest bindings",
+      "repository": "https://github.com/dkharlanau/dkharlanau.github.io"
+    },
+    {
+      "id": "signal-to-insight",
+      "role": "producer of reviewed external research context",
+      "repository": "https://github.com/dkharlanau/signal-to-insight"
+    },
+    {
+      "id": "enterprise-architecture-composer",
+      "role": "producer of the synthetic architecture decision record and visual projection",
+      "repository": "https://github.com/dkharlanau/enterprise-architecture-composer"
+    },
+    {
+      "id": "visual-workbench",
+      "role": "validator and renderer of the coordinate-free visual projection",
+      "repository": "https://github.com/dkharlanau/visual-workbench"
+    },
+    {
+      "id": "project-evidence-graph",
+      "role": "validator and analyzer of the synthetic assurance graph",
+      "repository": "https://github.com/dkharlanau/project-evidence-graph"
+    },
+    {
+      "id": "reconciliation-as-code",
+      "role": "optional producer of runtime comparison evidence; not exercised here",
+      "repository": "https://github.com/dkharlanau/reconciliation-as-code"
+    },
+    {
+      "id": "cutover-graph",
+      "role": "optional consumer of verified external evidence; not exercised here",
+      "repository": "https://github.com/dkharlanau/cutover-graph"
+    }
+  ],
+  "status_definitions": {
+    "implemented": "The edge is reproduced by committed fixtures and a deterministic product command in this case.",
+    "documented": "The products document the boundary, but this case does not execute or retain that handoff.",
+    "demonstration-only": "The case authors an explicit, digest-bound bridge because no runtime producer-consumer adapter is implemented."
+  },
+  "case_owned_identities": [
+    "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/research-context?version=1.0.0",
+    "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/decision-basis?version=1.0.0",
+    "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/architecture-decision?version=1.0.0",
+    "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/architecture-blueprint?version=1.0.0",
+    "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/architecture-visual-source?version=1.0.0",
+    "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/executive-render?version=1.0.0"
+  ],
+  "edges": [
+    {
+      "id": "research-context-to-architecture-decision",
+      "producer": "signal-to-insight",
+      "consumer": "enterprise-architecture-composer",
+      "status": "demonstration-only",
+      "source_contract_url": "https://dkharlanau.github.io/signal-to-insight/contracts/research-evidence-handoff.schema.json",
+      "verification_command": "python3 \"$STI_REPO/sti.py\" handoff validate \"$CASE_DIR/fixtures/research-context.json\" && python3 \"$CASE_DIR/validate.py\"",
+      "evidence_paths": [
+        "fixtures/research-context.json",
+        "fixtures/decision-basis.json",
+        "fixtures/architecture-context.json"
+      ],
+      "boundary": "Signal to Insight implements export and validation of the research packet. Enterprise Architecture Composer has no consumer adapter for it. The sidecar records a manually authored synthetic translation, requires human review, and grants no approval or execution authority."
+    },
+    {
+      "id": "architecture-decision-to-visual-render",
+      "producer": "enterprise-architecture-composer",
+      "consumer": "visual-workbench",
+      "status": "implemented",
+      "source_contract_url": "https://github.com/dkharlanau/enterprise-architecture-composer/blob/main/docs/VISUAL-WORKBENCH-INTEGRATION.md",
+      "verification_command": "node \"$EAC_REPO/bin/eac.mjs\" visual \"$CASE_DIR/fixtures/architecture-context.json\" --markdown --output /tmp/architecture.visual.md && node \"$VW_REPO/dist/cli.js\" validate /tmp/architecture.visual.md && node \"$VW_REPO/dist/cli.js\" render /tmp/architecture.visual.md --view executive --output /tmp/architecture.executive.svg && python3 \"$CASE_DIR/normalize_render.py\" /tmp/architecture.executive.svg",
+      "evidence_paths": [
+        "artifacts/architecture.blueprint.json",
+        "artifacts/architecture.visual.txt",
+        "artifacts/architecture.executive.svg"
+      ],
+      "boundary": "Composer owns the architecture proposal, IDs, and synthetic decision record. Visual Workbench owns validation, layout, and rendering. The SVG is a presentation artifact and neither approves nor changes the architecture decision."
+    },
+    {
+      "id": "visual-render-to-project-assurance",
+      "producer": "visual-workbench",
+      "consumer": "project-evidence-graph",
+      "status": "demonstration-only",
+      "source_contract_url": "https://github.com/dkharlanau/visual-workbench/blob/main/docs/project-evidence-graph.md",
+      "verification_command": "python3 \"$CASE_DIR/validate.py\" && python3 \"$PEG_REPO/evidence_graph.py\" \"$CASE_DIR/fixtures/project-evidence.json\" analyze",
+      "evidence_paths": [
+        "artifacts/architecture.executive.svg",
+        "fixtures/project-evidence.json"
+      ],
+      "boundary": "No Visual Workbench-to-Project Evidence Graph importer exists. The case binds the SVG digest into a manually authored synthetic graph. The implemented product adapter runs in the opposite direction: Project Evidence Graph to Visual Workbench."
+    },
+    {
+      "id": "project-evidence-structural-analysis",
+      "producer": "enterprise-change-evidence-pack",
+      "consumer": "project-evidence-graph",
+      "status": "implemented",
+      "source_contract_url": "https://github.com/dkharlanau/project-evidence-graph/blob/main/README.md",
+      "verification_command": "python3 \"$PEG_REPO/evidence_graph.py\" \"$CASE_DIR/fixtures/project-evidence.json\" analyze",
+      "evidence_paths": [
+        "fixtures/project-evidence.json",
+        "artifacts/project-evidence.analysis.json"
+      ],
+      "boundary": "Project Evidence Graph proves structural validity and traceability coverage for this synthetic graph. It does not prove architecture fitness, implementation, production readiness, or human approval."
+    },
+    {
+      "id": "optional-reconciliation-to-cutover",
+      "producer": "reconciliation-as-code",
+      "consumer": "cutover-graph",
+      "status": "documented",
+      "source_contract_url": "https://github.com/dkharlanau/cutover-graph/blob/main/docs/ARTIFACT-INDEX.md",
+      "verification_command": "Follow the verified external-evidence registry workflow documented by Cutover Graph; this reference case retains no reconciliation run or registry.",
+      "evidence_paths": [],
+      "boundary": "Optional and excluded from this pack. A syntactically valid reconciliation reference is not positive evidence without a verified local evidence-document binding."
+    },
+    {
+      "id": "optional-cutover-to-project-assurance",
+      "producer": "cutover-graph",
+      "consumer": "project-evidence-graph",
+      "status": "documented",
+      "source_contract_url": "https://github.com/dkharlanau/cutover-graph/blob/main/docs/ARTIFACT-INDEX.md",
+      "verification_command": "Follow the import-cutover workflow documented by Cutover Graph and Project Evidence Graph; this reference case retains no cutover artifact index.",
+      "evidence_paths": [],
+      "boundary": "Optional and excluded from this pack. An unverified external checkpoint must remain an assurance gap rather than being promoted to positive evidence."
+    }
+  ],
+  "boundaries": {
+    "synthetic": true,
+    "client_data_present": false,
+    "production_evidence_present": false,
+    "human_approval_present": false,
+    "authorization_or_execution_instruction_present": false,
+    "universal_eac_resolver_assumed": false,
+    "eac_identity_effect": "Identity only. Each case-owned eac:// reference identifies a detached reference-case artifact; it is not a network location, signature, authorization, or trust assertion.",
+    "runtime_claim": "Only Composer-to-Visual Workbench and local Project Evidence structural analysis are executed by this pack. The other connections retain their declared demonstration or documentation status."
+  }
+}

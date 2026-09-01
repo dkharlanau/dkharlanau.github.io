@@ -1,0 +1,48 @@
+{
+  "industry": "synthetic discrete manufacturing",
+  "operatingModel": "b2b",
+  "processes": [
+    "order-to-cash"
+  ],
+  "scale": {
+    "countries": 3,
+    "legalEntities": 4,
+    "plants": 2,
+    "warehouses": 3
+  },
+  "constraints": {
+    "multiCompany": true,
+    "highVolume": true,
+    "retainLegacyWms": false
+  },
+  "existingSystems": [
+    "crm",
+    "erp",
+    "mdm",
+    "integration-platform",
+    "data-platform"
+  ],
+  "requireExplicitNfrs": true,
+  "nfrProfile": {
+    "purpose": "business-request",
+    "latency": "immediate",
+    "consistency": "strong",
+    "volume": "medium",
+    "fanOut": 1,
+    "ordering": "none",
+    "replay": "not-required",
+    "offlineTolerance": "none",
+    "partnerBoundary": false,
+    "payloadSize": "small",
+    "changeFrequency": "medium",
+    "immediateResponse": true
+  },
+  "architectureDecisions": [
+    {
+      "id": "decision.sales-order-request-durability",
+      "recommendationId": "rec.integration.sales-order-request",
+      "status": "accepted",
+      "rationale": "Synthetic reference-case choice: retain an immediate business response while keeping execution history, human review, and production controls outside this proposal. This is not a production approval."
+    }
+  ]
+}

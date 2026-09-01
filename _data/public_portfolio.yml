@@ -4,7 +4,7 @@ id: dkharlanau-public-project-map
 projection:
   canonical_source: /products/manifest.json
   canonical_schema_version: '1.3'
-  canonical_sha256: d2f8fa5cfc48202f381d4dcd260ca9a046a615fed02cec2de65eec19b16216f4
+  canonical_sha256: 8bf55199ae9efe699e0374664266f7b83a88684b9caccc2c3166aaff9170be4d
   policy: Generated presentation projection. Edit products/manifest.json, then run python3 scripts/generate_public_portfolio.py.
 title: Public project map
 description: A reader-first map of Dzmitryi Kharlanau's public repositories across enterprise design,
@@ -15,10 +15,11 @@ machine_url: https://dkharlanau.github.io/ai/public-portfolio.json
 scope:
   account: dkharlanau
   repository_count: 17
-  selection: Public, non-archived source repositories returned by GitHub for the account on the observation
-    date, excluding dkharlanau.github.io.
+  selection: Public, non-archived project source repositories returned by GitHub for the account on the
+    observation date, excluding the central website and GitHub profile repositories.
   excluded_repositories:
   - dkharlanau.github.io
+  - dkharlanau
 boundaries:
   classification: This is a reader navigation layer. It does not replace the source of truth, contract,
     or ownership rules inside any repository.
@@ -28,6 +29,34 @@ boundaries:
     or operational approval.
   freshness: Repository availability and descriptions were observed from public GitHub metadata on the
     observation date. Follow each repository for current behavior.
+reference_case:
+  id: enterprise-change-evidence-pack
+  title: Enterprise Change Evidence Pack
+  summary: Follow one synthetic change from source-backed context through an architecture decision, a
+    business-readable visual, and an assurance graph without treating the demonstration as production
+    evidence.
+  status: synthetic-reproducible-demonstration
+  human_url: https://dkharlanau.github.io/machine/portfolio/enterprise-change-evidence-pack/
+  machine_url: https://dkharlanau.github.io/products/reference-cases/enterprise-change-evidence-pack/manifest.json
+  source_url: https://github.com/dkharlanau/dkharlanau.github.io/tree/main/products/reference-cases/enterprise-change-evidence-pack
+  boundary: The pack demonstrates bounded artifact identity, provenance, and verification. It does not
+    prove external adoption, live SAP execution, business approval, or universal runtime compatibility.
+actions:
+- id: run
+  label: Run the reference case
+  description: Inspect the synthetic inputs, verification commands, expected digests, and explicit handoff
+    status for one end-to-end evidence chain.
+  href: /machine/portfolio/enterprise-change-evidence-pack/
+- id: propose
+  label: Propose an integration
+  description: Describe the producer, consumer, artifact, trust boundary, and smallest fixture needed
+    to test another cross-project handoff.
+  href: https://github.com/dkharlanau/dkharlanau.github.io/issues/new?template=portfolio-integration.yml
+- id: collaborate
+  label: Discuss a real problem
+  description: Use the portfolio as evidence for a concrete SAP, transformation, architecture, or practical
+    AI problem rather than adopting it as a package.
+  href: https://www.linkedin.com/in/dkharlanau
 homepage:
   kicker: Public project work
   title: Three paths through the repository portfolio.

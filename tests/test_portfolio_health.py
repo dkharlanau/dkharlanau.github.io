@@ -21,7 +21,14 @@ def test_live_inventory_is_manifest_backed_and_contains_exact_public_scope():
     assert len(specs) == 17
     assert {spec.inventory_source for spec in specs} == {"products/manifest.json"}
     assert "dkharlanau.github.io" not in {spec.name for spec in specs}
+    assert "dkharlanau" not in {spec.name for spec in specs}
     assert config["additional_repositories"] == []
+    assert {surface["id"] for surface in config["required_public_surfaces"]} == {
+        "public-project-map",
+        "enterprise-change-evidence-pack",
+        "enterprise-change-evidence-pack-manifest",
+        "public-portfolio-json",
+    }
     assert set(config["release_required_repositories"]) == {
         "enterprise-architecture-composer",
         "project-evidence-graph",
@@ -56,6 +63,8 @@ def test_fixture_report_detects_publication_and_contract_failures_without_privat
         "required_release_at_published_sha": 1,
         "local_checkouts_checked": 0,
         "local_publication_clean": 0,
+        "required_public_surfaces": 0,
+        "required_public_surfaces_live": 0,
     }
 
     beta = next(repo for repo in report["repositories"] if repo["name"] == "beta-tool")
@@ -85,6 +94,32 @@ def test_fixture_report_detects_publication_and_contract_failures_without_privat
     assert "# Public portfolio health" in markdown
     assert "beta-tool / error / `author_footer_mismatch`" in markdown
     assert "no GitHub Traffic API data" in markdown
+
+
+def test_required_public_surfaces_are_part_of_strict_health_without_private_data():
+    config, specs = load_inventory(FIXTURE, FIXTURE / "config.json")
+    config["required_public_surfaces"] = [
+        {"id": "project-map", "url": "https://dkharlanau.github.io/alpha-tool/"},
+        {"id": "missing-case", "url": "https://dkharlanau.github.io/beta-tool/"},
+    ]
+
+    report = build_report(
+        config,
+        specs,
+        FixtureClient(FIXTURE / "responses.json"),
+        generated_at="2026-09-01T10:00:00Z",
+    )
+
+    assert report["status"] == "attention"
+    assert report["summary"]["required_public_surfaces"] == 2
+    assert report["summary"]["required_public_surfaces_live"] == 1
+    assert [surface["id"] for surface in report["public_surfaces"]] == [
+        "project-map",
+        "missing-case",
+    ]
+    assert report["public_surfaces"][0]["probe"]["live"] is True
+    assert report["public_surfaces"][1]["probe"]["live"] is False
+    assert "missing-case" in render_markdown(report)
 
 
 def test_required_release_must_resolve_to_current_published_main_sha():

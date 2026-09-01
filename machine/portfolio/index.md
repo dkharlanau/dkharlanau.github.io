@@ -47,6 +47,23 @@ tags:
     <a href="{{ portfolio.machine_url }}">Read JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
+  <section class="portfolio-map__reference" data-reveal aria-labelledby="portfolio-reference-title">
+    <div>
+      <p class="research-canvas__eyebrow">Reproducible reference case</p>
+      <h2 id="portfolio-reference-title">{{ portfolio.reference_case.title }}</h2>
+      <p>{{ portfolio.reference_case.summary }}</p>
+      <div class="portfolio-map__reference-actions">
+        <a class="research-canvas__button" href="{{ portfolio.reference_case.human_url }}">Run the evidence pack <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+        <a href="{{ portfolio.reference_case.machine_url }}">Inspect the machine manifest <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <aside aria-label="Reference case boundary">
+      <span>{{ portfolio.reference_case.status | replace: '-', ' ' }}</span>
+      <p>{{ portfolio.reference_case.boundary }}</p>
+      <a href="{{ portfolio.reference_case.source_url }}">Source and fixtures <span aria-hidden="true">↗</span></a>
+    </aside>
+  </section>
+
   <section class="portfolio-map__tracks" id="portfolio-tracks" data-reveal>
     <header class="portfolio-map__intro">
       <p class="research-canvas__eyebrow">Reader-first routes</p>
@@ -105,5 +122,23 @@ tags:
       <li><span>02</span><strong>Read its boundary</strong><p>Use the repository's README, examples, schemas, and validation commands as the local authority.</p></li>
       <li><span>03</span><strong>Verify any handoff</strong><p>Treat a cross-project workflow as supported only when the participating repositories document and test it.</p></li>
     </ol>
+  </section>
+
+  <section class="portfolio-map__actions" data-reveal aria-labelledby="portfolio-actions-title">
+    <header>
+      <p class="research-canvas__eyebrow">One useful next step</p>
+      <h2 id="portfolio-actions-title">Move from browsing to evidence.</h2>
+      <p>Run one bounded workflow, propose one testable handoff, or bring one concrete problem. Public availability alone is not an adoption result.</p>
+    </header>
+    <div>
+      {% for action in portfolio.actions %}
+      <a href="{{ action.href }}"{% if action.href contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+        <span>0{{ forloop.index }}</span>
+        <strong>{{ action.label }}</strong>
+        <small>{{ action.description }}</small>
+        <em aria-hidden="true">↗</em>
+      </a>
+      {% endfor %}
+    </div>
   </section>
 </div>

@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0.0",
+  "algorithm": "sha256",
+  "digest_scope": "exact committed file bytes",
+  "files": [
+    {
+      "path": "fixtures/research-context.json",
+      "kind": "detached_source_fixture",
+      "media_type": "application/json",
+      "producer": "signal-to-insight",
+      "source_contract_url": "https://dkharlanau.github.io/signal-to-insight/contracts/research-evidence-handoff.schema.json",
+      "sha256": "12d4a8c2edb3cb8f34c17a4e9321105affce4dcd3f9e3888ea60a70ad6671694",
+      "bytes": 4129
+    },
+    {
+      "path": "fixtures/architecture-context.json",
+      "kind": "synthetic_input_fixture",
+      "media_type": "application/json",
+      "producer": "enterprise-change-evidence-pack",
+      "source_contract_url": "https://dkharlanau.github.io/enterprise-architecture-composer/schemas/context.schema.json",
+      "sha256": "29b25e1cc2bd11cc81915faf950980bd50e11a98342e32e8ea3b88da422438cf",
+      "bytes": 1242
+    },
+    {
+      "path": "fixtures/decision-basis.json",
+      "kind": "demonstration_boundary_sidecar",
+      "media_type": "application/json",
+      "producer": "enterprise-change-evidence-pack",
+      "source_contract_url": "https://github.com/dkharlanau/dkharlanau.github.io/blob/main/products/INTEROPERABILITY.md",
+      "sha256": "707c1ab2c78bb66843fee9e7d1bc79bf69085b650102930fe92282795fb00d1d",
+      "bytes": 1593
+    },
+    {
+      "path": "fixtures/project-evidence.json",
+      "kind": "synthetic_assurance_fixture",
+      "media_type": "application/json",
+      "producer": "enterprise-change-evidence-pack",
+      "source_contract_url": "https://github.com/dkharlanau/project-evidence-graph/blob/main/README.md",
+      "sha256": "a6e4fe48881778295237e1340761d93a96ddf54c6bf9d226e5b96782606b7049",
+      "bytes": 5475
+    },
+    {
+      "path": "artifacts/architecture.blueprint.json",
+      "kind": "deterministic_composer_output",
+      "media_type": "application/json",
+      "producer": "enterprise-architecture-composer",
+      "source_contract_url": "https://dkharlanau.github.io/enterprise-architecture-composer/schemas/blueprint.schema.json",
+      "sha256": "a00a2abf0061f153d33e63e6de3d59182066349369cc384ed8fcde8c140e29df",
+      "bytes": 44705
+    },
+    {
+      "path": "artifacts/architecture.visual.txt",
+      "kind": "coordinate_free_visual_projection",
+      "media_type": "text/markdown",
+      "producer": "enterprise-architecture-composer",
+      "source_contract_url": "https://github.com/dkharlanau/enterprise-architecture-composer/blob/main/docs/VISUAL-WORKBENCH-INTEGRATION.md",
+      "sha256": "cf039d373b5ded5e9b7a22466bbe559fab6bb5ec3cddbc80936b99975b368624",
+      "bytes": 13192
+    },
+    {
+      "path": "artifacts/architecture.executive.svg",
+      "kind": "deterministic_visual_render_with_whitespace_normalization",
+      "media_type": "image/svg+xml",
+      "producer": "visual-workbench",
+      "source_contract_url": "https://github.com/dkharlanau/visual-workbench/blob/main/schemas/visual-workbench.schema.json",
+      "sha256": "bd8dd6e593d547903cde9f5d5138c094d95be4614dd31e24bc8bc35ed7364b91",
+      "bytes": 6147
+    },
+    {
+      "path": "artifacts/project-evidence.analysis.json",
+      "kind": "deterministic_structural_assurance_analysis",
+      "media_type": "application/json",
+      "producer": "project-evidence-graph",
+      "source_contract_url": "https://github.com/dkharlanau/project-evidence-graph/blob/main/README.md",
+      "sha256": "f3b30893888bda989920d4fbf907654697ce81f1ac05bff98f30b19a890ceb57",
+      "bytes": 875
+    }
+  ],
+  "assertions": {
+    "research_context": {
+      "schema_version": "1.0.0",
+      "trust_level": "external_research_context",
+      "payload_digest": "sha256:a65fca94fee05a84570cac0ca8aa2bb8e31f65737ecde9cd5fe7473b9b4051dc"
+    },
+    "architecture_blueprint": {
+      "schema_version": "0.1",
+      "decision_id": "decision.sales-order-request-durability",
+      "decision_status": "accepted",
+      "effective_decision": "pattern.sync-api"
+    },
+    "visual_projection": {
+      "title": "Composed enterprise architecture",
+      "named_views": [
+        "executive",
+        "integration",
+        "data",
+        "exceptions"
+      ],
+      "executive_render_title": "Executive architecture"
+    },
+    "project_evidence_analysis": {
+      "valid": true,
+      "node_count": 8,
+      "link_count": 13,
+      "test_coverage": 1.0,
+      "evidence_coverage": 1.0
+    }
+  }
+}

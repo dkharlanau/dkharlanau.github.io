@@ -1,0 +1,148 @@
+{
+  "case_id": "enterprise-change-evidence-pack",
+  "classification": "synthetic_public_reference_case",
+  "assurance_scope": "reference-case artifact identity, integrity, and declared handoff boundaries only",
+  "nodes": [
+    {
+      "id": "REQ-CHAIN-001",
+      "type": "requirement",
+      "risk": "high",
+      "title": "Retain a reconstructable research-to-decision-to-visual reference chain"
+    },
+    {
+      "id": "EVID-RESEARCH-001",
+      "type": "evidence",
+      "title": "Detached Signal to Insight research-context packet",
+      "artifact_ref": "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/research-context?version=1.0.0",
+      "document_sha256": "sha256:12d4a8c2edb3cb8f34c17a4e9321105affce4dcd3f9e3888ea60a70ad6671694",
+      "trust_level": "external_research_context",
+      "positive_operational_evidence": false
+    },
+    {
+      "id": "DEC-ARCH-001",
+      "type": "decision",
+      "title": "Use a synchronous API for the synthetic sales-order request",
+      "artifact_ref": "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/architecture-decision?version=1.0.0",
+      "producer_id": "decision.sales-order-request-durability",
+      "status": "synthetic_acceptance",
+      "human_approval": false,
+      "production_decision": false
+    },
+    {
+      "id": "EVID-DECISION-BASIS-001",
+      "type": "evidence",
+      "title": "Synthetic decision-basis sidecar with explicit research boundary",
+      "artifact_ref": "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/decision-basis?version=1.0.0",
+      "document_sha256": "sha256:707c1ab2c78bb66843fee9e7d1bc79bf69085b650102930fe92282795fb00d1d",
+      "producer": "enterprise-change-evidence-pack",
+      "positive_operational_evidence": false
+    },
+    {
+      "id": "TEST-PACK-VALIDATOR-001",
+      "type": "test",
+      "title": "Run the local deterministic reference-pack validator",
+      "command": "python3 validate.py"
+    },
+    {
+      "id": "EVID-BLUEPRINT-001",
+      "type": "evidence",
+      "title": "Deterministic Composer blueprint containing the synthetic decision record",
+      "artifact_ref": "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/architecture-blueprint?version=1.0.0",
+      "document_sha256": "sha256:a00a2abf0061f153d33e63e6de3d59182066349369cc384ed8fcde8c140e29df",
+      "producer": "enterprise-architecture-composer",
+      "positive_operational_evidence": false
+    },
+    {
+      "id": "EVID-VISUAL-SOURCE-001",
+      "type": "evidence",
+      "title": "Coordinate-free Composer projection for Visual Workbench",
+      "artifact_ref": "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/architecture-visual-source?version=1.0.0",
+      "document_sha256": "sha256:cf039d373b5ded5e9b7a22466bbe559fab6bb5ec3cddbc80936b99975b368624",
+      "producer": "enterprise-architecture-composer",
+      "positive_operational_evidence": false
+    },
+    {
+      "id": "EVID-VISUAL-RENDER-001",
+      "type": "evidence",
+      "title": "Deterministic Visual Workbench executive SVG",
+      "artifact_ref": "eac://dkharlanau/dkharlanau.github.io/reference-case/enterprise-change-evidence-pack/executive-render?version=1.0.0",
+      "document_sha256": "sha256:bd8dd6e593d547903cde9f5d5138c094d95be4614dd31e24bc8bc35ed7364b91",
+      "producer": "visual-workbench",
+      "positive_operational_evidence": false
+    }
+  ],
+  "links": [
+    {
+      "from": "REQ-CHAIN-001",
+      "to": "EVID-RESEARCH-001",
+      "type": "contextualized_by"
+    },
+    {
+      "from": "REQ-CHAIN-001",
+      "to": "DEC-ARCH-001",
+      "type": "resolved_by"
+    },
+    {
+      "from": "REQ-CHAIN-001",
+      "to": "TEST-PACK-VALIDATOR-001",
+      "type": "verified_by"
+    },
+    {
+      "from": "EVID-RESEARCH-001",
+      "to": "EVID-DECISION-BASIS-001",
+      "type": "selected_into"
+    },
+    {
+      "from": "EVID-DECISION-BASIS-001",
+      "to": "DEC-ARCH-001",
+      "type": "informed_fixture_for"
+    },
+    {
+      "from": "DEC-ARCH-001",
+      "to": "EVID-BLUEPRINT-001",
+      "type": "recorded_in"
+    },
+    {
+      "from": "EVID-BLUEPRINT-001",
+      "to": "EVID-VISUAL-SOURCE-001",
+      "type": "projected_as"
+    },
+    {
+      "from": "EVID-VISUAL-SOURCE-001",
+      "to": "EVID-VISUAL-RENDER-001",
+      "type": "rendered_as"
+    },
+    {
+      "from": "TEST-PACK-VALIDATOR-001",
+      "to": "EVID-BLUEPRINT-001",
+      "type": "checks_integrity_of"
+    },
+    {
+      "from": "TEST-PACK-VALIDATOR-001",
+      "to": "EVID-VISUAL-SOURCE-001",
+      "type": "checks_integrity_of"
+    },
+    {
+      "from": "TEST-PACK-VALIDATOR-001",
+      "to": "EVID-VISUAL-RENDER-001",
+      "type": "checks_integrity_of"
+    },
+    {
+      "from": "REQ-CHAIN-001",
+      "to": "EVID-BLUEPRINT-001",
+      "type": "supported_by"
+    },
+    {
+      "from": "REQ-CHAIN-001",
+      "to": "EVID-VISUAL-RENDER-001",
+      "type": "illustrated_by"
+    }
+  ],
+  "boundary": {
+    "visual_to_assurance_adapter": "absent",
+    "graph_authoring": "demonstration-only digest binding",
+    "production_readiness_claimed": false,
+    "authorization_claimed": false,
+    "statement": "The graph proves only that the retained synthetic artifacts and their declared relationships are structurally reconstructable. It does not verify architecture fitness, implementation, cutover readiness, or a production outcome."
+  }
+}

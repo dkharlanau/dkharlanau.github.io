@@ -2,100 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Enterprise Transformation Toolkit — Dzmitryi Kharlanau</title>
-  <meta name="description" content="A composable open-source toolkit for process contracts, mappings, interfaces, enterprise graphs, reconciliation, cutover, project assurance, SAP operations, and visual learning.">
-  <link rel="canonical" href="https://dkharlanau.github.io/products/">
-  <meta property="og:url" content="https://dkharlanau.github.io/products/">
-  <style>
-    :root{--blue:#1019c8;--navy:#101756;--bg:#eef4ff;--bg2:#f8fbff;--line:#c7d7fb;--muted:#505a82;--lime:#c6ff00;--ink:#11183e;--white:#fff}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--bg2);font-family:"Avenir Next",Avenir,Montserrat,Arial,sans-serif;line-height:1.5}a{color:inherit}.wrap{width:min(1180px,calc(100% - 40px));margin:auto}.top{display:flex;align-items:center;justify-content:space-between;padding:24px 0;font-size:14px}.brand{font-weight:800;text-decoration:none;letter-spacing:-.02em}.top nav{display:flex;gap:18px}.top nav a{color:var(--muted);text-decoration:none}.hero{padding:86px 0 58px;border-top:1px solid var(--line)}.kicker{font:700 12px/1.2 "Cascadia Code","IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.12em;color:var(--blue)}h1{font-size:clamp(48px,8vw,100px);line-height:.91;letter-spacing:-.065em;max-width:980px;margin:18px 0 28px}.lead{font-size:clamp(18px,2vw,25px);max-width:790px;color:var(--muted);margin:0}.principles{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:white;margin:28px 0 86px}.principle{padding:22px;border-right:1px solid var(--line)}.principle:last-child{border-right:0}.principle b{display:block;font-size:14px;margin-bottom:5px}.principle span{font-size:13px;color:var(--muted)}.section{padding:72px 0;border-top:1px solid var(--line)}.section-head{display:grid;grid-template-columns:1fr 2fr;gap:30px;margin-bottom:30px}.section h2{font-size:clamp(30px,4vw,54px);line-height:1;letter-spacing:-.045em;margin:0}.section-head p{max-width:690px;color:var(--muted);font-size:17px;margin:4px 0 0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{position:relative;display:block;min-height:236px;padding:28px;border:1px solid var(--line);border-radius:12px;background:white;text-decoration:none;transition:.18s ease}.card:hover{transform:translateY(-2px);border-color:var(--blue);box-shadow:0 12px 30px rgba(16,25,200,.08)}.num{font:700 11px/1 monospace;color:var(--blue)}.status{position:absolute;right:24px;top:22px;padding:5px 8px;border:1px solid var(--line);border-radius:999px;font:700 10px/1.1 monospace;letter-spacing:.04em;color:var(--muted);background:var(--bg2)}.status.live{border-color:#9cc800;background:#efffc0;color:#314800}.card h3{font-size:27px;line-height:1.05;letter-spacing:-.035em;margin:42px 0 10px}.card p{max-width:500px;color:var(--muted);margin:0}.card .destination{display:block;margin-top:18px;font:700 11px/1.2 monospace;color:var(--blue)}.chooser{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}.choice{background:white;padding:20px 22px;text-decoration:none}.choice:hover{background:#f5f8ff}.choice b{display:block;font-size:15px;margin-bottom:4px}.choice span{font-size:13px;color:var(--muted)}.architecture-note{margin-top:20px;color:var(--muted);font-size:14px}.architecture-note a{color:var(--blue);font-weight:700;text-decoration:none}.flow{display:grid;grid-template-columns:repeat(4,1fr);align-items:stretch;margin-top:26px}.flow div{padding:22px 18px;border:1px solid var(--line);background:white;margin-left:-1px}.flow div:first-child{border-radius:12px 0 0 12px;margin-left:0}.flow div:last-child{border-radius:0 12px 12px 0}.flow b{display:block;font-size:13px;margin-bottom:6px}.flow span{font-size:12px;color:var(--muted)}.agent{background:var(--navy);color:white}.agent .section-head p{color:#cbd1ff}.agent .flow div{background:rgba(255,255,255,.04);border-color:#39428f}.agent .flow span{color:#bfc6f5}.agent .kicker{color:var(--lime)}.cta{padding:86px 0;background:var(--blue);color:white}.cta h2{font-size:clamp(40px,6vw,76px);letter-spacing:-.055em;line-height:.95;max-width:850px;margin:0 0 26px}.cta p{max-width:720px;color:#d8dcff;font-size:18px}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}.btn{display:inline-block;padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.45);text-decoration:none;font-weight:700;font-size:14px}.btn.primary{background:var(--lime);border-color:var(--lime);color:var(--navy)}footer{padding:32px 0;color:var(--muted);font-size:13px;background:var(--bg2)}
-    @media(max-width:760px){.top nav{display:none}.hero{padding-top:58px}.principles{grid-template-columns:1fr 1fr;margin-bottom:50px}.principle{border-bottom:1px solid var(--line)}.section{padding:52px 0}.section-head{grid-template-columns:1fr}.grid,.chooser{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.flow div{margin:-1px 0 0}.flow div:first-child{border-radius:12px 12px 0 0}.flow div:last-child{border-radius:0 0 12px 12px}h1{font-size:52px}.status{right:18px}.card{padding:24px 20px}}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Public project map</title>
+  <meta name="description" content="Compatibility route for the problem-led public project map.">
+  <meta name="robots" content="noindex,follow">
+  <link rel="canonical" href="https://dkharlanau.github.io/machine/portfolio/">
+  <meta property="og:title" content="Public project map">
+  <meta property="og:description" content="Choose a public project by the enterprise, transformation assurance, SAP, or practical AI decision you need to make.">
+  <meta property="og:url" content="https://dkharlanau.github.io/machine/portfolio/">
+  <meta http-equiv="refresh" content="0; url=/machine/portfolio/">
 </head>
 <body>
-  <header class="wrap top"><a class="brand" href="/">DZMITRYI KHARLANAU</a><nav><a href="#start">Start</a><a href="#contracts">Contracts</a><a href="#assurance">Assurance</a><a href="#visual">Visual</a></nav></header>
-  <main>
-    <section class="wrap hero">
-      <div class="kicker">Open enterprise transformation toolkit</div>
-      <h1>Enterprise change,<br>made inspectable.</h1>
-      <p class="lead">Fourteen small, composable products for turning transformation work into explicit contracts, relationship graphs, evidence, execution state, and business-readable artifacts. Each product owns one bounded semantic job.</p>
-    </section>
-
-    <section class="wrap principles" aria-label="Shared principles">
-      <div class="principle"><b>Human-readable first</b><span>The source remains understandable outside the tool.</span></div>
-      <div class="principle"><b>Deterministic</b><span>The same input should produce the same decision or artifact.</span></div>
-      <div class="principle"><b>Evidence over assertions</b><span>Important outcomes can be inspected and reproduced.</span></div>
-      <div class="principle"><b>One semantic owner</b><span>Reference domain truth instead of copying it into every graph.</span></div>
-    </section>
-
-    <section class="section" id="start"><div class="wrap">
-      <div class="section-head"><h2>Start with the problem</h2><p>You do not need the whole toolkit. Pick the product that owns the problem. Every link below is a currently reachable public entry point; project Pages are used only where deployment is actually enabled.</p></div>
-      <div class="chooser">
-        <a class="choice" href="https://github.com/dkharlanau/process-as-code"><b>I need to describe how work should flow</b><span>Process as Code · repository</span></a>
-        <a class="choice" href="https://github.com/dkharlanau/decision-tables-as-code"><b>I need to make business rules executable</b><span>Decision Tables as Code · repository</span></a>
-        <a class="choice" href="https://github.com/dkharlanau/interface-as-code"><b>I need to make an integration operable</b><span>Interface as Code · repository</span></a>
-        <a class="choice" href="https://github.com/dkharlanau/mapping-as-code"><b>I need to govern source → target transformation</b><span>Mapping as Code · repository</span></a>
-        <a class="choice" href="https://github.com/dkharlanau/data-relationship-map"><b>I need to investigate cross-system identity</b><span>Data Relationship Map · repository</span></a>
-        <a class="choice" href="https://github.com/dkharlanau/reconciliation-as-code"><b>I need to prove migrated or replicated state</b><span>Reconciliation as Code · repository</span></a>
-        <a class="choice" href="https://github.com/dkharlanau/enterprise-change-graph"><b>I need to understand one change's blast radius</b><span>Enterprise Change Graph · repository</span></a>
-        <a class="choice" href="https://github.com/dkharlanau/cutover-graph"><b>I need to coordinate cutover readiness</b><span>Cutover Graph · repository</span></a>
-      </div>
-      <p class="architecture-note">One semantic owner, references before copies, derived views stay derived. <a href="https://github.com/dkharlanau/dkharlanau.github.io/blob/main/products/ARCHITECTURE.md">Read the portfolio architecture →</a></p>
-    </div></section>
-
-    <section class="section" id="contracts"><div class="wrap">
-      <div class="section-head"><h2>Intent & contracts</h2><p>Capture what a process, decision, transformation, or integration is supposed to do before execution makes the intent hard to inspect.</p></div>
-      <div class="grid">
-        <a class="card" href="https://github.com/dkharlanau/process-as-code"><span class="num">01 / PROCESS</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Process as Code</h3><p>Version, validate, diff and govern process semantics; derive BPMN, review views, test scope and agent context from the same source.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://github.com/dkharlanau/decision-tables-as-code"><span class="num">02 / DECISIONS</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Decision Tables as Code</h3><p>Turn spreadsheet and structured business rules into deterministic, testable and auditable decision contracts.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://github.com/dkharlanau/mapping-as-code"><span class="num">03 / MAPPING</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Mapping as Code</h3><p>Govern source-to-target transformations with validation, semantic diff, lineage, policy gates and interoperable evidence.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://github.com/dkharlanau/interface-as-code"><span class="num">04 / INTERFACES</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Interface as Code</h3><p>Keep integration ownership, contract, retry, recovery, monitoring, reconciliation and release readiness reviewable in Git.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-      </div>
-    </div></section>
-
-    <section class="section" id="graphs"><div class="wrap">
-      <div class="section-head"><h2>Relationships & impact</h2><p>Use bounded graphs for distinct questions: identity and lineage, durable project topology, or the impact of one concrete change.</p></div>
-      <div class="grid">
-        <a class="card" href="https://github.com/dkharlanau/data-relationship-map"><span class="num">05 / IDENTITY & LINEAGE</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Data Relationship Map</h3><p>Investigate cross-system identities, explicit relationships, lineage, cardinality anomalies and source-row provenance from ordinary exports.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://github.com/dkharlanau/transformation-graph"><span class="num">06 / PROJECT GRAPH</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Transformation Graph</h3><p>Materialize a project-scoped transformation graph from independently owned process, mapping and interface contracts.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://github.com/dkharlanau/enterprise-change-graph"><span class="num">07 / CHANGE IMPACT</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Enterprise Change Graph</h3><p>Explain what a concrete change affects, why a target is included or excluded, and what regression scope and review follow.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-      </div>
-    </div></section>
-
-    <section class="section" id="assurance"><div class="wrap">
-      <div class="section-head"><h2>Assurance & execution</h2><p>Prove state, coordinate live cutover decisions, connect claims to current evidence, and diagnose SAP-heavy operations from bounded evidence.</p></div>
-      <div class="grid">
-        <a class="card" href="https://github.com/dkharlanau/reconciliation-as-code"><span class="num">08 / RECONCILIATION</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Reconciliation as Code</h3><p>Run repeatable migration and replication controls with explicit identity, tolerances, exceptions and retained evidence.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://github.com/dkharlanau/cutover-graph"><span class="num">09 / CUTOVER</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Cutover Graph</h3><p>A deterministic control room for dependencies, timing, checkpoints, risk, trusted snapshots, contingencies and verified evidence.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://github.com/dkharlanau/project-evidence-graph"><span class="num">10 / PROJECT ASSURANCE</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Project Evidence Graph</h3><p>Trace requirements through implementation, tests and evidence; review freshness/risk and compare assurance across releases.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://dkharlanau.github.io/sap-agentic-operations/"><span class="num">11 / SAP OPERATIONS</span><span class="status live">LIVE PAGE</span><h3>SAP Agentic Operations</h3><p>Diagnose SAP-heavy incidents from bounded evidence and constrain recovery to actions the current evidence actually justifies.</p><span class="destination">OPEN LIVE PRODUCT PAGE ↗</span></a>
-      </div>
-    </div></section>
-
-    <section class="section" id="visual"><div class="wrap">
-      <div class="section-head"><h2>Visual & learning</h2><p>Turn structured meaning into readable business visuals, and external sources into evidence-backed cumulative understanding.</p></div>
-      <div class="grid">
-        <a class="card" href="https://github.com/dkharlanau/visual-workbench"><span class="num">12 / VISUAL</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Visual Workbench</h3><p>Describe semantics rather than coordinates; render deterministic process, handoff, data, plan, dependency and relationship views.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-        <a class="card" href="https://github.com/dkharlanau/signal-to-insight"><span class="num">13 / LEARNING</span><span class="status">GITHUB · PAGE PLANNED</span><h3>Signal to Insight</h3><p>Turn sources into whole-source models, Knowledge Deltas, evidence-backed decisions and a cumulative concept graph.</p><span class="destination">OPEN REPOSITORY ↗</span></a>
-      </div>
-    </div></section>
-
-    <section class="section" id="interoperability"><div class="wrap">
-      <div class="section-head"><h2>Agent interoperability</h2><p>A separate product track resolves the public web, structured, API and agent interfaces a website actually exposes. It is not a required step in the transformation chain.</p></div>
-      <div class="grid">
-        <a class="card" href="https://dkharlanau.github.io/agent-ready-web-profile/"><span class="num">14 / RESOLVER</span><span class="status live">LIVE PAGE</span><h3>Agent-Ready Web Profile</h3><p>Resolve public machine and agent surfaces, preserve authority/conflicts, and select the interface appropriate for a concrete intent.</p><span class="destination">OPEN LIVE PRODUCT PAGE ↗</span></a>
-      </div>
-    </div></section>
-
-    <section class="section agent"><div class="wrap">
-      <div class="kicker">A shared operating rule</div>
-      <div class="section-head"><h2>Usable by people.<br>Invocable by agents.</h2><p>Repositories expose bounded machine-readable contracts and deterministic commands. Agent reasoning should consume those contracts rather than silently becoming the source of enterprise truth.</p></div>
-      <div class="flow"><div><b>01 · Discover</b><span>Start from the user problem and semantic owner.</span></div><div><b>02 · Inspect</b><span>Validate input, provenance, authority and boundaries.</span></div><div><b>03 · Execute safely</b><span>Prefer read-only, dry-run and deterministic operations.</span></div><div><b>04 · Return evidence</b><span>Produce structured output a person can review or retain.</span></div></div>
-    </div></section>
-
-    <section class="cta"><div class="wrap"><h2>Small tools. One inspectable transformation system.</h2><p>The toolkit is intentionally modular. Repository links are the stable public baseline; a product switches to its project page only after that page is actually deployed and verified.</p><div class="buttons"><a class="btn primary" href="https://github.com/dkharlanau?tab=repositories">Browse repositories</a><a class="btn" href="manifest.json">Machine-readable product map</a><a class="btn" href="/">Back to main site</a></div></div></section>
+  <a href="#main-content">Skip to content</a>
+  <header>
+    <nav aria-label="Compatibility navigation">
+      <a href="/machine/portfolio/">Public project map</a>
+    </nav>
+  </header>
+  <main id="main-content">
+    <h1>Public project map</h1>
+    <p>The maintained reader map lives at <a href="/machine/portfolio/">/machine/portfolio/</a>. This route remains available so older references continue to work.</p>
+    <p>The machine-readable product and interoperability contracts remain under <a href="/products/manifest.json">/products/</a>.</p>
   </main>
-  <footer><div class="wrap">Dzmitryi Kharlanau · Enterprise systems, transformation, and agent-compatible delivery tooling.</div></footer>
+  <footer>
+    <p>Dzmitryi Kharlanau</p>
+  </footer>
 </body>
 </html>

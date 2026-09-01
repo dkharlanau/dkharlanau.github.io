@@ -1,0 +1,1407 @@
+{
+  "schemaVersion": "0.1",
+  "engineVersion": "0.2.0",
+  "catalogVersion": "0.1.0",
+  "context": {
+    "industry": "synthetic discrete manufacturing",
+    "operatingModel": "b2b",
+    "processes": [
+      "order-to-cash"
+    ],
+    "scale": {
+      "countries": 3,
+      "legalEntities": 4,
+      "plants": 2,
+      "warehouses": 3
+    },
+    "constraints": {
+      "multiCompany": true,
+      "highVolume": true,
+      "retainLegacyWms": false
+    },
+    "existingSystemIds": [
+      "sys.crm",
+      "sys.data-platform",
+      "sys.erp",
+      "sys.integration",
+      "sys.mdm"
+    ],
+    "nfrProfile": {
+      "purpose": "business-request",
+      "latency": "immediate",
+      "consistency": "strong",
+      "volume": "medium",
+      "fanOut": 1,
+      "ordering": "none",
+      "replay": "not-required",
+      "offlineTolerance": "none",
+      "partnerBoundary": false,
+      "payloadSize": "small",
+      "changeFrequency": "medium",
+      "immediateResponse": true
+    },
+    "requireExplicitNfrs": true,
+    "architectureDecisions": [
+      {
+        "id": "decision.sales-order-request-durability",
+        "recommendationId": "rec.integration.sales-order-request",
+        "status": "accepted",
+        "rationale": "Synthetic reference-case choice: retain an immediate business response while keeping execution history, human review, and production controls outside this proposal. This is not a production approval.",
+        "sourceRecommendation": {
+          "id": "rec.integration.sales-order-request",
+          "kind": "integration-pattern",
+          "decision": "pattern.sync-api",
+          "confidence": "high",
+          "because": [
+            "the caller requires an immediate business response",
+            "the interaction has one principal target"
+          ],
+          "ruleIds": [
+            "INT-SYNC-001"
+          ],
+          "alternatives": [
+            "pattern.async-message"
+          ]
+        }
+      }
+    ]
+  },
+  "blueprint": {
+    "processes": [
+      {
+        "id": "process.order-to-cash",
+        "kind": "process",
+        "key": "order-to-cash",
+        "name": "Order to Cash",
+        "description": "Customer demand through fulfilment, billing and settlement.",
+        "capabilityIds": [
+          "cap.customer-management",
+          "cap.order-management",
+          "cap.fulfilment",
+          "cap.billing",
+          "cap.warehouse-management"
+        ],
+        "systemIds": [
+          "sys.crm",
+          "sys.erp",
+          "sys.wms"
+        ],
+        "dataIds": [
+          "data.customer",
+          "data.product",
+          "data.price",
+          "data.sales-order",
+          "data.delivery",
+          "data.invoice"
+        ],
+        "reasonIds": [
+          "process.order-to-cash"
+        ]
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "cap.billing",
+        "kind": "capability",
+        "name": "Billing",
+        "description": "Create invoices and commercial settlement documents.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ]
+      },
+      {
+        "id": "cap.customer-management",
+        "kind": "capability",
+        "name": "Customer Management",
+        "description": "Manage customer lifecycle, commercial context and relationships.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ]
+      },
+      {
+        "id": "cap.fulfilment",
+        "kind": "capability",
+        "name": "Fulfilment",
+        "description": "Plan and execute delivery of ordered products to customers.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ]
+      },
+      {
+        "id": "cap.intercompany",
+        "kind": "capability",
+        "name": "Intercompany",
+        "description": "Coordinate transactions across legal entities in one operating model.",
+        "reasonIds": [
+          "SCOPE-MULTICOMPANY-001"
+        ]
+      },
+      {
+        "id": "cap.master-data",
+        "kind": "capability",
+        "name": "Master Data",
+        "description": "Govern shared enterprise business objects and ownership.",
+        "reasonIds": [
+          "SCOPE-MULTICOMPANY-001"
+        ]
+      },
+      {
+        "id": "cap.order-management",
+        "kind": "capability",
+        "name": "Order Management",
+        "description": "Capture, validate and manage customer demand through order lifecycle.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ]
+      },
+      {
+        "id": "cap.warehouse-management",
+        "kind": "capability",
+        "name": "Warehouse Management",
+        "description": "Control stock placement, picking, packing and warehouse movements.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ]
+      }
+    ],
+    "systems": [
+      {
+        "id": "sys.crm",
+        "kind": "system-role",
+        "name": "CRM",
+        "description": "Customer interaction and commercial relationship system role.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "state": "current",
+        "intent": "keep"
+      },
+      {
+        "id": "sys.erp",
+        "kind": "system-role",
+        "name": "ERP",
+        "description": "Transactional backbone for orders, procurement, inventory accounting and finance.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "state": "current",
+        "intent": "keep"
+      },
+      {
+        "id": "sys.integration",
+        "kind": "system-role",
+        "name": "Integration Platform",
+        "description": "Managed mediation, messaging, API and B2B integration role.",
+        "reasonIds": [
+          "SYS-INTEGRATION-001"
+        ],
+        "state": "current",
+        "intent": "keep"
+      },
+      {
+        "id": "sys.mdm",
+        "kind": "system-role",
+        "name": "MDM",
+        "description": "Authoritative governance role for shared master data.",
+        "reasonIds": [
+          "SCOPE-MULTICOMPANY-001"
+        ],
+        "state": "current",
+        "intent": "keep"
+      },
+      {
+        "id": "sys.wms",
+        "kind": "system-role",
+        "name": "WMS",
+        "description": "Warehouse execution system role.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "state": "target",
+        "intent": "introduce"
+      }
+    ],
+    "dataObjects": [
+      {
+        "id": "data.customer",
+        "kind": "data-object",
+        "name": "Customer",
+        "defaultOwner": "sys.mdm",
+        "description": "Customer business object used by the reference manufacturing model.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "owner": "sys.mdm"
+      },
+      {
+        "id": "data.delivery",
+        "kind": "data-object",
+        "name": "Delivery",
+        "defaultOwner": "sys.erp",
+        "description": "Delivery business object used by the reference manufacturing model.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "owner": "sys.erp"
+      },
+      {
+        "id": "data.invoice",
+        "kind": "data-object",
+        "name": "Invoice",
+        "defaultOwner": "sys.erp",
+        "description": "Invoice business object used by the reference manufacturing model.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "owner": "sys.erp"
+      },
+      {
+        "id": "data.price",
+        "kind": "data-object",
+        "name": "Price",
+        "defaultOwner": "sys.erp",
+        "description": "Price business object used by the reference manufacturing model.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "owner": "sys.erp"
+      },
+      {
+        "id": "data.product",
+        "kind": "data-object",
+        "name": "Product / Material",
+        "defaultOwner": "sys.mdm",
+        "description": "Product / Material business object used by the reference manufacturing model.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "owner": "sys.mdm"
+      },
+      {
+        "id": "data.sales-order",
+        "kind": "data-object",
+        "name": "Sales Order",
+        "defaultOwner": "sys.erp",
+        "description": "Sales Order business object used by the reference manufacturing model.",
+        "reasonIds": [
+          "process.order-to-cash"
+        ],
+        "owner": "sys.erp"
+      }
+    ],
+    "integrations": [
+      {
+        "id": "integration.delivery-to-warehouse",
+        "kind": "integration",
+        "name": "Release delivery to warehouse",
+        "source": "sys.erp",
+        "target": "sys.wms",
+        "dataObject": "data.delivery",
+        "partnerBoundary": false,
+        "patternId": "pattern.async-message",
+        "patternName": "Asynchronous Message",
+        "mode": "async",
+        "confidence": "high",
+        "because": [
+          "the transfer is non-blocking",
+          "the enterprise context is marked high-volume"
+        ],
+        "ruleIds": [
+          "INT-ASYNC-002"
+        ],
+        "alternatives": [
+          "pattern.batch-file"
+        ],
+        "decisionAnalysis": {
+          "drivers": {
+            "purpose": "business-request",
+            "latency": "immediate",
+            "consistency": "strong",
+            "volume": "medium",
+            "fanOut": 1,
+            "ordering": "none",
+            "replay": "not-required",
+            "offlineTolerance": "none",
+            "partnerBoundary": false,
+            "payloadSize": "small",
+            "changeFrequency": "medium",
+            "immediateResponse": true
+          },
+          "explicitDrivers": {
+            "purpose": "business-request",
+            "latency": "immediate",
+            "consistency": "strong",
+            "volume": "medium",
+            "fanOut": 1,
+            "ordering": "none",
+            "replay": "not-required",
+            "offlineTolerance": "none",
+            "partnerBoundary": false,
+            "payloadSize": "small",
+            "changeFrequency": "medium",
+            "immediateResponse": true
+          },
+          "missingExplicitDrivers": [],
+          "recommendedPatternId": "pattern.sync-api",
+          "recommendedFit": "preferred",
+          "selectedMatchesBlueprint": false,
+          "decisiveBecause": [
+            "the caller needs an immediate business response",
+            "the interaction requires strong transactional feedback"
+          ],
+          "decisiveTradeoffs": [],
+          "alternatives": [
+            {
+              "patternId": "pattern.async-message",
+              "label": "Asynchronous Message",
+              "fit": "disfavored",
+              "because": [
+                "there is one principal downstream responsibility"
+              ],
+              "tradeoffs": [
+                "the caller cannot receive the final downstream business result in the same interaction"
+              ],
+              "ruleIds": [
+                "INT-ASYNC-001"
+              ]
+            },
+            {
+              "patternId": "pattern.cdc",
+              "label": "CDC / Replication",
+              "fit": "disfavored",
+              "because": [],
+              "tradeoffs": [
+                "the business semantic is not primarily state replication"
+              ],
+              "ruleIds": [
+                "INT-CDC-001"
+              ]
+            },
+            {
+              "patternId": "pattern.domain-event",
+              "label": "Domain Event",
+              "fit": "disfavored",
+              "because": [],
+              "tradeoffs": [
+                "a domain event cannot provide the initiating caller with a synchronous final business result",
+                "with one known consumer, event publication may add unnecessary indirection"
+              ],
+              "ruleIds": [
+                "INT-EVENT-001"
+              ]
+            },
+            {
+              "patternId": "pattern.batch-file",
+              "label": "File / Batch",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "batch cannot satisfy an immediate response requirement",
+                "snapshot transfer weakens transactional consistency"
+              ],
+              "ruleIds": [
+                "INT-BATCH-001"
+              ]
+            },
+            {
+              "patternId": "pattern.edi-b2b",
+              "label": "EDI / B2B Exchange",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "there is no external trading-partner boundary",
+                "traditional partner document exchange is not optimized for immediate transactional response"
+              ],
+              "ruleIds": [
+                "INT-B2B-001"
+              ]
+            },
+            {
+              "patternId": "pattern.etl-elt",
+              "label": "ETL / ELT",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "analytical ETL/ELT is not a transactional request/response mechanism",
+                "analytical pipelines generally operate with delayed consistency",
+                "the target is not an analytical consumption path"
+              ],
+              "ruleIds": [
+                "INT-ANALYTICS-001"
+              ]
+            }
+          ],
+          "effectivePatternId": "pattern.async-message",
+          "effectiveDecisionSource": "composer",
+          "humanDecisionStatus": null
+        }
+      },
+      {
+        "id": "integration.sales-order-request",
+        "kind": "integration",
+        "name": "Create sales order",
+        "source": "sys.crm",
+        "target": "sys.erp",
+        "dataObject": "data.sales-order",
+        "partnerBoundary": false,
+        "patternId": "pattern.sync-api",
+        "patternName": "Synchronous API",
+        "mode": "sync",
+        "confidence": "high",
+        "because": [
+          "the caller requires an immediate business response",
+          "the interaction has one principal target"
+        ],
+        "ruleIds": [
+          "INT-SYNC-001"
+        ],
+        "alternatives": [
+          "pattern.async-message"
+        ],
+        "decisionAnalysis": {
+          "drivers": {
+            "purpose": "business-request",
+            "latency": "immediate",
+            "consistency": "strong",
+            "volume": "medium",
+            "fanOut": 1,
+            "ordering": "none",
+            "replay": "not-required",
+            "offlineTolerance": "none",
+            "partnerBoundary": false,
+            "payloadSize": "small",
+            "changeFrequency": "medium",
+            "immediateResponse": true
+          },
+          "explicitDrivers": {
+            "purpose": "business-request",
+            "latency": "immediate",
+            "consistency": "strong",
+            "volume": "medium",
+            "fanOut": 1,
+            "ordering": "none",
+            "replay": "not-required",
+            "offlineTolerance": "none",
+            "partnerBoundary": false,
+            "payloadSize": "small",
+            "changeFrequency": "medium",
+            "immediateResponse": true
+          },
+          "missingExplicitDrivers": [],
+          "recommendedPatternId": "pattern.sync-api",
+          "recommendedFit": "preferred",
+          "selectedMatchesBlueprint": true,
+          "decisiveBecause": [
+            "the caller needs an immediate business response",
+            "the interaction requires strong transactional feedback"
+          ],
+          "decisiveTradeoffs": [],
+          "alternatives": [
+            {
+              "patternId": "pattern.async-message",
+              "label": "Asynchronous Message",
+              "fit": "disfavored",
+              "because": [
+                "there is one principal downstream responsibility"
+              ],
+              "tradeoffs": [
+                "the caller cannot receive the final downstream business result in the same interaction"
+              ],
+              "ruleIds": [
+                "INT-ASYNC-001"
+              ]
+            },
+            {
+              "patternId": "pattern.cdc",
+              "label": "CDC / Replication",
+              "fit": "disfavored",
+              "because": [],
+              "tradeoffs": [
+                "the business semantic is not primarily state replication"
+              ],
+              "ruleIds": [
+                "INT-CDC-001"
+              ]
+            },
+            {
+              "patternId": "pattern.domain-event",
+              "label": "Domain Event",
+              "fit": "disfavored",
+              "because": [],
+              "tradeoffs": [
+                "a domain event cannot provide the initiating caller with a synchronous final business result",
+                "with one known consumer, event publication may add unnecessary indirection"
+              ],
+              "ruleIds": [
+                "INT-EVENT-001"
+              ]
+            },
+            {
+              "patternId": "pattern.batch-file",
+              "label": "File / Batch",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "batch cannot satisfy an immediate response requirement",
+                "snapshot transfer weakens transactional consistency"
+              ],
+              "ruleIds": [
+                "INT-BATCH-001"
+              ]
+            },
+            {
+              "patternId": "pattern.edi-b2b",
+              "label": "EDI / B2B Exchange",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "there is no external trading-partner boundary",
+                "traditional partner document exchange is not optimized for immediate transactional response"
+              ],
+              "ruleIds": [
+                "INT-B2B-001"
+              ]
+            },
+            {
+              "patternId": "pattern.etl-elt",
+              "label": "ETL / ELT",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "analytical ETL/ELT is not a transactional request/response mechanism",
+                "analytical pipelines generally operate with delayed consistency",
+                "the target is not an analytical consumption path"
+              ],
+              "ruleIds": [
+                "INT-ANALYTICS-001"
+              ]
+            }
+          ],
+          "effectivePatternId": "pattern.sync-api",
+          "effectiveDecisionSource": "human",
+          "humanDecisionStatus": "accepted"
+        }
+      },
+      {
+        "id": "integration.warehouse-confirmation",
+        "kind": "integration",
+        "name": "Report warehouse execution",
+        "source": "sys.wms",
+        "target": "sys.erp",
+        "dataObject": "data.delivery",
+        "partnerBoundary": false,
+        "patternId": "pattern.domain-event",
+        "patternName": "Domain Event",
+        "mode": "async",
+        "confidence": "high",
+        "because": [
+          "the producer does not need to block on downstream processing",
+          "the business fact can be consumed by multiple downstream responsibilities",
+          "the enterprise context is marked high-volume"
+        ],
+        "ruleIds": [
+          "INT-EVENT-001"
+        ],
+        "alternatives": [
+          "pattern.async-message"
+        ],
+        "decisionAnalysis": {
+          "drivers": {
+            "purpose": "business-request",
+            "latency": "immediate",
+            "consistency": "strong",
+            "volume": "medium",
+            "fanOut": 1,
+            "ordering": "none",
+            "replay": "not-required",
+            "offlineTolerance": "none",
+            "partnerBoundary": false,
+            "payloadSize": "small",
+            "changeFrequency": "medium",
+            "immediateResponse": true
+          },
+          "explicitDrivers": {
+            "purpose": "business-request",
+            "latency": "immediate",
+            "consistency": "strong",
+            "volume": "medium",
+            "fanOut": 1,
+            "ordering": "none",
+            "replay": "not-required",
+            "offlineTolerance": "none",
+            "partnerBoundary": false,
+            "payloadSize": "small",
+            "changeFrequency": "medium",
+            "immediateResponse": true
+          },
+          "missingExplicitDrivers": [],
+          "recommendedPatternId": "pattern.sync-api",
+          "recommendedFit": "preferred",
+          "selectedMatchesBlueprint": false,
+          "decisiveBecause": [
+            "the caller needs an immediate business response",
+            "the interaction requires strong transactional feedback"
+          ],
+          "decisiveTradeoffs": [],
+          "alternatives": [
+            {
+              "patternId": "pattern.async-message",
+              "label": "Asynchronous Message",
+              "fit": "disfavored",
+              "because": [
+                "there is one principal downstream responsibility"
+              ],
+              "tradeoffs": [
+                "the caller cannot receive the final downstream business result in the same interaction"
+              ],
+              "ruleIds": [
+                "INT-ASYNC-001"
+              ]
+            },
+            {
+              "patternId": "pattern.cdc",
+              "label": "CDC / Replication",
+              "fit": "disfavored",
+              "because": [],
+              "tradeoffs": [
+                "the business semantic is not primarily state replication"
+              ],
+              "ruleIds": [
+                "INT-CDC-001"
+              ]
+            },
+            {
+              "patternId": "pattern.domain-event",
+              "label": "Domain Event",
+              "fit": "disfavored",
+              "because": [],
+              "tradeoffs": [
+                "a domain event cannot provide the initiating caller with a synchronous final business result",
+                "with one known consumer, event publication may add unnecessary indirection"
+              ],
+              "ruleIds": [
+                "INT-EVENT-001"
+              ]
+            },
+            {
+              "patternId": "pattern.batch-file",
+              "label": "File / Batch",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "batch cannot satisfy an immediate response requirement",
+                "snapshot transfer weakens transactional consistency"
+              ],
+              "ruleIds": [
+                "INT-BATCH-001"
+              ]
+            },
+            {
+              "patternId": "pattern.edi-b2b",
+              "label": "EDI / B2B Exchange",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "there is no external trading-partner boundary",
+                "traditional partner document exchange is not optimized for immediate transactional response"
+              ],
+              "ruleIds": [
+                "INT-B2B-001"
+              ]
+            },
+            {
+              "patternId": "pattern.etl-elt",
+              "label": "ETL / ELT",
+              "fit": "incompatible",
+              "because": [],
+              "tradeoffs": [
+                "analytical ETL/ELT is not a transactional request/response mechanism",
+                "analytical pipelines generally operate with delayed consistency",
+                "the target is not an analytical consumption path"
+              ],
+              "ruleIds": [
+                "INT-ANALYTICS-001"
+              ]
+            }
+          ],
+          "effectivePatternId": "pattern.domain-event",
+          "effectiveDecisionSource": "composer",
+          "humanDecisionStatus": null
+        }
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "id": "rec.integration.delivery-to-warehouse",
+      "kind": "integration-pattern",
+      "decision": "pattern.async-message",
+      "confidence": "high",
+      "because": [
+        "the transfer is non-blocking",
+        "the enterprise context is marked high-volume"
+      ],
+      "ruleIds": [
+        "INT-ASYNC-002"
+      ],
+      "alternatives": [
+        "pattern.batch-file"
+      ],
+      "objectIds": [
+        "integration.delivery-to-warehouse",
+        "sys.erp",
+        "sys.wms",
+        "data.delivery"
+      ],
+      "nfrAnalysis": {
+        "drivers": {
+          "purpose": "business-request",
+          "latency": "immediate",
+          "consistency": "strong",
+          "volume": "medium",
+          "fanOut": 1,
+          "ordering": "none",
+          "replay": "not-required",
+          "offlineTolerance": "none",
+          "partnerBoundary": false,
+          "payloadSize": "small",
+          "changeFrequency": "medium",
+          "immediateResponse": true
+        },
+        "explicitDrivers": {
+          "purpose": "business-request",
+          "latency": "immediate",
+          "consistency": "strong",
+          "volume": "medium",
+          "fanOut": 1,
+          "ordering": "none",
+          "replay": "not-required",
+          "offlineTolerance": "none",
+          "partnerBoundary": false,
+          "payloadSize": "small",
+          "changeFrequency": "medium",
+          "immediateResponse": true
+        },
+        "decisiveBecause": [
+          "the caller needs an immediate business response",
+          "the interaction requires strong transactional feedback"
+        ],
+        "decisiveTradeoffs": [],
+        "missingExplicitDrivers": [],
+        "recommendedPatternId": "pattern.sync-api"
+      },
+      "alternativeAnalysis": [
+        {
+          "patternId": "pattern.async-message",
+          "label": "Asynchronous Message",
+          "fit": "disfavored",
+          "because": [
+            "there is one principal downstream responsibility"
+          ],
+          "tradeoffs": [
+            "the caller cannot receive the final downstream business result in the same interaction"
+          ],
+          "ruleIds": [
+            "INT-ASYNC-001"
+          ]
+        },
+        {
+          "patternId": "pattern.cdc",
+          "label": "CDC / Replication",
+          "fit": "disfavored",
+          "because": [],
+          "tradeoffs": [
+            "the business semantic is not primarily state replication"
+          ],
+          "ruleIds": [
+            "INT-CDC-001"
+          ]
+        },
+        {
+          "patternId": "pattern.domain-event",
+          "label": "Domain Event",
+          "fit": "disfavored",
+          "because": [],
+          "tradeoffs": [
+            "a domain event cannot provide the initiating caller with a synchronous final business result",
+            "with one known consumer, event publication may add unnecessary indirection"
+          ],
+          "ruleIds": [
+            "INT-EVENT-001"
+          ]
+        },
+        {
+          "patternId": "pattern.batch-file",
+          "label": "File / Batch",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "batch cannot satisfy an immediate response requirement",
+            "snapshot transfer weakens transactional consistency"
+          ],
+          "ruleIds": [
+            "INT-BATCH-001"
+          ]
+        },
+        {
+          "patternId": "pattern.edi-b2b",
+          "label": "EDI / B2B Exchange",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "there is no external trading-partner boundary",
+            "traditional partner document exchange is not optimized for immediate transactional response"
+          ],
+          "ruleIds": [
+            "INT-B2B-001"
+          ]
+        },
+        {
+          "patternId": "pattern.etl-elt",
+          "label": "ETL / ELT",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "analytical ETL/ELT is not a transactional request/response mechanism",
+            "analytical pipelines generally operate with delayed consistency",
+            "the target is not an analytical consumption path"
+          ],
+          "ruleIds": [
+            "INT-ANALYTICS-001"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rec.integration.platform",
+      "kind": "system-role",
+      "decision": "sys.integration",
+      "confidence": "high",
+      "because": [
+        "the selected scope contains 3 cross-system integration needs",
+        "the enterprise context is marked high-volume"
+      ],
+      "ruleIds": [
+        "SYS-INTEGRATION-001"
+      ],
+      "alternatives": []
+    },
+    {
+      "id": "rec.integration.sales-order-request",
+      "kind": "integration-pattern",
+      "decision": "pattern.sync-api",
+      "confidence": "high",
+      "because": [
+        "the caller requires an immediate business response",
+        "the interaction has one principal target"
+      ],
+      "ruleIds": [
+        "INT-SYNC-001"
+      ],
+      "alternatives": [
+        "pattern.async-message"
+      ],
+      "objectIds": [
+        "integration.sales-order-request",
+        "sys.crm",
+        "sys.erp",
+        "data.sales-order"
+      ],
+      "nfrAnalysis": {
+        "drivers": {
+          "purpose": "business-request",
+          "latency": "immediate",
+          "consistency": "strong",
+          "volume": "medium",
+          "fanOut": 1,
+          "ordering": "none",
+          "replay": "not-required",
+          "offlineTolerance": "none",
+          "partnerBoundary": false,
+          "payloadSize": "small",
+          "changeFrequency": "medium",
+          "immediateResponse": true
+        },
+        "explicitDrivers": {
+          "purpose": "business-request",
+          "latency": "immediate",
+          "consistency": "strong",
+          "volume": "medium",
+          "fanOut": 1,
+          "ordering": "none",
+          "replay": "not-required",
+          "offlineTolerance": "none",
+          "partnerBoundary": false,
+          "payloadSize": "small",
+          "changeFrequency": "medium",
+          "immediateResponse": true
+        },
+        "decisiveBecause": [
+          "the caller needs an immediate business response",
+          "the interaction requires strong transactional feedback"
+        ],
+        "decisiveTradeoffs": [],
+        "missingExplicitDrivers": [],
+        "recommendedPatternId": "pattern.sync-api"
+      },
+      "alternativeAnalysis": [
+        {
+          "patternId": "pattern.async-message",
+          "label": "Asynchronous Message",
+          "fit": "disfavored",
+          "because": [
+            "there is one principal downstream responsibility"
+          ],
+          "tradeoffs": [
+            "the caller cannot receive the final downstream business result in the same interaction"
+          ],
+          "ruleIds": [
+            "INT-ASYNC-001"
+          ]
+        },
+        {
+          "patternId": "pattern.cdc",
+          "label": "CDC / Replication",
+          "fit": "disfavored",
+          "because": [],
+          "tradeoffs": [
+            "the business semantic is not primarily state replication"
+          ],
+          "ruleIds": [
+            "INT-CDC-001"
+          ]
+        },
+        {
+          "patternId": "pattern.domain-event",
+          "label": "Domain Event",
+          "fit": "disfavored",
+          "because": [],
+          "tradeoffs": [
+            "a domain event cannot provide the initiating caller with a synchronous final business result",
+            "with one known consumer, event publication may add unnecessary indirection"
+          ],
+          "ruleIds": [
+            "INT-EVENT-001"
+          ]
+        },
+        {
+          "patternId": "pattern.batch-file",
+          "label": "File / Batch",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "batch cannot satisfy an immediate response requirement",
+            "snapshot transfer weakens transactional consistency"
+          ],
+          "ruleIds": [
+            "INT-BATCH-001"
+          ]
+        },
+        {
+          "patternId": "pattern.edi-b2b",
+          "label": "EDI / B2B Exchange",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "there is no external trading-partner boundary",
+            "traditional partner document exchange is not optimized for immediate transactional response"
+          ],
+          "ruleIds": [
+            "INT-B2B-001"
+          ]
+        },
+        {
+          "patternId": "pattern.etl-elt",
+          "label": "ETL / ELT",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "analytical ETL/ELT is not a transactional request/response mechanism",
+            "analytical pipelines generally operate with delayed consistency",
+            "the target is not an analytical consumption path"
+          ],
+          "ruleIds": [
+            "INT-ANALYTICS-001"
+          ]
+        }
+      ],
+      "humanDecision": {
+        "recordId": "decision.sales-order-request-durability",
+        "status": "accepted",
+        "applies": true,
+        "effectiveDecision": "pattern.sync-api",
+        "rationale": "Synthetic reference-case choice: retain an immediate business response while keeping execution history, human review, and production controls outside this proposal. This is not a production approval."
+      }
+    },
+    {
+      "id": "rec.integration.warehouse-confirmation",
+      "kind": "integration-pattern",
+      "decision": "pattern.domain-event",
+      "confidence": "high",
+      "because": [
+        "the producer does not need to block on downstream processing",
+        "the business fact can be consumed by multiple downstream responsibilities",
+        "the enterprise context is marked high-volume"
+      ],
+      "ruleIds": [
+        "INT-EVENT-001"
+      ],
+      "alternatives": [
+        "pattern.async-message"
+      ],
+      "objectIds": [
+        "integration.warehouse-confirmation",
+        "sys.wms",
+        "sys.erp",
+        "data.delivery"
+      ],
+      "nfrAnalysis": {
+        "drivers": {
+          "purpose": "business-request",
+          "latency": "immediate",
+          "consistency": "strong",
+          "volume": "medium",
+          "fanOut": 1,
+          "ordering": "none",
+          "replay": "not-required",
+          "offlineTolerance": "none",
+          "partnerBoundary": false,
+          "payloadSize": "small",
+          "changeFrequency": "medium",
+          "immediateResponse": true
+        },
+        "explicitDrivers": {
+          "purpose": "business-request",
+          "latency": "immediate",
+          "consistency": "strong",
+          "volume": "medium",
+          "fanOut": 1,
+          "ordering": "none",
+          "replay": "not-required",
+          "offlineTolerance": "none",
+          "partnerBoundary": false,
+          "payloadSize": "small",
+          "changeFrequency": "medium",
+          "immediateResponse": true
+        },
+        "decisiveBecause": [
+          "the caller needs an immediate business response",
+          "the interaction requires strong transactional feedback"
+        ],
+        "decisiveTradeoffs": [],
+        "missingExplicitDrivers": [],
+        "recommendedPatternId": "pattern.sync-api"
+      },
+      "alternativeAnalysis": [
+        {
+          "patternId": "pattern.async-message",
+          "label": "Asynchronous Message",
+          "fit": "disfavored",
+          "because": [
+            "there is one principal downstream responsibility"
+          ],
+          "tradeoffs": [
+            "the caller cannot receive the final downstream business result in the same interaction"
+          ],
+          "ruleIds": [
+            "INT-ASYNC-001"
+          ]
+        },
+        {
+          "patternId": "pattern.cdc",
+          "label": "CDC / Replication",
+          "fit": "disfavored",
+          "because": [],
+          "tradeoffs": [
+            "the business semantic is not primarily state replication"
+          ],
+          "ruleIds": [
+            "INT-CDC-001"
+          ]
+        },
+        {
+          "patternId": "pattern.domain-event",
+          "label": "Domain Event",
+          "fit": "disfavored",
+          "because": [],
+          "tradeoffs": [
+            "a domain event cannot provide the initiating caller with a synchronous final business result",
+            "with one known consumer, event publication may add unnecessary indirection"
+          ],
+          "ruleIds": [
+            "INT-EVENT-001"
+          ]
+        },
+        {
+          "patternId": "pattern.batch-file",
+          "label": "File / Batch",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "batch cannot satisfy an immediate response requirement",
+            "snapshot transfer weakens transactional consistency"
+          ],
+          "ruleIds": [
+            "INT-BATCH-001"
+          ]
+        },
+        {
+          "patternId": "pattern.edi-b2b",
+          "label": "EDI / B2B Exchange",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "there is no external trading-partner boundary",
+            "traditional partner document exchange is not optimized for immediate transactional response"
+          ],
+          "ruleIds": [
+            "INT-B2B-001"
+          ]
+        },
+        {
+          "patternId": "pattern.etl-elt",
+          "label": "ETL / ELT",
+          "fit": "incompatible",
+          "because": [],
+          "tradeoffs": [
+            "analytical ETL/ELT is not a transactional request/response mechanism",
+            "analytical pipelines generally operate with delayed consistency",
+            "the target is not an analytical consumption path"
+          ],
+          "ruleIds": [
+            "INT-ANALYTICS-001"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rec.multicompany.master-data",
+      "kind": "system-role",
+      "decision": "sys.mdm",
+      "confidence": "high",
+      "because": [
+        "multiple legal entities increase the need for explicit shared master-data ownership"
+      ],
+      "ruleIds": [
+        "SCOPE-MULTICOMPANY-001"
+      ],
+      "alternatives": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "finding.async.delivery-to-warehouse",
+      "severity": "info",
+      "kind": "operational-decision",
+      "ruleIds": [
+        "OPS-ASYNC-001"
+      ],
+      "objectIds": [
+        "integration.delivery-to-warehouse"
+      ],
+      "message": "Release delivery to warehouse is asynchronous and requires monitoring, replay and reconciliation decisions.",
+      "nextDecision": "Define failure ownership, replay safety, observability and reconciliation."
+    },
+    {
+      "id": "finding.async.warehouse-confirmation",
+      "severity": "info",
+      "kind": "operational-decision",
+      "ruleIds": [
+        "OPS-ASYNC-001"
+      ],
+      "objectIds": [
+        "integration.warehouse-confirmation"
+      ],
+      "message": "Report warehouse execution is asynchronous and requires monitoring, replay and reconciliation decisions.",
+      "nextDecision": "Define failure ownership, replay safety, observability and reconciliation."
+    },
+    {
+      "id": "finding.multicompany.intercompany-scope",
+      "severity": "warning",
+      "kind": "question",
+      "ruleIds": [
+        "SCOPE-MULTICOMPANY-001"
+      ],
+      "objectIds": [
+        "cap.intercompany"
+      ],
+      "message": "The enterprise is multi-company, but the Intercompany process is not included in the selected scope.",
+      "nextDecision": "Confirm whether intercompany commercial/logistics flows are out of scope or still need design."
+    }
+  ],
+  "workPackages": [
+    {
+      "mandatory": true,
+      "dependsOn": [],
+      "sourceIds": [
+        "finding.multicompany.intercompany-scope"
+      ],
+      "id": "wp.architecture.resolve-decisions",
+      "phase": "architecture",
+      "title": "Confirm architecture assumptions and unresolved decisions"
+    },
+    {
+      "mandatory": true,
+      "dependsOn": [
+        "wp.integration.delivery-to-warehouse",
+        "wp.integration.sales-order-request",
+        "wp.integration.warehouse-confirmation"
+      ],
+      "sourceIds": [
+        "integration.delivery-to-warehouse",
+        "integration.warehouse-confirmation"
+      ],
+      "id": "wp.assurance.async-flows",
+      "phase": "assurance",
+      "title": "Define monitoring, replay and reconciliation for asynchronous flows"
+    },
+    {
+      "mandatory": true,
+      "dependsOn": [
+        "wp.architecture.resolve-decisions"
+      ],
+      "sourceIds": [
+        "data.customer",
+        "data.product"
+      ],
+      "id": "wp.data.master-data",
+      "phase": "data",
+      "title": "Define master-data ownership and governance boundaries"
+    },
+    {
+      "mandatory": true,
+      "dependsOn": [
+        "wp.architecture.resolve-decisions"
+      ],
+      "sourceIds": [
+        "sys.integration"
+      ],
+      "id": "wp.foundation.integration-platform",
+      "phase": "foundation",
+      "title": "Establish integration-platform responsibility and operating model"
+    },
+    {
+      "mandatory": true,
+      "dependsOn": [
+        "wp.foundation.integration-platform"
+      ],
+      "sourceIds": [
+        "integration.delivery-to-warehouse",
+        "sys.erp",
+        "sys.wms",
+        "data.delivery"
+      ],
+      "id": "wp.integration.delivery-to-warehouse",
+      "phase": "integration",
+      "title": "Design and implement Release delivery to warehouse"
+    },
+    {
+      "mandatory": true,
+      "dependsOn": [
+        "wp.foundation.integration-platform"
+      ],
+      "sourceIds": [
+        "integration.sales-order-request",
+        "sys.crm",
+        "sys.erp",
+        "data.sales-order"
+      ],
+      "id": "wp.integration.sales-order-request",
+      "phase": "integration",
+      "title": "Design and implement Create sales order"
+    },
+    {
+      "mandatory": true,
+      "dependsOn": [
+        "wp.foundation.integration-platform"
+      ],
+      "sourceIds": [
+        "integration.warehouse-confirmation",
+        "sys.wms",
+        "sys.erp",
+        "data.delivery"
+      ],
+      "id": "wp.integration.warehouse-confirmation",
+      "phase": "integration",
+      "title": "Design and implement Report warehouse execution"
+    },
+    {
+      "mandatory": true,
+      "dependsOn": [
+        "wp.assurance.async-flows",
+        "wp.integration.delivery-to-warehouse",
+        "wp.integration.sales-order-request",
+        "wp.integration.warehouse-confirmation"
+      ],
+      "sourceIds": [
+        "integration.delivery-to-warehouse",
+        "integration.sales-order-request",
+        "integration.warehouse-confirmation"
+      ],
+      "id": "wp.testing.end-to-end",
+      "phase": "testing",
+      "title": "Build cross-system end-to-end and failure-path test scope"
+    }
+  ],
+  "metrics": {
+    "processCount": 1,
+    "capabilityCount": 7,
+    "systemCount": 5,
+    "integrationCount": 3,
+    "asyncIntegrationCount": 2,
+    "unresolvedDataOwnerCount": 0,
+    "findingCount": 3,
+    "workPackageCount": 8,
+    "explicitNfrGapCount": 0,
+    "unsupportedCapabilityCount": 0,
+    "capabilityModelGapCount": 0,
+    "processIntegrationGapCount": 0,
+    "unjustifiedSystemCount": 0,
+    "totalQualityFindingCount": 0,
+    "humanDecisionCount": 1,
+    "humanOverrideCount": 0,
+    "orphanedDecisionCount": 0
+  },
+  "decisionRecords": [
+    {
+      "id": "decision.sales-order-request-durability",
+      "recommendationId": "rec.integration.sales-order-request",
+      "status": "accepted",
+      "rationale": "Synthetic reference-case choice: retain an immediate business response while keeping execution history, human review, and production controls outside this proposal. This is not a production approval.",
+      "applies": true,
+      "effectiveDecision": "pattern.sync-api",
+      "sourceRecommendation": {
+        "id": "rec.integration.sales-order-request",
+        "kind": "integration-pattern",
+        "decision": "pattern.sync-api",
+        "confidence": "high",
+        "because": [
+          "the caller requires an immediate business response",
+          "the interaction has one principal target"
+        ],
+        "ruleIds": [
+          "INT-SYNC-001"
+        ],
+        "alternatives": [
+          "pattern.async-message"
+        ]
+      },
+      "currentRecommendation": {
+        "id": "rec.integration.sales-order-request",
+        "kind": "integration-pattern",
+        "decision": "pattern.sync-api",
+        "confidence": "high",
+        "because": [
+          "the caller requires an immediate business response",
+          "the interaction has one principal target"
+        ],
+        "ruleIds": [
+          "INT-SYNC-001"
+        ],
+        "alternatives": [
+          "pattern.async-message"
+        ]
+      }
+    }
+  ]
+}

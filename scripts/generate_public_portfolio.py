@@ -66,6 +66,8 @@ def build_projection(manifest: dict, manifest_bytes: bytes) -> dict:
             "excluded_repositories": reader_map["excluded_repositories"],
         },
         "boundaries": reader_map["boundaries"],
+        "reference_case": reader_map["reference_case"],
+        "actions": reader_map["actions"],
         "homepage": reader_map["homepage"],
         "tracks": reader_map["tracks"],
         "projects": projected_projects,

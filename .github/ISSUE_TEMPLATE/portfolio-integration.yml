@@ -1,0 +1,69 @@
+name: Portfolio integration proposal
+description: Propose one bounded, testable handoff between public portfolio projects.
+title: "Integration: <producer> to <consumer>"
+labels:
+  - integration
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for one concrete artifact handoff. A syntactically valid reference is not evidence of compatibility, trust, authority, or positive assurance.
+  - type: input
+    id: producer
+    attributes:
+      label: Producer
+      description: Which repository owns the source artifact and its semantics?
+      placeholder: dkharlanau/example-producer
+    validations:
+      required: true
+  - type: input
+    id: consumer
+    attributes:
+      label: Consumer
+      description: Which repository should read, transform, or verify the artifact?
+      placeholder: dkharlanau/example-consumer
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: User decision
+      description: What practical decision or action becomes clearer if this handoff works?
+      placeholder: A reviewer needs to decide whether...
+    validations:
+      required: true
+  - type: textarea
+    id: artifact
+    attributes:
+      label: Artifact and contract
+      description: Describe the producer-owned artifact, stable identity, version or schema, and expected consumer behavior.
+      placeholder: The producer emits... The consumer verifies...
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Smallest safe fixture
+      description: Link to or describe a synthetic or redacted fixture that can be committed publicly.
+      placeholder: A synthetic JSON fixture with...
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification command and expected result
+      description: Provide a deterministic command and the observable result that would prove the handoff.
+      placeholder: Run... Expect...
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Public and authority boundaries
+      options:
+        - label: The proposal contains no client, proprietary, credential, or private corpus data.
+          required: true
+        - label: The proposal does not treat a repository owner, URI, digest, or passing schema check as business approval or execution authority.
+          required: true
+        - label: Any external adoption or production claim is backed by public evidence or omitted.
+          required: true

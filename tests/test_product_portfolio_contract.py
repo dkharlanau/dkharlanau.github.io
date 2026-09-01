@@ -127,6 +127,23 @@ def test_reader_map_classifies_all_17_projects_without_equal_card_priority():
     assert "not evidence of external adoption" in reader_map["boundaries"]["adoption"]
     assert "not implied" in reader_map["boundaries"]["compatibility"]
 
+    reference_case = reader_map["reference_case"]
+    assert reference_case["id"] == "enterprise-change-evidence-pack"
+    assert reference_case["status"] == "synthetic-reproducible-demonstration"
+    assert reference_case["human_url"].endswith(
+        "/machine/portfolio/enterprise-change-evidence-pack/"
+    )
+    assert reference_case["machine_url"].endswith(
+        "/products/reference-cases/enterprise-change-evidence-pack/manifest.json"
+    )
+    assert "does not prove external adoption" in reference_case["boundary"]
+
+    actions = {action["id"]: action for action in reader_map["actions"]}
+    assert set(actions) == {"run", "propose", "collaborate"}
+    assert actions["run"]["href"] == "/machine/portfolio/enterprise-change-evidence-pack/"
+    assert "portfolio-integration.yml" in actions["propose"]["href"]
+    assert actions["collaborate"]["href"].startswith("https://www.linkedin.com/")
+
 
 def test_jekyll_portfolio_data_is_a_checked_projection_of_the_canonical_manifest():
     manifest = load_manifest()
@@ -142,6 +159,8 @@ def test_jekyll_portfolio_data_is_a_checked_projection_of_the_canonical_manifest
     assert projection["scope"]["repository_count"] == reader_map["repository_count"]
     assert projection["scope"]["selection"] == reader_map["selection"]
     assert projection["boundaries"] == reader_map["boundaries"]
+    assert projection["reference_case"] == reader_map["reference_case"]
+    assert projection["actions"] == reader_map["actions"]
     assert projection["homepage"] == reader_map["homepage"]
     assert projection["tracks"] == reader_map["tracks"]
 
@@ -194,6 +213,8 @@ def test_public_project_map_uses_the_projection_and_preserves_verification_bound
     assert "portfolio-track__primary--single" in page
     assert "not a compatibility claim" in page
     assert "Open public entry" in page
+    assert "portfolio.reference_case" in page
+    assert "portfolio.actions" in page
     assert "project.public_action" not in page
 
     assert "{{ site.data.public_portfolio | jsonify }}" in endpoint
@@ -201,6 +222,34 @@ def test_public_project_map_uses_the_projection_and_preserves_verification_bound
     assert "/ai/public-portfolio.json" in machine
     assert "/machine/portfolio/" in agent_tools
     assert "/ai/public-portfolio.json" in ai_hub
+
+    legacy_products = (ROOT / "products" / "index.html").read_text(encoding="utf-8")
+    assert 'rel="canonical" href="https://dkharlanau.github.io/machine/portfolio/"' in legacy_products
+    assert 'content="0; url=/machine/portfolio/"' in legacy_products
+    assert "The maintained reader map lives" in legacy_products
+    assert "/products/manifest.json" in legacy_products
+
+    issue_form = yaml.safe_load(
+        (ROOT / ".github" / "ISSUE_TEMPLATE" / "portfolio-integration.yml").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert issue_form["name"] == "Portfolio integration proposal"
+    fields = {
+        item["id"]: item
+        for item in issue_form["body"]
+        if isinstance(item, dict) and item.get("id")
+    }
+    assert set(fields) == {
+        "producer",
+        "consumer",
+        "decision",
+        "artifact",
+        "fixture",
+        "verification",
+        "boundaries",
+    }
+    assert fields["boundaries"]["type"] == "checkboxes"
 
 
 def test_derived_products_declare_sources_and_visuals_do_not_take_imported_domain_ownership():

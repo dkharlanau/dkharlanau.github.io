@@ -1,0 +1,226 @@
+# Generated from the enterprise change reference-case manifest and artifact inventory. Do not edit by hand.
+schema_version: '1.0'
+projection:
+  canonical_sources:
+  - path: /products/reference-cases/enterprise-change-evidence-pack/manifest.json
+    sha256: 2ad4947528b74f443f3ddd9dd8b9c15aca9942bba09e8ea2382496889a8c4b68
+  - path: /products/reference-cases/enterprise-change-evidence-pack/expected-artifacts.json
+    sha256: 0290eb26d938d9017b74bac72771a23e68136cd8679cb7af4c043594de31205a
+  policy: Generated presentation projection. Edit the reference-case manifest or expected-artifacts inventory,
+    then run python3 scripts/generate_portfolio_reference_case.py.
+case_id: enterprise-change-evidence-pack
+title: Enterprise change evidence pack
+classification: synthetic_public_reference_case
+client_free: true
+products:
+- id: enterprise-change-evidence-pack
+  role: case-local producer of synthetic fixtures, detached identities, and digest bindings
+  repository: https://github.com/dkharlanau/dkharlanau.github.io
+- id: signal-to-insight
+  role: producer of reviewed external research context
+  repository: https://github.com/dkharlanau/signal-to-insight
+- id: enterprise-architecture-composer
+  role: producer of the synthetic architecture decision record and visual projection
+  repository: https://github.com/dkharlanau/enterprise-architecture-composer
+- id: visual-workbench
+  role: validator and renderer of the coordinate-free visual projection
+  repository: https://github.com/dkharlanau/visual-workbench
+- id: project-evidence-graph
+  role: validator and analyzer of the synthetic assurance graph
+  repository: https://github.com/dkharlanau/project-evidence-graph
+- id: reconciliation-as-code
+  role: optional producer of runtime comparison evidence; not exercised here
+  repository: https://github.com/dkharlanau/reconciliation-as-code
+- id: cutover-graph
+  role: optional consumer of verified external evidence; not exercised here
+  repository: https://github.com/dkharlanau/cutover-graph
+status_definitions:
+  implemented: The edge is reproduced by committed fixtures and a deterministic product command in this
+    case.
+  documented: The products document the boundary, but this case does not execute or retain that handoff.
+  demonstration-only: The case authors an explicit, digest-bound bridge because no runtime producer-consumer
+    adapter is implemented.
+status_counts:
+  implemented: 2
+  demonstration-only: 2
+  documented: 2
+edges:
+- id: research-context-to-architecture-decision
+  producer: signal-to-insight
+  consumer: enterprise-architecture-composer
+  status: demonstration-only
+  source_contract_url: https://dkharlanau.github.io/signal-to-insight/contracts/research-evidence-handoff.schema.json
+  verification_command: python3 "$STI_REPO/sti.py" handoff validate "$CASE_DIR/fixtures/research-context.json"
+    && python3 "$CASE_DIR/validate.py"
+  evidence_paths:
+  - fixtures/research-context.json
+  - fixtures/decision-basis.json
+  - fixtures/architecture-context.json
+  boundary: Signal to Insight implements export and validation of the research packet. Enterprise Architecture
+    Composer has no consumer adapter for it. The sidecar records a manually authored synthetic translation,
+    requires human review, and grants no approval or execution authority.
+- id: architecture-decision-to-visual-render
+  producer: enterprise-architecture-composer
+  consumer: visual-workbench
+  status: implemented
+  source_contract_url: https://github.com/dkharlanau/enterprise-architecture-composer/blob/main/docs/VISUAL-WORKBENCH-INTEGRATION.md
+  verification_command: node "$EAC_REPO/bin/eac.mjs" visual "$CASE_DIR/fixtures/architecture-context.json"
+    --markdown --output /tmp/architecture.visual.md && node "$VW_REPO/dist/cli.js" validate /tmp/architecture.visual.md
+    && node "$VW_REPO/dist/cli.js" render /tmp/architecture.visual.md --view executive --output /tmp/architecture.executive.svg
+    && python3 "$CASE_DIR/normalize_render.py" /tmp/architecture.executive.svg
+  evidence_paths:
+  - artifacts/architecture.blueprint.json
+  - artifacts/architecture.visual.txt
+  - artifacts/architecture.executive.svg
+  boundary: Composer owns the architecture proposal, IDs, and synthetic decision record. Visual Workbench
+    owns validation, layout, and rendering. The SVG is a presentation artifact and neither approves nor
+    changes the architecture decision.
+- id: visual-render-to-project-assurance
+  producer: visual-workbench
+  consumer: project-evidence-graph
+  status: demonstration-only
+  source_contract_url: https://github.com/dkharlanau/visual-workbench/blob/main/docs/project-evidence-graph.md
+  verification_command: python3 "$CASE_DIR/validate.py" && python3 "$PEG_REPO/evidence_graph.py" "$CASE_DIR/fixtures/project-evidence.json"
+    analyze
+  evidence_paths:
+  - artifacts/architecture.executive.svg
+  - fixtures/project-evidence.json
+  boundary: 'No Visual Workbench-to-Project Evidence Graph importer exists. The case binds the SVG digest
+    into a manually authored synthetic graph. The implemented product adapter runs in the opposite direction:
+    Project Evidence Graph to Visual Workbench.'
+- id: project-evidence-structural-analysis
+  producer: enterprise-change-evidence-pack
+  consumer: project-evidence-graph
+  status: implemented
+  source_contract_url: https://github.com/dkharlanau/project-evidence-graph/blob/main/README.md
+  verification_command: python3 "$PEG_REPO/evidence_graph.py" "$CASE_DIR/fixtures/project-evidence.json"
+    analyze
+  evidence_paths:
+  - fixtures/project-evidence.json
+  - artifacts/project-evidence.analysis.json
+  boundary: Project Evidence Graph proves structural validity and traceability coverage for this synthetic
+    graph. It does not prove architecture fitness, implementation, production readiness, or human approval.
+- id: optional-reconciliation-to-cutover
+  producer: reconciliation-as-code
+  consumer: cutover-graph
+  status: documented
+  source_contract_url: https://github.com/dkharlanau/cutover-graph/blob/main/docs/ARTIFACT-INDEX.md
+  verification_command: Follow the verified external-evidence registry workflow documented by Cutover
+    Graph; this reference case retains no reconciliation run or registry.
+  evidence_paths: []
+  boundary: Optional and excluded from this pack. A syntactically valid reconciliation reference is not
+    positive evidence without a verified local evidence-document binding.
+- id: optional-cutover-to-project-assurance
+  producer: cutover-graph
+  consumer: project-evidence-graph
+  status: documented
+  source_contract_url: https://github.com/dkharlanau/cutover-graph/blob/main/docs/ARTIFACT-INDEX.md
+  verification_command: Follow the import-cutover workflow documented by Cutover Graph and Project Evidence
+    Graph; this reference case retains no cutover artifact index.
+  evidence_paths: []
+  boundary: Optional and excluded from this pack. An unverified external checkpoint must remain an assurance
+    gap rather than being promoted to positive evidence.
+boundaries:
+  synthetic: true
+  client_data_present: false
+  production_evidence_present: false
+  human_approval_present: false
+  authorization_or_execution_instruction_present: false
+  universal_eac_resolver_assumed: false
+  eac_identity_effect: Identity only. Each case-owned eac:// reference identifies a detached reference-case
+    artifact; it is not a network location, signature, authorization, or trust assertion.
+  runtime_claim: Only Composer-to-Visual Workbench and local Project Evidence structural analysis are
+    executed by this pack. The other connections retain their declared demonstration or documentation
+    status.
+artifacts:
+  algorithm: sha256
+  digest_scope: exact committed file bytes
+  file_count: 8
+  total_bytes: 77358
+  files:
+  - path: fixtures/research-context.json
+    kind: detached_source_fixture
+    media_type: application/json
+    producer: signal-to-insight
+    source_contract_url: https://dkharlanau.github.io/signal-to-insight/contracts/research-evidence-handoff.schema.json
+    sha256: 12d4a8c2edb3cb8f34c17a4e9321105affce4dcd3f9e3888ea60a70ad6671694
+    bytes: 4129
+  - path: fixtures/architecture-context.json
+    kind: synthetic_input_fixture
+    media_type: application/json
+    producer: enterprise-change-evidence-pack
+    source_contract_url: https://dkharlanau.github.io/enterprise-architecture-composer/schemas/context.schema.json
+    sha256: 29b25e1cc2bd11cc81915faf950980bd50e11a98342e32e8ea3b88da422438cf
+    bytes: 1242
+  - path: fixtures/decision-basis.json
+    kind: demonstration_boundary_sidecar
+    media_type: application/json
+    producer: enterprise-change-evidence-pack
+    source_contract_url: https://github.com/dkharlanau/dkharlanau.github.io/blob/main/products/INTEROPERABILITY.md
+    sha256: 707c1ab2c78bb66843fee9e7d1bc79bf69085b650102930fe92282795fb00d1d
+    bytes: 1593
+  - path: fixtures/project-evidence.json
+    kind: synthetic_assurance_fixture
+    media_type: application/json
+    producer: enterprise-change-evidence-pack
+    source_contract_url: https://github.com/dkharlanau/project-evidence-graph/blob/main/README.md
+    sha256: a6e4fe48881778295237e1340761d93a96ddf54c6bf9d226e5b96782606b7049
+    bytes: 5475
+  - path: artifacts/architecture.blueprint.json
+    kind: deterministic_composer_output
+    media_type: application/json
+    producer: enterprise-architecture-composer
+    source_contract_url: https://dkharlanau.github.io/enterprise-architecture-composer/schemas/blueprint.schema.json
+    sha256: a00a2abf0061f153d33e63e6de3d59182066349369cc384ed8fcde8c140e29df
+    bytes: 44705
+  - path: artifacts/architecture.visual.txt
+    kind: coordinate_free_visual_projection
+    media_type: text/markdown
+    producer: enterprise-architecture-composer
+    source_contract_url: https://github.com/dkharlanau/enterprise-architecture-composer/blob/main/docs/VISUAL-WORKBENCH-INTEGRATION.md
+    sha256: cf039d373b5ded5e9b7a22466bbe559fab6bb5ec3cddbc80936b99975b368624
+    bytes: 13192
+  - path: artifacts/architecture.executive.svg
+    kind: deterministic_visual_render_with_whitespace_normalization
+    media_type: image/svg+xml
+    producer: visual-workbench
+    source_contract_url: https://github.com/dkharlanau/visual-workbench/blob/main/schemas/visual-workbench.schema.json
+    sha256: bd8dd6e593d547903cde9f5d5138c094d95be4614dd31e24bc8bc35ed7364b91
+    bytes: 6147
+  - path: artifacts/project-evidence.analysis.json
+    kind: deterministic_structural_assurance_analysis
+    media_type: application/json
+    producer: project-evidence-graph
+    source_contract_url: https://github.com/dkharlanau/project-evidence-graph/blob/main/README.md
+    sha256: f3b30893888bda989920d4fbf907654697ce81f1ac05bff98f30b19a890ceb57
+    bytes: 875
+  assertions:
+    research_context:
+      schema_version: 1.0.0
+      trust_level: external_research_context
+      payload_digest: sha256:a65fca94fee05a84570cac0ca8aa2bb8e31f65737ecde9cd5fe7473b9b4051dc
+    architecture_blueprint:
+      schema_version: '0.1'
+      decision_id: decision.sales-order-request-durability
+      decision_status: accepted
+      effective_decision: pattern.sync-api
+    visual_projection:
+      title: Composed enterprise architecture
+      named_views:
+      - executive
+      - integration
+      - data
+      - exceptions
+      executive_render_title: Executive architecture
+    project_evidence_analysis:
+      valid: true
+      node_count: 8
+      link_count: 13
+      test_coverage: 1.0
+      evidence_coverage: 1.0
+urls:
+  human: /machine/portfolio/enterprise-change-evidence-pack/
+  manifest: /products/reference-cases/enterprise-change-evidence-pack/manifest.json
+  expected_artifacts: /products/reference-cases/enterprise-change-evidence-pack/expected-artifacts.json
+  source: https://github.com/dkharlanau/dkharlanau.github.io/tree/main/products/reference-cases/enterprise-change-evidence-pack
+  integration_proposal: https://github.com/dkharlanau/dkharlanau.github.io/issues/new?template=portfolio-integration.yml

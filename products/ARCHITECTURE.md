@@ -77,6 +77,21 @@ track with the manifest. `/ai/public-portfolio.json` renders this projection for
 machine clients, while `/machine/portfolio/` is the reader-facing map. Classification
 is navigation, not evidence of interoperability, adoption, or production readiness.
 
+The runnable synthetic reference case is maintained under
+`products/reference-cases/enterprise-change-evidence-pack/`. Its `manifest.json` and
+`expected-artifacts.json` are the canonical edge and digest ledgers. The public case
+page uses a deterministic Jekyll projection:
+
+```sh
+python3 products/reference-cases/enterprise-change-evidence-pack/validate.py
+python3 scripts/generate_portfolio_reference_case.py
+python3 scripts/generate_portfolio_reference_case.py --check
+```
+
+Do not edit `_data/portfolio_reference_case.yml` by hand. Each edge in the case keeps
+its own `implemented`, `demonstration-only`, or `documented` status; the presence of
+several products in one pack does not create an end-to-end runtime claim.
+
 ## Reference before copy
 
 When one maintained product needs another product's truth, prefer a **reference with stable identity and provenance** over copying the business rule.

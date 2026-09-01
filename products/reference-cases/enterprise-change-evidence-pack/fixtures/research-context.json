@@ -1,0 +1,111 @@
+{
+  "schema": "https://dkharlanau.github.io/signal-to-insight/contracts/research-evidence-handoff.schema.json",
+  "schema_version": "1.0.0",
+  "packet_id": "sti:enterprise-agents-production-substrate:research-evidence-handoff:v1",
+  "producer": {
+    "name": "Signal to Insight",
+    "repository": "https://github.com/dkharlanau/signal-to-insight"
+  },
+  "exported_from": {
+    "insight_id": "enterprise-agents-production-substrate",
+    "status": "published",
+    "title": "Why enterprise AI agents fail after the POC",
+    "one_liner": "A production agent needs a controlled execution environment around the model, not just a model connected to tools.",
+    "public_url": "https://dkharlanau.github.io/signal-to-insight/explainers/why-enterprise-ai-agents-fail-after-the-poc/",
+    "reviewed_at": "2026-08-26",
+    "tags": [
+      "ai-agents",
+      "architecture",
+      "durable-execution",
+      "evals",
+      "governance",
+      "tools"
+    ]
+  },
+  "source": {
+    "id": "src-ai-engineer-enterprise-stack-agents-2026",
+    "type": "video",
+    "title": "Why Your Enterprise Tech Stack Isn't Ready for AI Agents - And What to Build Instead",
+    "canonical_url": "https://www.youtube.com/watch?v=mav15aW9lLM",
+    "creators": [
+      "Christopher Lovejoy",
+      "Saul Howard"
+    ],
+    "publisher": "AI Engineer",
+    "published_at": null,
+    "event_date": "2026-07-02",
+    "captured_at": "2026-08-26",
+    "analyzed_at": "2026-08-26"
+  },
+  "claims": [
+    {
+      "id": "enterprise-poc-not-production",
+      "text": "A successful agent proof of concept does not by itself establish production readiness for consequential work.",
+      "impact": "high",
+      "origin": "source",
+      "status": "supported",
+      "evidence": [
+        {
+          "kind": "primary_source",
+          "source_id": "src-ai-engineer-enterprise-stack-agents-2026",
+          "url": "https://www.youtube.com/watch?v=mav15aW9lLM",
+          "locator": "Talk section: POC success versus production readiness"
+        }
+      ],
+      "note": null
+    },
+    {
+      "id": "enterprise-history-supports-reconstruction",
+      "text": "Reconstructable execution history enables stronger audit and replay-based evaluation than developer logs alone.",
+      "impact": "high",
+      "origin": "source",
+      "status": "supported",
+      "evidence": [
+        {
+          "kind": "primary_source",
+          "source_id": "src-ai-engineer-enterprise-stack-agents-2026",
+          "url": "https://www.youtube.com/watch?v=mav15aW9lLM",
+          "locator": "Talk sections: append-only execution history and replay as a production evaluation primitive"
+        }
+      ],
+      "note": null
+    },
+    {
+      "id": "enterprise-controlled-substrate-interpretation",
+      "text": "The model should be treated as one executor inside a controlled execution substrate rather than as the complete production system.",
+      "impact": "high",
+      "origin": "project_interpretation",
+      "status": "supported",
+      "evidence": [
+        {
+          "kind": "primary_source",
+          "source_id": "src-ai-engineer-enterprise-stack-agents-2026",
+          "url": "https://www.youtube.com/watch?v=mav15aW9lLM",
+          "locator": "Talk architecture model across execution history, protected data, human handoff and replay"
+        }
+      ],
+      "note": "This wording is the project's synthesis of the source architecture, not a direct quotation or source-authored product definition."
+    }
+  ],
+  "operational_boundary": {
+    "trust_level": "external_research_context",
+    "requires_human_review": true,
+    "permitted_uses": [
+      "human review",
+      "research traceability",
+      "control-design discussion",
+      "hypothesis formation"
+    ],
+    "prohibited_uses": [
+      "authorization",
+      "execution",
+      "production incident evidence",
+      "automatic policy change"
+    ]
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "canonicalization": "UTF-8 JSON with lexicographically sorted object keys and compact separators",
+    "digest": "sha256:a65fca94fee05a84570cac0ca8aa2bb8e31f65737ecde9cd5fe7473b9b4051dc"
+  }
+}

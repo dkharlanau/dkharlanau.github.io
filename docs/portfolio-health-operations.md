@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Public portfolio health and private traffic operations"
-description: "A two-week operating procedure for checking the public repository portfolio while keeping GitHub traffic evidence private."
+description: "A two-week operating procedure for checking public portfolio health, first-use evidence, and private GitHub traffic without mixing their claims."
 permalink: /docs/portfolio-health-operations/
 robots: noindex,follow
 sitemap: false
@@ -9,18 +9,20 @@ sitemap: false
 
 # Public portfolio health and private traffic operations
 
-Use this procedure every two weeks to answer two different questions:
+Use this procedure every two weeks to answer three different questions:
 
 1. Is the public repository portfolio published cleanly and consistently?
-2. Is private GitHub traffic evidence changing enough to influence the next maintenance cycle?
+2. Can a new user reach one useful artifact, and where do they stop?
+3. Is private GitHub traffic evidence changing enough to influence the next maintenance cycle?
 
-The two evidence sets stay separate. Portfolio health uses public metadata and may be shared after review. Traffic snapshots contain repository analytics and must remain local.
+The evidence sets stay separate. Portfolio health uses public metadata and may be shared after review. Usability evidence records an observed session only with the participant's consent. Traffic snapshots contain repository analytics and must remain local.
 
 ## Prerequisites
 
 - Run from the root of the `dkharlanau.github.io` checkout.
 - Install the GitHub CLI and authenticate it as a user who can read Traffic API data for the repositories.
 - Treat `products/manifest.json` as the repository inventory. Keep `config/portfolio-health.json` limited to verification-policy overlays and required contract edges.
+- The central website and `dkharlanau` profile repository are public surfaces but not project entries in the 17-repository inventory.
 - Keep `.local/portfolio-traffic/` ignored. Never override the traffic command to write into a tracked or external directory.
 
 Confirm the local boundary before the first run:
@@ -52,13 +54,29 @@ The command writes `portfolio-health.json` and `portfolio-health.md` under the i
 - the exact final README author footer;
 - release and tag presence;
 - expected cross-project contract links; and
+- required central public surfaces, including the project map, reference case, and their machine-readable manifests;
 - optional local booleans for clean worktree, `main`, and equality with the published SHA.
 
 It does not contain GitHub traffic, credentials, API error bodies, or local checkout paths. Review the report before sharing it; public-safe does not mean automatically publication-worthy.
 
 If `--strict` exits with status 1, use the finding codes as a maintenance queue. Do not weaken a check to make the summary green.
 
-## Step 2: capture private traffic evidence
+## Step 2: inspect first-use evidence
+
+The five flagship repositories provide a 15-minute external usability kit and a privacy-safe feedback form. Use the kit for the exact release or current documented quickstart. Do not treat a maintainer walkthrough, CI run, opened recruitment issue, or empty form as external evidence.
+
+For each consenting session, retain only what is needed to improve the public workflow:
+
+- whether the participant produced the named first artifact;
+- time to that artifact;
+- whether maintainer help was required;
+- the first blocking step or term;
+- the participant's practical question; and
+- whether they would use the artifact again for a real problem.
+
+Do not publish names, employer details, client context, repository traffic, or private working material. An anonymised finding may be shared only when consent and the evidence boundary are explicit.
+
+## Step 3: capture private traffic evidence
 
 Run the authenticated snapshot separately:
 
@@ -80,11 +98,12 @@ git status --short
 
 Never copy traffic counts, referrers, popular paths, or traffic snapshot files into the public health report, a commit, a public issue, or a Pages artifact.
 
-## Step 3: compare and decide
+## Step 4: compare and decide
 
 Compare the new private snapshot with the previous local snapshot, then choose a small, evidence-backed maintenance slice.
 
 - Treat views and clones as directional signals, not complete analytics.
+- Treat successful first-artifact completion as usability evidence, not production adoption or business value proof.
 - Check whether a referrer or popular path repeats across two windows before making a large documentation change.
 - Use public health failures as release blockers when they concern branch state, published SHA, broken docs, footer drift, or required handoff links.
 - Treat missing releases or tags as context unless the repository has an explicit release contract.

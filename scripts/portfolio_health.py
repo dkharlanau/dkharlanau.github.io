@@ -23,7 +23,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from portfolio_inventory import RepositorySpec, author_footer, load_inventory  # noqa: E402
 
 
-SCHEMA_VERSION = "0.1"
+SCHEMA_VERSION = "0.2"
 MAX_ACTION_RUNS = 20
 MAX_RELEASES_OR_TAGS = 100
 ACCEPTABLE_CONCLUSIONS = {"success", "neutral", "skipped"}
@@ -451,6 +451,22 @@ def build_report(
     attention = [repo["name"] for repo in repositories if repo["status"] == "attention"]
     checked_local = sum(bool(repo["local_publication"]["checked"]) for repo in repositories)
     required_releases = [repo for repo in repositories if repo["release_state"]["release_required"]]
+    public_surfaces = []
+    for configured in config.get("required_public_surfaces", []) or []:
+        surface_id = str(configured.get("id") or "").strip()
+        surface_url = str(configured.get("url") or "").strip()
+        probe = safe_probe(client, surface_url)
+        public_surfaces.append(
+            {
+                "id": surface_id,
+                "url": surface_url,
+                "status": "healthy" if probe["live"] else "attention",
+                "probe": probe,
+            }
+        )
+    unavailable_surfaces = [
+        surface["id"] for surface in public_surfaces if surface["status"] == "attention"
+    ]
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": generated_at or utc_now(),
@@ -460,7 +476,7 @@ def build_report(
             "excluded_repositories": list(config.get("excluded_repositories", [])),
             "inventory_sources": sorted({repo["inventory_source"] for repo in repositories}),
         },
-        "status": "attention" if attention else "healthy",
+        "status": "attention" if attention or unavailable_surfaces else "healthy",
         "summary": {
             "healthy": len(repositories) - len(attention),
             "attention": len(attention),
@@ -475,8 +491,11 @@ def build_report(
             ),
             "local_checkouts_checked": checked_local,
             "local_publication_clean": sum(repo["local_publication"]["publication_clean"] is True for repo in repositories),
+            "required_public_surfaces": len(public_surfaces),
+            "required_public_surfaces_live": len(public_surfaces) - len(unavailable_surfaces),
         },
         "repositories": repositories,
+        "public_surfaces": public_surfaces,
         "boundaries": {
             "public_metadata_only": True,
             "private_traffic_included": False,
@@ -507,6 +526,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- Published main SHA with passing CI: **{summary['published_sha_ci_passing']}**",
         f"- Required flagship release tag resolves to published main SHA: **{summary['required_release_at_published_sha']}/{summary['release_required']}**",
         f"- Optional local checkouts clean and equal to published SHA: **{summary['local_publication_clean']}/{summary['local_checkouts_checked']}**",
+        f"- Required central public surfaces reachable: **{summary['required_public_surfaces_live']}/{summary['required_public_surfaces']}**",
         "",
         "## Repository ledger",
         "",
@@ -539,12 +559,20 @@ def render_markdown(report: dict[str, Any]) -> str:
         for item in repo["findings"]
         if item["severity"] in {"error", "warning"}
     ]
+    surface_findings = [
+        surface for surface in report.get("public_surfaces", []) if surface["status"] == "attention"
+    ]
     lines += ["", "## Findings", ""]
     if findings:
         for name, item in findings:
             lines.append(f"- **{name} / {item['severity']} / `{item['code']}`:** {item['message']}")
     else:
         lines.append("No error or warning findings.")
+    if surface_findings:
+        for surface in surface_findings:
+            lines.append(
+                f"- **public surface / error / `{surface['id']}`:** Required public URL is unavailable."
+            )
     lines += [
         "",
         "## Evidence boundary",
