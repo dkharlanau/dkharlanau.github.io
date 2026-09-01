@@ -1,0 +1,200 @@
+id: AATP-PLAYBOOK-ASSESSMENT
+title: aATP Lead Heuristics and Assessment Drills
+updated_at: '2026-09-01'
+practitioner_heuristics:
+- id: HEUR-ATP-PAL-CHAIN
+  context: Product Allocation quantity looks wrong
+  statement: 'I debug PAL as an object chain: CVC → planning data → sequence → constraint/group → material assignment
+    → consumption.'
+  confidence: high
+  questions:
+  - Which CVC matched?
+  - Which period is the pivot and which backward/forward periods are allowed?
+  - Are multiple constraints acting together or are sequence groups alternatives?
+  - Is the material-plant assignment valid at the requirement date?
+  source_refs:
+  - SRC-SAP-AATP-PAL-CONCEPTS
+  - SRC-SAP-AATP-PAL-ASSIGN
+- id: HEUR-ATP-BOP-SIMULATE
+  context: New BOP priority policy or major variant change
+  statement: I simulate the variant and explain winners and losers before I allow it to update confirmations.
+  confidence: high
+  checks:
+  - segment membership
+  - evaluation and check sequence
+  - Win/Gain exception behavior
+  - fallback variant
+  - ACL/global segment runtime scope
+  source_refs:
+  - SRC-SAP-AATP-BOP-CONCEPTS
+  - SRC-SAP-AATP-BOP-STRATEGIES
+- id: HEUR-ATP-SUP-BYPASS
+  context: Protected quantity was consumed unexpectedly
+  statement: I check for a bypass path before changing protection quantities.
+  confidence: high
+  questions:
+  - Was Supply Protection active in the relevant checking-rule scope?
+  - Was demand created through a delivery without a predecessor sales order?
+  - Does the demand carry the planning-level context, such as storage location, that the protection expects?
+  source_refs:
+  - SRC-SAP-AATP-SUP-BYPASS
+  - SRC-SAP-AATP-SUP-PLANNING-LEVEL
+- id: HEUR-ATP-RELEASE-SCOPE
+  context: A project document quotes an old aATP limitation
+  statement: I treat aATP limitations as release-sensitive until I verify the target edition and release.
+  confidence: high
+  checks:
+  - target S/4HANA edition
+  - target release/FPS
+  - current SAP Help for the capability
+  - relevant SAP Notes for restrictions
+  anti_patterns:
+  - repeat a 1610/1709/1809 restriction as if it were current
+  - copy old Fiori service or role setup without target-release verification
+  source_refs:
+  - SRC-SAP-AATP-OVERVIEW
+  - SRC-SAP-AATP-ABC-CURRENT
+  - SRC-SAP-AATP-R4D
+- id: HEUR-ATP-MIGRATE-BEHAVIOR
+  context: Migration from classic ATP or older advanced promising design
+  statement: I migrate business promise behavior, not configuration screens.
+  confidence: high
+  questions:
+  - Which scope, allocation, priority, substitution, and release rules does the business depend on?
+  - Which rules are still needed in the target operating model?
+  - Which current standard capability replaces custom or historical design?
+  anti_patterns:
+  - one-to-one copying of historical customizing without a capability gap assessment
+failure_modes:
+- id: FAIL-ATP-PAL-PERIOD
+  symptom: Product Allocation consumes a different period or quantity than expected.
+  likely_causes:
+  - requested/check date maps to another pivot period
+  - backward or forward consumption is active
+  - allocation rate or unit conversion changes the consumed quantity
+  - multiple constraints or alternative sequence groups affect the result
+  first_checks:
+  - check date time type and period time zone
+  - pivot/backward/forward consumption order
+  - allocation rate and units
+  - sequence group and constraints
+- id: FAIL-ATP-SUP-BYPASS
+  symptom: A group was meant to be protected, but another demand consumed the quantity.
+  likely_causes:
+  - Supply Protection not active in the relevant checking-rule scope
+  - delivery without predecessor sales order bypassed the protection
+  - granular planning level was configured but the demand did not carry the required context
+  first_checks:
+  - scope activation
+  - predecessor document flow
+  - Supply Protection planning level
+- id: FAIL-ATP-BOP-TOO-BROAD
+  symptom: BOP processes far more orders or material-plant combinations than expected.
+  likely_causes:
+  - global segment is too broad or missing
+  - Availability Change Log filtering is not used or not configured as intended
+  - segment selection criteria overlap more than expected
+  first_checks:
+  - global segment and remainder group
+  - ACL filter categories and previous successful run
+  - segment selection result
+- id: FAIL-ATP-R4D
+  symptom: A due order is not receiving the expected final quantity before delivery.
+  likely_causes:
+  - order fulfillment responsibility or horizon excludes the item
+  - dependency or constraining element limits manual redistribution
+  - item is protected or postponed
+  - the underlying availability situation changed and worklist needs refresh
+  first_checks:
+  - responsibility and horizon
+  - constraints/dependencies
+  - protect/postpone state
+  - refresh worklist and compare current availability
+impact_traces:
+- id: TRACE-ATP-ACL-BOP
+  title: Change-driven BOP narrows the blast radius
+  path:
+  - availability change
+  - ACL event
+  - variant ACL filter
+  - affected material-plant-MRP-area requirements
+  - BOP recheck
+  explanation: A large BOP population does not always need to be reprocessed when the variant can focus on availability
+    situations that actually changed.
+- id: TRACE-ATP-R4D
+  title: The final promise can still be an operational decision
+  path:
+  - automated confirmation/BOP result
+  - Release for Delivery worklist
+  - impact + dependency + constrained supply
+  - manual/semi-automatic redistribution
+  - release to logistics
+  explanation: Release for Delivery is a controlled last gate for scarce supply, not a replacement for PAC or BOP
+    design.
+synthetic_cases:
+- id: SCN-ATP-PAL-SEQUENCE
+  title: One order, two allocation constraints
+  synthetic: true
+  context:
+  - A sales order is inside a monthly regional allocation but also inside a weekly customer allocation.
+  - The monthly allocation still has quantity.
+  - The weekly customer allocation is nearly exhausted.
+  - Backward consumption is allowed for one period.
+  task: Explain which dates, CVCs, sequence constraints, and consumption periods you would inspect before deciding
+    whether the confirmation is correct. Do not reduce the answer to one allocation number.
+  lead_answer_shape:
+  - Identify the check date and pivot period.
+  - Prove the characteristic value combination for each constraint.
+  - Show whether constraints are simultaneous or alternative.
+  - Trace final consumption after PAC.
+- id: SCN-ATP-RELEASE-FOR-DELIVERY
+  title: A rush order arrives after BOP
+  synthetic: true
+  context:
+  - BOP has already produced a stable confirmation set for a constrained material.
+  - A high-impact rush order becomes due before delivery creation.
+  - Another lower-priority order holds enough confirmed quantity.
+  - Both orders are inside the responsible specialist's horizon.
+  task: Decide whether Release for Delivery should redistribute quantity, protect or postpone an item, and what
+    evidence must be recorded before releasing the material to logistics.
+assessment_drills:
+- id: DRILL-ATP-07
+  question: Design Product Allocation for a scarce product across region and strategic customer. Which objects and
+    parameters matter?
+  expected_dimensions:
+  - characteristics/CVC hierarchy
+  - allocation object period/date basis and units
+  - planning data and collective allocation
+  - sequence groups/constraints and backward-forward consumption
+  - time-dependent material-plant assignment
+  - monitoring and change governance
+- id: DRILL-ATP-08
+  question: A Win requirement fails in BOP. What should a Lead ask before rerunning the job?
+  expected_dimensions:
+  - exception behavior
+  - fallback variant
+  - failed material-plant scope versus complete stop
+  - simulation before update
+  - business owner of the priority rule
+- id: DRILL-ATP-09
+  question: When does Availability Change Log make BOP safer or faster?
+  expected_dimensions:
+  - supply, demand, and master-data change categories
+  - previous successful variant run
+  - material-plant-MRP-area scope
+  - risk of processing nothing when no relevant ACL entries exist
+- id: DRILL-ATP-10
+  question: What is Release for Delivery, and why is it not the same as BOP?
+  expected_dimensions:
+  - manual post-processing of due orders after automated prioritization
+  - order fulfillment responsibility and horizon
+  - impact, constraints, dependencies
+  - redistribute, Confirm from Top, protect, postpone, release
+- id: DRILL-ATP-11
+  question: You find an old document saying ABC only substitutes a plant during order creation. How do you respond?
+  expected_dimensions:
+  - treat the statement as release-sensitive
+  - verify target edition and release
+  - current product/plant/storage-location substitution
+  - execution-context control for new or changed requirements
+  - avoid copying historical limitations into target design
