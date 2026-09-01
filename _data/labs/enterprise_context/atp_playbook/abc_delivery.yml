@@ -1,0 +1,78 @@
+id: AATP-PLAYBOOK-ABC-R4D
+title: ABC and Release for Delivery Design
+updated_at: '2026-09-01'
+release_scope:
+- SAP S/4HANA 2025 FPS01 where cited
+abc_current_design:
+  title: ABC — current design, not early-release limitations
+  capabilities:
+  - Substitute delivering plant, storage location, or product to improve a sales-order confirmation.
+  - Control whether alternatives are considered always, only for new requirements, or during re-check of posted
+    requirements.
+  - Create multiple subitems for different products, plants, or storage locations when partial-delivery design allows
+    it.
+  - Use product-substitution master data as a source for directed product alternatives.
+  - Combine ABC with supply creation where the selected scenario supports SBC.
+  design_chain:
+  - 'alternative control: which requirement characteristics trigger ABC'
+  - 'substitution strategy: which substitution methods are executed'
+  - 'substitute determination: which products/locations are candidates'
+  - availability checks for each valid substitute
+  - 'alternative determination: which confirmation wins'
+  - 'sales-document representation: inline substitution or subitems depending on design'
+  source_refs:
+  - SRC-SAP-AATP-ABC-CURRENT
+  - SRC-SAP-AATP-ABC-PRODUCT
+  - SRC-SAP-AATP-ABC-RECHECK
+  - SRC-SAP-AATP-ABC-PARTIAL
+  - SRC-SAP-AATP-ABC-SBC
+release_for_delivery:
+  title: Release for Delivery — the final operational promise gate
+  purpose: Release for Delivery complements automated BOP by letting order fulfillment specialists manually post-process
+    due sales orders and stock transport orders for materials with limited availability before subsequent logistics
+    execution.
+  capabilities:
+  - Work by assigned order fulfillment responsibility and horizon.
+  - See availability, confirmation status, constraints, dependencies, and potential financial impact.
+  - Redistribute limited quantity manually between requirement items.
+  - Use Confirm from Top for semi-automatic mass prioritization.
+  - Protect finalized items from further processing or postpone items from delivery creation.
+  - Refresh the worklist when underlying business documents change.
+  - Release materials to trigger subsequent logistics processing.
+  extensibility:
+  - BADI_ATP_R4D_MATERIAL_IMPACT for material-level impact
+  - BADI_ATP_R4D_REQUIREMNT_IMPACT for requirement-level impact
+  source_refs:
+  - SRC-SAP-AATP-R4D
+extension_layers:
+- id: AATP-EXT-ABC-ENRICH
+  title: ABC substitution-result BAdI
+  principle: Use the enriched substitution-result BAdI when standard substitute determination is correct but the
+    candidate list needs business filtering, priority influence, or shipping-point adjustment.
+  technical_shape:
+  - BAdI BADI_ATP_ABC_ENRCD_SUBSTN_RSLT
+  - can remove substitutes from the result
+  - can influence substitute priority before alternative determination
+  - can change shipping point and trigger route recalculation
+  diagnostic_checks:
+  - Prove the standard substitute list before the BAdI.
+  - Compare the list and priority after enrichment.
+  - Regression-test route and downstream shipping effects if shipping point is changed.
+  trap: Removing a substitute can make an apparently available source disappear from the final confirmation.
+  source_refs:
+  - SRC-SAP-AATP-ABC-ENRICH-BADI
+- id: AATP-EXT-R4D
+  title: Release for Delivery impact BAdIs
+  principle: Keep confirmation logic separate from impact scoring. Extend the impact calculation only when standard
+    prioritization information does not represent the business consequence.
+  technical_shape:
+  - BADI_ATP_R4D_MATERIAL_IMPACT
+  - BADI_ATP_R4D_REQUIREMNT_IMPACT
+  - enhancement spot ES_ATP_R4D_IMPACT
+  diagnostic_checks:
+  - Separate impact calculation from the available quantity and confirmation logic.
+  - Use deterministic business inputs for impact scoring.
+  - Test that impact changes prioritization insight without silently changing ATP itself.
+  trap: A custom impact score can influence user decisions even though the underlying confirmation is unchanged.
+  source_refs:
+  - SRC-SAP-AATP-R4D
