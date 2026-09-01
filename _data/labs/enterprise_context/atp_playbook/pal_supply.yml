@@ -1,0 +1,91 @@
+id: AATP-PLAYBOOK-PAL-SUP
+title: Product Allocation and Supply Protection Design
+updated_at: '2026-09-01'
+release_scope:
+- SAP S/4HANA 2025 FPS01 where cited
+pal_design:
+  title: Product Allocation — the design chain
+  lead_formula: For a simple sales-constraint design, confirmation cannot exceed the requested quantity, the availability
+    result, or the relevant allocation constraint. In current sequence designs, alternative groups may contribute
+    quantity, while simultaneous constraints are consolidated to a common confirmation that all constraints can
+    support.
+  objects:
+  - title: Characteristics and CVCs
+    purpose: Describe who or what receives an allocation, for example customer, region, channel, material, or another
+      supported characteristic.
+    trap: A wrong characteristic match can look like missing stock.
+  - title: Product Allocation Object
+    purpose: 'Defines the allocation schema: period, date basis, quantity unit, characteristics, hierarchy, and
+      collective-allocation behavior.'
+    trap: The object is a policy model, not the product assignment itself.
+  - title: Planning Data
+    purpose: Stores CVC time series, planned allocation quantities, activation state, and constraint status.
+    trap: Planning data can be correct but inactive, outside the relevant period, or matched to another CVC.
+  - title: Product Allocation Sequence
+    purpose: Combines allocation objects as simultaneous constraints or alternative allocation sources and defines
+      consumption strategy.
+    trap: A sequence can consume several periods or allocation objects, so the current bucket alone is not enough
+      evidence.
+  - title: Material / Plant Assignment
+    purpose: Activates the intended allocation sequence for a material or material-plant combination for a validity
+      period.
+    trap: Time-dependent assignments make seasonal activation possible and can also explain sudden behavior changes.
+  parameters:
+  - period type and period time zone
+  - requested date/check date time type
+  - allocation quantity unit and consumption unit
+  - allocation rate / factor for unit conversion
+  - collective allocation managed manually or by the system
+  - backward and forward consumption periods
+  - past-period handling and validity ranges
+  - constraint status and activation status
+  sequence_logic:
+  - title: Alternative sequence groups
+    explanation: If one group cannot satisfy the requirement, later groups can provide additional allocation according
+      to priority.
+    source_refs:
+    - SRC-SAP-AATP-PAL-CONCEPTS
+    - SRC-SAP-AATP-PAL-SEQUENCES
+  - title: Multiple constraints in one group
+    explanation: All valid constraints are checked together and the common confirmation is limited by what all constraints
+      can support.
+    source_refs:
+    - SRC-SAP-AATP-PAL-CONCEPTS
+  - title: Capacity sequence groups
+    explanation: A capacity allocation check can run after PAC and use the PAC confirmation as its requirement,
+      for example to restrict transport capacity.
+    source_refs:
+    - SRC-SAP-AATP-PAL-CAPACITY
+  operations:
+  - Use spreadsheet upload/download for controlled mass maintenance of CVCs and time series.
+  - Use Product Allocation Overview and monitoring apps to inspect consumption and overloaded/underloaded periods.
+  - Treat allocation object, CVC, period, and sequence changes as auditable business-policy changes.
+  source_refs:
+  - SRC-SAP-AATP-PAL-CONCEPTS
+  - SRC-SAP-AATP-PAL-PLANNING
+  - SRC-SAP-AATP-PAL-SEQUENCES
+  - SRC-SAP-AATP-PAL-ASSIGN
+  - SRC-SAP-AATP-PAL-CAPACITY
+supply_protection_guardrails:
+  title: Supply Protection — design the boundary so it cannot be bypassed
+  items:
+  - title: Object activation is not enough
+    lesson: Supply Protection must also be enabled in the scope of availability check for the relevant checking
+      rule.
+    source_refs:
+    - SRC-SAP-AATP-SUP-BYPASS
+  - title: Direct deliveries can bypass protection
+    lesson: A delivery without a predecessor sales order can avoid the protection restriction because the delivery
+      check does not reapply it as a normal predecessor-based flow would.
+    source_refs:
+    - SRC-SAP-AATP-SUP-BYPASS
+  - title: Choose the planning level deliberately
+    lesson: Protection can be modeled at plant or, for supported scenarios, a more granular level such as storage
+      location, pool segment, or batch. The demand must carry the context needed by that level.
+    source_refs:
+    - SRC-SAP-AATP-SUP-PLANNING-LEVEL
+  - title: Overprotection is a real operational failure
+    lesson: Protection quantities can mutually block demand. Monitor and simulate mitigation rather than solving
+      it by silently disabling protection.
+    source_refs:
+    - SRC-SAP-AATP-SUP-OVERPROTECTION
