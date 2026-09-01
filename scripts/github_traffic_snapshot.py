@@ -107,11 +107,20 @@ def sanitize_popular_path(value: Any) -> str:
     text = bounded_text(value)
     if not text:
         return "/"
+
+    def fallback_path() -> str:
+        candidate = text.split("?", 1)[0].split("#", 1)[0]
+        if "://" in candidate:
+            remainder = candidate.split("://", 1)[1]
+            separator = remainder.find("/")
+            candidate = remainder[separator:] if separator >= 0 else "/"
+        return candidate or "/"
+
     try:
         parsed = urlsplit(text)
         path = parsed.path or "/"
     except ValueError:
-        path = text.split("?", 1)[0].split("#", 1)[0] or "/"
+        path = fallback_path()
     if not path.startswith("/"):
         path = f"/{path}"
     return path[:MAX_TEXT_LENGTH]

@@ -81,6 +81,16 @@ def test_snapshot_sanitizes_url_evidence_and_never_keeps_raw_responses():
     assert traffic.sanitize_popular_path("https://[invalid]/docs?token=secret") == "/docs"
 
 
+def test_malformed_url_fallback_is_python_version_independent(monkeypatch):
+    def reject_malformed_url(_value):
+        raise ValueError("malformed URL")
+
+    monkeypatch.setattr(traffic, "urlsplit", reject_malformed_url)
+
+    assert traffic.sanitize_referrer("https://[invalid]?token=secret") == "invalid"
+    assert traffic.sanitize_popular_path("https://[invalid]/docs?token=secret") == "/docs"
+
+
 def test_private_output_is_ignored_untracked_and_owner_only(tmp_path, monkeypatch):
     subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
     (tmp_path / ".gitignore").write_text(".local/portfolio-traffic/\n", encoding="utf-8")
