@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-30
+last_modified_at: 2026-09-01
 hide_global_cta: true
 tags:
   - sap
@@ -78,6 +78,7 @@ tags:
       <a href="/labs/enterprise-context/sales-processes/"><span>01</span><strong>Sales</strong><small>Processes, sales orders, pricing, ATP, shipping, billing, credit, tax, analytics, diagnostics, and special cases.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
       <a href="/labs/enterprise-context/procurement/"><span>02</span><strong>Procurement and Logistics</strong><small>Procurement, inventory, EWM, transportation, material behaviour, production, and quality management.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
       <a href="/labs/enterprise-context/master-data/"><span>03</span><strong>Master Data and Governance</strong><small>Master data, MDG, data governance, replication dependencies, and enterprise data responsibility.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/enterprise-context/business-partner/"><span>BP</span><strong>Business Partner / CVI</strong><small>Roles, groupings, account groups, number ranges, CVI, field control, customer and supplier views, partner functions, extensions, diagnostics, and validation.</small><i class="material-symbols-outlined" aria-hidden="true">badge</i></a>
       <a href="/labs/enterprise-context/integrations/"><span>04</span><strong>Integration and Technology</strong><small>APIs, IDocs, events, middleware, integration operations, development, analytics, and AI touchpoints.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/automotive-jit/"><span>05</span><strong>Cross-functional and Industry</strong><small>Automotive JIT, finance-logistics connections, common logistics capabilities, industries, and deployment models.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
       <a href="/labs/enterprise-context/experience-platforms/"><span>06</span><strong>Experience Platforms</strong><small>SAP Build Work Zone, central entry points, Fiori launchpad boundaries, SAP Start, tasks, mobile, identity, and the workplace layer across systems.</small><i class="material-symbols-outlined" aria-hidden="true">space_dashboard</i></a>
