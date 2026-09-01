@@ -1,0 +1,143 @@
+id: AATP-PLAYBOOK-CONFIG
+title: aATP Configuration and Release Guardrails
+updated_at: '2026-09-01'
+release_scope:
+- SAP S/4HANA 2025 FPS01 where cited
+configuration_playbook:
+  title: Configuration playbook — prove the control chain before tuning the result
+  principle: aATP behavior is layered. Start with requirement eligibility and scope, then prove the feature-specific
+    object and assignment that is supposed to influence the check.
+  layers:
+  - id: ATP-CFG-01
+    title: Requirement eligibility
+    business_question: Should this document requirement be checked at all?
+    controls:
+    - schedule line availability relevance
+    - requirements type/class behavior
+    - availability checking group on the exact material-plant context
+    failure_pattern: No feature configuration can help if the requirement never enters the expected availability
+      logic.
+    source_refs:
+    - SRC-SAP-ATP-CONTROL
+  - id: ATP-CFG-02
+    title: Checking rule and scope
+    business_question: Which stocks, receipts, issues, and enhanced methods are visible to this transaction?
+    controls:
+    - checking group
+    - transaction checking rule
+    - scope of availability check
+    - check horizon and replenishment settings where relevant
+    failure_pattern: A supply element may exist and still be correctly ignored because it is outside the effective
+      scope.
+    source_refs:
+    - SRC-SAP-AATP-SCOPE
+    - SRC-SAP-AATP-CHECK-HORIZON
+  - id: ATP-CFG-03
+    title: Scheduling and check date
+    business_question: Which date is used to evaluate the promise?
+    controls:
+    - requested delivery date
+    - shipping and transportation durations
+    - material availability date
+    - factory calendars and time zones
+    failure_pattern: The business reads stock on the requested delivery date while the availability check uses another
+      date.
+    source_refs:
+    - SRC-SAP-AATP-SCHEDULING
+  - id: ATP-CFG-04
+    title: Product Allocation activation and assignment
+    business_question: Which allocation design applies to this product and time period?
+    controls:
+    - product allocation object and characteristics
+    - planning data and characteristic value combinations
+    - product allocation sequence, groups, and constraints
+    - time-dependent material or material-plant assignment
+    failure_pattern: Correct allocation planning data does nothing if the requirement does not resolve to the intended
+      sequence and assignment.
+    source_refs:
+    - SRC-SAP-AATP-PAL-CONCEPTS
+    - SRC-SAP-AATP-PAL-ASSIGN
+  - id: ATP-CFG-05
+    title: Supply Protection activation
+    business_question: Which minimum supply is protected, at which planning level, and for which demand?
+    controls:
+    - active supply protection object
+    - material-plant planning context and characteristics
+    - planning horizon and time buckets
+    - Supply Protection enabled in the scope for the relevant checking rule
+    failure_pattern: An active object alone is not sufficient; the scope can disable protection for a checking rule.
+    source_refs:
+    - SRC-SAP-AATP-SUP
+    - SRC-SAP-AATP-SUP-BYPASS
+  - id: ATP-CFG-06
+    title: Backorder Processing design
+    business_question: Which requirements enter the run and in what priority?
+    controls:
+    - segments and prioritizers
+    - confirmation strategies
+    - global segment and remainder behavior
+    - fallback variant and exception behavior
+    - Availability Change Log filters
+    failure_pattern: A technically successful BOP run can still implement the wrong business priority or process
+      far more requirements than intended.
+    source_refs:
+    - SRC-SAP-AATP-BOP-CONCEPTS
+    - SRC-SAP-AATP-BOP-STRATEGIES
+    - SRC-SAP-AATP-BOP-ACL
+  - id: ATP-CFG-07
+    title: Alternative-Based Confirmation
+    business_question: When and how may the original product or location be replaced?
+    controls:
+    - alternative control and characteristic values
+    - substitution strategy and methods
+    - alternative determination, rating attributes, and constraints
+    - execution context for creating or changing requirements
+    failure_pattern: A different product or location may be a designed result of ABC rather than a plant-determination
+      defect.
+    source_refs:
+    - SRC-SAP-AATP-ABC-CURRENT
+    - SRC-SAP-AATP-ABC-RECHECK
+  - id: ATP-CFG-08
+    title: Release for Delivery responsibility
+    business_question: Who may make the final manual redistribution before logistics execution?
+    controls:
+    - order fulfillment responsibility
+    - time horizon
+    - availability, impact, constraints, and dependencies
+    - protect, postpone, confirm, and release actions
+    failure_pattern: The last-mile confirmation decision can be operational rather than a configuration or PAC issue.
+    source_refs:
+    - SRC-SAP-AATP-R4D
+release_guardrails:
+  title: Release-sensitive facts — do not carry old aATP limits into a modern design
+  items:
+  - statement: Early ABC restrictions are historical. In SAP S/4HANA 2025 FPS01, ABC supports product, plant, and
+      storage-location substitution and can be controlled for new or changed requirements.
+    source_refs:
+    - SRC-SAP-AATP-ABC-CURRENT
+    - SRC-SAP-AATP-ABC-RECHECK
+  - statement: Current BOP includes Improve and Skip in addition to the early Win, Gain, Redistribute, Fill, and
+      Lose model.
+    source_refs:
+    - SRC-SAP-AATP-BOP-STRATEGIES
+  - statement: Release for Delivery now supports worklist refresh, semi-automatic Confirm from Top, protect, and
+      postpone actions; old worklist-refresh limitations must not be repeated as current facts.
+    source_refs:
+    - SRC-SAP-AATP-R4D
+  - statement: Current aATP contains additional capability families such as Interactive Backorder Processing, Supply
+      Creation-Based Confirmation, Availability Change Log, Business Process Scheduling attributes, substitutions,
+      and Object and Value Determination.
+    source_refs:
+    - SRC-SAP-AATP-OVERVIEW
+  - statement: App IDs, roles, service activation details, and feature restrictions are release- and edition-sensitive.
+      Verify them for the target system instead of copying an older setup guide.
+    source_refs:
+    - SRC-SAP-AATP-OVERVIEW
+migration_heuristic:
+  evidence_type: expert_heuristic
+  statement: 'For a migration or redesign, inventory the business behavior first: scope, receipt categories, allocation
+    characteristics and time buckets, priority rules, fallback behavior, substitution, manual release decisions,
+    interfaces, and operational monitoring. Rebuild those capabilities deliberately in the target release instead
+    of treating old configuration objects as a checklist to copy one-to-one.'
+  assessment_signal: A Lead can distinguish business promise rules from the historical configuration technology
+    that implemented them.
