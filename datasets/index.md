@@ -58,7 +58,7 @@ hide_global_cta: true
       <p><strong>Licence:</strong> <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a> — non-commercial reuse with attribution and source link.</p>
       <p><strong>Concept DOI:</strong> <a href="https://doi.org/10.5281/zenodo.18862098" target="_blank" rel="noopener noreferrer">10.5281/zenodo.18862098</a></p>
       <p><strong>Suggested citation:</strong> Dzmitryi Kharlanau. “&lt;Title&gt;” (dataset bytes). CC BY-NC 4.0. DOI: 10.5281/zenodo.18862098. &lt;Canonical URL&gt;</p>
-      <p class="dataset-canvas__citation-links"><a href="https://github.com/dkharlanau/dkharlanau-datasets" target="_blank" rel="noopener noreferrer">Dataset repository <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a><a href="/legal/datasets/">Read the full data terms <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p>
+      <p class="dataset-canvas__citation-links"><a href="https://github.com/dkharlanau/dkharlanau-datasets" target="_blank" rel="noopener noreferrer">Dataset repository <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a><a href="/CITATION/">Citation guide <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a><a href="/legal/datasets/">Read the full data terms <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p>
     </div>
   </section>
 </div>

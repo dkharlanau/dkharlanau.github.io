@@ -11,7 +11,7 @@ It:
 1. Reads `https://dkharlanau.github.io/sitemap.xml` and all child sitemaps.
 2. Submits the sitemap index through the Search Console Sitemaps API.
 3. Sends page URLs to the Search Console URL Inspection API.
-4. Skips JSON, YAML, XML, TXT, and CSV endpoints by default.
+4. Skips machine endpoints and static assets by default; URL Inspection focuses on HTML pages.
 5. Classifies page results into `P0`, `P1`, `P2`, `REVIEW`, or `OK`.
 6. Downloads the previous successful workflow artifact when available and calculates changes in indexing counts.
 7. Publishes `google-indexing.json` and `google-indexing.md` as a 90-day GitHub Actions artifact and as a workflow summary.
@@ -28,6 +28,10 @@ The workflow does not pretend that URL Inspection is an indexing request. Google
 6. Run **Actions → Google Search Pipeline → Run workflow** once.
 
 Do not commit the JSON key to the repository.
+
+Production runs fail closed when the secret is absent or invalid. A green workflow therefore means the Search Console connection was actually used; credential-free sitemap parsing is available only as an explicit local dry run.
+
+The scheduled run inspects a bounded rotating sample, while post-CI runs prioritize new and previously problematic URLs. Use the manual `all` mode for an occasional full baseline, not as a daily crawl. The URL Inspection API has a per-property daily quota, and sitemap submission is a discovery hint rather than a guarantee that Google will index every URL.
 
 ## Reports
 

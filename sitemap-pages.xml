@@ -8,6 +8,10 @@ permalink: /sitemap-pages.xml
   {% for page in pages %}
     {% assign page_path = page.url | default: page.permalink %}
     {% if page_path %}
+      {% assign page_name = page_path | split: '/' | last %}
+      {% assign page_extension = page_name | split: '.' | last | downcase %}
+      {% assign is_html_page = true %}
+      {% if page_name contains '.' and page_extension != 'html' %}{% assign is_html_page = false %}{% endif %}
       {% unless page_path == '/sitemap.xml' or page_path == '/sitemap-pages.xml' or page_path == '/sitemap-data.xml' or page_path == '/sitemap-atlas.xml' or page_path contains 'feed.xml' or page_path contains '404' %}
         {% assign robots_directive = page.robots | default: '' %}
         {% assign is_noindex = false %}
@@ -22,7 +26,7 @@ permalink: /sitemap-pages.xml
         {% if is_atlas %}
           {% unless atlas_verified == true and atlas_status == 'reviewed' %}{% assign atlas_ok = false %}{% endunless %}
         {% endif %}
-        {% unless is_noindex or is_research or atlas_ok == false %}
+        {% unless is_noindex or is_research or atlas_ok == false or is_html_page == false %}
     <url>
       <loc>{{ page_path | absolute_url }}</loc>
       {% assign page_lastmod = page.significant_lastmod | default: page.content_updated_at | default: page.schema_updated_at | default: page.last_modified_at | default: page.updated | default: page.date | default: nil %}

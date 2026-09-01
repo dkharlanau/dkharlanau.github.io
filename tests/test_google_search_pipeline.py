@@ -52,6 +52,9 @@ def test_parse_urlset():
 def test_data_endpoints_are_not_page_urls():
     assert classify_url_kind("https://example.com/ai/resume.json") == "data"
     assert classify_url_kind("https://example.com/llms.txt") == "data"
+    assert classify_url_kind("https://example.com/assets/app.js") == "data"
+    assert classify_url_kind("https://example.com/assets/site.css") == "data"
+    assert classify_url_kind("https://example.com/assets/icon.svg") == "data"
     assert classify_url_kind("https://example.com/labs/") == "page"
 
 

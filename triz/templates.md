@@ -22,7 +22,7 @@ tags: [triz, templates, consulting, architecture, sap, integration, data, ai, de
       <p class="research-canvas__eyebrow">TRIZ / practice templates</p>
       <h1>Use the framework.<br />Do not admire it.</h1>
       <p>These templates are made for real delivery work: workshops, change requests, incidents, architecture decisions, SAP extensions, integrations, data governance, and AI use cases. Open the smallest template that matches the problem, fill it with evidence, and stop when the decision is clear.</p>
-      <a class="research-canvas__button" href="/datasets/triz-digital-framework/practice-template-pack.md">Open the copy-ready pack <span class="material-symbols-outlined" aria-hidden="true">content_copy</span></a>
+      <a class="research-canvas__button" href="/datasets/triz-digital-framework/practice-template-pack/">Open the copy-ready pack <span class="material-symbols-outlined" aria-hidden="true">content_copy</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Template library summary">
       <p>Working pack</p>
@@ -123,7 +123,7 @@ tags: [triz, templates, consulting, architecture, sap, integration, data, ai, de
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Formats</p><h2>Take the templates with you.</h2><p>The framework is more useful when it leaves this website.</p></header>
     <div class="research-route-list">
-      <a href="/datasets/triz-digital-framework/practice-template-pack.md"><span>MD</span><strong>Copy-ready Markdown pack</strong><small>Blank templates that can be copied into a ticket, Confluence page, Notion page, repository, ADR folder, or workshop notes.</small><i class="material-symbols-outlined" aria-hidden="true">description</i></a>
+      <a href="/datasets/triz-digital-framework/practice-template-pack/"><span>MD</span><strong>Copy-ready Markdown pack</strong><small>Blank templates that can be copied into a ticket, Confluence page, Notion page, repository, ADR folder, or workshop notes.</small><i class="material-symbols-outlined" aria-hidden="true">description</i></a>
       <a href="/datasets/triz-digital-framework/practice-templates.json"><span>JSON</span><strong>Machine-readable template catalog</strong><small>Use cases, participants, questions, outputs, operators, patterns, and red flags for tools and agents.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/datasets/triz-digital-framework/reasoning-schema.json"><span>SCHEMA</span><strong>Reasoning output schema</strong><small>A stricter structured result when a tool or agent turns a filled template into analysis.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
     </div>

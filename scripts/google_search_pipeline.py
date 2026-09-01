@@ -33,7 +33,27 @@ from urllib.request import Request, urlopen
 WEBMASTERS_SCOPE = "https://www.googleapis.com/auth/webmasters"
 INSPECTION_ENDPOINT = "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect"
 SITEMAP_API_ROOT = "https://www.googleapis.com/webmasters/v3"
-DATA_EXTENSIONS = {".json", ".yml", ".yaml", ".xml", ".txt", ".csv"}
+DATA_EXTENSIONS = {
+    ".json",
+    ".yml",
+    ".yaml",
+    ".xml",
+    ".txt",
+    ".csv",
+    ".css",
+    ".js",
+    ".map",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".svg",
+    ".webp",
+    ".ico",
+    ".woff",
+    ".woff2",
+    ".ttf",
+}
 DEFAULT_USER_AGENT = "DKH-Google-Search-Pipeline/2.0 (+https://dkharlanau.github.io/)"
 
 PRIORITY_ORDER = {"P0": 0, "P1": 1, "P2": 2, "REVIEW": 3, "OK": 4, "SKIP": 5, "ERROR": 6}

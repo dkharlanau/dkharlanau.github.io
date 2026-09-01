@@ -6,7 +6,7 @@ on:
       max_inspections:
         description: "Maximum page URLs to inspect"
         required: false
-        default: "1900"
+        default: "500"
       inspection_mode:
         description: "Inspection selection mode"
         required: false
@@ -92,13 +92,13 @@ jobs:
 
           case "${{ github.event_name }}" in
             workflow_dispatch)
-              echo "max=${INPUT_MAX_INSPECTIONS:-1900}" >> "$GITHUB_OUTPUT"
+              echo "max=${INPUT_MAX_INSPECTIONS:-500}" >> "$GITHUB_OUTPUT"
               echo "mode=${INPUT_INSPECTION_MODE:-all}" >> "$GITHUB_OUTPUT"
               echo "cooldown=0" >> "$GITHUB_OUTPUT"
               echo "policy=manual full-control run" >> "$GITHUB_OUTPUT"
               ;;
             schedule)
-              echo "max=1200" >> "$GITHUB_OUTPUT"
+              echo "max=120" >> "$GITHUB_OUTPUT"
               echo "mode=rotate" >> "$GITHUB_OUTPUT"
               echo "cooldown=0" >> "$GITHUB_OUTPUT"
               echo "policy=daily rotating sweep" >> "$GITHUB_OUTPUT"
@@ -125,9 +125,8 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -z "${SERVICE_ACCOUNT_JSON:-}" ]]; then
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT is not configured. Running sitemap/setup checks only; Search Console API checks are skipped."
-            exit 0
+            echo "::error::GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT is not configured. Production indexing checks cannot run."
+            exit 1
           fi
 
           credentials_path="$RUNNER_TEMP/google-search-console.json"
@@ -147,12 +146,10 @@ jobs:
           PY
 
           echo "path=$credentials_path" >> "$GITHUB_OUTPUT"
-          echo "configured=true" >> "$GITHUB_OUTPUT"
 
       - name: Run Google Search pipeline
         shell: bash
         env:
-          CREDENTIALS_CONFIGURED: ${{ steps.credentials.outputs.configured }}
           CREDENTIALS_PATH: ${{ steps.credentials.outputs.path }}
           POLICY_MAX: ${{ steps.policy.outputs.max }}
           POLICY_MODE: ${{ steps.policy.outputs.mode }}
@@ -166,15 +163,13 @@ jobs:
             --max-inspections "$POLICY_MAX"
             --inspection-mode "$POLICY_MODE"
             --min-inspection-interval-hours "$POLICY_COOLDOWN"
+            --credentials "$CREDENTIALS_PATH"
+            --require-credentials
             --output-dir reports/seo/google-search
           )
 
           if [[ -f previous/google-indexing.json ]]; then
             args+=(--previous-report previous/google-indexing.json)
-          fi
-
-          if [[ "$CREDENTIALS_CONFIGURED" == "true" ]]; then
-            args+=(--credentials "$CREDENTIALS_PATH" --require-credentials)
           fi
 
           echo "Inspection policy: ${{ steps.policy.outputs.policy }}"

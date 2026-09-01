@@ -6,12 +6,19 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_google_search_workflow_uses_quota_safe_trigger_policies():
     text = (ROOT / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
-    assert 'echo "max=1200"' in text
+    assert 'echo "max=120"' in text
     assert 'echo "max=100"' in text
     assert 'echo "cooldown=6"' in text
     assert "--require-credentials" in text
     assert "--inspection-mode" in text
     assert "--min-inspection-interval-hours" in text
+
+
+def test_google_search_workflow_fails_closed_without_credentials():
+    text = (ROOT / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
+    assert "GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT is not configured" in text
+    assert 'echo "configured=false"' not in text
+    assert "Production indexing checks cannot run" in text
 
 
 def test_indexnow_production_waits_for_successful_ci_and_reuses_site_artifact():

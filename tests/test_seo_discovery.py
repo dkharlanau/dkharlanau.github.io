@@ -212,6 +212,17 @@ def test_internal_docs_are_noindex_but_dama_pages_remain_indexable():
     for source_doc in ("AGENTS.md", "ARCHITECTURE.md", "DESIGN-SYSTEM.md", "PROJECT_MAP.md"):
         assert "noindex" in by_path[source_doc]["robots"]
         assert by_path[source_doc]["sitemap"] is False
+    for internal_path in (
+        ".codex",
+        ".well-known",
+        "changelog.md",
+        "ddd/agent-context.md",
+        "mcp/sap-assessment-mcp/SECURITY.md",
+        "mcp/sap-diagnostics-mcp/SECURITY.md",
+        "products/reference-cases",
+    ):
+        assert "noindex" in by_path[internal_path]["robots"]
+        assert by_path[internal_path]["sitemap"] is False
 
 
 def test_atlas_verified_pages_have_canonical_permalink():
@@ -274,6 +285,13 @@ def test_sitemap_pages_xml_has_research_check():
     path = REPO_ROOT / "sitemap-pages.xml"
     text = path.read_text(encoding="utf-8")
     assert "is_research" in text or "doc_is_research" in text
+
+
+def test_sitemap_pages_xml_only_emits_html_page_routes():
+    path = REPO_ROOT / "sitemap-pages.xml"
+    text = path.read_text(encoding="utf-8")
+    assert "is_html_page" in text
+    assert "page_extension != 'html'" in text
 
 
 def test_sitemap_atlas_xml_exists():
