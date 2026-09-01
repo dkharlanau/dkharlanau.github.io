@@ -81,13 +81,24 @@ def sanitize_referrer(value: Any) -> str:
     text = bounded_text(value)
     if not text:
         return "unknown"
+
+    def fallback_label() -> str:
+        candidate = text.split("?", 1)[0].split("#", 1)[0]
+        if "://" in candidate:
+            candidate = candidate.split("://", 1)[1]
+        if "@" in candidate:
+            candidate = candidate.rsplit("@", 1)[1]
+        candidate = candidate.split("/", 1)[0].strip("[]").lower()
+        return candidate[:MAX_TEXT_LENGTH] or "unknown"
+
     try:
         parsed = urlsplit(text if "://" in text else f"//{text}")
+        hostname = parsed.hostname
     except ValueError:
-        return text.split("?", 1)[0].split("#", 1)[0][:MAX_TEXT_LENGTH]
-    if parsed.hostname:
-        return parsed.hostname.lower()[:MAX_TEXT_LENGTH]
-    return text.split("?", 1)[0].split("#", 1)[0][:MAX_TEXT_LENGTH]
+        return fallback_label()
+    if hostname:
+        return hostname.lower()[:MAX_TEXT_LENGTH]
+    return fallback_label()
 
 
 def sanitize_popular_path(value: Any) -> str:
