@@ -225,7 +225,7 @@ def test_public_project_map_uses_the_projection_and_preserves_verification_bound
 
     legacy_products = (ROOT / "products" / "index.html").read_text(encoding="utf-8")
     assert 'rel="canonical" href="https://dkharlanau.github.io/machine/portfolio/"' in legacy_products
-    assert 'content="0; url=/machine/portfolio/"' in legacy_products
+    assert 'http-equiv="refresh"' not in legacy_products
     assert "The maintained reader map lives" in legacy_products
     assert "/products/manifest.json" in legacy_products
 
