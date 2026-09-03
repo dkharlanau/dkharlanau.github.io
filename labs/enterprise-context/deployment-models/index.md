@@ -41,8 +41,8 @@ semantic_links:
     title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
     url: "/labs/enterprise-context/sales-processes/integrations/"
   - type: "related_topic"
-    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
-    url: "/labs/enterprise-context/business-ai/"
+    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    url: "/labs/enterprise-context/aif/"
 source_links:
   - title: "Offering Comparison"
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/b89b8b9026e1456bb2a1df7c0d59c937/1485d139460246d2a4b936c0bb0ca272.html"
