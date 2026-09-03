@@ -42,7 +42,7 @@ tags:
       <p>Research status</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ lab.first_vertical.gates_complete }}/{{ lab.first_vertical.gates_total }}</strong><small>First-topic gates</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ schema.node_types | size }}</strong><small>Node types</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ schema.edge_types | size }}</strong><small>Node types</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ schema.edge_types | size }}</strong><small>Edge types</small></div>
       <em>Last reviewed together {{ lab.last_reviewed_together_at }} · updated {{ lab.updated_at }}</em>
     </div>
   </header>
