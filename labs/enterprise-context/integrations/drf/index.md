@@ -3,11 +3,18 @@ layout: default
 title: "SAP DRF — Data Replication Framework"
 description: "A practical SAP Lead guide to Data Replication Framework: architecture, DRFIMG setup, replication models, outbound implementations, filters, DRFOUT, DRFLOG, output modes, troubleshooting, and assessment answers."
 permalink: /labs/enterprise-context/integrations/drf/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-integration-review-2026-09"
+review_method: "current SAP primary sources + deployment-boundary review + page-level factual review"
+search_intent: "SAP DRF Data Replication Framework configuration DRFIMG DRFOUT DRFLOG filters direct pooled output troubleshooting"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-drf"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -34,6 +41,8 @@ semantic_links:
     title: "MDG and Data Governance"
     url: "/labs/enterprise-context/mdg/"
 source_links:
+  - title: "Data Replication Framework — SAP S/4HANA Cloud Public Edition 2608"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/a630d57fc5004c6383e7a81efee7a8bb/88e3f5577c84bc12e10000000a4450e5.html"
   - title: "Data Replication Framework Configuration"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/22ccb1d573f84837a0850bd039543b50/7030f4dc2b3b4d77a87000cf6829a363.html"
   - title: "Data Replication Framework - DRF"
@@ -80,6 +89,7 @@ source_links:
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
     <p><strong>DRF is not middleware.</strong> It is the source-side replication framework. It controls selection and outbound processing. SAP Integration Suite, web services, IDocs, RFC-based communication, or another transport can still be part of the path, depending on the delivered outbound implementation.</p>
     <p><strong>Lead rule:</strong> never say “DRF sends data through technology X” as a universal statement. First check the business object and the outbound implementation.</p>
+    <p><strong>Deployment boundary:</strong> DRF is also available in SAP S/4HANA Cloud Public Edition, but the classic DRFIMG, DRFF, DRFOUT, and DRFLOG transaction workflow described here applies mainly to classic ABAP, on-premise/private-edition, and documented product-specific scenarios. In Public Edition, use the delivered replication apps and configuration available for the tenant release instead of assuming classic transaction access.</p>
   </section>
 
   <section class="research-canvas__inventory" id="mental-model" data-reveal>
@@ -306,6 +316,7 @@ source_links:
       <p>The explanations, troubleshooting model, and assessment framing are independently written. Concrete technical values remain scenario- and release-specific.</p>
     </header>
     <div class="research-route-list">
+      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a630d57fc5004c6383e7a81efee7a8bb/88e3f5577c84bc12e10000000a4450e5.html" target="_blank" rel="noopener"><span>2608</span><strong>Data Replication Framework — SAP S/4HANA Cloud Public Edition</strong><small>Current Public Edition DRF feature set and app-based operating boundary.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/22ccb1d573f84837a0850bd039543b50/7030f4dc2b3b4d77a87000cf6829a363.html" target="_blank" rel="noopener"><span>SAP</span><strong>Data Replication Framework Configuration</strong><small>Business systems, replication models, outbound implementations, target assignment, activation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://help.sap.com/docs/SUPPORT_CONTENT/carab/3362176074.html" target="_blank" rel="noopener"><span>SAP</span><strong>Data Replication Framework - DRF</strong><small>DRFIMG, DRFF, DRFOUT, and DRFLOG transaction overview.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://help.sap.com/docs/latest/2de74e75ac4240c68ff125a948205aee/68c049fa0a434e26b1bc3c249f64bf91.html" target="_blank" rel="noopener"><span>SAP</span><strong>Filter Concept</strong><small>Transfer relevance and DRF filtering concepts.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
