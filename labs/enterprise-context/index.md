@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-09-03
 hide_global_cta: true
 tags:
   - sap
@@ -42,7 +42,7 @@ tags:
       <p>Research status</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ lab.first_vertical.gates_complete }}/{{ lab.first_vertical.gates_total }}</strong><small>First-topic gates</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ schema.node_types | size }}</strong><small>Node types</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ schema.edge_types | size }}</strong><small>Edge types</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ schema.edge_types | size }}</strong><small>Node types</small></div>
       <em>Last reviewed together {{ lab.last_reviewed_together_at }} · updated {{ lab.updated_at }}</em>
     </div>
   </header>
@@ -66,6 +66,20 @@ tags:
       <a href="/labs/enterprise-context/model/"><span>02</span><strong>Capability → Process → Step</strong><small>Where the activity sits in the business flow and which process variant is in scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/model/"><span>03</span><strong>Object → Attribute → Rule</strong><small>Which business objects and data concepts participate, and which determination or validation logic uses them.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/model/"><span>04</span><strong>Integration → Failure → KPI → Test</strong><small>How a dependency crosses systems, how it can fail, what outcome it affects, and how the relationship is tested.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead-playbooks" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead playbooks</p>
+      <h2>Move from architecture to evidence.</h2>
+      <p>These playbooks are designed for the questions that appear after the solution diagram is finished: how do we prove the change, diagnose failure, operate integrations, and make a release decision?</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/testing/"><span>TEST</span><strong>SAP Testing</strong><small>Risk-based unit, integration, end-to-end, regression, UAT and automation strategy for logistics, ABAP and cross-system processes.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/enterprise-context/performance/"><span>OPS</span><strong>Performance and Technical Operations</strong><small>Follow symptoms through work processes, locks, updates, queues, traces, SQL, HANA and cloud monitoring.</small><i class="material-symbols-outlined" aria-hidden="true">monitor_heart</i></a>
+      <a href="/labs/enterprise-context/integration-operations/"><span>INT</span><strong>Integration Operations</strong><small>Diagnose and recover asynchronous and synchronous integration failures without losing business context.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/development/"><span>DEV</span><strong>Development Architecture</strong><small>Connect clean-core boundaries, extensibility choices, code quality and delivery constraints to the business design.</small><i class="material-symbols-outlined" aria-hidden="true">code</i></a>
     </div>
   </section>
 
