@@ -3,18 +3,30 @@ layout: default
 title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
 description: "Architecture and diagnostic MDG cases for Material, Business Partner, DRF, matching, survivorship and automotive multi-plant rollout."
 permalink: /labs/enterprise-context/mdg/assessment/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-16
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-mdg-review-2026-09"
+review_method: "synthetic case review against reviewed MDG Material, Business Partner, governance and replication modules"
+search_intent: "SAP MDG Lead interview assessment questions Material Business Partner DRF duplicate supplier architecture"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-mdg-assessment"
 hide_global_cta: true
+career_impact: mapped
+career_skills:
+  - logistics-mdg
+  - integration-recovery
+  - lead-decision
 tags: [sap, mdg, assessment, lead, architecture, logistics]
 ---
 
 # SAP MDG Lead Assessment Drills
 
-These cases are designed for Lead-level answers. The goal is not to remember transaction codes. The goal is to show how you frame scope, ownership, architecture, controls and proof.
+These are **synthetic assessment cases**, not customer cases. The goal is not to remember transaction codes. The goal is to show how you frame scope, ownership, architecture, controls and proof using the reviewed MDG domain, governance and replication models on this site.
 
 The machine-readable case set is `/labs/assessment/data/mdg-cases.jsonl`.
 
@@ -48,8 +60,8 @@ The Material is active and usable in Sales, but MRP is wrong in one plant and EW
 Start by freezing one identity and plant. Then trace:
 
 ```text
-MATERIAL root
-→ plant entities
+Material identity
+→ plant-level governed data
 → active state
 → DRF selection
 → target acceptance
@@ -70,7 +82,7 @@ Are they the same identity?
 Which values should survive?
 ```
 
-Then choose a duplicate strategy only after checking key mapping and downstream transaction behavior.
+Then choose a duplicate strategy only after checking key mapping and downstream transaction behavior. A similarity score is evidence for review, not automatic authority to merge two productive identities.
 
 ## Case 4 — Target outage and replay
 
@@ -112,9 +124,9 @@ Identity evidence → Match decision → Survivorship → Duplicate strategy →
 
 ## Study links
 
-- [Material entity map](/labs/enterprise-context/mdg/domains/material/entity-map/)
-- [Business Partner entity map](/labs/enterprise-context/mdg/domains/business-partner/entity-map/)
-- [Change Request Type Matrix](/labs/enterprise-context/mdg/governance-engine/change-request-matrix/)
-- [BRFplus Rule Catalog](/labs/enterprise-context/mdg/governance-engine/brfplus-rules/)
+- [Material domain](/labs/enterprise-context/mdg/domains/material/)
+- [Business Partner domain](/labs/enterprise-context/mdg/domains/business-partner/)
+- [Governance Engine](/labs/enterprise-context/mdg/governance-engine/)
+- [Replication & Distribution](/labs/enterprise-context/mdg/replication/)
 - [DRF Operations & Replay](/labs/enterprise-context/mdg/replication/operations/)
 - [Matching & Survivorship](/labs/enterprise-context/mdg/consolidation/survivorship/)
