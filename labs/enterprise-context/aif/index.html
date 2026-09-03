@@ -1,0 +1,312 @@
+---
+layout: default
+title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+description: "A practical SAP Application Interface Framework guide: architecture, setup, namespace and interface design, mappings, checks, actions, business keys, recipients, monitoring, error handling, safe restart and Lead-level diagnostics."
+permalink: /labs/enterprise-context/aif/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap
+  - sap-aif
+  - application-interface-framework
+  - integration
+  - monitoring
+  - error-handling
+  - reprocessing
+  - idoc
+  - brfplus
+  - troubleshooting
+  - sap-s4hana
+last_reviewed: 2026-09-03
+publication_wave: "integration-deep-dive-01"
+review_method: "primary SAP sources + existing Enterprise Context model + page-level editorial review"
+search_intent: "SAP AIF configuration monitoring error handling restart reprocessing guide"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-aif"
+semantic_links:
+  - type: "integrates_with"
+    title: "Integration Operations & Recovery — Enterprise Context Lab"
+    url: "/labs/enterprise-context/integration-operations/"
+  - type: "integrates_with"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "related_topic"
+    title: "BRFplus, AIF and ISLM — Decision, Recovery and AI Lifecycle"
+    url: "/labs/enterprise-context/frameworks/"
+source_links:
+  - title: "What is SAP Application Interface Framework?"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/1eb1380f367449b1a8bb08cec1dd7bc9.html"
+  - title: "Getting Started"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/4db1676c3f114f119b500bd80ccd944d/cca1bb46256a4db9a5601c514db099a3.html"
+  - title: "Interface Creation"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/4db1676c3f114f119b500bd80ccd944d/f0d1b60ff43c45efad71398b1214db04.html"
+  - title: "Defining Key Fields"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/4db1676c3f114f119b500bd80ccd944d/8aecfa3ab6f74987bf5db46abe8fff90.html"
+  - title: "Error Handling"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/18fe3fab96864826bfa0be0de4f65b85/0e8f002ea0894c51bd957168699669c5.html"
+---
+{% assign aif = site.data.labs.enterprise_context.topics.application_interface_framework %}
+{% assign registry = site.data.labs.enterprise_context.sources.cross_application_frameworks_registry %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">SAP AIF</li></ol>
+</nav>
+
+<style>
+  .aif-flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.75rem;align-items:stretch;margin:1.25rem 0}
+  .aif-flow__node{position:relative;padding:1rem;border:1px solid var(--border-color,rgba(120,130,150,.24));border-radius:14px;background:var(--surface-color,rgba(255,255,255,.03));min-height:118px}
+  .aif-flow__node span{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;opacity:.68;margin-bottom:.45rem}
+  .aif-flow__node strong{display:block;font-size:1rem;margin-bottom:.45rem}
+  .aif-flow__node p{margin:0;font-size:.88rem;line-height:1.45}
+  .aif-flow__node:not(:last-child)::after{content:"→";position:absolute;right:-.65rem;top:42%;z-index:2;font-weight:700}
+  .aif-lane{display:grid;grid-template-columns:1.05fr 1.45fr 1.05fr;gap:1rem;margin:1.25rem 0}
+  .aif-lane article{padding:1.1rem;border:1px solid var(--border-color,rgba(120,130,150,.24));border-radius:16px}
+  .aif-lane h3{margin:.15rem 0 .55rem}
+  .aif-lane ul{margin:.5rem 0 0;padding-left:1.2rem}
+  .aif-gate{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin-top:1.2rem}
+  .aif-gate article{padding:1rem;border-left:3px solid currentColor;background:var(--surface-color,rgba(255,255,255,.03));border-radius:0 12px 12px 0}
+  .aif-gate span{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+  .aif-gate h3{margin:.35rem 0 .45rem;font-size:1rem}
+  .aif-gate p{margin:0;font-size:.88rem}
+  .aif-tool{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .55rem;border:1px solid currentColor;border-radius:999px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem}
+  @media (max-width:900px){.aif-flow,.aif-gate{grid-template-columns:1fr 1fr}.aif-lane{grid-template-columns:1fr}.aif-flow__node::after{display:none}}
+  @media (max-width:600px){.aif-flow,.aif-gate{grid-template-columns:1fr}}
+</style>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Integration / Application Interface Framework</p>
+      <h1>Delivered is not processed.<br />AIF starts where middleware stops.</h1>
+      <p>{{ aif.memory_model.short_definition }} The useful question is not “is the message green?” It is “can I find the business message, understand the error, assign the right owner, recover it safely, and prove the business result?”</p>
+      <a class="research-canvas__button" href="#configure">Build the operating model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="AIF module summary">
+      <p>Lead memory model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Depth levels</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ aif.setup_sequence | size }}</strong><small>Setup steps</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ aif.exception_types | size }}</strong><small>Error classes</small></div>
+      <em>{{ aif.memory_model.phrase }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">target</span>
+    <p><strong>What AIF is for:</strong> application-side interface development, functional monitoring, business-readable error handling, ownership and controlled reprocessing. It can monitor different interface technologies; it does not replace Integration Suite, API Management, queues, or end-to-end business reconciliation.</p>
+    <a href="/labs/enterprise-context/data/aif.json">Open the structured AIF model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Position in the landscape</p>
+      <h2>Three layers. Three different questions.</h2>
+      <p>AIF is strongest when it sits close to the SAP application. The middleware can prove delivery. AIF can explain SAP-side processing. The business application proves the final result.</p>
+    </header>
+    <div class="aif-flow" role="img" aria-label="Source to middleware to AIF to SAP application to business reconciliation">
+      <div class="aif-flow__node"><span>01 / Source</span><strong>Sender</strong><p>Webshop, supplier, MDG, external ERP, plant system or another SAP system.</p></div>
+      <div class="aif-flow__node"><span>02 / Transport</span><strong>Integration layer</strong><p>Integration Suite, PI/PO, API, event, IDoc or another transport path.</p></div>
+      <div class="aif-flow__node"><span>03 / Application</span><strong>SAP AIF</strong><p>Interface context, mappings, checks, logs, business keys, recipients and recovery.</p></div>
+      <div class="aif-flow__node"><span>04 / Commit</span><strong>S/4HANA process</strong><p>Sales order, supplier, purchase order, posting, delivery, invoice or another business object.</p></div>
+      <div class="aif-flow__node"><span>05 / Proof</span><strong>Reconciliation</strong><p>Exactly one intended result exists and downstream processing continues correctly.</p></div>
+    </div>
+    <p class="ecg-caption"><strong>Lead rule:</strong> never use “middleware delivered” as proof that SAP created the intended business result.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">How deep should AIF go?</p>
+      <h2>You do not need to rebuild every interface in AIF.</h2>
+      <p>AIF can be introduced at different depths. Start from the operational problem, not from the framework itself.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>1. Monitor existing interfaces</h3><p>Use AIF mainly as the application-side monitoring and error-handling layer. This is useful when an existing IDoc, proxy or other supported runtime already works but support needs better visibility and ownership.</p></div>
+      <div><h3>2. Add checks and mappings</h3><p>Use AIF runtime for value mappings, structure mappings, checks and controlled actions when interface-specific data quality or transformation belongs close to the SAP application.</p></div>
+      <div><h3>3. Build with AIF patterns</h3><p>Use the framework more deeply for reusable interface building blocks, engines, persistence, logging and implementation standards. The exact design depends on interface technology and release.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configure" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration path</p>
+      <h2>Configure the support contract, not only the interface.</h2>
+      <p>In private/on-premise ABAP landscapes, much of the setup is reached through <span class="aif-tool">/AIF/CUST</span>. The exact activities depend on message technology. Public Cloud uses delivered Message Monitoring capabilities and does not expose the classic workbench in the same way.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in aif.setup_sequence %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if item.step < 10 %}0{% endif %}{{ item.step }}</span><small>setup</small></div><h3>{{ item.title }}</h3></header>
+        <div class="ecg-decision-columns"><div><h4>What to do</h4><p>{{ item.detail }}</p></div><div><h4>Lead check</h4><p>{% case item.step %}{% when 1 %}Is the error-handling baseline available and owned?{% when 2 %}Do trace levels support production analysis without creating unnecessary volume?{% when 3 %}Is namespace + interface + version a stable contract?{% when 4 %}Do the engines match the actual message technology and persistence?{% when 5 %}Which rule belongs in AIF, BRFplus, middleware, or application code?{% when 6 %}Can support search by the ID that the business actually knows?{% when 7 %}Which fields are safe to change without breaking source-of-record ownership?{% when 8 %}Who can really solve this error class, including after hours?{% when 9 %}What makes restart safe for this interface?{% when 10 %}What business evidence proves completion?{% endcase %}</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Interface anatomy</p>
+      <h2>Remember the objects by the job they do.</h2>
+      <p>AIF can look large in Customizing. The model becomes easier when each object answers one operational question.</p>
+    </header>
+    <div class="ecg-input-grid">
+      <article><span>ID</span><h3>Namespace + Interface + Version</h3><p>Which logical interface contract is this message using?</p></article>
+      <article><span>ENG</span><h3>Engines</h3><p>How is the message processed, persisted, selected and logged for this technology?</p></article>
+      <article><span>MAP</span><h3>Structure / Value Mapping</h3><p>How does source data become the SAP-side structure and values?</p></article>
+      <article><span>CHK</span><h3>Checks</h3><p>Which conditions must be true before processing can continue?</p></article>
+      <article><span>ACT</span><h3>Actions</h3><p>Which processing step or application logic should run after the data is valid?</p></article>
+      <article><span>KEY</span><h3>Key Fields</h3><p>Which business IDs should support users search: external order, PO, supplier, material, delivery?</p></article>
+      <article><span>OWN</span><h3>Recipients</h3><p>Who should see and own a specific class of message or error?</p></article>
+      <article><span>EDIT</span><h3>Changeable Fields</h3><p>Which payload fields may be corrected, and which must remain authoritative in the source?</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="operate" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Daily operations</p>
+      <h2>A good AIF runbook is short because the design did the hard work.</h2>
+      <p>Use <span class="aif-tool">/AIF/ERR</span>, Interface Monitor, Message Dashboard or the relevant Fiori Message Monitoring app for the deployment. Screen names and available actions vary; the diagnostic sequence should not.</p>
+    </header>
+    <div class="aif-flow" role="img" aria-label="AIF operational flow from finding a message to reconciliation">
+      <div class="aif-flow__node"><span>01 / Find</span><strong>Search the business message</strong><p>Interface, time, status and business key. Avoid starting with a random technical GUID if the business already knows the order or PO.</p></div>
+      <div class="aif-flow__node"><span>02 / Explain</span><strong>Read the first real error</strong><p>Separate mapping, master data, configuration, authorization, lock/resource and application validation.</p></div>
+      <div class="aif-flow__node"><span>03 / Own</span><strong>Route to the resolver</strong><p>The integration team should not repeatedly retry a deterministic business or master-data error.</p></div>
+      <div class="aif-flow__node"><span>04 / Recover</span><strong>Fix then reprocess</strong><p>Correct an allowed field or the real master/configuration cause. Restart only when commit and duplicate risk are understood.</p></div>
+      <div class="aif-flow__node"><span>05 / Prove</span><strong>Verify the business object</strong><p>Check that the intended object or posting exists exactly once and downstream work continued.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Safe restart gate</p>
+      <h2>Restart is a business decision with technical consequences.</h2>
+      <p>Do not treat the restart button as an incident-closing mechanism. Pass these gates first.</p>
+    </header>
+    <div class="aif-gate">
+      <article><span>Gate 1</span><h3>Root cause fixed?</h3><p>If the same deterministic condition still exists, restart only repeats the failure.</p></article>
+      <article><span>Gate 2</span><h3>Commit state known?</h3><p>Prove whether the previous attempt created a durable object, posting or partial side effect.</p></article>
+      <article><span>Gate 3</span><h3>Duplicate protection known?</h3><p>Know the stable business/message identity and how the receiver handles repeated delivery.</p></article>
+      <article><span>Gate 4</span><h3>Reconciliation ready?</h3><p>Know what to check after restart: target object, quantity, value, status and downstream reference.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="errors" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Error ownership</p>
+      <h2>“Interface error” is not an owner.</h2>
+      <p>The first useful classification is the layer that is wrong. That tells you who should act and whether retry can help.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in aif.exception_types %}
+      <article class="ecg-determination-detail"><header><div><span>ERR</span><small>class</small></div><h3>{{ item.type }}</h3></header><div class="ecg-decision-columns"><div><h4>Typical example</h4><p>{{ item.example }}</p></div><div><h4>Preferred response</h4><p>{{ item.preferred_response }}</p></div></div></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Operational ownership</p>
+      <h2>Route the error to the first wrong layer.</h2>
+    </header>
+    <div class="aif-lane">
+      <article><p class="research-canvas__eyebrow">Integration team</p><h3>Transport and mediation</h3><ul><li>Connectivity and authentication</li><li>Integration flow or adapter failure</li><li>Message routing and middleware mapping</li><li>Queue or delivery problem before SAP application processing</li></ul></article>
+      <article><p class="research-canvas__eyebrow">AIF / SAP application support</p><h3>Application-side exception</h3><ul><li>AIF mapping or check</li><li>Business validation and application error</li><li>Business key and recipient routing</li><li>Controlled correction and supported reprocessing</li></ul></article>
+      <article><p class="research-canvas__eyebrow">Business / data owner</p><h3>Authoritative data</h3><ul><li>Wrong customer, supplier or material data</li><li>Missing organizational assignment</li><li>Business decision that cannot be invented by support</li><li>Reconciliation and business acceptance</li></ul></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Synthetic sales case</p>
+      <h2>Web order delivered. Sales order missing.</h2>
+      <p>This is fictional, but the diagnostic pattern is realistic.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="#operate"><span>1</span><strong>External order reaches the SAP-side integration endpoint</strong><small>Integration Suite shows the message as delivered. That proves transport to the receiver path, not sales-order creation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#operate"><span>2</span><strong>AIF exposes external order ID as a key field</strong><small>Support searches the ID the business knows instead of asking for a middleware GUID.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#errors"><span>3</span><strong>Application processing rejects an organizational value</strong><small>The error is classified as mapping/configuration or source master data, not as a transport problem.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#configure"><span>4</span><strong>The correct owner fixes the real cause</strong><small>If a payload field is changeable, correction stays within the approved boundary. Otherwise fix source data or Customizing.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#lead"><span>5</span><strong>Restart only after duplicate risk is understood</strong><small>Then verify exactly one sales order and the expected downstream status.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Synthetic procurement case</p>
+      <h2>Supplier confirmation fails on a value the buyer understands.</h2>
+      <p>AIF becomes useful when technical monitoring can be translated into business ownership.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Business key</h3><p>Expose PO number, supplier and relevant external confirmation ID. A support analyst should not need middleware access just to identify the business document.</p></div>
+      <div><h3>Error ownership</h3><p>If the supplier sends an invalid code, the buyer/integration owner may need to correct mapping or source data. If SAP configuration is missing, application support owns it.</p></div>
+      <div><h3>Proof after recovery</h3><p>Verify the expected confirmation or follow-on state against the PO. Green monitoring alone does not prove the purchasing process is correct.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">AIF + BRFplus</p>
+      <h2>Keep the rule and the recovery context separate.</h2>
+      <p>{{ aif.integration_with_brfplus.statement }}</p>
+    </header>
+    <div class="ecg-decision-columns"><div><h3>BRFplus owns</h3><p>{{ aif.integration_with_brfplus.design_split.brfplus }}</p></div><div><h3>AIF owns</h3><p>{{ aif.integration_with_brfplus.design_split.aif }}</p></div><div><h3>Lead check</h3><p>If a mapping is reused across several interfaces and represents a business decision, consider a reusable rule. Do not move operational message state into the rule engine.</p></div></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Deployment boundary</p>
+      <h2>Do not answer “AIF works like this everywhere.”</h2>
+      <p>{{ aif.availability.lead_answer }}</p>
+    </header>
+    <div class="research-route-list">{% for item in aif.availability.timeline %}<a href="/labs/enterprise-context/data/aif.json"><span>VER</span><strong>{{ item.release }}</strong><small>{{ item.meaning }}</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>{% endfor %}</div>
+    <p class="ecg-caption"><strong>Public Cloud:</strong> use the delivered Message Monitoring capabilities for the relevant communication scenario. Available restart, edit and other actions depend on the interface and underlying technology; do not promise classic /AIF/CUST behavior.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead design review</p>
+      <h2>Before go-live, make support part of the interface design.</h2>
+    </header>
+    <div class="ecg-input-grid">
+      <article><span>KEY</span><h3>Business search keys</h3><p>Can support find the message from the ticket information?</p></article>
+      <article><span>ERR</span><h3>Readable errors</h3><p>Does the log point to a condition the owner can understand and fix?</p></article>
+      <article><span>OWN</span><h3>Recipients</h3><p>Does each important error class reach the team that can actually resolve it?</p></article>
+      <article><span>AUTH</span><h3>Correction rights</h3><p>Are monitoring, editing and restart permissions separated according to risk?</p></article>
+      <article><span>ID</span><h3>Idempotency</h3><p>What prevents a retry from creating a duplicate business effect?</p></article>
+      <article><span>SEQ</span><h3>Ordering</h3><p>Can a later change overtake a failed create or predecessor event?</p></article>
+      <article><span>KPI</span><h3>Operational SLA</h3><p>Do alerts use age and business priority, not only raw error count?</p></article>
+      <article><span>PROVE</span><h3>Reconciliation</h3><p>What target object, status, value or reference proves successful completion?</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment</p><h2>Questions that separate configuration knowledge from Lead thinking.</h2></header>
+    <div class="research-route-list">{% for card in aif.assessment_cards %}<a href="/labs/assessment/"><span>Q</span><strong>{{ card.question }}</strong><small>{{ card.answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Limits</p><h2>AIF becomes weak when ownership is weak.</h2></header>
+    <div class="research-route-list">{% for item in aif.limitations %}<a href="#lead"><span>!</span><strong>Design boundary</strong><small>{{ item }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary sources</p><h2>SAP documentation behind the product facts.</h2><p>The diagrams, operating rules and examples on this page are independent synthesis. Product capabilities are checked against primary SAP sources.</p></header>
+    <div class="research-route-list">
+      {% for source in registry.sources %}{% if source.id contains 'SRC-SAP-AIF' %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.verified_at %} · checked {{ source.verified_at }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endif %}{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">route</span>
+    <p><strong>Continue the chain:</strong> use Integration Operations for cross-technology retry, queue, commit-state and reconciliation rules; use Integration Architecture for choosing the interface style and system boundary.</p>
+    <a href="/labs/enterprise-context/integration-operations/">Open Integration Operations <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
