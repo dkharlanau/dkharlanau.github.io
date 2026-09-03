@@ -3,12 +3,22 @@ layout: default
 title: "SAP Testing — Practical Strategy for S/4HANA Logistics, Integrations and ABAP"
 description: "A practical SAP testing playbook for unit, component, integration, end-to-end, regression, UAT, authorization, performance and post-deployment testing across S/4HANA logistics and integrations."
 permalink: /labs/enterprise-context/testing/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-delivery-review-2026-09"
+review_method: "current SAP primary sources + practitioner boundary review for PTF + page-level factual review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-testing"
 hide_global_cta: true
+career_impact: mapped
+career_skills:
+  - delivery-testing
+  - delivery-lifecycle
 tags:
   - sap
   - s4hana
@@ -96,6 +106,7 @@ source_links:
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
     <p><strong>Testing is not a phase after development.</strong> It starts when the change and its risks are understood. A pricing change, BAdI, interface mapping, authorization role and warehouse configuration need different test evidence.</p>
     <p><strong>Do not automate everything.</strong> Automate stable, repeatable and valuable checks. Keep human testing for new behavior, usability, business judgment and cases where the process changes faster than the script can be maintained.</p>
+    <p><strong>Source boundary:</strong> ABAP Cloud, SAPUI5, SAP Cloud ALM, Tricentis, eCATT, and Public Edition Test Automation Tool statements are checked against SAP sources. The PTF section is deliberately practitioner-informed and release-dependent; it is not presented as a universal capability for every S/4HANA landscape.</p>
   </section>
 
   <section class="research-canvas__inventory" id="test-stack" data-reveal>
