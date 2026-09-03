@@ -3,20 +3,39 @@ layout: default
 title: "SAP MDG Change Request Type Matrix — Enterprise Context Lab"
 description: "How to design MDG change-request types by business purpose, scope, risk, authority, volume, activation and recovery behavior."
 permalink: /labs/enterprise-context/mdg/governance-engine/change-request-matrix/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-16
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-mdg-review-2026-09"
+review_method: "SAP S/4HANA 2025 FPS01 change-request and workflow primary sources + authored design-matrix review"
+search_intent: "SAP MDG change request type design matrix data model entity scope workflow activation error"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-mdg-change-request-design"
 hide_global_cta: true
+career_impact: mapped
+career_skills:
+  - logistics-mdg
+  - logistics-master-data
+  - lead-decision
 tags: [sap, mdg, change-request, workflow, governance, architecture]
+source_links:
+  - title: "Configuration of the Change Request Process — SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/12dcbc53d7865129e10000000a44176d.html"
+  - title: "Rule-Based Workflow — SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/1da96a56e1e8e65ae10000000a44147b.html"
+  - title: "Creating a Basic Change Request Process"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/1253c4db3f52494b808d820af673fe8c.html"
 ---
 
 # SAP MDG Change Request Type Matrix
 
 A change-request type is a **governance contract**. I would not create one workflow for every possible change and then hope that authorizations save the design later.
 
-SAP defines a change-request type for one MDG data model and lets it restrict the entity types that can be processed. The process flow can use standard/custom workflow or rule-based workflow.
+SAP S/4HANA 2025 FPS01 defines a change-request type against one MDG data model and allows it to control which entity types can be processed. The process flow can use workflow templates or rule-based workflow, depending on the configured process. The matrix below is an architecture design aid, not a list of SAP-delivered mandatory CR types. [Change Request Process](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/12dcbc53d7865129e10000000a44176d.html).
 
 ## Design matrix
 
@@ -29,6 +48,8 @@ SAP defines a change-request type for one MDG data model and lets it restrict th
 | Block / unblock / deletion | Lifecycle state | High | Business owner aware of transactional impact |
 | Mass change | Many objects or grains | High | Owner of rule + population |
 | Emergency correction | Minimum required scope | High | Predefined emergency authority |
+
+The risk labels and authority model above are authored governance choices. They should be adapted to the customer's control model rather than copied as SAP defaults.
 
 ## When I split CR types
 
@@ -62,7 +83,7 @@ Plant extension
 → MRP / production / procurement proof
 ```
 
-The plant extension should not accidentally expose unrelated global identity fields just because one generic CR type is convenient.
+The plant extension should not accidentally expose unrelated global identity fields only because one generic CR type is convenient.
 
 ## Example: BP / Supplier
 
@@ -88,7 +109,7 @@ Activation failure
 = the approved change could not become active truth
 ```
 
-The second one needs technical/data recovery. Sending it back as if the approver changed their mind produces confusing audit history and miserable support tickets.
+SAP's current basic change-request documentation explicitly separates successful activation from rollback/error behavior after activation failure. The recovery path should therefore preserve the difference between a business decision and a technical/data activation problem. [Creating a Basic Change Request Process](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/1253c4db3f52494b808d820af673fe8c.html).
 
 ## CR contract checklist
 
@@ -102,11 +123,11 @@ For each type, define:
 6. Agent determination.
 7. Validation points and final check.
 8. Activation and activation-error handling.
-9. Replication trigger.
+9. Replication timing/trigger where relevant.
 10. Audit evidence and owner.
 
 ## Machine-readable model
 
 The structured matrix is in `_data/labs/enterprise_context/topics/mdg_change_request_design_matrix.yml`.
 
-Continue with [BRFplus rule design](/labs/enterprise-context/mdg/governance-engine/brfplus-rules/), the broader [governance engine](/labs/enterprise-context/mdg/governance-engine/) and the [Material entity map](/labs/enterprise-context/mdg/domains/material/entity-map/).
+Continue with [BRFplus rule design](/labs/enterprise-context/mdg/governance-engine/brfplus-rules/), the broader [governance engine](/labs/enterprise-context/mdg/governance-engine/) and the [Material domain](/labs/enterprise-context/mdg/domains/material/).
