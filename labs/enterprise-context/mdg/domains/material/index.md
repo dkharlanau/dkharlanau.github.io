@@ -3,13 +3,27 @@ layout: default
 title: "SAP MDG Material Domain — Enterprise Context Lab"
 description: "Deep Material data-model engineering across global, plant, sales, purchasing, storage, valuation, warehouse and quality grains."
 permalink: /labs/enterprise-context/mdg/domains/material/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-16
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-mdg-review-2026-09"
+review_method: "SAP S/4HANA 2025 FPS01 MDG Material primary sources + organizational-grain review"
+search_intent: "SAP MDG Material data model plant sales purchasing valuation storage warehouse governance design"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-mdg-material"
 hide_global_cta: true
+career_impact: mapped
+career_skills:
+  - logistics-mdg
+  - logistics-master-data
 tags: [sap, mdg, material, product, logistics, data-model]
+source_links:
+  - title: "SAP MDG Material Data Model — S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/2a500de376504b4386a04d1085a52f22.html"
 ---
 
 # SAP MDG Material Domain
@@ -33,7 +47,7 @@ Material
 └─ Classification
 ```
 
-SAP documents the MDG-M model as based on the ERP material master and includes basic material data plus many dependent entity types for plant, sales, purchasing, valuation, units, classification and other material attributes. The exact supported entities depend on the product/version and selected scope. [SAP Help: MDG Material data model](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/2a500de376504b4386a04d1085a52f22.html).
+SAP documents the MDG-M model as based on the ERP material master and includes basic material data plus dependent entity types for plant, sales, purchasing, valuation, units, classification and other material attributes. The exact supported entities and features depend on the S/4HANA/MDG release and selected scope. [SAP Help: MDG Material data model](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/2a500de376504b4386a04d1085a52f22.html).
 
 ## How I would build it
 
@@ -41,7 +55,7 @@ SAP documents the MDG-M model as based on the ERP material master and includes b
 
 **2. Map fields to grain.** A field that changes by plant belongs to a plant-qualified slice. A field that changes by sales area belongs to the sales-area slice. Putting local meaning on the global root creates future conflicts.
 
-**3. Assign owners.** Product governance can own identity and global attributes. Planning owns planning meaning. Sales owns sales meaning. Procurement, quality, warehouse and finance own their business semantics. Central governance coordinates them; it does not magically become the expert for every field.
+**3. Assign owners.** Product governance can own identity and global attributes. Planning owns planning meaning. Sales owns sales meaning. Procurement, quality, warehouse and finance own their business semantics. Central governance coordinates them; it does not automatically become the expert for every field.
 
 **4. Design CR patterns around business change.** “Create material”, “extend to plant”, “extend to sales area”, “change regulated attribute” and “mass correction” can require different scope and authority.
 
@@ -49,7 +63,7 @@ SAP documents the MDG-M model as based on the ERP material master and includes b
 
 **6. Design distribution with the consumer.** Activation is not the end. Define target, filter, identity mapping, mandatory target fields, monitoring and reconciliation.
 
-**7. Prove business usability.** For a sales material, create the sales order and delivery. For planning, run the relevant planning scenario. For EWM, prove warehouse execution. “The record exists” is weak evidence.
+**7. Prove business usability.** For a sales material, create the sales order and delivery. For planning, run the relevant planning scenario. For EWM, prove warehouse execution where EWM is in scope. “The record exists” is weak evidence.
 
 ## Model smell checklist
 
