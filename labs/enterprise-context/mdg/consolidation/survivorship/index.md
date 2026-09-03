@@ -3,13 +3,33 @@ layout: default
 title: "SAP MDG Matching & Survivorship — Enterprise Context Lab"
 description: "How to design matching thresholds, review bands, best-record rules, manual overrides and duplicate strategies in SAP MDG consolidation."
 permalink: /labs/enterprise-context/mdg/consolidation/survivorship/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-16
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-mdg-review-2026-09"
+review_method: "SAP S/4HANA 2025 FPS01 matching, Match Review, best-record and active-record consolidation primary sources + policy review"
+search_intent: "SAP MDG matching survivorship match review best record source priority recency completeness duplicate strategy"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-mdg-matching-survivorship"
 hide_global_cta: true
+career_impact: mapped
+career_skills:
+  - logistics-mdg
+  - logistics-master-data
 tags: [sap, mdg, consolidation, matching, survivorship, golden-record]
+source_links:
+  - title: "Configure Matching — SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/e0c1ce6bfa1e4f2aa23393217e94b4c6.html"
+  - title: "Match Review"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5cb861909ee642388d828a9d1759901c.html"
+  - title: "Best Record Calculation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/866c1271ed9f49a382ce6ed93ddcb05c.html"
+  - title: "Consolidation of Active Records"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/399dfaaa10204570a94f126c64f30718.html"
 ---
 
 # SAP MDG Matching & Survivorship
@@ -25,36 +45,36 @@ They need different rules and different evidence.
 
 ## Matching policy
 
-SAP MDG matching can create match groups and use configured thresholds. Match Review exists for groups that need user decision. That gives us the product mechanism. The architecture still needs a business policy for false positives, false negatives and authority.
+SAP MDG matching can create match groups and use configured matching rules and scores. Match Review exists for groups that remain open and require user decision. That gives us the product mechanism. The architecture still needs a business policy for false positives, false negatives and authority. [Configure Matching](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/e0c1ce6bfa1e4f2aa23393217e94b4c6.html) and [Match Review](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5cb861909ee642388d828a9d1759901c.html).
 
-I use three bands:
+I use three **policy bands** as a design frame, not as SAP-delivered fixed thresholds:
 
 | Band | Meaning | Action |
 |---|---|---|
-| Automatic match | Strong evidence, acceptable false-positive risk | Continue if policy permits |
+| Automatic match | Strong evidence and an accepted false-positive risk | Continue automatically only if the configured process and policy permit it |
 | Review band | Ambiguous score or high business impact | Human review |
-| Non-match | Evidence below threshold | Keep identities separate |
+| Non-match | Evidence below the accepted match policy | Keep identities separate |
 
-A single global threshold is usually lazy design. Identity risk can differ by country, object type, data quality and downstream transaction history.
+A single global threshold is often weak design. Identity risk can differ by country, object type, available identifiers, data quality and downstream transaction history. The numeric thresholds themselves are configuration decisions.
 
 ## Evidence hierarchy
 
-Strong identity evidence can include trusted legal/registration identifiers, stable tax IDs or governed source mappings. Name and address are useful but can be noisy. Free text and local aliases are supporting evidence at best.
+Strong identity evidence can include governed legal/registration identifiers, stable tax identifiers, or trusted source mappings where the domain and legal context support them. Name and address are useful but can be noisy. Free text and local aliases are usually supporting evidence rather than sufficient proof by themselves.
 
-For an ambiguous BP, I want the reviewer to see:
+For an ambiguous BP, I want the reviewer to see, where available and permitted:
 
 - normalized values;
-- identifiers;
+- relevant identifiers;
 - source system;
 - previous match decisions;
 - current key mapping;
 - downstream usage and transaction history.
 
-A score without context is just a confident number.
+A score without business context is incomplete evidence.
 
 ## Survivorship rules
 
-SAP best-record calculation supports rule-based selection. Common rule ideas are source-system priority, recency and completeness. I treat them as building blocks, not universal truth.
+SAP best-record calculation supports rule-based selection. I treat source priority, recency, completeness and domain rules as building blocks, not universal truth. [Best Record Calculation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/866c1271ed9f49a382ce6ed93ddcb05c.html).
 
 ### Source priority
 
@@ -66,7 +86,7 @@ Use it only when the timestamp represents business freshness. A technical reload
 
 ### Completeness
 
-Non-empty is not the same as correct. Completeness can enrich a record when trust is comparable, but it should not override a high-quality controlled source just because another row has more fields filled.
+Non-empty is not the same as correct. Completeness can enrich a record when trust is comparable, but it should not override a higher-quality controlled source only because another row has more fields filled.
 
 ### Domain rule
 
@@ -74,7 +94,9 @@ For sensitive fields, a domain-specific precedence rule may be better than gener
 
 ## Manual override
 
-A manual best-record change should keep:
+SAP's Best Record Calculation Review allows authorized users to inspect and, for supported data, manually adapt the calculated result. The operating policy should keep enough evidence to explain the override.
+
+A useful audit record includes:
 
 ```text
 Calculated winner
@@ -85,27 +107,27 @@ Timestamp
 Downstream impact
 ```
 
-Otherwise the golden record becomes a golden mystery.
+The exact audit implementation depends on the configured process and governance requirements.
 
 ## Duplicate strategy
 
-For consolidation of active records, SAP supports strategies including Remove Duplicates, Improve Best Record and Improve All Records. The technical choice changes identity continuity and therefore must be discussed with downstream consumers.
+For consolidation of active records, SAP supports strategies including Remove Duplicates, Improve Best Record and Improve All Records. The technical choice changes identity continuity and therefore must be discussed with downstream consumers. [Consolidation of Active Records](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/399dfaaa10204570a94f126c64f30718.html).
 
-Before Remove Duplicates, I would prove:
+Before a destructive or redirecting duplicate strategy, I would prove:
 
 - surviving identity;
-- replacement/key mapping;
+- replacement/key mapping behavior;
 - target-system behavior;
 - transaction-history implications;
-- archive/retention path;
+- archive/retention requirements;
 - replay and reconciliation plan.
 
 ## Metrics
 
-Useful quality signals include automatic-match rate, human-review rate, reviewer override rate, sampled false-positive/false-negative rates, unresolved match age, manual survivorship overrides and key-mapping reconciliation errors.
+Useful quality signals can include automatic-match rate, human-review rate, reviewer override rate, sampled false-positive/false-negative rates, unresolved match age, manual survivorship overrides and key-mapping reconciliation errors. These are operating-model metrics, not SAP-mandated KPI names.
 
 ## Machine-readable model
 
 The structured policy is in `_data/labs/enterprise_context/topics/mdg_survivorship_matching_policy.yml`.
 
-Use it with [Consolidation & Golden Record](/labs/enterprise-context/mdg/consolidation/), the [BP entity map](/labs/enterprise-context/mdg/domains/business-partner/entity-map/) and [DRF operations](/labs/enterprise-context/mdg/replication/operations/).
+Use it with [Consolidation & Golden Record](/labs/enterprise-context/mdg/consolidation/), the [Business Partner domain](/labs/enterprise-context/mdg/domains/business-partner/) and [DRF operations](/labs/enterprise-context/mdg/replication/operations/).
