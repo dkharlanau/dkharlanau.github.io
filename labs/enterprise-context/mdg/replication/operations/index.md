@@ -3,17 +3,33 @@ layout: default
 title: "SAP MDG DRF Operations & Replay — Enterprise Context Lab"
 description: "How to operate MDG replication through DRF selection, payload, transport, key mapping, target acceptance, replay and reconciliation."
 permalink: /labs/enterprise-context/mdg/replication/operations/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-26
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-mdg-review-2026-09"
+review_method: "SAP S/4HANA 2025 FPS01 DRF/key-mapping primary sources + SAP BP replication KBA evidence + operational safety review"
+search_intent: "SAP MDG DRF operations replay Business Partner replication locks key mapping DRFOUT reconciliation"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-mdg-drf-operations"
 hide_global_cta: true
 tags: [sap, mdg, drf, replication, integration, operations]
 career_impact: mapped
 career_skills:
   - logistics-mdg
   - integration-recovery
+source_links:
+  - title: "SAP MDG Data Replication — S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/ef0a1e74ff9044df9e43d28021900335.html"
+  - title: "SAP MDG Key Mapping — S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/8f3d0f8274e642b5aed793f4f4f8e5a4.html"
+  - title: "SAP KBA 3730533 — System Performance Issues and Deadlocks During BP Replications"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3730533"
+  - title: "SAP KBA 3637764 — FAQ Business Partner Integration via Web Service"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3637764"
 ---
 
 # SAP MDG DRF Operations & Replay
@@ -38,11 +54,11 @@ SAP DRF configuration connects replication models, outbound implementations and 
 | Failure | First evidence | Typical response |
 |---|---|---|
 | Not selected | Replication model + filter population | Correct selection logic and assess affected population |
-| Payload wrong | Outbound payload / mapping trace | Correct source or mapping and rebuild |
-| Transport failed | Correlation ID + delivery log | Restore transport and decide safe retry |
+| Payload wrong | Outbound payload / mapping trace | Correct source or mapping and rebuild from the intended source state |
+| Transport failed | Correlation ID + delivery log | Restore transport and decide whether retry is safe |
 | Target rejected | Target application error | Fix semantic contract; do not resend unchanged data forever |
-| Key mapping failed | Source key + target key + mapping state | Repair identity mapping and check collisions |
-| Persisted but not used | Target record + consumer trace | Continue diagnosis in consuming process |
+| Key mapping failed | Source key + target key + mapping state | Repair identity mapping only after checking collisions and target existence |
+| Persisted but not used | Target record + consumer trace | Continue diagnosis in the consuming process |
 
 ## Replay decision
 
@@ -66,9 +82,9 @@ Stop and reconcile population
 
 Blind replay is attractive because it makes graphs go down. Unfortunately, graphs are not the business process.
 
-## Initial load to delta
+## Initial load to ongoing changes
 
-The handover between initial replication and ongoing delta deserves its own control:
+The handover between initial replication and ongoing change processing deserves its own control:
 
 ```text
 Baseline population
@@ -77,30 +93,31 @@ Baseline population
 → target accepted count
 → persisted count
 → key mapping coverage
-→ cut-off watermark
-→ first delta
+→ cut-off / reconciliation point
+→ first ongoing change cycle
 → no-gap proof
 ```
 
-If two teams own baseline and delta without one shared cut-off, the gap becomes a small time machine where changes disappear.
+Do not assume every outbound implementation provides the same delta mechanism. The supported replication/output modes are business-object-specific.
 
-## Limitation: mass BP updates can overload replication
+## High-volume BP replication can create lock and capacity pressure
 
-Large Business Partner mass updates can create much more replication load than normal online changes. If every change is sent immediately, update work processes can stay occupied and transactions can wait on record locks. The risk is higher when BP and relationship changes are processed through web-service replication.
+SAP KBA 3730533 documents S/4HANA and Private Edition incidents where large Business Partner changes combined with BP web-service replication led to occupied update work processes, `RECORD_LOCK`, `SAPLBS_SOA_INAPPSEQ_UPD`, `BSSOA_IAS_SEQ`, tRFC backlog and wider system-performance impact. This is a concrete failure pattern, not a statement that every BP mass change will behave this way.
 
-For a planned bulk update, treat replication as a controlled batch operation:
+For a planned high-volume change, treat source update and replication as one capacity-and-recovery design:
 
-1. Before the mass change, temporarily deactivate automatic replication for the affected BP replication model in `DRFIMG`.
-2. Run the mass update without pushing every change immediately to the receiving systems.
-3. Use `DRFOUT` to replicate the changed BPs in controlled batches during a low-load business window.
-4. Adjust the batch size to the real system load. There is no useful fixed batch number for every landscape.
-5. Reconcile the selected, sent and accepted population. When the backlog is complete, activate normal replication again in `DRFIMG`.
+1. Estimate the changed BP and relationship population before execution.
+2. Confirm whether the concrete outbound implementation uses direct, pooled, manual or scheduled processing and which options are supported.
+3. Decide with the MDG/BP, Basis and integration owners whether replication should remain immediate or be controlled through an approved batch/runbook. Do not switch output behavior ad hoc in production.
+4. If controlled DRFOUT processing is part of the approved design, start with a measured package size and observe update processes, locks, web-service processing and receiver throughput before increasing it.
+5. Reconcile selected, sent, accepted and persisted populations before declaring the backlog complete.
+6. Restore the normal operating mode only through the documented change procedure and after confirming there is no remaining population gap.
 
-For very high volumes, consider a dedicated application server or server group for BP replication. The goal is to keep replication work from consuming the same capacity needed by normal business processing.
+There is no useful universal package size or server-group setting. Capacity, message structure, target speed, relationship volume and current workload differ by landscape.
 
-Typical technical signs can include update work processes in wait or on-hold status, `RECORD_LOCK`, program `SAPLBS_SOA_INAPPSEQ_UPD`, and action `BSSOA_IAS_SEQ`. These are useful diagnostic clues, but they should be confirmed against the affected BP population, workload and lock evidence before deciding on the cause.
+Typical technical clues from SAP's BP replication KBA include update processes in wait/on-hold status, `RECORD_LOCK`, `SAPLBS_SOA_INAPPSEQ_UPD`, `BSSOA_IAS_SEQ` and tRFC entries involving `MDG_BS_BP_OUTBOUND_DRF_CALL`. Use these clues to focus the investigation; do not treat the presence of one program name as proof of the root cause.
 
-**Lead takeaway:** the limitation is not that MDG cannot perform mass BP changes. The operational risk comes from combining high-volume changes with immediate replication and shared processing capacity. Control throughput, batch windows, reconciliation and infrastructure capacity as one design problem.
+**Lead takeaway:** the risk is not “MDG cannot handle mass BP change”. The design problem is how high-volume source change, replication mode, receiver throughput, locks, update capacity and reconciliation interact.
 
 ## Operational metrics
 
@@ -131,6 +148,8 @@ Freeze object + target + source version
 → reconcile
 → prove business use
 ```
+
+For BP web-service incidents, SAP's current support material also explicitly covers cases where the message monitor is green while the BP was not actually created or updated. That is exactly why the runbook ends at target and business proof rather than transport status.
 
 ## Machine-readable model
 
