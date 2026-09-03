@@ -3,13 +3,30 @@ layout: default
 title: "SAP MDG Business Partner, Customer & Supplier — Enterprise Context Lab"
 description: "Deep domain engineering for shared Business Partner identity and customer/supplier organizational extensions."
 permalink: /labs/enterprise-context/mdg/domains/business-partner/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-16
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-mdg-review-2026-09"
+review_method: "SAP S/4HANA 2025 FPS01 Business Partner and MDG primary sources + page-level domain review"
+search_intent: "SAP MDG Business Partner customer supplier CVI roles company code sales area purchasing organization governance"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-mdg-business-partner"
 hide_global_cta: true
+career_impact: mapped
+career_skills:
+  - logistics-mdg
+  - logistics-master-data
+  - sales-o2c
 tags: [sap, mdg, business-partner, customer, supplier, cvi]
+source_links:
+  - title: "SAP MDG Business Partner Data Models — S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5fe9935ef5974d379de0d90cd94b3102.html"
+  - title: "Business Partner Master Data Structure"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/776fbd534f22b44ce10000000a174cb4.html"
 ---
 
 # Business Partner, Customer and Supplier
@@ -29,7 +46,7 @@ Sales Area  Purchasing Org
 Company Code Company Code
 ```
 
-SAP's current MDG documentation exposes separate Business Partner, Customer and Supplier data models in the Manage Business Partners scope. SAP S/4HANA also separates general BP data from company-code, sales and purchasing organization contexts. [SAP Help: BP data models](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5fe9935ef5974d379de0d90cd94b3102.html) and [BP master data structure](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/776fbd534f22b44ce10000000a174cb4.html).
+SAP's current MDG documentation exposes separate Business Partner, Customer and Supplier data models in the Manage Business Partners scope. SAP S/4HANA also separates general BP data from company-code, sales and purchasing-organization contexts. The exact entity set and available governance capabilities remain release- and scope-dependent. [SAP Help: BP data models](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5fe9935ef5974d379de0d90cd94b3102.html) and [BP master data structure](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/776fbd534f22b44ce10000000a174cb4.html).
 
 ## Design rules
 
@@ -44,7 +61,7 @@ CVI/synchronization is important technically, but it does not decide who owns a 
 ## Hard cases
 
 ### The same company is customer and supplier
-Do not create two enterprise identities by default. Govern one party identity and explicit roles, then control role-specific attributes.
+Do not create two enterprise identities by default. Govern one party identity and explicit roles, then control role-specific attributes. The concrete design still needs to respect legal, organizational, migration and local-system constraints.
 
 ### Address change requested by Sales
 Ask whether Sales owns that address or only consumes it. Shared identity changes can affect procurement, finance, tax, credit, logistics and integrations.
