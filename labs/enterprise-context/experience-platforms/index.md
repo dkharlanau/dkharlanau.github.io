@@ -3,11 +3,18 @@ layout: default
 title: "Experience Platforms — Enterprise Context Lab"
 description: "Learn enterprise experience platforms: central entry points, digital workplaces, task access, mobile entry, and SAP Build Work Zone."
 permalink: /labs/enterprise-context/experience-platforms/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-27
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-experience-review-2026-09"
+review_method: "current SAP Build Work Zone and SAP Task Center primary sources + architecture-boundary review"
+search_intent: "SAP enterprise experience platform Work Zone Fiori launchpad SAP Start Task Center digital workplace"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-enterprise-experience-platforms"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -19,6 +26,13 @@ tags:
   - digital-workplace
   - fiori
   - integration-architecture
+source_links:
+  - title: "SAP Build Work Zone, standard edition"
+    url: "https://help.sap.com/docs/build-work-zone-standard-edition/sap-build-work-zone-standard-edition"
+  - title: "SAP Build Work Zone, advanced edition"
+    url: "https://help.sap.com/docs/build-work-zone-advanced-edition/sap-build-work-zone-advanced-edition"
+  - title: "SAP Task Center"
+    url: "https://help.sap.com/docs/task-center/sap-task-center"
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
