@@ -3,11 +3,18 @@ layout: default
 title: "SAP Build Work Zone — Enterprise Context Lab"
 description: "Learn SAP Build Work Zone: system class, goals, editions, Fiori and SAP Start boundaries, federation, identity, tasks, Joule, and Lead design."
 permalink: /labs/enterprise-context/experience-platforms/sap-build-work-zone/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-27
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-experience-review-2026-09"
+review_method: "current SAP Build Work Zone standard/advanced + SAP Task Center primary sources + page-level architecture-boundary review"
+search_intent: "SAP Build Work Zone standard advanced edition Workspaces Workpages content federation Task Center Fiori launchpad SAP Start"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-build-work-zone"
 hide_global_cta: true
 enterprise_context_graph: true
 career_impact: mapped
@@ -224,7 +231,7 @@ tags:
 
   <section class="research-canvas__inventory" id="current-signals" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Current product signals / reviewed 2026-08-27</p>
+      <p class="research-canvas__eyebrow">Current product signals / reviewed 2026-09-03</p>
       <h2>The experience layer is broader than a tile launchpad.</h2>
       <p>These points are release-sensitive and should be checked again for a real project.</p>
     </header>
