@@ -3,11 +3,17 @@ layout: default
 title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
 description: "A practical SAP performance playbook covering SM50, SM66, SM51, SM12, SM13, SM04, ST03N, STAD, ST05, SAT, HANA, tRFC, qRFC, bgRFC, traces, queues, logs, and S/4HANA Cloud Public Edition differences."
 permalink: /labs/enterprise-context/performance/
-status: needs_verification
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-08-30
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-03
+last_reviewed: 2026-09-03
+publication_wave: "sap-operations-review-2026-09"
+review_method: "current SAP primary sources + public/private deployment-boundary review + page-level factual review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-performance-operations"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -108,7 +114,7 @@ source_links:
       <div class="research-canvas__signal-line"><span>01</span><strong>WP</strong><small>Processes and servers</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>LUW</strong><small>Locks, update and RFC</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>Trace</strong><small>ABAP, SQL and HANA</small></div>
-      <em>Source-checked against SAP Help. Human verification is still required before indexing.</em>
+      <em>Reviewed against SAP Help, Technical Monitoring (Cloud), and SAP Cloud ALM documentation.</em>
     </div>
   </header>
 
