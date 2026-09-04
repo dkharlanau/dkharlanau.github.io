@@ -6,9 +6,12 @@ import { execFileSync } from 'node:child_process';
 import { mkdir, stat, writeFile } from 'node:fs/promises';
 import { extname, resolve, sep } from 'node:path';
 import process from 'node:process';
+import { inspectPortraitFrames } from './lib/visual_details.mjs';
 
 const DEFAULT_ROUTES = [
   '/',
+  '/about/',
+  '/atlas/ai-operations/ai-agent-for-sap-support/',
   '/knowledge/',
   '/labs/',
   '/labs/enterprise-assurance/',
@@ -190,13 +193,14 @@ function buildFailureSummary(result) {
   if (result.pageErrors.length) failures.push(`${result.pageErrors.length} page error(s)`);
   if (result.audit.rootOverflow > 2) failures.push(`page overflows viewport by ${result.audit.rootOverflow}px`);
   if (result.audit.brokenImages.length) failures.push(`${result.audit.brokenImages.length} broken image(s)`);
+  if (result.audit.frameCornerMismatches.length) failures.push(`${result.audit.frameCornerMismatches.length} mismatched portrait corner(s)`);
   if (result.audit.hugeTextBlocks.length) failures.push(`${result.audit.hugeTextBlocks.length} huge text block(s)`);
   if (result.audit.interactiveOverlaps.length) failures.push(`${result.audit.interactiveOverlaps.length} overlapping interactive pair(s)`);
   return failures;
 }
 
 async function auditPage(page, viewport) {
-  return page.evaluate(({ viewportWidth, viewportHeight }) => {
+  const audit = await page.evaluate(({ viewportWidth, viewportHeight }) => {
     const isVisible = (el) => {
       const style = window.getComputedStyle(el);
       const rect = el.getBoundingClientRect();
@@ -296,6 +300,7 @@ async function auditPage(page, viewport) {
       h1Count: document.querySelectorAll('h1').length,
     };
   }, { viewportWidth: viewport.width, viewportHeight: viewport.height });
+  return { ...audit, frameCornerMismatches: await page.evaluate(inspectPortraitFrames) };
 }
 
 async function main() {
@@ -345,6 +350,7 @@ async function main() {
         let audit = {
           rootOverflow: 0,
           brokenImages: [],
+          frameCornerMismatches: [],
           hugeTextBlocks: [],
           clippedText: [],
           tinyText: [],
