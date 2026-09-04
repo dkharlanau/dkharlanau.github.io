@@ -16,6 +16,7 @@ structured_data:
   type: TechArticle
 primary_topic: "sap-drf"
 hide_global_cta: true
+enterprise_context_graph: true
 career_impact: mapped
 career_skills:
   - integration-patterns
