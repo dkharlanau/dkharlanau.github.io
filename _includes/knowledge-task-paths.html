@@ -1,0 +1,43 @@
+{% assign path_scope = include.scope | default: 'knowledge' %}
+{% assign task_lookup_urls = '' | split: ',' %}
+{% for task_path in site.data.knowledge_paths.paths %}
+  {% for task_step in task_path.steps %}
+    {% assign task_lookup_url = task_step.url | split: '#' | first %}
+    {% assign task_lookup_urls = task_lookup_urls | push: task_lookup_url %}
+  {% endfor %}
+{% endfor %}
+{% assign task_lookup_urls = task_lookup_urls | uniq %}
+{% assign task_lookup_pages = site.pages | where_exp: 'candidate', 'task_lookup_urls contains candidate.permalink' %}
+<section class="section atlas-pathfinder" id="{{ path_scope }}-task-paths" data-atlas-pathfinder aria-labelledby="{{ path_scope }}-pathfinder-title">
+  <header class="section-heading">
+    <p class="eyebrow">Problem → method → reusable output</p>
+    <h2 id="{{ path_scope }}-pathfinder-title">What needs to move forward?</h2>
+    <p class="lead">Choose a task, check the evidence, and leave with a record your team can use. Working material is marked where human review is still pending.</p>
+  </header>
+  <div class="atlas-pathfinder__layout">
+    <nav class="atlas-pathfinder__steps" aria-label="Work starting points" data-path-tabs>
+      {% for task_path in site.data.knowledge_paths.paths %}
+      <a class="atlas-pathfinder__step" id="{{ path_scope }}-tab-{{ task_path.id }}" href="#{{ path_scope }}-path-{{ task_path.id }}" data-path-target="{{ path_scope }}-path-{{ task_path.id }}">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ task_path.icon }}</span><span>{{ task_path.label }}</span>
+      </a>
+      {% endfor %}
+    </nav>
+    <div class="atlas-pathfinder__panels">
+      {% for task_path in site.data.knowledge_paths.paths %}
+      <article class="atlas-pathfinder__panel" id="{{ path_scope }}-path-{{ task_path.id }}" aria-labelledby="{{ path_scope }}-title-{{ task_path.id }}" data-path-panel>
+        <p class="eyebrow">{{ task_path.label }}</p>
+        <h3 id="{{ path_scope }}-title-{{ task_path.id }}">{{ task_path.title }}</h3>
+        <p>{{ task_path.question }}</p>
+        <ol class="atlas-pathfinder__links">
+          {% for task_step in task_path.steps %}
+          {% assign step_url = task_step.url | split: '#' | first %}
+          {% assign step_page = task_lookup_pages | where: 'permalink', step_url | first %}
+          <li><a href="{{ task_step.url }}">{{ task_step.label }}</a><br /><small>{% if step_page.verified == true and step_page.status == 'reviewed' %}{% if step_page.robots contains 'noindex' %}Working · review pending{% else %}Reviewed{% endif %}{% else %}Working · review pending{% endif %}</small></li>
+          {% endfor %}
+        </ol>
+        <p><strong>Result to keep:</strong> {{ task_path.output }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>

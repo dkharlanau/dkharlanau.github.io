@@ -25,6 +25,7 @@ expert_context:
     - /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
     - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 last_reviewed: '2026-06-13'
+last_modified_at: 2026-09-05
 author: Dzmitryi Kharlanau
 tags:
 - sap-ams
@@ -122,6 +123,15 @@ sitemap: true
 
     <h2>The end of the diagnosis</h2>
     <p>A strong IDoc incident says where the chain broke: generation, routing, transport, queue, mapping/data, or application posting. “Status 51 fixed” is not enough. The status is the symptom. The reusable knowledge is why the application rejected the message and what control prevents the same failure next time.</p>
+
+    <h2>Official references and scope</h2>
+    <p>Use these SAP references to check the monitoring and partner-profile behavior behind this guide. The sequence of investigation and escalation checklist above are the author's diagnostic synthesis; the references do not establish a cause or approve reprocessing in your system.</p>
+    <ul>
+      <li><a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/8f3819b0c24149b5959ab31070b64058/4b4c790e4a712597e10000000a42189b.html?locale=en-US&amp;version=LATEST">SAP Help: IDoc Monitoring</a> — ABAP Platform, 2025 FPS01 documentation at the time of the source check. Describes the available monitoring views and distinguishes IDoc display, status processing, and queues. Use it to select the monitor for the failed layer.</li>
+      <li><a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/8f3819b0c24149b5959ab31070b64058/4ab7c1736dbe6d8be10000000a42189c.html?locale=en-US&amp;state=PRODUCTION&amp;version=202310.latest">SAP Help: Status Monitor for ALE Messages</a> — ABAP Platform 2023 documentation. Covers BD87, status long text, linked objects, and manual processing after correcting the problem. This supports reading the error and target context before recovery.</li>
+      <li><a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/8f3819b0c24149b5959ab31070b64058/4ab38cc3549a6d8ce10000000a42189c.html">SAP Help: Check/Generate Partner Profiles</a> — ABAP Platform, 2025 FPS01 documentation at the time of the source check. Identifies WE20 and the distribution-model and RFC prerequisites. Use it to investigate routing configuration, not as an instruction to regenerate profiles during an incident.</li>
+    </ul>
+    <p><strong>Source check:</strong> 5 September 2026. Confidence is high for the documentation topics mapped above. This guide concerns classic IDoc/ALE landscapes; check your release, integration design, permissions, and restart behavior before applying a step. A source check is not a new review of the entire article or a live SAP test.</p>
 
     <h2>Related diagnostics</h2>
     <ul>

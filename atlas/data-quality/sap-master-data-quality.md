@@ -14,6 +14,7 @@ status: reviewed
 verified: true
 level: 2
 last_reviewed: 2026-06-13
+last_modified_at: 2026-09-05
 
 tags:
   - master-data
@@ -77,6 +78,14 @@ author: Dzmitryi Kharlanau
 
   <h2>A practical rule</h2>
   <p>When a master-data incident repeats, stop asking only “which value should we enter?” Ask “why was this invalid state possible, and where should it have been caught?” That is the point where AMS, process design, and data governance meet.</p>
+
+  <h2>Official references and scope</h2>
+  <p>These references support two parts of the investigation: whether data is maintained at the right organizational level, and where a repeat defect could be checked. The process-effect table, ownership questions, and suggested quality signals above are the author's operational synthesis.</p>
+  <ul>
+    <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f7fddfe4caca43dd967ac4c9ce6a70e4/b714c453f57eb44ce10000000a174cb4.html?locale=en-US&amp;state=PRODUCTION&amp;version=2023.latest">SAP Help: Interdependency of User Department and Organizational Levels</a> — SAP S/4HANA 2023, Material Master. Maps material-data views to required or optional organizational entries. Use it when an existing material is unavailable in the process context; it does not define Business Partner roles or every customer-specific validation.</li>
+    <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/2435a77764ed400da5a57f5fec3a11cb.html">SAP Help: Managing Validation Rules</a> — SAP Master Data Governance, 2025 FPS01 documentation at the time of the source check. Describes rule management and the contexts in which validation rules can be used. Use it to locate a possible prevention control when MDG is part of the landscape; it does not mean a rule is configured, enabled, or effective in your system.</li>
+  </ul>
+  <p><strong>Source check:</strong> 5 September 2026. Confidence is high for the documentation topics mapped above. Match the product, release, object, and governance setup before applying the guidance. These references do not establish the cause of a particular incident, and this source check does not replace the article's recorded review.</p>
 </div>
 
 <section class="atlas-related"><h2>Related pages</h2><ul>

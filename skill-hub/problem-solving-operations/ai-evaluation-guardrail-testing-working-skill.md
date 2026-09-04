@@ -69,7 +69,7 @@ sitemap: false
 </section>
 
 <section class="section">
-  <header class="section-heading"><h2>Working template</h2></header>
+  <header class="section-heading"><h2 id="ai-evaluation-record">Working template</h2></header>
   <pre><code>AI Evaluation & Guardrail Test Record
 
 Workflow:

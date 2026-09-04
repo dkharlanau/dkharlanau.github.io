@@ -72,12 +72,23 @@
   });
 
   document.querySelectorAll("[data-atlas-pathfinder]").forEach((root) => {
-    const steps = [...root.querySelectorAll("[data-path-title]")];
-    const outputIcon = root.querySelector("[data-path-output-icon]");
-    const outputTitle = root.querySelector("[data-path-output-title]");
-    const outputDetail = root.querySelector("[data-path-output-detail]");
-    const outputLink = root.querySelector("[data-path-output-link]");
-    const outputPanel = root.querySelector("[role='tabpanel']");
+    const steps = [...root.querySelectorAll("[data-path-target]")];
+    const panels = [...root.querySelectorAll("[data-path-panel]")];
+    const tabList = root.querySelector("[data-path-tabs]");
+    if (!steps.length || !tabList || steps.some((step) => !panels.some((panel) => panel.id === step.dataset.pathTarget))) return;
+
+    // The source is a complete set of anchor links and visible routes. Tabs are
+    // an enhancement; a missing script never hides the method or its template.
+    tabList.setAttribute("role", "tablist");
+    steps.forEach((step) => {
+      step.setAttribute("role", "tab");
+      step.setAttribute("aria-controls", step.dataset.pathTarget);
+    });
+    panels.forEach((panel) => {
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", steps.find((step) => step.dataset.pathTarget === panel.id).id);
+      panel.tabIndex = 0;
+    });
 
     const activate = (step) => {
       steps.forEach((item) => {
@@ -86,20 +97,20 @@
         item.setAttribute("aria-selected", String(active));
         item.tabIndex = active ? 0 : -1;
       });
-      if (outputIcon) outputIcon.textContent = step.dataset.pathIcon;
-      if (outputTitle) outputTitle.textContent = step.dataset.pathTitle;
-      if (outputDetail) outputDetail.textContent = step.dataset.pathDetail;
-      if (outputPanel) outputPanel.setAttribute("aria-labelledby", step.id);
-      if (outputLink) {
-        outputLink.href = step.dataset.pathLink;
-        outputLink.firstChild.textContent = `${step.dataset.pathLinkLabel} `;
-      }
+      panels.forEach((panel) => { panel.hidden = panel.id !== step.dataset.pathTarget; });
     };
 
     steps.forEach((step, index) => {
-      step.tabIndex = index === 0 ? 0 : -1;
-      step.addEventListener("click", () => activate(step));
+      step.addEventListener("click", (event) => {
+        event.preventDefault();
+        activate(step);
+      });
       step.addEventListener("keydown", (event) => {
+        if (event.key === ' ') {
+          event.preventDefault();
+          activate(step);
+          return;
+        }
         if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
         event.preventDefault();
         let targetIndex = index;
@@ -110,6 +121,13 @@
         activate(steps[targetIndex]);
       });
     });
+    const showLinkedRoute = () => {
+      const linkedStep = steps.find((step) => step.getAttribute("href") === window.location.hash);
+      if (linkedStep) activate(linkedStep);
+      return linkedStep;
+    };
+    if (!showLinkedRoute()) activate(steps[0]);
+    window.addEventListener("hashchange", showLinkedRoute);
   });
 })();
 

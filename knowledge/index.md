@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-22
+last_modified_at: 2026-09-05
 hide_global_cta: true
 tags:
   - sap
@@ -26,7 +26,7 @@ tags:
       <p class="research-canvas__eyebrow">Knowledge / evidence and explanation</p>
       <h1>Start with the question.<br />Choose the right depth.</h1>
       <p>The knowledge layer keeps reviewed explanations, diagnostic scenarios, working research, and longer essays in separate places. They can link to each other without pretending they have the same maturity.</p>
-      <a class="research-canvas__button" href="#knowledge-routes">Open the routes <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#knowledge-task-paths">Choose a task <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <figure class="hub-canvas__visual">
       <img src="/assets/img/systems/erp-document-flow-field.webp" alt="An ERP operating signal branching through document, data, warehouse, and integration checks before reaching a completed delivery." width="1728" height="1106" decoding="async" fetchpriority="high" />
@@ -40,6 +40,8 @@ tags:
       <em>Publication maturity stays visible at page level.</em>
     </div>
   </header>
+
+  {% include knowledge-task-paths.html scope="knowledge" %}
 
   <section class="research-canvas__boundary" data-reveal aria-label="Knowledge boundary">
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>

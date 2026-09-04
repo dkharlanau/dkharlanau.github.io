@@ -123,7 +123,7 @@ verified: true
 
   <section>
     <h2>Templates</h2>
-    <h3>Interface Ownership Matrix (Compact)</h3>
+    <h3 id="interface-ownership-matrix">Interface Ownership Matrix (Compact)</h3>
     <pre><code>---
 artifact: Interface Ownership Matrix
 id: IOM-001
