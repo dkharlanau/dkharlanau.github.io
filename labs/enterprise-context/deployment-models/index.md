@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-04
 hide_global_cta: true
 tags:
   - sap
@@ -15,7 +15,7 @@ tags:
   - deployment
   - public-cloud
   - private-cloud
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-04
 publication_wave: "lead-architecture-search-wave-03"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP S/4HANA Public Cloud vs Private Cloud vs on-premise"
@@ -25,6 +25,9 @@ structured_data:
 primary_topic: "sap-s4hana"
 ai_sidecar: "/ai/pages/labs--enterprise-context--deployment-models.json"
 semantic_links:
+  - type: "deep_dive"
+    title: "SAP S/4HANA 2025 Release Readiness"
+    url: "/labs/enterprise-context/release-readiness/"
   - type: "same_domain"
     title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
     url: "/labs/enterprise-context/development/"
@@ -83,6 +86,7 @@ source_links:
     <span class="material-symbols-outlined" aria-hidden="true">cloud</span>
     <p><strong>Problem:</strong> the three S/4HANA deployment models share a product family but differ in scope, extensibility, upgrades, and operations.</p>
     <p><strong>Remember:</strong> deployment changes scope, extensions, upgrades, and operations. It does not replace the business process.</p>
+    <a href="/labs/enterprise-context/release-readiness/">Check release and conversion readiness <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     <a href="/labs/enterprise-context/industries/">Open industry solutions <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     <a href="/labs/enterprise-context/development/">Choose the development architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
@@ -135,6 +139,7 @@ source_links:
       <p>Always validate the exact feature, release, add-on, and extension path.</p>
     </header>
     <div class="research-route-list">
+      <a href="/labs/enterprise-context/release-readiness/"><span>2025</span><strong>Release support is a separate architecture check</strong><small>A feature can exist in the product family and still have restrictions for a specific release, FPS, deployment model, or conversion path.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
       {% for model in topic.deployment_models %}
       <a href="/labs/enterprise-context/data/catalog.json"><span>!</span><strong>{{ model.short_title }}</strong><small>{{ model.watch_out }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
       {% endfor %}
