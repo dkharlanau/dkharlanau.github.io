@@ -1,22 +1,36 @@
-<aside class="site-share" data-site-share aria-labelledby="site-share-title">
+{% assign share_origin = site.production_url | default: site.url %}
+{% assign share_url = page.url | prepend: share_origin %}
+{% assign share_candidate = page.canonical_url | split: '?' | first | split: '#' | first %}
+{% assign share_prefix = share_origin | append: '/' %}
+{% assign share_prefix_size = share_prefix | size %}
+{% assign share_candidate_prefix = share_candidate | slice: 0, share_prefix_size %}
+{% if share_candidate == share_origin or share_candidate_prefix == share_prefix %}
+  {% assign share_url = share_candidate %}
+{% endif %}
+{% assign share_title = page.title | default: site.title | strip_html | normalize_whitespace %}
+<aside class="site-share" data-site-share data-site-share-origin="{{ share_origin | escape }}" data-site-share-url="{{ share_url | escape }}" data-site-share-title="{{ share_title | escape }}" data-site-share-author="{{ site.author.name | escape }}" aria-labelledby="site-share-title">
   <div>
     <p class="site-share__eyebrow">Share</p>
     <h2 id="site-share-title">Send this page to a colleague</h2>
-    <p>Copy the link, share it, or mark it useful for later.</p>
+    <p>Share the link or copy a citation for your notes.</p>
   </div>
   <div class="site-share__actions" aria-label="Share this page">
-    <button class="site-share__action" type="button" data-site-share-native>
+    <button class="site-share__action" type="button" data-site-share-native hidden>
       <span class="material-symbols-outlined" aria-hidden="true">ios_share</span><span>Share</span>
     </button>
-    <button class="site-share__action" type="button" data-site-share-copy>
+    <button class="site-share__action" type="button" data-site-share-copy hidden>
       <span class="material-symbols-outlined" aria-hidden="true">link</span><span>Copy link</span>
     </button>
-    <a class="site-share__action" data-site-share-email href="mailto:?subject={{ page.title | url_encode }}&body={{ site.url }}{{ page.url }}">
+    <button class="site-share__action" type="button" data-site-share-citation hidden>
+      <span class="material-symbols-outlined" aria-hidden="true">format_quote</span><span>Copy citation</span>
+    </button>
+    <noscript><a class="site-share__action" href="{{ share_url | escape }}">Permanent link</a></noscript>
+    <a class="site-share__action" data-site-share-email href="mailto:?subject={{ share_title | url_encode }}&amp;body={{ share_url | url_encode }}">
       <span class="material-symbols-outlined" aria-hidden="true">mail</span><span>Send by email</span>
     </a>
-    <button class="site-share__action" type="button" data-site-share-like aria-pressed="false">
+    <button class="site-share__action" type="button" data-site-share-like aria-pressed="false" hidden>
       <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span><span>Helpful</span>
     </button>
   </div>
-  <p class="site-share__status" aria-live="polite" data-site-share-status>Helpful marks are stored only on this device.</p>
+  <p class="site-share__status" aria-live="polite" aria-atomic="true" data-site-share-status>Use the permanent link when referencing this page.</p>
 </aside>

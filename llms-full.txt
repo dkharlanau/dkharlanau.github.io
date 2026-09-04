@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-09-03T00:00:00Z
+Generated: 2026-09-05T00:00:00Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -1650,6 +1650,14 @@ DomainData operationsTypeData qualityReviewed2026-06-13
   A practical rule
   When a master-data incident repeats, stop asking only “which value should we enter?” Ask “why was this invalid state possible, and where should it have been caught?” That is the point where AMS, process design, and data governance meet.
 
+  Official references and scope
+  These references support two parts of the investigation: whether data is maintained at the right organizational level, and where a repeat defect could be checked. The process-effect table, ownership questions, and suggested quality signals above are the author's operational synthesis.
+
+    SAP Help: Interdependency of User Department and Organizational Levels — SAP S/4HANA 2023, Material Master. Maps material-data views to required or optional organizational entries. Use it when an existing material is unavailable in the process context; it does not define Business Partner roles or every customer-specific validation.
+    SAP Help: Managing Validation Rules — SAP Master Data Governance, 2025 FPS01 documentation at the time of the source check. Describes rule management and the contexts in which validation rules can be used. Use it to locate a possible prevention control when MDG is part of the landscape; it does not mean a rule is configured, enabled, or effective in your system.
+
+  Source check: 5 September 2026. Confidence is high for the documentation topics mapped above. Match the product, release, object, and governance setup before applying the guidance. These references do not establish the cause of a particular incident, and this source check does not replace the article's recorded review.
+
 Related pages
   Master Data Governance Failure Modes
   AI-Ready Process Documentation
@@ -2623,6 +2631,15 @@ Home
 
     The end of the diagnosis
     A strong IDoc incident says where the chain broke: generation, routing, transport, queue, mapping/data, or application posting. “Status 51 fixed” is not enough. The status is the symptom. The reusable knowledge is why the application rejected the message and what control prevents the same failure next time.
+
+    Official references and scope
+    Use these SAP references to check the monitoring and partner-profile behavior behind this guide. The sequence of investigation and escalation checklist above are the author's diagnostic synthesis; the references do not establish a cause or approve reprocessing in your system.
+
+      SAP Help: IDoc Monitoring — ABAP Platform, 2025 FPS01 documentation at the time of the source check. Describes the available monitoring views and distinguishes IDoc display, status processing, and queues. Use it to select the monitor for the failed layer.
+      SAP Help: Status Monitor for ALE Messages — ABAP Platform 2023 documentation. Covers BD87, status long text, linked objects, and manual processing after correcting the problem. This supports reading the error and target context before recovery.
+      SAP Help: Check/Generate Partner Profiles — ABAP Platform, 2025 FPS01 documentation at the time of the source check. Identifies WE20 and the distribution-model and RFC prerequisites. Use it to investigate routing configuration, not as an instruction to regenerate profiles during an incident.
+
+    Source check: 5 September 2026. Confidence is high for the documentation topics mapped above. This guide concerns classic IDoc/ALE landscapes; check your release, integration design, permissions, and restart behavior before applying a step. A source check is not a new review of the entire article or a live SAP test.
 
     Related diagnostics
 

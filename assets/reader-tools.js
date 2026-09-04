@@ -317,6 +317,147 @@
     rail.append(disclosure);
   };
 
+  const pageReference = () => {
+    const widget = document.querySelector("[data-site-share]");
+    // The build supplies the production origin, including during a local preview.
+    // Never promote a location query or an external canonical into a shared URL.
+    let origin;
+    try {
+      origin = new URL(widget?.dataset.siteShareOrigin);
+      if (origin.protocol !== "https:" || origin.username || origin.password) return null;
+    } catch (_) { return null; }
+    const validUrl = (value) => {
+      if (!value?.trim()) return null;
+      try {
+        const url = new URL(value, origin);
+        if (url.origin !== origin.origin || url.protocol !== "https:" || url.username || url.password) return null;
+        url.search = "";
+        url.hash = "";
+        return url;
+      } catch (_) { return null; }
+    };
+    const canonical = validUrl(document.querySelector('link[rel="canonical"]')?.getAttribute("href"))
+      || validUrl(widget.dataset.siteShareUrl);
+    if (!canonical) return null;
+    const url = new URL(canonical);
+    // A heading on this route is safe to reference. Alias pages can have different
+    // anchors, so citations and links to their canonical target remain page-level.
+    if (window.location.pathname === canonical.pathname && window.location.hash) {
+      try {
+        const heading = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+        if (heading?.matches("h1, h2, h3, h4, h5, h6") && document.querySelector("#content")?.contains(heading)) {
+          url.hash = window.location.hash;
+        }
+      } catch (_) { /* malformed or unknown fragments are not shared */ }
+    }
+    const title = widget.dataset.siteShareTitle || document.title;
+    const author = widget.dataset.siteShareAuthor || document.querySelector('meta[name="author"]')?.content;
+    const modified = document.querySelector('meta[property="article:modified_time"]')?.content || "";
+    const date = modified.match(/^\d{4}-\d{2}-\d{2}(?=T|$)/)?.[0];
+    const validDate = date && !Number.isNaN(Date.parse(modified)) && new Date(date).toISOString().slice(0, 10) === date;
+    const citation = [author, `“${title}”`, validDate ? `Updated ${date}` : null, canonical.href].filter(Boolean).join(". ");
+    return { title, url: url.href, canonical: canonical.href, citation };
+  };
+
+  const copyText = async (text) => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (_) { /* try the browser's legacy copy command */ }
+    const active = document.activeElement;
+    const field = document.createElement("textarea");
+    field.value = text;
+    field.readOnly = true;
+    field.tabIndex = -1;
+    field.className = "reader-copy-buffer";
+    document.body.append(field);
+    try {
+      field.select();
+      return document.execCommand?.("copy") === true;
+    } catch (_) { return false; }
+    finally {
+      field.remove();
+      // A copy trigger can be disabled while this command runs. Its caller
+      // restores focus after re-enabling it; another focused control stays put.
+      if (!active?.disabled) active?.focus({ preventScroll: true });
+    }
+  };
+
+  const offerManualCopy = (container, text, trigger, focus = true) => {
+    let panel = container.querySelector(".reader-copy-fallback");
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.className = "reader-copy-fallback";
+      const label = document.createElement("label");
+      label.textContent = "Select and copy manually";
+      const field = document.createElement("textarea");
+      field.readOnly = true;
+      field.rows = 3;
+      label.append(field);
+      const note = document.createElement("p");
+      note.textContent = "Copy the selected text using your browser or keyboard.";
+      const close = document.createElement("button");
+      close.type = "button";
+      close.className = "site-share__action";
+      close.textContent = "Close";
+      close.addEventListener("click", () => {
+        panel.hidden = true;
+        panel.copyTrigger?.focus();
+      });
+      panel.append(label, note, close);
+      container.append(panel);
+    }
+    panel.copyTrigger = trigger;
+    panel.hidden = false;
+    const field = panel.querySelector("textarea");
+    field.value = text;
+    if (focus) {
+      field.focus();
+      field.select();
+    }
+  };
+
+  const bindCopy = (button, container, status, referenceText, kind) => {
+    if (!button) return;
+    button.hidden = false;
+    button.addEventListener("click", async () => {
+      const text = referenceText();
+      if (!text) {
+        if (status) status.textContent = "A permanent link is unavailable for this page.";
+        return;
+      }
+      const activeBeforeCopy = document.activeElement;
+      let focusMoved = false;
+      const trackFocus = (event) => {
+        if (event.target !== activeBeforeCopy && event.target !== document.body && !event.target.matches?.(".reader-copy-buffer")) {
+          focusMoved = true;
+        }
+      };
+      document.addEventListener("focusin", trackFocus);
+      button.disabled = true;
+      if (status) status.textContent = "Copying…";
+      try {
+        const copied = await copyText(text);
+        button.disabled = false;
+        document.removeEventListener("focusin", trackFocus);
+        if (copied) {
+          const panel = container.querySelector(".reader-copy-fallback");
+          if (panel) panel.hidden = true;
+          if (status) status.textContent = `${kind} copied to the clipboard.`;
+          if (!focusMoved) activeBeforeCopy?.focus({ preventScroll: true });
+        } else {
+          if (status) status.textContent = "Automatic copy is unavailable. Copy the selected text below.";
+          offerManualCopy(container, text, button, !focusMoved);
+        }
+      } finally {
+        button.disabled = false;
+        document.removeEventListener("focusin", trackFocus);
+      }
+    });
+  };
+
   const addArticleTools = (article) => {
     if (article.querySelector(":scope .reader-actions")) return;
     const heading = article.querySelector("h1");
@@ -331,6 +472,11 @@
     label.textContent = "Article tools";
     actions.append(label);
 
+    const status = document.createElement("p");
+    status.className = "reader-reaction-note";
+    status.setAttribute("aria-live", "polite");
+    status.setAttribute("aria-atomic", "true");
+
     const makeButton = (icon, text) => {
       const button = document.createElement("button");
       button.className = "reader-action";
@@ -340,36 +486,33 @@
     };
 
     const copy = makeButton("link", "Copy link");
-    copy.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-      } catch (_) {
-        const field = document.createElement("textarea");
-        field.value = window.location.href;
-        field.setAttribute("readonly", "");
-        field.style.position = "fixed";
-        field.style.opacity = "0";
-        document.body.append(field);
-        field.select();
-        document.execCommand("copy");
-        field.remove();
-      }
-      copy.querySelector("span:last-child").textContent = "Copied";
-      window.setTimeout(() => { copy.querySelector("span:last-child").textContent = "Copy link"; }, 1800);
-    });
+    bindCopy(copy, actions, status, () => pageReference()?.url, "Link");
     actions.append(copy);
+    const citation = makeButton("format_quote", "Copy citation");
+    bindCopy(citation, actions, status, () => pageReference()?.citation, "Citation");
+    actions.append(citation);
 
     if (navigator.share) {
       const share = makeButton("ios_share", "Share");
       share.addEventListener("click", async () => {
-        try { await navigator.share({ title: document.title, url: window.location.href }); } catch (_) { /* user cancelled */ }
+        const reference = pageReference();
+        if (!reference) return;
+        try { await navigator.share({ title: reference.title, url: reference.url }); }
+        catch (error) {
+          if (error?.name !== "AbortError") status.textContent = "Sharing is unavailable. Use Copy link instead.";
+        }
       });
       actions.append(share);
     }
 
     const linkedIn = document.createElement("a");
     linkedIn.className = "reader-action";
-    linkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+    linkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageReference()?.url || "")}`;
+    linkedIn.addEventListener("click", (event) => {
+      const reference = pageReference();
+      if (reference) linkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(reference.url)}`;
+      else event.preventDefault();
+    });
     linkedIn.target = "_blank";
     linkedIn.rel = "noopener noreferrer";
     linkedIn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">badge</span><span>LinkedIn</span>';
@@ -395,7 +538,7 @@
     const note = document.createElement("p");
     note.className = "reader-reaction-note";
     note.textContent = "Your reaction is stored only on this device. No public count is shown.";
-    actions.append(note);
+    actions.append(note, status);
 
     const header = article.querySelector(":scope > .note-header");
     if (header) header.append(actions);
@@ -406,48 +549,50 @@
     const widget = document.querySelector("[data-site-share]");
     if (!widget) return;
     const copy = widget.querySelector("[data-site-share-copy]");
+    const citation = widget.querySelector("[data-site-share-citation]");
     const share = widget.querySelector("[data-site-share-native]");
     const email = widget.querySelector("[data-site-share-email]");
     const like = widget.querySelector("[data-site-share-like]");
     const status = widget.querySelector("[data-site-share-status]");
-    const title = document.title;
-    const url = window.location.href;
-
-    if (email) email.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`;
-    if (share && !navigator.share) share.hidden = true;
+    const refreshEmail = () => {
+      const reference = pageReference();
+      if (email && reference) email.href = `mailto:?subject=${encodeURIComponent(reference.title)}&body=${encodeURIComponent(reference.url)}`;
+    };
+    refreshEmail();
+    window.addEventListener("hashchange", refreshEmail);
+    // TOC enhancement may create the target heading after widget setup. Refresh
+    // on activation as well, including keyboard activation of the mailto link.
+    email?.addEventListener("click", refreshEmail);
+    if (share) share.hidden = typeof navigator.share !== "function";
     share?.addEventListener("click", async () => {
-      try { await navigator.share({ title, url }); } catch (_) { /* user cancelled */ }
-    });
-    copy?.addEventListener("click", async () => {
-      try { await navigator.clipboard.writeText(url); }
-      catch (_) {
-        const field = document.createElement("textarea");
-        field.value = url;
-        field.setAttribute("readonly", "");
-        field.style.position = "fixed";
-        field.style.opacity = "0";
-        document.body.append(field);
-        field.select();
-        document.execCommand("copy");
-        field.remove();
+      const reference = pageReference();
+      if (!reference) return;
+      try { await navigator.share({ title: reference.title, url: reference.url }); }
+      catch (error) {
+        if (error?.name !== "AbortError" && status) status.textContent = "Sharing is unavailable. Use Copy link or Send by email.";
       }
-      copy.querySelector("span:last-child").textContent = "Copied";
-      if (status) status.textContent = "Link copied to the clipboard.";
-      window.setTimeout(() => { copy.querySelector("span:last-child").textContent = "Copy link"; }, 1800);
     });
+    bindCopy(copy, widget, status, () => pageReference()?.url, "Link");
+    bindCopy(citation, widget, status, () => pageReference()?.citation, "Citation");
     const storageKey = `dkh-page-helpful:${window.location.pathname}`;
     let helpful = false;
-    try { helpful = window.localStorage.getItem(storageKey) === "true"; } catch (_) { /* storage unavailable */ }
+    let storageAvailable = true;
+    try { helpful = window.localStorage.getItem(storageKey) === "true"; } catch (_) { storageAvailable = false; }
     const setHelpful = (value) => {
       helpful = value;
       like?.setAttribute("aria-pressed", String(helpful));
       if (like) like.querySelector("span:last-child").textContent = helpful ? "Marked helpful" : "Helpful";
-      if (status) status.textContent = helpful ? "Marked helpful on this device." : "Helpful marks are stored only on this device.";
+      if (status) status.textContent = storageAvailable
+        ? (helpful ? "Marked helpful on this device." : "Helpful marks are stored only on this device.")
+        : (helpful ? "Marked helpful for this visit. Device storage is unavailable." : "Helpful marks last for this visit because device storage is unavailable.");
     };
     setHelpful(helpful);
+    if (like) like.hidden = false;
     like?.addEventListener("click", () => {
-      setHelpful(!helpful);
-      try { if (helpful) window.localStorage.setItem(storageKey, "true"); else window.localStorage.removeItem(storageKey); } catch (_) { /* keep page state */ }
+      const next = !helpful;
+      try { if (next) window.localStorage.setItem(storageKey, "true"); else window.localStorage.removeItem(storageKey); }
+      catch (_) { storageAvailable = false; }
+      setHelpful(next);
     });
   };
 

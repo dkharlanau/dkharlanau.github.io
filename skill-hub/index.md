@@ -4,7 +4,7 @@ layout: default
 title: "Skill Hub — Practical Working Skills for Enterprise Consultants and AI Agents"
 description: "A library of practical working skills for enterprise consultants, business analysts, data consultants, solution architects, integration architects, SAP AMS consultants, and AI agents. Not a glossary. Not a framework encyclopedia. Usable work skills."
 permalink: /skill-hub/
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-05
 status: reviewed
 verified: true
 ---
@@ -21,7 +21,8 @@ verified: true
   <h1>Working methods for enterprise delivery.</h1>
   <p class="lead">Methods, decision rules, checklists, and artifact templates for consultants, analysts, architects, and AI agents.</p>
   <div class="atlas-hero__actions">
-    <a class="button button--primary" href="/skill-hub/problem-solving-operations/">Problem solving &amp; operations</a>
+    <a class="button button--primary" href="#skill-task-paths">Choose a task and output</a>
+    <a class="button" href="/skill-hub/problem-solving-operations/">Problem solving &amp; operations</a>
     <a class="button" href="/skill-hub/dama-dmbok/">Data &amp; DAMA skills</a>
     <a class="button" href="/skill-hub/business-analysis/">Business analysis skills</a>
     <a class="button" href="/skill-hub/testing-quality-delivery/">Testing &amp; QA skills</a>
@@ -31,6 +32,8 @@ verified: true
     <a class="button" href="/skill-hub/ai-assisted-development/">AI-assisted development skills</a>
   </div>
 </section>
+
+{% include knowledge-task-paths.html scope="skill" %}
 
 <section class="section">
   <header class="section-heading">

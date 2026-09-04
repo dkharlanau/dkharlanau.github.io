@@ -4,7 +4,7 @@ layout: default
 title: "Knowledge Atlas — SAP, Operations, Data, Automation, and AI Support Concepts"
 description: "Curated Knowledge Atlas for business, SAP, operations, data, automation, and AI-assisted support concepts."
 permalink: /atlas/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-09-05
 status: reviewed
 verified: true
 tags:
@@ -31,7 +31,7 @@ related:
   <h1>Find the SAP context before choosing the fix.</h1>
   <p class="lead">Reviewed public pages for SAP operations, process analysis, master data, integration, and controlled automation. Start with the observable problem, then follow the related process, data, and ownership checks.</p>
   <div class="atlas-hero__actions">
-    <a class="button button--primary" href="/atlas/diagnostics/">Start with a diagnostic</a>
+    <a class="button button--primary" href="#atlas-task-paths">Start with a problem</a>
     <a class="button" href="/atlas/concepts/">Browse concepts</a>
   </div>
   <nav class="atlas-hero__route" aria-label="Atlas routes">
@@ -42,36 +42,7 @@ related:
   </nav>
 </section>
 
-<section class="section atlas-pathfinder" data-atlas-pathfinder aria-labelledby="pathfinder-title">
-  <header class="section-heading">
-    <p class="eyebrow">Interactive diagnostic map</p>
-    <h2 id="pathfinder-title">Start from the operating question.</h2>
-    <p class="lead">Choose the question that best describes the work in front of you. The map points to the Atlas area that helps structure the next check.</p>
-  </header>
-  <div class="atlas-pathfinder__layout">
-    <div class="atlas-pathfinder__steps" role="tablist" aria-label="Diagnostic starting points">
-      <button class="atlas-pathfinder__step is-active" id="atlas-path-blocked" type="button" role="tab" aria-selected="true" aria-controls="pathfinder-panel" data-path-icon="troubleshoot" data-path-title="A business process is blocked" data-path-detail="Start with the observable symptom, the affected business outcome, and the point where the expected process stops moving." data-path-link="/atlas/diagnostics/" data-path-link-label="Open diagnostic patterns">
-        <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span><span>Blocked outcome</span>
-      </button>
-      <button class="atlas-pathfinder__step" id="atlas-path-data" type="button" role="tab" aria-selected="false" aria-controls="pathfinder-panel" data-path-icon="database" data-path-title="The data cannot be trusted" data-path-detail="Trace the critical object, its owner, validation point, activation state, and downstream use before treating the issue as a local data fix." data-path-link="/atlas/data-quality/" data-path-link-label="Open data-quality patterns">
-        <span class="material-symbols-outlined" aria-hidden="true">database</span><span>Data signal</span>
-      </button>
-      <button class="atlas-pathfinder__step" id="atlas-path-handoff" type="button" role="tab" aria-selected="false" aria-controls="pathfinder-panel" data-path-icon="account_tree" data-path-title="A handoff fails between systems or teams" data-path-detail="Separate source, mapping, transport, target, recovery, and ownership evidence before assuming that an interface status explains the business result." data-path-link="/atlas/maps/" data-path-link-label="Open dependency maps">
-        <span class="material-symbols-outlined" aria-hidden="true">account_tree</span><span>Broken handoff</span>
-      </button>
-      <button class="atlas-pathfinder__step" id="atlas-path-action" type="button" role="tab" aria-selected="false" aria-controls="pathfinder-panel" data-path-icon="fact_check" data-path-title="The team needs a controlled next move" data-path-detail="Turn the investigation into a clear decision, owner, review point, and reusable operating artefact rather than a one-off recovery." data-path-link="/atlas/automation/" data-path-link-label="Open automation and operating-memory patterns">
-        <span class="material-symbols-outlined" aria-hidden="true">fact_check</span><span>Controlled action</span>
-      </button>
-    </div>
-    <article class="atlas-pathfinder__panel" id="pathfinder-panel" role="tabpanel" tabindex="0" aria-labelledby="atlas-path-blocked" aria-live="polite">
-      <span class="atlas-pathfinder__panel-icon material-symbols-outlined" aria-hidden="true" data-path-output-icon>troubleshoot</span>
-      <p class="eyebrow">Suggested starting point</p>
-      <h3 data-path-output-title>A business process is blocked</h3>
-      <p data-path-output-detail>Start with the observable symptom, the affected business outcome, and the point where the expected process stops moving.</p>
-      <a class="button button--primary" href="/atlas/diagnostics/" data-path-output-link>Open diagnostic patterns <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-    </article>
-  </div>
-</section>
+{% include knowledge-task-paths.html scope="atlas" %}
 
 <section class="section">
   <header class="section-heading">
@@ -153,74 +124,21 @@ related:
 <section class="section">
   <header class="section-heading">
     <p class="eyebrow">Pilot Pages</p>
-    <h2>Reviewed first pages</h2>
+    <h2>Selected starting pages</h2>
+    <p>Review status belongs to each page. Working diagnostics still need human review in the relevant SAP context.</p>
   </header>
   <div class="atlas-card-grid">
-    <a class="atlas-card" href="/atlas/concepts/sap-atp-is-not-inventory/">
-      <h3>SAP ATP Is Not Inventory</h3>
-      <p>A practical distinction between stock visibility and customer promise logic.</p>
+    {% assign pilot_urls = site.data.knowledge_paths.atlas_pilots %}
+    {% assign pilot_pages = site.pages | where_exp: 'candidate', 'pilot_urls contains candidate.permalink' %}
+    {% for pilot_url in pilot_urls %}
+    {% assign pilot_page = pilot_pages | where: 'permalink', pilot_url | first %}
+    <a class="atlas-card" href="{{ pilot_url }}">
+      <h3>{{ pilot_page.short_title | default: pilot_page.title | escape }}</h3>
+      <p>{{ pilot_page.description | escape }}</p>
+      <span class="atlas-pill">{% if pilot_page.verified == true and pilot_page.status == 'reviewed' %}{% if pilot_page.robots contains 'noindex' %}Working · review pending{% else %}Reviewed{% endif %}{% else %}Working · review pending{% endif %}</span>
       <span class="link-arrow">Read page</span>
     </a>
-    <a class="atlas-card" href="/atlas/sap/sap-pricing-procedure-debugging/">
-      <h3>SAP Pricing Procedure Debugging</h3>
-      <p>A conservative troubleshooting frame for pricing issues in sales documents.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">
-      <h3>SAP Sales Order Block Diagnosis</h3>
-      <p>How to separate master data, credit, delivery, billing, and incompletion causes.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/concepts/order-to-cash/">
-      <h3>Order to Cash</h3>
-      <p>The operating chain from customer demand to billing and cash collection.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/ai-operations/ai-agent-for-sap-support/">
-      <h3>AI Agent for SAP Support</h3>
-      <p>A grounded pattern for retrieval, diagnosis, escalation, and human approval.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/data-quality/sap-master-data-quality/">
-      <h3>SAP Master Data Quality</h3>
-      <p>How weak master data turns into repeated SAP support issues.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/automation/operational-memory-for-sap-ams/">
-      <h3>Operational Memory for SAP AMS</h3>
-      <p>Runbooks, KEDB, and structured support knowledge for repeat incidents.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/diagnostics/sap-idoc-diagnostics/">
-      <h3>SAP IDoc Diagnostics</h3>
-      <p>Trace an IDoc failure from creation and dispatch through receipt and application posting.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/diagnostics/sap-authorization-diagnostics/">
-      <h3>SAP Authorization and Role Diagnostics</h3>
-      <p>Separate missing authorization objects, organizational values, profile generation, and user-context issues.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/diagnostics/sap-transport-governance-diagnostics/">
-      <h3>SAP Transport Governance Diagnostics</h3>
-      <p>Investigate queue conflicts, dependency order, approval gaps, and parallel changes before re-importing.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/concepts/sap-ams-cost-reduction-framework/">
-      <h3>SAP AMS Cost Reduction Framework</h3>
-      <p>A management-level lens for separating visible ticket reduction from real operating simplification.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/concepts/sap-extension-retain-rebuild-retire-framework/">
-      <h3>SAP Extension Retain, Rebuild, or Retire Framework</h3>
-      <p>Classify custom logic by business value, operating burden, and retirement potential.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
-    <a class="atlas-card" href="/atlas/concepts/enterprise-ai-around-sap-decision-framework/">
-      <h3>Enterprise AI Around SAP Decision Framework</h3>
-      <p>Decide where AI should assist, where automation should stay deterministic, and where neither is the real issue.</p>
-      <span class="link-arrow">Read page</span>
-    </a>
+    {% endfor %}
   </div>
 </section>
 

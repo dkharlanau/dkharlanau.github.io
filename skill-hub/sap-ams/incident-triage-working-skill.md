@@ -131,7 +131,7 @@ verified: true
 
   <section>
     <h2>Templates</h2>
-    <h3>Incident Triage Record</h3>
+    <h3 id="incident-triage-record">Incident Triage Record</h3>
     <pre><code>---
 artifact: Incident Triage Record
 id: TRI-001
