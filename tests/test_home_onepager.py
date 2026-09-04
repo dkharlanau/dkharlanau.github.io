@@ -170,6 +170,19 @@ def test_reader_sharing_behaviour():
     assert result.returncode == 0, result.stdout + result.stderr
 
 
+def test_portrait_corner_audit_behaviour():
+    import subprocess
+
+    result = subprocess.run(
+        ["node", "--test", "tests/visual_details.test.mjs"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_footer_is_compact_and_trust_oriented():
     text = (REPO_ROOT / "_includes/footer.html").read_text(encoding="utf-8")
     assert "portal-footer__nav" in text

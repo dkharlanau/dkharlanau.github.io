@@ -1515,7 +1515,9 @@ body.page-context--knowledge .atlas-page .reader-actions { margin-top: 1.5rem; }
 body.page-context--knowledge .atlas-page .reader-action { min-height: 0; border-width: 0 0 1px !important; border-radius: 0 !important; background: transparent !important; padding: .35rem 0; color: var(--ps-ink-soft) !important; }
 body.page-context--knowledge .atlas-page .reader-action + .reader-action { margin-inline-start: .8rem; }
 body.page-context--knowledge .atlas-page .reader-action:hover, body.page-context--knowledge .atlas-page .reader-action:focus-visible, body.page-context--knowledge .atlas-page .reader-action[aria-pressed="true"] { border-color: var(--ps-signal) !important; color: var(--ps-signal) !important; }
-@media (min-width: 1000px) { body.page-context--knowledge .atlas-page > .atlas-meta-panel { position: sticky; top: calc(var(--ps-header) + 1.2rem); } }
+/* This grid item shares a column with later evidence and author blocks.
+   Keeping it in flow prevents the TOC from covering those blocks on scroll. */
+body.page-context--knowledge .atlas-page > .atlas-meta-panel { position: static; }
 @media (max-width: 760px) { body.page-context--knowledge .atlas-page { display: block; width: min(100%, 68rem); } body.page-context--knowledge .atlas-page > .note-header { display: block; min-height: 0; padding-top: 3.5rem; } body.page-context--knowledge .atlas-page > .note-header .atlas-pill-row { display: flex; flex-wrap: wrap; margin-top: 1.5rem; padding-top: .7rem; } body.page-context--knowledge .atlas-page .atlas-status { width: auto; border-bottom: 0; padding: 0; } body.page-context--knowledge .atlas-page > .atlas-meta-panel { margin-top: 2rem; } body.page-context--knowledge .atlas-page > .note-body { max-width: none; margin-top: 3.25rem; } }
 @media (max-width: 560px) { body.page-context--knowledge .atlas-page > .note-header h1 { font-size: clamp(3.15rem, 14.5vw, 4.7rem) !important; } body.page-context--knowledge .atlas-page > .note-body h2 { grid-template-columns: 2.5rem minmax(0, 1fr); gap: .55rem; } body.page-context--knowledge .atlas-page .reader-actions { gap: .3rem .8rem; } body.page-context--knowledge .atlas-page .reader-action + .reader-action { margin-inline-start: 0; } }
 @media (prefers-reduced-motion: reduce) { body.page-context--knowledge .atlas-page .reader-action { transition: none; } }
@@ -1530,6 +1532,10 @@ body.page-context--knowledge .atlas-page > .atlas-meta-panel { grid-area: meta; 
 body.page-context--knowledge .atlas-page > .atlas-related { grid-area: related; min-width: 0; padding: 1rem; }
 body.page-context--knowledge .atlas-page > .atlas-author.atlas-trust { grid-area: trust; padding-inline: 1rem; }
 body.page-context--knowledge .atlas-page > .atlas-author:not(.atlas-trust) { grid-area: author; min-width: 0; padding-inline: 1rem; }
+/* Legacy expert CTA and author credit are separate siblings, not two layers
+   in the same named cell. Only reserve this row when the CTA is present. */
+body.page-context--knowledge .atlas-page:has(> .atlas-expert-cta) { grid-template-areas: "header header" "body meta" "body related" "expert expert" "trust author" "disclaimer author"; }
+body.page-context--knowledge .atlas-page > .atlas-author.atlas-expert-cta { grid-area: expert; }
 body.page-context--knowledge .atlas-page > .atlas-disclaimer { grid-area: disclaimer; padding-inline: 1rem; }
 
 /* Page-end utility: deliberately compact and useful on both article and index pages. */

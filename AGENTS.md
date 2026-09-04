@@ -203,6 +203,13 @@ The repository uses a three-level content verification system:
 
 Read `docs/ai/CONTENT_VERIFICATION_POLICY.md` for the full policy.
 
+## Visual Detail Checks
+
+- For shared CSS changes, inspect the homepage, a profile, a hub, and a long article at desktop and mobile widths. Compare screenshots at the same viewport and state.
+- Check portrait/photo corners against their frames, media clipping, straight divider ends, spacing, text wrapping, and keyboard focus. A passing build does not establish visual quality.
+- Keep border radii on components, not universal selectors. Give a framed photo one clipping owner so inset image corners do not expose the frame background.
+- Run the visual smoke audit on the affected routes before publication; it includes checks for mismatched corners on framed portraits. Preserve existing URLs, content, and unrelated local work.
+
 ## Common Commands
 
 ```sh
