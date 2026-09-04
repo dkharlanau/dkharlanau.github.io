@@ -17,7 +17,7 @@ structured_data:
   type: TechArticle
 tags: [sap, s4hana, release-readiness, conversion, upgrade, logistics, sales, procurement, aatp, integration, variant-configuration]
 # ai-discovery-managed:start
-primary_topic: "sap-s4hana-release-readiness"
+primary_topic: "sap-s4hana"
 ai_sidecar: "/ai/pages/labs--enterprise-context--release-readiness.json"
 entity_mentions:
   - "sap-s4hana-2025"
