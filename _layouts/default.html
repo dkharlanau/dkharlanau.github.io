@@ -78,6 +78,9 @@
   <!-- The portal theme is deliberately last: route-specific canvases provide
        structure, while this layer owns the sitewide visual language. -->
   <link rel="stylesheet" href="{{ '/assets/diagnostic-portal.css' | relative_url }}?v={{ site.time | date: '%s' }}&theme=4" />
+  {% if page.url contains '/labs/' %}
+  <link rel="stylesheet" href="{{ '/assets/labs-technical-content.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  {% endif %}
 </head>
 
 {% assign is_home = false %}
