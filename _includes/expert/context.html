@@ -1,7 +1,8 @@
 {% assign expert = include.expert | default: page.expert_context %}
 {% if expert and expert.enabled == true %}
-<aside class="atlas-author atlas-expert-context" aria-label="Expert context">
-  <p class="eyebrow">Expert context</p>
+<aside class="atlas-expert-context editorial-aside" aria-label="Author perspective">
+  <p class="eyebrow">Author perspective</p>
+  <div class="editorial-aside__body">
   {% case expert.domain %}
     {% when 'sap-integration' %}
       <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant working with SAP integration diagnostics, interface monitoring, IDoc and API failure analysis, and controlled incident resolution.</p>
@@ -18,6 +19,7 @@
     {% when 'enterprise-operations' %}
       <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant who builds practical working methods for enterprise analysis, delivery control, documentation, and AI-assisted support work.</p>
   {% endcase %}
-  <p><a class="link-arrow" href="/about/">Profile and experience</a> <a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+  </div>
+  <nav class="editorial-aside__links" aria-label="Author references"><a href="/about/">Profile and experience</a><a href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">LinkedIn</a></nav>
 </aside>
 {% endif %}

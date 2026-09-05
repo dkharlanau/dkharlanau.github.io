@@ -75,19 +75,19 @@ tags:
       <p><strong>Process:</strong> {{ item.process }}. <strong>Problem:</strong> {{ item.problem }}</p>
     </header>
 
-    <div class="research-route-list">
+    <div class="case-evidence-list">
       <a href="/labs/business-ai/patterns/#{{ item.pattern }}"><span>PAT</span><strong>Primary pattern</strong><small>{{ item.pattern }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       {% if item.secondary_patterns %}
-      <a href="#{{ item.id }}"><span>PAT+</span><strong>Secondary patterns</strong><small>{{ item.secondary_patterns | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <div class="case-evidence-row"><span>PAT+</span><strong>Secondary patterns</strong><small>{{ item.secondary_patterns | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></div>
       {% endif %}
-      <a href="#{{ item.id }}"><span>SYS</span><strong>Implementation</strong><small>{{ item.implementation }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
-      <a href="#{{ item.id }}"><span>TECH</span><strong>Technology</strong><small>{{ item.technology.vendors | join: ", " }} · {{ item.technology.products | join: ", " }} · Models: {{ item.technology.models | join: ", " }}</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
-      <a href="#{{ item.id }}"><span>INT</span><strong>Integration note</strong><small>{{ item.technology.integration_notes }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <div class="case-evidence-row"><span>SYS</span><strong>Implementation</strong><small>{{ item.implementation }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></div>
+      <div class="case-evidence-row"><span>TECH</span><strong>Technology</strong><small>{{ item.technology.vendors | join: ", " }} · {{ item.technology.products | join: ", " }} · Models: {{ item.technology.models | join: ", " }}</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></div>
+      <div class="case-evidence-row"><span>INT</span><strong>Integration note</strong><small>{{ item.technology.integration_notes }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></div>
       {% for result in item.reported_results %}
-      <a href="#{{ item.id }}"><span>KPI</span><strong>{{ result.metric }}</strong><small>{{ result.value }} · {{ result.claim_type }}</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
+      <div class="case-evidence-row case-evidence-row--metric"><span>KPI</span><strong>{{ result.metric }}</strong><small>{{ result.value }} · {{ result.claim_type }}</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></div>
       {% endfor %}
-      <a href="#{{ item.id }}"><span>!</span><strong>Limits</strong><small>{{ item.limits | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
-      <a href="#{{ item.id }}"><span>NOTE</span><strong>Consultant note</strong><small>{{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">comment</i></a>
+      <div class="case-evidence-row case-evidence-row--boundary"><span>!</span><strong>Limits</strong><small>{{ item.limits | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></div>
+      <aside class="case-evidence-row case-evidence-row--commentary"><span>NOTE</span><strong>Consultant perspective</strong><small>{{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">comment</i></aside>
       {% for source_id in item.source_ids %}
         {% for source in all_sources %}
           {% if source.id == source_id %}
@@ -105,11 +105,11 @@ tags:
       <h2>Do not give every source the same weight.</h2>
       <p>The grade is about the evidence behind the result, not about whether the company or technology is good.</p>
     </header>
-    <div class="research-route-list">
+    <div class="case-evidence-list case-evidence-list--grades">
       {% for grade_pair in catalog.evidence_grades %}
       {% assign grade_id = grade_pair[0] %}
       {% assign grade = grade_pair[1] %}
-      <a href="#evidence-grades"><span>{{ grade_id }}</span><strong>{{ grade.label }}</strong><small>{{ grade.rule }}</small><i class="material-symbols-outlined" aria-hidden="true">verified</i></a>
+      <div class="case-evidence-row"><span>{{ grade_id }}</span><strong>{{ grade.label }}</strong><small>{{ grade.rule }}</small><i class="material-symbols-outlined" aria-hidden="true">verified</i></div>
       {% endfor %}
     </div>
   </section>

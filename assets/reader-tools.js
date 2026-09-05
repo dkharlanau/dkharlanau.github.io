@@ -90,6 +90,27 @@
     return item;
   };
 
+  const normaliseFlatSkillArticle = (article) => {
+    if (!window.location.pathname.startsWith("/skill-hub/") || !article.matches(".atlas-page")) return;
+    if (article.querySelector(":scope > .note-header, :scope > .note-body")) return;
+
+    const eyebrow = article.querySelector(":scope > .eyebrow");
+    const heading = article.querySelector(":scope > h1");
+    const lead = article.querySelector(":scope > .lead");
+    if (!heading) return;
+
+    const header = document.createElement("header");
+    header.className = "note-header skill-reader__header";
+    article.insertBefore(header, article.firstChild);
+    [eyebrow, heading, lead].filter(Boolean).forEach((node) => header.append(node));
+
+    const body = document.createElement("div");
+    body.className = "note-body skill-reader__body";
+    [...article.children].filter((node) => node !== header).forEach((node) => body.append(node));
+    article.append(body);
+    article.classList.add("reader-structure--normalised");
+  };
+
   const addToc = (article) => {
     const body = article.querySelector(":scope > .note-body");
     if (!body || article.querySelector(":scope > .reader-toc")) return;
@@ -98,7 +119,9 @@
     const sourceHeading = allHeadings[0];
     const sourceList = sourceHeading?.nextElementSibling;
     const hasSourceToc = normalise(sourceHeading?.textContent || "") === "on this page" && sourceList?.tagName === "UL";
-    const headings = allHeadings.filter((heading) => heading !== sourceHeading || !hasSourceToc);
+    const eligibleHeadings = allHeadings.filter((heading) => heading !== sourceHeading || !hasSourceToc);
+    const tocLimit = 12;
+    const headings = eligibleHeadings.slice(0, tocLimit);
     if (headings.length < 3 && !hasSourceToc) return;
 
     headings.forEach((heading, index) => {
@@ -113,10 +136,19 @@
     disclosure.open = !window.matchMedia("(max-width: 760px)").matches;
     const summary = document.createElement("summary");
     summary.className = "reader-toc__summary";
-    summary.textContent = `On this page (${headings.length})`;
+    summary.textContent = eligibleHeadings.length > tocLimit
+      ? `On this page (${headings.length} key sections)`
+      : `On this page (${headings.length})`;
 
     if (hasSourceToc) {
       sourceHeading.classList.add("reader-toc__visually-hidden");
+      [...sourceList.children].slice(tocLimit).forEach((item) => item.remove());
+      if (eligibleHeadings.length > tocLimit) {
+        const remainder = document.createElement("li");
+        remainder.className = "reader-toc__remainder";
+        remainder.textContent = `${eligibleHeadings.length - tocLimit} additional sections continue in the article.`;
+        sourceList.append(remainder);
+      }
       disclosure.append(summary, sourceList);
       toc.append(sourceHeading, disclosure);
       const sourceLinks = [...toc.querySelectorAll("a[href^='#']")];
@@ -422,7 +454,13 @@
   const enhanceReader = () => {
     addPageBreadcrumbs();
     addSiteShare();
+    if (document.querySelector(".article-disclosure")) {
+      document.querySelectorAll("p.disclaimer").forEach((paragraph) => {
+        if (!paragraph.closest(".article-disclosure")) paragraph.remove();
+      });
+    }
     document.querySelectorAll(".note-article, .atlas-page, article.note-detail").forEach((article) => {
+      normaliseFlatSkillArticle(article);
       addBreadcrumbs(article);
       addReaderVisual(article);
       consolidateAtlasSourceBrief(article);

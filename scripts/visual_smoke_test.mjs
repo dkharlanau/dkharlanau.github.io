@@ -11,9 +11,14 @@ const DEFAULT_ROUTES = [
   '/',
   '/knowledge/',
   '/labs/',
-  '/labs/tool-roadmap/',
+  '/labs/enterprise-assurance/',
+  '/labs/business-ai/cases/',
   '/frameworks/',
   '/machine/',
+  '/products/',
+  '/atlas/diagnostics/sap-idoc-diagnostics/',
+  '/skill-hub/ai-assisted-analysis/ai-agent-authority-design-working-skill/',
+  '/datasets/view/ai-business-signals/aibs-004/',
   '/services/',
 ];
 
