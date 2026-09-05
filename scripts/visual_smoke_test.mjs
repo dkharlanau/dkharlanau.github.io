@@ -262,8 +262,12 @@ async function auditPage(page, viewport) {
 
     const interactive = [...document.querySelectorAll('a[href], button, input:not([type="hidden"]), select, textarea, summary')]
       .filter(isVisible)
-      .map((el) => ({ el, rect: el.getBoundingClientRect(), label: label(el) }))
-      .filter(({ rect }) => rect.width > 3 && rect.height > 3)
+      .map((el) => ({
+        el,
+        rects: [...el.getClientRects()].filter((rect) => rect.width > 3 && rect.height > 3),
+        label: label(el),
+      }))
+      .filter(({ rects }) => rects.length)
       .slice(0, 180);
 
     const interactiveOverlaps = [];
@@ -272,13 +276,17 @@ async function auditPage(page, viewport) {
         const a = interactive[i];
         const b = interactive[j];
         if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
-        const overlapWidth = Math.max(0, Math.min(a.rect.right, b.rect.right) - Math.max(a.rect.left, b.rect.left));
-        const overlapHeight = Math.max(0, Math.min(a.rect.bottom, b.rect.bottom) - Math.max(a.rect.top, b.rect.top));
-        if (!overlapWidth || !overlapHeight) continue;
-        const overlapArea = overlapWidth * overlapHeight;
-        const minArea = Math.min(a.rect.width * a.rect.height, b.rect.width * b.rect.height);
-        if (minArea > 0 && overlapArea / minArea >= 0.45) {
-          interactiveOverlaps.push({ a: a.label, b: b.label, ratio: Number((overlapArea / minArea).toFixed(2)) });
+        let largestRatio = 0;
+        for (const aRect of a.rects) {
+          for (const bRect of b.rects) {
+            const overlapWidth = Math.max(0, Math.min(aRect.right, bRect.right) - Math.max(aRect.left, bRect.left));
+            const overlapHeight = Math.max(0, Math.min(aRect.bottom, bRect.bottom) - Math.max(aRect.top, bRect.top));
+            const minArea = Math.min(aRect.width * aRect.height, bRect.width * bRect.height);
+            if (minArea > 0) largestRatio = Math.max(largestRatio, overlapWidth * overlapHeight / minArea);
+          }
+        }
+        if (largestRatio >= 0.45) {
+          interactiveOverlaps.push({ a: a.label, b: b.label, ratio: Number(largestRatio.toFixed(2)) });
           if (interactiveOverlaps.length >= 20) break;
         }
       }
