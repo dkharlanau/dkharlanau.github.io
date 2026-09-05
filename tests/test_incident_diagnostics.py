@@ -35,7 +35,7 @@ def test_incident_diagnostics_exposes_required_artifacts_and_safety_copy():
         assert label in text
     assert "It cannot prove the root cause" in text
     assert "does not upload the input" in text
-    assert "does not store it in localStorage" in text
+    assert "or store it in localStorage" in text
     assert "raw text into generated artifacts" in text
 
 
