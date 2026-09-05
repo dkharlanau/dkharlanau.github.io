@@ -72,7 +72,7 @@ Active source
 → Business consumer
 ```
 
-SAP DRF configuration connects replication models, outbound implementations and receiving business systems. Key mapping is relevant when source and target IDs are not the same. Those are configuration facts. Operations needs an additional contract for recovery and proof.
+[SAP DRF configuration](/labs/enterprise-context/integrations/drf/) connects replication models, outbound implementations and receiving business systems. Key mapping is relevant when source and target IDs are not the same. Those are configuration facts. Operations needs an additional contract for recovery and proof.
 
 ## Error classes
 

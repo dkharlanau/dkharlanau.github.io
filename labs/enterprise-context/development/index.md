@@ -44,7 +44,7 @@ semantic_links:
     title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
   - type: "same_domain"
-    title: "SAP S/4HANA 2025 Release Readiness — Restriction Notes, Conversion Checks and Lead Decisions"
+    title: "SAP S/4HANA 2025: Release Readiness and Conversion"
     url: "/labs/enterprise-context/release-readiness/"
 source_links:
   - title: "Clean Core Extensibility and ABAP-Based Extensions"

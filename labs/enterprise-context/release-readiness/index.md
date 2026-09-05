@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "SAP S/4HANA 2025 Release Readiness — Restriction Notes, Conversion Checks and Lead Decisions"
+title: "SAP S/4HANA 2025: Release Readiness and Conversion"
 description: "A practical SAP Lead playbook for checking whether an S/4HANA 2025 feature is released, supported, convertible, and safe to design around."
 permalink: /labs/enterprise-context/release-readiness/
 status: reviewed
@@ -38,7 +38,7 @@ semantic_links:
     title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
     url: "/labs/enterprise-context/sales-processes/integrations/"
   - type: "integrates_with"
-    title: "SAP Testing — Practical Strategy for S/4HANA Logistics, Integrations and ABAP"
+    title: "SAP Testing: S/4HANA Logistics, Integrations and ABAP"
     url: "/labs/enterprise-context/testing/"
   - type: "related_topic"
     title: "Who Should Own Scarce-Supply Priority in aATP? — Decision Card"
