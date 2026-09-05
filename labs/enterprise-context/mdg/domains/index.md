@@ -21,8 +21,32 @@ career_skills:
   - logistics-mdg
   - logistics-master-data
 tags: [sap, mdg, material, business-partner, customer, supplier, data-model]
+# ai-discovery-managed:start
+primary_topic: "sap-mdg-domain-engineering"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--domains.json"
+entity_mentions:
+  - "sap-mdg"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP MDG Business Partner, Customer & Supplier — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/business-partner/"
+  - type: "deep_dive"
+    title: "SAP MDG Material Domain — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/material/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "related_topic"
+    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "related_topic"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "related_topic"
+    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
+    url: "/labs/enterprise-context/decisions/master-data-validation/"
+# ai-discovery-managed:end
 ---
-
 # SAP MDG Domain Engineering
 
 MDG becomes useful when the data model matches the real business grain. A screen is not a grain. A table is not automatically a business object. The design starts with identity, organizational meaning, ownership and lifecycle.

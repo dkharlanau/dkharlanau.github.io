@@ -29,8 +29,33 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/8f3d0f8274e642b5aed793f4f4f8e5a4.html"
   - title: "Configuring Data Replication"
     url: "https://help.sap.com/docs/SAP_ERP/d6bbe43b03894e4f817c8b939d532744/22d76454004f2357e10000000a44176d.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg-replication"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--replication.json"
+entity_mentions:
+  - "sap-mdg"
+  - "sap-integration"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP MDG DRF Operations & Replay — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/replication/operations/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
+  - type: "related_topic"
+    title: "SAP MDG Interface Contracts — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/interfaces/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "related_topic"
+    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
+    url: "/labs/enterprise-context/decisions/master-data-validation/"
+  - type: "related_topic"
+    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    url: "/labs/enterprise-context/aif/"
+# ai-discovery-managed:end
 ---
-
 # Replication and Distribution
 
 Activation and replication are two different proofs.

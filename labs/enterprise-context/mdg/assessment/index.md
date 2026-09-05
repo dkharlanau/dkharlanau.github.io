@@ -22,8 +22,32 @@ career_skills:
   - integration-recovery
   - lead-decision
 tags: [sap, mdg, assessment, lead, architecture, logistics]
+# ai-discovery-managed:start
+primary_topic: "sap-mdg-assessment"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--assessment.json"
+entity_mentions:
+  - "sap-mdg"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "related_topic"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "related_topic"
+    title: "SAP Decision Cards — Enterprise Context Lab"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "related_topic"
+    title: "Which SAP Logistics Decisions Should AI Not Own? — Decision Card"
+    url: "/labs/enterprise-context/decisions/ai-logistics-boundary/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+  - type: "integrates_with"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+# ai-discovery-managed:end
 ---
-
 # SAP MDG Lead Assessment Drills
 
 These are **synthetic assessment cases**, not customer cases. The goal is not to remember transaction codes. The goal is to show how you frame scope, ownership, architecture, controls and proof using the reviewed MDG domain, governance and replication models on this site.

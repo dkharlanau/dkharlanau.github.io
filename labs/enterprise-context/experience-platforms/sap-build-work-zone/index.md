@@ -29,8 +29,55 @@ tags:
   - digital-workplace
   - fiori
   - integration-architecture
+# ai-discovery-managed:start
+primary_topic: "sap-build-work-zone"
+ai_sidecar: "/ai/pages/labs--enterprise-context--experience-platforms--sap-build-work-zone.json"
+semantic_links:
+  - type: "parent_context"
+    title: "Experience Platforms — Enterprise Context Lab"
+    url: "/labs/enterprise-context/experience-platforms/"
+  - type: "related_topic"
+    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    url: "/labs/enterprise-context/aif/"
+  - type: "related_topic"
+    title: "SAP ATP and aATP Promise Engine — Enterprise Context Lab"
+    url: "/labs/enterprise-context/atp/"
+  - type: "related_topic"
+    title: "Automotive JIT / JIS — Enterprise Context Lab"
+    url: "/labs/enterprise-context/automotive-jit/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+  - type: "integrates_with"
+    title: "Who Owns an IDoc Failure? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-failure-ownership/"
+source_links:
+  - title: "SAP Build Work Zone, standard edition"
+    url: "https://help.sap.com/docs/build-work-zone-standard-edition"
+  - title: "Data sheet for SAP Build Work Zone, standard edition"
+    url: "https://help.sap.com/docs/PRODUCT_ID/01cd1c17c9304dc0ba6bc8650bdf3386/477addaf70e244b4b7814632775577de.html"
+  - title: "What Is SAP Build Work Zone, advanced edition?"
+    url: "https://help.sap.com/docs/WZ/fca1d19bc99e4c3a9b591584a7b61b92/what-is-sap-build-work-zone-advanced-edition"
+  - title: "What Is SAP Build?"
+    url: "https://help.sap.com/docs/SAP%20Build/9d385a1842594230993661ca78dce150/what-is-sap-build"
+  - title: "About Spaces and Pages"
+    url: "https://help.sap.com/docs/build-work-zone-standard-edition/sap-build-work-zone-standard-edition/manual-configuration-of-spaces-and-pages"
+  - title: "About Workspaces"
+    url: "https://help.sap.com/docs/build-work-zone-advanced-edition/sap-build-work-zone-advanced-edition/8ff3df94802449f3877af5c380b22c4b.html"
+  - title: "Central Entry Point"
+    url: "https://help.sap.com/docs/sap-btp-guidance-framework/integration-architecture-guide/using-entry-points-for-accessing-sap-solutions"
+  - title: "Big Picture of Available SAP Components and Solutions"
+    url: "https://help.sap.com/docs/sap-btp-guidance-framework/integration-architecture-guide/big-picture-of-available-sap-components-and-solutions-6f03af3b512d4dc894c886f3c31bdbf1"
+  - title: "What Is SAP Start?"
+    url: "https://help.sap.com/docs/start/sap-start/what-is-sap-start"
+  - title: "SAP Fiori Launchpad"
+    url: "https://help.sap.com/docs/SAP_FIORI_LAUNCHPAD"
+  - title: "Integrating the Launchpad and Launchpad Content Into Other UI Clients"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/a7b390faab1140c087b8926571e942b7/eb300dc5a5294677a96cfbf7190d1f75.html"
+  - title: "Integrating With SAP Build Work Zone, Standard Edition"
+    url: "https://help.sap.com/docs/SAP_INTEGRATED_BUSINESS_PLANNING/da797ae2bf6246d58abd417f24915d55/c81371fce5b84f888988147622db1bdb.html"
+# ai-discovery-managed:end
 ---
-
 {% assign graph = site.data.labs.enterprise_context.graphs.sap_build_work_zone %}
 {% assign evidence = site.data.labs.enterprise_context.sources.sap_build_work_zone %}
 

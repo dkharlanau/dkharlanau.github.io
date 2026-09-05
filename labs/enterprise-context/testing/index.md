@@ -79,8 +79,33 @@ source_links:
     url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition/explaining-the-test-strategy_d4b6f563-e5bb-41b5-b7e2-ec899edb756f"
   - title: "LeverX — SAP Process Test Framework (PTF): A Practical Guide to End-to-End Testing for ABAP Developers"
     url: "https://career.leverx.com/blog/sap-process-test-framework-ptf-a-practical-guide-to-end-to-end-testing-for-abap-developers"
+# ai-discovery-managed:start
+primary_topic: "sap-testing"
+ai_sidecar: "/ai/pages/labs--enterprise-context--testing.json"
+entity_mentions:
+  - "sap-s4hana"
+  - "sap-integration"
+semantic_links:
+  - type: "related_topic"
+    title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
+    url: "/labs/enterprise-context/performance/"
+  - type: "related_topic"
+    title: "SAP S/4HANA 2025 Release Readiness — Restriction Notes, Conversion Checks and Lead Decisions"
+    url: "/labs/enterprise-context/release-readiness/"
+  - type: "related_topic"
+    title: "SAP Decision Cards — Enterprise Context Lab"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "integrates_with"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "integrates_with"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+# ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">SAP Enterprise</a></li><li aria-current="page">Testing</li></ol>
 </nav>
