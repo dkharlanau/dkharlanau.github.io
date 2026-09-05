@@ -52,3 +52,35 @@ jobs:
         uses: dkharlanau/agent-ready-web-profile@c1d51698e3765d0817ee14bcbc36c67297457260
         with:
           profile: ai/site-profile.json
+
+      - name: Setup Node for ARWP citation profile validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate AI Search and Citation Profile
+        run: >-
+          npx --yes
+          --package=github:dkharlanau/agent-ready-web-profile#c1d51698e3765d0817ee14bcbc36c67297457260
+          arwp-ai-search validate ai/ai-search-profile.json --json
+
+      - name: Validate trust and crawler JSON surfaces
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          for path in [
+              Path('trust/trust.json'),
+              Path('trust/corrections.json'),
+              Path('crawler-matrix/crawlers.json'),
+          ]:
+              json.loads(path.read_text(encoding='utf-8'))
+
+          profile = json.loads(Path('ai/site-profile.json').read_text(encoding='utf-8'))
+          extension = profile['extensions']['io.github.dkharlanau/ai-search-profile']
+          assert extension['profile'].endswith('/ai/ai-search-profile.json')
+          assert extension['trustCenter'].endswith('/trust/trust.json')
+          assert extension['crawlerMatrix'].endswith('/crawler-matrix/crawlers.json')
+          print('Validated ARWP trust/crawler JSON surfaces and profile routing')
+          PY
