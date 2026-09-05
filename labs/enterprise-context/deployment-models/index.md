@@ -26,7 +26,7 @@ primary_topic: "sap-s4hana"
 ai_sidecar: "/ai/pages/labs--enterprise-context--deployment-models.json"
 semantic_links:
   - type: "same_domain"
-    title: "SAP S/4HANA 2025: Release Readiness and Conversion"
+    title: "SAP S/4HANA 2025 Release Readiness Playbook"
     url: "/labs/enterprise-context/release-readiness/"
   - type: "same_domain"
     title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"

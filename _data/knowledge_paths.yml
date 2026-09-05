@@ -1,0 +1,72 @@
+paths:
+  - id: blocked-order
+    label: Sales order blocked
+    icon: troubleshoot
+    title: An order exists, but delivery or billing stops.
+    question: Identify the next expected business step and the control that stops it before considering a release.
+    output: A triage record with the affected step, business impact, evidence, release owner, and next update.
+    steps:
+      - label: Diagnose the blocked step
+        url: /atlas/diagnostics/sap-sales-order-block-diagnosis/
+      - label: Apply incident triage
+        url: /skill-hub/sap-ams/incident-triage-working-skill/
+      - label: Open the triage template
+        url: /skill-hub/sap-ams/incident-triage-working-skill/#incident-triage-record
+
+  - id: failed-handoff
+    label: IDoc or handoff failure
+    icon: account_tree
+    title: The message moved, but the business result is missing.
+    question: Find the last confirmed step from source to target, then identify who owns the failed boundary.
+    output: An interface ownership matrix with business, technical, and operational owners, gaps, and escalation actions.
+    steps:
+      - label: Trace the IDoc journey
+        url: /atlas/diagnostics/sap-idoc-diagnostics/
+      - label: Resolve interface ownership
+        url: /skill-hub/integration-architecture/interface-ownership-working-skill/
+      - label: Open the ownership template
+        url: /skill-hub/integration-architecture/interface-ownership-working-skill/#interface-ownership-matrix
+
+  - id: unreliable-data
+    label: Unreliable master data
+    icon: database
+    title: The same data defect keeps returning.
+    question: Trace the failed process decision to its data entry point, validation rule, and system of record.
+    output: A root cause note separating observed evidence, correction, prevention, and accountable owners.
+    steps:
+      - label: Diagnose the process effect
+        url: /atlas/data-quality/sap-master-data-quality/
+      - label: Trace the data quality cause
+        url: /skill-hub/dama-dmbok/data-quality-root-cause-working-skill/
+      - label: Open the root cause template
+        url: /skill-hub/artifact-templates/#root-cause-analysis-note
+
+  - id: ai-support-decision
+    label: AI support decision
+    icon: fact_check
+    title: The team needs to decide whether AI belongs in support.
+    question: Define the task and baseline, compare AI with rules or human review, then test the allowed authority.
+    output: An evaluation record with expected and observed behaviour, failure evidence, a pilot or hold decision, and an owner.
+    steps:
+      - label: Choose the appropriate control
+        url: /atlas/concepts/enterprise-ai-around-sap-decision-framework/
+      - label: Test quality and authority
+        url: /skill-hub/problem-solving-operations/ai-evaluation-guardrail-testing-working-skill/
+      - label: Open the evaluation template
+        url: /skill-hub/problem-solving-operations/ai-evaluation-guardrail-testing-working-skill/#ai-evaluation-record
+
+# Keep this selection small; titles, descriptions, and maturity come from page metadata.
+atlas_pilots:
+  - /atlas/concepts/sap-atp-is-not-inventory/
+  - /atlas/sap/sap-pricing-procedure-debugging/
+  - /atlas/diagnostics/sap-sales-order-block-diagnosis/
+  - /atlas/concepts/order-to-cash/
+  - /atlas/ai-operations/ai-agent-for-sap-support/
+  - /atlas/data-quality/sap-master-data-quality/
+  - /atlas/automation/operational-memory-for-sap-ams/
+  - /atlas/diagnostics/sap-idoc-diagnostics/
+  - /atlas/diagnostics/sap-authorization-diagnostics/
+  - /atlas/diagnostics/sap-transport-governance-diagnostics/
+  - /atlas/concepts/sap-ams-cost-reduction-framework/
+  - /atlas/concepts/sap-extension-retain-rebuild-retire-framework/
+  - /atlas/concepts/enterprise-ai-around-sap-decision-framework/

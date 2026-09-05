@@ -434,6 +434,23 @@ body.site :is(.atlas-card, .service-card, .note-card, .dataset-card):focus-visib
   margin-top: auto;
 }
 
+.atlas-pathfinder__panels { display: grid; gap: 1rem; }
+.atlas-pathfinder__panel[hidden] { display: none; }
+.atlas-pathfinder__links { display: grid; gap: 0.8rem; margin: 0; padding-left: 1.25rem; }
+.atlas-pathfinder__links li { color: inherit; }
+.atlas-pathfinder__links a { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
+.atlas-pathfinder__links a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.atlas-pathfinder__links small { color: inherit; }
+
+/* Hub typography also targets article descendants; keep this dark panel's
+   foreground explicit so Knowledge and Skill Hub cannot inherit dark ink. */
+body.site [data-atlas-pathfinder] .atlas-pathfinder__panel,
+body.site [data-atlas-pathfinder] .atlas-pathfinder__panel :is(h3, a, strong) { color: #fff !important; }
+body.site [data-atlas-pathfinder] .atlas-pathfinder__panel :is(p, ol, li, small) { color: #c8d0d4 !important; }
+body.site [data-atlas-pathfinder] .atlas-pathfinder__panel .eyebrow,
+body.site [data-atlas-pathfinder] .atlas-pathfinder__links a:hover { color: #ffad8e !important; }
+body.site [data-atlas-pathfinder] .atlas-pathfinder__links a:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
 /* Atlas entry: the same sparse, route-first language as the homepage. */
 .atlas-hero--focus { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, .66fr); column-gap: clamp(2rem, 7vw, 7rem); row-gap: 1.45rem; padding-block: clamp(3rem, 8vw, 7rem) !important; }
 .atlas-hero--focus .eyebrow { grid-column: 1; margin: 0; }.atlas-hero--focus h1 { grid-column: 1; max-width: 13ch; margin: 0; font-family: "Source Serif 4", Georgia, serif !important; font-size: clamp(3rem, 5.9vw, 6rem) !important; font-weight: 550 !important; letter-spacing: -.065em !important; line-height: .94 !important; }.atlas-hero--focus .lead { grid-column: 2; grid-row: 2 / span 2; align-self: center; max-width: 28rem; margin: 0; color: var(--ps-ink-soft); font-size: clamp(1rem, 1.25vw, 1.14rem); line-height: 1.62; }.atlas-hero--focus .atlas-hero__actions { grid-column: 1; margin: .35rem 0 0; }.atlas-hero--focus .atlas-hero__route { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); margin-top: clamp(2rem, 5vw, 5rem); border-top: 1px solid var(--ps-line); }.atlas-hero--focus .atlas-hero__route a { display: flex; align-items: center; justify-content: space-between; min-height: 4.25rem; border-right: 1px solid var(--ps-line); padding: .8rem 1rem .8rem 0; color: var(--ps-ink); font-size: .9rem; font-weight: 720; transition: color 180ms ease, padding 180ms ease; }.atlas-hero--focus .atlas-hero__route a + a { padding-left: 1rem; }.atlas-hero--focus .atlas-hero__route a:last-child { border-right: 0; }.atlas-hero--focus .atlas-hero__route a:hover { color: var(--ps-signal); padding-inline: .45rem; }
@@ -1498,7 +1515,9 @@ body.page-context--knowledge .atlas-page .reader-actions { margin-top: 1.5rem; }
 body.page-context--knowledge .atlas-page .reader-action { min-height: 0; border-width: 0 0 1px !important; border-radius: 0 !important; background: transparent !important; padding: .35rem 0; color: var(--ps-ink-soft) !important; }
 body.page-context--knowledge .atlas-page .reader-action + .reader-action { margin-inline-start: .8rem; }
 body.page-context--knowledge .atlas-page .reader-action:hover, body.page-context--knowledge .atlas-page .reader-action:focus-visible, body.page-context--knowledge .atlas-page .reader-action[aria-pressed="true"] { border-color: var(--ps-signal) !important; color: var(--ps-signal) !important; }
-@media (min-width: 1000px) { body.page-context--knowledge .atlas-page > .atlas-meta-panel { position: sticky; top: calc(var(--ps-header) + 1.2rem); } }
+/* This grid item shares a column with later evidence and author blocks.
+   Keeping it in flow prevents the TOC from covering those blocks on scroll. */
+body.page-context--knowledge .atlas-page > .atlas-meta-panel { position: static; }
 @media (max-width: 760px) { body.page-context--knowledge .atlas-page { display: block; width: min(100%, 68rem); } body.page-context--knowledge .atlas-page > .note-header { display: block; min-height: 0; padding-top: 3.5rem; } body.page-context--knowledge .atlas-page > .note-header .atlas-pill-row { display: flex; flex-wrap: wrap; margin-top: 1.5rem; padding-top: .7rem; } body.page-context--knowledge .atlas-page .atlas-status { width: auto; border-bottom: 0; padding: 0; } body.page-context--knowledge .atlas-page > .atlas-meta-panel { margin-top: 2rem; } body.page-context--knowledge .atlas-page > .note-body { max-width: none; margin-top: 3.25rem; } }
 @media (max-width: 560px) { body.page-context--knowledge .atlas-page > .note-header h1 { font-size: clamp(3.15rem, 14.5vw, 4.7rem) !important; } body.page-context--knowledge .atlas-page > .note-body h2 { grid-template-columns: 2.5rem minmax(0, 1fr); gap: .55rem; } body.page-context--knowledge .atlas-page .reader-actions { gap: .3rem .8rem; } body.page-context--knowledge .atlas-page .reader-action + .reader-action { margin-inline-start: 0; } }
 @media (prefers-reduced-motion: reduce) { body.page-context--knowledge .atlas-page .reader-action { transition: none; } }
@@ -1513,6 +1532,10 @@ body.page-context--knowledge .atlas-page > .atlas-meta-panel { grid-area: meta; 
 body.page-context--knowledge .atlas-page > .atlas-related { grid-area: related; min-width: 0; padding: 1rem; }
 body.page-context--knowledge .atlas-page > .atlas-author.atlas-trust { grid-area: trust; padding-inline: 1rem; }
 body.page-context--knowledge .atlas-page > .atlas-author:not(.atlas-trust) { grid-area: author; min-width: 0; padding-inline: 1rem; }
+/* Legacy expert CTA and author credit are separate siblings, not two layers
+   in the same named cell. Only reserve this row when the CTA is present. */
+body.page-context--knowledge .atlas-page:has(> .atlas-author.atlas-expert-cta) { grid-template-areas: "header header" "body meta" "body related" "expert expert" "trust author" "disclaimer author"; }
+body.page-context--knowledge .atlas-page > .atlas-author.atlas-expert-cta { grid-area: expert; }
 body.page-context--knowledge .atlas-page > .atlas-disclaimer { grid-area: disclaimer; padding-inline: 1rem; }
 
 /* Page-end utility: deliberately compact and useful on both article and index pages. */
@@ -1525,6 +1548,12 @@ body.page-context--knowledge .atlas-page > .atlas-disclaimer { grid-area: discla
 .site-share__action:hover, .site-share__action:focus-visible, .site-share__action[aria-pressed="true"] { border-color: var(--ps-signal); background: var(--ps-signal-soft); color: var(--ps-signal); }
 .site-share__action .material-symbols-outlined { font-size: 1rem; }
 .site-share__status { grid-column: 2; margin: -.35rem 0 0; color: var(--ps-muted); font-size: .72rem; line-height: 1.45; }
+.site-share__action[hidden], .reader-copy-fallback[hidden] { display: none !important; }
+.reader-copy-buffer { position: fixed; inset: 0 auto auto -9999px; opacity: 0; }
+.reader-copy-fallback { grid-column: 1 / -1; flex-basis: 100%; min-width: 0; padding: 1rem; border: 1px solid var(--ps-line); background: var(--ps-surface-strong); }
+.reader-copy-fallback label { display: block; font: 600 .85rem/1.5 var(--ps-sans); }
+.reader-copy-fallback textarea { display: block; width: 100%; max-width: 100%; box-sizing: border-box; margin-top: .5rem; padding: .65rem; resize: vertical; color: var(--ps-ink); background: var(--ps-surface-strong); border: 1px solid var(--ps-line); font: 400 .85rem/1.5 var(--ps-sans); }
+.reader-copy-fallback p { margin: .65rem 0; color: var(--ps-ink-soft); font-size: .8rem; }
 @media (max-width: 980px) { body.page-context--knowledge .atlas-page { display: block; width: min(calc(100% - 2rem), 48rem); padding-inline: 1rem; } body.page-context--knowledge .atlas-page > :is(.atlas-meta-panel, .atlas-related, .atlas-author, .atlas-disclaimer) { margin-top: 2rem; } body.page-context--knowledge .atlas-page > .atlas-meta-panel { position: static; } }
 @media (max-width: 760px) { .site-share { grid-template-columns: 1fr; width: min(calc(100% - 2rem), 44rem); margin-top: 3.5rem; } .site-share__status { grid-column: 1; margin-top: 0; } }
 @media (prefers-reduced-motion: reduce) { .site-share__action { transition: none; } }

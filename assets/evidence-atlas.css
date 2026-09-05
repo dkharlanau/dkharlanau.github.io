@@ -469,10 +469,9 @@ html[dir="rtl"] .cred-editorial__portrait-wrap { border-right: 0; border-left: 1
   .cta-card { align-items: flex-start; flex-direction: column; }
 }
 
-/* The older theme uses radius and elevation as decoration.  Collapse every
-   inherited component to the shared hairline language, then restore the few
-   paper surfaces that intentionally carry depth. */
-body.site * { border-radius: var(--ea-radius) !important; box-shadow: none !important; }
+/* Keep the shared elevation treatment, but let components own their geometry.
+   A universal radius breaks clipped portraits and bends one-sided dividers. */
+body.site * { box-shadow: none !important; }
 body.site .home-hero__loop-card,
 body.site .analysis-problem__visual-surface,
 body.site .engagement-framework__closing,

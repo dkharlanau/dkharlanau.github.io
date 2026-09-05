@@ -3,6 +3,8 @@ import re
 
 import yaml
 
+from scripts.lib.content_model import parse_frontmatter
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CLUSTERS_PATH = REPO_ROOT / "_data" / "site_clusters.yml"
@@ -78,3 +80,34 @@ def test_secondary_product_hubs_are_reachable_from_knowledge():
     knowledge = (REPO_ROOT / "knowledge/index.md").read_text(encoding="utf-8")
     for route in ("/labs/", "/frameworks/", "/machine/"):
         assert f'href="{route}"' in knowledge
+
+
+def test_task_routes_reach_real_pages_and_static_artifact_anchors():
+    paths = yaml.safe_load((REPO_ROOT / "_data/knowledge_paths.yml").read_text(encoding="utf-8"))["paths"]
+    for task_path in paths:
+        assert task_path["output"], f"Missing reusable output: {task_path['id']}"
+        assert len(task_path["steps"]) == 3, f"Expected diagnosis, method, and artifact: {task_path['id']}"
+        for step in task_path["steps"]:
+            route, _, fragment = step["url"].partition("#")
+            source = REPO_ROOT / (route.strip("/") + ".md")
+            assert source.is_file(), f"Task route must reach a concrete page: {step['url']}"
+            metadata, body, error = parse_frontmatter(source)
+            assert error is None
+            assert metadata.get("permalink") == route
+            if fragment:
+                assert len(re.findall(rf'<h[2-6]\b[^>]*\bid="{re.escape(fragment)}"', body)) == 1, (
+                    f"Template link needs a unique static heading anchor: {step['url']}"
+                )
+            if not metadata.get("verified"):
+                assert "noindex" in metadata.get("robots", ""), f"Working route lost its boundary: {route}"
+        assert "#" in task_path["steps"][-1]["url"], f"Route must finish at the artifact: {task_path['id']}"
+
+
+def test_atlas_selected_page_metadata_can_resolve_every_card():
+    registry = yaml.safe_load((REPO_ROOT / "_data/knowledge_paths.yml").read_text(encoding="utf-8"))
+    for route in registry["atlas_pilots"]:
+        source = REPO_ROOT / (route.strip("/") + ".md")
+        metadata, _, error = parse_frontmatter(source)
+        assert error is None
+        assert metadata.get("permalink") == route
+        assert metadata.get("title") and metadata.get("description"), f"Empty Atlas card: {route}"

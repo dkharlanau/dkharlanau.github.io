@@ -65,7 +65,7 @@ status: draft | approved | deprecated
   </section>
 
   <section>
-    <h2>Root Cause Analysis Note</h2>
+    <h2 id="root-cause-analysis-note">Root Cause Analysis Note</h2>
     <pre><code>---
 artifact: Root Cause Analysis Note
 id: RCA-001

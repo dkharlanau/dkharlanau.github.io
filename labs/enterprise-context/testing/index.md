@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP Testing: S/4HANA Logistics, Integrations and ABAP"
-description: "Plan SAP tests across S/4HANA logistics, integrations and ABAP: unit, end-to-end, regression, UAT, performance and deployment checks."
+title: "SAP Testing Strategy for S/4HANA Delivery"
+description: "A practical SAP testing playbook for component, integration, regression, UAT, authorization, performance, and post-deployment checks."
 permalink: /labs/enterprise-context/testing/
 status: reviewed
 verified: true
@@ -90,7 +90,7 @@ semantic_links:
     title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
     url: "/labs/enterprise-context/performance/"
   - type: "related_topic"
-    title: "SAP S/4HANA 2025: Release Readiness and Conversion"
+    title: "SAP S/4HANA 2025 Release Readiness Playbook"
     url: "/labs/enterprise-context/release-readiness/"
   - type: "related_topic"
     title: "SAP Decision Cards — Enterprise Context Lab"

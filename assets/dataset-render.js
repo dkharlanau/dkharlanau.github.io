@@ -384,6 +384,62 @@
     return container;
   };
 
+  const renderAiBusinessSignal = (data) => {
+    const container = el('div', 'dataset-view dataset-view--signal');
+
+    const signalIntro = el('div', 'dataset-signal-intro');
+    if (data.intent) signalIntro.appendChild(el('p', 'dataset-lead', data.intent));
+    const signalMeta = renderPills([data.theme, data.published_on].filter(Boolean));
+    if (signalMeta) signalIntro.appendChild(signalMeta);
+    if (signalIntro.childNodes.length) container.appendChild(renderSection('Signal', signalIntro));
+
+    if (data.fact?.primary_stat) {
+      const evidence = el('div', 'dataset-evidence');
+      evidence.appendChild(el('p', 'dataset-evidence__primary', data.fact.primary_stat));
+      const supporting = renderList(data.fact.supporting_stats || []);
+      if (supporting) evidence.appendChild(supporting);
+      container.appendChild(renderSection('What the source reports', evidence));
+    }
+
+    if (data.source) {
+      const source = el('div', 'dataset-source-card');
+      source.appendChild(el('p', 'dataset-source-card__publisher', data.source.organization));
+      source.appendChild(el('p', 'dataset-source-card__title', data.source.title));
+      if (data.source.methodology) source.appendChild(el('p', 'dataset-source-card__method', data.source.methodology));
+      if (data.source.url) {
+        const link = el('a', 'article-link', 'Open the original source');
+        link.href = data.source.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        source.appendChild(link);
+      }
+      container.appendChild(renderSection('Source and method', source));
+    }
+
+    const relevance = renderList(data.business_relevance || []);
+    if (relevance) container.appendChild(renderSection('Why it matters', relevance));
+
+    if (data.dzmitryi_commentary) {
+      const commentary = el('aside', 'dataset-author-commentary');
+      const portrait = el('img', 'dataset-author-commentary__portrait');
+      portrait.src = '/assets/img/DzmitryiKharlanau.webp';
+      portrait.alt = '';
+      portrait.width = 96;
+      portrait.height = 96;
+      portrait.loading = 'lazy';
+      portrait.decoding = 'async';
+      const copy = el('div', 'dataset-author-commentary__copy');
+      copy.appendChild(el('p', 'dataset-author-commentary__label', 'Consultant perspective'));
+      copy.appendChild(el('p', null, data.dzmitryi_commentary));
+      commentary.append(portrait, copy);
+      container.appendChild(commentary);
+    }
+
+    const focus = renderPills(data.focus_fit || []);
+    if (focus) container.appendChild(renderSection('Relevant to', focus));
+    return container;
+  };
+
   const renderObjectType = (data) => {
     const container = el('div', 'dataset-view');
     const overview = renderOverview(data);
@@ -454,6 +510,8 @@
         return renderPatternPack(data);
       case 'tool_pack':
         return renderToolPack(data);
+      case 'ai_business_signal':
+        return renderAiBusinessSignal(data);
       default:
         return renderObjectType(data);
     }
