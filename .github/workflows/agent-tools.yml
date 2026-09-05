@@ -2,22 +2,26 @@ name: Agent tools validation
 
 on:
   pull_request:
-    paths: ["data/agent-tools/**", "datasets/incident-lab/**", "ai/agent-tools.json", "ai/incident-lab.json", "scripts/generate_agent_tool_artifacts.py", "scripts/generate_incident_lab_artifacts.py", "agent-tools/**", "agent-skills/**", "mcp/sap-diagnostics-mcp/**"]
+    paths: ["data/agent-tools/**", "datasets/incident-lab/**", "ai/agent-tools.json", "ai/incident-lab.json", "scripts/generate_agent_tool_artifacts.py", "scripts/generate_incident_lab_artifacts.py", "agent-tools/**", "agent-skills/**", "mcp/sap-diagnostics-mcp/**", ".github/workflows/agent-tools.yml"]
   push:
     branches: [main]
-    paths: ["data/agent-tools/**", "datasets/incident-lab/**", "ai/agent-tools.json", "ai/incident-lab.json", "scripts/generate_agent_tool_artifacts.py", "scripts/generate_incident_lab_artifacts.py", "agent-tools/**", "agent-skills/**", "mcp/sap-diagnostics-mcp/**"]
+    paths: ["data/agent-tools/**", "datasets/incident-lab/**", "ai/agent-tools.json", "ai/incident-lab.json", "scripts/generate_agent_tool_artifacts.py", "scripts/generate_incident_lab_artifacts.py", "agent-tools/**", "agent-skills/**", "mcp/sap-diagnostics-mcp/**", ".github/workflows/agent-tools.yml"]
 
 jobs:
   static-validation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - name: Install Python dependencies
         run: python3 -m pip install pyyaml
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
+      - name: Materialize deterministic repository state for validation
+        run: python3 scripts/sync_repository_state.py
       - run: python3 scripts/generate_agent_tool_artifacts.py --check
       - run: python3 scripts/generate_incident_lab_artifacts.py --check
       - run: python3 scripts/generate_atlas_artifacts.py --check
