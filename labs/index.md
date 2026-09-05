@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-01
+last_modified_at: 2026-09-05
 hide_global_cta: true
 tags:
   - sap
@@ -61,6 +61,7 @@ tags:
       <a href="/labs/business-ai/"><span>BIZ</span><strong>Business AI</strong><small>Business process → AI job → pattern → technology → control → outcome → evidence, including failed and mixed cases.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/enterprise-assurance/"><span>RISK</span><strong>Enterprise Assurance</strong><small>ISO management systems, ISAE and SOC reports, cloud and industry schemes, vendor evidence, control scope, and practical due diligence.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
       <a href="/labs/templates/"><span>OPS</span><strong>Operational Protocols</strong><small>RCA, incident response, integration failure analysis, runbooks, change impact, cutover, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/labs/incident-diagnostics/"><span>INC</span><strong>SAP Incident Diagnostics</strong><small>Browser-local evidence triage for IDoc and integration failures, BP/MDG replication, and recurring AMS incidents, with reusable Markdown outputs.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
       <a href="/labs/tool-roadmap/"><span>TOOLS</span><strong>Tool Roadmap</strong><small>Canonical backlog for practical SAP, data, mapping, migration, integration, and operations utilities.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
       <a href="/labs/interview-readiness/"><span>INTERVIEW</span><strong>SAP Lead Interview Readiness</strong><small>Track what you refreshed, what you can explain, what you can defend, which interview questions expose gaps, and which project stories are ready.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
       <a href="/labs/assessment/start-here/"><span>START</span><strong>SAP Lead Assessment — Start Here</strong><small>Use a practical study → case → pressure → review loop instead of reading the site as a long syllabus.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
