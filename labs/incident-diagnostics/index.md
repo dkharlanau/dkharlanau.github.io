@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Incident Diagnostics — Evidence to Incident Brief and RCA"
-description: "Browser-local SAP incident diagnostics that turns pasted evidence into an incident brief, evidence checklist, RCA draft, and Jira-ready Markdown using reviewed Atlas references and operational protocols."
+description: "Browser-local SAP incident diagnostics for IDoc, integration, BP/MDG replication, evidence gaps, RCA drafts, and Jira-ready handoff."
 permalink: /labs/incident-diagnostics/
 status: draft
 verified: false
