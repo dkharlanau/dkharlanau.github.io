@@ -14,7 +14,7 @@ review_method: "current SAP Build Work Zone and SAP Task Center primary sources 
 search_intent: "SAP enterprise experience platform Work Zone Fiori launchpad SAP Start Task Center digital workplace"
 structured_data:
   type: TechArticle
-primary_topic: "sap-enterprise-experience-platforms"
+primary_topic: "sap-integration"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -33,8 +33,30 @@ source_links:
     url: "https://help.sap.com/docs/build-work-zone-advanced-edition/sap-build-work-zone-advanced-edition"
   - title: "SAP Task Center"
     url: "https://help.sap.com/docs/task-center/sap-task-center"
+# ai-discovery-managed:start
+primary_topic: "sap-integration"
+ai_sidecar: "/ai/pages/labs--enterprise-context--experience-platforms.json"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP Build Work Zone — Enterprise Context Lab"
+    url: "/labs/enterprise-context/experience-platforms/sap-build-work-zone/"
+  - type: "integrates_with"
+    title: "Integration Operations & Recovery — Enterprise Context Lab"
+    url: "/labs/enterprise-context/integration-operations/"
+  - type: "integrates_with"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "integrates_with"
+    title: "SAP Data Migration and Controlled Bulk Loading"
+    url: "/labs/enterprise-context/integrations/data-migration/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
+  - type: "integrates_with"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+# ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">SAP Enterprise</a></li><li aria-current="page">Experience Platforms</li></ol>
 </nav>

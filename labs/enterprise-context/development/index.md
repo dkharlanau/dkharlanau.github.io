@@ -43,9 +43,9 @@ semantic_links:
   - type: "related_topic"
     title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
-  - type: "integrates_with"
-    title: "IDoc, API, or Event? — SAP Integration Decision Card"
-    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+  - type: "same_domain"
+    title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
+    url: "/labs/enterprise-context/performance/"
 source_links:
   - title: "Clean Core Extensibility and ABAP-Based Extensions"
     url: "https://help.sap.com/docs/abap-cloud/developer-guide-from-classic-abap-to-abap-cloud/clean-core-extensibility-and-abap-based-extensions"

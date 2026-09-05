@@ -14,7 +14,7 @@ review_method: "SAP S/4HANA 2025 FPS01 consolidation, matching, best-record and 
 search_intent: "SAP MDG consolidation matching best record calculation golden record duplicate strategy active records"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-consolidation"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -30,8 +30,30 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5cb861909ee642388d828a9d1759901c.html"
   - title: "Consolidation of Active Records"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/399dfaaa10204570a94f126c64f30718.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--consolidation.json"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP MDG Matching & Survivorship — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/survivorship/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "same_domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "same_domain"
+    title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/assessment/"
+  - type: "same_domain"
+    title: "SAP MDG Domain Engineering — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/"
+  - type: "same_domain"
+    title: "SAP MDG Business Partner, Customer & Supplier — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/business-partner/"
+# ai-discovery-managed:end
 ---
-
 # Consolidation and Golden Record
 
 A golden record is not “the row with most fields”. It is a governed result of identity evidence and precedence rules.

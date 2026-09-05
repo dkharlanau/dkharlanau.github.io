@@ -14,7 +14,7 @@ review_method: "SAP S/4HANA 2025 FPS01 Business Partner and MDG primary sources 
 search_intent: "SAP MDG Business Partner customer supplier CVI roles company code sales area purchasing organization governance"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-business-partner"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -27,8 +27,30 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5fe9935ef5974d379de0d90cd94b3102.html"
   - title: "Business Partner Master Data Structure"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/776fbd534f22b44ce10000000a174cb4.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--domains--business-partner.json"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP MDG Domain Engineering — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "same_domain"
+    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "same_domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "same_domain"
+    title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/assessment/"
+  - type: "same_domain"
+    title: "SAP MDG Consolidation & Golden Record — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/"
+# ai-discovery-managed:end
 ---
-
 # Business Partner, Customer and Supplier
 
 A customer and a supplier can represent the same real-world party. That is why I separate **identity** from **business role** and then from **organizational behavior**.

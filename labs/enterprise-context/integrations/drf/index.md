@@ -14,7 +14,7 @@ review_method: "current SAP primary sources + deployment-boundary review + page-
 search_intent: "SAP DRF Data Replication Framework configuration DRFIMG DRFOUT DRFLOG filters direct pooled output troubleshooting"
 structured_data:
   type: TechArticle
-primary_topic: "sap-drf"
+primary_topic: "sap-integration"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -55,8 +55,33 @@ source_links:
     url: "https://help.sap.com/docs/SAP_LBN_GTT_OPTION/98d177f964dc42f8916622380de9d0c3/4ba91045409b47dbbfcf109f5429b4fc.html"
   - title: "Define Replication Models and Outbound Implementations"
     url: "https://help.sap.com/docs/sap-digital-manufacturing/integration-guide/define-replication-models-and-outbound-implementations"
+# ai-discovery-managed:start
+primary_topic: "sap-integration"
+ai_sidecar: "/ai/pages/labs--enterprise-context--integrations--drf.json"
+entity_mentions:
+  - "sap-s4hana"
+  - "sap-mdg"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "related_topic"
+    title: "SAP MDG Interface Contracts — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/interfaces/"
+  - type: "related_topic"
+    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    url: "/labs/enterprise-context/aif/"
+  - type: "related_topic"
+    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "integrates_with"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+  - type: "integrates_with"
+    title: "Integration Operations & Recovery — Enterprise Context Lab"
+    url: "/labs/enterprise-context/integration-operations/"
+# ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>

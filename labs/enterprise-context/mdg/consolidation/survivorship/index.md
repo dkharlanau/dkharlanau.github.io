@@ -14,7 +14,7 @@ review_method: "SAP S/4HANA 2025 FPS01 matching, Match Review, best-record and a
 search_intent: "SAP MDG matching survivorship match review best record source priority recency completeness duplicate strategy"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-matching-survivorship"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -30,8 +30,30 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/866c1271ed9f49a382ce6ed93ddcb05c.html"
   - title: "Consolidation of Active Records"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/399dfaaa10204570a94f126c64f30718.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--consolidation--survivorship.json"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP MDG Consolidation & Golden Record — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "same_domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "same_domain"
+    title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/assessment/"
+  - type: "same_domain"
+    title: "SAP MDG Domain Engineering — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/"
+  - type: "same_domain"
+    title: "SAP MDG Business Partner, Customer & Supplier — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/business-partner/"
+# ai-discovery-managed:end
 ---
-
 # SAP MDG Matching & Survivorship
 
 Two decisions are often mixed together:

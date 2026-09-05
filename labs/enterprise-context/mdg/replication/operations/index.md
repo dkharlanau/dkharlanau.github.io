@@ -14,7 +14,7 @@ review_method: "SAP S/4HANA 2025 FPS01 DRF/key-mapping primary sources + SAP BP 
 search_intent: "SAP MDG DRF operations replay Business Partner replication locks key mapping DRFOUT reconciliation"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-drf-operations"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 tags: [sap, mdg, drf, replication, integration, operations]
 career_impact: mapped
@@ -30,8 +30,32 @@ source_links:
     url: "https://userapps.support.sap.com/sap/support/knowledge/en/3730533"
   - title: "SAP KBA 3637764 — FAQ Business Partner Integration via Web Service"
     url: "https://userapps.support.sap.com/sap/support/knowledge/en/3637764"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--replication--operations.json"
+entity_mentions:
+  - "sap-integration"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP MDG Replication & Distribution — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/replication/"
+  - type: "same_domain"
+    title: "SAP MDG Interface Contracts — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/interfaces/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "same_domain"
+    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "same_domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
+# ai-discovery-managed:end
 ---
-
 # SAP MDG DRF Operations & Replay
 
 A replication incident is not solved when the message becomes green. The useful trace is longer:

@@ -14,7 +14,7 @@ review_method: "synthetic case review against reviewed MDG Material, Business Pa
 search_intent: "SAP MDG Lead interview assessment questions Material Business Partner DRF duplicate supplier architecture"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-assessment"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -22,8 +22,30 @@ career_skills:
   - integration-recovery
   - lead-decision
 tags: [sap, mdg, assessment, lead, architecture, logistics]
+# ai-discovery-managed:start
+primary_topic: "sap-mdg"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--assessment.json"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "same_domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "same_domain"
+    title: "SAP MDG Material Domain — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/material/"
+  - type: "same_domain"
+    title: "SAP MDG Change Request Type Matrix — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/governance-engine/change-request-matrix/"
+  - type: "same_domain"
+    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "same_domain"
+    title: "SAP MDG Consolidation & Golden Record — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/"
+# ai-discovery-managed:end
 ---
-
 # SAP MDG Lead Assessment Drills
 
 These are **synthetic assessment cases**, not customer cases. The goal is not to remember transaction codes. The goal is to show how you frame scope, ownership, architecture, controls and proof using the reviewed MDG domain, governance and replication models on this site.

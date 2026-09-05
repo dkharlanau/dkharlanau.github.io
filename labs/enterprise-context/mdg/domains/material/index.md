@@ -14,7 +14,7 @@ review_method: "SAP S/4HANA 2025 FPS01 MDG Material primary sources + organizati
 search_intent: "SAP MDG Material data model plant sales purchasing valuation storage warehouse governance design"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-material"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -24,8 +24,30 @@ tags: [sap, mdg, material, product, logistics, data-model]
 source_links:
   - title: "SAP MDG Material Data Model — S/4HANA 2025 FPS01"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/2a500de376504b4386a04d1085a52f22.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--domains--material.json"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP MDG Domain Engineering — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "same_domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "same_domain"
+    title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/assessment/"
+  - type: "same_domain"
+    title: "SAP MDG Consolidation & Golden Record — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/"
+  - type: "same_domain"
+    title: "SAP MDG Matching & Survivorship — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/survivorship/"
+# ai-discovery-managed:end
 ---
-
 # SAP MDG Material Domain
 
 The useful mental model is not “Material has many views”. It is **one business identity with several organizational grains**.
