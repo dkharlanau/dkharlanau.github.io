@@ -1,0 +1,152 @@
+.incident-diagnostics {
+  --incident-border: color-mix(in srgb, var(--rc-line) 78%, transparent);
+  --incident-panel: color-mix(in srgb, var(--rc-paper) 96%, var(--rc-line));
+  display: grid;
+  gap: 1.4rem;
+}
+.incident-diagnostics__hero,
+.incident-diagnostics__workspace,
+.incident-diagnostics__results,
+.incident-diagnostics__sources {
+  border: 1px solid var(--incident-border);
+  background: var(--incident-panel);
+}
+.incident-diagnostics__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(17rem, .6fr);
+  gap: 2rem;
+  padding: clamp(1.4rem, 3vw, 2.6rem);
+}
+.incident-diagnostics__hero h1 {
+  max-width: 14ch;
+  margin: .35rem 0 .9rem;
+  font-size: clamp(2.3rem, 6vw, 5.2rem);
+  line-height: .94;
+  letter-spacing: -.05em;
+}
+.incident-diagnostics__hero p { max-width: 52rem; color: var(--rc-soft); line-height: 1.65; }
+.incident-diagnostics__eyebrow,
+.incident-diagnostics__label,
+.incident-diagnostics__status,
+.incident-diagnostics__meta {
+  font-family: var(--ps-mono);
+  font-size: .68rem;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+.incident-diagnostics__eyebrow,
+.incident-diagnostics__label { color: var(--rc-signal); font-weight: 760; }
+.incident-diagnostics__privacy {
+  align-self: stretch;
+  display: grid;
+  gap: .9rem;
+  padding: 1.1rem;
+  border-left: 3px solid var(--rc-signal);
+  background: color-mix(in srgb, var(--rc-signal) 5%, var(--rc-paper));
+}
+.incident-diagnostics__privacy strong { color: var(--rc-ink); }
+.incident-diagnostics__privacy p { margin: 0; font-size: .9rem; }
+.incident-diagnostics__status { color: var(--rc-soft); }
+.incident-diagnostics__status[data-state="ready"] { color: var(--rc-ink); }
+.incident-diagnostics__status[data-state="error"] { color: #8c2d2d; }
+.incident-diagnostics__workspace {
+  display: grid;
+  grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr);
+}
+.incident-diagnostics__panel { padding: clamp(1.15rem, 2vw, 1.8rem); }
+.incident-diagnostics__panel + .incident-diagnostics__panel { border-left: 1px solid var(--incident-border); }
+.incident-diagnostics__panel h2,
+.incident-diagnostics__results h2,
+.incident-diagnostics__sources h2 { margin: .3rem 0 1rem; font-size: clamp(1.35rem, 3vw, 2rem); }
+.incident-diagnostics__field { display: grid; gap: .45rem; margin-top: 1rem; }
+.incident-diagnostics__field label { color: var(--rc-ink); font-size: .83rem; font-weight: 700; }
+.incident-diagnostics :is(input, select, textarea) {
+  width: 100%;
+  border: 1px solid var(--rc-line);
+  border-radius: .5rem;
+  background: var(--rc-paper);
+  color: var(--rc-ink);
+  font: inherit;
+}
+.incident-diagnostics :is(input, select) { min-height: 2.9rem; padding: .7rem .8rem; }
+.incident-diagnostics textarea { min-height: 12rem; resize: vertical; padding: .85rem; line-height: 1.55; }
+.incident-diagnostics :is(input, select, textarea, button):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--rc-signal) 35%, transparent);
+  outline-offset: 2px;
+}
+.incident-diagnostics__file { display: grid; gap: .35rem; }
+.incident-diagnostics__file small,
+.incident-diagnostics__hint { color: var(--rc-soft); font-size: .78rem; line-height: 1.45; }
+.incident-diagnostics__actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.1rem; }
+.incident-diagnostics__button {
+  min-height: 2.7rem;
+  border: 1px solid var(--rc-ink);
+  border-radius: 999px;
+  padding: .64rem 1rem;
+  background: var(--rc-ink);
+  color: var(--rc-paper);
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 760;
+  cursor: pointer;
+}
+.incident-diagnostics__button--quiet { background: transparent; color: var(--rc-ink); }
+.incident-diagnostics__summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.incident-diagnostics__summary > div,
+.incident-diagnostics__summary > section {
+  padding: .9rem;
+  border-top: 1px solid var(--rc-line);
+  background: color-mix(in srgb, var(--rc-paper) 90%, var(--rc-line));
+}
+.incident-diagnostics__summary > div span,
+.incident-diagnostics__summary > div small { display: block; color: var(--rc-soft); }
+.incident-diagnostics__summary > div strong { display: block; margin: .25rem 0; font-size: 1.75rem; color: var(--rc-ink); }
+.incident-diagnostics__summary > section { grid-column: span 3; }
+.incident-diagnostics__summary h3 { margin: 0 0 .55rem; font-size: .95rem; }
+.incident-diagnostics__summary ul { margin: 0; padding-left: 1.2rem; color: var(--rc-soft); line-height: 1.55; }
+.incident-diagnostics__results { padding: clamp(1.15rem, 2vw, 1.8rem); }
+.incident-diagnostics__tabs { display: flex; flex-wrap: wrap; gap: .45rem; margin: .8rem 0; }
+.incident-diagnostics__tab {
+  border: 1px solid var(--rc-line);
+  border-radius: 999px;
+  padding: .52rem .75rem;
+  background: transparent;
+  color: var(--rc-soft);
+  font: inherit;
+  font-size: .76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.incident-diagnostics__tab[aria-selected="true"] { border-color: var(--rc-ink); background: var(--rc-ink); color: var(--rc-paper); }
+.incident-diagnostics__output { min-height: 26rem !important; font-family: var(--ps-mono); font-size: .78rem; }
+.incident-diagnostics__sources { padding: clamp(1.15rem, 2vw, 1.8rem); }
+.incident-diagnostics__reference-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.incident-diagnostics__reference-list a {
+  display: grid;
+  gap: .35rem;
+  padding: .95rem;
+  border-top: 1px solid var(--rc-line);
+  text-decoration: none;
+}
+.incident-diagnostics__reference-list a:hover strong { text-decoration: underline; }
+.incident-diagnostics__reference-list strong { color: var(--rc-ink); }
+.incident-diagnostics__reference-list small { color: var(--rc-soft); line-height: 1.45; }
+.incident-diagnostics__boundary {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--incident-border);
+  background: color-mix(in srgb, var(--rc-signal) 4%, var(--rc-paper));
+  color: var(--rc-soft);
+  line-height: 1.55;
+}
+.incident-diagnostics__boundary strong { color: var(--rc-ink); }
+@media (max-width: 860px) {
+  .incident-diagnostics__hero,
+  .incident-diagnostics__workspace { grid-template-columns: 1fr; }
+  .incident-diagnostics__panel + .incident-diagnostics__panel { border-left: 0; border-top: 1px solid var(--incident-border); }
+  .incident-diagnostics__reference-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .incident-diagnostics__summary { grid-template-columns: 1fr; }
+  .incident-diagnostics__summary > section { grid-column: auto; }
+  .incident-diagnostics__actions .incident-diagnostics__button { width: 100%; }
+}
