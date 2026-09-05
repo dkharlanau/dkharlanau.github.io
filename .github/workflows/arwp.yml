@@ -53,16 +53,28 @@ jobs:
         with:
           profile: ai/site-profile.json
 
-      - name: Setup Node for ARWP citation profile validation
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+      - name: Validate AI Search and Citation Profile schema
+        run: |
+          python3 -m pip install --disable-pip-version-check --quiet jsonschema
+          python3 - <<'PY'
+          import json
+          import urllib.request
+          from pathlib import Path
+          from jsonschema import Draft202012Validator, FormatChecker
 
-      - name: Validate AI Search and Citation Profile
-        run: >-
-          npx --yes
-          --package=github:dkharlanau/agent-ready-web-profile#c1d51698e3765d0817ee14bcbc36c67297457260
-          arwp-ai-search validate ai/ai-search-profile.json --json
+          schema_url = 'https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/c1d51698e3765d0817ee14bcbc36c67297457260/schema/ai-search-profile.schema.json'
+          with urllib.request.urlopen(schema_url, timeout=30) as response:
+              schema = json.load(response)
+          profile = json.loads(Path('ai/ai-search-profile.json').read_text(encoding='utf-8'))
+          validator = Draft202012Validator(schema, format_checker=FormatChecker())
+          errors = sorted(validator.iter_errors(profile), key=lambda error: list(error.path))
+          if errors:
+              for error in errors:
+                  location = '.'.join(str(part) for part in error.path) or '<root>'
+                  print(f'{location}: {error.message}')
+              raise SystemExit(1)
+          print('PASS ai/ai-search-profile.json')
+          PY
 
       - name: Validate trust and crawler JSON surfaces
         run: |
