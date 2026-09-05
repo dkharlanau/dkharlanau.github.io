@@ -8,8 +8,15 @@ on:
       - 'datasets/**'
       - '.well-known/**'
       - 'mcp/**'
+      - 'trust/**'
+      - 'evidence/**'
+      - 'crawler-matrix/**'
+      - 'knowledge/**'
+      - 'media/**'
       - 'llms.txt'
       - 'llms-full.txt'
+      - 'robots.txt'
+      - 'SECURITY.md'
       - '_includes/seo/page-machine-links.html'
       - '.github/workflows/arwp.yml'
   pull_request:
@@ -18,8 +25,15 @@ on:
       - 'datasets/**'
       - '.well-known/**'
       - 'mcp/**'
+      - 'trust/**'
+      - 'evidence/**'
+      - 'crawler-matrix/**'
+      - 'knowledge/**'
+      - 'media/**'
       - 'llms.txt'
       - 'llms-full.txt'
+      - 'robots.txt'
+      - 'SECURITY.md'
       - '_includes/seo/page-machine-links.html'
       - '.github/workflows/arwp.yml'
   workflow_dispatch:
@@ -35,6 +49,50 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate Agent-Ready Web Profile
-        uses: dkharlanau/agent-ready-web-profile@2b9c627f9a8cbe5cae2d6aaa78012a1671c4566e
+        uses: dkharlanau/agent-ready-web-profile@c1d51698e3765d0817ee14bcbc36c67297457260
         with:
           profile: ai/site-profile.json
+
+      - name: Validate AI Search and Citation Profile schema
+        run: |
+          python3 -m pip install --disable-pip-version-check --quiet jsonschema
+          python3 - <<'PY'
+          import json
+          import urllib.request
+          from pathlib import Path
+          from jsonschema import Draft202012Validator, FormatChecker
+
+          schema_url = 'https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/c1d51698e3765d0817ee14bcbc36c67297457260/schema/ai-search-profile.schema.json'
+          with urllib.request.urlopen(schema_url, timeout=30) as response:
+              schema = json.load(response)
+          profile = json.loads(Path('ai/ai-search-profile.json').read_text(encoding='utf-8'))
+          validator = Draft202012Validator(schema, format_checker=FormatChecker())
+          errors = sorted(validator.iter_errors(profile), key=lambda error: list(error.path))
+          if errors:
+              for error in errors:
+                  location = '.'.join(str(part) for part in error.path) or '<root>'
+                  print(f'{location}: {error.message}')
+              raise SystemExit(1)
+          print('PASS ai/ai-search-profile.json')
+          PY
+
+      - name: Validate trust and crawler JSON surfaces
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          for path in [
+              Path('trust/trust.json'),
+              Path('trust/corrections.json'),
+              Path('crawler-matrix/crawlers.json'),
+          ]:
+              json.loads(path.read_text(encoding='utf-8'))
+
+          profile = json.loads(Path('ai/site-profile.json').read_text(encoding='utf-8'))
+          extension = profile['extensions']['io.github.dkharlanau/ai-search-profile']
+          assert extension['profile'].endswith('/ai/ai-search-profile.json')
+          assert extension['trustCenter'].endswith('/trust/trust.json')
+          assert extension['crawlerMatrix'].endswith('/crawler-matrix/crawlers.json')
+          print('Validated ARWP trust/crawler JSON surfaces and profile routing')
+          PY

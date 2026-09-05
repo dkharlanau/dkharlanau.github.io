@@ -29,7 +29,10 @@ sitemap: false
         {"@id": "https://dkharlanau.github.io/ai/identity.json#document"},
         {"@id": "https://dkharlanau.github.io/ai/profile-audit.json#document"},
         {"@id": "https://dkharlanau.github.io/llms.txt#document"},
-        {"@id": "https://dkharlanau.github.io/ai/catalog.json#catalog"}
+        {"@id": "https://dkharlanau.github.io/ai/catalog.json#catalog"},
+        {"@id": "https://dkharlanau.github.io/ai/site-profile.json#document"},
+        {"@id": "https://dkharlanau.github.io/ai/ai-search-profile.json#document"},
+        {"@id": "https://dkharlanau.github.io/trust/trust.json#document"}
       ]
     },
     {
@@ -45,7 +48,14 @@ sitemap: false
       "name": {{ site.data.identity.name | jsonify }},
       "publisher": {
         "@id": {{ site.data.identity.entity_id | jsonify }}
-      }
+      },
+      "subjectOf": [
+        {"@id": "https://dkharlanau.github.io/ai/site-profile.json#document"},
+        {"@id": "https://dkharlanau.github.io/ai/ai-search-profile.json#document"},
+        {"@id": "https://dkharlanau.github.io/crawler-matrix/crawlers.json#document"},
+        {"@id": "https://dkharlanau.github.io/trust/trust.json#document"},
+        {"@id": "https://dkharlanau.github.io/trust/corrections.json#document"}
+      ]
     },
     {
       "@type": "ProfilePage",
@@ -66,6 +76,56 @@ sitemap: false
       "encodingFormat": "application/json",
       "about": {
         "@id": {{ site.data.identity.entity_id | jsonify }}
+      }
+    },
+    {
+      "@type": "DataDownload",
+      "@id": "https://dkharlanau.github.io/ai/site-profile.json#document",
+      "contentUrl": "https://dkharlanau.github.io/ai/site-profile.json",
+      "encodingFormat": "application/json",
+      "name": "Agent-Ready Web Profile",
+      "about": {
+        "@id": "https://dkharlanau.github.io/#website"
+      }
+    },
+    {
+      "@type": "DataDownload",
+      "@id": "https://dkharlanau.github.io/ai/ai-search-profile.json#document",
+      "contentUrl": "https://dkharlanau.github.io/ai/ai-search-profile.json",
+      "encodingFormat": "application/json",
+      "name": "AI Search and Citation Profile",
+      "about": {
+        "@id": "https://dkharlanau.github.io/#website"
+      }
+    },
+    {
+      "@type": "DataDownload",
+      "@id": "https://dkharlanau.github.io/crawler-matrix/crawlers.json#document",
+      "contentUrl": "https://dkharlanau.github.io/crawler-matrix/crawlers.json",
+      "encodingFormat": "application/json",
+      "name": "AI crawler and access matrix",
+      "about": {
+        "@id": "https://dkharlanau.github.io/#website"
+      }
+    },
+    {
+      "@type": "DataDownload",
+      "@id": "https://dkharlanau.github.io/trust/trust.json#document",
+      "contentUrl": "https://dkharlanau.github.io/trust/trust.json",
+      "encodingFormat": "application/json",
+      "name": "Trust Center",
+      "about": {
+        "@id": "https://dkharlanau.github.io/#website"
+      }
+    },
+    {
+      "@type": "DataDownload",
+      "@id": "https://dkharlanau.github.io/trust/corrections.json#document",
+      "contentUrl": "https://dkharlanau.github.io/trust/corrections.json",
+      "encodingFormat": "application/json",
+      "name": "Corrections ledger",
+      "about": {
+        "@id": "https://dkharlanau.github.io/#website"
       }
     }
   ]
