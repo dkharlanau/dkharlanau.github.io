@@ -7,17 +7,11 @@ on:
     branches: [main]
     paths: ["data/agent-tools/**", "datasets/incident-lab/**", "ai/agent-tools.json", "ai/incident-lab.json", "scripts/generate_agent_tool_artifacts.py", "scripts/generate_incident_lab_artifacts.py", "agent-tools/**", "agent-skills/**", "mcp/sap-diagnostics-mcp/**"]
 
-permissions:
-  contents: write
-
 jobs:
   static-validation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - name: Install Python dependencies
@@ -26,27 +20,9 @@ jobs:
         with: {node-version: "22"}
       - run: python3 scripts/generate_agent_tool_artifacts.py --check
       - run: python3 scripts/generate_incident_lab_artifacts.py --check
-      - name: Materialize canonical Atlas discovery state
-        run: python3 scripts/generate_atlas_artifacts.py
       - run: python3 scripts/generate_atlas_artifacts.py --check
       - run: python3 agent-skills/exporters/validate_agent_skills.py
       - run: npm test
         working-directory: mcp/sap-diagnostics-mcp
       - run: npm run smoke
         working-directory: mcp/sap-diagnostics-mcp
-      - name: Commit generated state and restore canonical workflow
-        if: github.event_name == 'pull_request'
-        env:
-          HEAD_REF: ${{ github.head_ref }}
-        run: |
-          git fetch origin main
-          git checkout origin/main -- .github/workflows/agent-tools.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ai/expert-promotion-inventory.json ai/markdown-clusters.json .github/workflows/agent-tools.yml
-          if git diff --cached --quiet; then
-            echo "No generated state changes to commit"
-            exit 0
-          fi
-          git commit -m "chore: refresh generated discovery state"
-          git push origin "HEAD:${HEAD_REF}"
