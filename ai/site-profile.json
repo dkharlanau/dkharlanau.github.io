@@ -2,14 +2,15 @@
   "$schema": "https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/main/schema/site-profile.schema.json",
   "profileVersion": "0.1",
   "id": "dkharlanau-sap-knowledge",
-  "name": "Dzmitryi Kharlanau — SAP AMS & AI-Ready Support Knowledge",
+  "name": "Dzmitryi Kharlanau — SAP Transformation, Enterprise Operations & Agentic AI",
   "canonicalUrl": "https://dkharlanau.github.io/",
-  "description": "Public professional SAP AMS diagnostics and support knowledge site with structured datasets, retrieval indexes, agent-skill routing and local read-only MCP implementations.",
+  "description": "Public professional knowledge site by Dzmitryi Kharlanau covering SAP transformation, SD/MM, MDG, integrations, AMS, enterprise operations and practical agentic AI, with structured datasets, retrieval indexes, agent-skill routing, read-only MCP implementations and explicit trust/discovery surfaces.",
   "languages": ["en"],
   "web": {
     "sitemap": "https://dkharlanau.github.io/sitemap.xml",
     "robots": "https://dkharlanau.github.io/robots.txt",
-    "llms": "https://dkharlanau.github.io/llms.txt"
+    "llms": "https://dkharlanau.github.io/llms.txt",
+    "markdownIndex": "https://dkharlanau.github.io/llms-full.txt"
   },
   "data": {
     "catalog": "https://dkharlanau.github.io/ai/catalog.json",
@@ -27,7 +28,42 @@
         "url": "https://dkharlanau.github.io/ai/atlas-compact-index.json",
         "mediaType": "application/json",
         "role": "search-index",
-        "description": "Compact structured index over public SAP Atlas material."
+        "description": "Compact structured index over reviewed SAP Atlas material."
+      },
+      {
+        "name": "Page knowledge index",
+        "url": "https://dkharlanau.github.io/ai/page-knowledge-index.json",
+        "mediaType": "application/json",
+        "role": "search-index",
+        "description": "Machine-readable routing index connecting public pages to canonical entities and AI sidecars."
+      },
+      {
+        "name": "Canonical entity graph",
+        "url": "https://dkharlanau.github.io/ai/entity-graph.jsonld",
+        "mediaType": "application/ld+json",
+        "role": "other",
+        "description": "JSON-LD graph connecting the person, website and public machine-readable identity surfaces."
+      },
+      {
+        "name": "AI Search & Citation Profile",
+        "url": "https://dkharlanau.github.io/ai/ai-search-profile.json",
+        "mediaType": "application/json",
+        "role": "other",
+        "description": "Site-specific implementation profile for citation-ready, machine-discoverable and trust-oriented surfaces."
+      },
+      {
+        "name": "AI crawler access matrix",
+        "url": "https://dkharlanau.github.io/crawler-matrix/crawlers.json",
+        "mediaType": "application/json",
+        "role": "other",
+        "description": "Dated machine-readable representation of the site's published AI/search crawler policy."
+      },
+      {
+        "name": "Trust Center",
+        "url": "https://dkharlanau.github.io/trust/trust.json",
+        "mediaType": "application/json",
+        "role": "other",
+        "description": "Machine-readable trust, evidence, correction and security boundaries for the site."
       }
     ]
   },
@@ -39,6 +75,13 @@
         "mediaType": "application/json",
         "format": "json",
         "description": "Compact public retrieval index over reviewed SAP Atlas content."
+      },
+      {
+        "name": "Page knowledge index",
+        "url": "https://dkharlanau.github.io/ai/page-knowledge-index.json",
+        "mediaType": "application/json",
+        "format": "json",
+        "description": "Page-level discovery and entity-routing index for public knowledge pages."
       }
     ],
     "search": "https://dkharlanau.github.io/datasets/search/"
@@ -65,8 +108,43 @@
       }
     ]
   },
+  "identity": {
+    "namespace": "https://dkharlanau.github.io/#",
+    "idPattern": "https://dkharlanau.github.io/#<stable-id>",
+    "aliases": "https://dkharlanau.github.io/ai/identity.json"
+  },
   "trust": {
     "license": "https://raw.githubusercontent.com/dkharlanau/dkharlanau.github.io/main/LICENSE",
-    "citation": "https://dkharlanau.github.io/CITATION/"
+    "citation": "https://dkharlanau.github.io/CITATION/",
+    "provenance": "https://github.com/dkharlanau/dkharlanau.github.io/commits/main",
+    "reviewPolicy": "https://raw.githubusercontent.com/dkharlanau/dkharlanau.github.io/main/_data/knowledge_publication_contract.yml",
+    "security": "https://github.com/dkharlanau/dkharlanau.github.io/blob/main/SECURITY.md"
+  },
+  "extensions": {
+    "io.github.dkharlanau/ai-search-profile": {
+      "version": "0.1",
+      "status": "active-site-profile",
+      "profile": "https://dkharlanau.github.io/ai/ai-search-profile.json",
+      "schema": "https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/main/schema/ai-search-profile.schema.json",
+      "knowledgeGraph": "https://dkharlanau.github.io/ai/entity-graph.jsonld",
+      "crawlerMatrix": "https://dkharlanau.github.io/crawler-matrix/crawlers.json",
+      "trustCenter": "https://dkharlanau.github.io/trust/trust.json",
+      "correctionsLedger": "https://dkharlanau.github.io/trust/corrections.json"
+    },
+    "io.github.dkharlanau/trust-center": {
+      "version": "0.1",
+      "status": "active-site-policy",
+      "human": "https://dkharlanau.github.io/trust/",
+      "machine": "https://dkharlanau.github.io/trust/trust.json",
+      "securityPolicy": "https://github.com/dkharlanau/dkharlanau.github.io/blob/main/SECURITY.md",
+      "corrections": "https://dkharlanau.github.io/trust/corrections.json"
+    },
+    "io.github.dkharlanau/crawler-policy": {
+      "version": "0.1",
+      "status": "active-site-policy",
+      "robots": "https://dkharlanau.github.io/robots.txt",
+      "human": "https://dkharlanau.github.io/legal/ai-crawler-policy/",
+      "matrix": "https://dkharlanau.github.io/crawler-matrix/crawlers.json"
+    }
   }
 }
