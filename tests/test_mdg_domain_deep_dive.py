@@ -66,25 +66,33 @@ def test_mdg_domain_relations_use_enterprise_graph_contract():
             assert relation["object"].startswith("TOPIC-MDG-")
 
 
-def test_domain_pages_exist_and_are_noindex_drafts():
-    pages = [
+def test_domain_pages_keep_their_reviewed_or_draft_publication_contract():
+    reviewed_pages = [
         "labs/enterprise-context/mdg/domains/index.md",
         "labs/enterprise-context/mdg/domains/material/index.md",
-        "labs/enterprise-context/mdg/domains/material/entity-map/index.md",
         "labs/enterprise-context/mdg/domains/business-partner/index.md",
-        "labs/enterprise-context/mdg/domains/business-partner/entity-map/index.md",
         "labs/enterprise-context/mdg/governance-engine/index.md",
         "labs/enterprise-context/mdg/governance-engine/change-request-matrix/index.md",
-        "labs/enterprise-context/mdg/governance-engine/brfplus-rules/index.md",
         "labs/enterprise-context/mdg/replication/index.md",
         "labs/enterprise-context/mdg/replication/operations/index.md",
         "labs/enterprise-context/mdg/consolidation/index.md",
         "labs/enterprise-context/mdg/consolidation/survivorship/index.md",
-        "labs/enterprise-context/mdg/migration/index.md",
-        "labs/enterprise-context/mdg/logistics/cases/index.md",
         "labs/enterprise-context/mdg/assessment/index.md",
     ]
-    for rel in pages:
+    draft_pages = [
+        "labs/enterprise-context/mdg/domains/material/entity-map/index.md",
+        "labs/enterprise-context/mdg/domains/business-partner/entity-map/index.md",
+        "labs/enterprise-context/mdg/governance-engine/brfplus-rules/index.md",
+        "labs/enterprise-context/mdg/migration/index.md",
+        "labs/enterprise-context/mdg/logistics/cases/index.md",
+    ]
+    for rel in reviewed_pages:
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        assert "status: reviewed" in text
+        assert "verified: true" in text
+        assert "robots: index,follow" in text
+        assert "sitemap: true" in text
+    for rel in draft_pages:
         text = (ROOT / rel).read_text(encoding="utf-8")
         assert "verified: false" in text
         assert "robots: noindex,follow" in text
