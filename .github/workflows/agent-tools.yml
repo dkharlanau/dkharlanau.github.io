@@ -20,6 +20,17 @@ jobs:
         with: {node-version: "22"}
       - run: python3 scripts/generate_agent_tool_artifacts.py --check
       - run: python3 scripts/generate_incident_lab_artifacts.py --check
+      - name: Materialize generated Atlas discovery state
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Capture generated discovery files
+        uses: actions/upload-artifact@v4
+        with:
+          name: incident-diagnostics-generated-atlas
+          path: |
+            ai/expert-promotion-inventory.json
+            ai/markdown-clusters.json
+          if-no-files-found: error
+          retention-days: 1
       - run: python3 scripts/generate_atlas_artifacts.py --check
       - run: python3 agent-skills/exporters/validate_agent_skills.py
       - run: npm test
