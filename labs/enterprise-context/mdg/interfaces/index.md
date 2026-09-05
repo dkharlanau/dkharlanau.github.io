@@ -93,7 +93,7 @@ source_links:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
     <p><strong>Problem:</strong> transport success can hide a master-data failure. The consumer may receive a message but still reject, misidentify, or fail to use the governed object.</p>
-    <p><strong>Boundary:</strong> a successful message is not the business outcome. The target still has to identify the object, map codes, accept the data, and use it in a transaction.</p>
+    <p><strong>Boundary:</strong> a successful message is not the business outcome. The target still has to identify the object, map codes, accept the data, and use it in a transaction. For source-side selection and outbound control, use the <a href="/labs/enterprise-context/integrations/drf/">SAP DRF operating guide</a>.</p>
     <p><strong>Material warning:</strong> one business object can require several technical messages. MATMAS alone must not be assumed to cover classification, revision, quality, or every dependent data set.</p>
     <a href="/labs/enterprise-context/mdg/extensions/">Choose an extension path <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>

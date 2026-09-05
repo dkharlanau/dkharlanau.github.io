@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP Testing — Practical Strategy for S/4HANA Logistics, Integrations and ABAP"
-description: "A practical SAP testing playbook for unit, component, integration, end-to-end, regression, UAT, authorization, performance and post-deployment testing across S/4HANA logistics and integrations."
+title: "SAP Testing Strategy for S/4HANA Delivery"
+description: "A practical SAP testing playbook for component, integration, regression, UAT, authorization, performance, and post-deployment checks."
 permalink: /labs/enterprise-context/testing/
 status: reviewed
 verified: true

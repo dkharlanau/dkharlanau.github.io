@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "SAP S/4HANA 2025 Release Readiness — Restriction Notes, Conversion Checks and Lead Decisions"
+title: "SAP S/4HANA 2025 Release Readiness Playbook"
 description: "A practical SAP Lead playbook for checking whether an S/4HANA 2025 feature is released, supported, convertible, and safe to design around."
 permalink: /labs/enterprise-context/release-readiness/
 status: reviewed

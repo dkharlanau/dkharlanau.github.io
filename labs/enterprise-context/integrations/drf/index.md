@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP DRF — Data Replication Framework"
-description: "A practical SAP Lead guide to Data Replication Framework: architecture, DRFIMG setup, replication models, outbound implementations, filters, DRFOUT, DRFLOG, output modes, troubleshooting, and assessment answers."
+description: "A practical SAP DRF guide to replication models, filters, outbound processing, monitoring, and safe recovery."
 permalink: /labs/enterprise-context/integrations/drf/
 status: reviewed
 verified: true
