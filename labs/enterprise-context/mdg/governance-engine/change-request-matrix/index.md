@@ -29,8 +29,32 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/1da96a56e1e8e65ae10000000a44147b.html"
   - title: "Creating a Basic Change Request Process"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/1253c4db3f52494b808d820af673fe8c.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg-change-request-design"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--governance-engine--change-request-matrix.json"
+entity_mentions:
+  - "sap-mdg"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP MDG Governance Engine — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/governance-engine/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "related_topic"
+    title: "Which SAP Logistics Decisions Should AI Not Own? — Decision Card"
+    url: "/labs/enterprise-context/decisions/ai-logistics-boundary/"
+  - type: "related_topic"
+    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
+    url: "/labs/enterprise-context/decisions/master-data-validation/"
+  - type: "related_topic"
+    title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/assessment/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+# ai-discovery-managed:end
 ---
-
 # SAP MDG Change Request Type Matrix
 
 A change-request type is a **governance contract**. I would not create one workflow for every possible change and then hope that authorizations save the design later.

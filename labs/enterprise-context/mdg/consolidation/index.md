@@ -30,8 +30,32 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5cb861909ee642388d828a9d1759901c.html"
   - title: "Consolidation of Active Records"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/399dfaaa10204570a94f126c64f30718.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg-consolidation"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--consolidation.json"
+entity_mentions:
+  - "sap-mdg"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP MDG Matching & Survivorship — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/survivorship/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "related_topic"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "related_topic"
+    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
+    url: "/labs/enterprise-context/decisions/master-data-validation/"
+  - type: "integrates_with"
+    title: "SAP Data Migration and Controlled Bulk Loading"
+    url: "/labs/enterprise-context/integrations/data-migration/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
+# ai-discovery-managed:end
 ---
-
 # Consolidation and Golden Record
 
 A golden record is not “the row with most fields”. It is a governed result of identity evidence and precedence rules.

@@ -24,8 +24,32 @@ tags: [sap, mdg, material, product, logistics, data-model]
 source_links:
   - title: "SAP MDG Material Data Model — S/4HANA 2025 FPS01"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/2a500de376504b4386a04d1085a52f22.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg-material"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--domains--material.json"
+entity_mentions:
+  - "sap-mdg"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP MDG Domain Engineering — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "related_topic"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "related_topic"
+    title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/assessment/"
+  - type: "related_topic"
+    title: "SAP Decision Cards — Enterprise Context Lab"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "integrates_with"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+# ai-discovery-managed:end
 ---
-
 # SAP MDG Material Domain
 
 The useful mental model is not “Material has many views”. It is **one business identity with several organizational grains**.

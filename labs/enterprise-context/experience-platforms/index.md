@@ -33,8 +33,30 @@ source_links:
     url: "https://help.sap.com/docs/build-work-zone-advanced-edition/sap-build-work-zone-advanced-edition"
   - title: "SAP Task Center"
     url: "https://help.sap.com/docs/task-center/sap-task-center"
+# ai-discovery-managed:start
+primary_topic: "sap-enterprise-experience-platforms"
+ai_sidecar: "/ai/pages/labs--enterprise-context--experience-platforms.json"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP Build Work Zone — Enterprise Context Lab"
+    url: "/labs/enterprise-context/experience-platforms/sap-build-work-zone/"
+  - type: "related_topic"
+    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    url: "/labs/enterprise-context/aif/"
+  - type: "related_topic"
+    title: "SAP ATP and aATP Promise Engine — Enterprise Context Lab"
+    url: "/labs/enterprise-context/atp/"
+  - type: "related_topic"
+    title: "Automotive JIT / JIS — Enterprise Context Lab"
+    url: "/labs/enterprise-context/automotive-jit/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+  - type: "integrates_with"
+    title: "Who Owns an IDoc Failure? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-failure-ownership/"
+# ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">SAP Enterprise</a></li><li aria-current="page">Experience Platforms</li></ol>
 </nav>

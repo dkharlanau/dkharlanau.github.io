@@ -55,8 +55,34 @@ source_links:
     url: "https://help.sap.com/docs/SAP_LBN_GTT_OPTION/98d177f964dc42f8916622380de9d0c3/4ba91045409b47dbbfcf109f5429b4fc.html"
   - title: "Define Replication Models and Outbound Implementations"
     url: "https://help.sap.com/docs/sap-digital-manufacturing/integration-guide/define-replication-models-and-outbound-implementations"
+# ai-discovery-managed:start
+primary_topic: "sap-drf"
+ai_sidecar: "/ai/pages/labs--enterprise-context--integrations--drf.json"
+entity_mentions:
+  - "sap-s4hana"
+  - "sap-integration"
+  - "sap-mdg"
+semantic_links:
+  - type: "related_topic"
+    title: "SAP MDG Interface Contracts — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/interfaces/"
+  - type: "parent_context"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "related_topic"
+    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    url: "/labs/enterprise-context/aif/"
+  - type: "related_topic"
+    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+  - type: "integrates_with"
+    title: "Who Owns an IDoc Failure? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-failure-ownership/"
+# ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>

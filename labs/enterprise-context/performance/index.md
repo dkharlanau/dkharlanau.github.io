@@ -95,8 +95,33 @@ source_links:
     url: "https://help.sap.com/docs/cloud-alm/applicationhelp/system-health"
   - title: "SAP Cloud ALM - Real User Monitoring"
     url: "https://help.sap.com/docs/cloud-alm/applicationhelp/rum-monitoring"
+# ai-discovery-managed:start
+primary_topic: "sap-performance-operations"
+ai_sidecar: "/ai/pages/labs--enterprise-context--performance.json"
+entity_mentions:
+  - "sap-s4hana"
+  - "sap-integration"
+semantic_links:
+  - type: "related_topic"
+    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    url: "/labs/enterprise-context/aif/"
+  - type: "integrates_with"
+    title: "SAP Testing — Practical Strategy for S/4HANA Logistics, Integrations and ABAP"
+    url: "/labs/enterprise-context/testing/"
+  - type: "integrates_with"
+    title: "Integration Operations & Recovery — Enterprise Context Lab"
+    url: "/labs/enterprise-context/integration-operations/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
+  - type: "related_topic"
+    title: "SAP S/4HANA 2025 Release Readiness — Restriction Notes, Conversion Checks and Lead Decisions"
+    url: "/labs/enterprise-context/release-readiness/"
+  - type: "integrates_with"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+# ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">SAP Enterprise</a></li><li aria-current="page">Performance</li></ol>
 </nav>

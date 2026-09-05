@@ -42,9 +42,9 @@ semantic_links:
   - type: "integrates_with"
     title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
     url: "/labs/enterprise-context/integrations/"
-  - type: "related_topic"
-    title: "Which SAP Logistics Decisions Should AI Not Own? — Decision Card"
-    url: "/labs/enterprise-context/decisions/ai-logistics-boundary/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
 source_links:
   - title: "Business Partner Master Data Structure"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/776fbd534f22b44ce10000000a174cb4.html"

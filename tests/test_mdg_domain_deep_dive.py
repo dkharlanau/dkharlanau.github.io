@@ -66,7 +66,7 @@ def test_mdg_domain_relations_use_enterprise_graph_contract():
             assert relation["object"].startswith("TOPIC-MDG-")
 
 
-def test_domain_pages_exist_and_are_noindex_drafts():
+def test_domain_pages_preserve_reviewed_wave_and_unreviewed_drafts():
     pages = [
         "labs/enterprise-context/mdg/domains/index.md",
         "labs/enterprise-context/mdg/domains/material/index.md",
@@ -84,11 +84,29 @@ def test_domain_pages_exist_and_are_noindex_drafts():
         "labs/enterprise-context/mdg/logistics/cases/index.md",
         "labs/enterprise-context/mdg/assessment/index.md",
     ]
+    # These five routes were not promoted in the September MDG review wave.
+    drafts = {
+        "labs/enterprise-context/mdg/domains/material/entity-map/index.md",
+        "labs/enterprise-context/mdg/domains/business-partner/entity-map/index.md",
+        "labs/enterprise-context/mdg/governance-engine/brfplus-rules/index.md",
+        "labs/enterprise-context/mdg/migration/index.md",
+        "labs/enterprise-context/mdg/logistics/cases/index.md",
+    }
     for rel in pages:
         text = (ROOT / rel).read_text(encoding="utf-8")
-        assert "verified: false" in text
-        assert "robots: noindex,follow" in text
-        assert "sitemap: false" in text
+        metadata = yaml.safe_load(text.split("---", 2)[1])
+        if rel in drafts:
+            assert metadata["verified"] is False, rel
+            assert metadata["robots"] == "noindex,follow", rel
+            assert metadata["sitemap"] is False, rel
+        else:
+            assert metadata["status"] == "reviewed", rel
+            assert metadata["verified"] is True, rel
+            assert metadata["robots"] == "index,follow", rel
+            assert metadata["sitemap"] is True, rel
+            assert metadata["publication_wave"] == "sap-mdg-review-2026-09", rel
+            assert metadata.get("review_method"), rel
+            assert metadata.get("last_reviewed"), rel
 
 
 def test_technical_entity_maps_keep_key_delivered_entities_visible():

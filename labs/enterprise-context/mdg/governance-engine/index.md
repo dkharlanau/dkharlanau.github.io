@@ -29,8 +29,32 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/8395e68123e24177982795ca05e127e9.html"
   - title: "Configuration of the Change Request Process — SAP S/4HANA 2025 FPS01"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/12dcbc53d7865129e10000000a44176d.html"
+# ai-discovery-managed:start
+primary_topic: "sap-mdg-governance-engine"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--governance-engine.json"
+entity_mentions:
+  - "sap-mdg"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP MDG Change Request Type Matrix — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/governance-engine/change-request-matrix/"
+  - type: "parent_context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "related_topic"
+    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
+    url: "/labs/enterprise-context/decisions/master-data-validation/"
+  - type: "related_topic"
+    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    url: "/labs/enterprise-context/aif/"
+  - type: "related_topic"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
+# ai-discovery-managed:end
 ---
-
 # Change Request, Workflow and Rules
 
 Three mechanisms are often mixed together:
