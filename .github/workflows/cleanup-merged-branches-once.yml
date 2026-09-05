@@ -1,0 +1,63 @@
+name: One-time merged branch cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cleanup-merged-branches-once.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete merged branches and remove this workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          open_heads=$(gh api --paginate "repos/$REPO/pulls?state=open&per_page=100" --jq '.[].head.ref' | sort -u)
+          deleted=0
+          kept_open=0
+          kept_unmerged=0
+
+          while IFS= read -r branch; do
+            [[ -z "$branch" ]] && continue
+            [[ "$branch" == "$DEFAULT_BRANCH" ]] && continue
+
+            if grep -Fxq "$branch" <<< "$open_heads"; then
+              echo "KEEP open PR: $branch"
+              kept_open=$((kept_open+1))
+              continue
+            fi
+
+            encoded_branch=$(python -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$branch")
+            ahead=$(gh api "repos/$REPO/compare/$DEFAULT_BRANCH...$encoded_branch" --jq '.ahead_by')
+
+            if [[ "$ahead" == "0" ]]; then
+              encoded_ref=$(python -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "heads/$branch")
+              echo "DELETE merged: $branch"
+              gh api --method DELETE "repos/$REPO/git/refs/$encoded_ref"
+              deleted=$((deleted+1))
+            else
+              echo "KEEP unmerged ($ahead ahead): $branch"
+              kept_unmerged=$((kept_unmerged+1))
+            fi
+          done < <(gh api --paginate "repos/$REPO/branches?per_page=100" --jq '.[].name')
+
+          echo "Deleted merged branches: $deleted"
+          echo "Kept open PR branches: $kept_open"
+          echo "Kept unmerged branches: $kept_unmerged"
+
+          sha=$(gh api "repos/$REPO/contents/.github/workflows/cleanup-merged-branches-once.yml?ref=$DEFAULT_BRANCH" --jq '.sha')
+          gh api --method DELETE "repos/$REPO/contents/.github/workflows/cleanup-merged-branches-once.yml" \
+            -f message='chore: remove one-time branch cleanup workflow' \
+            -f sha="$sha" \
+            -f branch="$DEFAULT_BRANCH"
