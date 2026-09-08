@@ -9,6 +9,7 @@ permalink: /sitemap-data.xml
 {%- assign catalog_json = site.pages | where: "url", "/ai/catalog.json" | first -%}
 {%- assign discovery_map_json = site.pages | where: "url", "/ai/discovery-map.json" | first -%}
 {%- assign knowledge_index_json = site.pages | where: "url", "/ai/page-knowledge-index.json" | first -%}
+{%- assign entity_graph = site.pages | where: "url", "/ai/entity-graph.jsonld" | first -%}
 {%- assign llm_legacy = site.pages | where: "url", "/LLM.txt" | first -%}
 {%- assign llm_lower = site.pages | where: "url", "/llms.txt" | first -%}
 <?xml version="1.0" encoding="UTF-8"?>
@@ -20,6 +21,12 @@ permalink: /sitemap-data.xml
   <url><loc>https://dkharlanau.github.io/ai/catalog.json</loc><lastmod>{{ catalog_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/ai/discovery-map.json</loc><lastmod>{{ discovery_map_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/ai/page-knowledge-index.json</loc><lastmod>{{ knowledge_index_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/site-profile.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/ai-search-profile.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/entity-graph.jsonld</loc><lastmod>{{ entity_graph.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/trust/trust.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/trust/corrections.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/crawler-matrix/crawlers.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/LLM.txt</loc><lastmod>{{ llm_legacy.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/llms.txt</loc><lastmod>{{ llm_lower.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/llms-full.txt</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>

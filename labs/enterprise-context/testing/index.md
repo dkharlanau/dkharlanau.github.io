@@ -13,7 +13,7 @@ publication_wave: "sap-delivery-review-2026-09"
 review_method: "current SAP primary sources + practitioner boundary review for PTF + page-level factual review"
 structured_data:
   type: TechArticle
-primary_topic: "sap-testing"
+primary_topic: "sap-s4hana"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -80,30 +80,29 @@ source_links:
   - title: "LeverX — SAP Process Test Framework (PTF): A Practical Guide to End-to-End Testing for ABAP Developers"
     url: "https://career.leverx.com/blog/sap-process-test-framework-ptf-a-practical-guide-to-end-to-end-testing-for-abap-developers"
 # ai-discovery-managed:start
-primary_topic: "sap-testing"
+primary_topic: "sap-s4hana"
 ai_sidecar: "/ai/pages/labs--enterprise-context--testing.json"
 entity_mentions:
-  - "sap-s4hana"
   - "sap-integration"
 semantic_links:
-  - type: "related_topic"
+  - type: "same_domain"
     title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
     url: "/labs/enterprise-context/performance/"
-  - type: "related_topic"
+  - type: "same_domain"
     title: "SAP S/4HANA 2025 Release Readiness Playbook"
     url: "/labs/enterprise-context/release-readiness/"
+  - type: "same_domain"
+    title: "SAP S/4HANA Deployment Models — Enterprise Context Lab"
+    url: "/labs/enterprise-context/deployment-models/"
   - type: "related_topic"
     title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
-  - type: "integrates_with"
-    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
-    url: "/labs/enterprise-context/integrations/"
-  - type: "integrates_with"
-    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
-    url: "/labs/enterprise-context/sales-processes/integrations/"
-  - type: "integrates_with"
-    title: "IDoc, API, or Event? — SAP Integration Decision Card"
-    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+  - type: "same_domain"
+    title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
+    url: "/labs/enterprise-context/development/"
+  - type: "related_topic"
+    title: "SAP EWM — Deployment & Warehouse Execution Map"
+    url: "/labs/enterprise-context/ewm/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

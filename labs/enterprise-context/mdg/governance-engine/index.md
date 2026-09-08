@@ -14,7 +14,7 @@ review_method: "SAP S/4HANA 2025 FPS01 MDG workflow, change-request, validation 
 search_intent: "SAP MDG change request rule based workflow BRFplus validation derivation activation governance"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-governance-engine"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -30,10 +30,8 @@ source_links:
   - title: "Configuration of the Change Request Process — SAP S/4HANA 2025 FPS01"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/12dcbc53d7865129e10000000a44176d.html"
 # ai-discovery-managed:start
-primary_topic: "sap-mdg-governance-engine"
+primary_topic: "sap-mdg"
 ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--governance-engine.json"
-entity_mentions:
-  - "sap-mdg"
 semantic_links:
   - type: "deep_dive"
     title: "SAP MDG Change Request Type Matrix — Enterprise Context Lab"
@@ -41,18 +39,18 @@ semantic_links:
   - type: "parent_context"
     title: "SAP Master Data Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/"
-  - type: "related_topic"
-    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
-    url: "/labs/enterprise-context/decisions/master-data-validation/"
-  - type: "related_topic"
-    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
-    url: "/labs/enterprise-context/aif/"
-  - type: "related_topic"
+  - type: "same_domain"
     title: "Data, Master Data and Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/data-governance/"
-  - type: "integrates_with"
-    title: "SAP DRF — Data Replication Framework"
-    url: "/labs/enterprise-context/integrations/drf/"
+  - type: "same_domain"
+    title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/assessment/"
+  - type: "same_domain"
+    title: "SAP MDG Consolidation & Golden Record — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/"
+  - type: "same_domain"
+    title: "SAP MDG Matching & Survivorship — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/survivorship/"
 # ai-discovery-managed:end
 ---
 # Change Request, Workflow and Rules

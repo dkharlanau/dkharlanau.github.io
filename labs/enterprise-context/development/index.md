@@ -44,8 +44,8 @@ semantic_links:
     title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
   - type: "same_domain"
-    title: "SAP S/4HANA 2025 Release Readiness Playbook"
-    url: "/labs/enterprise-context/release-readiness/"
+    title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
+    url: "/labs/enterprise-context/performance/"
 source_links:
   - title: "Clean Core Extensibility and ABAP-Based Extensions"
     url: "https://help.sap.com/docs/abap-cloud/developer-guide-from-classic-abap-to-abap-cloud/clean-core-extensibility-and-abap-based-extensions"

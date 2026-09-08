@@ -28,6 +28,12 @@ semantic_links:
   - type: "related_topic"
     title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "SAP Testing Strategy for S/4HANA Delivery"
+    url: "/labs/enterprise-context/testing/"
+  - type: "same_domain"
+    title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
+    url: "/labs/enterprise-context/performance/"
   - type: "related_topic"
     title: "STO or Intercompany Sales? — SAP Logistics Decision Card"
     url: "/labs/enterprise-context/decisions/sto-vs-intercompany/"
@@ -37,12 +43,6 @@ semantic_links:
   - type: "integrates_with"
     title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
     url: "/labs/enterprise-context/sales-processes/integrations/"
-  - type: "related_topic"
-    title: "SAP Testing Strategy for S/4HANA Delivery"
-    url: "/labs/enterprise-context/testing/"
-  - type: "same_domain"
-    title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
-    url: "/labs/enterprise-context/development/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

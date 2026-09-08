@@ -14,7 +14,7 @@ review_method: "SAP S/4HANA 2025 FPS01 primary sources + DRF/key-mapping review 
 search_intent: "SAP MDG DRF replication model outbound implementation business system key mapping active data troubleshooting"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-replication"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -30,30 +30,29 @@ source_links:
   - title: "Configuring Data Replication"
     url: "https://help.sap.com/docs/SAP_ERP/d6bbe43b03894e4f817c8b939d532744/22d76454004f2357e10000000a44176d.html"
 # ai-discovery-managed:start
-primary_topic: "sap-mdg-replication"
+primary_topic: "sap-mdg"
 ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--replication.json"
 entity_mentions:
-  - "sap-mdg"
   - "sap-integration"
 semantic_links:
   - type: "deep_dive"
     title: "SAP MDG DRF Operations & Replay — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/replication/operations/"
-  - type: "integrates_with"
-    title: "SAP DRF — Data Replication Framework"
-    url: "/labs/enterprise-context/integrations/drf/"
-  - type: "related_topic"
+  - type: "same_domain"
     title: "SAP MDG Interface Contracts — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/interfaces/"
   - type: "parent_context"
     title: "SAP Master Data Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/"
-  - type: "related_topic"
-    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
-    url: "/labs/enterprise-context/decisions/master-data-validation/"
-  - type: "related_topic"
-    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
-    url: "/labs/enterprise-context/aif/"
+  - type: "same_domain"
+    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "same_domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
 # ai-discovery-managed:end
 ---
 # Replication and Distribution

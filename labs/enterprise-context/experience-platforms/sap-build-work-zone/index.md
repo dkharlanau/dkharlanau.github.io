@@ -14,7 +14,7 @@ review_method: "current SAP Build Work Zone standard/advanced + SAP Task Center 
 search_intent: "SAP Build Work Zone standard advanced edition Workspaces Workpages content federation Task Center Fiori launchpad SAP Start"
 structured_data:
   type: TechArticle
-primary_topic: "sap-build-work-zone"
+primary_topic: "sap-integration"
 hide_global_cta: true
 enterprise_context_graph: true
 career_impact: mapped
@@ -30,27 +30,27 @@ tags:
   - fiori
   - integration-architecture
 # ai-discovery-managed:start
-primary_topic: "sap-build-work-zone"
+primary_topic: "sap-integration"
 ai_sidecar: "/ai/pages/labs--enterprise-context--experience-platforms--sap-build-work-zone.json"
 semantic_links:
   - type: "parent_context"
     title: "Experience Platforms — Enterprise Context Lab"
     url: "/labs/enterprise-context/experience-platforms/"
-  - type: "related_topic"
-    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
-    url: "/labs/enterprise-context/aif/"
-  - type: "related_topic"
-    title: "SAP ATP and aATP Promise Engine — Enterprise Context Lab"
-    url: "/labs/enterprise-context/atp/"
-  - type: "related_topic"
-    title: "Automotive JIT / JIS — Enterprise Context Lab"
-    url: "/labs/enterprise-context/automotive-jit/"
   - type: "integrates_with"
-    title: "IDoc, API, or Event? — SAP Integration Decision Card"
-    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+    title: "Integration Operations & Recovery — Enterprise Context Lab"
+    url: "/labs/enterprise-context/integration-operations/"
   - type: "integrates_with"
-    title: "Who Owns an IDoc Failure? — SAP Integration Decision Card"
-    url: "/labs/enterprise-context/decisions/idoc-failure-ownership/"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "integrates_with"
+    title: "SAP Data Migration and Controlled Bulk Loading"
+    url: "/labs/enterprise-context/integrations/data-migration/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
+  - type: "integrates_with"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
 source_links:
   - title: "SAP Build Work Zone, standard edition"
     url: "https://help.sap.com/docs/build-work-zone-standard-edition"

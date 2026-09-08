@@ -13,7 +13,7 @@ publication_wave: "sap-operations-review-2026-09"
 review_method: "current SAP primary sources + public/private deployment-boundary review + page-level factual review"
 structured_data:
   type: TechArticle
-primary_topic: "sap-performance-operations"
+primary_topic: "sap-s4hana"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -96,30 +96,29 @@ source_links:
   - title: "SAP Cloud ALM - Real User Monitoring"
     url: "https://help.sap.com/docs/cloud-alm/applicationhelp/rum-monitoring"
 # ai-discovery-managed:start
-primary_topic: "sap-performance-operations"
+primary_topic: "sap-s4hana"
 ai_sidecar: "/ai/pages/labs--enterprise-context--performance.json"
 entity_mentions:
-  - "sap-s4hana"
   - "sap-integration"
 semantic_links:
+  - type: "same_domain"
+    title: "SAP Testing Strategy for S/4HANA Delivery"
+    url: "/labs/enterprise-context/testing/"
+  - type: "same_domain"
+    title: "SAP S/4HANA 2025 Release Readiness Playbook"
+    url: "/labs/enterprise-context/release-readiness/"
   - type: "related_topic"
     title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
     url: "/labs/enterprise-context/aif/"
-  - type: "related_topic"
-    title: "SAP Testing Strategy for S/4HANA Delivery"
-    url: "/labs/enterprise-context/testing/"
-  - type: "integrates_with"
-    title: "Integration Operations & Recovery — Enterprise Context Lab"
-    url: "/labs/enterprise-context/integration-operations/"
-  - type: "integrates_with"
-    title: "SAP DRF — Data Replication Framework"
-    url: "/labs/enterprise-context/integrations/drf/"
-  - type: "related_topic"
-    title: "SAP S/4HANA 2025 Release Readiness Playbook"
-    url: "/labs/enterprise-context/release-readiness/"
-  - type: "integrates_with"
-    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
-    url: "/labs/enterprise-context/sales-processes/integrations/"
+  - type: "same_domain"
+    title: "SAP S/4HANA Deployment Models — Enterprise Context Lab"
+    url: "/labs/enterprise-context/deployment-models/"
+  - type: "same_domain"
+    title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
+    url: "/labs/enterprise-context/development/"
+  - type: "same_domain"
+    title: "FI/CO for Logistics — Enterprise Context Lab"
+    url: "/labs/enterprise-context/finance-logistics/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

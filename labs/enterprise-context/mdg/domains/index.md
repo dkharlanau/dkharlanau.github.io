@@ -14,7 +14,7 @@ review_method: "reviewed MDG Material, Business Partner, governance and replicat
 search_intent: "SAP MDG domain engineering Material Business Partner customer supplier data model governance replication"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-domain-engineering"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -22,10 +22,8 @@ career_skills:
   - logistics-master-data
 tags: [sap, mdg, material, business-partner, customer, supplier, data-model]
 # ai-discovery-managed:start
-primary_topic: "sap-mdg-domain-engineering"
+primary_topic: "sap-mdg"
 ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--domains.json"
-entity_mentions:
-  - "sap-mdg"
 semantic_links:
   - type: "deep_dive"
     title: "SAP MDG Business Partner, Customer & Supplier — Enterprise Context Lab"
@@ -36,15 +34,15 @@ semantic_links:
   - type: "parent_context"
     title: "SAP Master Data Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/"
-  - type: "related_topic"
+  - type: "same_domain"
     title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
     url: "/labs/enterprise-context/business-partner/"
-  - type: "related_topic"
+  - type: "same_domain"
     title: "Data, Master Data and Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/data-governance/"
-  - type: "related_topic"
-    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
-    url: "/labs/enterprise-context/decisions/master-data-validation/"
+  - type: "same_domain"
+    title: "SAP MDG Lead Assessment Drills — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/assessment/"
 # ai-discovery-managed:end
 ---
 # SAP MDG Domain Engineering

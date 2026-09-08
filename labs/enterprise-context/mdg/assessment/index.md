@@ -14,7 +14,7 @@ review_method: "synthetic case review against reviewed MDG Material, Business Pa
 search_intent: "SAP MDG Lead interview assessment questions Material Business Partner DRF duplicate supplier architecture"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg-assessment"
+primary_topic: "sap-mdg"
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -23,29 +23,27 @@ career_skills:
   - lead-decision
 tags: [sap, mdg, assessment, lead, architecture, logistics]
 # ai-discovery-managed:start
-primary_topic: "sap-mdg-assessment"
+primary_topic: "sap-mdg"
 ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--assessment.json"
-entity_mentions:
-  - "sap-mdg"
 semantic_links:
   - type: "parent_context"
     title: "SAP Master Data Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/"
-  - type: "related_topic"
+  - type: "same_domain"
     title: "Data, Master Data and Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/data-governance/"
-  - type: "related_topic"
-    title: "SAP Decision Cards — Enterprise Context Lab"
-    url: "/labs/enterprise-context/decisions/"
-  - type: "related_topic"
-    title: "Which SAP Logistics Decisions Should AI Not Own? — Decision Card"
-    url: "/labs/enterprise-context/decisions/ai-logistics-boundary/"
-  - type: "integrates_with"
-    title: "IDoc, API, or Event? — SAP Integration Decision Card"
-    url: "/labs/enterprise-context/decisions/idoc-api-event/"
-  - type: "integrates_with"
-    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
-    url: "/labs/enterprise-context/integrations/"
+  - type: "same_domain"
+    title: "SAP MDG Material Domain — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/domains/material/"
+  - type: "same_domain"
+    title: "SAP MDG Change Request Type Matrix — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/governance-engine/change-request-matrix/"
+  - type: "same_domain"
+    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "same_domain"
+    title: "SAP MDG Consolidation & Golden Record — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/consolidation/"
 # ai-discovery-managed:end
 ---
 # SAP MDG Lead Assessment Drills
