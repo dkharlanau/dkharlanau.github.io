@@ -1,0 +1,99 @@
+---
+layout: default
+title: "Kanban Control Cycle — Containers, PSA and Sizing"
+description: "A practical SAP Kanban guide to control-cycle master data, production supply areas, storage locations, container sizing, source responsibility, and calculation inputs."
+permalink: /labs/enterprise-context/kanban/control-cycle/
+status: needs_verification
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-08
+hide_global_cta: true
+tags: [sap, kanban, control-cycle, production-supply-area, sap-pp, sap-mm, master-data]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/kanban/">Kanban</a></li><li aria-current="page">Control Cycle</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Kanban / 02</p>
+      <h1>The control cycle is the contract<br />between consumption and supply.</h1>
+      <p>It tells SAP what material is being controlled, where the demand point is, how many containers circulate, how much each container represents, which replenishment strategy applies, and which status logic governs the loop.</p>
+      <a class="research-canvas__button" href="#cycle">Build the cycle <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal"><p>Control-cycle questions</p><div class="research-canvas__signal-line"><span>WHERE</span><strong>PSA</strong><small>Where material is consumed</small></div><div class="research-canvas__signal-line"><span>HOW MUCH</span><strong>Qty</strong><small>Container and circulation size</small></div><div class="research-canvas__signal-line"><span>HOW</span><strong>Strategy</strong><small>How supply is restored</small></div><em>Master data defines the behavior before the first signal is scanned.</em></div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">account_tree</span><p><strong>Working rule:</strong> do not configure the status sequence first. Start with the physical loop: demand point, supply source, container, route, lead time, and responsibility. Then make SAP reflect that loop.</p><a href="#psa">Start with the demand point <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></section>
+
+  <section class="research-canvas__inventory" id="psa" data-reveal>
+    <header><p class="research-canvas__eyebrow">Production supply area</p><h2>The PSA is the operational address of line-side supply.</h2><p>A production supply area is a staging zone close to one or more work centers. It acts as a local buffer for material needed by production and connects physical delivery with Inventory Management responsibility.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>LOCATION</span><h3>Storage location</h3><p>A PSA is assigned to a storage location. Several PSAs can use the same storage location, but one PSA should not point to several storage locations at once.</p><p><strong>Lead question:</strong> can book stock be reconciled with the physical staging area?</p></article>
+      <article><span>OWNER</span><h3>Responsible person</h3><p>Assign operational responsibility for monitoring supply and responding when the loop is not restored in time.</p><p><strong>Lead question:</strong> who owns an EMPTY container that stays empty?</p></article>
+      <article><span>DOOR</span><h3>Unloading point</h3><p>For external supply, the supplier may deliver directly to a defined line-side or staging destination. The unloading point becomes part of the physical design.</p><p><strong>Lead question:</strong> does the document destination match the real receiving route?</p></article>
+      <article><span>WORK CENTER</span><h3>Consumption relationship</h3><p>A PSA can serve one or more work centers. The design should be specific enough to make replenishment ownership and stock visibility clear.</p><p><strong>Lead question:</strong> is one buffer hiding several unrelated consumption patterns?</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="cycle" data-reveal>
+    <header><p class="research-canvas__eyebrow">Control-cycle content</p><h2>Seven settings shape most of the runtime behavior.</h2><p>The exact screen depends on release, but the design logic remains recognizable.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>01</span><h3>Material + demand location</h3><p>Plant, material, production supply area, and related storage-location context identify the demand side of the loop.</p><strong>If this is wrong, every later document can be correct for the wrong place.</strong></article>
+      <article><span>02</span><h3>Number of Kanbans</h3><p>Defines how many containers or signals circulate at the same time.</p><strong>This is capacity of the loop, not a decorative count.</strong></article>
+      <article><span>03</span><h3>Quantity per Kanban</h3><p>Defines the material quantity represented by one container and normally the replenishment quantity generated by one signal.</p><strong>Container size should match the physical handling unit where practical.</strong></article>
+      <article><span>04</span><h3>Maximum empty</h3><p>Defines a control threshold for how many containers may be empty before the situation becomes exceptional.</p><strong>Useful as an operations signal, not as a substitute for lead-time design.</strong></article>
+      <article><span>05</span><h3>Replenishment strategy</h3><p>Determines whether the signal is handled by internal production, external procurement, or stock transfer, and which execution object is expected.</p><strong>The strategy is the bridge from signal to supply.</strong></article>
+      <article><span>06</span><h3>Flow control</h3><p>Status sequence, independent supply-source logic, separate goods receipt, trigger quantity, and related controls determine how the loop progresses.</p><strong>This is where allowed transitions become process logic.</strong></article>
+      <article><span>07</span><h3>Output and calculation</h3><p>Printing, barcode behavior, calculation profile, safety settings, and replenishment-time inputs support physical execution and sizing.</p><strong>These settings make the loop operable and maintainable.</strong></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Container identity</p><h2>A container needs a stable identity if the status should be trusted.</h2><p>Each Kanban can have an internal identifier. In barcode-based operation, the scanned identity tells SAP which exact container changed state.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Why identity matters</h4><ul><li>Trace which container is EMPTY or FULL.</li><li>Link a status change to its replenishment object.</li><li>Prevent operators from updating the wrong loop.</li></ul></div>
+      <div><h4>Signal lock</h4><ul><li>A short lock interval can protect against duplicate scans.</li><li>Useful when scanners or operators can send the same status quickly twice.</li><li>It reduces accidental double processing, but does not fix wrong process design.</li></ul></div>
+      <div><h4>Physical design</h4><ul><li>Card on container.</li><li>Card stays at supply source.</li><li>Card stays at demand source and the board communicates the refill.</li><li>Electronic signal with barcode or equivalent identifier.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Sizing</p><h2>Size the loop from consumption and replenishment time.</h2><p>Automatic calculation can use a profile, but the underlying business logic is simple: the loop must cover material consumption while a container is away being replenished, plus the selected protection against variation.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>AC</span><h3>Average consumption</h3><p>How much material is normally used per time unit in the demand area?</p><p><strong>Risk:</strong> averages hide peaks and shift patterns.</p></article>
+      <article><span>RT</span><h3>Replenishment time</h3><p>How long from the EMPTY signal until usable material is back at the demand point?</p><p><strong>Risk:</strong> master-data time may not include queueing, transport, receiving, or supplier variability.</p></article>
+      <article><span>QTY</span><h3>Container quantity</h3><p>How much material fits one physical or logical Kanban unit?</p><p><strong>Risk:</strong> a mathematically neat quantity may be operationally awkward.</p></article>
+      <article><span>SAFE</span><h3>Safety factor or buffer</h3><p>How much additional protection is required for normal variation?</p><p><strong>Risk:</strong> too much safety converts a lean loop into hidden inventory.</p></article>
+    </div>
+    <p class="ecg-caption"><strong>Validation rule:</strong> after any automatic calculation, test the proposed number of containers against actual consumption peaks, real replenishment-time distribution, packaging, route frequency, and source capacity. Validate the exact calculation profile and formula in the target SAP release.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Classic versus event-driven</p><h2>Not every pull loop needs a fixed set of circulating cards.</h2><p>Classic Kanban normally manages a defined number of containers. Event-driven variants can create or activate a Kanban from an actual requirement rather than from a fixed permanent circulation pattern.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Classic</h4><ul><li>Fixed circulation.</li><li>Stable container quantity.</li><li>Strong visual control.</li><li>Best for repetitive demand.</li></ul></div>
+      <div><h4>Event-driven</h4><ul><li>Signal can be created for a requirement event.</li><li>Useful when permanent container circulation is not the best representation.</li><li>Still needs clear source and status logic.</li></ul></div>
+      <div><h4>Lead decision</h4><ul><li>Choose the model that matches the physical replenishment pattern.</li><li>Do not introduce dynamic logic only because the fixed cycle was badly sized.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Related master data</p><h2>The control cycle does not live alone.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production version and supply area</strong><small>Repetitive or production-based replenishment may depend on production-version and supply-area assignments.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/master-data/"><span>BOM</span><strong>Component supply area</strong><small>Components can carry supply-area information so staging and replenishment point to the intended demand location.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Storage-location and stock semantics</strong><small>The Kanban state and the actual stock state must remain explainable together.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Classic GUI reference</p><h2>Useful landmarks in older and private-system implementations.</h2><p>These names are implementation references, not a promise that the same transaction is available or recommended in every S/4HANA edition.</p></header>
+    <div class="ecg-lead-lens"><ul><li><strong>PK01 / PK02:</strong> create or change a control cycle in classic GUI flows.</li><li><strong>PK05:</strong> production supply area maintenance in classic implementations.</li><li><strong>PK13N:</strong> Kanban board for operational status handling.</li><li>Number ranges, storage locations, controller responsibility, replenishment strategies, status sequences, and alert behavior are also controlled by configuration and master data around the cycle.</li></ul></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span><p><strong>Next:</strong> connect the control cycle to the right supply mechanism.</p><a href="/labs/enterprise-context/kanban/replenishment-strategies/">Replenishment Strategies <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
