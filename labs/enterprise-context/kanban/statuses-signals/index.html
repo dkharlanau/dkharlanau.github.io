@@ -29,12 +29,12 @@ tags: [sap, kanban, statuses, barcode, quantity-signal, sap-pp, shop-floor]
     <header><p class="research-canvas__eyebrow">Status sequence</p><h2>EMPTY and FULL are the anchors; intermediate states make execution visible.</h2><p>A practical sequence can include waiting, replenishment work, transport, use, and error states. The exact sequence should represent the physical process rather than create artificial clicks.</p></header>
     <div class="research-route-list">
       <a href="#waiting"><span>WAIT</span><strong>Waiting</strong><small>The demand side has signaled a need, but the actual replenishment trigger is controlled separately.</small><i class="material-symbols-outlined" aria-hidden="true">hourglass</i></a>
-      <a href="#empty"><span>EMPTY</span><strong>Container empty</strong><small>The demand-side container no longer protects consumption and normally requests replenishment.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
-      <a href="#process"><span>PROCESS</span><strong>In process</strong><small>The supply source is producing or preparing the refill.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
-      <a href="#transit"><span>TRANSIT</span><strong>In transit</strong><small>The refill has left the source but is not yet usable at the demand point.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
-      <a href="#full"><span>FULL</span><strong>Container full</strong><small>The replenished quantity is available again for the demand side.</small><i class="material-symbols-outlined" aria-hidden="true">check_circle</i></a>
-      <a href="#use"><span>IN USE</span><strong>Material being consumed</strong><small>Useful when a quantity signal tracks partial consumption before the container becomes empty.</small><i class="material-symbols-outlined" aria-hidden="true">remove_circle</i></a>
-      <a href="#error"><span>ERROR</span><strong>Processing failed</strong><small>The requested transition or linked business action failed and needs correction.</small><i class="material-symbols-outlined" aria-hidden="true">error</i></a>
+      <a href="#sequence"><span>EMPTY</span><strong>Container empty</strong><small>The demand-side container no longer protects consumption and normally requests replenishment.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="#sequence"><span>PROCESS</span><strong>In process</strong><small>The supply source is producing or preparing the refill.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="#sequence"><span>TRANSIT</span><strong>In transit</strong><small>The refill has left the source but is not yet usable at the demand point.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      <a href="#sequence"><span>FULL</span><strong>Container full</strong><small>The replenished quantity is available again for the demand side.</small><i class="material-symbols-outlined" aria-hidden="true">check_circle</i></a>
+      <a href="#sequence"><span>IN USE</span><strong>Material being consumed</strong><small>Useful when a quantity signal tracks partial consumption before the container becomes empty.</small><i class="material-symbols-outlined" aria-hidden="true">remove_circle</i></a>
+      <a href="/labs/enterprise-context/kanban/operations-diagnostics/"><span>ERROR</span><strong>Processing failed</strong><small>The requested transition or linked business action failed and needs correction.</small><i class="material-symbols-outlined" aria-hidden="true">error</i></a>
     </div>
     <p class="ecg-caption">Classic implementations often use a sequence close to WAIT → EMPTY → IN PROCESS → IN TRANSIT → FULL → IN USE, with ERROR as an exception state. Treat the exact sequence as configurable process logic.</p>
   </section>
@@ -63,9 +63,9 @@ tags: [sap, kanban, statuses, barcode, quantity-signal, sap-pp, shop-floor]
   <section class="research-canvas__inventory" id="waiting" data-reveal>
     <header><p class="research-canvas__eyebrow">Independent supply source</p><h2>Separate “we need material” from “start replenishment now.”</h2><p>Some loops should not let the demand side directly create the replenishment object. A waiting state can record demand while the supply source controls the actual trigger timing.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Demand side</h4><ul><li>Consumption creates the need.</li><li>Container moves into a waiting condition.</li><li>The request is visible without immediately creating new supply.</li></ul></div>
-      <div><h4>Supply side</h4><ul><li>Monitors the waiting queue.</li><li>Decides which Kanbans to release into replenishment.</li><li>Can group work around production or logistics constraints.</li></ul></div>
-      <div><h4>Lead risk</h4><ul><li>WAIT can become a hidden backlog.</li><li>Define owner, trigger rule, aging threshold, and escalation.</li><li>Measure waiting time separately from physical replenishment time.</li></ul></div>
+      <div><h3>Demand side</h3><ul><li>Consumption creates the need.</li><li>Container moves into a waiting condition.</li><li>The request is visible without immediately creating new supply.</li></ul></div>
+      <div><h3>Supply side</h3><ul><li>Monitors the waiting queue.</li><li>Decides which Kanbans to release into replenishment.</li><li>Can group work around production or logistics constraints.</li></ul></div>
+      <div><h3>Lead risk</h3><ul><li>WAIT can become a hidden backlog.</li><li>Define owner, trigger rule, aging threshold, and escalation.</li><li>Measure waiting time separately from physical replenishment time.</li></ul></div>
     </div>
   </section>
 
