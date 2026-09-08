@@ -1,0 +1,114 @@
+---
+layout: default
+title: "Kanban Operations and Diagnostics — Board, Alerts and Error Recovery"
+description: "A practical SAP Kanban operations guide covering board monitoring, delayed replenishment, alerts, evaluations, error correction, reversal, and root-cause diagnosis."
+permalink: /labs/enterprise-context/kanban/operations-diagnostics/
+status: needs_verification
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-08
+hide_global_cta: true
+tags: [sap, kanban, operations, diagnostics, alerts, error-recovery, sap-pp, monitoring]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/kanban/">Kanban</a></li><li aria-current="page">Operations and Diagnostics</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Kanban / 06</p>
+      <h1>Do not repair the color.<br />Repair the broken business event.</h1>
+      <p>Kanban operations becomes difficult when teams see only the board. The board is the symptom surface. Diagnosis must continue into the control cycle, replenishment element, material document, source capacity, and real physical state.</p>
+      <a class="research-canvas__button" href="#diagnostic">Use the diagnostic path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal"><p>Operations priorities</p><div class="research-canvas__signal-line"><span>1</span><strong>Age</strong><small>How long in current state?</small></div><div class="research-canvas__signal-line"><span>2</span><strong>Proof</strong><small>Which document exists?</small></div><div class="research-canvas__signal-line"><span>3</span><strong>Recover</strong><small>Fix cause before status</small></div><em>A healthy loop is fast enough that abnormal aging becomes visible quickly.</em></div>
+  </header>
+
+  <section class="research-canvas__inventory" id="diagnostic" data-reveal>
+    <header><p class="research-canvas__eyebrow">Diagnostic path</p><h2>Start from the failed state and walk outward.</h2><p>The shortest reliable path is status → control cycle → replenishment object → posting → physical process.</p></header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>state</small></div><h3>Read the exact Kanban</h3><p class="ecg-question">Which container is wrong, and what is its current status?</p></header><div class="ecg-decision-columns"><div><h4>Collect</h4><ul><li>Kanban ID</li><li>Material / plant / PSA</li><li>Current and previous status</li><li>Status timestamp</li></ul></div><div><h4>Interpret</h4><ul><li>Was the transition allowed?</li><li>Is the container simply late?</li><li>Is it in ERROR?</li></ul></div><div><h4>Do not</h4><p>Change status only because the board looks wrong.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>design</small></div><h3>Read the control cycle</h3><p class="ecg-question">What should this status have triggered?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><ul><li>Replenishment strategy</li><li>Status sequence</li><li>Automatic actions</li><li>Source and receiving location</li></ul></div><div><h4>Interpret</h4><ul><li>Expected object type</li><li>Expected quantity</li><li>Required intermediate state</li></ul></div><div><h4>Failure clues</h4><p>Wrong master data, missing source, invalid status path, or obsolete cycle sizing.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>document</small></div><h3>Find the replenishment element</h3><p class="ecg-question">Did SAP create what the strategy promised?</p></header><div class="ecg-decision-columns"><div><h4>Possible objects</h4><ul><li>Production order</li><li>Run-schedule quantity</li><li>Purchase order / schedule line</li><li>Reservation / transfer object</li></ul></div><div><h4>Check</h4><ul><li>Status and quantity</li><li>Deletion or completion flag</li><li>Source and date</li></ul></div><div><h4>Failure clues</h4><p>Deleted object, scheduling failure, invalid source, or document still open after physical completion.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>posting</small></div><h3>Find stock and production postings</h3><p class="ecg-question">Did the business event change book stock or consumption?</p></header><div class="ecg-decision-columns"><div><h4>Evidence</h4><ul><li>Material document</li><li>Goods issue / receipt</li><li>Backflush or confirmation</li></ul></div><div><h4>Compare</h4><ul><li>Actual quantity</li><li>Source / destination</li><li>Posting time</li></ul></div><div><h4>Failure clues</h4><p>Status completed but posting missing, duplicate posting, or quantity mismatch.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>physical</small></div><h3>Confirm the real material</h3><p class="ecg-question">Where is the container physically?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><ul><li>Line-side quantity</li><li>Source stock</li><li>Transit location</li><li>Wrong PSA or unloading point</li></ul></div><div><h4>Interpret</h4><ul><li>System wrong?</li><li>Physical process wrong?</li><li>Both wrong?</li></ul></div><div><h4>Recovery</h4><p>Correct only after the intended business state is agreed.</p></div></div></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Operational views</p><h2>Different reports answer different questions.</h2><p>The Kanban board is excellent for current execution. Historical and exception views are needed for system improvement.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>BOARD</span><h3>Current status</h3><p>See containers by demand or supply view, status, quantity, and control-cycle context. Use it for immediate shop-floor action.</p><p><strong>Classic reference:</strong> PK13N.</p></article>
+      <article><span>EVALUATE</span><h3>Control-cycle detail</h3><p>Inspect Kanban states together with replenishment elements and material-document references.</p><p><strong>Classic reference:</strong> PK18.</p></article>
+      <article><span>DELAY</span><h3>Delayed replenishment</h3><p>Focus on containers whose expected replenishment has not arrived in time. This is more actionable than scanning every red card.</p><p><strong>Classic reference:</strong> PKAL.</p></article>
+      <article><span>ANALYSIS</span><h3>Historical performance</h3><p>Analyze status times, operation counts, quantities, and other historical indicators to see whether the cycle is structurally healthy.</p><p><strong>Classic reference:</strong> MCQ.</p></article>
+      <article><span>PLANT</span><h3>Plant overview</h3><p>Look across materials and supply areas to see how many containers are waiting, empty, full, or in other states.</p><p><strong>Use for:</strong> pattern detection and prioritization.</p></article>
+      <article><span>ERROR</span><h3>Error processing</h3><p>Filter failed Kanbans by plant, PSA, source, material, strategy, status, and time, then open the exact correction context.</p><p><strong>Classic reference:</strong> PK50.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Alerts</p><h2>Alert on conditions that need action, not on every normal status.</h2><p>Kanban can produce useful exception signals when a container enters error, too many containers are empty, a replenishment element is deleted, or a replenishment is delayed.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>ERROR</span><h3>Container processing failed</h3><p>The signal could not complete its linked business action.</p><strong>Owner: process support or operations depending on the failure.</strong></article>
+      <article><span>EMPTY LIMIT</span><h3>Too many empty containers</h3><p>The protective buffer is shrinking faster than replenishment restores it.</p><strong>Owner: production/supply controller; investigate source lead time and demand spike.</strong></article>
+      <article><span>DELETED</span><h3>Replenishment element removed</h3><p>A user or downstream process deleted the object that was supposed to refill the Kanban.</p><strong>Owner: identify why the object was removed before recreating anything.</strong></article>
+      <article><span>DELAY</span><h3>Replenishment overdue</h3><p>The object exists but the refill has exceeded the expected timing.</p><strong>Owner: source-specific — supplier, production, warehouse, or transport.</strong></article>
+    </div>
+    <p class="ecg-caption">Classic implementations can activate Kanban alert behavior through configuration. Treat the exact alert framework and transaction mapping as release-specific.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Operations rule:</strong> a useful alert must answer four things: what failed, how long it has been abnormal, which production risk it creates, and who owns the next action.</p><a href="/labs/enterprise-context/performance/">Connect to wider operations diagnostics <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Error correction</p><h2>Fix the cause, then repair the Kanban state.</h2><p>A failed status transition normally means a linked action could not complete. The correction tool should be the final step of diagnosis, not the first.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>1</span><h3>Read the error message</h3><p>Identify whether the failure came from scheduling, master data, source determination, production data, stock, or another linked process.</p><strong>Preserve the original error as evidence.</strong></article>
+      <article><span>2</span><h3>Repair root data</h3><p>Correct the invalid master data, production setting, purchasing source, stock condition, or other cause.</p><strong>Do not manually force a status past a still-broken action.</strong></article>
+      <article><span>3</span><h3>Use Kanban correction</h3><p>Apply the supported correction function to move the Kanban into the correct next state or repeat the intended action where appropriate.</p><strong>The target state must match the real physical situation.</strong></article>
+      <article><span>4</span><h3>Reconcile linked documents</h3><p>After correction, confirm the production/purchasing/transfer object and material postings are not duplicated or left inconsistent.</p><strong>Recovery is complete only when the evidence chain is coherent.</strong></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Reversal</p><h2>Reversing a signal is more than changing the status back.</h2><p>Where supported, reversing the last Kanban signal can reset the container to its previous state and reverse or mark related replenishment actions for deletion.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>What may be reversed</h3><ul><li>Previous container status.</li><li>Linked purchasing, reservation, production, or schedule-line action depending on process.</li><li>Related posting where the supported reversal logic permits it.</li></ul></div>
+      <div><h3>Important limits</h3><ul><li>An already processed correction may no longer be reversible.</li><li>A Kanban that has already been reversed should not be repeatedly reversed as a repair technique.</li><li>Downstream business processing can make technical reversal inappropriate even if the button exists.</li></ul></div>
+      <div><h3>Lead rule</h3><ul><li>Check downstream use first.</li><li>Prefer business reversal over database-like status repair.</li><li>After reversal, retest the normal signal path.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">KPIs</p><h2>Measure the loop, not the number of scans.</h2><p>The best Kanban metrics show whether replenishment protects production with minimal inventory.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>TIME</span><h3>Replenishment lead time</h3><p>EMPTY or trigger → usable FULL material. Split waiting, processing, transit, and receiving time where the statuses support it.</p></article>
+      <article><span>RISK</span><h3>Empty-container exposure</h3><p>How often and how long the loop operates near or above the maximum-empty threshold.</p></article>
+      <article><span>ERROR</span><h3>Failed signal rate</h3><p>Share of signals entering error or requiring correction. Group by root-cause family.</p></article>
+      <article><span>STOCK</span><h3>Circulation inventory</h3><p>Total container quantity in the loop compared with actual consumption and service requirement.</p></article>
+      <article><span>VARIANCE</span><h3>Logical/physical mismatch</h3><p>Frequency of board state not matching the real stock or physical container position.</p></article>
+      <article><span>CHANGE</span><h3>Cycle recalculation need</h3><p>Materials where sustained demand or lead-time change makes the original number of Kanbans obsolete.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure patterns</p><h2>Fast diagnosis starts with pattern recognition.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/kanban/runtime-flows/#procurement"><span>A</span><strong>EMPTY, no purchasing document</strong><small>Check external-procurement strategy, source, agreement validity, purchasing data, and error state.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/kanban/runtime-flows/#production"><span>B</span><strong>Production complete, cannot set FULL</strong><small>Check required intermediate statuses, separate goods-receipt design, and whether the production posting actually completed.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/kanban/runtime-flows/#transfer"><span>C</span><strong>Transfer object exists, line still empty</strong><small>Check goods issue, transit state, goods receipt, receiving storage location, and physical route.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      <a href="/labs/enterprise-context/kanban/statuses-signals/"><span>D</span><strong>Board green, stock wrong</strong><small>Check whether FULL was a status-only action and find the expected material document.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
+      <a href="/labs/enterprise-context/kanban/control-cycle/"><span>E</span><strong>Too many EMPTY containers every shift</strong><small>Check real replenishment time, source capacity, demand change, container sizing, and maximum-empty threshold.</small><i class="material-symbols-outlined" aria-hidden="true">monitor_heart</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment answer</p><h2>How to explain a Kanban incident as a Lead.</h2></header>
+    <div class="ecg-lead-lens"><p><strong>Use this structure:</strong> “The visible symptom is the container status. I first confirm the control-cycle expectation, then the replenishment object, then the actual stock or production posting, and finally the physical location. I correct the root cause before using Kanban correction or reversal. After recovery, I check whether the failure was one-off or whether lead time, source capacity, or cycle sizing needs redesign.”</p></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">home</span><p><strong>Path complete:</strong> return to the Kanban hub to review pull fit, master data, strategy, status logic, runtime, and operations as one model.</p><a href="/labs/enterprise-context/kanban/">Back to SAP Kanban <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></a></section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>

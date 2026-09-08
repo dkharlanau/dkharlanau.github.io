@@ -1,0 +1,82 @@
+---
+layout: default
+title: "Kanban Pull Control — When It Works and When It Fails"
+description: "A practical SAP Kanban guide to push versus pull, MRP coexistence, process prerequisites, buffers, and design decisions."
+permalink: /labs/enterprise-context/kanban/pull-control/
+status: needs_verification
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-08
+hide_global_cta: true
+tags: [sap, kanban, sap-pp, mrp, pull-system, replenishment]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/kanban/">Kanban</a></li><li aria-current="page">Pull Control</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Kanban / 01</p>
+      <h1>Pull is not “MRP switched off.”<br />It is a different control point.</h1>
+      <p>In a push model, planning decides what should be available and when. In a Kanban pull loop, the demand point says: this container was consumed, replace it. The difference looks simple, but it changes where inventory, responsibility, and execution decisions sit.</p>
+      <a class="research-canvas__button" href="#decision">Use the fit test <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal"><p>Memory model</p><div class="research-canvas__signal-line"><span>PUSH</span><strong>Plan</strong><small>Supply follows calculated requirements</small></div><div class="research-canvas__signal-line"><span>PULL</span><strong>Use</strong><small>Supply follows consumption</small></div><div class="research-canvas__signal-line"><span>LEAD</span><strong>Fit</strong><small>Choose by operating conditions</small></div><em>The control method must match the physical process.</em></div>
+  </header>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Push versus pull</p><h2>Planning and execution answer different questions.</h2><p>A production plan can be correct and the line can still run out of material. Kanban moves one part of the execution decision closer to the point of consumption.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Push control asks</h3><ul><li>What will be needed?</li><li>On which date?</li><li>In what lot size?</li><li>Which dependent requirements come from the BOM?</li><li>What supply element should be created in advance?</li></ul></div>
+      <div><h3>Pull control asks</h3><ul><li>Was a defined quantity actually consumed?</li><li>Which container now needs replacement?</li><li>Which supply source owns the refill?</li><li>Can the source restore the buffer inside the replenishment time?</li></ul></div>
+      <div><h3>The Lead asks</h3><ul><li>Which horizon belongs to planning?</li><li>Which horizon belongs to shop-floor execution?</li><li>Where should stock be visible?</li><li>What is the recovery path when a signal cannot be fulfilled?</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>Anti-pattern:</strong> using Kanban to compensate for unstable production, long supplier lead times, bad master data, or missing capacity. A pull loop exposes these problems; it does not remove them.</p>
+    <a href="/labs/enterprise-context/kanban/operations-diagnostics/">Open diagnostics <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="decision" data-reveal>
+    <header><p class="research-canvas__eyebrow">Fit test</p><h2>Five conditions make the pull loop credible.</h2><p>If several of these conditions are weak, the design normally needs larger buffers, a different supply strategy, or more planning control.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>01</span><h3>Fast replenishment</h3><p>The source must be able to refill the consumed quantity quickly enough that the remaining containers protect production.</p><p><strong>Check:</strong> real lead-time distribution, not only master-data lead time.</p></article>
+      <article><span>02</span><h3>Small and repeatable lots</h3><p>Kanban works naturally when the source can deliver in practical container-sized quantities without expensive setup for every signal.</p><p><strong>Check:</strong> setup time, batch constraints, transport unit, minimum order quantity.</p></article>
+      <article><span>03</span><h3>Available capacity and parts</h3><p>A perfect signal is useless if the source has no machine capacity, labor, packaging, transport, or upstream components.</p><p><strong>Check:</strong> the real bottleneck behind the source.</p></article>
+      <article><span>04</span><h3>Stable enough consumption</h3><p>Demand does not need to be flat, but the loop needs a usable relationship between consumption, container quantity, and replenishment time.</p><p><strong>Check:</strong> seasonality, campaign peaks, engineering changes.</p></article>
+      <article><span>05</span><h3>No hidden overproduction</h3><p>The source should not keep producing “just in case.” Otherwise Kanban becomes a label on top of a push process and inventory grows outside the control loop.</p><p><strong>Check:</strong> WIP and stock outside the defined containers.</p></article>
+      <article><span>FAIL</span><h3>Variable one-off demand</h3><p>Rare components, long project lead times, configurable low-volume materials, or supply with long campaigns may need a different planning and execution model.</p><p><strong>Check:</strong> whether the signal frequency is high enough to justify a fixed cycle.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">MRP coexistence</p><h2>Decide what MRP should see.</h2><p>Kanban can be designed with or without MRP participation for the local material segment. That choice changes how future requirements and live replenishment interact.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>WITHOUT MRP</span><h3>Signal-driven local supply</h3><p>The Kanban-managed storage-location segment can be excluded from normal MRP. Replenishment is then created from the Kanban signal rather than from MRP receipt proposals.</p><strong>Use when the local loop is deliberately self-controlling.</strong></article>
+      <article><span>WITH MRP</span><h3>Planning remains visible</h3><p>MRP can still calculate future material needs and create or propose supply elements while the Kanban process controls short-cycle consumption and staging.</p><strong>Use when planning visibility is still required.</strong></article>
+      <article><span>SIMULATION</span><h3>Forecast without disturbing execution</h3><p>Long-term or simulation planning can help estimate future dependent requirements for Kanban materials without turning every forecast into immediate shop-floor replenishment.</p><strong>Useful for capacity and medium-term supply conversations.</strong></article>
+    </div>
+    <p class="ecg-caption"><strong>Design rule:</strong> document the MRP boundary by plant, material, and storage-location segment. “Kanban material” is too vague to explain the planning behavior.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Inventory logic</p><h2>The buffer should be visible and finite.</h2><p>A container is not only a visual aid. It represents a controlled quantity and therefore a defined amount of inventory in the circulation loop.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/kanban/control-cycle/"><span>A</span><strong>Number of containers</strong><small>Defines how many refill cycles can be in different states at the same time.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/labs/enterprise-context/kanban/control-cycle/"><span>B</span><strong>Quantity per container</strong><small>Defines the replenishment lot represented by one Kanban signal.</small><i class="material-symbols-outlined" aria-hidden="true">straighten</i></a>
+      <a href="/labs/enterprise-context/kanban/statuses-signals/"><span>C</span><strong>Status distribution</strong><small>Shows how much of the loop is full, in use, empty, waiting, in process, or in error.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment questions</p><h2>What a SAP Lead should be able to explain.</h2></header>
+    <div class="ecg-lead-lens"><ul><li>Why can MRP be technically correct while Kanban still improves line-side execution?</li><li>What happens if replenishment time becomes longer than the protection offered by the remaining containers?</li><li>Why is adding more containers not always the right fix?</li><li>When would you exclude a storage-location segment from MRP, and what visibility do you lose?</li><li>Which business conditions would make you reject Kanban for a material?</li></ul></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span><p><strong>Next:</strong> once the pull model is justified, define the master-data contract that makes it executable.</p><a href="/labs/enterprise-context/kanban/control-cycle/">Control Cycle — The Master-Data Contract <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
