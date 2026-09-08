@@ -57,9 +57,9 @@ tags: [sap, kanban, runtime, procurement, production-order, goods-receipt, stock
   <section class="research-canvas__inventory" id="transfer" data-reveal>
     <header><p class="research-canvas__eyebrow">Stock-transfer flow</p><h2>EMPTY can request movement of existing stock.</h2><p>The source stock already exists. The runtime question is how SAP represents the planned move and how the actual transfer updates the receiving state.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Reservation-style flow</h4><ul><li>EMPTY creates a transfer requirement or reservation.</li><li>Source warehouse prepares the quantity.</li><li>Transfer posting moves stock.</li><li>FULL indicates restored receiving availability.</li></ul></div>
-      <div><h4>Direct flow</h4><ul><li>No separate reservation is required.</li><li>Posting moves stock source → receiving location.</li><li>Status and physical movement can be tightly coupled.</li></ul></div>
-      <div><h4>Two-step flow</h4><ul><li>Goods issue removes stock from the source.</li><li>Transit state becomes meaningful.</li><li>Goods receipt creates receiving stock.</li><li>Only then is demand-side availability restored.</li></ul></div>
+      <div><h3>Reservation-style flow</h3><ul><li>EMPTY creates a transfer requirement or reservation.</li><li>Source warehouse prepares the quantity.</li><li>Transfer posting moves stock.</li><li>FULL indicates restored receiving availability.</li></ul></div>
+      <div><h3>Direct flow</h3><ul><li>No separate reservation is required.</li><li>Posting moves stock source → receiving location.</li><li>Status and physical movement can be tightly coupled.</li></ul></div>
+      <div><h3>Two-step flow</h3><ul><li>Goods issue removes stock from the source.</li><li>Transit state becomes meaningful.</li><li>Goods receipt creates receiving stock.</li><li>Only then is demand-side availability restored.</li></ul></div>
     </div>
   </section>
 
@@ -76,9 +76,9 @@ tags: [sap, kanban, runtime, procurement, production-order, goods-receipt, stock
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Logical versus physical stock</p><h2>The Kanban board can be right while inventory is wrong — and the reverse.</h2><p>A status loop can progress without immediately posting every physical consumption event. This creates a deliberate distinction between logical container state and book stock.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Logical state</h4><ul><li>EMPTY means the container no longer protects the demand point.</li><li>IN USE can represent partial consumption.</li><li>FULL means available in the Kanban control model.</li></ul></div>
-      <div><h4>Book stock</h4><ul><li>Changes only when an Inventory Management or production posting changes quantity.</li><li>Can remain visible in the storage location after the physical container is already being consumed.</li><li>Can be corrected only by understanding the real business event, not by changing a Kanban color.</li></ul></div>
-      <div><h4>Lead diagnosis</h4><ul><li>Compare board state with stock overview.</li><li>Find material documents and production postings.</li><li>Check whether backflush timing explains the difference.</li><li>Confirm physical quantity at the demand point before posting corrections.</li></ul></div>
+      <div><h3>Logical state</h3><ul><li>EMPTY means the container no longer protects the demand point.</li><li>IN USE can represent partial consumption.</li><li>FULL means available in the Kanban control model.</li></ul></div>
+      <div><h3>Book stock</h3><ul><li>Changes only when an Inventory Management or production posting changes quantity.</li><li>Can remain visible in the storage location after the physical container is already being consumed.</li><li>Can be corrected only by understanding the real business event, not by changing a Kanban color.</li></ul></div>
+      <div><h3>Lead diagnosis</h3><ul><li>Compare board state with stock overview.</li><li>Find material documents and production postings.</li><li>Check whether backflush timing explains the difference.</li><li>Confirm physical quantity at the demand point before posting corrections.</li></ul></div>
     </div>
   </section>
 
