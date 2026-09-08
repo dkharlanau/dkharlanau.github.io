@@ -3,9 +3,11 @@ layout: default
 title: AI Routing Hub
 permalink: /ai/
 description: "AI routing hub for Dzmitryi Kharlanau's profile, discovery map, intent entities, and machine-readable knowledge assets."
-last_modified_at: 2026-09-01
+last_modified_at: 2026-09-08
 hide_global_cta: true
 ---
+
+Before reusing a profile, dataset or generated answer, check the [Trust Center](/trust/) for source attribution, review boundaries, crawler policy and corrections.
 
 <div class="ai-canvas">
   <header class="ai-canvas__hero" data-reveal>

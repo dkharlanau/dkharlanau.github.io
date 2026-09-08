@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "Compose Target Enterprise Architecture — Explainable Architecture Workbench"
-description: "A public deterministic workbench for composing target enterprise architecture from business scope, explicit constraints, current landscape facts, and reviewable decisions."
+title: "Compose Target Enterprise Architecture from Business Context"
+description: "Compose a reviewable target architecture from explicit business scope, constraints and current systems. Inspect rule traces, unknowns and delivery handoffs."
 permalink: /services/compose-target-enterprise-architecture/
-last_modified_at: 2026-09-05
+last_modified_at: 2026-09-08
 ---
 
 <section class="section note-detail">
@@ -19,7 +19,10 @@ last_modified_at: 2026-09-05
 
       <p><a href="https://dkharlanau.github.io/enterprise-architecture-composer/">Open the live workbench</a> · <a href="https://github.com/dkharlanau/enterprise-architecture-composer">View the source and contracts on GitHub</a></p>
 
-      <h2>What the product does</h2>
+      <h2>The architecture problem it addresses</h2>
+      <p>A target diagram can look complete while leaving business scope, system responsibilities and migration dependencies implicit. Composer makes those inputs explicit so a reviewer can trace each proposed responsibility to its context and challenge the assumptions before adopting it.</p>
+
+      <h2>Outputs you can inspect</h2>
       <ul>
         <li>Composes capabilities, logical system responsibilities, data ownership, and cross-system integration needs from a bounded business scope.</li>
         <li>Evaluates integration patterns from explicit drivers such as latency, consistency, fan-out, replay, ordering, volume, and partner boundaries.</li>
