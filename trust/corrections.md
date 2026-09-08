@@ -1,14 +1,18 @@
 ---
 layout: default
 title: Corrections policy and ledger
-description: Public policy for material factual corrections on dkharlanau.github.io.
+description: How material factual corrections preserve the affected URL, previous claim, correction and evidence on dkharlanau.github.io.
 permalink: /trust/corrections/
 sitemap: true
+last_modified_at: 2026-09-08
+tags: [corrections, provenance, evidence]
 ---
 
 # Corrections policy and ledger
 
-The site should not silently rewrite material published factual claims when the correction matters to a reader, search system, or AI agent evaluating the evidence.
+A copied answer can retain an outdated claim after its source changes. The goal of this policy is to preserve enough context to identify the affected statement and check its replacement. Material published factual claims should not be silently rewritten when the correction changes a reader's decision or an agent's interpretation of the evidence.
+
+Use the [Trust Center](/trust/) to distinguish a correction from a change in review state, source attribution or reuse permission.
 
 ## What belongs in the ledger
 

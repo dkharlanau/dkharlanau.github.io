@@ -1,14 +1,16 @@
 ---
 layout: default
-title: Trust Center
+title: "Trust Center: Evidence, Citation and Reuse"
 description: Canonical trust, evidence, citation, crawler, correction and security boundaries for dkharlanau.github.io.
 permalink: /trust/
 sitemap: true
+last_modified_at: 2026-09-08
+tags: [provenance, citation, evidence]
 ---
 
 # Trust Center
 
-This page is the canonical trust surface for `dkharlanau.github.io`. It explains what the site publishes, how evidence is reviewed, which machine-readable interfaces are authoritative, and which claims should remain bounded.
+Use this page when deciding whether a statement can be cited, whether reuse is within scope, or whether a correction changes an earlier answer. Its goal is to connect those decisions to the site's actual identity, evidence and policy records. Machine-readable completeness alone does not establish that a claim is correct.
 
 ## Identity and source of record
 
@@ -37,10 +39,11 @@ Repository history provides source provenance. It is not an independent correctn
 
 ## Crawler and AI access policy
 
-The canonical enforcement surface is `robots.txt`; the human explanation and dated matrix make that policy easier to inspect.
+Published crawler preferences are recorded in `robots.txt`; the human explanation and dated matrix make that policy easier to inspect.
 
 - Robots policy: <https://dkharlanau.github.io/robots.txt>
 - Human AI crawler policy: <https://dkharlanau.github.io/legal/ai-crawler-policy/>
+- [Crawler and access matrix](/crawler-matrix/) — compare a crawler rule with the published site policy.
 - Machine-readable crawler matrix: <https://dkharlanau.github.io/crawler-matrix/crawlers.json>
 
 The current policy intentionally separates search and user-directed AI retrieval from model-training crawlers. Agents should read the actual published policy rather than infer permission from the existence of AI-readable files.
@@ -49,7 +52,7 @@ The current policy intentionally separates search and user-directed AI retrieval
 
 Material factual corrections should be recorded rather than silently rewriting important history. The current ledger and policy are published at:
 
-- <https://dkharlanau.github.io/trust/corrections/>
+- [Corrections policy and ledger](/trust/corrections/) — identify the affected claim, change and supporting evidence.
 - <https://dkharlanau.github.io/trust/corrections.json>
 
 Minor spelling, layout, broken-link, or generated-inventory refreshes do not require a material correction entry unless they change the meaning of a published claim.
