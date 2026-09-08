@@ -46,10 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Validate Agent-Ready Web Profile
-        uses: dkharlanau/agent-ready-web-profile@c1d51698e3765d0817ee14bcbc36c67297457260
+        uses: dkharlanau/agent-ready-web-profile@a60be6a057f6ffe07a85ed884e89c91d2d4d740f
         with:
           profile: ai/site-profile.json
 
@@ -62,7 +62,7 @@ jobs:
           from pathlib import Path
           from jsonschema import Draft202012Validator, FormatChecker
 
-          schema_url = 'https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/c1d51698e3765d0817ee14bcbc36c67297457260/schema/ai-search-profile.schema.json'
+          schema_url = 'https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/a60be6a057f6ffe07a85ed884e89c91d2d4d740f/schema/ai-search-profile.schema.json'
           with urllib.request.urlopen(schema_url, timeout=30) as response:
               schema = json.load(response)
           profile = json.loads(Path('ai/ai-search-profile.json').read_text(encoding='utf-8'))
