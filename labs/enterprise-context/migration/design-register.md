@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP S/4HANA Migration Design Register — Object-Level Architecture Control"
-description: "A practical object decision register for S/4HANA migration: release, method, dependencies, numbering, delta, volume, reconciliation, ownership, fallback and evidence."
+title: "SAP S/4HANA Migration Design Register — Object Control"
+description: "Object-level S/4HANA migration problem control: release, method, dependencies, numbering, delta, volume, reconciliation, ownership and fallback."
 permalink: /labs/enterprise-context/migration/design-register/
 status: draft
 verified: false
