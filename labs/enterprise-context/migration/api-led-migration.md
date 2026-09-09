@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP S/4HANA API-Led Migration — Design, Restart and Cutover"
-description: "Lead-level guide to API-led S/4HANA migration: when to use released APIs, object sequencing, idempotency, retries, throughput, delta loads, reconciliation, and cloud boundaries."
+description: "API-led S/4HANA migration problem solving: when APIs fit, plus sequencing, restart safety, throughput, delta, reconciliation and cloud boundaries."
 permalink: /labs/enterprise-context/migration/api-led-migration/
 status: draft
 verified: false
