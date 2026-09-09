@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP S/4HANA Migration Factory — Governance, Mock Cycles and Ownership"
-description: "Lead-level operating model for an S/4HANA migration factory: environments, object squads, mock cycles, defect control, design freeze, evidence, cutover ownership and handover."
+description: "Lead operating model for an S/4HANA migration factory: environments, squads, mock cycles, defect control, design freeze, evidence and cutover ownership."
 permalink: /labs/enterprise-context/migration/migration-factory/
 status: draft
 verified: false
