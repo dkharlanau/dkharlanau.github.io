@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP S/4HANA Greenfield Migration — Architecture and Data Load"
-description: "A Lead-level guide to greenfield data migration into SAP S/4HANA: scope, sequencing, migration cockpit, cloud boundaries, cutover, reconciliation, and domain decisions."
+description: "Lead-level greenfield S/4HANA migration architecture: scope, sequencing, Migration Cockpit, cloud boundaries, cutover, and reconciliation."
 permalink: /labs/enterprise-context/migration/
 status: draft
 verified: false
@@ -32,126 +32,99 @@ career_skills:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Enterprise / Greenfield migration</p>
       <h1>Move the business state,<br />not the old database.</h1>
-      <p>A greenfield S/4HANA migration is a controlled rebuild of the data needed to operate the new solution. The architect decides what must exist on day one, what stays as history, how dependencies are sequenced, and how every loaded number is proved.</p>
+      <p>A greenfield migration rebuilds the data needed to run the new S/4HANA solution. The Lead decides what must exist on day one, what remains as history, how dependencies are sequenced, and how every important quantity and value is proved.</p>
       <a class="research-canvas__button" href="#migration-map">Open the migration map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Migration scope">
       <p>Architect view</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Scope</strong><small>What moves and what does not</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>Load</strong><small>Objects, tools, dependencies</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Prove</strong><small>Reconcile before go-live</small></div>
-      <em>Research baseline: Public Cloud 2608 and S/4HANA 2025 FPS01 documentation.</em>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Prove</strong><small>Reconcile before release</small></div>
+      <em>Baseline: Public Cloud 2608 and S/4HANA 2025 documentation.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">conversion_path</span>
-    <p><strong>Greenfield is not “copy ECC into S/4”.</strong> Standard migration content is designed mainly for initial master data, open transactional data, balances, and inventory needed to start operations.</p>
-    <p><strong>Closed history is a separate architecture decision.</strong> Keep it in the legacy system, an archive, a data platform, or another governed history solution unless a supported migration object and a real business need justify moving it.</p>
+    <p><strong>Greenfield is not “copy ECC into S/4”.</strong> Standard migration is focused on the initial operating state: master data, eligible open business, inventory, open items and balances.</p>
+    <p><strong>Closed operational history is a separate decision.</strong> Keep it in a governed legacy system, archive or data platform unless an explicit business, legal and supported target requirement justifies another path.</p>
     <a href="/labs/enterprise-context/deployment-models/">Check deployment-model boundaries <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="migration-map" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Migration knowledge map</p>
-      <h2>Six views for one cutover.</h2>
-      <p>Use the pages together. Object knowledge without sequencing is incomplete. Tool knowledge without reconciliation is dangerous.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Knowledge map</p><h2>Six views for one cutover.</h2><p>Object knowledge without sequencing is incomplete. Tool knowledge without reconciliation is unsafe.</p></header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/migration/object-catalog/"><span>01</span><strong>Migration Object Catalog</strong><small>What can usually be loaded across SD, MM, PP, QM, EWM, PM, PS, FI and CO; what is master, open transaction, balance, or reference data.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/"><span>02</span><strong>Tools and Technical Paths</strong><small>Migration Cockpit, staging tables, direct transfer, APIs, IDocs, Integration Suite, ETL tools, LTMOM, Public Cloud modeler, and custom engineering.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
-      <a href="/labs/enterprise-context/migration/domain-playbooks/"><span>03</span><strong>Domain Playbooks</strong><small>Practical load order and migration questions for Sales, Procurement, Inventory, Production, Finance, Controlling and adjacent logistics domains.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/migration/cutover/"><span>04</span><strong>Cutover and Reconciliation</strong><small>Mock loads, freeze and delta design, run control, error recovery, financial and logistics reconciliation, go/no-go evidence, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/enterprise-context/migration/lead-assessment/"><span>05</span><strong>Lead Assessment Drills</strong><small>Architecture questions that expose weak migration thinking: history, partial documents, internal numbering, stock versus value, rollback, cloud restrictions, and ownership.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
-      <a href="#architecture-model"><span>06</span><strong>Architecture Model</strong><small>The operating model on this page: scope layers, source paths, dependency gates, evidence, and deployment choices.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/enterprise-context/migration/object-catalog/"><span>01</span><strong>Migration Object Catalog</strong><small>Master data, open business, balances and object families across SD, MM, PP, QM, EWM, PM, PS, FI and CO.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/"><span>02</span><strong>Tools and Technical Paths</strong><small>Migration Cockpit, staging, direct transfer, APIs, IDocs, ETL, LTMOM, Public Cloud modeler and custom engineering.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
+      <a href="/labs/enterprise-context/migration/domain-playbooks/"><span>03</span><strong>Domain Playbooks</strong><small>Sales, Procurement, Inventory, EWM, Production, Quality, Finance, Controlling, Assets and cross-domain dependencies.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/migration/cutover/"><span>04</span><strong>Cutover and Reconciliation</strong><small>Mocks, freeze, deltas, run control, recovery, financial proof, go/no-go, hypercare and decommissioning.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/enterprise-context/migration/lead-assessment/"><span>05</span><strong>Lead Assessment Drills</strong><small>Twenty architecture questions on history, partial documents, numbering, stock/value, rollback, cloud restrictions and ownership.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
+      <a href="#architecture-model"><span>06</span><strong>Architecture Model</strong><small>Scope classes, source paths, dependency gates, evidence and deployment choices.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="architecture-model" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Scope before extraction</p>
-      <h2>Classify every requested dataset before anyone writes an ETL job.</h2>
-      <p>The same word “migration” is often used for very different jobs. Separate them early.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Scope first</p><h2>Classify every requested dataset before extraction starts.</h2></header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/migration/domain-playbooks/"><span>A</span><strong>Configuration and organisational design</strong><small>Company codes, plants, sales organisations, purchasing organisations, ledgers, valuation and process configuration normally belong to implementation and transport/configuration governance. Do not treat them as ordinary business-data loads.</small><i class="material-symbols-outlined" aria-hidden="true">settings</i></a>
-      <a href="/labs/enterprise-context/migration/object-catalog/#foundation"><span>B</span><strong>Foundation master data</strong><small>Business partners, customers, suppliers, products, units, banks, G/L accounts, cost and profit structures, and other objects that later transactions reference.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
-      <a href="/labs/enterprise-context/migration/object-catalog/#domain-master"><span>C</span><strong>Domain master and planning data</strong><small>Purchasing info records, source lists, BOMs, work centres, routings, production versions, classification, quality, warehouse and maintenance structures.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="/labs/enterprise-context/migration/object-catalog/#open-business"><span>D</span><strong>Open business transactions</strong><small>Open sales orders, contracts, purchase orders, production orders and other in-flight business that must continue after go-live. Eligibility is object-specific.</small><i class="material-symbols-outlined" aria-hidden="true">pending_actions</i></a>
-      <a href="/labs/enterprise-context/migration/object-catalog/#balances"><span>E</span><strong>Balances, stock and open items</strong><small>Inventory quantities and values, G/L balances, AP/AR open items, bank balances and fixed-asset values. These require business reconciliation, not only technical success.</small><i class="material-symbols-outlined" aria-hidden="true">balance</i></a>
-      <a href="/labs/enterprise-context/migration/cutover/#history"><span>F</span><strong>Closed history</strong><small>Closed orders, old deliveries, old invoices and long historical document chains are usually better retained outside the operational migration scope. Define access, retention and audit requirements separately.</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/#integration-after-go-live"><span>G</span><strong>Post-go-live replication and deltas</strong><small>Recurring interfaces are integration, not one-time migration. Design APIs, IDocs, events or middleware with monitoring, retries and ownership.</small><i class="material-symbols-outlined" aria-hidden="true">sync</i></a>
+      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-0"><span>A</span><strong>Configuration</strong><small>Company codes, plants, sales and purchasing structures, ledgers, valuation, process configuration and scope belong to implementation/configuration governance.</small><i class="material-symbols-outlined" aria-hidden="true">settings</i></a>
+      <a href="/labs/enterprise-context/migration/object-catalog/#foundation"><span>B</span><strong>Foundation master data</strong><small>Business Partners, customers, suppliers, products, banks, G/L accounts, cost/profit structures and common references.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/enterprise-context/migration/object-catalog/#domain-master"><span>C</span><strong>Domain and planning master data</strong><small>Purchasing masters, classification, BOMs, work centres, routings, production versions, quality, warehouse and maintenance structures.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/enterprise-context/migration/object-catalog/#open-business"><span>D</span><strong>Eligible open business</strong><small>Open contracts and orders only where the released migration object supports the current state. Follow-on document flow is a critical restriction.</small><i class="material-symbols-outlined" aria-hidden="true">pending_actions</i></a>
+      <a href="/labs/enterprise-context/migration/object-catalog/#balances"><span>E</span><strong>Stock, open items and balances</strong><small>Inventory quantities/values, AP/AR, G/L balances, assets and other opening positions require business and financial reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">balance</i></a>
+      <a href="/labs/enterprise-context/migration/cutover/#history"><span>F</span><strong>Closed history</strong><small>Retain it through the agreed history architecture instead of rebuilding old operational document chains in S/4.</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#integration-after-go-live"><span>G</span><strong>Recurring flows</strong><small>If the data continues after go-live, treat it as production integration with monitoring, retry, ownership and change governance.</small><i class="material-symbols-outlined" aria-hidden="true">sync</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Source-system decision</p>
-      <h2>Use direct transfer where it fits. Use staging as the neutral boundary.</h2>
-      <p>Do not force every source through the same route.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Source path</p><h2>Use direct transfer where supported. Use staging as the neutral boundary.</h2></header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/migration/tooling/#direct-transfer"><span>ECC</span><strong>SAP ERP / supported SAP source</strong><small>Direct transfer can reduce extraction work when the exact source scenario and migration object are supported. Keep object selection, mappings, transformations and target validation explicit.</small><i class="material-symbols-outlined" aria-hidden="true">east</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/#staging"><span>EXT</span><strong>Non-SAP and mixed legacy sources</strong><small>Staging tables are usually the cleanest contract: extract and harmonise outside S/4, populate the SAP-defined structures, process mappings, simulate, migrate and reconcile.</small><i class="material-symbols-outlined" aria-hidden="true">table_view</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/#custom"><span>GAP</span><strong>No suitable migration object</strong><small>First prove that the gap is real. Then compare a released API, an SAP-supported interface, a modeler enhancement, or a controlled custom loader. Direct table writes are not a migration strategy.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#direct-transfer"><span>SAP</span><strong>Supported SAP source</strong><small>Direct transfer can reduce custom extraction. It does not remove scope, mapping, prerequisite, simulation or reconciliation work.</small><i class="material-symbols-outlined" aria-hidden="true">east</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#staging"><span>EXT</span><strong>External or mixed legacy sources</strong><small>Extract and harmonise outside S/4, populate the SAP staging contract, process mappings, simulate, migrate and reconcile.</small><i class="material-symbols-outlined" aria-hidden="true">table_view</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#custom"><span>GAP</span><strong>No suitable migration object</strong><small>Prove the gap, then compare released APIs/interfaces, modeler enhancement or a controlled custom loader. Never write directly to application tables.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Deployment boundary</p>
-      <h2>Public, Private and On-Premise share the migration problem, not the same freedom.</h2>
-      <p>Always confirm the exact target release and active scope before freezing the design.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Deployment boundary</p><h2>Same migration problem, different technical freedom.</h2></header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/migration/tooling/#public-cloud"><span>PUB</span><strong>S/4HANA Cloud Public Edition</strong><small>Use released migration objects, Migrate Your Data, staging tables or supported direct transfer. Remote staging can use SAP HANA Cloud on BTP. Modeler enhancements are limited to migration objects and fields released by SAP.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/#private-cloud"><span>PRV</span><strong>S/4HANA Cloud Private Edition</strong><small>Migration Cockpit remains central, with broader technical control. LTMOM supports migration-object modelling; recent 2025 features add direct-transfer selection and split options.</small><i class="material-symbols-outlined" aria-hidden="true">cloud_queue</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/#on-premise"><span>ONP</span><strong>S/4HANA On-Premise</strong><small>Similar Migration Cockpit and LTMOM capabilities to Private Edition, plus full customer system control. More freedom also creates more ways to build unsupported loaders, so governance matters more, not less.</small><i class="material-symbols-outlined" aria-hidden="true">dns</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#public-cloud"><span>PUB</span><strong>S/4HANA Cloud Public Edition</strong><small>Use released migration objects and supported migration approaches. Public Cloud 2608 documents staging-table migration and direct transfer from SAP systems; modeler changes are limited to SAP-released content.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#private-cloud"><span>PRV</span><strong>S/4HANA Cloud Private Edition</strong><small>Migration Cockpit remains central with broader technical control and LTMOM modelling.</small><i class="material-symbols-outlined" aria-hidden="true">cloud_queue</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#on-premise"><span>ONP</span><strong>S/4HANA On-Premise</strong><small>Similar Migration Cockpit/LTMOM capabilities plus full system control. More freedom increases the need for clean-core governance.</small><i class="material-symbols-outlined" aria-hidden="true">dns</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Dependency model</p>
-      <h2>Load by dependency, not by module plan.</h2>
-      <p>A useful starting sequence is below. The final order must be proven against the migration-object prerequisites in the target release.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Dependency model</p><h2>Load by dependency, not by module calendar.</h2></header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-0"><span>0</span><strong>Target configuration ready</strong><small>Organisational units, currencies, ledgers, valuation, number ranges, document types, plants, sales and purchasing structures, and required scope are usable.</small><i class="material-symbols-outlined" aria-hidden="true">check_circle</i></a>
-      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-1"><span>1</span><strong>Identity and financial foundations</strong><small>Business partners, customers, suppliers, banks, G/L accounts, cost centres, profit centres and required reference masters.</small><i class="material-symbols-outlined" aria-hidden="true">badge</i></a>
-      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-2"><span>2</span><strong>Products and operational masters</strong><small>Products and organisational extensions, classification, purchasing masters, BOM, work centre, routing, production version, quality and warehouse-related masters.</small><i class="material-symbols-outlined" aria-hidden="true">category</i></a>
-      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-3"><span>3</span><strong>Open commercial and supply documents</strong><small>Eligible open contracts, sales orders, purchase orders, production orders and other continuing commitments.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
-      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-4"><span>4</span><strong>Stock and financial cutover</strong><small>Inventory, AP/AR open items, G/L balances, asset master and asset postings in the agreed financial sequence. Reconcile quantity, value and clearing accounts together.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
-      <a href="/labs/enterprise-context/migration/cutover/#delta"><span>5</span><strong>Delta, interfaces and business release</strong><small>Apply final deltas, start recurring integrations, complete reconciliation, approve go/no-go, and release the business only when evidence is signed.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
+      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-0"><span>0</span><strong>Configuration ready</strong><small>Target organisations, ledgers, valuation, number ranges, scope and process settings are usable.</small><i class="material-symbols-outlined" aria-hidden="true">settings</i></a>
+      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-1"><span>1</span><strong>Shared foundations</strong><small>Business Partners, financial masters and common reference objects.</small><i class="material-symbols-outlined" aria-hidden="true">badge</i></a>
+      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-2"><span>2</span><strong>Operational masters</strong><small>Products, purchasing/sales masters, production, quality, warehouse and maintenance dependencies.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-3"><span>3</span><strong>Eligible open business</strong><small>Open transactions that can be represented safely under the current migration-object restrictions.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="/labs/enterprise-context/migration/domain-playbooks/#wave-4"><span>4</span><strong>Stock and financial opening</strong><small>Inventory, AP/AR, G/L, assets and related cross-domain reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+      <a href="/labs/enterprise-context/migration/cutover/#delta"><span>5</span><strong>Final delta and release</strong><small>Final changes, production integrations, reconciliation, go/no-go and controlled business release.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead rules</p>
-      <h2>Five rules prevent most migration design mistakes.</h2>
-    </header>
+    <header><p class="research-canvas__eyebrow">Lead rules</p><h2>Five rules keep the programme under control.</h2></header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/migration/cutover/"><span>1</span><strong>A successful load is not a successful migration</strong><small>Technical status proves processing. Business reconciliation proves that the target can operate with correct quantities, values, relationships and ownership.</small><i class="material-symbols-outlined" aria-hidden="true">verified</i></a>
-      <a href="/labs/enterprise-context/migration/object-catalog/"><span>2</span><strong>Migration objects change by release</strong><small>Never design from an old spreadsheet of object names. Check the Available Migration Objects page, prerequisites, restrictions, scope items and migration approach for the target release.</small><i class="material-symbols-outlined" aria-hidden="true">update</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/#id-mapping"><span>3</span><strong>Legacy keys are part of the contract</strong><small>If target numbers change, keep source IDs as governed cross-references. Use them consistently in later migration objects so dependencies can be resolved and audited.</small><i class="material-symbols-outlined" aria-hidden="true">key</i></a>
-      <a href="/labs/enterprise-context/migration/cutover/#rehearsal"><span>4</span><strong>Every rehearsal must look more like production</strong><small>Same extraction logic, comparable volume, same mapping version, measured runtimes, real reconciliation and clear defect burn-down.</small><i class="material-symbols-outlined" aria-hidden="true">repeat</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/#engineering-kit"><span>5</span><strong>Put migration logic under engineering control</strong><small>Mappings, transformations, validation rules and reconciliation queries should be versioned, tested and promoted through controlled environments. Excel can be an input; it should not be the architecture.</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
+      <a href="/labs/enterprise-context/migration/cutover/#reconciliation"><span>1</span><strong>Technical success is not business acceptance</strong><small>Prove quantities, values, references and executable processes.</small><i class="material-symbols-outlined" aria-hidden="true">verified</i></a>
+      <a href="/labs/enterprise-context/migration/object-catalog/"><span>2</span><strong>Object availability is release-specific</strong><small>Check the current Available Migration Objects documentation, prerequisites and restrictions before design freeze.</small><i class="material-symbols-outlined" aria-hidden="true">update</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#id-mapping"><span>3</span><strong>Legacy keys are governed data</strong><small>Keep source-to-target identity even when S/4 generates internal numbers.</small><i class="material-symbols-outlined" aria-hidden="true">key</i></a>
+      <a href="/labs/enterprise-context/migration/cutover/#rehearsal"><span>4</span><strong>Rehearsals must converge on production</strong><small>Same logic, realistic volume, measured runtime, real reconciliation and controlled defect burn-down.</small><i class="material-symbols-outlined" aria-hidden="true">repeat</i></a>
+      <a href="/labs/enterprise-context/migration/tooling/#engineering-kit"><span>5</span><strong>Version migration logic like software</strong><small>Mappings, transformations, validations, reconciliation queries and runbooks belong under engineering control.</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Official source map</p>
-      <h2>Use SAP documentation as the release-level source of truth.</h2>
-      <p>This Lab converts documentation into an architecture model. Exact object availability and restrictions must still be checked for the customer release and activated scope.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Official source map</p><h2>Use SAP Help as the release-level source of truth.</h2></header>
     <div class="research-route-list">
-      <a href="https://help.sap.com/S4_CE_DM" target="_blank" rel="noopener"><span>SAP</span><strong>Public Edition — Data Migration</strong><small>Migration Cockpit, staging tables, direct transfer, process and Public Cloud guidance.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/S4_CE_MO" target="_blank" rel="noopener"><span>SAP</span><strong>Public Edition — Available Migration Objects</strong><small>Release-specific migration objects, prerequisites, restrictions, approach and validation guidance.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/S4_CE_DM_STATUS" target="_blank" rel="noopener"><span>SAP</span><strong>Public Edition — Data Migration Status</strong><small>Status, messages, audit data and reporting for the staging-table approach.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/S4_OP_DM" target="_blank" rel="noopener"><span>SAP</span><strong>S/4HANA / Private Edition — Data Migration</strong><small>Migration Cockpit guidance for SAP S/4HANA and Private Edition.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/S4_OP_MO" target="_blank" rel="noopener"><span>SAP</span><strong>S/4HANA / Private Edition — Available Migration Objects</strong><small>Object documentation and release-specific migration content for the broader S/4HANA stack.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/S4_CE_DM" target="_blank" rel="noopener"><span>SAP</span><strong>Public Edition — Data Migration</strong><small>Migration process, staging tables and direct transfer.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/S4_CE_MO" target="_blank" rel="noopener"><span>SAP</span><strong>Public Edition — Available Migration Objects</strong><small>Object-specific prerequisites, restrictions and migration approach.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/S4_CE_DM_STATUS" target="_blank" rel="noopener"><span>SAP</span><strong>Public Edition — Data Migration Status</strong><small>Status and audit support for the staging-table approach.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/S4_OP_DM" target="_blank" rel="noopener"><span>SAP</span><strong>S/4HANA / Private Edition — Data Migration</strong><small>Migration Cockpit guidance for the broader S/4HANA stack.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/S4_OP_MO" target="_blank" rel="noopener"><span>SAP</span><strong>S/4HANA / Private Edition — Available Migration Objects</strong><small>Release-specific migration content and object documentation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
 
