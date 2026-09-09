@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP S/4HANA Migration Tools — Cockpit, Staging, APIs, IDoc, Cloud Integration and CI/CD"
-description: "Decision guide for S/4HANA migration tools: Migration Cockpit, staging, direct transfer, APIs, IDocs, SAP Cloud Integration, LTMOM, ETL, custom engineering, and CI/CD controls."
+title: "SAP S/4HANA Migration Tools — Cockpit, APIs and Integration"
+description: "Decision guide for S/4HANA migration tools: Migration Cockpit, staging, direct transfer, APIs, IDocs, Integration Suite, LTMOM, ETL and CI/CD controls."
 permalink: /labs/enterprise-context/migration/tooling/
 status: draft
 verified: false
