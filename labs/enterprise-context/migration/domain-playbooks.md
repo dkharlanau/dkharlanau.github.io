@@ -47,6 +47,7 @@ career_skills:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Problem:</strong> module teams can produce individually correct load plans that fail as one cutover because shared master data, open-document state, stock valuation and financial opening balances depend on each other.</p>
     <p><strong>Current standard order rule.</strong> Migration Cockpit is for the initial operating state. Orders with follow-on documents in their document flow cannot be migrated through the standard migration content. SAP specifically requires partially delivered sales orders to be closed in the source and partially open purchase orders to be closed or cancelled.</p>
     <p><strong>Architectural consequence.</strong> If a commercial commitment remains after the legacy document is closed, create a controlled target document for the remaining business. Do not rebuild historical receipts, deliveries, invoices or confirmations only to imitate the old document flow.</p>
   </section>
