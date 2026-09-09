@@ -94,14 +94,14 @@ career_skills:
   <section class="research-canvas__inventory" id="q5" data-reveal>
     <header><p class="research-canvas__eyebrow">Question 05</p><h2>How do you migrate a partially delivered sales order?</h2></header>
     <div class="research-route-list">
-      <a href="#q5"><span>ANS</span><strong>I migrate the remaining commitment, not the historical document flow.</strong><small>First I check whether the target migration object supports the document type and status. Then I separate the already executed legacy part from the quantity/value that still has to be delivered. If the remaining part cannot be represented safely, I close or split the legacy document and create a controlled target order. I reconcile remaining quantity and value and test the target delivery/billing flow.</small><i class="material-symbols-outlined" aria-hidden="true">call_split</i></a>
+      <a href="#q5"><span>ANS</span><strong>I do not migrate the partially delivered order through the standard Migration Cockpit.</strong><small>The current standard rule is that orders with follow-on documents cannot be migrated, and SAP explicitly says partially delivered sales orders must be closed in the source. I close the legacy chain, identify the remaining business commitment, and create a controlled target order if the business still needs it. Then I reconcile remaining quantity and value and test delivery and billing in the target.</small><i class="material-symbols-outlined" aria-hidden="true">call_split</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="q6" data-reveal>
     <header><p class="research-canvas__eyebrow">Question 06</p><h2>How do you migrate a purchase order with goods receipt or invoice history?</h2></header>
     <div class="research-route-list">
-      <a href="#q6"><span>ANS</span><strong>I treat it as Procurement plus Finance, not only a PO load.</strong><small>The target should represent the remaining open business, while historical receipts and invoices normally remain historical. I check the migration-object restrictions, then agree the remaining quantity/value and GR/IR or open-item treatment with Finance. I do not create fake target goods movements to rebuild legacy PO history.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
+      <a href="#q6"><span>ANS</span><strong>A PO with follow-on receipt or invoice history is not a standard PO migration candidate.</strong><small>The standard rule is that orders with follow-on documents cannot be migrated, and SAP says partially open purchase orders must be closed or cancelled in the source. If a business commitment remains, I recreate the required target PO under an approved cutover rule and reconcile quantity, value, GR/IR and open financial items with Finance. I do not create fake target goods movements to rebuild legacy history.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
     </div>
   </section>
 
