@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP S/4HANA Migration Tools — Cockpit, Staging, APIs, IDoc and CI"
-description: "Decision guide for S/4HANA migration tools: Migration Cockpit, staging, direct transfer, APIs, IDocs, LTMOM, ETL, custom engineering, and CI."
+title: "SAP S/4HANA Migration Tools — Cockpit, Staging, APIs, IDoc, Cloud Integration and CI/CD"
+description: "Decision guide for S/4HANA migration tools: Migration Cockpit, staging, direct transfer, APIs, IDocs, SAP Cloud Integration, LTMOM, ETL, custom engineering, and CI/CD controls."
 permalink: /labs/enterprise-context/migration/tooling/
 status: draft
 verified: false
@@ -16,6 +16,8 @@ tags:
   - ltmom
   - idoc
   - api
+  - integration-suite
+  - cloud-integration
   - ci-cd
 career_impact: mapped
 career_skills:
@@ -33,7 +35,7 @@ career_skills:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Greenfield migration / Tooling</p>
       <h1>Choose the load path<br />from the business object.</h1>
-      <p>Migration Cockpit is the default initial-load engine. ETL, APIs, IDocs and custom code solve different parts of the problem. The Lead keeps migration, transformation and production integration responsibilities separate.</p>
+      <p>Migration Cockpit is the default initial-load engine. ETL, APIs, IDocs, Cloud Integration and custom code solve different parts of the problem. The Lead keeps migration, transformation, orchestration and production integration responsibilities separate.</p>
       <a class="research-canvas__button" href="#decision">Choose a path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Tool selection">
@@ -47,6 +49,7 @@ career_skills:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Context:</strong> this page is the Lead decision layer for target loading and orchestration. The existing reviewed <a href="/labs/enterprise-context/integrations/data-migration/">Data Migration and Controlled Bulk Loading</a> page remains the detailed toolbox for Migration Cockpit, ETL, data-quality, mass-maintenance and migration-factory products.</p>
     <p><strong>Initial migration and integration are different products.</strong> Migration Cockpit creates the initial target state. APIs, IDocs, events and middleware are integration mechanisms when data must continue after go-live.</p>
     <p><strong>ETL does not replace SAP business validation.</strong> It can extract, cleanse, transform and fill staging structures, but the target business object is still created through supported SAP migration content or a released business interface.</p>
   </section>
@@ -58,7 +61,8 @@ career_skills:
       <a href="#direct-transfer"><span>2</span><strong>Migration Cockpit — direct transfer</strong><small>Useful for supported SAP source scenarios and migration objects; reduces extraction code, not governance.</small><i class="material-symbols-outlined" aria-hidden="true">sync_alt</i></a>
       <a href="#api"><span>3</span><strong>Released API</strong><small>Consider for a proven standard gap or when the same business capability must continue after go-live.</small><i class="material-symbols-outlined" aria-hidden="true">api</i></a>
       <a href="#idoc"><span>4</span><strong>Supported IDoc</strong><small>Mature asynchronous SAP integration where the exact interface is released and monitoring/restart semantics are useful.</small><i class="material-symbols-outlined" aria-hidden="true">mail</i></a>
-      <a href="#custom"><span>5</span><strong>Modeler or custom loader</strong><small>Use only after proving the standard gap and keep the target-side custom logic small.</small><i class="material-symbols-outlined" aria-hidden="true">extension</i></a>
+      <a href="#cloud-integration"><span>5</span><strong>SAP Integration Suite — Cloud Integration</strong><small>Use for protocol mediation, transformation, routing and controlled orchestration around released target interfaces. It is middleware, not an alternative S/4 business object.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="#custom"><span>6</span><strong>Modeler or custom loader</strong><small>Use only after proving the standard gap and keep the target-side custom logic small.</small><i class="material-symbols-outlined" aria-hidden="true">extension</i></a>
     </div>
   </section>
 
@@ -128,6 +132,18 @@ career_skills:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="cloud-integration" data-reveal>
+    <header><p class="research-canvas__eyebrow">SAP Integration Suite / Cloud Integration</p><h2>Orchestrate the route; do not replace the target contract.</h2><p>Cloud Integration is useful when a migration stream needs protocol conversion, message transformation, routing, asynchronous buffering or the same interface will continue after go-live.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/integrations/"><span>ORCH</span><strong>Use middleware for mediation</strong><small>Connect legacy systems to released S/4 APIs or IDoc interfaces, normalize protocols and isolate source-specific transport logic from the target business object.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="https://help.sap.com/docs/cloud-integration/sap-cloud-integration/idoc-adapter" target="_blank" rel="noopener"><span>IDOC</span><strong>IDoc adapter uses web-service transport</strong><small>Cloud Integration can exchange IDoc messages with systems that support the required SOAP web-service communication. This is not the same as unrestricted classic ALE/RFC connectivity.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
+      <a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/monitor-message-processing" target="_blank" rel="noopener"><span>OPS</span><strong>Design operations before volume</strong><small>Use message monitoring, correlation, controlled retry and error ownership. A middleware success status does not prove that the S/4 business object reconciles correctly.</small><i class="material-symbols-outlined" aria-hidden="true">monitor_heart</i></a>
+      <a href="https://help.sap.com/docs/cloud-integration/sap-cloud-integration/define-idempotent-process-call" target="_blank" rel="noopener"><span>DUP</span><strong>Idempotency still matters</strong><small>Retries can create duplicates when receiver semantics are weak or acknowledgements are uncertain. Prefer receiver-side duplicate control and make migration batches traceable by source key and run ID.</small><i class="material-symbols-outlined" aria-hidden="true">content_copy</i></a>
+      <a href="#public-cloud"><span>PUB</span><strong>Public Cloud stays inside released communication scope</strong><small>Cloud Integration does not create a private back door into Public Edition. The target API, web service or IDoc communication scenario must be released for the required business operation.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
+      <a href="/labs/enterprise-context/integrations/data-migration/"><span>MAP</span><strong>Use the existing reviewed toolbox for product choice</strong><small>Compare ETL, data-quality, mass-maintenance and migration-factory tools there; keep this page focused on Lead architecture and target-load decisions.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="lsmw" data-reveal>
     <header><p class="research-canvas__eyebrow">Legacy tooling</p><h2>LSMW is not the S/4 migration architecture.</h2></header>
     <div class="research-route-list">
@@ -159,10 +175,10 @@ career_skills:
     <header><p class="research-canvas__eyebrow">Migration Engineering Kit</p><h2>Put mappings and controls in Git.</h2><p>This is a useful custom capability because it improves preparation and evidence without replacing SAP's target migration framework.</p></header>
     <div class="research-route-list">
       <a href="#engineering-kit"><span>REPO</span><strong>Versioned object contracts</strong><small>Source schema, target staging metadata, mappings, transformations, validations, samples, reconciliation queries and runbook live together.</small><i class="material-symbols-outlined" aria-hidden="true">folder_data</i></a>
-      <a href="#engineering-kit"><span>CI</span><strong>Pre-load gates</strong><small>Validate schema, mandatory fields, types, duplicates, allowed values, referential dependencies and mapping completeness before SAP load.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="#engineering-kit"><span>CI/CD</span><strong>Pre-load gates</strong><small>Use delivery pipelines to validate schema, mandatory fields, types, duplicates, allowed values, referential dependencies and mapping completeness before SAP load.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
       <a href="#engineering-kit"><span>DRIFT</span><strong>Metadata drift</strong><small>Detect when a target release or migration-project update changes the expected staging structure without an approved mapping change.</small><i class="material-symbols-outlined" aria-hidden="true">difference</i></a>
       <a href="/labs/enterprise-context/migration/cutover/#reconciliation"><span>POST</span><strong>Machine-readable reconciliation</strong><small>Produce counts, rejected keys, values and source-to-target differences as cutover evidence.</small><i class="material-symbols-outlined" aria-hidden="true">analytics</i></a>
-      <a href="#engineering-kit"><span>SAFE</span><strong>Secrets stay outside Git</strong><small>CI can validate and package migration assets; production credentials and customer data stay in approved runtime/secret controls.</small><i class="material-symbols-outlined" aria-hidden="true">lock</i></a>
+      <a href="#engineering-kit"><span>SAFE</span><strong>Secrets stay outside Git</strong><small>CI/CD can validate and package migration assets; production credentials and customer data stay in approved runtime and secret controls.</small><i class="material-symbols-outlined" aria-hidden="true">lock</i></a>
     </div>
   </section>
 
