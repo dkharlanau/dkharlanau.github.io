@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
-description: "Practical workspaces for SAP enterprise knowledge, enterprise assurance, AI architecture, Business AI, operational protocols, SAP Lead interview preparation, and assessment practice."
+description: "Practical workspaces for SAP enterprise knowledge, S/4HANA migration, enterprise assurance, AI architecture, Business AI, operational protocols, SAP Lead interview preparation, and assessment practice."
 permalink: /labs/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-01
+last_modified_at: 2026-09-09
 hide_global_cta: true
 tags:
   - sap
@@ -83,6 +83,7 @@ tags:
       <a href="/labs/enterprise-context/automotive-jit/"><span>05</span><strong>Cross-functional and Industry</strong><small>Automotive JIT, finance-logistics connections, common logistics capabilities, industries, and deployment models.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
       <a href="/labs/enterprise-context/experience-platforms/"><span>06</span><strong>Experience Platforms</strong><small>SAP Build Work Zone, central entry points, Fiori launchpad boundaries, SAP Start, tasks, mobile, identity, and the workplace layer across systems.</small><i class="material-symbols-outlined" aria-hidden="true">space_dashboard</i></a>
       <a href="/labs/enterprise-context/performance/"><span>07</span><strong>Performance and Technical Operations</strong><small>Work processes, servers, locks, updates, tRFC/qRFC/bgRFC, traces, SQL/HANA diagnostics, incident paths, and Public Cloud monitoring differences.</small><i class="material-symbols-outlined" aria-hidden="true">monitor_heart</i></a>
+      <a href="/labs/enterprise-context/migration/"><span>08</span><strong>S/4HANA Greenfield Migration</strong><small>Migration architecture, object scope, Migration Cockpit, API-led loading, design register, SD/MM/PP/FI/CO playbooks, cutover, reconciliation, cloud boundaries, and Lead assessment drills.</small><i class="material-symbols-outlined" aria-hidden="true">conversion_path</i></a>
     </div>
   </section>
 
