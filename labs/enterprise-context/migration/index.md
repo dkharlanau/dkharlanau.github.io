@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP S/4HANA Greenfield Migration — Architecture and Data Load"
-description: "Lead-level greenfield S/4HANA migration architecture: scope, sequencing, Migration Cockpit, cloud boundaries, cutover, and reconciliation."
+description: "Lead-level greenfield S/4HANA migration architecture: scope, sequencing, Migration Cockpit, API-led loading, cloud boundaries, cutover, and reconciliation."
 permalink: /labs/enterprise-context/migration/
 status: draft
 verified: false
@@ -52,14 +52,15 @@ career_skills:
   </section>
 
   <section class="research-canvas__inventory" id="migration-map" data-reveal>
-    <header><p class="research-canvas__eyebrow">Knowledge map</p><h2>Six views for one cutover.</h2><p>Object knowledge without sequencing is incomplete. Tool knowledge without reconciliation is unsafe.</p></header>
+    <header><p class="research-canvas__eyebrow">Knowledge map</p><h2>Seven views for one cutover.</h2><p>Object knowledge without sequencing is incomplete. Tool knowledge without reconciliation is unsafe.</p></header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/migration/object-catalog/"><span>01</span><strong>Migration Object Catalog</strong><small>Master data, open business, balances and object families across SD, MM, PP, QM, EWM, PM, PS, FI and CO.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
       <a href="/labs/enterprise-context/migration/tooling/"><span>02</span><strong>Tools and Technical Paths</strong><small>Migration Cockpit, staging, direct transfer, APIs, IDocs, ETL, LTMOM, Public Cloud modeler and custom engineering.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
-      <a href="/labs/enterprise-context/migration/domain-playbooks/"><span>03</span><strong>Domain Playbooks</strong><small>Sales, Procurement, Inventory, EWM, Production, Quality, Finance, Controlling, Assets and cross-domain dependencies.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/migration/cutover/"><span>04</span><strong>Cutover and Reconciliation</strong><small>Mocks, freeze, deltas, run control, recovery, financial proof, go/no-go, hypercare and decommissioning.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/enterprise-context/migration/lead-assessment/"><span>05</span><strong>Lead Assessment Drills</strong><small>Twenty architecture questions on history, partial documents, numbering, stock/value, rollback, cloud restrictions and ownership.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
-      <a href="#architecture-model"><span>06</span><strong>Architecture Model</strong><small>Scope classes, source paths, dependency gates, evidence and deployment choices.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/enterprise-context/migration/api-led-migration/"><span>03</span><strong>API-Led Migration</strong><small>When a released API is justified, plus dependency queues, source-to-target keys, retry safety, throughput proof, delta strategy and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">api</i></a>
+      <a href="/labs/enterprise-context/migration/domain-playbooks/"><span>04</span><strong>Domain Playbooks</strong><small>Sales, Procurement, Inventory, EWM, Production, Quality, Finance, Controlling, Assets and cross-domain dependencies.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/migration/cutover/"><span>05</span><strong>Cutover and Reconciliation</strong><small>Mocks, freeze, deltas, run control, recovery, financial proof, go/no-go, hypercare and decommissioning.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/enterprise-context/migration/lead-assessment/"><span>06</span><strong>Lead Assessment Drills</strong><small>Architecture questions on history, partial documents, numbering, API recovery, throughput, stock/value, rollback, cloud restrictions and ownership.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
+      <a href="#architecture-model"><span>07</span><strong>Architecture Model</strong><small>Scope classes, source paths, dependency gates, evidence and deployment choices.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
     </div>
   </section>
 
@@ -81,7 +82,7 @@ career_skills:
     <div class="research-route-list">
       <a href="/labs/enterprise-context/migration/tooling/#direct-transfer"><span>SAP</span><strong>Supported SAP source</strong><small>Direct transfer can reduce custom extraction. It does not remove scope, mapping, prerequisite, simulation or reconciliation work.</small><i class="material-symbols-outlined" aria-hidden="true">east</i></a>
       <a href="/labs/enterprise-context/migration/tooling/#staging"><span>EXT</span><strong>External or mixed legacy sources</strong><small>Extract and harmonise outside S/4, populate the SAP staging contract, process mappings, simulate, migrate and reconcile.</small><i class="material-symbols-outlined" aria-hidden="true">table_view</i></a>
-      <a href="/labs/enterprise-context/migration/tooling/#custom"><span>GAP</span><strong>No suitable migration object</strong><small>Prove the gap, then compare released APIs/interfaces, modeler enhancement or a controlled custom loader. Never write directly to application tables.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
+      <a href="/labs/enterprise-context/migration/api-led-migration/#decision"><span>GAP</span><strong>No suitable migration object</strong><small>Prove the gap, then compare a released API/interface, modeler enhancement or a controlled custom loader. Never write directly to application tables.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
     </div>
   </section>
 
