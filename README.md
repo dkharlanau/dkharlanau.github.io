@@ -4,6 +4,8 @@ This repository powers the public professional website and knowledge base of **D
 
 The site is designed as three things at once: a human-readable professional profile, a source-backed enterprise knowledge base, and a machine-readable discovery surface for search engines, retrieval systems, and AI agents.
 
+For repository work from ChatGPT or another coding agent, start with [AGENTS.md](AGENTS.md), then use [PROJECT_MAP.md](PROJECT_MAP.md) to route the task to the right sources and checks.
+
 - **Live site:** https://dkharlanau.github.io/
 - **Open-source products:** https://dkharlanau.github.io/products/
 - **LinkedIn:** https://www.linkedin.com/in/dkharlanau/
@@ -94,4 +96,4 @@ Only intentionally public material belongs here. Client information, internal ti
 
 SAP-related material is practical diagnostic and research content, not official SAP documentation. Any configuration, process, integration, or automation decision must be validated in the relevant system landscape.
 
-See `CITATION.md`, `CITATION.cff`, `LICENSE`, `LICENSE-DATA`, and `AGENTS.md` for attribution, licensing, and usage boundaries.
+See [AGENTS.md](AGENTS.md), `CITATION.md`, `CITATION.cff`, `LICENSE`, and `LICENSE-DATA` for repository rules, attribution, licensing, and usage boundaries.
