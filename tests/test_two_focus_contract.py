@@ -81,7 +81,7 @@ def test_pilot_has_five_attempt_review_cycles_and_no_new_data_collection():
     assert "not an employment or certification score" in page
     assert "source checks do not constitute human approval" in page
     assert "There is no validated pass threshold" in page
-    assert "client" in page.lower()
+    assert "customer case" in page.lower()
     assert "Blank, omitted and clear" in page
     assert "One exception list is not one recovery action" in page
     for prohibited in ("<form", "<input", "localStorage", "fetch(", "<script"):
