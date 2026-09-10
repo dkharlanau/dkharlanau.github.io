@@ -6,9 +6,12 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FRONT_MATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.DOTALL)
 
-EXPECTED_SECTIONS = ["home-product"]
+EXPECTED_SECTIONS = ["home-focus", "home-product"]
 
-EXPECTED_PARTIALS = ["_includes/sections/home-product.html"]
+EXPECTED_PARTIALS = [
+    "_includes/sections/home-focus.html",
+    "_includes/sections/home-product.html",
+]
 
 REMOVED_PARTIALS = [
     "_includes/sections/hero-canvas.html",
@@ -29,15 +32,18 @@ def home_data() -> dict:
     return yaml.safe_load((REPO_ROOT / "_data/home.yml").read_text(encoding="utf-8"))
 
 
-def test_all_localized_homepages_use_the_shared_product_page():
+def test_home_rollout_changes_english_and_preserves_translated_pages():
+    """The two-focus rollout is explicitly English-only until locale review."""
     home_paths = [
         "index.md", "ar/index.md", "de/index.md", "es/index.md", "fr/index.md",
         "it/index.md", "nl/index.md", "pl/index.md", "pt-br/index.md", "zh-cn/index.md",
     ]
     for home_path in home_paths:
         fm = parse_frontmatter(REPO_ROOT / home_path)
-        assert fm.get("sections") == EXPECTED_SECTIONS, home_path
+        expected = ["home-focus"] if home_path == "index.md" else ["home-product"]
+        assert fm.get("sections") == expected, home_path
         assert fm.get("home_locale") is True, home_path
+    assert parse_frontmatter(REPO_ROOT / "index.md")["locale"] == "en"
 
 
 def test_index_uses_global_header():
@@ -58,7 +64,9 @@ def test_old_partials_removed():
 def test_page_builder_registers_sections():
     text = (REPO_ROOT / "_includes/page-builder.html").read_text(encoding="utf-8")
     for key in EXPECTED_SECTIONS:
-        assert f"when '{key}'" in text, key
+        # Check the dispatch and its real include, not merely the existence of a partial.
+        pattern = rf"when '{re.escape(key)}' %\}}\s*\{{%-? include sections/{re.escape(key)}\.html -?%\}}"
+        assert re.search(pattern, text), key
     for key in ("hero-canvas", "photo-strip", "tri-columns", "constraint-canvas-home", "steps-ruled"):
         assert f"when '{key}'" not in text, key
 

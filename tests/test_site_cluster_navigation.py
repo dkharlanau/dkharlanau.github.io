@@ -16,14 +16,50 @@ def load_registry():
     return yaml.safe_load(CLUSTERS_PATH.read_text(encoding="utf-8"))
 
 
-def primary_urls(registry):
-    return [item["url"] for item in registry["primary_navigation"]]
+def primary_urls(registry, locale="en"):
+    key = "primary_navigation" if locale == "en" else "fallback_navigation"
+    return [item["url"] for item in registry[key]]
 
 
-def header_product_urls():
-    html = HEADER_PATH.read_text(encoding="utf-8")
+def select_navigation_locale(html, locale):
+    """Resolve only the explicit rollout branch; this is not Liquid rendering."""
+    marker = "{% if page_locale == 'en' %}"
+    assert html.count(marker) == 1
+    start = html.index(marker)
+    body_start = start + len(marker)
+    depth = 1
+    alternate = end = None
+    for token in re.finditer(r"\{%\s*(if|unless|else|endif|endunless)\b.*?%\}", html[body_start:], re.S):
+        command = token.group(1)
+        absolute_start = body_start + token.start()
+        absolute_end = body_start + token.end()
+        if command in ("if", "unless"):
+            depth += 1
+        elif command in ("endif", "endunless"):
+            depth -= 1
+            if depth == 0:
+                end = (absolute_start, absolute_end)
+                break
+        elif command == "else" and depth == 1:
+            assert alternate is None
+            alternate = (absolute_start, absolute_end)
+    assert alternate is not None and end is not None, "Unbalanced locale branch"
+    chosen = html[body_start:alternate[0]] if locale == "en" else html[alternate[1]:end[0]]
+    return html[:start] + chosen + html[end[1]:]
+
+
+def header_product_urls(locale="en"):
+    html = select_navigation_locale(HEADER_PATH.read_text(encoding="utf-8"), locale)
     links = re.findall(r'<a href="([^"]+)" class="([^"]*nav-link[^"]*)"', html)
-    return [href for href, classes in links if "nav-link--utility" not in classes]
+    result = []
+    for href, classes in links:
+        if "nav-link--utility" in classes:
+            continue
+        relative = re.fullmatch(r"\{\{\s*'([^']+)'\s*\|\s*relative_url\s*\}\}", href)
+        route = relative.group(1) if relative else href
+        assert route.startswith("/"), f"Unresolved navigation URL: {href}"
+        result.append(route)
+    return result
 
 
 def footer_explore_urls():
@@ -39,10 +75,22 @@ def footer_explore_urls():
 
 def test_primary_navigation_matches_cluster_registry():
     registry = load_registry()
-    expected = primary_urls(registry)
+    for locale in ("en", "de", "ar", "es", "fr", "it", "nl", "pl", "pt-BR", "zh-Hans"):
+        assert header_product_urls(locale) == primary_urls(registry, locale), locale
+    # Footer is a supporting reference menu, not a second primary audience router.
+    assert set(footer_explore_urls()) == set(primary_urls(registry, "fallback"))
 
-    assert header_product_urls() == expected
-    assert set(footer_explore_urls()) == set(expected)
+
+def test_locale_branch_selection_keeps_nested_conditions_and_common_links():
+    sample = """before{% if page_locale == 'en' %}<a href="{{ '/learn/' | relative_url }}" class="nav-link{% if active %} active{% else %} inactive{% endif %}">Learn</a>{% else %}<a href="/services/" class="nav-link{% unless inactive %} active{% endunless %}">Work</a>{% endif %}<a href="/about/" class="nav-link">About</a>after"""
+    en = select_navigation_locale(sample, "en")
+    de = select_navigation_locale(sample, "de")
+    assert "/learn/" in en and "/services/" not in en
+    assert "/services/" in de and "/learn/" not in de
+    for selected in (en, de):
+        assert selected.startswith("before") and selected.endswith("after")
+        assert "/about/" in selected
+    assert "{% else %} inactive" in en
 
 
 def test_primary_navigation_routes_are_owned_by_product_clusters():
@@ -54,8 +102,9 @@ def test_primary_navigation_routes_are_owned_by_product_clusters():
             owned_routes.add(hub)
         owned_routes.update(cluster.get("members", []))
 
-    for item in registry["primary_navigation"]:
-        assert item["url"] in owned_routes, f"Unowned primary route: {item['url']}"
+    for key in ("primary_navigation", "fallback_navigation"):
+        for item in registry[key]:
+            assert item["url"] in owned_routes, f"Unowned primary route: {item['url']}"
 
 
 def test_machine_layer_stays_out_of_primary_navigation():
@@ -63,17 +112,21 @@ def test_machine_layer_stays_out_of_primary_navigation():
     machine = registry["clusters"]["machine"]
 
     assert machine.get("primary_navigation") is False
-    assert machine["hub"] not in primary_urls(registry)
-    assert machine["hub"] not in header_product_urls()
+    for locale in ("en", "fallback"):
+        assert machine["hub"] not in primary_urls(registry, locale)
+        assert machine["hub"] not in header_product_urls(locale)
 
 
 def test_primary_navigation_has_unique_labels_and_routes():
     registry = load_registry()
-    labels = [item["label"] for item in registry["primary_navigation"]]
-    urls = primary_urls(registry)
-
-    assert len(labels) == len(set(labels))
-    assert len(urls) == len(set(urls))
+    for key in ("primary_navigation", "fallback_navigation"):
+        labels = [item["label"] for item in registry[key]]
+        urls = [item["url"] for item in registry[key]]
+        assert len(labels) == len(set(labels))
+        assert len(urls) == len(set(urls))
+    assert primary_urls(registry) == [
+        "/learn/", "/services/sap-ams-consulting/", "/knowledge/", "/about/"
+    ]
 
 
 def test_secondary_product_hubs_are_reachable_from_knowledge():
