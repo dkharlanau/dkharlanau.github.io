@@ -5,6 +5,12 @@ permalink: /ai/
 description: "Machine-readable routing for two primary site jobs: SAP learning and assessment practice, or SAP AMS optimization, with evidence and publication-state boundaries."
 last_modified_at: 2026-09-10
 hide_global_cta: true
+primary_topic: two-focus-agent-routing
+tags:
+  - sap-learning
+  - sap-ams
+  - ai-discovery
+  - agent-ready-web-profile
 ---
 
 Before reusing a profile, dataset or generated answer, check the [Trust Center](/trust/) for source attribution, review boundaries, crawler policy and corrections.
