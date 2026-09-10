@@ -140,6 +140,10 @@ def infer_content_model(rel_path: str, fm: dict[str, Any]) -> tuple[str, bool]:
     path = rel_path.lower()
     if path.startswith("atlas/diagnostics/"):
         return "diagnostic", True
+    if path == "learning/index.md":
+        return "landing_page", True
+    if path.startswith("learning/packs/"):
+        return "learning_pack", True
     if path.startswith(("services/",)):
         return "service", True
     if path.startswith(("scenarios/",)):

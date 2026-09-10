@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "SAP Learning, Interview Practice and AMS Optimization | Dzmitryi Kharlanau"
+title: "SAP Learning & AMS Optimization | Dzmitryi Kharlanau"
 description: "Practice SAP interviews and assessments, or improve SAP AMS through incident prevention, reliable integrations and controlled automation."
 permalink: /
 locale: en
