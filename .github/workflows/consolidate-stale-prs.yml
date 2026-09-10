@@ -1,0 +1,42 @@
+name: Refresh portfolio projection for consolidation
+
+on:
+  push:
+    branches:
+      - chore/consolidate-stale-prs-20260910
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python3 -m pip install pytest pyyaml
+
+      - name: Regenerate canonical public portfolio projection
+        run: |
+          set -euo pipefail
+          python3 scripts/generate_public_portfolio.py
+          python3 scripts/generate_public_portfolio.py --check
+          python3 -m pytest tests/test_product_portfolio_contract.py
+
+      - name: Validate clean public tree and commit generated output
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/consolidate-stale-prs.yml
+          python3 scripts/check_public_repo.py
+          git add -A
+          git commit -m "chore: refresh public portfolio projection"
+          git push origin HEAD:${GITHUB_REF_NAME}
