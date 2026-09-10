@@ -12,6 +12,8 @@ From this directory, run `npm install .` (there are no runtime dependencies), th
 
 `search_diagnostics`, `get_diagnostic`, `find_related_topics`, `get_evidence_checklist`, `get_tables_and_transactions`, `find_agent_tools`, `get_tool_risk_profile`, and `build_incident_brief` provide deterministic local retrieval. Responses preserve URLs, review state, limitations, and public evidence references.
 
+`build_incident_artifacts` turns a synthetic case plus evidence labels into four bounded Markdown drafts: Incident Brief, Evidence Checklist, RCA Draft, and Jira-ready Markdown. It accepts evidence labels rather than raw production payloads, keeps hypotheses explicitly unconfirmed, and preserves the human approval boundary from the Incident Lab case.
+
 The synthetic Incident Lab adds `list_incident_cases`, `get_incident_case`, `evaluate_incident_response`, and `run_incident_loop`. The loop checks a proposed response against a public-safe fixture for evidence coverage, Atlas source use, unsafe actions, and a stated human approval boundary. It does not generate an answer, call an LLM, or authorize a SAP action.
 
 ## Test
