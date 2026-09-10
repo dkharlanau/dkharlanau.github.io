@@ -1,87 +1,104 @@
 ---
 layout: default
-title: "SAP AMS Consulting — Incident Reduction and Knowledge Transfer"
-description: "SAP AMS consulting to reduce repeat incidents, improve MTTR, remove vendor lock-in, and turn support into a prevention-driven operating model."
+title: "SAP AMS Optimization — Incident Reduction and Continuous Improvement"
+description: "Improve SAP AMS with a repeat-work diagnostic, a focused reliability improvement and a measurable continuous-improvement cycle."
 permalink: /services/sap-ams-consulting/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-09-10
+hide_global_cta: true
 ---
 
-<section class="section note-detail">
-  <article class="note-article neub-card">
-    <header class="note-header">
-      <p class="eyebrow">Service</p>
-      <h1>SAP AMS consulting for teams stuck in repeat-incident mode</h1>
-      <p class="note-subtitle">Stabilise operations, harvest knowledge, and shift AMS from ticket closure to prevention.</p>
-    </header>
-    <div class="note-body">
-      <p>Many SAP AMS engagements look healthy in SLA reports while the same delivery blocks, IDoc failures, billing issues, and master-data defects keep returning. The work examines the operating model behind that pattern: incident clustering, knowledge capture, root-cause loops, and guardrails that reduce rediscovery and make prevention work visible.</p>
+<link rel="stylesheet" href="{{ '/assets/site-focus.css' | relative_url }}" />
+<article class="focus-page focus-reading">
+  <header class="focus-intro">
+    <p class="eyebrow">SAP AMS optimization</p>
+    <h1>Fewer repeat incidents.<br />Less manual recovery.</h1>
+    <p class="focus-lead">Improve the support you already have: trace recurring problems, implement a bounded change and check whether the operating burden actually falls.</p>
+    <p><a class="portal-primary-link" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">Discuss one recurring SAP problem <span aria-hidden="true">↗</span></a></p>
+  </header>
 
-      <h2>What this is—and is not</h2>
-      <p>This is not a promise to remove every incident or replace an existing support provider. It is a way to make a support model more explainable: which failure patterns recur, what evidence is repeatedly missing, where recovery ownership breaks, and which improvements are worth doing before teams add more automation or capacity.</p>
+  <section aria-labelledby="ams-fit-title">
+    <h2 id="ams-fit-title">An improvement engagement, not another support queue.</h2>
+    <p>For SAP service owners, internal application teams and AMS delivery leads who keep paying for the same investigation, repair or handover. The starting point is one process, incident class or data flow with an accountable owner.</p>
+    <p>This is not a replacement for your entire AMS provider, a 24/7 service desk or an unconditional savings promise. Functional, technical and platform owners remain involved where their authority and skills are required.</p>
+  </section>
 
-      <div class="process-rail" aria-label="AMS improvement process">
-        <div class="process-rail__step"><strong>Choose a class</strong><span>Start with one repeat incident or fragile handover, not a generic maturity score.</span></div>
-        <div class="process-rail__step"><strong>Cluster evidence</strong><span>Connect symptoms, affected process step, time, workaround, and dependencies.</span></div>
-        <div class="process-rail__step"><strong>Assign ownership</strong><span>Name the business, functional, technical, and interface decisions required.</span></div>
-        <div class="process-rail__step"><strong>Build memory</strong><span>Leave a runbook, KEDB pattern, control, or prevention backlog.</span></div>
-      </div>
+  <section class="focus-section" aria-labelledby="ams-offers-title">
+    <h2 id="ams-offers-title">Three bounded ways to work</h2>
+    <h3>1. Repeat-work diagnostic</h3>
+    <p><strong>Input:</strong> an agreed sample of sanitized incident evidence, recovery effort, affected process volumes and current ownership. <strong>Output:</strong> a repeat-pattern register, missing-evidence map, baseline and ranked prevention backlog. <strong>Decision:</strong> which problem is worth fixing first, including the option not to automate.</p>
+    <h3>2. Reliability improvement</h3>
+    <p><strong>Input:</strong> one selected pattern and access agreed through the customer's normal controls. <strong>Output:</strong> a scoped solution, implementation responsibilities, tests, recovery or rollback plan, runbook and acceptance evidence. <strong>Decision:</strong> whether a bounded change is safe and useful enough to adopt. Development and platform work are scoped explicitly, not implied as unlimited delivery.</p>
+    <h3>3. Continuous-improvement cycle</h3>
+    <p><strong>Input:</strong> the measured baseline and an owned backlog. <strong>Output:</strong> recurring review of prevention actions, control coverage, knowledge transfer and observed operating results. <strong>Decision:</strong> continue, change direction or stop an intervention whose cost exceeds its demonstrated benefit.</p>
+  </section>
 
-      <h2>Typical problems</h2>
-      <ul>
-        <li>Repeat incidents are closed quickly but never removed at the source.</li>
-        <li>Vendor knowledge is trapped in inboxes, chats, or undocumented custom logic.</li>
-        <li>Business users still experience blocked orders, billing backlog, or unstable interfaces despite green dashboards.</li>
-      </ul>
+  <section class="focus-section" aria-labelledby="ams-scope-title">
+    <h2 id="ams-scope-title">Start where the work keeps returning.</h2>
+    <p><a href="{{ '/services/sap-master-data-stability-assessment/' | relative_url }}">BP / MDG and master-data stability</a>: recurring repairs, incomplete replication and unclear ownership of the target result.</p>
+    <p><a href="{{ '/services/sap-integration-reliability-assessment/' | relative_url }}">Integration reliability</a>: IDoc, service and middleware failures, fragile recovery and missing end-to-end reconciliation.</p>
+    <p><a href="{{ '/services/sap-o2c-process-audit/' | relative_url }}">Order-to-cash diagnostics</a>: repeat delivery or billing blocks whose business impact is not explained by ticket closure.</p>
+    <p><a href="{{ '/atlas/automation/operational-memory-for-sap-ams/' | relative_url }}">Operational memory</a>: evidence checklists, known-error records and runbooks that another person can actually use.</p>
+  </section>
 
-      <h2>Expected outputs</h2>
-      <ul>
-        <li>KEDB and runbook structure for the highest-frequency incident classes.</li>
-        <li>Backlog and MTTR diagnostics tied to business process steps, not just ticket queues.</li>
-        <li>Observability and prevention patterns for AIF, IDoc, OData, and partner integrations.</li>
-        <li>Knowledge-transfer model that reduces dependence on one vendor or one support team.</li>
-      </ul>
+  <section class="focus-section" aria-labelledby="ams-method-title">
+    <h2 id="ams-method-title">What “next-generation AMS” means here</h2>
+    <ol class="focus-steps">
+      <li><strong>Baseline.</strong> Define the business outcome, comparable workload and cost boundary.</li>
+      <li><strong>Prevent.</strong> Find and address the conditions producing repeat demand.</li>
+      <li><strong>Control.</strong> Apply tested changes, explicit ownership and recoverable automation.</li>
+      <li><strong>Verify.</strong> Reconcile the result and inspect recurrence, effort and side effects.</li>
+    </ol>
+    <p>Continuous improvement is the operating cycle. CI/CD is the engineering discipline used where appropriate to validate scripts, mappings, configuration and releases. A green pipeline alone is not proof of a better business outcome.</p>
+  </section>
 
-      <h2>Deliverable preview</h2>
-      <div class="decision-table"><table><thead><tr><th>Artefact</th><th>Practical use</th></tr></thead><tbody>
-        <tr><td>Repeat-pattern register</td><td>Shows what has recurred, the affected business outcome, and whether the pattern is truly comparable.</td></tr>
-        <tr><td>Evidence checklist</td><td>Defines the information needed before escalation, avoiding a new investigation from zero.</td></tr>
-        <tr><td>Ownership and recovery map</td><td>Clarifies who restores service, who fixes the root cause, and who accepts the remaining risk.</td></tr>
-        <tr><td>Operational-memory template</td><td>Captures symptoms, diagnosis, safe checks, decision rationale, prevention action, and review date.</td></tr>
-      </tbody></table></div>
-
-      <h2>How the work starts</h2>
-      <p>The starting point is one visible incident class, not a generic maturity workshop. A useful slice might be delivery blocks that keep reopening, a recurring master-data correction, or an integration failure whose business impact is reported late. The work connects the symptom, process step, evidence, current workaround, accountable owner, and durable prevention path.</p>
-
-      <h2>What usually keeps the pattern alive</h2>
-      <p>Teams often improve ticket handling before they improve the system that produces tickets. Fast closure can hide an unresolved dependency; a workaround can become the unofficial process; and an incident record can lose the reasoning needed for the next person to diagnose it. The assessment distinguishes a local defect from a repeatable failure mode before proposing automation or a structural change.</p>
-
-      <h2>Public-safe example</h2>
-      <p><strong>Illustrative scenario:</strong> an interface error is manually reprocessed whenever it appears. The useful question is not only whether the message can be replayed. It is whether the source data, mapping, queue condition, target state, retry boundary, and business reconciliation are known; and whether one team is accountable for the end-to-end outcome. A runbook that only says “reprocess” does not answer those questions.</p>
-
-      <h2>Where AI may help</h2>
-      <p>AI can cluster similar incident descriptions, draft an evidence pack, and surface related runbooks for a reviewer. It should not close a ticket, approve a production change, or replay a business document without deterministic checks and accountable human review.</p>
-
-      <h2>Dependencies and boundaries</h2>
-      <p>Useful work needs representative, sanitized incident evidence and participation from the business, functional, technical, and vendor sides of the support chain. It does not replace formal change control, release testing, or platform-specific SAP guidance. The immediate output is a clearer prevention backlog and operating model, not a claim that every root cause can be removed in one sprint.</p>
-
-      <h2>Related pages</h2>
-      <p><a href="/about/">Profile</a> · <a href="/ai/sap-ams-improvement/">AI routing page</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/notes/ams/">SAP AMS playbook</a> · <a href="/atlas/automation/operational-memory-for-sap-ams/">Operational memory for SAP AMS</a> · <a href="/atlas/diagnostics/sap-incident-triage-diagnostics/">SAP incident triage diagnostics</a> · <a href="/scenarios/repeated-sap-ams-incidents-knowledge-loss/">Repeat-incident scenario</a> · <a href="/services/sap-o2c-process-audit/">SAP O2C process audit</a> · <a href="/faq/">FAQ</a></p>
+  <section class="focus-section" aria-labelledby="ams-measures-title">
+    <h2 id="ams-measures-title">Measure less avoidable work, not more ticket closures.</h2>
+    <div class="focus-table" role="region" aria-label="AMS measurement contract" tabindex="0">
+      <table>
+        <caption>Agree definitions and a comparable baseline before starting.</caption>
+        <thead><tr><th scope="col">Measure</th><th scope="col">What must be explicit</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Repeat-incident rate</th><td>Comparable pattern, observation window and business-volume denominator.</td></tr>
+          <tr><th scope="row">Manual recovery effort</th><td>Measured handling and reconciliation time, not elapsed waiting time presented as labor.</td></tr>
+          <tr><th scope="row">Recovery time</th><td>Start and end events, severity mix, median and tail behavior.</td></tr>
+          <tr><th scope="row">Business exceptions</th><td>Unresolved target discrepancies or blocked documents after the agreed window.</td></tr>
+          <tr><th scope="row">Safety</th><td>Reopens, escaped change defects, unauthorized actions and service-level regressions.</td></tr>
+        </tbody>
+      </table>
     </div>
-  </article>
-</section>
+    <p>Released team capacity and cash savings are different outcomes. A claim about lower cost must include implementation, maintenance, tooling and review effort; avoid counting the same saved hour twice. Reduced ticket volume caused by lower business activity is not automatically an improvement.</p>
+  </section>
+
+  <section class="focus-section" aria-labelledby="ams-ai-title">
+    <h2 id="ams-ai-title">AI assists the work. It does not own production.</h2>
+    <p>Possible bounded tasks include grouping incident descriptions, preparing an evidence checklist and retrieving relevant runbooks. Outputs need evaluation against representative cases and accountable review. Monitoring access does not imply permission to change data, replay messages or close business exceptions.</p>
+    <p>Use existing monitoring and automation capabilities where they fit. SAP Cloud ALM provides operations capabilities, and SAP Automation Pilot supports automation for SAP BTP. Actual product coverage, entitlements, integration effort and operational authority must be checked for the customer's landscape; this service does not claim to replace those products.</p>
+    <p><a href="https://support.sap.com/en/alm/sap-cloud-alm/operations/expert-portal/calm-apis-for-operations.html">SAP Cloud ALM operations APIs</a> · <a href="https://www.sap.com/products/technology-platform/automation-pilot.html">SAP Automation Pilot</a></p>
+  </section>
+
+  <section class="focus-section" aria-labelledby="ams-proof-title">
+    <h2 id="ams-proof-title">Inspect the method before discussing the work.</h2>
+    <p><a href="{{ '/atlas/diagnostics/sap-incident-triage-diagnostics/' | relative_url }}">Incident triage diagnostics</a> · <a href="{{ '/atlas/automation/operational-memory-for-sap-ams/' | relative_url }}">Operational-memory reference</a> · <a href="{{ '/learn/packs/bp-mdg-replication/' | relative_url }}">Synthetic BP replication exercise</a> · <a href="{{ '/about/' | relative_url }}">Professional background</a></p>
+    <p>The exercise is a draft demonstration of reasoning, not customer evidence. No customer savings figure, testimonial or production-validation claim is inferred from a public example.</p>
+  </section>
+
+  <section class="focus-section" aria-labelledby="ams-start-title">
+    <h2 id="ams-start-title">Bring one problem, without confidential data.</h2>
+    <p>Describe the recurring symptom, the affected process, its approximate frequency, the current workaround and who owns the outcome. Do not send credentials, raw logs or client identifiers through a public channel. Scope, authorized access, deliverables and acceptance criteria are agreed before execution.</p>
+    <p><a class="portal-primary-link" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">Discuss an AMS improvement <span aria-hidden="true">↗</span></a></p>
+    <p class="focus-meta"><a href="{{ '/services/' | relative_url }}">Full service catalogue</a> · <a href="{{ '/learn/' | relative_url }}">Looking for personal learning instead?</a></p>
+  </section>
+</article>
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Service",
-  "name": "SAP AMS consulting",
-  "provider": {
-    "@type": "Person",
-    "@id": "https://dkharlanau.github.io/#dkharlanau"
-  },
-  "serviceType": "SAP AMS consulting",
+  "name": "SAP AMS optimization",
+  "provider": {"@type": "Person", "@id": "https://dkharlanau.github.io/#dkharlanau"},
+  "serviceType": "SAP AMS consulting and continuous improvement",
   "url": "https://dkharlanau.github.io/services/sap-ams-consulting/",
-  "description": "SAP AMS consulting to reduce repeat incidents, improve MTTR, remove vendor lock-in, and build a prevention-driven support model."
+  "description": "Focused SAP AMS diagnostics, reliability improvements and a measurable continuous-improvement cycle. Scope and acceptance are agreed before execution."
 }
 </script>
 
@@ -90,9 +107,9 @@ last_modified_at: 2026-07-25
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "https://dkharlanau.github.io/"},
-    {"@type": "ListItem","position": 2,"name": "Services","item": "https://dkharlanau.github.io/services/"},
-    {"@type": "ListItem","position": 3,"name": "SAP AMS consulting","item": "https://dkharlanau.github.io/services/sap-ams-consulting/"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dkharlanau.github.io/"},
+    {"@type": "ListItem", "position": 2, "name": "Services", "item": "https://dkharlanau.github.io/services/"},
+    {"@type": "ListItem", "position": 3, "name": "SAP AMS optimization", "item": "https://dkharlanau.github.io/services/sap-ams-consulting/"}
   ]
 }
 </script>

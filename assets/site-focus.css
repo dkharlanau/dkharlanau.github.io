@@ -1,0 +1,33 @@
+/* Audience entry points only: do not change the legacy library or shared theme. */
+.focus-page { max-width: 100%; margin-inline: auto; padding-block: clamp(1.5rem, 4vw, 3rem); }
+.focus-page h1 { max-width: 25ch; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.025em; }
+.focus-page h2 { font-size: clamp(1.35rem, 2.3vw, 1.8rem); line-height: 1.3; font-weight: 550; }
+.focus-page h3 { font-size: 1.15rem; line-height: 1.4; }
+.focus-page p, .focus-page li { max-width: 70ch; line-height: 1.75; overflow-wrap: anywhere; }
+.focus-page p + p, .focus-page h2 + p, .focus-page h3 + p { margin-top: 0.9rem; }
+.focus-page a:not(.portal-primary-link) { text-underline-offset: 0.2em; }
+.focus-page a:focus-visible, .focus-page summary:focus-visible { outline: 3px solid currentColor; outline-offset: 5px; }
+.focus-intro { margin-bottom: 2rem; }
+.focus-intro .eyebrow { margin-bottom: 0.9rem; }
+.focus-lead { margin-top: 1.25rem; font-size: 1.15rem; }
+.focus-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; }
+.focus-card { min-width: 0; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--color-border-soft, #e5e7eb); border-radius: var(--radius-md, 12px); background: var(--color-card, #fff); }
+.focus-card .eyebrow { margin-bottom: 0.7rem; }
+.focus-card .portal-primary-link { display: inline-flex; margin-top: 1.25rem; }
+.focus-meta { font-size: 0.95rem; color: var(--color-ink-soft, #374151); }
+.focus-section { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--color-border-soft, #e5e7eb); }
+.focus-secondary { font-size: 0.95rem; }
+.focus-secondary h2 { font-size: 1.15rem; }
+.focus-reading { max-width: 78ch; }
+.focus-notice { padding: 1rem 1.2rem; margin-block: 1.25rem; border-left: 3px solid currentColor; background: var(--color-card-alt, #f9fafb); }
+.focus-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 2rem; padding-left: 1.5rem; margin-block: 1.5rem; }
+.focus-table { overflow-x: auto; margin-block: 1.25rem; }
+.focus-table table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.focus-table th, .focus-table td { padding: 0.75rem; border-bottom: 1px solid var(--color-border-soft, #e5e7eb); text-align: start; vertical-align: top; }
+.focus-table caption { text-align: start; margin-bottom: 0.75rem; font-weight: 600; }
+.focus-answer { margin-top: 1.5rem; padding: 1.2rem; border: 1px solid var(--color-border-soft, #e5e7eb); border-radius: var(--radius-sm, 8px); }
+.focus-answer summary { cursor: pointer; font-weight: 600; }
+.focus-answer[open] summary { margin-bottom: 1rem; }
+.focus-page ul, .focus-page ol { margin-block: 1rem; }
+@media (max-width: 720px) { .focus-grid, .focus-steps { grid-template-columns: minmax(0, 1fr); } .focus-page h1 { max-width: 100%; } }
+@media print { .focus-page { padding: 0; color: #000; } .focus-answer, .focus-secondary { display: none; } .focus-card { break-inside: avoid; } .focus-grid, .focus-steps { display: block; } .focus-table { overflow: visible; } }
