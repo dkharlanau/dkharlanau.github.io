@@ -79,7 +79,7 @@ The reusable method is documented in [Assessment Workbook Generation](/skill-hub
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script>
 if (!window.XLSX) {
-  document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\\/script>');
+  document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>');
 }
 </script>
-<script src="/assets/js/sap-lead-assessment-workbook-v3.js?v=20260910-1"></script>
+<script src="/assets/js/sap-lead-assessment-workbook-v3.js?v=20260910-2"></script>
