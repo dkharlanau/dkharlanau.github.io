@@ -68,6 +68,7 @@ def test_validation_record_contract_and_example_are_privacy_safe():
 def test_portfolio_manifest_links_governance_contracts_without_breaking_manifest_version():
     manifest = _load("manifest.json")
 
+    # Consolidating older governance work must not roll the current portfolio contract back.
     assert manifest["schema_version"] == "1.3"
     assert manifest["compatibility_source"].endswith("/products/COMPATIBILITY.md")
     assert manifest["compatibility_contract"].endswith("/products/compatibility.json")
