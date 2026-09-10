@@ -30,6 +30,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          git fetch origin main
+          git merge --no-edit origin/main
+
           git fetch origin \
             feat/sap-incident-diagnostics:refs/remotes/origin/feat/sap-incident-diagnostics \
             feat/incident-diagnostics-discovery:refs/remotes/origin/feat/incident-diagnostics-discovery \
@@ -113,14 +116,13 @@ jobs:
           set -euo pipefail
           python3 -m pytest tests/test_incident_diagnostics.py tests/test_portfolio_governance_contracts.py
           (cd mcp/sap-diagnostics-mcp && npm test)
-          rm .github/workflows/consolidate-stale-prs.yml
+          git rm .github/workflows/consolidate-stale-prs.yml
           python3 scripts/check_public_repo.py
 
       - name: Commit consolidated result
         shell: bash
         run: |
           set -euo pipefail
-          rm -f .github/workflows/consolidate-stale-prs.yml
           git add -A
           if git diff --cached --quiet; then
             echo "No consolidation delta found"
