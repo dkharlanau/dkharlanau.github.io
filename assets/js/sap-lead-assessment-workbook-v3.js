@@ -5,6 +5,7 @@
   const FILE_NAME = 'sap-lead-assessment-master.xlsx';
   const STATUS_DEFAULT = 'Not Started';
   const TIER_PRIORITY = { core: 'P1', cross_boundary: 'P2', differentiator: 'P3' };
+  const MIME_XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
   function asList(value) { return Array.isArray(value) ? value : []; }
   function asText(value) { return value === null || value === undefined ? '' : String(value); }
@@ -77,7 +78,7 @@
     return 'Other / Cross-domain';
   }
 
-  function safeSheetName(workbook, name) {
+  function safeSheetName(existingNames, name) {
     let base = asText(name || 'Sheet')
       .replace(/[\\\/?*\[\]:]/g, '-')
       .replace(/\s+/g, ' ')
@@ -85,24 +86,12 @@
     base = (base || 'Sheet').substring(0, 31);
     let candidate = base;
     let index = 2;
-    while (asList(workbook.SheetNames).indexOf(candidate) !== -1) {
+    while (existingNames.indexOf(candidate) !== -1) {
       const suffix = ' ' + index;
       candidate = base.substring(0, 31 - suffix.length) + suffix;
       index += 1;
     }
     return candidate;
-  }
-
-  function addSheet(workbook, name, rows, widths, withFilter) {
-    const normalizedRows = rows.map(function (row) { return row.map(cell); });
-    const sheet = XLSX.utils.aoa_to_sheet(normalizedRows);
-    sheet['!cols'] = widths.map(function (wch) { return { wch: wch }; });
-    if (withFilter && normalizedRows.length > 1 && normalizedRows[0].length > 0) {
-      const end = XLSX.utils.encode_col(normalizedRows[0].length - 1) + normalizedRows.length;
-      sheet['!autofilter'] = { ref: 'A1:' + end };
-    }
-    XLSX.utils.book_append_sheet(workbook, sheet, safeSheetName(workbook, name));
-    return sheet;
   }
 
   function skillPriority(skill) { return TIER_PRIORITY[skill.tier] || 'P2'; }
@@ -128,10 +117,12 @@
     return item.state === 'needs_decision' && ids.length === 0 ? 'P2' : best;
   }
 
-  function buildWorkbook(roadmap, requirementsModel, factory) {
-    if (!window.XLSX || !XLSX.utils || !XLSX.write) throw new Error('SheetJS is not available.');
+  function sheet(name, rows, widths, withFilter) {
+    return { name: name, rows: rows, widths: widths, withFilter: !!withFilter };
+  }
 
-    const workbook = XLSX.utils.book_new();
+  function buildSheetModel(roadmap, requirementsModel, factory) {
+    const sheets = [];
     const skills = asList(roadmap.skills);
     const requirements = asList(requirementsModel.requirements);
     const domains = requirementsModel.domains || {};
@@ -150,7 +141,7 @@
     const mappedLabs = labs.filter(function (item) { return item.state === 'mapped'; }).length;
     const needsDecision = labs.filter(function (item) { return item.state === 'needs_decision'; }).length;
 
-    addSheet(workbook, 'Dashboard', [
+    sheets.push(sheet('Dashboard', [
       ['SAP Lead Assessment Master Workbook'],
       ['Three layers: required assessment topics, Lead capabilities, and the complete site inventory.'],
       [],
@@ -170,7 +161,7 @@
       ['3', 'Use Lead Skills to move from configuration detail to design, diagnosis and leadership.'],
       ['4', 'Use Site Topics when you need deeper component material.'],
       ['5', 'Add one real project example before you mark a topic Ready.']
-    ], [8, 92], false);
+    ], [8, 92], false));
 
     const reqRows = [['Domain', 'Component', 'Requirement ID', 'Required Topic', 'Priority', 'Assessment Prompt', 'Source Pages', 'Site Coverage', 'Confidence (1-5)', 'Status', 'Last Review', 'Next Review', 'Project Example', 'Notes']];
     requirements.forEach(function (item) {
@@ -179,14 +170,14 @@
       const covered = sources.some(function (route) { return !!routeSet[route]; });
       reqRows.push([domain.label || item.domain, item.component, item.id, item.title, item.priority, item.prompt, sources.map(absoluteUrl).join('\n'), covered ? 'Covered' : 'Check source', 1, STATUS_DEFAULT, '', '', '', '']);
     });
-    addSheet(workbook, 'Required Topics', reqRows, [34, 26, 28, 46, 10, 66, 74, 16, 16, 16, 14, 14, 48, 42], true);
+    sheets.push(sheet('Required Topics', reqRows, [34, 26, 28, 46, 10, 66, 74, 16, 16, 16, 14, 14, 48, 42], true));
 
     Object.keys(domains).sort(function (a, b) { return (domains[a].order || 999) - (domains[b].order || 999); }).forEach(function (domainId) {
       const rows = [['Component', 'Requirement ID', 'Required Topic', 'Priority', 'Assessment Prompt', 'Sources', 'Confidence (1-5)', 'Status', 'Project Example', 'Notes']];
       requirements.filter(function (item) { return item.domain === domainId; }).forEach(function (item) {
         rows.push([item.component, item.id, item.title, item.priority, item.prompt, asList(item.sources).map(absoluteUrl).join('\n'), 1, STATUS_DEFAULT, '', '']);
       });
-      addSheet(workbook, domains[domainId].label || domainId, rows, [28, 28, 44, 10, 64, 72, 16, 16, 48, 42], true);
+      sheets.push(sheet(domains[domainId].label || domainId, rows, [28, 28, 44, 10, 64, 72, 16, 16, 48, 42], true));
     });
 
     const skillRows = [['Track', 'Skill ID', 'Skill', 'Tier', 'Priority', 'Capabilities', 'Why it matters', 'Interview signal', 'Sources', 'Confidence (1-5)', 'Status', 'Project Example', 'Notes']];
@@ -194,13 +185,13 @@
       const track = tracks[skill.track] || {};
       skillRows.push([track.label || skill.track, skill.id, skill.title, skill.tier, skillPriority(skill), asList(skill.capabilities).join(', '), skill.why, skill.interview_signal, sourceSummary(skill), 1, STATUS_DEFAULT, '', '']);
     });
-    addSheet(workbook, 'Lead Skills', skillRows, [30, 26, 42, 18, 10, 26, 60, 60, 74, 16, 16, 48, 42], true);
+    sheets.push(sheet('Lead Skills', skillRows, [30, 26, 42, 18, 10, 26, 60, 60, 74, 16, 16, 48, 42], true));
 
     const siteRows = [['Component / Area', 'Topic', 'Route', 'Source File', 'Career State', 'Career Impact', 'Mapped Skills', 'Suggested Skills', 'Priority', 'Confidence (1-5)', 'Status', 'URL', 'Notes']];
     labs.forEach(function (item) {
       siteRows.push([inferComponent(item), item.title, item.route, item.source_file, item.state, item.career_impact, asList(item.skills).join(', '), suggestedSkillIds(item).join(', '), topicPriority(item, skillById), 1, STATUS_DEFAULT, absoluteUrl(item.route), '']);
     });
-    addSheet(workbook, 'Site Topics', siteRows, [30, 50, 50, 56, 18, 18, 34, 34, 10, 16, 16, 60, 42], true);
+    sheets.push(sheet('Site Topics', siteRows, [30, 50, 50, 56, 18, 18, 34, 34, 10, 16, 16, 60, 42], true));
 
     const componentMap = {};
     function bucket(name) {
@@ -224,19 +215,19 @@
       const itemBucket = componentMap[name];
       componentRows.push([name, itemBucket.required, itemBucket.p1, itemBucket.pages, itemBucket.mapped, itemBucket.gaps]);
     });
-    addSheet(workbook, 'Components', componentRows, [38, 16, 14, 14, 16, 20], true);
+    sheets.push(sheet('Components', componentRows, [38, 16, 14, 14, 16, 20], true));
 
     const gapRows = [['Component / Area', 'Topic', 'Route', 'Suggested Skills', 'Priority', 'URL', 'Decision / Notes']];
     labs.filter(function (item) { return item.state === 'needs_decision'; }).forEach(function (item) {
       gapRows.push([inferComponent(item), item.title, item.route, suggestedSkillIds(item).join(', '), topicPriority(item, skillById), absoluteUrl(item.route), '']);
     });
-    addSheet(workbook, 'Needs Mapping', gapRows, [32, 52, 52, 38, 10, 60, 48], true);
+    sheets.push(sheet('Needs Mapping', gapRows, [32, 52, 52, 38, 10, 60, 48], true));
 
     const sprintRows = [['Date', 'Domain', 'Topic', 'Goal', '20-minute Block', 'Result / Gap', 'Next Action', 'Done']];
     for (let i = 0; i < 30; i += 1) sprintRows.push(['', '', '', '', 'Recall → review → project example', '', '', 'No']);
-    addSheet(workbook, 'Daily Sprint', sprintRows, [14, 30, 44, 44, 36, 44, 44, 10], true);
+    sheets.push(sheet('Daily Sprint', sprintRows, [14, 30, 44, 44, 36, 44, 44, 10], true));
 
-    addSheet(workbook, 'How to Use', [
+    sheets.push(sheet('How to Use', [
       ['Rule', 'Action'],
       ['1. Required Topics are the syllabus', 'This sheet is the detailed assessment programme. Start with P1.'],
       ['2. Lead Skills are the capability model', 'Use them to turn module knowledge into diagnosis, architecture and leadership answers.'],
@@ -247,15 +238,218 @@
       ['7. Ready has a strict meaning', 'You can explain purpose, flow, one design decision, one failure path and one project example.'],
       ['8. Needs Mapping is content debt', 'These Lab pages exist but still need a career decision. Keep them visible until mapped or explicitly excluded.'],
       ['9. Regenerate instead of maintaining manually', 'Generate a new workbook after Career Factory or Assessment Requirements changes.']
-    ], [34, 108], true);
+    ], [34, 108], true));
 
-    workbook.Props = {
-      Title: 'SAP Lead Assessment Master Workbook',
-      Subject: 'SAP Lead assessment preparation',
-      Author: 'DKHARLANAU.github.io',
-      Comments: 'Generated from Assessment Requirements, Career Roadmap and Career Factory.'
-    };
-    return workbook;
+    const usedNames = [];
+    sheets.forEach(function (item) {
+      item.name = safeSheetName(usedNames, item.name);
+      usedNames.push(item.name);
+    });
+    return sheets;
+  }
+
+  function xmlEscape(value) {
+    return asText(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
+  function columnName(index) {
+    let n = index + 1;
+    let out = '';
+    while (n > 0) {
+      n -= 1;
+      out = String.fromCharCode(65 + (n % 26)) + out;
+      n = Math.floor(n / 26);
+    }
+    return out;
+  }
+  function cellXml(value, ref) {
+    const normalized = cell(value);
+    if (typeof normalized === 'number' && Number.isFinite(normalized)) {
+      return '<c r="' + ref + '" t="n"><v>' + normalized + '</v></c>';
+    }
+    if (typeof normalized === 'boolean') {
+      return '<c r="' + ref + '" t="b"><v>' + (normalized ? '1' : '0') + '</v></c>';
+    }
+    const text = asText(normalized);
+    if (!text) return '<c r="' + ref + '" t="inlineStr"><is><t></t></is></c>';
+    return '<c r="' + ref + '" t="inlineStr"><is><t xml:space="preserve">' + xmlEscape(text) + '</t></is></c>';
+  }
+  function worksheetXml(model) {
+    const rows = asList(model.rows);
+    const cols = asList(model.widths).map(function (width, index) {
+      const col = index + 1;
+      return '<col min="' + col + '" max="' + col + '" width="' + Number(width || 12) + '" customWidth="1"/>';
+    }).join('');
+    const data = rows.map(function (row, rowIndex) {
+      const r = rowIndex + 1;
+      const cells = asList(row).map(function (value, colIndex) {
+        return cellXml(value, columnName(colIndex) + r);
+      }).join('');
+      return '<row r="' + r + '">' + cells + '</row>';
+    }).join('');
+    let filter = '';
+    if (model.withFilter && rows.length > 1 && asList(rows[0]).length > 0) {
+      filter = '<autoFilter ref="A1:' + columnName(rows[0].length - 1) + rows.length + '"/>';
+    }
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+      (cols ? '<cols>' + cols + '</cols>' : '') +
+      '<sheetData>' + data + '</sheetData>' + filter + '</worksheet>';
+  }
+
+  function contentTypesXml(sheetCount) {
+    let sheetOverrides = '';
+    for (let i = 1; i <= sheetCount; i += 1) {
+      sheetOverrides += '<Override PartName="/xl/worksheets/sheet' + i + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
+    }
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+      '<Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+      '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
+      '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>' +
+      '<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>' +
+      sheetOverrides + '</Types>';
+  }
+  function rootRelsXml() {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' +
+      '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>' +
+      '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/>' +
+      '</Relationships>';
+  }
+  function workbookXml(models) {
+    const entries = models.map(function (model, index) {
+      return '<sheet name="' + xmlEscape(model.name) + '" sheetId="' + (index + 1) + '" r:id="rId' + (index + 1) + '"/>';
+    }).join('');
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+      '<bookViews><workbookView activeTab="0"/></bookViews><sheets>' + entries + '</sheets></workbook>';
+  }
+  function workbookRelsXml(sheetCount) {
+    let rels = '';
+    for (let i = 1; i <= sheetCount; i += 1) {
+      rels += '<Relationship Id="rId' + i + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + i + '.xml"/>';
+    }
+    rels += '<Relationship Id="rId' + (sheetCount + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + rels + '</Relationships>';
+  }
+  function stylesXml() {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+      '<fonts count="1"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font></fonts>' +
+      '<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>' +
+      '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>' +
+      '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
+      '<cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs>' +
+      '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>' +
+      '</styleSheet>';
+  }
+  function appXml(models) {
+    const titles = models.map(function (model) { return '<vt:lpstr>' + xmlEscape(model.name) + '</vt:lpstr>'; }).join('');
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">' +
+      '<Application>DKHARLANAU.github.io</Application><DocSecurity>0</DocSecurity><ScaleCrop>false</ScaleCrop>' +
+      '<HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Worksheets</vt:lpstr></vt:variant><vt:variant><vt:i4>' + models.length + '</vt:i4></vt:variant></vt:vector></HeadingPairs>' +
+      '<TitlesOfParts><vt:vector size="' + models.length + '" baseType="lpstr">' + titles + '</vt:vector></TitlesOfParts>' +
+      '<Company></Company><LinksUpToDate>false</LinksUpToDate><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>1.0</AppVersion></Properties>';
+  }
+  function coreXml() {
+    const now = new Date().toISOString();
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
+      '<dc:title>SAP Lead Assessment Master Workbook</dc:title><dc:subject>SAP Lead assessment preparation</dc:subject><dc:creator>DKHARLANAU.github.io</dc:creator>' +
+      '<cp:lastModifiedBy>DKHARLANAU.github.io</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">' + now + '</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">' + now + '</dcterms:modified></cp:coreProperties>';
+  }
+
+  const CRC_TABLE = (function () {
+    const table = new Uint32Array(256);
+    for (let n = 0; n < 256; n += 1) {
+      let c = n;
+      for (let k = 0; k < 8; k += 1) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      table[n] = c >>> 0;
+    }
+    return table;
+  }());
+  function crc32(bytes) {
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < bytes.length; i += 1) crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+  function dosDateTime(date) {
+    const year = Math.max(1980, date.getFullYear());
+    const dosTime = ((date.getHours() & 31) << 11) | ((date.getMinutes() & 63) << 5) | ((Math.floor(date.getSeconds() / 2)) & 31);
+    const dosDate = (((year - 1980) & 127) << 9) | (((date.getMonth() + 1) & 15) << 5) | (date.getDate() & 31);
+    return { time: dosTime, date: dosDate };
+  }
+  function u16(view, offset, value) { view.setUint16(offset, value, true); }
+  function u32(view, offset, value) { view.setUint32(offset, value >>> 0, true); }
+  function concatParts(parts) {
+    const total = parts.reduce(function (sum, part) { return sum + part.length; }, 0);
+    const out = new Uint8Array(total);
+    let offset = 0;
+    parts.forEach(function (part) { out.set(part, offset); offset += part.length; });
+    return out;
+  }
+  function zipStore(files) {
+    const encoder = new TextEncoder();
+    const now = dosDateTime(new Date());
+    const localParts = [];
+    const centralParts = [];
+    let localOffset = 0;
+
+    files.forEach(function (file) {
+      const nameBytes = encoder.encode(file.name);
+      const dataBytes = typeof file.data === 'string' ? encoder.encode(file.data) : file.data;
+      const crc = crc32(dataBytes);
+
+      const local = new Uint8Array(30 + nameBytes.length);
+      const lv = new DataView(local.buffer);
+      u32(lv, 0, 0x04034B50); u16(lv, 4, 20); u16(lv, 6, 0x0800); u16(lv, 8, 0);
+      u16(lv, 10, now.time); u16(lv, 12, now.date); u32(lv, 14, crc); u32(lv, 18, dataBytes.length); u32(lv, 22, dataBytes.length);
+      u16(lv, 26, nameBytes.length); u16(lv, 28, 0); local.set(nameBytes, 30);
+      localParts.push(local, dataBytes);
+
+      const central = new Uint8Array(46 + nameBytes.length);
+      const cv = new DataView(central.buffer);
+      u32(cv, 0, 0x02014B50); u16(cv, 4, 20); u16(cv, 6, 20); u16(cv, 8, 0x0800); u16(cv, 10, 0);
+      u16(cv, 12, now.time); u16(cv, 14, now.date); u32(cv, 16, crc); u32(cv, 20, dataBytes.length); u32(cv, 24, dataBytes.length);
+      u16(cv, 28, nameBytes.length); u16(cv, 30, 0); u16(cv, 32, 0); u16(cv, 34, 0); u16(cv, 36, 0); u32(cv, 38, 0); u32(cv, 42, localOffset);
+      central.set(nameBytes, 46); centralParts.push(central);
+
+      localOffset += local.length + dataBytes.length;
+    });
+
+    const localData = concatParts(localParts);
+    const centralData = concatParts(centralParts);
+    const end = new Uint8Array(22);
+    const ev = new DataView(end.buffer);
+    u32(ev, 0, 0x06054B50); u16(ev, 4, 0); u16(ev, 6, 0); u16(ev, 8, files.length); u16(ev, 10, files.length);
+    u32(ev, 12, centralData.length); u32(ev, 16, localData.length); u16(ev, 20, 0);
+    return concatParts([localData, centralData, end]);
+  }
+
+  function createXlsxBytes(models) {
+    const files = [
+      { name: '[Content_Types].xml', data: contentTypesXml(models.length) },
+      { name: '_rels/.rels', data: rootRelsXml() },
+      { name: 'docProps/app.xml', data: appXml(models) },
+      { name: 'docProps/core.xml', data: coreXml() },
+      { name: 'xl/workbook.xml', data: workbookXml(models) },
+      { name: 'xl/_rels/workbook.xml.rels', data: workbookRelsXml(models.length) },
+      { name: 'xl/styles.xml', data: stylesXml() }
+    ];
+    models.forEach(function (model, index) {
+      files.push({ name: 'xl/worksheets/sheet' + (index + 1) + '.xml', data: worksheetXml(model) });
+    });
+    return zipStore(files);
   }
 
   function setMetric(id, value) {
@@ -289,8 +483,6 @@
     });
 
     try {
-      if (!window.XLSX || !XLSX.utils || !XLSX.write) throw new Error('Spreadsheet library did not load.');
-
       const roadmap = parseJsonNode('sap-lead-roadmap-data');
       const requirementsModel = parseJsonNode('sap-lead-requirements-data');
       const factory = await loadFactory();
@@ -305,13 +497,13 @@
       setMetric('sap-lead-coverage', factory.summary && factory.summary.decision_coverage_percent !== undefined ? factory.summary.decision_coverage_percent + '%' : '—');
 
       setStatus(' Building the workbook…');
-      const workbook = buildWorkbook(roadmap, requirementsModel, factory);
-      const bytes = XLSX.write(workbook, { bookType: 'xlsx', type: 'array', compression: true });
-      const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const models = buildSheetModel(roadmap, requirementsModel, factory);
+      const bytes = createXlsxBytes(models);
+      const blob = new Blob([bytes], { type: MIME_XLSX });
       const objectUrl = URL.createObjectURL(blob);
 
       setLinkReady(link, objectUrl);
-      setStatus(' Workbook ready. The download is generated from the current site data.');
+      setStatus(' Workbook ready. The download is generated from the current site data without external spreadsheet libraries.');
       window.addEventListener('pagehide', function () { URL.revokeObjectURL(objectUrl); }, { once: true });
     } catch (error) {
       console.error('SAP Lead workbook preparation failed:', error);
@@ -320,8 +512,13 @@
     }
   }
 
-  function boot() { prepareWorkbook(); }
+  window.__SAP_LEAD_WORKBOOK_V4__ = {
+    safeSheetName: safeSheetName,
+    createXlsxBytes: createXlsxBytes,
+    buildSheetModel: buildSheetModel
+  };
 
+  function boot() { prepareWorkbook(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
   else boot();
 }());
