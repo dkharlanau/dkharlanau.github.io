@@ -141,7 +141,8 @@ def test_html_head_advertises_arwp_and_focus_map():
 
     assert 'title="Agent-Ready Web Profile"' in head
     assert 'title="Two-Focus Routing Map"' in head
-    assert '"name": "SAP Learning & AMS Optimization — Dzmitryi Kharlanau"' in head
+    assert '"name": "Dzmitryi Kharlanau"' in head
+    assert '"alternateName": ["dkharlanau.github.io"]' in head
     assert '"name": "SAP Learning & Assessment Practice"' in head
     assert '"name": "SAP AMS Optimization"' in head
 
