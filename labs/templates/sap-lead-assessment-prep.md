@@ -76,11 +76,6 @@ The reusable method is documented in [Assessment Workbook Generation](/skill-hub
 <script type="application/json" id="sap-lead-requirements-data">{{ site.data.career.assessment_requirements | jsonify }}</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script>
-if (!window.XLSX) {
-  document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\\/script>');
-}
-</script>
-<script>
 (function () {
   const status = document.getElementById('download-sap-lead-status');
   if (!window.XLSX || !XLSX.utils || !XLSX.utils.book_append_sheet) {
