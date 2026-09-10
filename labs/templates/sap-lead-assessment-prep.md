@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Assessment Master Workbook"
-description: "Generate a complete SAP Lead Excel preparation workbook from assessment requirements, the Career Roadmap, and every Lab page in Career Factory."
+description: "Download a complete SAP Lead Excel preparation workbook generated from assessment requirements, the Career Roadmap, and every Lab page in Career Factory."
 permalink: /labs/templates/sap-lead-assessment-prep/
 status: needs_verification
 verified: false
@@ -20,7 +20,7 @@ tags: [sap, interview, assessment, checklist, excel, template]
 
 # SAP Lead Assessment Master Workbook
 
-Generate the workbook from the current site instead of maintaining a second checklist by hand.
+Use one workbook for the complete preparation scope instead of maintaining a second checklist by hand.
 
 The model has three separate layers:
 
@@ -31,18 +31,18 @@ The model has three separate layers:
 This separation matters. A new Lab page does not automatically become a mandatory interview topic, and a required assessment topic stays visible even if the site still needs better material for it.
 
 <div class="research-canvas__metrics" aria-label="Workbook source metrics">
-  <div><strong id="sap-lead-required-count">—</strong><span> required topics</span></div>
-  <div><strong id="sap-lead-p1-count">—</strong><span> P1 topics</span></div>
-  <div><strong id="sap-lead-skill-count">—</strong><span> Lead skills</span></div>
+  <div><strong>{{ site.data.career.assessment_requirements.requirements | size }}</strong><span> required topics</span></div>
+  {% assign p1_required = site.data.career.assessment_requirements.requirements | where: "priority", "P1" %}
+  <div><strong>{{ p1_required | size }}</strong><span> P1 topics</span></div>
+  <div><strong>{{ site.data.career.roadmap.skills | size }}</strong><span> Lead skills</span></div>
   <div><strong id="sap-lead-page-count">—</strong><span> Lab pages</span></div>
   <div><strong id="sap-lead-gap-count">—</strong><span> pages needing career mapping</span></div>
   <div><strong id="sap-lead-coverage">—</strong><span> career mapping coverage</span></div>
 </div>
 
-<a class="research-canvas__button" id="download-sap-lead-tracker" href="#" aria-disabled="true">Preparing Excel workbook…</a>
-<span id="download-sap-lead-status" role="status" aria-live="polite"> Loading current site data…</span>
+<a class="research-canvas__button" href="/assets/downloads/sap-lead-assessment-master.xlsx" download>Download current Excel workbook</a>
 
-The file is prepared before you click the download link. Workbook creation is self-contained on this site and does not depend on an external spreadsheet library.
+The workbook is generated and validated by the site build process before publication. The download does not require JavaScript, a third-party spreadsheet library, or browser-side workbook generation.
 
 ## What is inside
 
@@ -74,6 +74,27 @@ For site maintenance, use **Needs Mapping** as a backlog. A useful Lab page shou
 
 The reusable method is documented in [Assessment Workbook Generation](/skill-hub/productivity-execution-control/assessment-workbook-generation-working-skill/).
 
-<script type="application/json" id="sap-lead-roadmap-data">{{ site.data.career.roadmap | jsonify }}</script>
-<script type="application/json" id="sap-lead-requirements-data">{{ site.data.career.assessment_requirements | jsonify }}</script>
-<script src="/assets/js/sap-lead-assessment-workbook-v3.js?v=20260910-3"></script>
+<script>
+(function () {
+  fetch('/ai/career-factory.json', { cache: 'no-store' })
+    .then(function (response) {
+      if (!response.ok) throw new Error('Career Factory data unavailable');
+      return response.json();
+    })
+    .then(function (factory) {
+      var labs = Array.isArray(factory.lab_inventory) ? factory.lab_inventory : [];
+      var gaps = labs.filter(function (item) { return item.state === 'needs_decision'; }).length;
+      var coverage = factory.summary && factory.summary.decision_coverage_percent !== undefined
+        ? factory.summary.decision_coverage_percent + '%'
+        : '—';
+      document.getElementById('sap-lead-page-count').textContent = labs.length;
+      document.getElementById('sap-lead-gap-count').textContent = gaps;
+      document.getElementById('sap-lead-coverage').textContent = coverage;
+    })
+    .catch(function () {
+      document.getElementById('sap-lead-page-count').textContent = '—';
+      document.getElementById('sap-lead-gap-count').textContent = '—';
+      document.getElementById('sap-lead-coverage').textContent = '—';
+    });
+}());
+</script>
