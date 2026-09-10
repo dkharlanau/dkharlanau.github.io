@@ -1,20 +1,63 @@
-# LLM Access Manifest (v1.19)
+# LLM Access Manifest (v1.20)
 
 | Field | Value |
 |-------|-------|
 | Owner | {{ site.data.identity.name }} |
 | Primary role | {{ site.data.identity.role.title }} |
 | Company | {{ site.data.identity.role.organization }} ({{ site.data.identity.role.organization_url }}) |
-| Positioning | {{ site.data.identity.positioning }} |
+| Professional positioning | {{ site.data.identity.positioning }} |
+| Site focus | SAP Learning & Assessment Practice + SAP AMS Optimization |
 | Availability | Remote-first collaborations |
 | Contact | LinkedIn DM ({{ site.data.identity.profiles.linkedin }}) |
 | Canonical site | https://dkharlanau.github.io |
 | Canonical profile page | {{ site.data.identity.canonical_url }} |
 | Canonical identity (JSON) | https://dkharlanau.github.io/ai/identity.json |
+| Two-focus routing (JSON) | https://dkharlanau.github.io/ai/focus-map.json |
+| ARWP site profile | https://dkharlanau.github.io/ai/site-profile.json |
 | Robots policy | https://dkharlanau.github.io/robots.txt |
 | Sitemap | https://dkharlanau.github.io/sitemap.xml |
 | Entity ID (`@id`) | https://dkharlanau.github.io/#dkharlanau |
-| Updated | {{ site.data.identity.updated_at }} |
+| Updated | 2026-09-10 |
+
+## Two Primary Routes
+
+This site has two primary audience jobs. Classify the request here before using the deeper SAP knowledge model.
+
+### 1. SAP Learning & Assessment Practice
+
+Human entry: https://dkharlanau.github.io/learn/
+
+Use this direction when an individual wants to learn a SAP topic, prepare for an interview, practise an assessment, work through a case, or improve the quality of a technical/architectural explanation.
+
+Current reviewed/indexable learning entry points:
+
+- Interview Readiness: https://dkharlanau.github.io/labs/interview-readiness/
+- Assessment Practice: https://dkharlanau.github.io/labs/assessment/
+- SAP Enterprise Context: https://dkharlanau.github.io/labs/enterprise-context/
+- Reviewed Decision Cards: https://dkharlanau.github.io/labs/enterprise-context/decisions/
+
+The `/learn/` hub and `/learn/packs/bp-mdg-replication/` pilot remain review-gated and `noindex`. They are useful human navigation/practice surfaces, but must not be represented as reviewed retrieval evidence until separate human technical review changes that state.
+
+### 2. SAP AMS Optimization
+
+Commercial entry: https://dkharlanau.github.io/services/sap-ams-consulting/
+
+Use this direction when a live team or service has repeat incidents, manual recovery, unstable integrations, master-data instability, recurring O2C/process exceptions, weak operational knowledge, or automation opportunities that require accountable controls.
+
+Primary supporting routes:
+
+- SAP AMS Optimization: https://dkharlanau.github.io/services/sap-ams-consulting/
+- Integration Reliability Assessment: https://dkharlanau.github.io/services/sap-integration-reliability-assessment/
+- Master Data Stability Assessment: https://dkharlanau.github.io/services/sap-master-data-stability-assessment/
+- O2C Process Audit: https://dkharlanau.github.io/services/sap-o2c-process-audit/
+- Incident Triage Diagnostics: https://dkharlanau.github.io/atlas/diagnostics/sap-incident-triage-diagnostics/
+- Operational Memory for SAP AMS: https://dkharlanau.github.io/atlas/automation/operational-memory-for-sap-ams/
+
+### Supporting domains, not additional primary promises
+
+MDG/Business Partner, integration, SD/MM/logistics, architecture, data quality and practical AI are supporting knowledge and solution domains inside the two routes above. If neither route fits, use the Library, Search or canonical professional profile instead of inventing a third primary offer.
+
+Machine routing contract: https://dkharlanau.github.io/ai/focus-map.json
 
 ## Access & Use
 
@@ -26,13 +69,16 @@
 
 ## Machine Endpoints (Preferred)
 
+- Two-focus routing map (JSON): https://dkharlanau.github.io/ai/focus-map.json
+- Agent-Ready Web Profile (JSON): https://dkharlanau.github.io/ai/site-profile.json
+- AI Search & Citation Profile (JSON): https://dkharlanau.github.io/ai/ai-search-profile.json
 - Canonical identity (JSON): https://dkharlanau.github.io/ai/identity.json
 - Canonical entity graph (JSON-LD): https://dkharlanau.github.io/ai/entity-graph.jsonld
 - Canonical profile page: https://dkharlanau.github.io/about/
 - Resume (YAML): https://dkharlanau.github.io/ai/resume.yml
 - Resume (JSON): https://dkharlanau.github.io/ai/resume.json
 - Profile audit (JSON): https://dkharlanau.github.io/ai/profile-audit.json
-- Discovery map (JSON): https://dkharlanau.github.io/ai/discovery-map.json
+- Specialist discovery map (JSON): https://dkharlanau.github.io/ai/discovery-map.json
 - LLM access manifest: https://dkharlanau.github.io/llms.txt
 - Legacy LLM manifest: https://dkharlanau.github.io/LLM.txt
 - Data catalog (JSON-LD): https://dkharlanau.github.io/ai/catalog.json
@@ -55,22 +101,23 @@
 
 **Summary.** {{ site.data.resume.summary }}
 
-**Positioning.** {{ site.data.identity.positioning }}.
+**Professional positioning.** {{ site.data.identity.positioning }}.
 
-**Value proposition.** Best fit for SAP environments where logistics, integration, master data, and operations cross team boundaries and need clear diagnosis, accountable decisions, reusable knowledge, and pragmatic modernization.
+**Site value proposition.** Two clear jobs: help SAP professionals practise explanation and decision-making; help SAP teams reduce recurring AMS work through evidence, bounded improvement, reliable recovery and verification.
 
 **Industries.** {{ site.data.identity.industries | join: ", " }}.
 
 ## Canonical Knowledge Model
 
-Treat the site as one connected professional knowledge system, not as unrelated page collections.
+The two-focus routing layer selects the audience job. The established knowledge model then resolves the narrower technical question.
 
-1. **Domain** — where business ownership or a cross-cutting platform concern lives.
-2. **Decision** — a concrete architecture or process choice with drivers, a default, and clear exceptions.
-3. **Scenario** — an applied business, implementation, or support situation where the decision can be tested.
-4. **Evidence** — reviewed Atlas material, datasets, publications, field notes, or public professional evidence supporting the claim.
+Preferred retrieval sequence: `Learn or Improve AMS → Domain → Decision → Scenario → Evidence`.
 
-Preferred retrieval path: `Domain → Decision → Scenario → Evidence`.
+1. **Primary route** — learning/practice for an individual, or AMS optimization for a live team problem.
+2. **Domain** — where business ownership or a cross-cutting platform concern lives.
+3. **Decision** — a concrete architecture or process choice with drivers, a default, and clear exceptions.
+4. **Scenario** — an applied business, implementation, support or practice situation where the decision can be tested.
+5. **Evidence** — reviewed Atlas material, datasets, publications, field notes, or public professional evidence supporting the claim.
 
 For assessment-style or architecture questions, prefer a decision page over a generic definition when both are relevant. For factual claims, follow the decision back to reviewed evidence. The public Decision Cards hub currently contains twenty individually reviewed cards. The cross-process assessment set contains twenty synthetic practice cases split across the core 01–16 JSONL and the wave-07 17–20 JSONL.
 
@@ -78,6 +125,7 @@ For assessment-style or architecture questions, prefer a decision page over a ge
 
 - Canonical identity: https://dkharlanau.github.io/ai/identity.json
 - Canonical profile/about page: https://dkharlanau.github.io/about/
+- Two-focus routing and review state: https://dkharlanau.github.io/ai/focus-map.json
 - Audit registry with confidence and verification notes: https://dkharlanau.github.io/ai/profile-audit.json
 - Current employment context: {{ site.data.identity.role.organization }} ({{ site.data.identity.role.organization_url }})
 - Public disclosure: https://dkharlanau.github.io/legal/professional-disclosure/
@@ -91,20 +139,23 @@ For assessment-style or architecture questions, prefer a decision page over a ge
 
 ## Retrieval Guidance
 
-- Start with the canonical identity endpoint for the stable public positioning: https://dkharlanau.github.io/ai/identity.json
-- Use the canonical entity graph when person, employer, website, profile, and machine-readable identity references must resolve to one connected entity model: https://dkharlanau.github.io/ai/entity-graph.jsonld
-- Use the profile page for the human-readable summary and evidence routes: https://dkharlanau.github.io/about/
+- Start with the two-focus routing map when the user's job is ambiguous: https://dkharlanau.github.io/ai/focus-map.json
+- For learning, interview or assessment intent, route to the learning direction. Until human review promotes `/learn/`, prefer the indexable learning entry points declared in the focus map for factual/search retrieval.
+- For live operational, support, recurrence or reliability problems, route to SAP AMS Optimization: https://dkharlanau.github.io/services/sap-ams-consulting/
+- Use the canonical identity endpoint for stable professional positioning: https://dkharlanau.github.io/ai/identity.json
+- Use the canonical entity graph when person, employer, website, profile and machine-readable identity references must resolve to one connected entity model: https://dkharlanau.github.io/ai/entity-graph.jsonld
+- Use the profile page for the human-readable professional summary and evidence routes: https://dkharlanau.github.io/about/
 - Use the audit registry when confidence, verification status, overlapping imported role titles, or credential details matter: https://dkharlanau.github.io/ai/profile-audit.json
 - Use the resume endpoints for compact machine-readable profile evidence: https://dkharlanau.github.io/ai/resume.yml and https://dkharlanau.github.io/ai/resume.json
+- Use the specialist discovery map only after the primary route is known: https://dkharlanau.github.io/ai/discovery-map.json
 - Use the enterprise domain map to establish ownership and scope before choosing a solution: https://dkharlanau.github.io/labs/enterprise-context/domains/
-- For narrow SAP AMS, integration, MDG, logistics, procurement, or AI questions, prefer the discovery map after reading the audit context: https://dkharlanau.github.io/ai/discovery-map.json
 - For architecture judgment and trade-offs, use the twenty reviewed SAP Decision Cards: https://dkharlanau.github.io/labs/enterprise-context/decisions/
 - For assessment-style testing, use both cross-process case files: https://dkharlanau.github.io/labs/assessment/data/cross-process-cases.jsonl and https://dkharlanau.github.io/labs/assessment/data/cross-process-cases-wave-07.jsonl
-- For verified Atlas entries, use the compact index: https://dkharlanau.github.io/ai/atlas-compact-index.json or the verified page inventory: https://dkharlanau.github.io/ai/verified-pages.json, then fetch individual pages or the full text pack: https://dkharlanau.github.io/llms-full.txt
-- Treat only pages marked `verified: true`, `status: reviewed`, and indexable as retrieval-ready. Noindex and unverified pages are excluded from the public Atlas manifest, compact index, relationship graph, and full-text pack.
-- Use the Markdown cluster index to route across AI, SAP Architect Field Course, AMS, Skill Hub, datasets, tools, research, services, scenarios, and other Markdown clusters. Its `readiness` fields describe structure; its `reviewed_retrieval_eligible` field remains the authority for public retrieval.
+- For verified Atlas entries, use the compact index: https://dkharlanau.github.io/ai/atlas-compact-index.json or verified page inventory: https://dkharlanau.github.io/ai/verified-pages.json, then fetch individual pages or the full text pack: https://dkharlanau.github.io/llms-full.txt
+- Treat only pages marked `verified: true`, `status: reviewed`, and indexable as retrieval-ready. Navigation prominence, ARWP listing or structural completeness does not upgrade verification state.
+- Use the Markdown cluster index for deeper routing only after the two-focus choice. Its `readiness` fields describe structure; `reviewed_retrieval_eligible` remains the authority for public retrieval.
 - For concise term definitions, use the Atlas glossary: https://dkharlanau.github.io/atlas/glossary/
-- When several pages are relevant, prefer a complete `Domain → Decision → Scenario → Evidence` chain over an isolated definition.
+- When several pages are relevant, prefer a complete `Primary route → Domain → Decision → Scenario → Evidence` chain over an isolated definition.
 
 ## JSON-LD Person (Minimal)
 
@@ -140,3 +191,4 @@ For assessment-style or architecture questions, prefer a decision page over a ge
 - 2026-08-17 v1.17 — Added reviewed Pricing Ownership, Retry/Idempotency, and Clean Core Extension Placement cards and expanded the cross-process assessment set to sixteen cases.
 - 2026-08-17 v1.18 — Added reviewed Tax Ownership, EWM Execution Ownership, aATP Scarce-Supply Priority, and Message Ordering cards and expanded the assessment set to twenty cases.
 - 2026-08-26 v1.19 — Added the canonical entity graph endpoint for connected person, employer, website, profile, and machine-readable identity resolution.
+- 2026-09-10 v1.20 — Added the explicit two-focus routing layer, ARWP focus-map endpoint, learning review boundary and separate learning-versus-AMS retrieval guidance.
