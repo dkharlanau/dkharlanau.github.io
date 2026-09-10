@@ -76,62 +76,40 @@ The reusable method is documented in [Assessment Workbook Generation](/skill-hub
 <script type="application/json" id="sap-lead-requirements-data">{{ site.data.career.assessment_requirements | jsonify }}</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script>
+if (!window.XLSX) {
+  document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\\/script>');
+}
+</script>
+<script>
 (function () {
-  function setLibraryStatus(message) {
-    const status = document.getElementById('download-sap-lead-status');
-    if (status) status.textContent = message;
-  }
-
-  function patchSheetNames() {
-    if (!window.XLSX || !XLSX.utils || !XLSX.utils.book_append_sheet) return false;
-
-    const appendSheet = XLSX.utils.book_append_sheet;
-    XLSX.utils.book_append_sheet = function (workbook, worksheet, sheetName, roll) {
-      let safeName = String(sheetName || 'Sheet')
-        .replace(/[\\\/?*\[\]:]/g, '-')
-        .replace(/\s+/g, ' ')
-        .trim();
-      safeName = (safeName || 'Sheet').substring(0, 31);
-
-      let candidate = safeName;
-      let index = 2;
-      while (workbook.SheetNames && workbook.SheetNames.indexOf(candidate) !== -1) {
-        const suffix = ' ' + index;
-        candidate = safeName.substring(0, 31 - suffix.length) + suffix;
-        index += 1;
-      }
-
-      return appendSheet.call(this, workbook, worksheet, candidate, roll);
-    };
-    return true;
-  }
-
-  function loadGenerator() {
-    const generator = document.createElement('script');
-    generator.src = '/assets/js/sap-lead-assessment-workbook-v2.js';
-    generator.onerror = function () {
-      setLibraryStatus(' Workbook generator could not be loaded.');
-    };
-    document.body.appendChild(generator);
-  }
-
-  function start() {
-    patchSheetNames();
-    loadGenerator();
-  }
-
-  if (window.XLSX) {
-    start();
+  const status = document.getElementById('download-sap-lead-status');
+  if (!window.XLSX || !XLSX.utils || !XLSX.utils.book_append_sheet) {
+    if (status) status.textContent = ' Spreadsheet library could not be loaded.';
     return;
   }
 
-  const fallback = document.createElement('script');
-  fallback.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
-  fallback.onload = start;
-  fallback.onerror = function () {
-    setLibraryStatus(' Spreadsheet library could not be loaded.');
-    loadGenerator();
+  if (!XLSX.writeFileXLSX && XLSX.writeFile) {
+    XLSX.writeFileXLSX = XLSX.writeFile;
+  }
+
+  const appendSheet = XLSX.utils.book_append_sheet;
+  XLSX.utils.book_append_sheet = function (workbook, worksheet, sheetName, roll) {
+    let safeName = String(sheetName || 'Sheet')
+      .replace(/[\\\/?*\[\]:]/g, '-')
+      .replace(/\s+/g, ' ')
+      .trim();
+    safeName = (safeName || 'Sheet').substring(0, 31);
+
+    let candidate = safeName;
+    let index = 2;
+    while (workbook.SheetNames && workbook.SheetNames.indexOf(candidate) !== -1) {
+      const suffix = ' ' + index;
+      candidate = safeName.substring(0, 31 - suffix.length) + suffix;
+      index += 1;
+    }
+
+    return appendSheet.call(this, workbook, worksheet, candidate, roll);
   };
-  document.head.appendChild(fallback);
 }());
 </script>
+<script src="/assets/js/sap-lead-assessment-workbook-v2.js"></script>
