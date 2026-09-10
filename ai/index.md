@@ -2,7 +2,7 @@
 layout: default
 title: "AI Routing Hub — SAP Learning & AMS Optimization"
 permalink: /ai/
-description: "Machine-readable routing for two primary site jobs: SAP learning and assessment practice, or SAP AMS optimization, with evidence and publication-state boundaries."
+description: "Machine-readable routing for two site jobs: SAP learning and assessment practice, or SAP AMS optimization, with evidence and publication-state boundaries."
 last_modified_at: 2026-09-10
 hide_global_cta: true
 tags:
