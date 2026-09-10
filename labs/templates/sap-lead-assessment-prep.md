@@ -42,7 +42,7 @@ This separation matters. A new Lab page does not automatically become a mandator
 <a class="research-canvas__button" id="download-sap-lead-tracker" href="#" aria-disabled="true">Preparing Excel workbook…</a>
 <span id="download-sap-lead-status" role="status" aria-live="polite"> Loading current site data…</span>
 
-The file is prepared before you click the download link. This keeps the download reliable in mobile browsers and embedded web views.
+The file is prepared before you click the download link. Workbook creation is self-contained on this site and does not depend on an external spreadsheet library.
 
 ## What is inside
 
@@ -76,10 +76,4 @@ The reusable method is documented in [Assessment Workbook Generation](/skill-hub
 
 <script type="application/json" id="sap-lead-roadmap-data">{{ site.data.career.roadmap | jsonify }}</script>
 <script type="application/json" id="sap-lead-requirements-data">{{ site.data.career.assessment_requirements | jsonify }}</script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script>
-if (!window.XLSX) {
-  document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>');
-}
-</script>
-<script src="/assets/js/sap-lead-assessment-workbook-v3.js?v=20260910-2"></script>
+<script src="/assets/js/sap-lead-assessment-workbook-v3.js?v=20260910-3"></script>
