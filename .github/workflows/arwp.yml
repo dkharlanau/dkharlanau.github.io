@@ -18,6 +18,7 @@ on:
       - 'robots.txt'
       - 'SECURITY.md'
       - '_includes/seo/page-machine-links.html'
+      - '.arwp/**'
       - '.github/workflows/arwp.yml'
   pull_request:
     paths:
@@ -35,6 +36,7 @@ on:
       - 'robots.txt'
       - 'SECURITY.md'
       - '_includes/seo/page-machine-links.html'
+      - '.arwp/**'
       - '.github/workflows/arwp.yml'
   workflow_dispatch:
 
@@ -49,7 +51,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Validate Agent-Ready Web Profile
-        uses: dkharlanau/agent-ready-web-profile@a60be6a057f6ffe07a85ed884e89c91d2d4d740f
+        uses: dkharlanau/agent-ready-web-profile@716e0a13aeaef1f2dcb2dd89d868fbf7343acc63
         with:
           profile: ai/site-profile.json
 
@@ -62,7 +64,8 @@ jobs:
           from pathlib import Path
           from jsonschema import Draft202012Validator, FormatChecker
 
-          schema_url = 'https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/a60be6a057f6ffe07a85ed884e89c91d2d4d740f/schema/ai-search-profile.schema.json'
+          arwp_ref = '716e0a13aeaef1f2dcb2dd89d868fbf7343acc63'
+          schema_url = f'https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/{arwp_ref}/schema/ai-search-profile.schema.json'
           with urllib.request.urlopen(schema_url, timeout=30) as response:
               schema = json.load(response)
           profile = json.loads(Path('ai/ai-search-profile.json').read_text(encoding='utf-8'))
