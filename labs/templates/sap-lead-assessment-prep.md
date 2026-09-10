@@ -22,7 +22,7 @@ tags: [sap, interview, assessment, checklist, excel, template]
 
 Generate the workbook from the current site instead of maintaining a second checklist by hand.
 
-The model now has three separate layers:
+The model has three separate layers:
 
 1. **Assessment Requirements** — the detailed syllabus: what a SAP Lead should know for Sales, Procurement, Logistics, Integration, Migration, Performance, AI, Delivery, and Leadership.
 2. **Lead Skills** — the broader Career Roadmap capabilities: know, diagnose, design, and lead.
@@ -39,8 +39,10 @@ This separation matters. A new Lab page does not automatically become a mandator
   <div><strong id="sap-lead-coverage">—</strong><span> career mapping coverage</span></div>
 </div>
 
-<button class="research-canvas__button" type="button" id="download-sap-lead-tracker">Generate current Excel workbook</button>
-<span id="download-sap-lead-status" role="status" aria-live="polite"></span>
+<a class="research-canvas__button" id="download-sap-lead-tracker" href="#" aria-disabled="true">Preparing Excel workbook…</a>
+<span id="download-sap-lead-status" role="status" aria-live="polite"> Loading current site data…</span>
+
+The file is prepared before you click the download link. This keeps the download reliable in mobile browsers and embedded web views.
 
 ## What is inside
 
@@ -49,12 +51,12 @@ This separation matters. A new Lab page does not automatically become a mandator
 - **Domain sheets** — Sales and O2C; Procurement and Inventory; Warehouse, Production, Quality and Transport; Integration and Architecture; S/4HANA Migration; Performance and Operations; AI and Data; Delivery and Leadership.
 - **Lead Skills** — the Career Roadmap capability model and interview signals.
 - **Site Topics** — every Lab page from Career Factory, with component, route, career state, mapped skills, priority, URL, and preparation fields.
-- **Components** — required-topic counts and site-page counts side by side. This makes areas such as SD, Pricing, ATP/aATP, MM, Inventory, EWM, TM, PP, QM, MDG/DRF, AIF, Integration Suite, Migration, Performance, AI, and operations visible in one place.
+- **Components** — required-topic counts and site-page counts side by side.
 - **Needs Mapping** — existing Lab pages that still need a career decision.
 - **Daily Sprint** — a small working queue for 20-minute review blocks.
 - **How to Use** — the preparation rules.
 
-The workbook is generated in the browser from the current `_data/career/assessment_requirements.yml`, `_data/career/roadmap.yml`, and `/ai/career-factory.json`. Preparation status stays in the downloaded workbook; it is not uploaded to the site.
+The workbook uses the current `_data/career/assessment_requirements.yml`, `_data/career/roadmap.yml`, and `/ai/career-factory.json`. Preparation status stays in the downloaded workbook; it is not uploaded to the site.
 
 ## How to prepare
 
@@ -76,35 +78,8 @@ The reusable method is documented in [Assessment Workbook Generation](/skill-hub
 <script type="application/json" id="sap-lead-requirements-data">{{ site.data.career.assessment_requirements | jsonify }}</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script>
-(function () {
-  const status = document.getElementById('download-sap-lead-status');
-  if (!window.XLSX || !XLSX.utils || !XLSX.utils.book_append_sheet) {
-    if (status) status.textContent = ' Spreadsheet library could not be loaded.';
-    return;
-  }
-
-  if (!XLSX.writeFileXLSX && XLSX.writeFile) {
-    XLSX.writeFileXLSX = XLSX.writeFile;
-  }
-
-  const appendSheet = XLSX.utils.book_append_sheet;
-  XLSX.utils.book_append_sheet = function (workbook, worksheet, sheetName, roll) {
-    let safeName = String(sheetName || 'Sheet')
-      .replace(/[\\\/?*\[\]:]/g, '-')
-      .replace(/\s+/g, ' ')
-      .trim();
-    safeName = (safeName || 'Sheet').substring(0, 31);
-
-    let candidate = safeName;
-    let index = 2;
-    while (workbook.SheetNames && workbook.SheetNames.indexOf(candidate) !== -1) {
-      const suffix = ' ' + index;
-      candidate = safeName.substring(0, 31 - suffix.length) + suffix;
-      index += 1;
-    }
-
-    return appendSheet.call(this, workbook, worksheet, candidate, roll);
-  };
-}());
+if (!window.XLSX) {
+  document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\\/script>');
+}
 </script>
-<script src="/assets/js/sap-lead-assessment-workbook-v2.js"></script>
+<script src="/assets/js/sap-lead-assessment-workbook-v3.js?v=20260910-1"></script>
