@@ -16,6 +16,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install targeted test dependency
+        run: python3 -m pip install pytest
+
       - name: Import reviewed unique work onto current main
         shell: bash
         run: |
