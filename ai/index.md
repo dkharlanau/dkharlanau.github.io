@@ -5,7 +5,6 @@ permalink: /ai/
 description: "Machine-readable routing for two primary site jobs: SAP learning and assessment practice, or SAP AMS optimization, with evidence and publication-state boundaries."
 last_modified_at: 2026-09-10
 hide_global_cta: true
-primary_topic: two-focus-agent-routing
 tags:
   - sap-learning
   - sap-ams
@@ -57,9 +56,10 @@ Before reusing a profile, dataset or generated answer, check the [Trust Center](
       <a href="/ai/professional-intelligence.json"><span>07</span><strong>Professional intelligence contract</strong><small>Readiness dimensions, decision chain, evidence levels, pressure routes and privacy boundaries for SAP Lead preparation.</small><em>Reasoning</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/ai/principles.json"><span>08</span><strong>Consulting principles</strong><small>Operating heuristics for SAP AMS improvement, support knowledge, architecture and change design.</small><em>Method</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/datasets/manifest.json"><span>09</span><strong>Dataset manifest</strong><small>Published data material for AMS, agentic tooling and governance work.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/about/"><span>10</span><strong>Profile page</strong><small>Canonical human page for identity, expertise, credentials and reference checks.</small><em>Identity</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/publications/"><span>11</span><strong>Publication register</strong><small>Public articles, SAP technical notes, architecture writing and reusable knowledge surfaces.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/agent-tools/"><span>12</span><strong>Agent tools</strong><small>Public agent-facing tools and contracts where a task needs a more specific machine interface.</small><em>Tools</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/ai/public-portfolio.json"><span>10</span><strong>Public project map</strong><small>Machine-readable project projection with explicit roles, verification boundaries and public entry points.</small><em>Projects</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/about/"><span>11</span><strong>Profile page</strong><small>Canonical human page for identity, expertise, credentials and reference checks.</small><em>Identity</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/publications/"><span>12</span><strong>Publication register</strong><small>Public articles, SAP technical notes, architecture writing and reusable knowledge surfaces.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/agent-tools/"><span>13</span><strong>Agent tools</strong><small>Public agent-facing tools and contracts where a task needs a more specific machine interface.</small><em>Tools</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>
 
