@@ -75,4 +75,27 @@ The reusable method is documented in [Assessment Workbook Generation](/skill-hub
 <script type="application/json" id="sap-lead-roadmap-data">{{ site.data.career.roadmap | jsonify }}</script>
 <script type="application/json" id="sap-lead-requirements-data">{{ site.data.career.assessment_requirements | jsonify }}</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script>
+(function () {
+  if (!window.XLSX || !XLSX.utils || !XLSX.utils.book_append_sheet) return;
+  const appendSheet = XLSX.utils.book_append_sheet;
+  XLSX.utils.book_append_sheet = function (workbook, worksheet, sheetName, roll) {
+    let safeName = String(sheetName || 'Sheet')
+      .replace(/[\\\/?*\[\]:]/g, '-')
+      .replace(/\s+/g, ' ')
+      .trim();
+    safeName = (safeName || 'Sheet').substring(0, 31);
+
+    let candidate = safeName;
+    let index = 2;
+    while (workbook.SheetNames && workbook.SheetNames.indexOf(candidate) !== -1) {
+      const suffix = ' ' + index;
+      candidate = safeName.substring(0, 31 - suffix.length) + suffix;
+      index += 1;
+    }
+
+    return appendSheet.call(this, workbook, worksheet, candidate, roll);
+  };
+}());
+</script>
 <script src="/assets/js/sap-lead-assessment-workbook-v2.js"></script>
