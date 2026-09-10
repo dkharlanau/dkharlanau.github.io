@@ -2,6 +2,7 @@
 layout: null
 permalink: /ai/entity-graph.jsonld
 sitemap: false
+last_modified_at: 2026-09-10
 ---
 {
   "@context": "https://schema.org",
@@ -31,6 +32,7 @@ sitemap: false
         {"@id": "https://dkharlanau.github.io/llms.txt#document"},
         {"@id": "https://dkharlanau.github.io/ai/catalog.json#catalog"},
         {"@id": "https://dkharlanau.github.io/ai/site-profile.json#document"},
+        {"@id": "https://dkharlanau.github.io/ai/focus-map.json#document"},
         {"@id": "https://dkharlanau.github.io/ai/ai-search-profile.json#document"},
         {"@id": "https://dkharlanau.github.io/trust/trust.json#document"}
       ]
@@ -45,17 +47,43 @@ sitemap: false
       "@type": "WebSite",
       "@id": "https://dkharlanau.github.io/#website",
       "url": "https://dkharlanau.github.io/",
-      "name": {{ site.data.identity.name | jsonify }},
+      "name": "SAP Learning & AMS Optimization — Dzmitryi Kharlanau",
+      "description": "Two primary routes: practical SAP learning, interview and assessment practice for professionals; and SAP AMS optimization for teams reducing recurring operational work.",
       "publisher": {
         "@id": {{ site.data.identity.entity_id | jsonify }}
       },
+      "about": [
+        {"@type": "Thing", "name": "SAP learning and assessment practice"},
+        {"@type": "Thing", "name": "SAP AMS optimization"}
+      ],
+      "hasPart": [
+        {"@id": "https://dkharlanau.github.io/learn/#webpage"},
+        {"@id": "https://dkharlanau.github.io/services/sap-ams-consulting/#webpage"}
+      ],
       "subjectOf": [
         {"@id": "https://dkharlanau.github.io/ai/site-profile.json#document"},
+        {"@id": "https://dkharlanau.github.io/ai/focus-map.json#document"},
         {"@id": "https://dkharlanau.github.io/ai/ai-search-profile.json#document"},
         {"@id": "https://dkharlanau.github.io/crawler-matrix/crawlers.json#document"},
         {"@id": "https://dkharlanau.github.io/trust/trust.json#document"},
         {"@id": "https://dkharlanau.github.io/trust/corrections.json#document"}
       ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://dkharlanau.github.io/learn/#webpage",
+      "url": "https://dkharlanau.github.io/learn/",
+      "name": "SAP Learning & Assessment Practice",
+      "description": "Human navigation hub for SAP learning, interview preparation, assessment practice and focused practice packs. Publication and indexing state remains independently controlled by the page frontmatter.",
+      "isPartOf": {"@id": "https://dkharlanau.github.io/#website"}
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://dkharlanau.github.io/services/sap-ams-consulting/#webpage",
+      "url": "https://dkharlanau.github.io/services/sap-ams-consulting/",
+      "name": "SAP AMS Optimization",
+      "description": "Commercial pillar for reducing repeat SAP incidents, manual recovery and recurring support work through bounded diagnostics, reliability improvement and continuous improvement.",
+      "isPartOf": {"@id": "https://dkharlanau.github.io/#website"}
     },
     {
       "@type": "ProfilePage",
@@ -84,6 +112,16 @@ sitemap: false
       "contentUrl": "https://dkharlanau.github.io/ai/site-profile.json",
       "encodingFormat": "application/json",
       "name": "Agent-Ready Web Profile",
+      "about": {
+        "@id": "https://dkharlanau.github.io/#website"
+      }
+    },
+    {
+      "@type": "DataDownload",
+      "@id": "https://dkharlanau.github.io/ai/focus-map.json#document",
+      "contentUrl": "https://dkharlanau.github.io/ai/focus-map.json",
+      "encodingFormat": "application/json",
+      "name": "Two-Focus Routing Map",
       "about": {
         "@id": "https://dkharlanau.github.io/#website"
       }
