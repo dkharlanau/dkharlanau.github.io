@@ -1,0 +1,41 @@
+schema_version: '1.0'
+# Product metadata only. Canonical SAP explanations and Lab progress remain in their existing sources.
+packs:
+  - id: bp-mdg-replication
+    title: 'BP / MDG Replication: Evidence to Recovery'
+    href: /learn/packs/bp-mdg-replication/
+    status: draft
+    access: free_pilot
+    level: Experienced SAP consultant
+    duration_minutes: 70
+    case_count: 5
+    version: '0.2.0'
+    outcome: Diagnose source-to-target discrepancies, define a controlled recovery boundary, and explain the decision.
+    prerequisites: Basic Business Partner, MDG and integration concepts; no SAP system access required.
+    source_routes:
+      - /labs/enterprise-context/mdg/
+      - /labs/enterprise-context/integrations/drf/
+      - /labs/interview-readiness/
+      - /labs/assessment/
+    learning_outcomes:
+      - Separate source intent, outbound membership, transport status, target application and business outcome.
+      - Partition exceptions instead of forcing different symptoms into one root cause.
+      - Distinguish missing evidence from evidence of failure.
+      - Define replay, overwrite and concurrency checks before recovery.
+      - Communicate ownership, stop conditions and reconciliation criteria clearly.
+    curriculum:
+      - id: selection-gap
+        title: Selection gap
+        focus: Selection, filtering and outbound evidence
+      - id: application-gap
+        title: Application gap
+        focus: Transport success versus target application evidence
+      - id: blank-semantics
+        title: Blank semantics
+        focus: Clear, omit and overwrite ambiguity
+      - id: concurrent-change
+        title: Concurrent change
+        focus: Chronology, ownership and current-state evidence
+      - id: recovery-design
+        title: Recovery design
+        focus: Exception partitioning, bounded replay and reconciliation
