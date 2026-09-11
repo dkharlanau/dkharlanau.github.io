@@ -73,6 +73,16 @@ def png_dimensions(path: Path) -> tuple[int, int]:
     return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
 
 
+def xml_local_name(tag: str) -> str:
+    return tag.rsplit("}", 1)[-1]
+
+
+def sitemap_locs(path: Path) -> tuple[str, list[str]]:
+    root = ET.fromstring(path.read_text(encoding="utf-8"))
+    locs = [node.text.strip() for node in root.iter() if xml_local_name(node.tag) == "loc" and node.text]
+    return xml_local_name(root.tag), locs
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Check built HTML and final Search Release invariants.")
     parser.add_argument("root", nargs="?", default="_site", help="Built site root (default: _site)")
@@ -193,13 +203,35 @@ def main() -> int:
         errors.append("sitemap.xml: missing")
     else:
         try:
-            sitemap_root = ET.fromstring(sitemap_path.read_text(encoding="utf-8"))
-            locs = [node.text.strip() for node in sitemap_root.iter() if node.tag.endswith("loc") and node.text]
-            if len(locs) != len(set(locs)):
-                errors.append("sitemap.xml: duplicate URL entries")
-            if site_url not in locs:
+            sitemap_kind, sitemap_index_locs = sitemap_locs(sitemap_path)
+            page_locs: list[str] = []
+
+            if sitemap_kind == "sitemapindex":
+                for sitemap_loc in sitemap_index_locs:
+                    parsed = urlparse(sitemap_loc)
+                    if parsed.netloc != site_origin:
+                        errors.append(f"sitemap.xml: non-canonical sitemap host {sitemap_loc}")
+                        continue
+                    child_rel = parsed.path.lstrip("/")
+                    child_path = root / child_rel
+                    if not child_path.is_file():
+                        errors.append(f"sitemap.xml: referenced sitemap is missing ({sitemap_loc})")
+                        continue
+                    child_kind, child_locs = sitemap_locs(child_path)
+                    if child_kind != "urlset":
+                        errors.append(f"sitemap.xml: referenced sitemap is not a urlset ({sitemap_loc})")
+                        continue
+                    page_locs.extend(child_locs)
+            elif sitemap_kind == "urlset":
+                page_locs = sitemap_index_locs
+            else:
+                errors.append(f"sitemap.xml: unsupported root element {sitemap_kind}")
+
+            if len(page_locs) != len(set(page_locs)):
+                errors.append("sitemap.xml: duplicate URL entries across sitemap set")
+            if site_url not in page_locs:
                 errors.append("sitemap.xml: canonical homepage is missing")
-            for loc in locs:
+            for loc in page_locs:
                 if urlparse(loc).netloc != site_origin:
                     errors.append(f"sitemap.xml: non-canonical host {loc}")
                 if loc.endswith("/404.html") or loc.endswith("/404/"):
