@@ -1,0 +1,55 @@
+{
+  "schema_version": "0.1",
+  "record_id": "example-validation-001",
+  "cohort_id": "example-cohort",
+  "attempt_ordinal": 1,
+  "product_id": "example-product",
+  "validation_dimension": "usability",
+  "performed_at": "2026-08-29T12:00:00Z",
+  "participant": {
+    "independent": true,
+    "authored_test_fixture": false,
+    "role_archetype": "enterprise data practitioner"
+  },
+  "product_ref": {
+    "repository": "https://github.com/example/example-product",
+    "commit": "0123456789abcdef0123456789abcdef01234567",
+    "version": "0.1.0",
+    "contract_versions": {
+      "example-contract": "1.0"
+    }
+  },
+  "task": {
+    "description": "Run the documented first workflow against an independently prepared representative dataset and explain the resulting evidence.",
+    "input_class": "independently_prepared_representative",
+    "privacy_handling": "Synthetic representative records only; no participant or client source data retained in the public repository."
+  },
+  "setup": {
+    "environment": "Clean local environment following only the public installation guide.",
+    "author_assistance": false,
+    "assistance_notes": "No implementation-author assistance during setup or task execution."
+  },
+  "outcome": {
+    "status": "partial",
+    "summary": "The participant completed the core task and interpreted the result correctly, but one installation step required documentation lookup outside the quick start.",
+    "expected_result_basis": "Expected behavior was prepared independently from the product implementation and reviewed before the run."
+  },
+  "friction": [
+    "The optional dependency needed for one input format was not obvious from the quick start."
+  ],
+  "failures": [],
+  "workarounds": [
+    "Participant found the optional-dependency section in the full installation guide."
+  ],
+  "participant_feedback": [
+    "The evidence output was understandable after the run, but the first-run path should surface optional input dependencies earlier."
+  ],
+  "limitations": [
+    "This single synthetic example demonstrates the record shape only; it is not real external validation evidence.",
+    "The run does not establish production suitability, security, performance at scale, or correctness for other input classes."
+  ],
+  "evidence_retention": {
+    "class": "public_sanitized",
+    "description": "Synthetic example only; no real participant or enterprise data is present."
+  }
+}

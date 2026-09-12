@@ -1,0 +1,104 @@
+---
+layout: default
+title: "Kanban Runtime Flows — From Signal to Material Document"
+description: "A practical SAP Kanban runtime guide for procurement, production, stock transfer, goods receipt, backflush, card handling, and evidence tracing."
+permalink: /labs/enterprise-context/kanban/runtime-flows/
+status: needs_verification
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-08
+hide_global_cta: true
+tags: [sap, kanban, runtime, procurement, production-order, goods-receipt, stock-transfer, material-document]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/kanban/">Kanban</a></li><li aria-current="page">Runtime Flows</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Kanban / 05</p>
+      <h1>Trace the container all the way<br />to the business document.</h1>
+      <p>A Kanban flow is healthy only when the visible status, replenishment object, physical stock movement, and consumption or value effect tell the same story. The runtime trace below makes that evidence chain explicit.</p>
+      <a class="research-canvas__button" href="#procurement">Trace a procurement loop <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal"><p>Runtime proof</p><div class="research-canvas__signal-line"><span>1</span><strong>Signal</strong><small>Which Kanban changed?</small></div><div class="research-canvas__signal-line"><span>2</span><strong>Object</strong><small>What supply document exists?</small></div><div class="research-canvas__signal-line"><span>3</span><strong>Stock</strong><small>What was actually posted?</small></div><em>Follow references instead of assuming the next step happened.</em></div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">search</span><p><strong>Runtime rule:</strong> after every important status change, ask what new business object or posting should now exist. If the expected evidence is missing, stop the trace there.</p><a href="#evidence">Open the evidence checklist <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></section>
+
+  <section class="research-canvas__inventory" id="procurement" data-reveal>
+    <header><p class="research-canvas__eyebrow">Procurement flow</p><h2>EMPTY → purchasing object → goods receipt → FULL.</h2><p>This is the cleanest way to understand externally supplied Kanban: one signal starts a purchasing response, and the later receipt restores usable material.</p></header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>signal</small></div><h3>Demand consumes a container</h3><p class="ecg-question">Did the correct Kanban become EMPTY?</p></header><div class="ecg-decision-columns"><div><h4>Inputs</h4><ul><li>Material and PSA</li><li>Kanban ID</li><li>Control cycle</li></ul></div><div><h4>Expected output</h4><ul><li>EMPTY status</li><li>Trigger timestamp</li></ul></div><div><h4>Failure signal</h4><p>Wrong container, blocked status sequence, duplicate scan, or no trigger.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>replenishment</small></div><h3>SAP creates the purchasing response</h3><p class="ecg-question">Was the expected PO, schedule line, or contract release created?</p></header><div class="ecg-decision-columns"><div><h4>Inputs</h4><ul><li>Replenishment strategy</li><li>Supplier or outline agreement</li><li>Container quantity</li><li>Purchasing parameters</li></ul></div><div><h4>Expected output</h4><ul><li>Correct purchasing reference</li><li>Correct quantity and delivery date</li><li>Correct receiving destination</li></ul></div><div><h4>Failure signal</h4><p>Missing source, invalid agreement, wrong destination, or document-creation error.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>physical receipt</small></div><h3>Material arrives</h3><p class="ecg-question">Was the real delivered quantity posted?</p></header><div class="ecg-decision-columns"><div><h4>Inputs</h4><ul><li>Purchasing reference</li><li>Actual quantity</li><li>Storage location or PSA route</li></ul></div><div><h4>Expected output</h4><ul><li>Material document</li><li>Stock increase at the intended location</li><li>Open purchasing quantity updated</li></ul></div><div><h4>Failure signal</h4><p>Status says FULL but stock was never received, or the receipt went to the wrong location.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>restore</small></div><h3>Kanban returns to usable state</h3><p class="ecg-question">Did FULL represent real availability?</p></header><div class="ecg-decision-columns"><div><h4>Possible trigger</h4><ul><li>Goods receipt action</li><li>Board action</li><li>Barcode scan</li></ul></div><div><h4>Expected output</h4><ul><li>FULL status</li><li>Purchasing object completed or reduced correctly</li></ul></div><div><h4>Failure signal</h4><p>FULL without sufficient stock, duplicate receipt, or purchasing document still open unexpectedly.</p></div></div></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Scheduling-agreement nuance</p><h2>Do not assume one Kanban equals one schedule-line receipt.</h2><p>A schedule-line process can aggregate physical delivery. Several empty containers can be covered by one supplier delivery, and receipt quantity may then restore several Kanbans depending on the process design.</p></header>
+    <div class="ecg-lead-lens"><ul><li>Check the agreement item and Kanban relevance.</li><li>Check that the receiving storage location aligns with the supply area.</li><li>Separate the number of Kanban signals from the number of supplier delivery events.</li><li>When goods receipt quantity does not match one container, trace how the quantity is distributed across waiting containers.</li></ul></div>
+  </section>
+
+  <section class="research-canvas__inventory" id="production" data-reveal>
+    <header><p class="research-canvas__eyebrow">Production flow</p><h2>EMPTY can create production work, but production completion and Kanban completion are not always the same click.</h2><p>The exact path depends on whether the loop uses manual production, repetitive manufacturing, or production orders.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>01</span><h3>EMPTY requests internal supply</h3><p>The control cycle determines whether SAP creates a production order, run-schedule quantity, or no separate replenishment document.</p><strong>Proof: the expected production object exists, or the no-document process is explicitly designed.</strong></article>
+      <article><span>02</span><h3>Production starts</h3><p>If the sequence requires IN PROCESS, the container should enter that state before completion. A direct EMPTY → FULL jump can be rejected.</p><strong>Proof: status sequence matches actual execution.</strong></article>
+      <article><span>03</span><h3>Components and output are posted</h3><p>Backflush can post component consumption and finished quantity. In an order-based design, confirmation and goods receipt can also be handled as separate production events.</p><strong>Proof: production document, component issues, and receipt quantities reconcile.</strong></article>
+      <article><span>04</span><h3>Container becomes FULL</h3><p>The status can be linked to backflush/receipt or updated separately, depending on the design.</p><strong>Proof: FULL corresponds to material physically available at the demand point.</strong></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">error</span><p><strong>Typical production failure:</strong> the user tries to set a replenished container to FULL, but the status sequence requires IN PROCESS first. This is not a stock problem. It is a state-machine problem until proven otherwise.</p><a href="/labs/enterprise-context/kanban/operations-diagnostics/">Open error recovery <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <section class="research-canvas__inventory" id="transfer" data-reveal>
+    <header><p class="research-canvas__eyebrow">Stock-transfer flow</p><h2>EMPTY can request movement of existing stock.</h2><p>The source stock already exists. The runtime question is how SAP represents the planned move and how the actual transfer updates the receiving state.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Reservation-style flow</h3><ul><li>EMPTY creates a transfer requirement or reservation.</li><li>Source warehouse prepares the quantity.</li><li>Transfer posting moves stock.</li><li>FULL indicates restored receiving availability.</li></ul></div>
+      <div><h3>Direct flow</h3><ul><li>No separate reservation is required.</li><li>Posting moves stock source → receiving location.</li><li>Status and physical movement can be tightly coupled.</li></ul></div>
+      <div><h3>Two-step flow</h3><ul><li>Goods issue removes stock from the source.</li><li>Transit state becomes meaningful.</li><li>Goods receipt creates receiving stock.</li><li>Only then is demand-side availability restored.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="evidence" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence chain</p><h2>Use the same four questions for every runtime trace.</h2></header>
+    <div class="ecg-input-grid">
+      <article><span>SIGNAL</span><h3>What did the Kanban say?</h3><p>Container ID, old status, new status, timestamp, user/device, actual quantity if quantity signals are used.</p></article>
+      <article><span>OBJECT</span><h3>What replenishment element exists?</h3><p>Production order, repetitive quantity, PO, schedule line, reservation, transfer document, or an explicitly designed no-document execution.</p></article>
+      <article><span>STOCK</span><h3>What material movement exists?</h3><p>Material document, movement semantics, actual quantity, source and destination, batch or stock type where relevant.</p></article>
+      <article><span>VALUE</span><h3>What consumption or cost effect exists?</h3><p>Backflush, cost-center issue, order cost, valuation, or another accounting effect that should follow the physical event.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Logical versus physical stock</p><h2>The Kanban board can be right while inventory is wrong — and the reverse.</h2><p>A status loop can progress without immediately posting every physical consumption event. This creates a deliberate distinction between logical container state and book stock.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Logical state</h3><ul><li>EMPTY means the container no longer protects the demand point.</li><li>IN USE can represent partial consumption.</li><li>FULL means available in the Kanban control model.</li></ul></div>
+      <div><h3>Book stock</h3><ul><li>Changes only when an Inventory Management or production posting changes quantity.</li><li>Can remain visible in the storage location after the physical container is already being consumed.</li><li>Can be corrected only by understanding the real business event, not by changing a Kanban color.</li></ul></div>
+      <div><h3>Lead diagnosis</h3><ul><li>Compare board state with stock overview.</li><li>Find material documents and production postings.</li><li>Check whether backflush timing explains the difference.</li><li>Confirm physical quantity at the demand point before posting corrections.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Kanban cards</p><h2>The card design should support the physical route.</h2><p>Printing is part of execution when the signal moves physically with the material.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>CIRCULATE</span><h3>Card travels with the container</h3><p>The same physical card moves between demand and supply together with the container.</p></article>
+      <article><span>SUPPLY</span><h3>Card stays at the source</h3><p>Demand sends the signal electronically or through the board; the supplier attaches or uses the local card for the refill.</p></article>
+      <article><span>DEMAND</span><h3>Card stays at the demand point</h3><p>The board communicates which container is required while the physical card remains close to consumption.</p></article>
+      <article><span>PRINT</span><h3>Print at a lifecycle event</h3><p>Classic flows can print cards when replenishment is triggered, when goods receipt is posted, collectively, or from a preprinted blank design.</p></article>
+    </div>
+    <p class="ecg-caption">Classic GUI implementations can use <strong>PK17</strong> for Kanban card printing. Validate output technology and supported apps in the target release.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment scenario</p><h2>“The board is green, but the line says the material never arrived.”</h2></header>
+    <div class="ecg-lead-lens"><ol><li>Identify the exact Kanban ID that became FULL.</li><li>Check what event changed it to FULL: scan, board action, goods receipt, or automatic action.</li><li>Find the replenishment document linked to that Kanban.</li><li>Find the material document and verify actual quantity and destination.</li><li>Check whether the goods were received to a central storage location instead of the line-side PSA.</li><li>Confirm physical stock and transport status before creating any corrective posting.</li></ol></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span><p><strong>Next:</strong> when the evidence chain breaks, use operational evaluations, alerts, and controlled error recovery.</p><a href="/labs/enterprise-context/kanban/operations-diagnostics/">Operations and Diagnostics <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>

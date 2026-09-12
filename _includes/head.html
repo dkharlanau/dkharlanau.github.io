@@ -13,7 +13,7 @@
 {% if page.home_locale %}
 {% assign computed_title = locale_meta.title | default: computed_title %}
 {% elsif page.url == '/' or page.permalink == '/' %}
-{% assign computed_title = page.title | default: 'Dzmitryi Kharlanau — SAP, Enterprise Knowledge and Practical AI' %}
+{% assign computed_title = page.title | default: 'SAP Learning & AMS Optimization | Dzmitryi Kharlanau' %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
 {% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP AMS, Integration & Process Optimization' %}
 {% elsif page.collection == 'notes' %}
@@ -80,6 +80,9 @@ normalize_whitespace %}
 <!-- GitHub Pages cannot set HTTP Link response headers, so these HTML links are the static-site fallback for agent discovery. -->
 <link rel="index" href="{{ '/ai/' | absolute_url }}" title="AI Routing Hub" />
 <link rel="about" href="{{ '/about/' | absolute_url }}" title="Canonical Profile" />
+<link rel="describedby" type="application/json" href="{{ '/ai/site-profile.json' | absolute_url }}" title="Agent-Ready Web Profile" />
+<link rel="describedby" type="application/json" href="{{ '/ai/focus-map.json' | absolute_url }}" title="Two-Focus Routing Map" />
+<link rel="describedby" type="application/json" href="{{ '/ai/ai-search-profile.json' | absolute_url }}" title="AI Search and Citation Profile" />
 <link rel="describedby" type="application/json" href="{{ '/ai/catalog.json' | absolute_url }}" title="AI Catalog" />
 <link rel="describedby" type="application/json" href="{{ '/ai/discovery-map.json' | absolute_url }}" title="AI Discovery Map" />
 <link rel="describedby" type="application/json" href="{{ '/ai/verified-pages.json' | absolute_url }}" title="Verified Page Inventory" />
@@ -217,12 +220,30 @@ normalize_whitespace %}
   "@id": "{{ canonical_url }}#website",
   "url": "{{ canonical_url }}",
   "name": "Dzmitryi Kharlanau",
+  "alternateName": ["dkharlanau.github.io"],
+  "description": {{ page.description | default: default_description | jsonify }},
   "inLanguage": "{{ page.locale | default: 'en' }}",
   "publisher": {
     "@id": "https://dkharlanau.github.io/#dkharlanau"
-  }
+  },
+  "about": [
+    {"@type": "Thing", "name": "SAP learning and assessment practice"},
+    {"@type": "Thing", "name": "SAP AMS optimization"}
+  ],
+  "hasPart": [
+    {
+      "@type": "WebPage",
+      "@id": "https://dkharlanau.github.io/learn/#learning",
+      "url": "https://dkharlanau.github.io/learn/",
+      "name": "SAP Learning & Assessment Practice"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://dkharlanau.github.io/services/sap-ams-consulting/#ams-optimization",
+      "url": "https://dkharlanau.github.io/services/sap-ams-consulting/",
+      "name": "SAP AMS Optimization"
+    }
+  ]
 }
 </script>
 {% endif %}
-
-{% include seo/article-visual.html %}

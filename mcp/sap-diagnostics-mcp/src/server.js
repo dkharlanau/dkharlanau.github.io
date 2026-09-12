@@ -29,6 +29,8 @@ const allResponseText = (response) => [
   ...(response.facts || []), ...(response.evidence || []), ...(response.evidence_refs || []),
   ...(response.hypotheses || []), ...(response.proposed_actions || []), response.summary || '', response.approval_boundary || ''
 ].join('\n');
+const unique = (items) => [...new Set(items.filter(Boolean))];
+const mdList = (items, empty = ['Not provided']) => (items.length ? items : empty).map((item) => `- ${item}`).join('\n');
 
 function getCase(id) {
   return incidentLab.cases.find((item) => item.id === id) || null;
@@ -59,6 +61,54 @@ function evaluateResponse(caseRecord, response = {}) {
   return result;
 }
 
+function buildIncidentArtifacts(args = {}) {
+  const caseRecord = args.case_id ? getCase(args.case_id) : null;
+  if (args.case_id && !caseRecord) return null;
+
+  const title = String(args.title || caseRecord?.title || 'Untitled SAP incident').trim();
+  const businessImpact = String(args.business_impact || 'Not yet stated').trim();
+  const evidenceLabels = unique((args.evidence_labels || []).map((item) => String(item).trim()));
+  const requiredEvidence = caseRecord?.required_evidence || call('get_evidence_checklist', { query: title }).checklist;
+  const evidenceText = evidenceLabels.join('\n');
+  const captured = requiredEvidence.filter((item) => contains(evidenceText, item));
+  const missing = requiredEvidence.filter((item) => !captured.includes(item));
+  const hypotheses = caseRecord?.acceptable_hypotheses || find(title, 3).map((entry) => entry.title);
+  const references = caseRecord?.expected_atlas_urls || find(title, 4).map((entry) => entry.url);
+  const forbidden = caseRecord?.forbidden_actions || ['Do not change production state before preserving evidence and confirming the failing boundary.'];
+  const owner = caseRecord?.correct_owner || 'Assign a business-process owner and the technical owner of the failing boundary.';
+  const approvalBoundary = caseRecord?.human_approval_boundary || 'A human owner must approve production changes, retries, reprocessing, queue intervention, or data correction.';
+  const commonHeader = '> Deterministic public-knowledge draft. No root cause is asserted. Validate in the actual landscape before action.';
+  const refs = references.length ? references.map((item) => `- ${item}`).join('\n') : '- No reviewed Atlas reference resolved.';
+
+  const incidentBrief = `# Incident Brief\n\n${commonHeader}\n\n## Context\n- **Title:** ${title}\n- **Business impact:** ${businessImpact}\n- **Synthetic case:** ${caseRecord?.id || 'none'}\n\n## Evidence labels captured\n${mdList(captured)}\n\n## Evidence still needed\n${mdList(missing)}\n\n## Candidate hypotheses — not confirmed\n${mdList(hypotheses)}\n\n## Ownership\n- ${owner}\n\n## Human approval boundary\n- ${approvalBoundary}\n\n## Reviewed references\n${refs}\n`;
+
+  const evidenceChecklist = `# Evidence Checklist\n\n${commonHeader}\n\n## Captured\n${mdList(captured)}\n\n## Missing / confirm\n${mdList(missing)}\n\n## Do not do yet\n${mdList(forbidden)}\n\n## Reviewed references\n${refs}\n`;
+
+  const rcaDraft = `# RCA Draft\n\n${commonHeader}\n\n## Problem statement\n- **Observed:** ${title}\n- **Business impact:** ${businessImpact}\n- **Expected:** _Define the expected business outcome._\n- **Difference:** _State the smallest clear gap between expected and observed._\n\n## Evidence\n### Present\n${mdList(captured)}\n\n### Missing\n${mdList(missing)}\n\n## Hypotheses to test\n${mdList(hypotheses)}\n\n## Causal chain\n1. Why did the business outcome fail? _Not established._\n2. Where is the first verified divergence? _Not established._\n3. Which condition allowed the divergence? _Not established._\n4. Which control, data rule, configuration, code path, or ownership model allowed it? _Not established._\n5. Why did prevention or detection not catch it? _Not established._\n\n## Actions\n- **Containment:** _Pending evidence._\n- **Corrective action:** _Pending verified cause._\n- **Preventive action:** _Pending verified cause._\n- **Validation:** _Define a business-result check and recurrence signal._\n\n## Human approval boundary\n- ${approvalBoundary}\n`;
+
+  const jiraMarkdown = `# ${title}\n\n## Business impact\n${businessImpact}\n\n## Evidence captured\n${mdList(captured)}\n\n## Evidence missing\n${mdList(missing)}\n\n## Candidate hypotheses — not confirmed\n${mdList(hypotheses)}\n\n## Ownership\n- ${owner}\n\n## Change / recovery boundary\n- ${approvalBoundary}\n\n## Reviewed references\n${refs}\n\n## Done when\n- Failing boundary is supported by evidence.\n- Recovery is approved and executed safely.\n- Business outcome is validated.\n- Recurrence signal or preventive action is recorded where relevant.\n`;
+
+  return {
+    schema_version: '1.0',
+    case_id: caseRecord?.id || null,
+    title,
+    business_impact: businessImpact,
+    evidence: { captured, missing, required: requiredEvidence },
+    candidate_hypotheses: hypotheses,
+    forbidden_actions: forbidden,
+    owner,
+    human_approval_boundary: approvalBoundary,
+    evidence_references: references,
+    artifacts: {
+      incident_brief: incidentBrief,
+      evidence_checklist: evidenceChecklist,
+      rca_draft: rcaDraft,
+      jira_markdown: jiraMarkdown
+    },
+    limitations: unique([...(caseRecord?.limitations || []), limitation, 'The artifact builder accepts evidence labels, not raw production payloads.'])
+  };
+}
+
 const toolDefinitions = [
   ['search_diagnostics', 'Search reviewed Atlas diagnostics', { query: { type: 'string' }, limit: { type: 'integer' } }],
   ['get_diagnostic', 'Get a reviewed Atlas diagnostic by stable slug or URL', { id: { type: 'string' } }],
@@ -68,6 +118,7 @@ const toolDefinitions = [
   ['find_agent_tools', 'Search the static SAP tool registry', { query: { type: 'string' }, access: { type: 'string' } }],
   ['get_tool_risk_profile', 'Return one tool risk profile', { id: { type: 'string' } }],
   ['build_incident_brief', 'Build a fact-versus-hypothesis incident brief', { symptom: { type: 'string' }, facts: { type: 'array', items: { type: 'string' } } }],
+  ['build_incident_artifacts', 'Build incident brief, evidence checklist, RCA draft, and Jira Markdown from public case rules and evidence labels', { case_id: { type: 'string' }, title: { type: 'string' }, business_impact: { type: 'string' }, evidence_labels: { type: 'array', items: { type: 'string' } } }],
   ['list_incident_cases', 'List synthetic Incident Lab cases for the agent loop', { domain: { type: 'string' }, difficulty: { type: 'string' } }],
   ['get_incident_case', 'Retrieve one synthetic Incident Lab case and evaluation contract', { case_id: { type: 'string' } }],
   ['evaluate_incident_response', 'Deterministically evaluate a proposed diagnostic response against a synthetic case', { case_id: { type: 'string' }, response: { type: 'object' } }],
@@ -84,6 +135,7 @@ function call(name, args = {}) {
   if (name === 'find_agent_tools') return tools.tools.filter((tool) => (!args.access || tool.access === args.access) && (!args.query || JSON.stringify(tool).toLowerCase().includes(args.query.toLowerCase()))).map((tool) => ({ id: tool.id, name: tool.name, canonical_url: tools.canonical_url, verification_status: tool.status, last_reviewed: tool.verification_date, evidence_references: tool.evidence_sources, limitations: ['Registry metadata only; inspect the original project before installation.'], related_topics: tool.domains }));
   if (name === 'get_tool_risk_profile') { const tool = tools.tools.find((item) => item.id === args.id); return tool ? { ...tool, limitations: ['Registry assessment, not a security approval.'] } : null; }
   if (name === 'build_incident_brief') return { symptom: args.symptom, facts: args.facts || [], hypotheses: find(args.symptom || '', 3).map((entry) => entry.title), evidence_checklist: call('get_evidence_checklist', { query: args.symptom }).checklist, human_approval_boundary: 'No system action, reprocessing, configuration change, or write operation is authorized by this brief.', limitations: [limitation] };
+  if (name === 'build_incident_artifacts') return buildIncidentArtifacts(args);
   if (name === 'list_incident_cases') return incidentLab.cases.filter((item) => (!args.domain || item.domain === args.domain) && (!args.difficulty || item.difficulty === args.difficulty)).map((item) => ({ id: item.id, title: item.title, domain: item.domain, difficulty: item.difficulty, scenario: item.scenario, limitations: item.limitations }));
   if (name === 'get_incident_case') { const caseRecord = getCase(args.case_id); return caseRecord ? { ...caseRecord, canonical_url: incidentLab.canonical_url, evaluation_contract: incidentLab.evaluation_contract } : null; }
   if (name === 'evaluate_incident_response' || name === 'run_incident_loop') {
@@ -99,7 +151,7 @@ const respond = (id, result) => process.stdout.write(JSON.stringify({ jsonrpc: '
 readline.createInterface({ input: process.stdin }).on('line', (line) => {
   try {
     const message = JSON.parse(line);
-    if (message.method === 'initialize') respond(message.id, { protocolVersion: '2025-03-26', capabilities: { tools: {} }, serverInfo: { name: 'sap-diagnostics-mcp', version: '0.2.0' } });
+    if (message.method === 'initialize') respond(message.id, { protocolVersion: '2025-03-26', capabilities: { tools: {} }, serverInfo: { name: 'sap-diagnostics-mcp', version: '0.3.0' } });
     else if (message.method === 'tools/list') respond(message.id, { tools: listTools() });
     else if (message.method === 'tools/call') respond(message.id, { content: [{ type: 'text', text: JSON.stringify(call(message.params.name, message.params.arguments), null, 2) }] });
   } catch (error) {

@@ -1,14 +1,27 @@
 version: 1
-updated: 2026-09-12
+updated: 2026-09-10
 
 principles:
   - Product architecture and storage architecture are related but not identical.
   - Keep established deep URLs stable unless a move has a clear benefit.
-  - Global navigation exposes the two primary routes, the supporting Library, and About; Frameworks and Machine remain visible from the Library product map.
+  - Two primary audience journeys share one knowledge base; reference products support learning and AMS improvement.
+  - Global navigation stays compact; Labs, Frameworks, and Machine remain visible from the Knowledge product map.
   - Reuse canonical sources instead of copying the same knowledge between products.
 
+# Phase 1 English header. Reviewed localization follows without overwriting existing translations.
 primary_navigation:
-  - label: Business
+  - label: Learn
+    url: /learn/
+  - label: Improve AMS
+    url: /services/sap-ams-consulting/
+  - label: Library
+    url: /knowledge/
+  - label: About
+    url: /about/
+
+# Existing non-English header and supporting footer retain these reference destinations.
+fallback_navigation:
+  - label: Work
     url: /services/
   - label: Learn & prepare
     url: /labs/
@@ -59,9 +72,11 @@ clusters:
 
   career:
     label: Career
-    role: SAP Lead interview readiness, assessment practice, evidence, and skills progression.
+    role: SAP learning, interview readiness, assessment practice, evidence, and skills progression.
     hub: /labs/interview-readiness/
     members:
+      - /learn/
+      - /learn/packs/bp-mdg-replication/
       - /labs/interview-readiness/
       - /labs/interview-readiness/roadmap/
       - /labs/interview-readiness/questions/
@@ -103,6 +118,7 @@ clusters:
     hub: /services/
     members:
       - /services/
+      - /services/sap-ams-consulting/
 
 lifecycle:
   - Research

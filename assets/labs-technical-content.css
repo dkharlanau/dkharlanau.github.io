@@ -1,0 +1,351 @@
+/* Labs technical content system ------------------------------------------
+   Loaded after the portal theme so dense, agent-authored technical pages
+   inherit one resilient hierarchy and overflow model by default. */
+
+body[data-page^="/labs/"] {
+  --labs-reading: 68ch;
+  --labs-wide: 78rem;
+  --labs-gutter: clamp(1rem, 3vw, 2rem);
+  --labs-section-space: clamp(2.75rem, 5vw, 4.75rem);
+  --labs-card-space: clamp(1rem, 2vw, 1.4rem);
+}
+
+body[data-page^="/labs/"] :is(.research-canvas, .context-graph) {
+  min-width: 0;
+  overflow: visible;
+}
+
+body[data-page^="/labs/"] .research-canvas {
+  display: grid;
+  row-gap: clamp(.75rem, 2vw, 1.5rem);
+}
+
+body[data-page^="/labs/"] .research-canvas > :is(header, section, article) {
+  scroll-margin-top: 6rem;
+}
+
+body[data-page^="/labs/"] .research-canvas__hero,
+body[data-page^="/labs/"] .research-canvas__inventory,
+body[data-page^="/labs/"] .research-canvas__boundary,
+body[data-page^="/labs/"] .research-canvas__method,
+body[data-page^="/labs/"] .research-canvas__support,
+body[data-page^="/labs/"] .context-graph > :is(section, article) {
+  box-sizing: border-box;
+  width: min(calc(100% - (2 * var(--labs-gutter))), var(--labs-wide));
+  min-width: 0;
+  margin-inline: auto;
+}
+
+body[data-page^="/labs/"] .research-canvas__hero {
+  gap: clamp(2.25rem, 5vw, 5rem) !important;
+  padding-block: clamp(2.5rem, 5vw, 4.75rem) !important;
+}
+
+body[data-page^="/labs/"] .research-canvas__hero-copy > p:not(.research-canvas__eyebrow),
+body[data-page^="/labs/"] .research-canvas__inventory > header > p:last-child,
+body[data-page^="/labs/"] .research-panel > header > p:last-child,
+body[data-page^="/labs/"] .ecg-caption {
+  max-width: var(--labs-reading) !important;
+}
+
+body[data-page^="/labs/"] .research-canvas__inventory {
+  padding-block: var(--labs-section-space) !important;
+  border-top: 1px solid var(--portal-line);
+}
+
+body[data-page^="/labs/"] .research-canvas__inventory > header,
+body[data-page^="/labs/"] .research-panel > header {
+  grid-template-columns: minmax(9rem, .42fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 5vw, 4.5rem);
+  margin-bottom: clamp(1.75rem, 3.5vw, 3rem);
+}
+
+body[data-page^="/labs/"] .research-canvas__inventory > header > h2,
+body[data-page^="/labs/"] .research-panel > header > h2 {
+  max-width: 19ch;
+  font-size: clamp(2rem, 3.6vw, 3.25rem) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -.045em !important;
+}
+
+body[data-page^="/labs/"] .research-canvas__inventory > header > p:last-child,
+body[data-page^="/labs/"] .research-panel > header > p:last-child {
+  font-size: 1rem !important;
+  line-height: 1.65 !important;
+}
+
+body[data-page^="/labs/"] :is(h2, h3, h4) {
+  scroll-margin-top: 6rem;
+}
+
+body[data-page^="/labs/"] :is(section, article, li, tr, pre, figure, .research-canvas__boundary) > :is(h2, h3, h4):first-child {
+  break-after: avoid;
+}
+
+body[data-page^="/labs/"] :is(.ecg-memory-grid, .ecg-input-grid, .ecg-view-grid, .ecg-heuristic-grid, .ecg-decision-columns) {
+  min-width: 0;
+}
+
+body[data-page^="/labs/"] :is(.ecg-memory-card, .ecg-input-grid article, .ecg-view-card, .ecg-heuristic-grid article, .ecg-decision-columns > div) {
+  min-width: 0;
+  padding: var(--labs-card-space) !important;
+  overflow-wrap: anywhere;
+}
+
+body[data-page^="/labs/"] .context-graph :is(.ecg-memory-card, .ecg-input-grid article, .ecg-view-card, .ecg-heuristic-grid article) h3 {
+  font-size: clamp(1.08rem, 1.6vw, 1.35rem) !important;
+  line-height: 1.16 !important;
+}
+
+body[data-page^="/labs/"] .context-graph :is(
+  .ecg-memory-card,
+  .ecg-input-grid article,
+  .ecg-view-card,
+  .ecg-decision-columns > div,
+  .ecg-determination-detail,
+  .ecg-diagnostic,
+  .ecg-heuristic-grid article,
+  .ecg-case,
+  .ecg-trace
+) :is(p, li) {
+  font-size: clamp(.875rem, .15vw + .85rem, .95rem) !important;
+  line-height: 1.55 !important;
+  text-transform: none;
+}
+
+body[data-page^="/labs/"] .context-graph .ecg-decision-columns {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+
+body[data-page^="/labs/"] .context-graph .ecg-decision-columns > div + div {
+  border-inline-start: 1px solid var(--ecg-line);
+}
+
+body[data-page^="/labs/"] .context-graph .ecg-determination-detail {
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+body[data-page^="/labs/"] .context-graph .ecg-determination-detail > header {
+  grid-template-columns: minmax(5rem, .25fr) minmax(14rem, .8fr) minmax(18rem, 1.2fr);
+  gap: 1rem clamp(1.25rem, 3vw, 2.5rem);
+}
+
+body[data-page^="/labs/"] .research-canvas__boundary {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: .8rem 1rem;
+  padding: clamp(1rem, 2vw, 1.35rem) var(--labs-card-space) !important;
+  border: 1px solid var(--portal-line) !important;
+  border-inline-start: 3px solid var(--portal-blue) !important;
+  border-radius: var(--portal-radius-card) !important;
+  background: rgba(248, 251, 255, .72) !important;
+}
+
+body[data-page^="/labs/"] .research-canvas__boundary > :not(.material-symbols-outlined) {
+  grid-column: 2;
+  max-width: var(--labs-reading);
+  font-size: clamp(.9rem, .2vw + .86rem, 1rem) !important;
+  line-height: 1.6 !important;
+}
+
+body[data-page^="/labs/"] :is(.research-canvas__table-wrap, .table-scroll, .table-wrapper) {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+}
+
+body[data-page^="/labs/"] :is(.research-canvas__table-wrap, .table-scroll, .table-wrapper):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--portal-blue) 45%, transparent);
+  outline-offset: 3px;
+}
+
+body[data-page^="/labs/"] :is(.research-canvas, .note-body, .atlas-page__body) table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: clamp(.875rem, .12vw + .85rem, .95rem);
+  line-height: 1.45;
+}
+
+body[data-page^="/labs/"] .research-canvas__table-wrap table {
+  min-width: min(46rem, 180vw);
+}
+
+body[data-page^="/labs/"] :is(.research-canvas, .note-body, .atlas-page__body) :is(th, td) {
+  min-width: 8rem;
+  padding: .85rem 1rem;
+  border-bottom: 1px solid var(--portal-line);
+  text-align: start;
+  vertical-align: top;
+  overflow-wrap: normal;
+}
+
+body[data-page^="/labs/"] :is(.research-canvas, .note-body, .atlas-page__body) th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fbff;
+  color: var(--portal-blue);
+  font-weight: 750;
+}
+
+body[data-page^="/labs/"] :is(pre, .highlighter-rouge) {
+  max-width: 100%;
+  min-width: 0;
+}
+
+body[data-page^="/labs/"] pre {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1px solid var(--portal-line) !important;
+  border-radius: var(--portal-radius-card);
+  background: #111a3f;
+  color: #edf3ff;
+  font-size: clamp(.82rem, .15vw + .79rem, .9rem);
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+body[data-page^="/labs/"] pre code {
+  color: inherit;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+body[data-page^="/labs/"] :not(pre) > code {
+  padding: .12em .35em;
+  border: 1px solid var(--portal-line);
+  border-radius: .35rem;
+  background: rgba(248, 251, 255, .9);
+  overflow-wrap: anywhere;
+}
+
+body[data-page^="/labs/"] :is(.ecg-rail, .ecg-trace__path, .research-canvas__visual, figure, svg, img) {
+  max-width: 100%;
+}
+
+body[data-page^="/labs/"] :is(.ecg-rail__branch, .ecg-trace__path) {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+  padding-bottom: .65rem;
+}
+
+body[data-page^="/labs/"] .research-route-list > a {
+  grid-template-columns: 2.75rem minmax(12rem, .75fr) minmax(16rem, 1.25fr) auto;
+  min-width: 0;
+  min-height: 0;
+  gap: .75rem 1rem;
+  padding-block: 1rem !important;
+}
+
+body[data-page^="/labs/"] .research-route-list > a :is(strong, small) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 64rem) {
+  body[data-page^="/labs/"] .context-graph .ecg-decision-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body[data-page^="/labs/"] .context-graph .ecg-determination-detail > header {
+    grid-template-columns: minmax(4.5rem, .25fr) minmax(0, 1fr);
+  }
+
+  body[data-page^="/labs/"] .context-graph .ecg-determination-detail > header > p {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 48rem) {
+  body[data-page^="/labs/"] {
+    --labs-gutter: 1rem;
+    --labs-section-space: clamp(2.25rem, 10vw, 3.25rem);
+  }
+
+  body[data-page^="/labs/"] .research-canvas__inventory > header,
+  body[data-page^="/labs/"] .research-panel > header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .65rem;
+  }
+
+  body[data-page^="/labs/"] .research-canvas__inventory > header > h2,
+  body[data-page^="/labs/"] .research-panel > header > h2 {
+    font-size: clamp(1.8rem, 8vw, 2.4rem) !important;
+  }
+
+  body[data-page^="/labs/"] .research-canvas__signal-line strong {
+    font-size: clamp(1.75rem, 9vw, 2.5rem) !important;
+  }
+
+  body[data-page^="/labs/"] :is(.ecg-memory-grid, .ecg-input-grid, .ecg-view-grid, .ecg-heuristic-grid),
+  body[data-page^="/labs/"] .context-graph .ecg-decision-columns {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page^="/labs/"] :is(.ecg-memory-card, .ecg-input-grid article, .ecg-view-card, .ecg-heuristic-grid article, .ecg-decision-columns > div) {
+    min-height: 0;
+    border-inline-start: 0 !important;
+    border-top: 1px solid var(--ecg-line);
+  }
+
+  body[data-page^="/labs/"] :is(.ecg-memory-card, .ecg-input-grid article, .ecg-view-card, .ecg-heuristic-grid article, .ecg-decision-columns > div):first-child {
+    border-top: 0;
+  }
+
+  body[data-page^="/labs/"] .context-graph .ecg-determination-detail > header {
+    grid-template-columns: 1fr;
+    gap: .55rem;
+  }
+
+  body[data-page^="/labs/"] .context-graph .ecg-determination-detail > header > p {
+    grid-column: 1;
+  }
+
+  body[data-page^="/labs/"] .research-route-list > a {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+  }
+
+  body[data-page^="/labs/"] .research-route-list > a small {
+    grid-column: 2 / -1;
+  }
+}
+
+@media (max-width: 30rem) {
+  body[data-page^="/labs/"] .research-canvas__hero {
+    padding-inline: 1rem !important;
+  }
+
+  body[data-page^="/labs/"] .research-canvas__boundary {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page^="/labs/"] .research-canvas__boundary > :not(.material-symbols-outlined) {
+    grid-column: 1;
+  }
+
+  body[data-page^="/labs/"] .research-route-list > a {
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+  }
+
+  body[data-page^="/labs/"] .research-route-list > a > i {
+    display: none;
+  }
+}
+
+@media print {
+  body[data-page^="/labs/"] :is(.research-canvas__table-wrap, .table-scroll, .table-wrapper, .ecg-rail__branch, .ecg-trace__path, pre) {
+    overflow: visible;
+  }
+
+  body[data-page^="/labs/"] :is(.research-canvas__inventory, .ecg-determination-detail, .ecg-memory-card, .research-canvas__boundary) {
+    break-inside: avoid;
+  }
+}

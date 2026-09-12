@@ -1,0 +1,100 @@
+/* Two-focus audience surfaces only. Keep the legacy library and shared theme intact. */
+.focus-page {
+  --focus-learn: #d9ff62;
+  --focus-ams: #72d9ff;
+  --focus-wash: color-mix(in srgb, currentColor 5%, transparent);
+  max-width: 100%;
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+}
+.focus-home { max-width: 1120px; }
+.focus-page h1 { max-width: 25ch; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.025em; }
+.focus-page h2 { font-size: clamp(1.35rem, 2.3vw, 1.8rem); line-height: 1.3; font-weight: 550; }
+.focus-page h3 { font-size: 1.15rem; line-height: 1.4; }
+.focus-page p, .focus-page li { max-width: 70ch; line-height: 1.75; overflow-wrap: anywhere; }
+.focus-page p + p, .focus-page h2 + p, .focus-page h3 + p { margin-top: 0.9rem; }
+.focus-page a:not(.portal-primary-link) { text-underline-offset: 0.2em; }
+.focus-page a:focus-visible, .focus-page summary:focus-visible { outline: 3px solid currentColor; outline-offset: 5px; }
+.focus-intro { margin-bottom: 2rem; }
+.focus-intro .eyebrow { margin-bottom: 0.9rem; }
+.focus-lead { margin-top: 1.25rem; font-size: 1.15rem; }
+.focus-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; }
+.focus-card { min-width: 0; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--color-border-soft, #e5e7eb); border-radius: var(--radius-md, 12px); background: var(--color-card, #fff); }
+.focus-card--learn { border-top: 4px solid var(--focus-learn); }
+.focus-card--ams { border-top: 4px solid var(--focus-ams); }
+.focus-card .eyebrow { margin-bottom: 0.7rem; }
+.focus-card .portal-primary-link { display: inline-flex; margin-top: 1.25rem; }
+.focus-meta { font-size: 0.95rem; color: var(--color-ink-soft, #374151); }
+.focus-section { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--color-border-soft, #e5e7eb); }
+.focus-secondary { font-size: 0.95rem; }
+.focus-secondary h2 { font-size: 1.15rem; }
+.focus-reading { max-width: 78ch; }
+.focus-reading-wide { max-width: 94ch; }
+.focus-notice { padding: 1rem 1.2rem; margin-block: 1.25rem; border-left: 3px solid currentColor; background: var(--color-card-alt, #f9fafb); }
+.focus-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 2rem; padding-left: 1.5rem; margin-block: 1.5rem; }
+.focus-table { overflow-x: auto; margin-block: 1.25rem; }
+.focus-table table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.focus-table th, .focus-table td { padding: 0.75rem; border-bottom: 1px solid var(--color-border-soft, #e5e7eb); text-align: start; vertical-align: top; }
+.focus-table caption { text-align: start; margin-bottom: 0.75rem; font-weight: 600; }
+.focus-answer { margin-top: 1.5rem; padding: 1.2rem; border: 1px solid var(--color-border-soft, #e5e7eb); border-radius: var(--radius-sm, 8px); background: var(--focus-wash); }
+.focus-answer summary { cursor: pointer; font-weight: 600; }
+.focus-answer[open] summary { margin-bottom: 1rem; }
+.focus-page ul, .focus-page ol { margin-block: 1rem; }
+
+.focus-method-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-block: 1.5rem;
+}
+.focus-method-step { position: relative; min-width: 0; padding: 0.85rem 0.9rem; border: 1px solid var(--color-border-soft, #e5e7eb); border-radius: 10px; background: var(--focus-wash); }
+.focus-method-step strong { display: block; font-size: 0.95rem; }
+.focus-method-step span { display: block; margin-top: 0.25rem; font-size: 0.82rem; line-height: 1.45; color: var(--color-ink-soft, #374151); }
+.focus-method-step:not(:last-child)::after { content: "→"; position: absolute; inset-inline-end: -0.55rem; top: 50%; z-index: 2; transform: translateY(-50%); font-weight: 700; }
+
+.focus-proof-grid, .focus-route-grid, .focus-offer-grid { display: grid; gap: 1rem; margin-top: 1.25rem; }
+.focus-proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.focus-route-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.focus-offer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.focus-proof, .focus-route, .focus-offer { min-width: 0; padding: 1.15rem; border: 1px solid var(--color-border-soft, #e5e7eb); border-radius: 10px; }
+.focus-proof--learn, .focus-route--learn { box-shadow: inset 4px 0 0 var(--focus-learn); }
+.focus-proof--ams, .focus-offer--ams { box-shadow: inset 4px 0 0 var(--focus-ams); }
+.focus-proof h3, .focus-route h3, .focus-offer h3 { margin-top: 0.2rem; }
+.focus-proof p, .focus-route p, .focus-offer p { font-size: 0.96rem; }
+
+.focus-case-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.65rem; margin-block: 1.4rem 2rem; }
+.focus-case-nav a { display: block; min-height: 100%; padding: 0.8rem; border: 1px solid var(--color-border-soft, #e5e7eb); border-radius: 9px; text-decoration: none; background: var(--focus-wash); }
+.focus-case-nav strong { display: block; font-size: 0.92rem; }
+.focus-case-nav span { display: block; margin-top: 0.25rem; font-size: 0.8rem; line-height: 1.4; color: var(--color-ink-soft, #374151); }
+.focus-case { scroll-margin-top: 6rem; }
+.focus-case-label { display: inline-block; margin-bottom: 0.45rem; padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--focus-learn); color: #111; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+.focus-task { padding: 1rem 1.15rem; border: 1px dashed var(--color-border-soft, #cbd5e1); border-radius: 10px; }
+.focus-task > :first-child { margin-top: 0; }
+
+.focus-diagnostic-sheet { margin-top: 1.25rem; border: 1px solid var(--color-border-soft, #e5e7eb); border-radius: 12px; overflow: hidden; }
+.focus-diagnostic-sheet__head { padding: 1rem 1.15rem; background: var(--focus-wash); border-bottom: 1px solid var(--color-border-soft, #e5e7eb); }
+.focus-diagnostic-sheet__head strong { display: block; }
+.focus-diagnostic-row { display: grid; grid-template-columns: minmax(9rem, 0.7fr) minmax(0, 2fr); gap: 1rem; padding: 0.85rem 1.15rem; border-bottom: 1px solid var(--color-border-soft, #e5e7eb); }
+.focus-diagnostic-row:last-child { border-bottom: 0; }
+.focus-diagnostic-row dt { font-weight: 650; }
+.focus-diagnostic-row dd { margin: 0; line-height: 1.65; }
+.focus-chip { display: inline-block; margin-inline-end: 0.35rem; margin-bottom: 0.35rem; padding: 0.18rem 0.5rem; border: 1px solid var(--color-border-soft, #cbd5e1); border-radius: 999px; font-size: 0.78rem; }
+
+@media (max-width: 900px) {
+  .focus-method-strip, .focus-case-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .focus-method-step:not(:last-child)::after { display: none; }
+  .focus-route-grid, .focus-offer-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .focus-grid, .focus-steps, .focus-proof-grid { grid-template-columns: minmax(0, 1fr); }
+  .focus-page h1 { max-width: 100%; }
+  .focus-method-strip, .focus-case-nav { grid-template-columns: minmax(0, 1fr); }
+  .focus-diagnostic-row { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
+}
+@media print {
+  .focus-page { padding: 0; color: #000; }
+  .focus-answer, .focus-secondary, .focus-case-nav { display: none; }
+  .focus-card, .focus-case, .focus-diagnostic-sheet { break-inside: avoid; }
+  .focus-grid, .focus-steps, .focus-method-strip, .focus-proof-grid, .focus-route-grid, .focus-offer-grid { display: block; }
+  .focus-table { overflow: visible; }
+}

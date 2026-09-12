@@ -3,7 +3,7 @@ layout: default
 title: "SAP Consulting Services — Dzmitryi Kharlanau | AMS, O2C, Integration"
 description: "SAP consulting for transformation friction, O2C and integration stability, operational memory, and controlled AI and automation around SAP."
 permalink: /services/
-last_modified_at: 2026-09-12
+last_modified_at: 2026-09-08
 ---
 
 <div class="service-canvas" data-service-canvas>
@@ -95,6 +95,8 @@ last_modified_at: 2026-09-12
     </ul>
     <a class="service-canvas__text-link" href="/ai/">Read the AI evidence layer <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
+
+  <p>For a public architecture exercise before discussing an engagement, try <a href="/services/compose-target-enterprise-architecture/">composing a target architecture from explicit business context</a>. Inspect the synthetic reference scenario, rule traces and unknown decisions before treating any output as a proposal for your own landscape.</p>
 
   <section class="service-field-notes" aria-labelledby="service-field-notes-title" data-reveal>
     <header><p class="service-canvas__eyebrow">Field notes</p><h2 id="service-field-notes-title">Reading for the problem at hand.</h2><a class="service-canvas__text-link" href="/blog/">View all writing <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></header>

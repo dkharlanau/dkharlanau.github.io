@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
-description: "Practical workspaces for SAP enterprise knowledge, enterprise assurance, AI architecture, Business AI, operational protocols, SAP Lead interview preparation, and assessment practice."
+description: "Practical workspaces for SAP enterprise knowledge, S/4HANA migration, enterprise assurance, AI architecture, Business AI, operational protocols, SAP Lead interview preparation, and assessment practice."
 permalink: /labs/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-01
+last_modified_at: 2026-09-10
 hide_global_cta: true
 tags:
   - sap
@@ -61,6 +61,7 @@ tags:
       <a href="/labs/business-ai/"><span>BIZ</span><strong>Business AI</strong><small>Business process → AI job → pattern → technology → control → outcome → evidence, including failed and mixed cases.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/enterprise-assurance/"><span>RISK</span><strong>Enterprise Assurance</strong><small>ISO management systems, ISAE and SOC reports, cloud and industry schemes, vendor evidence, control scope, and practical due diligence.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
       <a href="/labs/templates/"><span>OPS</span><strong>Operational Protocols</strong><small>RCA, incident response, integration failure analysis, runbooks, change impact, cutover, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/labs/incident-diagnostics/"><span>INC</span><strong>SAP Incident Diagnostics</strong><small>Browser-local evidence triage for IDoc and integration failures, BP/MDG replication, and recurring AMS incidents, with reusable Markdown outputs.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
       <a href="/labs/tool-roadmap/"><span>TOOLS</span><strong>Tool Roadmap</strong><small>Canonical backlog for practical SAP, data, mapping, migration, integration, and operations utilities.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
       <a href="/labs/interview-readiness/"><span>INTERVIEW</span><strong>SAP Lead Interview Readiness</strong><small>Track what you refreshed, what you can explain, what you can defend, which interview questions expose gaps, and which project stories are ready.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
       <a href="/labs/assessment/start-here/"><span>START</span><strong>SAP Lead Assessment — Start Here</strong><small>Use a practical study → case → pressure → review loop instead of reading the site as a long syllabus.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
@@ -83,6 +84,7 @@ tags:
       <a href="/labs/enterprise-context/automotive-jit/"><span>05</span><strong>Cross-functional and Industry</strong><small>Automotive JIT, finance-logistics connections, common logistics capabilities, industries, and deployment models.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
       <a href="/labs/enterprise-context/experience-platforms/"><span>06</span><strong>Experience Platforms</strong><small>SAP Build Work Zone, central entry points, Fiori launchpad boundaries, SAP Start, tasks, mobile, identity, and the workplace layer across systems.</small><i class="material-symbols-outlined" aria-hidden="true">space_dashboard</i></a>
       <a href="/labs/enterprise-context/performance/"><span>07</span><strong>Performance and Technical Operations</strong><small>Work processes, servers, locks, updates, tRFC/qRFC/bgRFC, traces, SQL/HANA diagnostics, incident paths, and Public Cloud monitoring differences.</small><i class="material-symbols-outlined" aria-hidden="true">monitor_heart</i></a>
+      <a href="/labs/enterprise-context/migration/"><span>08</span><strong>S/4HANA Greenfield Migration</strong><small>Migration architecture, object scope, Migration Cockpit, API-led loading, design register, SD/MM/PP/FI/CO playbooks, cutover, reconciliation, cloud boundaries, and Lead assessment drills.</small><i class="material-symbols-outlined" aria-hidden="true">conversion_path</i></a>
     </div>
   </section>
 

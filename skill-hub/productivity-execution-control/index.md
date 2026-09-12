@@ -2,9 +2,9 @@
 author: "Dzmitryi Kharlanau"
 layout: default
 title: "Productivity and Execution Control — Skill Group Index"
-description: "Practical working skills for planning work, clarifying tasks, triaging priorities, escalating blockers, reviewing daily execution, tracking follow-ups, managing delivery checklists, and detecting scope creep."
+description: "Practical working skills for planning work, clarifying tasks, triaging priorities, escalating blockers, reviewing execution, tracking follow-ups, managing checklists, generating assessment workbooks, and controlling scope."
 permalink: /skill-hub/productivity-execution-control/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-10
 status: reviewed
 verified: true
 ---
@@ -20,16 +20,16 @@ verified: true
 <section class="section atlas-hero">
   <p class="eyebrow">Skill Hub — Productivity and Execution Control</p>
   <h1>Stay in control of complex delivery.</h1>
-  <p class="lead">Skills for breaking down work, clarifying ambiguous tasks, triaging priorities, escalating blockers, reviewing daily execution, tracking follow-ups, managing delivery checklists, and detecting scope creep. Every skill produces a concrete artifact that keeps the project moving and the team aligned.</p>
+  <p class="lead">Skills for breaking down work, clarifying ambiguous tasks, triaging priorities, escalating blockers, reviewing daily execution, tracking follow-ups, managing delivery checklists, generating preparation workbooks, and detecting scope creep. Every skill produces a concrete artifact that keeps the work visible and actionable.</p>
 </section>
 
 <section class="section">
   <header class="section-heading">
     <h2>What this group covers</h2>
   </header>
-  <p>Productivity and Execution Control skills help you turn chaos into structure. They provide methods for understanding what must be done, deciding what to do first, removing blockers, tracking what was promised, and catching scope drift before it derails the plan. These skills are not generic productivity advice. Each one is tied to a concrete professional output: a work breakdown, a clarified task, a triage decision, an escalation note, a daily review record, a follow-up tracker, a delivery checklist, or a scope creep alert.</p>
+  <p>Productivity and Execution Control skills help you turn chaos into structure. They provide methods for understanding what must be done, deciding what to do first, removing blockers, tracking what was promised, and catching scope drift before it derails the plan. They also cover generated work queues such as an assessment workbook that stays linked to the source knowledge model instead of becoming a second manual list.</p>
   <p>These skills are cross-domain. They apply to SAP projects, integration deliveries, data governance initiatives, operational improvement, and consulting engagements. They are designed to be used together: work breakdown feeds task clarification, task clarification feeds priority triage, and priority triage feeds blocker escalation when something is stuck.</p>
-  <p>Each skill page includes: a working method, diagnostic questions, decision rules, artifact templates, quality checklists, and specific instructions for AI agents.</p>
+  <p>Each skill page includes a working method, diagnostic questions, decision rules, artifact templates or output contracts, quality checks, and instructions for AI agents when relevant.</p>
 </section>
 
 <section class="section">
@@ -44,6 +44,7 @@ verified: true
     <li>The team needs a daily habit to review what was done, what is stuck, and what must happen tomorrow.</li>
     <li>Commitments are made in meetings but forgotten afterward because no one is tracking them.</li>
     <li>A delivery milestone is approaching and the team needs a checklist to confirm readiness.</li>
+    <li>A large knowledge base needs to become a current preparation or assessment workbook without maintaining a duplicate list.</li>
     <li>Scope is expanding quietly and the team needs a structured way to detect, document, and challenge it.</li>
   </ul>
 </section>
@@ -71,7 +72,7 @@ verified: true
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/productivity-execution-control/daily-execution-review-working-skill/">Daily Execution Review</a></h3>
-      <p>Run a 10-minute daily review that tracks progress, surfaces blockers, and resets priorities for the next day.</p>
+      <p>Run a short daily review that tracks progress, surfaces blockers, and resets priorities for the next day.</p>
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/productivity-execution-control/follow-up-tracking-working-skill/">Follow-Up Tracking</a></h3>
@@ -80,6 +81,10 @@ verified: true
     <div class="topic-card">
       <h3><a href="/skill-hub/productivity-execution-control/delivery-checklist-management-working-skill/">Delivery Checklist Management</a></h3>
       <p>Build and maintain a delivery checklist that confirms every prerequisite is complete before a milestone is declared done.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/productivity-execution-control/assessment-workbook-generation-working-skill/">Assessment Workbook Generation</a></h3>
+      <p>Generate a preparation workbook from a live roadmap and knowledge inventory so the checklist stays aligned with the source material.</p>
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/productivity-execution-control/scope-creep-detection-working-skill/">Scope Creep Detection</a></h3>
@@ -99,6 +104,7 @@ verified: true
     <li><a href="/skill-hub/productivity-execution-control/blocker-escalation-working-skill/">Blocker Escalation</a> — Remove obstacles that stop progress.</li>
     <li><a href="/skill-hub/productivity-execution-control/daily-execution-review-working-skill/">Daily Execution Review</a> — Review progress and reset priorities every day.</li>
     <li><a href="/skill-hub/productivity-execution-control/follow-up-tracking-working-skill/">Follow-Up Tracking</a> — Track commitments and ensure they are kept.</li>
+    <li><a href="/skill-hub/productivity-execution-control/assessment-workbook-generation-working-skill/">Assessment Workbook Generation</a> — Turn a changing knowledge base into a current preparation queue.</li>
     <li><a href="/skill-hub/productivity-execution-control/scope-creep-detection-working-skill/">Scope Creep Detection</a> — Catch and challenge scope expansion early.</li>
     <li><a href="/skill-hub/productivity-execution-control/delivery-checklist-management-working-skill/">Delivery Checklist Management</a> — Confirm readiness before every milestone.</li>
   </ol>

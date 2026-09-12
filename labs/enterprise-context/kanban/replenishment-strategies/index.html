@@ -1,0 +1,101 @@
+---
+layout: default
+title: "Kanban Replenishment Strategies — Production, Procurement and Stock Transfer"
+description: "A practical SAP Kanban guide to in-house production, external procurement, scheduling agreements, stock transfer, contracts, and cost-center variants."
+permalink: /labs/enterprise-context/kanban/replenishment-strategies/
+status: needs_verification
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-08
+hide_global_cta: true
+tags: [sap, kanban, replenishment, procurement, production, stock-transfer, sap-mm, sap-pp]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/kanban/">Kanban</a></li><li aria-current="page">Replenishment Strategies</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Kanban / 03</p>
+      <h1>EMPTY is only a request.<br />The strategy decides what SAP does next.</h1>
+      <p>The same demand-side signal can launch very different supply processes. A Lead should first identify the physical source, then choose the SAP replenishment object that represents it with the least unnecessary complexity.</p>
+      <a class="research-canvas__button" href="#matrix">Choose the strategy <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal"><p>Three strategy families</p><div class="research-canvas__signal-line"><span>MAKE</span><strong>Production</strong><small>Supply is manufactured</small></div><div class="research-canvas__signal-line"><span>BUY</span><strong>Procurement</strong><small>Supply comes from a supplier</small></div><div class="research-canvas__signal-line"><span>MOVE</span><strong>Transfer</strong><small>Supply comes from another stock point</small></div><em>Choose by physical ownership and document behavior.</em></div>
+  </header>
+
+  <section class="research-canvas__inventory" id="matrix" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision matrix</p><h2>Start with the source, not with the transaction.</h2><p>Each family can have several execution variants. The key question is what should exist after the EMPTY signal and what evidence should prove completion.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>MAKE</span><h3>In-house production</h3><p>Use when the source is an internal production process. The replenishment object can be manual/no-document execution, a repetitive-manufacturing quantity, or a production order.</p><strong>Completion evidence: produced quantity, backflush or goods receipt, and restored Kanban state.</strong></article>
+      <article><span>BUY</span><h3>External procurement</h3><p>Use when a supplier refills the demand point. The signal can work with purchase orders, scheduling-agreement schedule lines, contracts, source lists, or related purchasing arrangements.</p><strong>Completion evidence: purchasing reference, actual goods receipt, and restored Kanban state.</strong></article>
+      <article><span>MOVE</span><h3>Stock transfer</h3><p>Use when material already exists in another plant or storage location and needs to be moved to the demand-side stock point.</p><strong>Completion evidence: transfer object or reservation, material document, receiving stock, and restored Kanban state.</strong></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">In-house production</p><h2>Choose how much formal execution evidence you need.</h2><p>The physical refill can be the same while the ERP representation is very different.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>MANUAL</span><h3>Card + cost collector</h3><p>The EMPTY signal does not have to create a separate replenishment document. The production source sees the card or board, produces the container quantity, and later posts the required production/backflush activity.</p><p><strong>Best fit:</strong> very repetitive internal loops where a separate order per container would add little control value.</p></article>
+      <article><span>REM</span><h3>Run-schedule quantity</h3><p>The signal can create a repetitive-manufacturing quantity. When the container is completed, backflush can post the finished quantity and component consumption against the repetitive process and cost collector.</p><p><strong>Best fit:</strong> repetitive manufacturing with stable production versions and line-side supply.</p></article>
+      <article><span>ORDER</span><h3>Production order</h3><p>EMPTY can create a production order for the replenishment quantity. Depending on configuration, order release and output can be automated. Completion can be linked to backflush or handled with a separate goods receipt.</p><p><strong>Best fit:</strong> when order-level execution, traceability, costing, or confirmation is required.</p></article>
+      <article><span>SEPARATE GR</span><h3>Decouple goods receipt from status</h3><p>In some designs the physical goods receipt is posted independently from the Kanban status progression. This helps when receiving and line-side status are separate operational steps.</p><p><strong>Risk:</strong> FULL must not be interpreted as posted stock if the goods receipt is still missing.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">External procurement</p><h2>One supplier can support different replenishment documents.</h2><p>The correct choice depends on the commercial relationship, expected frequency, and whether each Kanban signal should map to its own purchasing document.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>PO</span><h3>Purchase order</h3><p>EMPTY can create a purchase order for the container quantity. The delivery date comes from purchasing and material master data, while the receiving destination comes from the Kanban/control-cycle design.</p><strong>Use when each signal should create an explicit procurement document.</strong></article>
+      <article><span>SA</span><h3>Scheduling agreement</h3><p>EMPTY can create a schedule line against an existing scheduling agreement. The relationship is not necessarily one container to one receipt: one delivery can cover several empty containers, depending on quantity and configuration.</p><strong>Use for high-frequency supplier relationships where the agreement already owns the commercial frame.</strong></article>
+      <article><span>CONTRACT</span><h3>Contract release</h3><p>A quantity or value contract can provide the outline agreement while each signal creates a release document against it.</p><strong>Use when the commercial commitment exists before individual Kanban calls.</strong></article>
+      <article><span>SOURCE</span><h3>Source list</h3><p>A source list can help determine the valid supplier or outline agreement when many control cycles use shared sourcing rules.</p><strong>Keep the valid Kanban source unambiguous for the required period.</strong></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">local_shipping</span><p><strong>Direct-to-PSA design:</strong> if the supplier physically delivers to a line-side or staging point, make sure the purchasing destination, storage location, unloading point, and goods-receipt process describe the same route. A correct purchase order with the wrong operational destination still creates a bad Kanban loop.</p><a href="/labs/enterprise-context/procurement/">Open procurement context <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Goods receipt behavior</p><h2>Do not fake FULL when the delivered quantity is different.</h2><p>In a goods-receipt-driven design, posting the receipt can also set the container to FULL. The actual received quantity still matters for Inventory Management.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Full delivery</h3><ul><li>Receive the expected quantity.</li><li>Material document reflects the actual receipt.</li><li>Configured status action can restore the container to FULL.</li></ul></div>
+      <div><h3>Under-delivery</h3><ul><li>Post the real quantity in Inventory Management.</li><li>Do not use a status-only action to pretend the expected stock arrived.</li><li>Keep final-delivery and open-quantity logic consistent with the purchasing document.</li></ul></div>
+      <div><h3>Lead proof</h3><ul><li>Kanban status.</li><li>PO or schedule-line quantity.</li><li>Material document quantity.</li><li>Actual receiving stock.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Stock transfer</p><h2>A pull signal can move existing stock instead of creating new supply.</h2><p>The source may be another storage location or another plant. The design determines whether the transfer is direct or represented by a reservation or stock-transfer document.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>DIRECT</span><h3>Direct transfer posting</h3><p>The signal is fulfilled by moving stock from the supplying storage location to the receiving location. The stock posting and the Kanban status change are closely coupled.</p><p><strong>Use when:</strong> the physical route is simple and an additional transfer document adds little value.</p></article>
+      <article><span>RESERVATION</span><h3>Transfer with reservation</h3><p>EMPTY can create a planned transfer requirement or reservation. The later transfer posting consumes that intent and restores the demand-side quantity.</p><p><strong>Use when:</strong> the source warehouse needs a clear planned issue before the movement.</p></article>
+      <article><span>TWO STEP</span><h3>Stock transport flow</h3><p>For longer or cross-plant movement, issue and receipt can be separate events. This makes stock-in-transit and receiving evidence visible.</p><p><strong>Use when:</strong> the physical move cannot be represented as one immediate storage-location transfer.</p></article>
+      <article><span>CLASSIC</span><h3>Movement references</h3><p>Classic examples often use 311 for storage-location transfer and 351/101 for two-step stock transport scenarios.</p><p><strong>Release boundary:</strong> validate the exact movement and document design in the target process; do not select movement types by memory alone.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Cost-center variants</p><h2>Bulk consumption can sit outside normal component backflush.</h2><p>Some line-side materials are consumed as overhead or bulk material rather than as a precise BOM component for each assembly. Kanban can still replenish them while the consumption is posted to a cost center.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Withdrawal to cost center</h3><ul><li>Material is available in local stock.</li><li>Consumption is charged to a cost center when the Kanban process reaches the configured point.</li><li>Classic systems often use movement 201 for cost-center goods issue.</li></ul></div>
+      <div><h3>Procurement to cost center</h3><ul><li>Material can be procured directly for consumption rather than held as normal warehouse stock.</li><li>Account assignment and the replenishment relationship must remain consistent.</li></ul></div>
+      <div><h3>Lead check</h3><ul><li>Is the material really bulk/overhead?</li><li>Should it be stock-managed?</li><li>Which cost center owns consumption?</li><li>Could normal BOM backflush be more transparent?</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Strategy selection</p><h2>Use this order of questions.</h2></header>
+    <div class="research-route-list">
+      <a href="#"><span>01</span><strong>Where is the physical source?</strong><small>Internal production, external supplier, another plant, or another storage location?</small><i class="material-symbols-outlined" aria-hidden="true">location_on</i></a>
+      <a href="#"><span>02</span><strong>What object should exist after EMPTY?</strong><small>No separate object, production order, repetitive quantity, PO, schedule line, contract release, reservation, or transfer document?</small><i class="material-symbols-outlined" aria-hidden="true">description</i></a>
+      <a href="#"><span>03</span><strong>What proves physical completion?</strong><small>Backflush, goods receipt, transfer posting, or another material movement?</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
+      <a href="#"><span>04</span><strong>What changes the Kanban state?</strong><small>Board action, scan, document posting, or an automatic status action?</small><i class="material-symbols-outlined" aria-hidden="true">sync</i></a>
+      <a href="#"><span>05</span><strong>How is an exception recovered?</strong><small>Can operations identify and reverse or correct the failed document without corrupting the physical state?</small><i class="material-symbols-outlined" aria-hidden="true">build</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span><p><strong>Next:</strong> the strategy defines what should happen. The status sequence defines when it is allowed to happen.</p><a href="/labs/enterprise-context/kanban/statuses-signals/">Statuses and Signals <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>

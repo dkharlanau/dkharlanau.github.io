@@ -87,9 +87,9 @@
   <link rel="stylesheet" href="{{ '/assets/internal-page-polish.css' | relative_url }}?v={{ site.time | date: '%s' }}&theme=1" />
   {% endunless %}
   {% endunless %}
-  <link rel="stylesheet" href="{{ '/assets/evidence-journal.css' | relative_url }}?v={{ site.time | date: '%s' }}&theme=1" />
-  <link rel="stylesheet" href="{{ '/assets/learning-materials.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
-  <script defer src="{{ '/assets/learning-diagrams.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  {% if page.url contains '/labs/' %}
+  <link rel="stylesheet" href="{{ '/assets/labs-technical-content.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  {% endif %}
 </head>
 
 {% assign is_home = false %}

@@ -1,0 +1,100 @@
+---
+layout: default
+title: "Kanban Statuses and Signals — EMPTY, FULL, ERROR and Quantity Signals"
+description: "A practical SAP Kanban guide to status sequences, automatic actions, signal locks, independent supply sources, quantity signals, two-Kanban logic, and stock-state boundaries."
+permalink: /labs/enterprise-context/kanban/statuses-signals/
+status: needs_verification
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-08
+hide_global_cta: true
+tags: [sap, kanban, statuses, barcode, quantity-signal, sap-pp, shop-floor]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/kanban/">Kanban</a></li><li aria-current="page">Statuses and Signals</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Kanban / 04</p>
+      <h1>A Kanban status is not a color.<br />It is a control event.</h1>
+      <p>Changing a status can start replenishment, post goods receipt, trigger backflush, print a card, or reject an invalid transition. The sequence therefore belongs to process design, not only to the board layout.</p>
+      <a class="research-canvas__button" href="#sequence">Read the sequence <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal"><p>Core distinction</p><div class="research-canvas__signal-line"><span>STATE</span><strong>Status</strong><small>Where the container is in the loop</small></div><div class="research-canvas__signal-line"><span>ACTION</span><strong>Posting</strong><small>What SAP executes because of it</small></div><div class="research-canvas__signal-line"><span>PROOF</span><strong>Document</strong><small>What proves the business event</small></div><em>Never infer stock movement from color alone.</em></div>
+  </header>
+
+  <section class="research-canvas__inventory" id="sequence" data-reveal>
+    <header><p class="research-canvas__eyebrow">Status sequence</p><h2>EMPTY and FULL are the anchors; intermediate states make execution visible.</h2><p>A practical sequence can include waiting, replenishment work, transport, use, and error states. The exact sequence should represent the physical process rather than create artificial clicks.</p></header>
+    <div class="research-route-list">
+      <a href="#waiting"><span>WAIT</span><strong>Waiting</strong><small>The demand side has signaled a need, but the actual replenishment trigger is controlled separately.</small><i class="material-symbols-outlined" aria-hidden="true">hourglass</i></a>
+      <a href="#sequence"><span>EMPTY</span><strong>Container empty</strong><small>The demand-side container no longer protects consumption and normally requests replenishment.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="#sequence"><span>PROCESS</span><strong>In process</strong><small>The supply source is producing or preparing the refill.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="#sequence"><span>TRANSIT</span><strong>In transit</strong><small>The refill has left the source but is not yet usable at the demand point.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      <a href="#sequence"><span>FULL</span><strong>Container full</strong><small>The replenished quantity is available again for the demand side.</small><i class="material-symbols-outlined" aria-hidden="true">check_circle</i></a>
+      <a href="#sequence"><span>IN USE</span><strong>Material being consumed</strong><small>Useful when a quantity signal tracks partial consumption before the container becomes empty.</small><i class="material-symbols-outlined" aria-hidden="true">remove_circle</i></a>
+      <a href="/labs/enterprise-context/kanban/operations-diagnostics/"><span>ERROR</span><strong>Processing failed</strong><small>The requested transition or linked business action failed and needs correction.</small><i class="material-symbols-outlined" aria-hidden="true">error</i></a>
+    </div>
+    <p class="ecg-caption">Classic implementations often use a sequence close to WAIT → EMPTY → IN PROCESS → IN TRANSIT → FULL → IN USE, with ERROR as an exception state. Treat the exact sequence as configurable process logic.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Allowed transitions</p><h2>Mandatory, optional, and forbidden states create a state machine.</h2><p>A good sequence prevents impossible business jumps while keeping normal work fast.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>MANDATORY</span><h3>Must be passed</h3><p>If IN PROCESS is mandatory, trying to move directly from EMPTY to FULL should fail until the required intermediate state is reached.</p><p><strong>Use for:</strong> steps that are operationally important and must be visible.</p></article>
+      <article><span>OPTIONAL</span><h3>May be passed</h3><p>Optional states support richer visibility without blocking a simpler path where the physical step is not always separate.</p><p><strong>Use for:</strong> transport or handling states that depend on scenario.</p></article>
+      <article><span>FORBIDDEN</span><h3>Cannot be used in the path</h3><p>Not every status belongs to every control cycle. Removing irrelevant states reduces bad scans and ambiguous recovery.</p><p><strong>Use for:</strong> states that would not represent a real event in this loop.</p></article>
+      <article><span>ERROR</span><h3>Technical or business failure</h3><p>When the linked action fails, the container can remain or move into an error condition so operations do not silently lose the failed request.</p><p><strong>Use for:</strong> repairable failures that need evidence and correction.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Actions on status change</p><h2>A status can carry business logic.</h2><p>Examples include automatic goods receipt, backflush, card printing, or creation of a replenishment object. This is why a status-only correction must be used carefully.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>EMPTY</span><h3>Create replenishment</h3><p>The EMPTY transition can create the expected supply object according to the replenishment strategy.</p><strong>Check: did the correct object appear, with correct source and quantity?</strong></article>
+      <article><span>FULL</span><h3>Post receipt or completion</h3><p>A FULL transition can be linked to goods receipt or backflush in selected designs. In other designs the posting is separate.</p><strong>Check: does FULL mean physically available, or only a status update?</strong></article>
+      <article><span>PRINT</span><h3>Create physical signal</h3><p>A card can be printed when replenishment is triggered, when receipt is posted, or according to another defined lifecycle.</p><strong>Check: where does the physical card live during the cycle?</strong></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">inventory</span><p><strong>Critical boundary:</strong> Kanban status and book stock are related but not identical. Setting a container to EMPTY does not automatically mean a goods issue happened. Setting it to FULL does not prove that receipt was posted unless the configured action actually created the material document.</p><a href="/labs/enterprise-context/inventory-management/">Review stock-state evidence <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <section class="research-canvas__inventory" id="waiting" data-reveal>
+    <header><p class="research-canvas__eyebrow">Independent supply source</p><h2>Separate “we need material” from “start replenishment now.”</h2><p>Some loops should not let the demand side directly create the replenishment object. A waiting state can record demand while the supply source controls the actual trigger timing.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Demand side</h3><ul><li>Consumption creates the need.</li><li>Container moves into a waiting condition.</li><li>The request is visible without immediately creating new supply.</li></ul></div>
+      <div><h3>Supply side</h3><ul><li>Monitors the waiting queue.</li><li>Decides which Kanbans to release into replenishment.</li><li>Can group work around production or logistics constraints.</li></ul></div>
+      <div><h3>Lead risk</h3><ul><li>WAIT can become a hidden backlog.</li><li>Define owner, trigger rule, aging threshold, and escalation.</li><li>Measure waiting time separately from physical replenishment time.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Signal lock</p><h2>Protect the process from duplicate scans.</h2><p>Barcode operation is fast enough that the same container can be scanned twice before the user notices the first update. A short signal lock can reject another status change within a defined interval.</p></header>
+    <div class="ecg-lead-lens"><ul><li>Use the lock to prevent accidental double input, not to hide slow transactions.</li><li>Investigate repeated scans as an ergonomics or process-training signal.</li><li>If devices retry automatically after network failure, test idempotency and the real status result.</li></ul></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Quantity signal</p><h2>You can trigger from consumption quantity, not only from EMPTY/FULL clicks.</h2><p>In a two-Kanban or quantity-signal design, withdrawals reduce the actual quantity in the active container. When the remaining quantity reaches the trigger, SAP can make the next Kanban available for replenishment.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>STEP 1</span><h3>Start using a full container</h3><p>The first withdrawal can move the active Kanban from FULL to IN USE and reduce its actual quantity.</p><strong>The status now represents partial consumption.</strong></article>
+      <article><span>STEP 2</span><h3>Reach the trigger</h3><p>As withdrawals continue, remaining quantity approaches the configured trigger quantity.</p><strong>The next container can be signaled before the current one is completely empty.</strong></article>
+      <article><span>STEP 3</span><h3>Spill consumption correctly</h3><p>If one withdrawal is larger than the remaining quantity, the logic can consume the rest of the current container and continue against the next one.</p><strong>This keeps quantity and status rotation aligned.</strong></article>
+    </div>
+    <p class="ecg-caption"><strong>Trade-off:</strong> quantity signals give better visibility of partial consumption but require reliable quantity reporting. If users do not record withdrawals correctly, the status model becomes more precise than the real process.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Fixed quantity boundary</p><h2>Kanban manages a control quantity, not demand variability forever.</h2><p>Fixed container quantities work inside a reasonable demand and lead-time range. If consumption changes materially, the number of containers or quantity per container should be reviewed.</p></header>
+    <div class="ecg-lead-lens"><ul><li>Recalculate after sustained demand change, route change, supplier lead-time change, packaging change, or production-rate change.</li><li>Do not keep obsolete safety containers because “the line likes them.” Make the reason explicit.</li><li>Compare status history with real stock and consumption before changing the cycle.</li></ul></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Classic GUI reference</p><h2>Operational landmarks.</h2></header>
+    <div class="ecg-lead-lens"><ul><li><strong>PK13N:</strong> classic Kanban board for status operations and detailed container information.</li><li><strong>PK22:</strong> classic quantity-signal entry.</li><li>Status sequences and actions are configured around the Kanban process and may vary strongly by implementation.</li><li>Validate transaction and app availability in the target SAP S/4HANA edition and front end.</li></ul></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span><p><strong>Next:</strong> trace how these status events create real purchasing, production, and stock documents.</p><a href="/labs/enterprise-context/kanban/runtime-flows/">Runtime Flows <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
