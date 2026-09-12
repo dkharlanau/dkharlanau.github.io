@@ -23,25 +23,32 @@ The site is not a generic knowledge directory and not a lead-generation landing 
 
 ## Visual language
 
+### Current system: Evidence Journal
+
+The active direction is a calm analytical journal built for reading and recall. It uses warm paper, thin rules, normal-width sans-serif type, cobalt evidence signals, and occasional red review marks. The site has two primary routes: business work (SAP, AMS, Business AI, solution design) and preparation (interviews, assessments, practice packs). Library pages support both routes.
+
+Headings stay close to editorial scale and use regular or medium weight. Oversized condensed display type, glossy 3D diagrams, large rounded panels, and decorative gradients are retired patterns. The abstract mark contains no initials or visible personal name.
+
 ### Core idea
 
-The visual metaphor is a diagnostic signal: a diffuse operating situation becomes a focused line of evidence and a visible decision point.
+The visual metaphor is an evidence journal: a complex operating situation becomes a traceable line from problem to evidence to decision.
 
-- Light blue dispersion is the atmospheric background, never the primary source of text contrast.
-- The signal beam, concentric rings, and crosshair represent focus and decision making.
-- Animation is functional and quiet: one moving/pulsing signal point is enough. Respect `prefers-reduced-motion`.
+- Warm paper is the reading background.
+- Thin rules, numbered stages, annotations, and simple diagrams show structure.
+- Cobalt marks evidence and action; red marks an exception, question, or review point.
+- Animation is rare and functional. Respect `prefers-reduced-motion`.
 
 ### Palette
 
 | Token | Value | Use |
 | --- | --- | --- |
-| Portal blue | `#1019c8` | Headings, primary navigation, links, signal paths |
-| Deep ink | `#101756` | High-contrast text |
-| Paper | `#f8fbff` | Reading surfaces and cards |
-| Canvas | `#eef4ff` | Page background |
-| Border | `#c7d7fb` | Rules and dividers |
-| Lime | `#c6ff00` | One primary action per view |
-| Muted text | `#59648b` | Supporting text only |
+| Cobalt | `#1254f5` | Evidence, active navigation, primary actions |
+| Deep ink | `#17223a` | Headings, rules, and high-contrast text |
+| Paper | `#fbf9f3` | Reading surfaces |
+| Canvas | `#f5f2ea` | Page background |
+| Border | `#aeb4bd` | Rules, tables, and dividers |
+| Review red | `#d9343b` | Sparse exceptions, questions, and annotations |
+| Muted text | `#46516a` | Supporting text only |
 
 ### Readability rules
 
@@ -98,9 +105,9 @@ Corner radius communicates hierarchy:
 
 | Role | Desktop size | Mobile size | Colour | Rule |
 | --- | --- | --- | --- | --- |
-| Display heading | 52–104px | 43–62px | Portal blue | One message per view; use `clamp()`, never a fixed oversized value. |
-| Section heading | 42–76px | 38–52px | Portal blue | Keep to two or three lines at the intended viewport. |
-| Card / step title | 20–32px | 19–26px | Portal blue | Never rely on colour alone to show hierarchy. |
+| Display heading | 42–64px | 34–44px | Deep ink | One message per view; regular or medium weight only. |
+| Section heading | 29–43px | 26–34px | Deep ink | Keep to two or three lines at the intended viewport. |
+| Card / step title | 19–24px | 18–22px | Deep ink | Never rely on colour alone to show hierarchy. |
 | Lead paragraph | 17–21px | 16–18px | Deep ink | Maximum comfortable measure: about 60–70 characters. |
 | Body text | 16–18px | 16px minimum | Deep ink or dark muted | Minimum line-height 1.5. |
 | Supporting text | 13–14px | 13px minimum | `#44537d` or darker on pale backgrounds | Do not reduce contrast to make it feel secondary. |
@@ -229,11 +236,11 @@ Every system illustration must answer four questions without relying on baked-in
 
 | Domain | Required operating story | Canonical asset |
 | --- | --- | --- |
-| ERP | Demand or business signal → document and availability checks → cross-module/warehouse execution → delivery outcome. | `assets/img/systems/erp-document-flow-field.webp` |
-| Data | Imperfect source records → identity, validation, lineage and ownership gates → governed record → trusted reuse. | `assets/img/systems/master-data-lineage-field.webp` |
-| Workflow | Main operating route → visible exception → evidence and review loop → decision gate → controlled re-entry. | `assets/img/systems/workflow-exception-field.webp` |
-| AI | Heterogeneous evidence → bounded retrieval/synthesis → uncertainty separation and review → approved action + audit trail. | `assets/img/systems/ai-evidence-boundary-field.webp` |
-| Logistics | Demand and allocation → warehouse pick/pack/stage → transport handoff → delivery confirmation + feedback. | `assets/img/systems/logistics-fulfilment-field.webp` |
+| ERP | Demand or business signal → document and availability checks → cross-module/warehouse execution → delivery outcome. | `assets/img/systems/erp-document-flow-journal.webp` |
+| Data | Imperfect source records → identity, validation, lineage and ownership gates → governed record → trusted reuse. | `assets/img/systems/master-data-lineage-journal.webp` |
+| Workflow | Main operating route → visible exception → evidence and review loop → decision gate → controlled re-entry. | `assets/img/systems/workflow-exception-journal.webp` |
+| AI | Heterogeneous evidence → bounded retrieval/synthesis → uncertainty separation and review → approved action + audit trail. | `assets/img/systems/ai-evidence-boundary-journal.webp` |
+| Logistics | Demand and allocation → warehouse pick/pack/stage → transport handoff → delivery confirmation + feedback. | `assets/img/systems/logistics-fulfilment-journal.webp` |
 
 - Map the asset to the page's actual operating model; do not use one generic “technology” scene across unrelated routes.
 - Preserve source, control point, and outcome inside the central crop on desktop and mobile.

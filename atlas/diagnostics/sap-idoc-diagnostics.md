@@ -25,8 +25,13 @@ expert_context:
     - /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
     - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 last_reviewed: '2026-06-13'
-last_modified_at: 2026-09-05
+last_modified_at: 2026-09-12
 author: Dzmitryi Kharlanau
+article_visual: idoc-evidence-boundaries
+og_image: /assets/img/articles/idoc-evidence-boundaries.webp
+og_image_width: 1536
+og_image_height: 1024
+og_image_alt: "IDoc evidence boundaries: trigger, message, receipt and business result."
 tags:
 - sap-ams
 - idoc
@@ -39,7 +44,7 @@ related:
 - /atlas/diagnostics/sap-inbound-processing-diagnostics/
 - /atlas/diagnostics/sap-outbound-processing-diagnostics/
 - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
-robots: index,follow
+robots: index,follow,max-image-preview:large
 sitemap: true
 ---
 
@@ -70,6 +75,7 @@ sitemap: true
   </aside>
 
   <div class="note-body">
+    {% include article-visual.html %}
     <h2>Do not start with the status code alone</h2>
     <p>An IDoc status is evidence, but it is not the whole incident. First define the business message: what should have left the source system, where should it have gone, and which business document or update should have appeared in the target?</p>
     <p>Then trace the message through the actual landscape. The failure can happen before an IDoc is created, during dispatch, in RFC or queue processing, after the target receives the IDoc, or inside the target application. The same user symptom can therefore belong to very different owners.</p>
@@ -80,7 +86,7 @@ sitemap: true
     <div class="decision-table"><table><thead><tr><th>Evidence</th><th>What it tells you</th><th>Next place to look</th></tr></thead><tbody>
       <tr><td>No expected outbound IDoc exists</td><td>The problem may be in the business trigger, output/change logic, distribution model, or selection before IDoc creation.</td><td>Source document, trigger logic, change pointers or application-specific generation path.</td></tr>
       <tr><td>IDoc exists but was not transferred as expected</td><td>The message was created, so move downstream to partner, port, RFC, queue, or scheduling evidence.</td><td>IDoc status history, partner profile, port, RFC/tRFC/qRFC evidence.</td></tr>
-      <tr><td>Target received the IDoc but no business document was posted</td><td>Transport worked far enough for application processing to begin.</td><td>Inbound status text, segment values, master data, mapping, application validation.</td></tr>
+      <tr><td>Target received the IDoc but no business document was posted</td><td>The message reached the receiving system. Application processing may still be queued, rejected, or incomplete.</td><td>Inbound status text, segment values, master data, mapping, application validation.</td></tr>
       <tr><td>IDoc reached a success status but the business result is still wrong</td><td>The technical message path may be healthy while the application result or follow-on process is not.</td><td>Created business document, application log, follow-on status, business rules.</td></tr>
       <tr><td>The same business message appears more than once</td><td>Do not assume “duplicate IDoc” is the cause. Find whether the source sent twice, middleware retried, or the target processed twice.</td><td>Message identifiers, timestamps, source trigger, middleware/retry history, target document references.</td></tr>
     </tbody></table></div>
@@ -119,7 +125,21 @@ sitemap: true
     </ul>
 
     <h2>Reprocessing needs a business check</h2>
-    <p>Before reprocessing, confirm whether the message is safe to repeat. Some inbound processes have duplicate protection; others can create a second business effect if the original result already exists outside the status you are looking at. Check the target business object and the landscape's restart design before pressing the convenient button humans invented for making yesterday's problem happen twice.</p>
+    <p>Before reprocessing, confirm whether the message is safe to repeat. Some inbound processes have duplicate protection; others can create a second business effect if the original result already exists outside the status you are looking at. Check the target business object and the landscape's restart design before retrying. Record what prevents a second business effect and who authorizes the recovery.</p>
+
+    <h2>Interview exercise: receipt without the expected result</h2>
+    <p>A synthetic support case: the source has an outbound IDoc, the receiver has the corresponding inbound message, and a user cannot find the expected business update. No cause has been established. Explain your next check without jumping to a retry.</p>
+    <ol>
+      <li>State what the two message records prove and what they leave unproven.</li>
+      <li>Name the business object, identifier and expected state you would look for in the target.</li>
+      <li>Explain how you would distinguish a pending message from a rejected one, and an absent business result from a result hidden by the user's selection.</li>
+    </ol>
+    <details class="study-review">
+      <summary>Compare your reasoning</summary>
+      <p>The receiving message narrows the investigation; it does not establish the expected business result. Correlate source and target identifiers, then read the inbound history, application error or queue evidence appropriate to the landscape. Inspect the referenced business object directly, including its current state and timing.</p>
+      <p>If the business object already exists, a retry could be the wrong next action. First establish whether the reported gap is posting, follow-on processing, authorization or report selection. If it does not exist, identify the blocking evidence and recovery prerequisites before requesting controlled reprocessing.</p>
+      <p><strong>Change the condition:</strong> the target result exists but the source never received an acknowledgement. Explain why recovery should now investigate the return path rather than repeat the original business update.</p>
+    </details>
 
     <h2>The end of the diagnosis</h2>
     <p>A strong IDoc incident says where the chain broke: generation, routing, transport, queue, mapping/data, or application posting. “Status 51 fixed” is not enough. The status is the symptom. The reusable knowledge is why the application rejected the message and what control prevents the same failure next time.</p>

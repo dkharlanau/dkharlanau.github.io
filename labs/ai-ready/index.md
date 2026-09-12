@@ -48,7 +48,7 @@ semantic_links:
       <a class="research-canvas__button" href="/labs/ai-ready/use-cases/">Start from a use case <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
     <figure class="system-opening-visual">
-      <img src="/assets/img/systems/ai-evidence-boundary-field.webp" alt="Heterogeneous evidence entering a bounded AI synthesis layer, then separating into approved action, human review, and a retained audit trail." width="1728" height="1081" decoding="async" fetchpriority="high" />
+      <img src="/assets/img/systems/ai-evidence-boundary-journal.webp" alt="Heterogeneous evidence entering a bounded AI synthesis layer, then separating into approved action, human review, and a retained audit trail." width="1728" height="1081" decoding="async" fetchpriority="high" />
       <figcaption>The model handles uncertainty; normal software keeps authority, state, and evidence.</figcaption>
     </figure>
     <div class="research-canvas__signal" aria-label="Review status">

@@ -87,6 +87,9 @@
   <link rel="stylesheet" href="{{ '/assets/internal-page-polish.css' | relative_url }}?v={{ site.time | date: '%s' }}&theme=1" />
   {% endunless %}
   {% endunless %}
+  <link rel="stylesheet" href="{{ '/assets/evidence-journal.css' | relative_url }}?v={{ site.time | date: '%s' }}&theme=1" />
+  <link rel="stylesheet" href="{{ '/assets/learning-materials.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  <script defer src="{{ '/assets/learning-diagrams.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 </head>
 
 {% assign is_home = false %}
@@ -108,11 +111,28 @@
   {% assign page_context = 'page-context--dataset' %}
 {% endif %}
 
-<body class="site {{ page_context }}" data-page="{{ page.url | escape }}">
+{% assign design_track = 'library' %}
+{% if page.url contains '/services/' or page.url contains '/labs/business-ai/' or page.url contains '/labs/ai-ready/' or page.url contains '/labs/enterprise-context/' %}
+  {% assign design_track = 'business' %}
+{% elsif page.url contains '/labs/interview-readiness/' or page.url contains '/labs/assessment/' or page.url contains '/learn/' %}
+  {% assign design_track = 'prepare' %}
+{% elsif is_home %}
+  {% assign design_track = 'home' %}
+{% endif %}
+
+<body class="site {{ page_context }} design-track--{{ design_track }}" data-page="{{ page.url | escape }}">
   <a class="skip-link" href="#content">{{ locale_data.ui.skip_to_content | default: 'Skip to main content' }}</a>
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
+    {% assign entry_route = page.permalink | default: page.url %}
+    {% for entry_case in site.data.learning_cases %}
+    {% if entry_case.routes contains entry_route %}
+    <nav class="study-entry" aria-label="Study this page"><a href="#study-case-title">Try the visual case ↓</a></nav>
+    {% endif %}
+    {% endfor %}
     {{ content }}
+    {% include learning-case.html %}
+    {% include learning-practice.html %}
     {% if page_faq %}{% include page-faq.html faq=page_faq %}{% endif %}
     {% include seo/trust-strip.html %}
     {% include seo/semantic-related.html %}
@@ -170,6 +190,11 @@
   {% endif %}
   {% include seo/lab-breadcrumb-data.html %}
   {% include seo/structured-data-sitewide-graph.html %}
+  <script>
+    /* A few legacy tools declare route CSS inside their page body. Moving the
+       canonical theme link here keeps the visual system last in the cascade. */
+    document.body.append(document.querySelector('link[href*="evidence-journal.css"]'));
+  </script>
 </body>
 
 </html>

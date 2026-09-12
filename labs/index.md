@@ -31,7 +31,7 @@ tags:
       <a class="research-canvas__button" href="#lab-routes">Open the lab map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <figure class="hub-canvas__visual">
-      <img src="/assets/img/systems/workflow-exception-field.webp" alt="A workflow moving across operating stages, with an exception routed through evidence review before a controlled decision and reusable outcome." width="1728" height="1081" decoding="async" fetchpriority="high" />
+      <img src="/assets/img/systems/workflow-exception-journal.webp" alt="A workflow moving across operating stages, with an exception routed through evidence review before a controlled decision and reusable outcome." width="1728" height="1081" decoding="async" fetchpriority="high" />
       <figcaption>Process → exception → evidence review → controlled re-entry</figcaption>
     </figure>
     <div class="research-canvas__signal" aria-label="Lab structure">

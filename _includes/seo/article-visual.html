@@ -1,0 +1,20 @@
+{% assign visual = site.data.article_visuals[page.article_visual] %}
+{% if visual and page.verified == true %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ImageObject",
+  "@id": {{ visual.src | absolute_url | append: '#image' | jsonify }},
+  "contentUrl": {{ visual.src | absolute_url | jsonify }},
+  "url": {{ visual.src | absolute_url | jsonify }},
+  "name": {{ visual.title | jsonify }},
+  "description": {{ visual.alt | jsonify }},
+  "caption": {{ visual.caption | jsonify }},
+  "width": {{ visual.width }},
+  "height": {{ visual.height }},
+  "creator": {"@type": "Person", "name": {{ visual.creator | jsonify }}, "url": {{ '/about/' | absolute_url | jsonify }}},
+  "creditText": {{ visual.credit | jsonify }},
+  "isPartOf": {"@id": {{ canonical_url | append: '#article' | jsonify }}}
+}
+</script>
+{% endif %}

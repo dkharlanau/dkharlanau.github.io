@@ -24,7 +24,7 @@ hide_global_cta: true
       <a class="research-canvas__button" href="https://github.com/dkharlanau/dkharlanau.github.io/tree/main/mcp/sap-diagnostics-mcp" target="_blank" rel="noopener">Open the source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
     </div>
     <figure class="system-opening-visual">
-      <img src="/assets/img/systems/ai-evidence-boundary-field.webp" alt="Documents, system events, and structured records entering a bounded AI retrieval layer, then splitting into approved action and human-review routes with an audit trail." width="1728" height="1081" decoding="async" fetchpriority="high" />
+      <img src="/assets/img/systems/ai-evidence-boundary-journal.webp" alt="Documents, system events, and structured records entering a bounded AI retrieval layer, then splitting into approved action and human-review routes with an audit trail." width="1728" height="1081" decoding="async" fetchpriority="high" />
       <figcaption>Read-only retrieval before credentials, writes, or production authority.</figcaption>
     </figure>
     <div class="research-canvas__signal" aria-label="Lab characteristics">

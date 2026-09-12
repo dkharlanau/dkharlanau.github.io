@@ -2,9 +2,12 @@
 {% assign portal_locale = site.data.home_portal[page_locale] | default: site.data.home_portal.en %}
 {% assign portal_nav = portal_locale.navigation %}
 {% assign work_nav_active = false %}
-{% if page.url contains '/services/' %}{% assign work_nav_active = true %}{% endif %}
+{% if page.url contains '/services/' or page.url contains '/labs/business-ai/' or page.url contains '/labs/ai-ready/' or page.url contains '/labs/enterprise-context/' %}{% assign work_nav_active = true %}{% endif %}
+{% assign prepare_nav_active = false %}
+{% if page.url contains '/labs/' or page.url contains '/learn/' %}{% assign prepare_nav_active = true %}{% endif %}
+{% if work_nav_active %}{% assign prepare_nav_active = false %}{% endif %}
 {% assign knowledge_nav_active = false %}
-{% if page.url contains '/knowledge/' or page.url contains '/atlas/' or page.url contains '/scenarios/' or page.url contains '/research/' or page.url contains '/blog/' or page.url contains '/notes/' or page.url contains '/radar/' or page.url contains '/news/' or page.url contains '/glossary/' or page.url contains '/faq/' %}{% assign knowledge_nav_active = true %}{% endif %}
+{% if page.url contains '/knowledge/' or page.url contains '/atlas/' or page.url contains '/scenarios/' or page.url contains '/research/' or page.url contains '/blog/' or page.url contains '/notes/' or page.url contains '/radar/' or page.url contains '/news/' or page.url contains '/glossary/' or page.url contains '/faq/' or page.url contains '/frameworks/' or page.url contains '/machine/' or page.url contains '/datasets/' or page.url contains '/agent-' or page.url contains '/mcp/' %}{% assign knowledge_nav_active = true %}{% endif %}
 {% assign profile_nav_active = false %}
 {% if page.url contains '/about/' or page.url contains '/cv/' or page.url contains '/certifications/' or page.url contains '/education/' or page.url contains '/publications/' %}{% assign profile_nav_active = true %}{% endif %}
 <header class="site-header" data-site-header>
@@ -18,8 +21,9 @@
     </button>
     <nav class="site-nav" aria-label="{{ portal_nav.label | default: nav_ui.label | default: 'Primary navigation' }}">
       <div class="nav-links" id="site-navigation">
-        <a href="/services/" class="nav-link nav-link--work{% if work_nav_active %} is-active{% endif %}"{% if page.url == '/services/' %} aria-current="page"{% endif %}>{{ portal_nav.work | default: 'Work' }}</a>
-        <a href="/knowledge/" class="nav-link{% if knowledge_nav_active %} is-active{% endif %}"{% if page.url == '/knowledge/' %} aria-current="page"{% endif %}>{{ portal_nav.knowledge | default: 'Knowledge' }}</a>
+        <a href="/services/" class="nav-link nav-link--work{% if work_nav_active %} is-active{% endif %}"{% if page.url == '/services/' %} aria-current="page"{% endif %}>{{ portal_nav.business | default: portal_nav.work | default: 'Business' }}</a>
+        <a href="/labs/" class="nav-link{% if prepare_nav_active %} is-active{% endif %}"{% if page.url == '/labs/' %} aria-current="page"{% endif %}>{{ portal_nav.prepare | default: portal_nav.labs | default: 'Learn & prepare' }}</a>
+        <a href="/knowledge/" class="nav-link{% if knowledge_nav_active %} is-active{% endif %}"{% if page.url == '/knowledge/' %} aria-current="page"{% endif %}>{{ portal_nav.library | default: portal_nav.knowledge | default: 'Library' }}</a>
         <a href="/about/" class="nav-link{% if profile_nav_active %} is-active{% endif %}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>{{ portal_nav.about | default: nav_ui.about | default: 'About' }}</a>
         <a href="/search/" class="nav-link nav-link--utility{% if page.url == '/search/' %} is-active{% endif %}" aria-label="{{ portal_nav.search | default: nav_ui.search | default: 'Search' }}"{% if page.url == '/search/' %} aria-current="page"{% endif %}>
           <span class="material-symbols-outlined" aria-hidden="true">search</span><span class="nav-link__search-label">{{ portal_nav.search | default: nav_ui.search | default: 'Search' }}</span>

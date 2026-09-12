@@ -3,6 +3,8 @@
 {% assign portal = site.data.home_portal[product_locale] | default: site.data.home_portal.en %}
 
 {% if product_locale == 'en' %}
+{% include sections/home-evidence-journal.html %}
+{% comment %}
 {% assign personal = portal.personal %}
 {% assign public_portfolio = site.data.public_portfolio %}
 <div class="personal-home">
@@ -100,6 +102,7 @@
     </div>
   </section>
 </div>
+{% endcomment %}
 {% else %}
 
 <div class="consulting-hero" role="region" aria-labelledby="home-title">
@@ -133,7 +136,7 @@
   </header>
   <div class="consulting-focus__layout">
     <figure class="consulting-focus__visual" aria-label="An AMS workflow that routes a recurring exception through evidence, human review, recovery, and prevention.">
-      <img src="{{ '/assets/img/systems/workflow-exception-field.webp' | relative_url }}" alt="A recurring SAP exception routed through evidence review, an explicit decision gate, controlled recovery, and prevention." width="1728" height="1081" loading="lazy" decoding="async" />
+      <img src="{{ '/assets/img/systems/workflow-exception-journal.webp' | relative_url }}" alt="A recurring SAP exception routed through evidence review, an explicit decision gate, controlled recovery, and prevention." width="1728" height="1081" loading="lazy" decoding="async" />
     </figure>
     <div class="consulting-focus__grid">
       {% for card in portal.focus.cards %}
@@ -170,7 +173,7 @@
   <header class="portal-section__heading"><p class="portal-kicker">{{ portal.method.kicker }}</p><h2 id="method-title">{{ portal.method.title }}</h2></header>
   <div class="consulting-method__layout">
     <figure class="consulting-method__visual" aria-label="A workflow that routes an exception through evidence review before it rejoins the controlled operating path.">
-      <img src="{{ '/assets/img/systems/workflow-exception-field.webp' | relative_url }}" alt="A workflow moving through three operating stages, with one exception routed through evidence review before a controlled outcome." width="1728" height="1081" loading="lazy" decoding="async" />
+      <img src="{{ '/assets/img/systems/workflow-exception-journal.webp' | relative_url }}" alt="A workflow moving through three operating stages, with one exception routed through evidence review before a controlled outcome." width="1728" height="1081" loading="lazy" decoding="async" />
     </figure>
     <ol class="consulting-method__steps">
       {% for step in portal.method.steps %}
@@ -187,7 +190,7 @@
   </header>
   <div class="portal-evidence__layout">
     <figure class="portal-evidence__visual" aria-label="Master-data sources passing through quality gates into a governed record and trusted downstream use.">
-      <img src="{{ '/assets/img/systems/master-data-lineage-field.webp' | relative_url }}" alt="Multiple master-data sources passing through identity and quality checks into one governed record used by downstream processes." width="1728" height="1106" loading="lazy" decoding="async" />
+      <img src="{{ '/assets/img/systems/master-data-lineage-journal.webp' | relative_url }}" alt="Multiple master-data sources passing through identity and quality checks into one governed record used by downstream processes." width="1728" height="1081" loading="lazy" decoding="async" />
     </figure>
     <div class="portal-evidence__content">
       <div class="portal-evidence__list">

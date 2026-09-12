@@ -1,0 +1,37 @@
+{% assign study_route = page.permalink | default: page.url %}
+{% assign study_count = 0 %}
+{% capture study_questions %}
+{% for skill in site.data.career.roadmap.skills %}
+  {% assign study_match = false %}
+  {% if page.career_skills contains skill.id %}{% assign study_match = true %}{% endif %}
+  {% for source in skill.sources %}
+    {% if source.href == study_route %}{% assign study_match = true %}{% endif %}
+  {% endfor %}
+  {% if study_match %}
+    {% assign group = site.data.career.question_bank.skills | where: 'skill_id', skill.id | first %}
+    {% if group %}
+      {% assign study_count = study_count | plus: 1 %}
+      <details class="study-skill" {% if study_count == 1 %}open{% endif %}>
+        <summary><span class="study-kicker">{{ skill.track | escape }} / Practice</span><h3 id="study-{{ skill.id }}">{{ skill.title | escape }}</h3></summary><p>{{ skill.interview_signal | escape }}</p>
+        <div class="study-questions">
+        {% for question in group.questions %}
+          {% assign question_type = site.data.career.question_bank.types[question.type] %}
+          <article class="study-question">
+            <p class="study-kicker">0{{ forloop.index }} / {{ question_type.label | escape }}</p>
+            <h4>{{ question.prompt | escape }}</h4>
+            <details><summary>Compare your reasoning</summary><p><strong>Evidence to include.</strong> {{ question.evidence | default: question_type.evidence | escape }}</p><p><strong>Follow-up.</strong> {{ question.follow_up | default: question_type.pressure | escape }}</p><p><a href="{{ '/labs/interview-readiness/questions/' | relative_url }}">Practise another question</a></p></details>
+          </article>
+        {% endfor %}
+        </div>
+      </details>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% endcapture %}
+{% if study_count > 0 %}
+<aside class="study-workbench" aria-labelledby="study-title">
+  <header class="study-workbench__intro"><p class="study-kicker">Read → Recall → Defend</p><h2 id="study-title">Turn this material into an answer.</h2><p>Close your notes. Pick one question, answer aloud, then open the evidence checklist. These prompts practise the skills linked to this page; the checklist guides self-review and does not grade your answer.</p></header>
+  {{ study_questions }}
+  <footer><a href="{{ '/labs/interview-readiness/practice/' | relative_url }}">Run a mixed interview →</a><a href="{{ '/labs/interview-readiness/stories/' | relative_url }}">Build your project evidence →</a></footer>
+</aside>
+{% endif %}

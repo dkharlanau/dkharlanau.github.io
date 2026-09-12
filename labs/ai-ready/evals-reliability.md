@@ -7,7 +7,9 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-19
+last_modified_at: 2026-09-12
+career_impact: mapped
+career_skills: [ai-evaluation, ai-readiness]
 hide_global_cta: true
 tags: [ai, evals, testing, reliability, observability]
 ---
@@ -40,7 +42,15 @@ Include:
 - tool failures;
 - cases that broke in production or testing.
 
-A dataset of 30 useful cases can teach more than 3,000 synthetic questions that all test the same happy path.
+Choose cases by the decisions and failure conditions they cover. Report coverage by case type so a large set of similar happy-path questions cannot hide an untested permission boundary or recovery path.
+
+## Read the denominator before the score
+
+In the worked exercise below, 100 tasks lead to 60 completed, 35 accepted and 32 usable results. Completion is 60/100; usable output is 32/100. The 32/60 ratio describes usable output among completed tasks and must not be presented as overall success.
+
+Before comparing two runs, keep the evaluation population, acceptance criteria and observation window comparable. Record review time and correction time separately. The same usable-output count with twice the human effort is a different operating result.
+
+<p><a href="#study-case-title">Try the visual evaluation case →</a></p>
 
 ## Separate what you measure
 

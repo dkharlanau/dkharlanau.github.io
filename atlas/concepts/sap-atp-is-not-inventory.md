@@ -4,7 +4,7 @@ layout: default
 title: "SAP ATP Is Not Inventory"
 description: "A practical explanation of why SAP available-to-promise is customer commitment logic, not a simple inventory count."
 permalink: /atlas/concepts/sap-atp-is-not-inventory/
-last_modified_at: 2026-08-11
+last_modified_at: 2026-09-12
 atlas_section: concepts
 domain: SAP operations
 subdomain: Sales and fulfillment
@@ -16,6 +16,11 @@ verified: true
 level: 2
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
+article_visual: atp-inventory-promise-context
+og_image: /assets/img/articles/atp-inventory-promise-context.webp
+og_image_width: 1536
+og_image_height: 1024
+og_image_alt: "Inventory differs from ATP confirmation: scope, demand and date matter."
 
 tags:
   - order-to-cash
@@ -27,7 +32,7 @@ related:
   - /services/sap-ams-consulting/
   - /atlas/concepts/sap-stock-exists-not-promisable/
   - /atlas/maps/order-to-cash-map/
-robots: index,follow
+robots: index,follow,max-image-preview:large
 sitemap: true
 ---
 
@@ -64,6 +69,7 @@ sitemap: true
   </aside>
 
   <div class="note-body">
+    {% include article-visual.html %}
     <h2>Core idea</h2>
     <p>Available-to-promise answers a commitment question: what quantity can the business responsibly promise to a customer, and when? It is not the same as asking what quantity exists physically in a plant or warehouse.</p>
     <p>Conceptually, an ATP result is shaped by eligible stock and receipts minus relevant requirements, evaluated for a date and document context. The actual categories are not universal: SAP uses the checking group and checking rule to determine the scope of availability check, including which stocks, receipts, issue elements, and requirements are considered.</p>
@@ -102,7 +108,17 @@ sitemap: true
       <li>The inventory report and selection criteria used for comparison.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
+    <h2>A small example: reconcile the quantities before changing the check</h2>
+    <p>Use this synthetic exercise to explain the distinction in an interview. Assume 100 units are recorded now, only 80 belong to the stated check scope, and 50 of those units are already consumed by relevant demand. Assume no additional eligible receipts before the requested date and no other active controls. Within this deliberately simplified model, 30 units remain against a new request for 40.</p>
+    <p>The ten-unit gap describes the example; it does not identify a configuration defect. The excluded 20 units and the existing 50 units of demand require separate evidence. This arithmetic is not an SAP ATP formula and must not be reused without those assumptions.</p>
+    <details class="study-review">
+      <summary>Practise the explanation, then open the review</summary>
+      <p><strong>Question:</strong> which two observations would you request before proposing a change to the confirmation?</p>
+      <p>First reconcile the inventory selection with the check scope: material, location, category and date. Then inspect the eligible supply and consuming requirements in that same context. A larger inventory total does not establish that those units can satisfy this demand.</p>
+      <p><strong>Change the condition:</strong> 25 additional units are due tomorrow while the customer requests delivery today. Explain which scheduling and eligibility facts you need before promising a quantity or date. A receipt quantity alone cannot establish a customer delivery date.</p>
+    </details>
+
+    <h2>Before changing the promise</h2>
     <p>Do not diagnose ATP from stock quantity alone. Diagnose the promise result from its time, location, document, supply, demand, and prioritization context. Changing the scope may improve one confirmation while weakening other commitments, so configuration changes require process ownership and regression evidence.</p>
 
     <h2>Boundaries and non-goals</h2>

@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-03
+last_modified_at: 2026-09-12
 last_reviewed: 2026-09-03
 publication_wave: "sap-mdg-review-2026-09"
 review_method: "SAP S/4HANA 2025 FPS01 primary sources + DRF/key-mapping review + page-level factual review"
@@ -59,6 +59,10 @@ semantic_links:
 
 Activation and replication are two different proofs.
 
+For study, keep three questions separate: which source state is ready to distribute, which IDs crossed each boundary, and which target state the business actually uses. A status at one boundary answers only part of that chain.
+
+<p><a href="#study-case-title">Work through the 12 → 10 → 10 → 8 evidence case →</a></p>
+
 ```text
 Approved change
 → Active master data
@@ -107,6 +111,12 @@ Active source?
 ```
 
 This isolates the first failing boundary. A successful HTTP call or outbound message is only transport evidence.
+
+## Reconcile identities before subtracting counts
+
+Count distinct business-object IDs within the same population and observation window. Retries can produce several messages for one object; comparing message totals with distinct target records would create a false gap. Check version or change time as well as identity when the same object changes more than once.
+
+For a training example, let the outbound set be a subset of the changed source IDs and the correctly persisted target set be a subset of the delivered IDs. Only with those set relationships can a subtraction locate the missing records. Then inspect the actual IDs in each difference. The count identifies the size of a gap; the object-level evidence determines the investigation.
 
 ## Initialization and delta
 

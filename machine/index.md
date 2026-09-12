@@ -30,7 +30,7 @@ tags:
       <a class="research-canvas__button" href="#machine-routes">Open technical routes <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <figure class="hub-canvas__visual">
-      <img src="/assets/img/systems/master-data-lineage-field.webp" alt="Several public data sources passing through identity, validation, and governance gates into one structured core with controlled downstream routes." width="1728" height="1106" decoding="async" fetchpriority="high" />
+      <img src="/assets/img/systems/master-data-lineage-journal.webp" alt="Several public data sources passing through identity, validation, and governance gates into one structured core with controlled downstream routes." width="1728" height="1081" decoding="async" fetchpriority="high" />
       <figcaption>Public sources → validation and structure → controlled reuse</figcaption>
     </figure>
     <div class="research-canvas__signal" aria-label="Machine layer">

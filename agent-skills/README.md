@@ -3,7 +3,7 @@
 Portable, installable agent skill packages for enterprise consulting, business analysis, data governance, architecture, integration, and SAP AMS operations.
 
 <figure class="system-opening-visual agent-skills__visual">
-  <img src="/assets/img/systems/ai-evidence-boundary-field.webp" alt="Enterprise evidence sources entering a bounded AI reasoning layer, then separating into approved action, human review, and an audit trail." width="1728" height="1081" decoding="async" fetchpriority="high" />
+  <img src="/assets/img/systems/ai-evidence-boundary-journal.webp" alt="Enterprise evidence sources entering a bounded AI reasoning layer, then separating into approved action, human review, and an audit trail." width="1728" height="1081" decoding="async" fetchpriority="high" />
   <figcaption>Portable skills make the evidence, decision boundary, and output contract explicit.</figcaption>
 </figure>
 

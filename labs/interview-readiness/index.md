@@ -64,7 +64,7 @@ semantic_links:
       </nav>
     </div>
     <figure class="research-canvas__visual">
-      <img src="/assets/img/labs/interview-readiness-field.webp" alt="Six SAP Lead preparation routes converging into one decision and evidence chain." width="1664" height="936" fetchpriority="high" decoding="async" />
+      <img src="/assets/img/labs/interview-readiness-journal.webp" alt="A visual practice loop moving from observation through an answer, pressure, review, and repetition." width="1728" height="1081" fetchpriority="high" decoding="async" />
       <figcaption>Six tracks. One answer chain. Evidence at every hand-off.</figcaption>
     </figure>
     <div class="research-canvas__signal" aria-label="Interview readiness model">

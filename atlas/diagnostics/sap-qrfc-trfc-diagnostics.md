@@ -3,7 +3,7 @@ layout: default
 title: SAP qRFC and tRFC Diagnostics
 description: A source-backed SAP qRFC and tRFC guide for blocked SMQ1, SMQ2, and SM58 entries, with safe recovery boundaries.
 permalink: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
-last_modified_at: 2026-08-11
+last_modified_at: 2026-09-12
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
@@ -14,6 +14,11 @@ status: reviewed
 verified: true
 last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
+article_visual: qrfc-serialized-backlog
+og_image: /assets/img/articles/qrfc-serialized-backlog.webp
+og_image_width: 1536
+og_image_height: 1024
+og_image_alt: "One blocked unit holds three subsequent units in an assumed serialized queue; investigation starts with the blocking error and recovery preserves the sequence."
 tags:
 - integration
 - sap-ale
@@ -23,7 +28,7 @@ related:
 - /atlas/diagnostics/idoc-aif-integration-diagnostics/
 - /atlas/diagnostics/sap-idoc-status-diagnostics/
 - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
-robots: index,follow
+robots: index,follow,max-image-preview:large
 sitemap: true
 level: 2
 ---
@@ -61,6 +66,7 @@ level: 2
   </aside>
 
   <div class="note-body">
+    {% include article-visual.html %}
     <h2>Core idea</h2>
     <p>Transactional RFC (tRFC) and queued RFC (qRFC) carry many ALE, IDoc, and custom integration calls. qRFC adds queue-based serialization, so an earlier failed unit can hold later work in the same queue. The diagnostic task is to identify the direction, the first blocking unit, and whether the failure belongs to connectivity, authorization, scheduling, serialization, or the target application.</p>
     <p>Use SM59 when an outbound destination or connection is involved, but do not treat a successful destination test as proof that the queued function will execute successfully. Application data, authorization, locks, and queue state can still block the call.</p>
@@ -103,7 +109,7 @@ level: 2
       <li>SM58 — tRFC monitor and error log.</li>
       <li>SMQ1 — outbound qRFC queue status.</li>
       <li>SMQ2 — inbound qRFC queue status.</li>
-      <li>SM50 / SM66 — work process status if RFC is executing synchronously.</li>
+      <li>SM50 / SM66 — work-process evidence when the investigation points to an executing task or resource constraint.</li>
     </ul>
 
     <h2>Key tables / transactions / objects</h2>
@@ -129,13 +135,31 @@ level: 2
       <li>Repeat the failed tRFC unit only after connectivity, authorization, or application data has been corrected and duplicate-processing risk is understood.</li>
       <li>For qRFC, fix the first failed unit and use the release-appropriate repeat or activation action with the application owner.</li>
       <li>Do not delete or move a queue entry as a routine unblock step. That can break sequence, lose the only recoverable unit, or make later business state inconsistent.</li>
-      <li>Fix the RFC destination configuration if SM59 test fails.</li>
-      <li>Update the RFC user authorization in the target system.</li>
-      <li>Restart the queue scheduler if it is not running.</li>
+      <li>Use the exact SM59 failure to distinguish destination settings, network availability and logon problems before proposing a configuration change.</li>
+      <li>Request a scoped authorization correction only when target-side evidence establishes the missing permission.</li>
+      <li>Establish whether the scheduler or queue was intentionally stopped and resolve its ownership and prerequisites before activation.</li>
     </ul>
 
     <h2>What to capture first</h2>
     <p>Capture the RFC destination, sending and receiving systems, function module, queue name, first failing unit, exact error text, timestamps, business key, and whether other queues or interfaces are affected. For serialized flows, note the oldest blocked unit and queue depth; for authorization errors, record the target-side evidence without exposing credentials.</p>
+
+    <h2>Waiting, application error, or communication error?</h2>
+    <p>A long queue is a consequence to explain. Read the state and the first relevant unit before treating every delay as a failed connection. SAP's queue-status documentation distinguishes application failures, dependencies and communication-related states; the exact recovery action depends on direction and release.</p>
+    <ul>
+      <li><strong>WAITING:</strong> inspect dependencies on other queues. Waiting does not by itself identify a defective payload or failed scheduler.</li>
+      <li><strong>SYSFAIL:</strong> read the error associated with the failed unit and involve the application owner. Use a matching dump when one exists; a queue error does not guarantee that a dump was written.</li>
+      <li><strong>CPICERR:</strong> read the long text. SAP also documents application-triggered retries that use this state, so the label alone does not prove a network fault.</li>
+    </ul>
+    <p>These distinctions follow <a href="https://help.sap.com/saphelp_autoid2007/helpdata/EN/d9/b9f2407b937e7fe10000000a1550b0/content.htm?no_cache=true">SAP's inbound queue-status documentation</a>. This is legacy documentation; confirm the behavior in the active release. This targeted source check on 12 September 2026 does not replace the page's recorded human review.</p>
+
+    <h2>Interview exercise: one blocked unit, many waiting updates</h2>
+    <p><strong>Synthetic case:</strong> four updates belong to one serialized queue. The first has an application error; the next three have not executed. The destination connection test succeeds. Explain why neither the successful test nor the queue length identifies the correction.</p>
+    <details class="study-review">
+      <summary>Review the diagnostic reasoning</summary>
+      <p>The connection test answers a narrower technical question than execution of this business update. Read the first unit's error and business key, then establish whether data, application logic, a lock or another prerequisite explains it. The waiting units are consequences of the assumed order in this example, not three independently diagnosed failures.</p>
+      <p>Before controlled recovery, establish the original outcome, the correction, dependencies and owner. Verify both queue progress and the intended business state afterwards. Deleting the first unit to shorten the queue would not prove successful processing.</p>
+      <p><strong>Change the condition:</strong> the first unit has no application error and the queue is waiting on another queue. Follow that dependency before proposing a payload correction or scheduler restart.</p>
+    </details>
 
     <h2>Safe recovery boundary</h2>
     <p>A restart is justified only when the failure cause is corrected, the original execution outcome is known, and the relevant application owner agrees with the replay path. Deletion requires an explicit recovery and reconciliation decision; it is not a diagnostic shortcut.</p>

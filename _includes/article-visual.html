@@ -1,0 +1,13 @@
+{% assign visual = site.data.article_visuals[page.article_visual] %}
+{% if visual %}
+<figure class="article-visual" id="article-visual">
+  <a href="{{ visual.src | relative_url }}" aria-label="Open illustration at full size: {{ visual.title | escape }}">
+    <picture>
+      {% if visual.mobile_src %}<source media="(max-width: 48rem)" srcset="{{ visual.mobile_src | relative_url }}" />{% endif %}
+      <img src="{{ visual.src | relative_url }}" alt="{{ visual.alt | escape }}" width="{{ visual.width }}" height="{{ visual.height }}" loading="lazy" decoding="async" />
+    </picture>
+  </a>
+  <figcaption>{{ visual.caption }} <a href="{{ visual.src | relative_url }}">Open full-size image ↗</a></figcaption>
+  <p class="article-visual__credit">{{ visual.credit }}</p>
+</figure>
+{% endif %}

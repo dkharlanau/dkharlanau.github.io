@@ -3,7 +3,7 @@ layout: default
 title: SAP Interface Monitoring Diagnostics
 description: "A source-backed SAP interface monitoring guide for IDoc and RFC errors, backlog thresholds, blind spots, alert quality, and safe triage."
 permalink: /atlas/diagnostics/sap-interface-monitoring-diagnostics/
-last_modified_at: 2026-08-11
+last_modified_at: 2026-09-12
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
@@ -14,6 +14,11 @@ status: reviewed
 verified: true
 last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
+article_visual: interface-monitoring-coverage
+og_image: /assets/img/articles/interface-monitoring-coverage.webp
+og_image_width: 1536
+og_image_height: 1024
+og_image_alt: "A green interface monitor covers explicit status while age, collection freshness, monitoring scope, and the business outcome remain separate evidence questions."
 tags:
 - integration
 - sap-ale
@@ -23,7 +28,7 @@ related:
 - /atlas/diagnostics/idoc-aif-integration-diagnostics/
 - /atlas/diagnostics/sap-idoc-status-diagnostics/
 - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
-robots: index,follow
+robots: index,follow,max-image-preview:large
 sitemap: true
 level: 2
 expert_context:
@@ -41,7 +46,7 @@ expert_context:
 ---
 
 **Sources:** [SAP IDoc Channel monitoring guidance](https://support.sap.com/en/alm/solution-manager/expert-portal/monitoring-of-integration-scenarios/idoc-channel.html), [SAP end-to-end integration monitoring guidance](https://help.sap.com/docs/sap-btp-guidance-framework/integration-architecture-guide/end-to-end-integration-monitoring), and [SAP Cloud ALM message monitoring](https://help.sap.com/docs/cloud-alm/applicationhelp/monitoring-messages).
-**Date checked:** 2026-08-11
+**Date checked:** 2026-09-12
 **Confidence:** high for monitoring-design principles; medium for tool-specific coverage, which depends on product, release, and landscape configuration.
 **Related page/topic:** /atlas/diagnostics/sap-idoc-status-diagnostics/
 **Practical implication:** Monitor both explicit failures and aged intermediate states, then correlate each alert to a business flow and a recovery owner.
@@ -76,7 +81,23 @@ expert_context:
     <h2>Core idea</h2>
     <p>Interface monitoring must detect more than explicit error states. Messages can remain in technically valid intermediate statuses, queues can grow without a hard failure, and one healthy component can hide a broken end-to-end business path. The diagnostic task is to compare the failed flow with the monitor's actual scope, status selection, age and volume thresholds, collection health, business context, and alert ownership.</p>
 
+    {% include article-visual.html %}
+
     {% include atlas/expert-context.html %}
+
+    <h2>Four questions behind a green monitor</h2>
+    <table>
+      <thead>
+        <tr><th>Question</th><th>Evidence</th><th>What green does not prove</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Status</td><td>Which explicit success, warning, or error states are selected?</td><td>That valid intermediate states are progressing on time.</td></tr>
+        <tr><td>Age</td><td>How old is the oldest waiting message, queue entry, or unconfirmed hand-off?</td><td>That a low count is harmless or that throughput is normal.</td></tr>
+        <tr><td>Coverage and freshness</td><td>Which systems, interfaces, partners, filters, and time windows are included, and when did collection last succeed?</td><td>That the dashboard contains the failed path or current data.</td></tr>
+        <tr><td>Outcome</td><td>Which receiver-side record or business object confirms the expected result?</td><td>That a technically completed component produced the intended business state.</td></tr>
+      </tbody>
+    </table>
+    <p>Treat these as independent controls. A monitor can answer the status question correctly while missing an aged backlog, using stale collection data, excluding one route, or stopping before the application outcome.</p>
 
     <h2>Error monitoring versus backlog monitoring</h2>
     <table>
@@ -116,13 +137,13 @@ expert_context:
       <li>WE02 / WE05 — IDoc status overview to compare with monitoring results.</li>
       <li>SMQ1 / SMQ2 — qRFC queue status if queue monitoring is used.</li>
       <li>SM58 — tRFC error log.</li>
-      <li>SLG1 — application log for monitoring tool errors.</li>
+      <li>SLG1 — a relevant application or collector log where the monitored process writes one.</li>
     </ul>
 
     <h2>Key tables / transactions / objects</h2>
     <ul>
       <li><strong>EDIDC / EDIDS</strong> — IDoc control and status.</li>
-      <li><strong>TRFCQOUT / TRFCQIN</strong> — tRFC queue tables.</li>
+      <li><strong>TRFCQOUT / TRFCQIN</strong> — qRFC outbound and inbound queue tables.</li>
       <li><strong>TBTCO</strong> — background job status.</li>
     </ul>
 
@@ -149,6 +170,20 @@ expert_context:
 
     <h2>What to capture first</h2>
     <p>Capture the end-to-end interface path, message or correlation ID, message type, partner or endpoint, business key, first-failure time, oldest backlog age, queue depth, expected versus actual alert, last successful monitor collection, and recent deployment or configuration changes. A green dashboard alongside failed messages is evidence to test scope, collection freshness, thresholds, and end-to-end coverage—not proof of one cause.</p>
+
+    <h2>Interview exercise: the green dashboard</h2>
+    <p><strong>Synthetic case.</strong> A business order is missing. The interface dashboard is green, but its last successful collection was 47 minutes ago. The rule checks explicit error states only. A receiver-side message has remained in a valid intermediate status for 55 minutes; the expected processing time is 15 minutes.</p>
+    <ol>
+      <li>State precisely what the green dashboard proves.</li>
+      <li>Name the two monitoring controls that already failed in this case.</li>
+      <li>Choose the next technical check and the business-outcome check.</li>
+      <li>Define the evidence required before any retry.</li>
+    </ol>
+    <details class="study-review">
+      <summary>Review the reasoning</summary>
+      <p>The dashboard proves only that its last collected data contained no selected explicit error state. It does not prove current collection health or timely progress. The first control gap is freshness: 47-minute-old data cannot support a current green conclusion. The second is age-based backlog detection: a message waiting 55 minutes has breached the stated 15-minute expectation even though its status is technically valid.</p>
+      <p>Correlate the business key or message identifier to the receiver-side record, inspect its status history and the responsible job, queue, or application log, then verify whether the expected business object exists in the required state. Before retrying, establish the cause, current application outcome, affected scope, ordering dependency, and duplicate risk.</p>
+    </details>
 
     <h2>Official references</h2>
     <ul>

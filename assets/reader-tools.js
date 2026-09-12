@@ -188,27 +188,27 @@
 
     if (path.startsWith("/scenarios/") && path !== "/scenarios/") {
       if (/ai-|ai-ready|pilot/.test(path)) return visual(
-        "/assets/img/systems/ai-evidence-boundary-field.webp",
+        "/assets/img/systems/ai-evidence-boundary-journal.webp",
         "Operational evidence entering a bounded AI synthesis layer, then separating into approved action and human-review routes with an audit trail.",
         "Evidence → AI boundary → human review → controlled action."
       );
       if (/master-data|bp-|vendor|supplier|mdg|duplicate/.test(path)) return visual(
-        "/assets/img/systems/master-data-lineage-field.webp",
+        "/assets/img/systems/master-data-lineage-journal.webp",
         "Several master-data sources passing through identity and quality gates into one governed record and trusted downstream routes.",
         "Source records → quality and ownership gates → governed reuse."
       );
       if (/delivery|billing|invoice|planning|replenishment|fulfilment/.test(path)) return visual(
-        "/assets/img/systems/logistics-fulfilment-field.webp",
+        "/assets/img/systems/logistics-fulfilment-journal.webp",
         "An order moving through availability, warehouse execution, transport, delivery confirmation, and an operational feedback loop.",
         "Order → availability → warehouse → transport → proof of delivery."
       );
       if (/ams|incident|support-cost|knowledge-loss/.test(path)) return visual(
-        "/assets/img/systems/workflow-exception-field.webp",
+        "/assets/img/systems/workflow-exception-journal.webp",
         "A workflow exception leaving the main operating route for evidence review before returning through a controlled decision gate.",
         "Recurring work → exception evidence → decision → controlled re-entry."
       );
       return visual(
-        "/assets/img/systems/erp-document-flow-field.webp",
+        "/assets/img/systems/erp-document-flow-journal.webp",
         "A business signal moving through ERP documents, data checks, warehouse execution, integration, and delivery confirmation.",
         "Business symptom → ERP context → evidence → defensible decision."
       );
@@ -216,22 +216,22 @@
 
     if (path.startsWith("/atlas/")) {
       if (/data-quality|master-data|data-governance/.test(path)) return visual(
-        "/assets/img/systems/master-data-lineage-field.webp",
+        "/assets/img/systems/master-data-lineage-journal.webp",
         "Source records passing through identity, validation, and ownership checks into a governed data core with visible downstream lineage.",
         "Source → lineage and quality → governed operational use."
       );
       if (/ai-operations|automation|agent|retrieval/.test(path)) return visual(
-        "/assets/img/systems/ai-evidence-boundary-field.webp",
+        "/assets/img/systems/ai-evidence-boundary-journal.webp",
         "Documents, events, and structured records entering a bounded AI synthesis layer with review and audit routes.",
         "Evidence → synthesis boundary → review → controlled use."
       );
       if (/logistics|warehouse|delivery|inventory|procurement/.test(path)) return visual(
-        "/assets/img/systems/logistics-fulfilment-field.webp",
+        "/assets/img/systems/logistics-fulfilment-journal.webp",
         "An order passing through availability, warehouse execution, transport, delivery confirmation, and a feedback route.",
         "Demand → fulfilment → proof of completion."
       );
       return visual(
-        "/assets/img/systems/erp-document-flow-field.webp",
+        "/assets/img/systems/erp-document-flow-journal.webp",
         "An ERP operating signal branching through document, data, warehouse, and integration evidence before reaching a business outcome.",
         "Use the page as an operating route: signal, evidence, decision, outcome."
       );
@@ -239,32 +239,32 @@
 
     if (!path.startsWith("/services/") || path === "/services/") return null;
     if (/ams|incident|reliability/.test(path)) return {
-      src: "/assets/img/systems/workflow-exception-field.webp",
+      src: "/assets/img/systems/workflow-exception-journal.webp",
       alt: "A repeated workflow exception routed into an evidence-and-review loop before it returns through a controlled decision gate.",
       caption: "Recurring work → exception evidence → ownership → prevention."
     };
     if (/master-data|data/.test(path)) return {
-      src: "/assets/img/systems/master-data-lineage-field.webp",
+      src: "/assets/img/systems/master-data-lineage-journal.webp",
       alt: "Several source records passing through identity, quality, and ownership gates into one governed record with visible downstream lineage.",
       caption: "Trace the decision through source, lineage, quality, ownership and reuse."
     };
     if (/ai-|enterprise-ai|pilot/.test(path)) return {
-      src: "/assets/img/systems/ai-evidence-boundary-field.webp",
+      src: "/assets/img/systems/ai-evidence-boundary-journal.webp",
       alt: "Operational evidence entering a bounded AI synthesis layer, then separating into approved action and human-review routes with an audit trail.",
       caption: "Keep evidence, review authority and the action boundary visible."
     };
     if (/o2c|planning|replenishment|logistics|fulfilment/.test(path)) return {
-      src: "/assets/img/systems/logistics-fulfilment-field.webp",
+      src: "/assets/img/systems/logistics-fulfilment-journal.webp",
       alt: "An order passing through availability, warehouse execution, transport, delivery confirmation, and a feedback route.",
       caption: "Keep the fulfilment flow visible from demand to proof of completion."
     };
     if (/integration/.test(path)) return {
-      src: "/assets/img/systems/erp-document-flow-field.webp",
+      src: "/assets/img/systems/erp-document-flow-journal.webp",
       alt: "A business signal moving through ERP documents, data checks, warehouse execution, integration, and delivery confirmation.",
       caption: "Keep the business flow visible across document and system boundaries."
     };
     return {
-      src: "/assets/img/systems/workflow-exception-field.webp",
+      src: "/assets/img/systems/workflow-exception-journal.webp",
       alt: "An operating workflow with one exception routed through evidence review before returning to a controlled outcome.",
       caption: "Start from the work, exception and evidence before selecting the intervention."
     };
@@ -282,7 +282,7 @@
     image.src = visual.src;
     image.alt = visual.alt;
     image.width = 1728;
-    image.height = /ai-evidence-boundary|workflow-exception/.test(visual.src) ? 1081 : 1106;
+    image.height = 1081;
     image.decoding = "async";
     image.fetchPriority = "high";
     const caption = document.createElement("figcaption");

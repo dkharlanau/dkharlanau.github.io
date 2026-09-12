@@ -1,0 +1,23 @@
+{% assign lesson_case = nil %}
+{% assign lesson_route = page.permalink | default: page.url %}
+{% for candidate in site.data.learning_cases %}
+  {% if candidate.routes contains lesson_route %}{% assign lesson_case = candidate %}{% endif %}
+{% endfor %}
+{% if lesson_case %}
+<section class="study-case" aria-labelledby="study-case-title">
+  <header><p class="study-kicker">Visual case / {{ lesson_case.topic | escape }}</p><h2 id="study-case-title">{{ lesson_case.title | escape }}</h2><p>{{ lesson_case.context | escape }}</p></header>
+  <figure class="study-evidence">
+    <ol class="study-evidence__stages{% if lesson_case.mode == 'groups' %} study-evidence__stages--groups{% endif %}">
+    {% for stage in lesson_case.stages %}<li><span>{{ stage.label | escape }}</span><strong>{{ stage.value | escape }}</strong><small>{{ stage.note | escape }}</small></li>{% endfor %}
+    </ol>
+    <figcaption>{{ lesson_case.scope | escape }}</figcaption>
+  </figure>
+  <p class="study-case__gap">{{ lesson_case.gap | escape }}</p>
+  <h3>{{ lesson_case.question | escape }}</h3>
+  <ol class="study-case__prompts">{% for prompt in lesson_case.prompts %}<li>{{ prompt | escape }}</li>{% endfor %}</ol>
+  <details class="study-review"><summary>Reveal the worked reasoning</summary>
+    {% for step in lesson_case.review %}<section><h4>{{ step.title | escape }}</h4><p>{{ step.text | escape }}</p></section>{% endfor %}
+    <p class="study-case__transfer"><strong>Change one condition.</strong> {{ lesson_case.transfer | escape }}</p>
+  </details>
+</section>
+{% endif %}

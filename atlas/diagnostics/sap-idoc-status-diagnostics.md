@@ -3,7 +3,7 @@ layout: default
 title: SAP IDoc Status Diagnostics
 description: A source-backed SAP IDoc guide for statuses 51, 53, 56, 64, 75, 02, and 03, with safe checks before reprocessing.
 permalink: /atlas/diagnostics/sap-idoc-status-diagnostics/
-last_modified_at: 2026-08-11
+last_modified_at: 2026-09-12
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
@@ -14,6 +14,11 @@ status: reviewed
 verified: true
 last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
+article_visual: idoc-status-evidence
+og_image: /assets/img/articles/idoc-status-evidence.webp
+og_image_width: 1536
+og_image_height: 1024
+og_image_alt: "Outbound status 03 means data passed to the port; inbound status 53 means the application document was posted. These are separate directions, not a guaranteed sequence."
 tags:
 - integration
 - sap-ale
@@ -24,7 +29,7 @@ related:
 - /atlas/diagnostics/sap-inbound-processing-diagnostics/
 - /atlas/diagnostics/sap-outbound-processing-diagnostics/
 - /atlas/diagnostics/sap-idoc-diagnostics/
-robots: index,follow
+robots: index,follow,max-image-preview:large
 sitemap: true
 level: 2
 ---
@@ -62,6 +67,7 @@ level: 2
   </aside>
 
   <div class="note-body">
+    {% include article-visual.html %}
     <h2>Core idea</h2>
     <p>An IDoc status is a checkpoint in either the inbound or outbound flow. It does not, by itself, prove that the intended business document exists in the receiving application. Start with direction and full status history, use the current status to select the next monitor, and reprocess only after the underlying cause is understood.</p>
 
@@ -86,7 +92,7 @@ level: 2
       <li>IDoc stuck in status 64 and not processed.</li>
       <li>IDoc in status 51 with application error text that is not immediately clear.</li>
       <li>IDoc in status 56 after a partner or profile check fails.</li>
-      <li>Inbound IDoc in status 53 but the business document was not created.</li>
+      <li>Inbound IDoc in status 53 while a user cannot find the expected business result; inspect the referenced object before concluding that posting failed.</li>
       <li>Outbound IDoc in status 03 but the partner reports it never arrived.</li>
     </ul>
 
@@ -102,7 +108,7 @@ level: 2
     <h2>Where to check in SAP</h2>
     <ul>
       <li>WE02 / WE05 — IDoc list and detailed display with status history.</li>
-      <li>BD87 — IDoc reprocessing and status change.</li>
+      <li>BD87 — status monitoring and controlled reprocessing where applicable.</li>
       <li>SM58 — tRFC error log if the IDoc uses RFC.</li>
       <li>SMQ1 / SMQ2 — qRFC queues if queued RFC is involved.</li>
       <li>SLG1 — application log for detailed error messages.</li>
@@ -134,7 +140,7 @@ level: 2
       <li>Correct the RBDAPP01 schedule, variant, or authorization when background processing is configured and status 64 accumulates.</li>
       <li>Correct the partner profile or port configuration if the IDoc fails at the profile layer.</li>
       <li>Resolve the first failed qRFC unit before retrying an IDoc that remains in status 75.</li>
-      <li>If the IDoc is corrupted and cannot be reprocessed, request a resend from the partner system.</li>
+      <li>If a resend is required, agree the replacement scope, correlation keys, original outcome and duplicate handling with the source and application owners first.</li>
     </ul>
 
     <h2>What to capture first</h2>
@@ -142,6 +148,16 @@ level: 2
 
     <h2>Safe reprocessing boundary</h2>
     <p>Do not use BD87, restart an RFC entry, or request a resend merely to see whether the error clears. First establish whether the original message already produced a business object, whether sequencing matters, and which team owns the failing layer. This avoids duplicate documents and hides fewer intermittent failures.</p>
+
+    <h2>Practise a status handover</h2>
+    <p><strong>Synthetic interview case:</strong> one team reports an outbound IDoc in status 03. Another reports an inbound IDoc in status 53. A user says the order is missing. You have not established that the two IDocs refer to the same business message.</p>
+    <p>Explain what you can conclude now, the evidence needed to correlate the records, and the next check if they do belong to the same message.</p>
+    <details class="study-review">
+      <summary>Review the evidence boundary</summary>
+      <p>The status meanings describe different directions. They do not establish a source-to-target match. Compare sender, receiver, message type, business reference and timing, plus landscape-specific correlation evidence. Do not assume equal IDoc numbers across systems.</p>
+      <p>If the records correspond, follow the inbound object reference and inspect the expected business state. A user selection, follow-on process or object mismatch can explain the reported absence without establishing a failed posting. The exact cause remains a question for the evidence.</p>
+      <p><strong>Change the condition:</strong> the inbound message actually has status 51. The next check moves to its detailed application error and relevant data. It still does not justify an immediate resend from the source.</p>
+    </details>
 
     <h2>Official references</h2>
     <ul>

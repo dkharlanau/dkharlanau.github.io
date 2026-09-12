@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-09-05T00:00:00Z
+Generated: 2026-09-12T00:00:00Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -1029,6 +1029,7 @@ REVIEWED: 2026-05-06
 
 
 
+
     Core idea
     Available-to-promise answers a commitment question: what quantity can the business responsibly promise to a customer, and when? It is not the same as asking what quantity exists physically in a plant or warehouse.
     Conceptually, an ATP result is shaped by eligible stock and receipts minus relevant requirements, evaluated for a date and document context. The actual categories are not universal: SAP uses the checking group and checking rule to determine the scope of availability check, including which stocks, receipts, issue elements, and requirements are considered.
@@ -1067,7 +1068,17 @@ REVIEWED: 2026-05-06
       The inventory report and selection criteria used for comparison.
 
 
-    Support takeaway
+    A small example: reconcile the quantities before changing the check
+    Use this synthetic exercise to explain the distinction in an interview. Assume 100 units are recorded now, only 80 belong to the stated check scope, and 50 of those units are already consumed by relevant demand. Assume no additional eligible receipts before the requested date and no other active controls. Within this deliberately simplified model, 30 units remain against a new request for 40.
+    The ten-unit gap describes the example; it does not identify a configuration defect. The excluded 20 units and the existing 50 units of demand require separate evidence. This arithmetic is not an SAP ATP formula and must not be reused without those assumptions.
+
+      Practise the explanation, then open the review
+      Question: which two observations would you request before proposing a change to the confirmation?
+      First reconcile the inventory selection with the check scope: material, location, category and date. Then inspect the eligible supply and consuming requirements in that same context. A larger inventory total does not establish that those units can satisfy this demand.
+      Change the condition: 25 additional units are due tomorrow while the customer requests delivery today. Explain which scheduling and eligibility facts you need before promising a quantity or date. A receipt quantity alone cannot establish a customer delivery date.
+
+
+    Before changing the promise
     Do not diagnose ATP from stock quantity alone. Diagnose the promise result from its time, location, document, supply, demand, and prioritization context. Changing the scope may improve one confirmation while weakening other commitments, so configuration changes require process ownership and regression evidence.
 
     Boundaries and non-goals
@@ -2578,6 +2589,7 @@ Home
 
 
 
+
     Do not start with the status code alone
     An IDoc status is evidence, but it is not the whole incident. First define the business message: what should have left the source system, where should it have gone, and which business document or update should have appeared in the target?
     Then trace the message through the actual landscape. The failure can happen before an IDoc is created, during dispatch, in RFC or queue processing, after the target receives the IDoc, or inside the target application. The same user symptom can therefore belong to very different owners.
@@ -2588,7 +2600,7 @@ Home
     EvidenceWhat it tells youNext place to look
       No expected outbound IDoc existsThe problem may be in the business trigger, output/change logic, distribution model, or selection before IDoc creation.Source document, trigger logic, change pointers or application-specific generation path.
       IDoc exists but was not transferred as expectedThe message was created, so move downstream to partner, port, RFC, queue, or scheduling evidence.IDoc status history, partner profile, port, RFC/tRFC/qRFC evidence.
-      Target received the IDoc but no business document was postedTransport worked far enough for application processing to begin.Inbound status text, segment values, master data, mapping, application validation.
+      Target received the IDoc but no business document was postedThe message reached the receiving system. Application processing may still be queued, rejected, or incomplete.Inbound status text, segment values, master data, mapping, application validation.
       IDoc reached a success status but the business result is still wrongThe technical message path may be healthy while the application result or follow-on process is not.Created business document, application log, follow-on status, business rules.
       The same business message appears more than onceDo not assume “duplicate IDoc” is the cause. Find whether the source sent twice, middleware retried, or the target processed twice.Message identifiers, timestamps, source trigger, middleware/retry history, target document references.
 
@@ -2627,7 +2639,21 @@ Home
 
 
     Reprocessing needs a business check
-    Before reprocessing, confirm whether the message is safe to repeat. Some inbound processes have duplicate protection; others can create a second business effect if the original result already exists outside the status you are looking at. Check the target business object and the landscape's restart design before pressing the convenient button humans invented for making yesterday's problem happen twice.
+    Before reprocessing, confirm whether the message is safe to repeat. Some inbound processes have duplicate protection; others can create a second business effect if the original result already exists outside the status you are looking at. Check the target business object and the landscape's restart design before retrying. Record what prevents a second business effect and who authorizes the recovery.
+
+    Interview exercise: receipt without the expected result
+    A synthetic support case: the source has an outbound IDoc, the receiver has the corresponding inbound message, and a user cannot find the expected business update. No cause has been established. Explain your next check without jumping to a retry.
+
+      State what the two message records prove and what they leave unproven.
+      Name the business object, identifier and expected state you would look for in the target.
+      Explain how you would distinguish a pending message from a rejected one, and an absent business result from a result hidden by the user's selection.
+
+
+      Compare your reasoning
+      The receiving message narrows the investigation; it does not establish the expected business result. Correlate source and target identifiers, then read the inbound history, application error or queue evidence appropriate to the landscape. Inspect the referenced business object directly, including its current state and timing.
+      If the business object already exists, a retry could be the wrong next action. First establish whether the reported gap is posting, follow-on processing, authorization or report selection. If it does not exist, identify the blocking evidence and recovery prerequisites before requesting controlled reprocessing.
+      Change the condition: the target result exists but the source never received an acknowledgement. Explain why recovery should now investigate the return path rather than repeat the original business update.
+
 
     The end of the diagnosis
     A strong IDoc incident says where the chain broke: generation, routing, transport, queue, mapping/data, or application posting. “Status 51 fixed” is not enough. The status is the symptom. The reusable knowledge is why the application rejected the message and what control prevents the same failure next time.
@@ -2705,6 +2731,7 @@ REVIEWED: 2026-06-13
 
 
 
+
     Core idea
     An IDoc status is a checkpoint in either the inbound or outbound flow. It does not, by itself, prove that the intended business document exists in the receiving application. Start with direction and full status history, use the current status to select the next monitor, and reprocess only after the underlying cause is understood.
 
@@ -2729,7 +2756,7 @@ REVIEWED: 2026-06-13
       IDoc stuck in status 64 and not processed.
       IDoc in status 51 with application error text that is not immediately clear.
       IDoc in status 56 after a partner or profile check fails.
-      Inbound IDoc in status 53 but the business document was not created.
+      Inbound IDoc in status 53 while a user cannot find the expected business result; inspect the referenced object before concluding that posting failed.
       Outbound IDoc in status 03 but the partner reports it never arrived.
 
 
@@ -2745,7 +2772,7 @@ REVIEWED: 2026-06-13
     Where to check in SAP
 
       WE02 / WE05 — IDoc list and detailed display with status history.
-      BD87 — IDoc reprocessing and status change.
+      BD87 — status monitoring and controlled reprocessing where applicable.
       SM58 — tRFC error log if the IDoc uses RFC.
       SMQ1 / SMQ2 — qRFC queues if queued RFC is involved.
       SLG1 — application log for detailed error messages.
@@ -2777,7 +2804,7 @@ REVIEWED: 2026-06-13
       Correct the RBDAPP01 schedule, variant, or authorization when background processing is configured and status 64 accumulates.
       Correct the partner profile or port configuration if the IDoc fails at the profile layer.
       Resolve the first failed qRFC unit before retrying an IDoc that remains in status 75.
-      If the IDoc is corrupted and cannot be reprocessed, request a resend from the partner system.
+      If a resend is required, agree the replacement scope, correlation keys, original outcome and duplicate handling with the source and application owners first.
 
 
     What to capture first
@@ -2785,6 +2812,16 @@ REVIEWED: 2026-06-13
 
     Safe reprocessing boundary
     Do not use BD87, restart an RFC entry, or request a resend merely to see whether the error clears. First establish whether the original message already produced a business object, whether sequencing matters, and which team owns the failing layer. This avoids duplicate documents and hides fewer intermittent failures.
+
+    Practise a status handover
+    Synthetic interview case: one team reports an outbound IDoc in status 03. Another reports an inbound IDoc in status 53. A user says the order is missing. You have not established that the two IDocs refer to the same business message.
+    Explain what you can conclude now, the evidence needed to correlate the records, and the next check if they do belong to the same message.
+
+      Review the evidence boundary
+      The status meanings describe different directions. They do not establish a source-to-target match. Compare sender, receiver, message type, business reference and timing, plus landscape-specific correlation evidence. Do not assume equal IDoc numbers across systems.
+      If the records correspond, follow the inbound object reference and inspect the expected business state. A user selection, follow-on process or object mismatch can explain the reported absence without establishing a failed posting. The exact cause remains a question for the evidence.
+      Change the condition: the inbound message actually has status 51. The next check moves to its detailed application error and relevant data. It still does not justify an immediate resend from the source.
+
 
     Official references
 
@@ -2860,6 +2897,8 @@ Home
     Core idea
     Inbound processing is the path from an external system into SAP. When an inbound IDoc or message is missing, stuck in status, or posts wrong data, the support goal is to trace the path from receipt through syntax check, partner profile validation, and application posting to identify where it failed and why.
 
+
+
     Common symptoms
 
       Partner reports a message was sent but no IDoc exists in SAP.
@@ -2871,20 +2910,20 @@ Home
 
     Likely causes
 
-      Receipt failure: the IDoc never arrived due to network, RFC, or gateway issues.
+      Receipt failure: transport evidence identifies a failed hand-off. An empty receiver search alone does not establish this cause.
       Syntax error: the IDoc structure does not match the expected segment definition.
       Partner profile mismatch: the sender partner or message type is not configured in the inbound partner profile.
       Application error: the IDoc passed syntax and profile checks but failed during posting due to master data or business rules.
-      Queue bottleneck: inbound qRFC queues are not processing fast enough.
+      Queue bottleneck: a failed unit, dependency, deliberate stop, or resource constraint prevents progress. Queue depth alone does not distinguish these causes.
 
 
     Where to check in SAP
 
-      WE02 / WE05 — IDoc list filtered by direction 1 (inbound) and partner.
-      SM58 — tRFC error log for inbound RFC failures.
+      WE02 / WE05 — IDoc list filtered by direction 2 (inbound) and partner.
+      SM58 — inspect failed tRFC calls in the sending RFC system, when this interface actually uses tRFC. It is not a generic receiver-side inbound message log.
       SMQ2 — inbound qRFC queue status.
       SM21 — system log for gateway or connection errors.
-      SLG1 — application log for posting errors.
+      SLG1 — application log where the receiving application records posting details; start with the IDoc status long text and its referenced object.
 
 
     Key tables / transactions / objects
@@ -2896,22 +2935,40 @@ Home
 
     Diagnostic workflow
 
-      Confirm the partner sent the message and capture the message ID or timestamp.
-      Check WE02 for the IDoc with direction 1 (inbound) and the sender partner.
-      If the IDoc does not exist, check SM21 for gateway errors and SM58 for RFC failures.
-      If the IDoc exists, check its status and status history for the failure layer.
-      For status 51, check SLG1 for the application error details.
-      For queue delays, check SMQ2 for queue depth and processing status.
+      Identify the receiving system and client, sender, message type, business key, and time window with its time zone. Capture the sender's correlation reference.
+      Search WE02 / WE05 with direction 2 (inbound). Check restrictive partner, date, and status selections before concluding that no matching IDoc exists. Direction 1 denotes outbound processing.
+      If no match remains, trace the actual transport path. Inspect middleware delivery evidence and, for a tRFC sender, failed calls in that sending system's SM58. Do not assume sender and receiver IDoc numbers are identical.
+      If the IDoc exists, read its status history and detailed message. For status 51, inspect the application error and relevant application log where available. For a successful posting, inspect the referenced business object and expected state.
+      For an inbound qRFC delay, inspect SMQ2 and the blocking unit or dependency. Record whether the queue is stopped intentionally before proposing recovery.
+      Choose one testable next action and define its expected evidence: a located message, an explained failure, or the correct application state.
 
 
     Typical fixes or next actions
 
-      Request a resend from the partner if the IDoc never arrived.
-      Fix syntax errors by correcting the segment data or updating the partner's mapping.
-      Update the inbound partner profile to accept the message type and sender.
-      Fix master data or business rule issues before reprocessing status 51 IDocs.
-      Increase queue processing capacity or tune the queue scheduler if messages accumulate.
+      Correct the search scope or correlation first if receipt is still uncertain.
+      Correct a proven structure or mapping defect with the interface owner; validate a representative payload before replay.
+      Change a partner profile only when the intended sender, message type, and processing design justify it.
+      Resolve the specific master-data or business-rule failure before controlled reprocessing of affected status 51 IDocs.
+      Request a resend only after checking the original outcome, duplicate handling, and replay scope. A missing search result is insufficient authorization for replay.
+      Consider capacity or scheduler changes only after identifying a resource constraint. A serialized application error needs a different remedy.
 
+
+    Interview exercise: the empty receiver list
+    Synthetic case. A sender reports successful dispatch at 23:58. The receiver search returns no IDoc. The search uses today's date, one partner, and direction 1. A colleague proposes an immediate resend.
+
+      Name the selection error and two other facts to verify before interpreting the empty list.
+      Explain which evidence would connect the sender's message to the receiver.
+      State what you need to know before a resend is safe.
+
+
+      Review the diagnostic reasoning
+      Use direction 2 for inbound processing. Confirm the receiving system and client, then check the date boundary, time zone, and partner selection. The sender's message reference, business key, and transport trace should establish correlation; a dispatch statement alone does not establish posting.
+      Before replay, determine whether the original message or business object already exists, how duplicates are handled, and which exact message is in scope. The useful answer narrows uncertainty before choosing recovery.
+      Transfer question: if the corrected search finds status 53, what changes? Inspect the referenced application object and expected state; the next step is no longer an investigation of an absent IDoc.
+
+
+    Source checks
+    SAP documents direction 2 for inbound processing in Assigning a Function Module (Direct Inbound Processing). Its tRFC status check describes investigating an outbound IDoc that has not reached the receiver. These checks were consulted on 12 September 2026; screen details and recovery procedures remain release- and landscape-dependent.
 
     Support takeaway
     Inbound issues are usually receipt, syntax, or application posting problems. A useful ticket should include: sender partner, message type, IDoc number if it exists, expected business document, actual result, and any error text from WE02, SM58, or SLG1.
@@ -3061,7 +3118,7 @@ TAGS: integration, sap-ale, diagnostics, monitoring
 REVIEWED: 2026-06-13
 ----------------------------------------
 **Sources:** [SAP IDoc Channel monitoring guidance](https://support.sap.com/en/alm/solution-manager/expert-portal/monitoring-of-integration-scenarios/idoc-channel.html), [SAP end-to-end integration monitoring guidance](https://help.sap.com/docs/sap-btp-guidance-framework/integration-architecture-guide/end-to-end-integration-monitoring), and [SAP Cloud ALM message monitoring](https://help.sap.com/docs/cloud-alm/applicationhelp/monitoring-messages).
-**Date checked:** 2026-08-11
+**Date checked:** 2026-09-12
 **Confidence:** high for monitoring-design principles; medium for tool-specific coverage, which depends on product, release, and landscape configuration.
 **Related page/topic:** /atlas/diagnostics/sap-idoc-status-diagnostics/
 **Practical implication:** Monitor both explicit failures and aged intermediate states, then correlate each alert to a business flow and a recovery owner.
@@ -3094,6 +3151,22 @@ REVIEWED: 2026-06-13
     Interface monitoring must detect more than explicit error states. Messages can remain in technically valid intermediate statuses, queues can grow without a hard failure, and one healthy component can hide a broken end-to-end business path. The diagnostic task is to compare the failed flow with the monitor's actual scope, status selection, age and volume thresholds, collection health, business context, and alert ownership.
 
 
+
+
+
+    Four questions behind a green monitor
+
+
+        QuestionEvidenceWhat green does not prove
+
+
+        StatusWhich explicit success, warning, or error states are selected?That valid intermediate states are progressing on time.
+        AgeHow old is the oldest waiting message, queue entry, or unconfirmed hand-off?That a low count is harmless or that throughput is normal.
+        Coverage and freshnessWhich systems, interfaces, partners, filters, and time windows are included, and when did collection last succeed?That the dashboard contains the failed path or current data.
+        OutcomeWhich receiver-side record or business object confirms the expected result?That a technically completed component produced the intended business state.
+
+
+    Treat these as independent controls. A monitor can answer the status question correctly while missing an aged backlog, using stale collection data, excluding one route, or stopping before the application outcome.
 
     Error monitoring versus backlog monitoring
 
@@ -3133,13 +3206,13 @@ REVIEWED: 2026-06-13
       WE02 / WE05 — IDoc status overview to compare with monitoring results.
       SMQ1 / SMQ2 — qRFC queue status if queue monitoring is used.
       SM58 — tRFC error log.
-      SLG1 — application log for monitoring tool errors.
+      SLG1 — a relevant application or collector log where the monitored process writes one.
 
 
     Key tables / transactions / objects
 
       EDIDC / EDIDS — IDoc control and status.
-      TRFCQOUT / TRFCQIN — tRFC queue tables.
+      TRFCQOUT / TRFCQIN — qRFC outbound and inbound queue tables.
       TBTCO — background job status.
 
 
@@ -3166,6 +3239,20 @@ REVIEWED: 2026-06-13
 
     What to capture first
     Capture the end-to-end interface path, message or correlation ID, message type, partner or endpoint, business key, first-failure time, oldest backlog age, queue depth, expected versus actual alert, last successful monitor collection, and recent deployment or configuration changes. A green dashboard alongside failed messages is evidence to test scope, collection freshness, thresholds, and end-to-end coverage—not proof of one cause.
+
+    Interview exercise: the green dashboard
+    Synthetic case. A business order is missing. The interface dashboard is green, but its last successful collection was 47 minutes ago. The rule checks explicit error states only. A receiver-side message has remained in a valid intermediate status for 55 minutes; the expected processing time is 15 minutes.
+
+      State precisely what the green dashboard proves.
+      Name the two monitoring controls that already failed in this case.
+      Choose the next technical check and the business-outcome check.
+      Define the evidence required before any retry.
+
+
+      Review the reasoning
+      The dashboard proves only that its last collected data contained no selected explicit error state. It does not prove current collection health or timely progress. The first control gap is freshness: 47-minute-old data cannot support a current green conclusion. The second is age-based backlog detection: a message waiting 55 minutes has breached the stated 15-minute expectation even though its status is technically valid.
+      Correlate the business key or message identifier to the receiver-side record, inspect its status history and the responsible job, queue, or application log, then verify whether the expected business object exists in the required state. Before retrying, establish the cause, current application outcome, affected scope, ordering dependency, and duplicate risk.
+
 
     Official references
 
@@ -4047,6 +4134,7 @@ REVIEWED: 2026-06-13
 
 
 
+
     Core idea
     Transactional RFC (tRFC) and queued RFC (qRFC) carry many ALE, IDoc, and custom integration calls. qRFC adds queue-based serialization, so an earlier failed unit can hold later work in the same queue. The diagnostic task is to identify the direction, the first blocking unit, and whether the failure belongs to connectivity, authorization, scheduling, serialization, or the target application.
     Use SM59 when an outbound destination or connection is involved, but do not treat a successful destination test as proof that the queued function will execute successfully. Application data, authorization, locks, and queue state can still block the call.
@@ -4089,7 +4177,7 @@ REVIEWED: 2026-06-13
       SM58 — tRFC monitor and error log.
       SMQ1 — outbound qRFC queue status.
       SMQ2 — inbound qRFC queue status.
-      SM50 / SM66 — work process status if RFC is executing synchronously.
+      SM50 / SM66 — work-process evidence when the investigation points to an executing task or resource constraint.
 
 
     Key tables / transactions / objects
@@ -4115,13 +4203,31 @@ REVIEWED: 2026-06-13
       Repeat the failed tRFC unit only after connectivity, authorization, or application data has been corrected and duplicate-processing risk is understood.
       For qRFC, fix the first failed unit and use the release-appropriate repeat or activation action with the application owner.
       Do not delete or move a queue entry as a routine unblock step. That can break sequence, lose the only recoverable unit, or make later business state inconsistent.
-      Fix the RFC destination configuration if SM59 test fails.
-      Update the RFC user authorization in the target system.
-      Restart the queue scheduler if it is not running.
+      Use the exact SM59 failure to distinguish destination settings, network availability and logon problems before proposing a configuration change.
+      Request a scoped authorization correction only when target-side evidence establishes the missing permission.
+      Establish whether the scheduler or queue was intentionally stopped and resolve its ownership and prerequisites before activation.
 
 
     What to capture first
     Capture the RFC destination, sending and receiving systems, function module, queue name, first failing unit, exact error text, timestamps, business key, and whether other queues or interfaces are affected. For serialized flows, note the oldest blocked unit and queue depth; for authorization errors, record the target-side evidence without exposing credentials.
+
+    Waiting, application error, or communication error?
+    A long queue is a consequence to explain. Read the state and the first relevant unit before treating every delay as a failed connection. SAP's queue-status documentation distinguishes application failures, dependencies and communication-related states; the exact recovery action depends on direction and release.
+
+      WAITING: inspect dependencies on other queues. Waiting does not by itself identify a defective payload or failed scheduler.
+      SYSFAIL: read the error associated with the failed unit and involve the application owner. Use a matching dump when one exists; a queue error does not guarantee that a dump was written.
+      CPICERR: read the long text. SAP also documents application-triggered retries that use this state, so the label alone does not prove a network fault.
+
+    These distinctions follow SAP's inbound queue-status documentation. This is legacy documentation; confirm the behavior in the active release. This targeted source check on 12 September 2026 does not replace the page's recorded human review.
+
+    Interview exercise: one blocked unit, many waiting updates
+    Synthetic case: four updates belong to one serialized queue. The first has an application error; the next three have not executed. The destination connection test succeeds. Explain why neither the successful test nor the queue length identifies the correction.
+
+      Review the diagnostic reasoning
+      The connection test answers a narrower technical question than execution of this business update. Read the first unit's error and business key, then establish whether data, application logic, a lock or another prerequisite explains it. The waiting units are consequences of the assumed order in this example, not three independently diagnosed failures.
+      Before controlled recovery, establish the original outcome, the correction, dependencies and owner. Verify both queue progress and the intended business state afterwards. Deleting the first unit to shorten the queue would not prove successful processing.
+      Change the condition: the first unit has no application error and the queue is waiting on another queue. Follow that dependency before proposing a payload correction or scheduler restart.
+
 
     Safe recovery boundary
     A restart is justified only when the failure cause is corrected, the original execution outcome is known, and the relevant application owner agrees with the replay path. Deletion requires an explicit recovery and reconciliation decision; it is not a diagnostic shortcut.

@@ -29,7 +29,7 @@ tags:
       <a class="research-canvas__button" href="#knowledge-task-paths">Choose a task <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <figure class="hub-canvas__visual">
-      <img src="/assets/img/systems/erp-document-flow-field.webp" alt="An ERP operating signal branching through document, data, warehouse, and integration checks before reaching a completed delivery." width="1728" height="1106" decoding="async" fetchpriority="high" />
+      <img src="/assets/img/systems/erp-document-flow-journal.webp" alt="An ERP operating signal branching through document, data, warehouse, and integration checks before reaching a completed delivery." width="1728" height="1081" decoding="async" fetchpriority="high" />
       <figcaption>Operating signal → document and data evidence → business outcome</figcaption>
     </figure>
     <div class="research-canvas__signal" aria-label="Knowledge structure">

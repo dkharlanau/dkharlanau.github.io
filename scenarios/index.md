@@ -26,7 +26,7 @@ hide_site_share: true
       <div class="scenario-canvas__actions"><a class="scenario-canvas__button" href="#scenario-routes">Choose a problem area <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a><a class="scenario-canvas__text-link" href="/atlas/diagnostics/">Open Diagnostics <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
     </div>
     <figure class="scenario-canvas__visual">
-      <img src="/assets/img/systems/erp-document-flow-field.webp" alt="A business signal moving through ERP documents, master-data and availability checks, warehouse execution, integration, and delivery confirmation." width="1728" height="1106" decoding="async" fetchpriority="high" />
+      <img src="/assets/img/systems/erp-document-flow-journal.webp" alt="A business signal moving through ERP documents, master-data and availability checks, warehouse execution, integration, and delivery confirmation." width="1728" height="1081" decoding="async" fetchpriority="high" />
       <figcaption>One symptom can cross documents, data, warehouse, and integration boundaries. Follow the operating flow before choosing the fix.</figcaption>
     </figure>
     <ol class="scenario-canvas__sequence" aria-label="Scenario structure">

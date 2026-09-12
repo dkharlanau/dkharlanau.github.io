@@ -16,9 +16,10 @@
     </nav>
   </div>
   <nav class="portal-footer__nav" aria-label="{{ portal_footer.label | default: 'Footer navigation' }}">
-    <a href="/services/">{{ portal_footer.work | default: portal_nav.work | default: 'Services' }}</a>
-    <a href="/about/">{{ portal_footer.about | default: portal_nav.about | default: 'Profile' }}</a>
-    <a href="/knowledge/">{{ portal_footer.knowledge | default: portal_nav.knowledge | default: 'Knowledge' }}</a>
+    <a href="/services/">{{ portal_nav.business | default: portal_footer.work | default: 'Business' }}</a>
+    <a href="/labs/">{{ portal_nav.prepare | default: portal_nav.labs | default: 'Learn & prepare' }}</a>
+    <a href="/knowledge/">{{ portal_nav.library | default: portal_footer.knowledge | default: 'Library' }}</a>
+    <a href="/about/">{{ portal_footer.about | default: portal_nav.about | default: 'About' }}</a>
   </nav>
   <div class="portal-footer__meta">
     <p>&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau. {{ portal_footer.personal_site | default: 'Personal site.' }}</p>

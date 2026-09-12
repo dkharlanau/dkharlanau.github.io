@@ -3,7 +3,7 @@ layout: default
 title: "SAP Consulting Services — Dzmitryi Kharlanau | AMS, O2C, Integration"
 description: "SAP consulting for transformation friction, O2C and integration stability, operational memory, and controlled AI and automation around SAP."
 permalink: /services/
-last_modified_at: 2026-08-22
+last_modified_at: 2026-09-12
 ---
 
 <div class="service-canvas" data-service-canvas>
@@ -29,9 +29,35 @@ last_modified_at: 2026-08-22
       <a href="/services/enterprise-ai-pilot-design/"><span>06</span><strong>Enterprise AI pilot</strong><small>ERP, document, or agent workflow with controls and evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </nav>
     <figure class="service-canvas__visual" data-reveal>
-      <img src="/assets/img/systems/workflow-exception-field.webp" alt="An operating workflow with one exception routed into an evidence review loop before it returns to a controlled outcome." width="1728" height="1081" decoding="async" fetchpriority="high" />
+      <img src="/assets/img/systems/workflow-exception-journal.webp" alt="An operating workflow with one exception routed into an evidence review loop before it returns to a controlled outcome." width="1728" height="1081" decoding="async" fetchpriority="high" />
       <figcaption>Start with the blocked work. Trace the exception, evidence, decision, and return path.</figcaption>
     </figure>
+  </section>
+
+  <section class="ej-analysis" aria-labelledby="ej-analysis-title" data-reveal>
+    <header class="ej-analysis__header">
+      <p class="service-canvas__eyebrow">01 / Business / AMS diagnostic</p>
+      <h2 id="ej-analysis-title">40 incidents.<br />Three causes to check.</h2>
+      <p>Find the repeat demand before adding automation.</p>
+    </header>
+    <figure class="ej-bars" aria-labelledby="ej-bars-caption">
+      <figcaption id="ej-bars-caption">Incidents / mutually exclusive sample groups</figcaption>
+      <ol>
+        <li><span>Repeat process issue</span><i style="--value: 100%"><b>20</b></i></li>
+        <li><span>Master-data error</span><i style="--value: 60%"><b>12</b></i></li>
+        <li><span>Interface exception</span><i style="--value: 40%"><b>8</b></i></li>
+      </ol>
+      <p>Illustrative data. Ranked by count, not severity.</p>
+    </figure>
+    <ol class="ej-analysis__lenses">
+      <li><span>01</span><strong>Process</strong><p>Trace the repeat trigger.</p></li>
+      <li><span>02</span><strong>Data</strong><p>Check ownership and validation.</p></li>
+      <li><span>03</span><strong>Integration</strong><p>Locate the failed hand-off.</p></li>
+    </ol>
+    <footer>
+      <h3>A useful diagnostic ends with a testable next step.</h3>
+      <div><p>Pattern → Evidence → Action → Verification</p><a class="service-canvas__button service-canvas__button--primary" href="/atlas/diagnostics/">See the diagnostic format <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
+    </footer>
   </section>
 
   <section class="service-paths" aria-labelledby="service-paths-title">

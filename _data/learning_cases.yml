@@ -1,0 +1,109 @@
+- id: replication-gaps
+  topic: BP / MDG
+  routes:
+    - /labs/enterprise-context/mdg/replication/
+    - /labs/enterprise-context/mdg/interfaces/
+    - /labs/enterprise-context/integrations/drf/
+  title: Delivered ≠ applied.
+  context: Twelve distinct records changed at the source. For this exercise, the outbound and delivered sets contain the same ten IDs, and the eight correct targets belong to that set.
+  scope: Synthetic case. Same observation window, distinct record IDs, nested populations. These counts are not production measurements.
+  stages:
+    - {label: Source changed, value: '12', note: Expected record IDs}
+    - {label: Outbound, value: '10', note: Payload evidence exists}
+    - {label: Delivered, value: '10', note: Transport evidence exists}
+    - {label: Target correct, value: '8', note: Expected state checked}
+  gap: 'Two records lack outbound evidence. Two delivered records lack the expected target state. The counts locate gaps; they do not identify a root cause.'
+  question: Which evidence would you check next?
+  prompts:
+    - Separate the two record sets by ID.
+    - Name one check for each set and what it could establish.
+    - State what would make a retry safe.
+  review:
+    - title: Separate selection from application.
+      text: For the two IDs without outbound evidence, inspect the active source version, selection scope and outbound log in the same window. Missing evidence can mean exclusion, delay or an observation gap; it does not by itself prove transport failure.
+    - title: Trace the delivered IDs into target state.
+      text: For the other two IDs, correlate the delivered payload with inbound validation, identity mapping and persisted target values. Check whether processing is delayed or rejected before assuming that a delivered message was applied.
+    - title: Make recovery specific.
+      text: Identify the correction, recovery owner, replay scope and duplicate-effect control. Verify the resulting business state after replay. Replaying all twelve would mix two different investigations and could repeat successful work.
+  transfer: If all twelve now have correct target values but a downstream report shows eight, move the investigation to consumption timing, report selection and refresh evidence. Do not keep treating it as an outbound gap.
+- id: promise-boundary
+  topic: Availability / ATP
+  routes:
+    - /labs/enterprise-context/atp/
+  title: Stock is a quantity. A promise has a date.
+  context: A simplified exercise starts with 100 units on hand. Twenty are excluded from the exercise scope and fifty are already committed in the relevant window. A customer requests forty units.
+  scope: Synthetic arithmetic model, not the SAP ATP calculation. Actual scope, dates, receipts, demand and configuration must be checked in the system.
+  stages:
+    - {label: On hand, value: '100', note: Starting quantity}
+    - {label: In scope, value: '80', note: 100 minus 20 excluded}
+    - {label: After commitments, value: '30', note: 80 minus 50 committed}
+    - {label: Requested, value: '40', note: Customer demand}
+  gap: 'The simplified model is ten units short. It gives no delivery date and does not prove delivery readiness.'
+  question: What is missing before you can promise a date?
+  prompts:
+    - Explain why the stock screenshot is insufficient.
+    - Identify the date, scope and supply evidence you need.
+    - Separate confirmation from execution readiness.
+  review:
+    - title: State the limited conclusion.
+      text: Under the supplied assumptions, 30 units remain against demand of 40. State the ten-unit gap explicitly, then stop short of inventing a date or assuming the real system uses this subtraction.
+    - title: Rebuild the relevant time window.
+      text: Ask for the requested date, plant and stock scope, competing requirements and dated receipts. Compare the actual availability result and its inputs with these assumptions before suggesting a correction.
+    - title: Follow the promise into execution.
+      text: A confirmed quantity still requires execution checks. Identify which delivery, warehouse and transport conditions must hold and who owns them before communicating a customer commitment.
+  transfer: A receipt of ten units is expected tomorrow. Explain what must be true about its availability date and execution lead times before it can support the requested delivery date.
+- id: ai-usable-output
+  topic: AI evaluation
+  routes:
+    - /labs/ai-ready/evals-reliability/
+    - /labs/business-ai/implementation-readiness/
+    - /labs/business-ai/model-selection/
+  title: Completion is only the first gate.
+  context: One synthetic evaluation run contains 100 tasks. Sixty finish, thirty-five of those pass the stated acceptance checks, and thirty-two of the accepted results need no further correction.
+  scope: Synthetic nested populations from one run. An acceptance result is conditional on the test criteria; no benchmark or vendor comparison is implied.
+  stages:
+    - {label: Tasks, value: '100', note: Fixed evaluation set}
+    - {label: Completed, value: '60', note: Returned a result}
+    - {label: Accepted, value: '35', note: Passed the checks}
+    - {label: Usable, value: '32', note: No further correction}
+  gap: '32% of all tasks produced a usable result. Among completed tasks, 32/60 ≈ 53% were usable. These denominators answer different questions.'
+  question: Would you expand this pilot?
+  prompts:
+    - State the denominator for each success rate.
+    - Identify the missing cost and failure-severity evidence.
+    - Propose a next experiment with an exit criterion.
+  review:
+    - title: Keep throughput and quality separate.
+      text: Forty tasks did not complete. Twenty-five completed results did not pass acceptance. Three accepted results still needed correction. Investigate each group before changing the model or declaring the pilot successful.
+    - title: Measure the human work.
+      text: Record review and correction time alongside usable results, operating cost and the existing workflow baseline. Without human effort data, these counts cannot establish a capacity gain.
+    - title: Set a bounded next test.
+      text: Choose a failure class, change one intervention and rerun a comparable held-out set. Define the minimum usable-output rate, maximum intervention time and unacceptable failure types before examining the result.
+  transfer: A new run completes ninety tasks but still produces thirty-two usable results. Explain which metric improved and why the business case has not yet been established.
+- id: repeat-demand
+  mode: groups
+  topic: AMS diagnostics
+  routes:
+    - /labs/enterprise-context/integration-operations/
+  title: Count the repeat work. Then choose the intervention.
+  context: Forty synthetic incidents are assigned to mutually exclusive initial investigation groups. Twenty concern repeated process issues, twelve master-data errors and eight interface exceptions.
+  scope: Synthetic investigation groups, not confirmed causes. Counts alone do not represent severity, effort, business loss or automation value.
+  stages:
+    - {label: All incidents, value: '40', note: One observation window}
+    - {label: Process group, value: '20', note: 50% of the sample}
+    - {label: Data group, value: '12', note: 30% of the sample}
+    - {label: Interface group, value: '8', note: 20% of the sample}
+  gap: The largest group is an investigation starting point. One low-frequency failure may carry more business risk than twenty small repeat requests.
+  question: What would you fix first, and why?
+  prompts:
+    - Ask for effort, consequence and recurrence evidence.
+    - Separate a workaround from a change that removes repeat demand.
+    - Define the measure and review window for the intervention.
+  review:
+    - title: Check how the groups were assigned.
+      text: Review examples and classification rules before treating these groups as causes. A master-data symptom may originate in a process rule or ownership gap. Keep a primary group and record contributing factors separately.
+    - title: Compare consequence as well as frequency.
+      text: Add handling time, business impact, recurrence and recovery risk. Choose an intervention whose expected benefit and operational boundary can be explained from those observations.
+    - title: Prove demand changed.
+      text: Compare the selected failure pattern over an agreed period and normalise for workload where appropriate. Track recurrence, recovery effort and new side effects; faster ticket closure alone does not demonstrate prevention.
+  transfer: An automated workaround halves handling time but the incident count doubles. Explain what additional volume and impact evidence is needed before calling this an improvement.

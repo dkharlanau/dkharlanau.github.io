@@ -71,7 +71,7 @@ semantic_links:
       <a class="research-canvas__button" href="#business-ai-map">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <figure class="research-canvas__visual">
-      <img src="/assets/img/systems/ai-evidence-boundary-field.webp" alt="Documents, system events, structured records, and data entering an AI synthesis boundary, then separating into approved action and human-review routes with an audit trail." width="1728" height="1081" fetchpriority="high" decoding="async" />
+      <img src="/assets/img/systems/ai-evidence-boundary-journal.webp" alt="Documents, system events, structured records, and data entering an AI synthesis boundary, then separating into approved action and human-review routes with an audit trail." width="1728" height="1081" fetchpriority="high" decoding="async" />
       <figcaption>Evidence enters the model boundary. Only reviewed output becomes action.</figcaption>
     </figure>
     <div class="research-canvas__signal" aria-label="Business AI catalog status">
