@@ -4,7 +4,7 @@ layout: default
 title: "AI in Business for SAP Operations — Decision, Governance, and Delivery"
 description: "A practical AI-in-business cluster for SAP operations: choose valuable workflows, prepare knowledge, govern access, design human review, and measure pilots."
 permalink: /atlas/ai-operations/
-last_modified_at: 2026-08-11
+last_modified_at: 2026-09-12
 status: reviewed
 verified: true
 robots: index,follow
@@ -21,6 +21,7 @@ related:
   - /atlas/ai-operations/ai-agent-for-sap-support/
   - /atlas/ai-operations/ai-ready-process-documentation/
   - /atlas/ai-operations/authorization-aware-ai-for-sap/
+  - /atlas/ai-operations/prompts-agents-graphs/
   - /scenarios/ai-pilots-for-sap-support-fail-before-value/
 ---
 
@@ -82,6 +83,22 @@ related:
       <h2>AI Agent for SAP Support</h2>
       <p>Translate the controls into a retrieval, diagnosis, ticket-enrichment, escalation, and review architecture.</p>
       <span class="link-arrow">Design the delivery pattern</span>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Architecture deep dive · Review candidate</p>
+    <h2>What actually comes after prompts and agents?</h2>
+    <p>The deeper architecture is not a fashion sequence. This working cluster separates prompts, workflows, agent control loops, execution graphs, domain graphs, event provenance, state, and verified closed loops — then connects them through an illustrative SAP Business Partner case.</p>
+  </header>
+  <div class="atlas-card-grid atlas-card-grid--ai-business">
+    <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/">
+      <p class="eyebrow">Deep dive</p>
+      <h2>From Prompts to Operational Intelligence</h2>
+      <p>Understand which abstraction solves which problem, why “graph” means several different things, and when complexity is actually justified.</p>
+      <span class="link-arrow">Read the architecture cluster</span>
     </a>
   </div>
 </section>
