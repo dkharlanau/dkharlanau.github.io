@@ -57,6 +57,7 @@
   <section class="focus-section" aria-labelledby="focus-identity-title">
     <h2 id="focus-identity-title">Complex SAP work, made easier to reason about.</h2>
     <p>The site connects SAP operations, master data, integrations, logistics and practical AI around one question: what evidence is enough to make the next decision safely?</p>
+    <p>Created and maintained by <a href="{{ '/about/' | relative_url }}">Dzmitryi Kharlanau</a>, a Senior SAP Consultant working across SAP operations, master data, integration and practical AI.</p>
     <p><a href="{{ '/about/' | relative_url }}">Professional background</a> · <a href="{{ '/atlas/diagnostics/sap-incident-triage-diagnostics/' | relative_url }}">Incident triage reference</a></p>
   </section>
 
@@ -66,3 +67,29 @@
     <p><a href="{{ '/knowledge/' | relative_url }}">Knowledge library</a> · <a href="{{ '/labs/' | relative_url }}">All practice workspaces</a> · <a href="{{ '/frameworks/' | relative_url }}">Frameworks</a> · <a href="{{ '/machine/' | relative_url }}">Data and developer resources</a></p>
   </aside>
 </div>
+
+{% assign identity = site.data.identity %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": {{ identity.entity_id | jsonify }},
+  "name": {{ identity.name | jsonify }},
+  "alternateName": "dkharlanau",
+  "url": {{ identity.canonical_url | jsonify }},
+  "mainEntityOfPage": {{ identity.canonical_url | jsonify }},
+  "jobTitle": {{ identity.role.title | jsonify }},
+  "description": {{ identity.positioning | jsonify }},
+  "worksFor": {
+    "@type": "Organization",
+    "name": {{ identity.role.organization | jsonify }},
+    "url": {{ identity.role.organization_url | jsonify }}
+  },
+  "sameAs": [
+    {{ identity.profiles.linkedin | jsonify }},
+    {{ identity.profiles.github | jsonify }},
+    {{ identity.profiles.x | jsonify }}
+  ],
+  "knowsAbout": {{ identity.scope | jsonify }}
+}
+</script>
