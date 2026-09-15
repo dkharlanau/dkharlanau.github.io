@@ -55,7 +55,10 @@ def validate_templates() -> None:
 
 
 def eligible_blog_urls() -> set[str]:
-    pages, parse_errors = discover_pages(ROOT)
+    # ruby/setup-ruby materializes cached gems under vendor/bundle. Those gem
+    # fixtures are not repository content and must not participate in the
+    # site's publication model or front-matter health gate.
+    pages, parse_errors = discover_pages(ROOT, excluded_prefixes=("vendor",))
     if parse_errors:
         failed = ", ".join(item["path"] for item in parse_errors[:5])
         fail(f"front matter parse errors block feed validation: {failed}")
@@ -69,7 +72,7 @@ def eligible_blog_urls() -> set[str]:
 def validate_rss(site_dir: Path, trusted_blogs: set[str]) -> tuple[int, int]:
     root = read_xml(site_dir / "rss.xml")
     if root.tag != "rss" or root.attrib.get("version") != "2.0":
-        fail("_site/rss.xml is not RSS 2.0")
+        fail("rendered rss.xml is not RSS 2.0")
     channel = root.find("channel")
     if channel is None:
         fail("RSS channel is missing")
@@ -146,9 +149,9 @@ def validate_atom(site_dir: Path, trusted_blogs: set[str]) -> tuple[int, int]:
     blog_feed = read_xml(site_dir / "blog/feed.xml")
     expected_tag = f"{{{ATOM_NS}}}feed"
     if root_feed.tag != expected_tag:
-        fail("_site/feed.xml is not an Atom feed")
+        fail("rendered feed.xml is not an Atom feed")
     if blog_feed.tag != expected_tag:
-        fail("_site/blog/feed.xml is not an Atom feed")
+        fail("rendered blog/feed.xml is not an Atom feed")
     if not text(root_feed.find(f"{{{ATOM_NS}}}updated")):
         fail("primary Atom feed has no source-backed updated timestamp")
     if not text(blog_feed.find(f"{{{ATOM_NS}}}updated")):
