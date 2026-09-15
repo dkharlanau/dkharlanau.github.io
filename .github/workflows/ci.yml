@@ -217,8 +217,11 @@ jobs:
       - name: Install feed validator dependency
         run: python3 -m pip install pyyaml
 
-      - name: Build Jekyll site for subscription verification
-        run: bundle exec jekyll build --trace
+      - name: Stage focused subscription fixture
+        run: python3 scripts/stage_rss_ci_fixture.py
+
+      - name: Render feeds with Jekyll and real publication sources
+        run: bundle exec jekyll build --source .rss-ci-source --destination _rss_site --config _config.yml,.rss-ci-source/_config.rss-ci.yml --trace
 
       - name: Gate source-backed RSS and Atom feeds
-        run: python3 scripts/check_rss_feeds.py --site-dir _site
+        run: python3 scripts/check_rss_feeds.py --site-dir _rss_site
