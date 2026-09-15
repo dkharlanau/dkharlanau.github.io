@@ -201,7 +201,18 @@ function buildFailureSummary(result) {
 
 async function auditPage(page, viewport) {
   const audit = await page.evaluate(({ viewportWidth, viewportHeight }) => {
+    const hiddenByClosedDetails = (el) => {
+      let details = el.closest('details:not([open])');
+      while (details) {
+        const summary = [...details.children].find((child) => child.tagName === 'SUMMARY');
+        if (!summary || (el !== summary && !summary.contains(el))) return true;
+        details = details.parentElement?.closest('details:not([open])') || null;
+      }
+      return false;
+    };
+
     const isVisible = (el) => {
+      if (el.closest('[hidden]') || hiddenByClosedDetails(el)) return false;
       const style = window.getComputedStyle(el);
       const rect = el.getBoundingClientRect();
       return style.display !== 'none' && style.visibility !== 'hidden' && Number.parseFloat(style.opacity || '1') > 0.01 && rect.width > 1 && rect.height > 1;

@@ -1,0 +1,41 @@
+---
+layout: null
+permalink: /rss.xml
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.title | xml_escape }}</title>
+    <link>{{ '/' | absolute_url }}</link>
+    <description>{{ site.description | xml_escape }}</description>
+    <language>{{ site.lang | default: 'en' }}</language>
+    <atom:link href="{{ page.url | absolute_url }}" rel="self" type="application/rss+xml" />
+    <atom:link href="{{ '/feed.xml' | absolute_url }}" rel="alternate" type="application/atom+xml" />
+    {% assign publications = site.blog | where: 'verified', true | where: 'status', 'reviewed' %}
+    {% assign entries = publications | concat: site.data.changelog.entries | sort: 'date' | reverse %}
+    {% for entry in entries limit: 30 %}
+      {% if entry.collection == 'blog' %}
+        {% unless entry.robots contains 'noindex' %}
+          {% unless entry.sitemap == false %}
+    <item>
+      <title>{{ entry.title | xml_escape }}</title>
+      <link>{{ entry.url | absolute_url }}</link>
+      <guid isPermaLink="true">{{ entry.url | absolute_url }}</guid>
+      <pubDate>{{ entry.date | date_to_rfc822 }}</pubDate>
+      <description>{{ entry.description | default: entry.excerpt | strip_html | normalize_whitespace | xml_escape }}</description>
+    </item>
+          {% endunless %}
+        {% endunless %}
+      {% else %}
+    <item>
+      <title>{{ entry.title | xml_escape }}</title>
+      <link>{{ '/changelog/' | absolute_url }}</link>
+      <guid isPermaLink="false">tag:dkharlanau.github.io,{{ entry.date | date: '%Y-%m-%d' }}:changelog/{{ entry.title | slugify }}</guid>
+      <pubDate>{{ entry.date | date_to_rfc822 }}</pubDate>
+      <description>{{ entry.summary | xml_escape }}</description>
+    </item>
+      {% endif %}
+    {% endfor %}
+  </channel>
+</rss>
