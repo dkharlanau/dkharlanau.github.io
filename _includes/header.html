@@ -26,6 +26,7 @@
         <a href="{{ '/knowledge/' | relative_url }}" class="nav-link{% if knowledge_nav_active %} is-active{% endif %}"{% if page.url == '/knowledge/' %} aria-current="page"{% endif %}>Library</a>
         {% else %}
         <a href="/services/" class="nav-link nav-link--work{% if work_nav_active %} is-active{% endif %}"{% if page.url == '/services/' %} aria-current="page"{% endif %}>{{ portal_nav.work | default: 'Work' }}</a>
+        <a href="/labs/" class="nav-link{% if learn_nav_active %} is-active{% endif %}"{% if page.url == '/labs/' %} aria-current="page"{% endif %}>{{ portal_nav.prepare | default: portal_nav.labs | default: 'Learn & prepare' }}</a>
         <a href="/knowledge/" class="nav-link{% if knowledge_nav_active %} is-active{% endif %}"{% if page.url == '/knowledge/' %} aria-current="page"{% endif %}>{{ portal_nav.knowledge | default: 'Knowledge' }}</a>
         {% endif %}
         <a href="/about/" class="nav-link{% if profile_nav_active %} is-active{% endif %}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>{{ portal_nav.about | default: nav_ui.about | default: 'About' }}</a>
