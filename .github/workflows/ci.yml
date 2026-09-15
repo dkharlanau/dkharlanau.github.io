@@ -64,9 +64,6 @@ jobs:
       - name: Build Jekyll site
         run: bundle exec jekyll build --trace
 
-      - name: Gate source-backed RSS and Atom feeds
-        run: python3 scripts/check_rss_feeds.py --site-dir _site
-
       - name: Check rendered Markdown artifacts
         run: python3 scripts/check_rendered_markdown.py --site-dir _site --source-dir .
 
@@ -193,3 +190,35 @@ jobs:
           path: _site/
           if-no-files-found: error
           retention-days: 2
+
+  subscription-feeds:
+    name: Source-backed RSS and Atom gate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.4"
+          bundler-cache: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install feed validator dependency
+        run: python3 -m pip install pyyaml
+
+      - name: Build Jekyll site for subscription verification
+        run: bundle exec jekyll build --trace
+
+      - name: Gate source-backed RSS and Atom feeds
+        run: python3 scripts/check_rss_feeds.py --site-dir _site
