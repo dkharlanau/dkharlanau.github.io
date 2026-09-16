@@ -16,6 +16,14 @@ on:
           - all
           - priority
           - rotate
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/google-search.yml"
+      - "scripts/google_search_pipeline.py"
+      - "scripts/indexation_recovery_queue.py"
+      - "config/indexation-recovery.json"
   workflow_run:
     workflows:
       - CI
@@ -103,6 +111,12 @@ jobs:
               echo "cooldown=0" >> "$GITHUB_OUTPUT"
               echo "policy=daily rotating sweep" >> "$GITHUB_OUTPUT"
               ;;
+            push)
+              echo "max=60" >> "$GITHUB_OUTPUT"
+              echo "mode=priority" >> "$GITHUB_OUTPUT"
+              echo "cooldown=6" >> "$GITHUB_OUTPUT"
+              echo "policy=search infrastructure change validation" >> "$GITHUB_OUTPUT"
+              ;;
             workflow_run)
               echo "max=100" >> "$GITHUB_OUTPUT"
               echo "mode=priority" >> "$GITHUB_OUTPUT"
@@ -179,12 +193,25 @@ jobs:
 
           python scripts/google_search_pipeline.py "${args[@]}"
 
+      - name: Build indexation recovery queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/indexation_recovery_queue.py \
+            --report reports/seo/google-search/google-indexing.json \
+            --config config/indexation-recovery.json \
+            --output-dir reports/seo/google-search
+
       - name: Add report to workflow summary
         if: always()
         shell: bash
         run: |
           if [[ -f reports/seo/google-search/google-indexing.md ]]; then
             cat reports/seo/google-search/google-indexing.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [[ -f reports/seo/google-search/indexation-recovery.md ]]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat reports/seo/google-search/indexation-recovery.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload Google Search report
