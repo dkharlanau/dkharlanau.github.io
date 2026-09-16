@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "site_url": "https://dkharlanau.github.io",
+  "manual_request_limit": 25,
+  "candidate_statuses": [
+    "unknown",
+    "not_inspected",
+    "discovered_not_indexed",
+    "crawled_not_indexed",
+    "blocked",
+    "fetch_error",
+    "needs_review",
+    "inspection_error"
+  ],
+  "status_scores": {
+    "unknown": 600,
+    "not_inspected": 550,
+    "discovered_not_indexed": 500,
+    "crawled_not_indexed": 400,
+    "needs_review": 250,
+    "blocked": 100,
+    "fetch_error": 100,
+    "inspection_error": 50
+  },
+  "tier_scores": {
+    "P0": 300,
+    "P1": 200,
+    "P2": 100
+  },
+  "current_inspection_bonus": 20,
+  "prefix_rules": [
+    {"prefix": "/services/", "score": 90},
+    {"prefix": "/labs/interview-readiness/", "score": 90},
+    {"prefix": "/labs/enterprise-context/decisions/", "score": 85},
+    {"prefix": "/atlas/diagnostics/", "score": 80},
+    {"prefix": "/atlas/data-quality/", "score": 75},
+    {"prefix": "/notes/", "score": 40}
+  ],
+  "priority_routes": [
+    {"path": "/about/", "tier": "P0", "focus": "profile", "reason": "Primary professional entity and trust page."},
+    {"path": "/services/sap-ams-consulting/", "tier": "P0", "focus": "ams", "reason": "Primary commercial SAP AMS search route."},
+    {"path": "/services/sap-o2c-process-audit/", "tier": "P0", "focus": "ams", "reason": "Concrete commercial O2C diagnostic intent."},
+    {"path": "/services/sap-integration-architecture/", "tier": "P0", "focus": "integration", "reason": "Commercial integration architecture route."},
+    {"path": "/labs/interview-readiness/", "tier": "P0", "focus": "learning", "reason": "Indexable owner for SAP learning and assessment intent."},
+    {"path": "/labs/enterprise-context/decisions/", "tier": "P0", "focus": "learning", "reason": "Indexable decision-practice entry point."},
+    {"path": "/atlas/diagnostics/sap-business-partner-replication-diagnostics/", "tier": "P0", "focus": "mdg", "reason": "High-value BP/MDG replication problem intent."},
+    {"path": "/atlas/diagnostics/sap-customer-master-replication-diagnostics/", "tier": "P0", "focus": "mdg", "reason": "Customer master replication problem intent."},
+    {"path": "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/", "tier": "P0", "focus": "mdg", "reason": "CVI synchronization problem intent."},
+    {"path": "/atlas/diagnostics/sap-idoc-diagnostics/", "tier": "P0", "focus": "integration", "reason": "Broad SAP IDoc troubleshooting search intent."},
+    {"path": "/atlas/diagnostics/sap-idoc-status-diagnostics/", "tier": "P0", "focus": "integration", "reason": "Specific IDoc status troubleshooting intent."},
+    {"path": "/atlas/diagnostics/sap-qrfc-trfc-diagnostics/", "tier": "P0", "focus": "integration", "reason": "qRFC/tRFC queue troubleshooting intent."},
+    {"path": "/atlas/diagnostics/sap-interface-monitoring-diagnostics/", "tier": "P0", "focus": "integration", "reason": "Operational interface monitoring intent."},
+    {"path": "/atlas/data-quality/master-data-governance-failure-modes/", "tier": "P0", "focus": "mdg", "reason": "Master-data governance failure intent aligned with expertise."},
+    {"path": "/atlas/data-quality/sap-master-data-quality/", "tier": "P0", "focus": "mdg", "reason": "SAP master-data quality search intent."},
+    {"path": "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/", "tier": "P1", "focus": "integration", "reason": "ALE distribution model troubleshooting intent."},
+    {"path": "/atlas/diagnostics/sap-inbound-processing-diagnostics/", "tier": "P1", "focus": "integration", "reason": "Inbound processing troubleshooting intent."},
+    {"path": "/atlas/diagnostics/sap-outbound-processing-diagnostics/", "tier": "P1", "focus": "integration", "reason": "Outbound processing troubleshooting intent."},
+    {"path": "/atlas/diagnostics/sap-rfc-destination-diagnostics/", "tier": "P1", "focus": "integration", "reason": "RFC destination troubleshooting intent."},
+    {"path": "/atlas/diagnostics/sap-application-log-diagnostics/", "tier": "P1", "focus": "integration", "reason": "Application-log diagnostic intent."},
+    {"path": "/atlas/diagnostics/sap-vendor-master-replication-diagnostics/", "tier": "P1", "focus": "mdg", "reason": "Vendor master replication problem intent."},
+    {"path": "/atlas/diagnostics/sap-purchase-order-creation-diagnostics/", "tier": "P1", "focus": "procurement", "reason": "Purchase-order creation troubleshooting intent."},
+    {"path": "/atlas/diagnostics/sap-invoice-verification-diagnostics/", "tier": "P1", "focus": "procurement", "reason": "Invoice verification troubleshooting intent."},
+    {"path": "/atlas/diagnostics/sap-three-way-match-diagnostics/", "tier": "P1", "focus": "procurement", "reason": "Three-way-match problem intent."},
+    {"path": "/atlas/diagnostics/sap-goods-receipt-diagnostics/", "tier": "P1", "focus": "procurement", "reason": "Goods-receipt troubleshooting intent."},
+    {"path": "/notes/ams/", "tier": "P1", "focus": "ams", "reason": "Existing AMS page already crawled by Google."},
+    {"path": "/notes/process-audit/", "tier": "P1", "focus": "ams", "reason": "Existing process-audit page already crawled by Google."},
+    {"path": "/notes/composable-erp/", "tier": "P2", "focus": "architecture", "reason": "Existing architecture page already crawled by Google."}
+  ]
+}
