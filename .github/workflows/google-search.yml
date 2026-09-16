@@ -16,6 +16,14 @@ on:
           - all
           - priority
           - rotate
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/google-search.yml"
+      - "scripts/google_search_pipeline.py"
+      - "scripts/indexation_recovery_queue.py"
+      - "config/indexation-recovery.json"
   workflow_run:
     workflows:
       - CI
@@ -102,6 +110,12 @@ jobs:
               echo "mode=rotate" >> "$GITHUB_OUTPUT"
               echo "cooldown=0" >> "$GITHUB_OUTPUT"
               echo "policy=daily rotating sweep" >> "$GITHUB_OUTPUT"
+              ;;
+            push)
+              echo "max=60" >> "$GITHUB_OUTPUT"
+              echo "mode=priority" >> "$GITHUB_OUTPUT"
+              echo "cooldown=6" >> "$GITHUB_OUTPUT"
+              echo "policy=search infrastructure change validation" >> "$GITHUB_OUTPUT"
               ;;
             workflow_run)
               echo "max=100" >> "$GITHUB_OUTPUT"
