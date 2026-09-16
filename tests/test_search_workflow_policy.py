@@ -8,10 +8,20 @@ def test_google_search_workflow_uses_quota_safe_trigger_policies():
     text = (ROOT / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
     assert 'echo "max=120"' in text
     assert 'echo "max=100"' in text
+    assert 'echo "max=60"' in text
     assert 'echo "cooldown=6"' in text
     assert "--require-credentials" in text
     assert "--inspection-mode" in text
     assert "--min-inspection-interval-hours" in text
+
+
+def test_google_search_workflow_runs_after_search_infrastructure_changes():
+    text = (ROOT / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
+    assert "push:" in text
+    assert 'branches:\n      - main' in text
+    assert '"scripts/indexation_recovery_queue.py"' in text
+    assert '"config/indexation-recovery.json"' in text
+    assert "search infrastructure change validation" in text
 
 
 def test_google_search_workflow_fails_closed_without_credentials():
