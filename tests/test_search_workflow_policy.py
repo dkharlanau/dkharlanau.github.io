@@ -21,6 +21,14 @@ def test_google_search_workflow_fails_closed_without_credentials():
     assert "Production indexing checks cannot run" in text
 
 
+def test_google_search_workflow_builds_indexation_recovery_queue():
+    text = (ROOT / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
+    assert "Build indexation recovery queue" in text
+    assert "scripts/indexation_recovery_queue.py" in text
+    assert "config/indexation-recovery.json" in text
+    assert "indexation-recovery.md" in text
+
+
 def test_indexnow_production_waits_for_successful_ci_and_reuses_site_artifact():
     text = (ROOT / ".github/workflows/indexnow.yml").read_text(encoding="utf-8")
     assert "workflow_run:" in text
