@@ -3,6 +3,8 @@ layout: default
 title: SAP Incident Triage Diagnostics
 description: A practical first-pass method for turning vague SAP incidents into clear business impact, evidence, ownership, and next action.
 permalink: /atlas/diagnostics/sap-incident-triage-diagnostics/
+article_visual: incident-triage-evidence-path
+og_image: /assets/img/articles/incident-triage-evidence-matrix.webp
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: SAP AMS operations
@@ -57,6 +59,8 @@ sitemap: true
     <h2>Triage is a reduction exercise</h2>
     <p>A weak ticket says “SAP is slow”, “order not working”, or “interface failed”. A useful triage result is smaller and more concrete: one business outcome, one affected object or population, one time window, one known last-good step, and one owner for the next check.</p>
     <p>You do not need the root cause during triage. You need enough evidence to stop the ticket from bouncing between teams.</p>
+
+    {% include article-visual.html %}
 
     <h2>Capture six things before choosing the team</h2>
     <div class="decision-table"><table><thead><tr><th>Question</th><th>Why it matters</th></tr></thead><tbody>

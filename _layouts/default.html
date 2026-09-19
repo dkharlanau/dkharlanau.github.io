@@ -90,6 +90,9 @@
   {% if page.url contains '/labs/' %}
   <link rel="stylesheet" href="{{ '/assets/labs-technical-content.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   {% endif %}
+  {%- comment -%} This is deliberately the final visual layer. Route styles can
+  describe a subject, but the editorial system owns reading scale and chrome. {%- endcomment -%}
+  <link rel="stylesheet" href="{{ '/assets/editorial-system.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
 </head>
 
 {% assign is_home = false %}

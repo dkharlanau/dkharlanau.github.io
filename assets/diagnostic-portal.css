@@ -915,7 +915,10 @@ body.page-context--legal .page-content--knowledge > h1 {
 }
 body.page-context--legal .page-content--knowledge > h2::before { color: var(--portal-blue) !important; }
 
-@media (max-width: 800px) {
+/* The visual hub needs a real reading column before its diagram becomes too
+   narrow. At roughly tablet width, a clipped two-column composition is worse
+   than a deliberate one-column sequence. */
+@media (max-width: 900px) {
   body.site .research-canvas__hero { grid-template-columns: 1fr !important; min-height: 0 !important; gap: 36px !important; }
   .research-canvas__hero-copy, .research-canvas__hero > .research-canvas__signal { grid-column: auto; grid-row: auto; }
   html body.site :is(.research-canvas, .service-canvas, .profile-canvas, .dataset-canvas, .education-canvas, .search-canvas, .diagnostics-canvas, .ai-canvas, .scenario-canvas) h1,
@@ -1489,7 +1492,7 @@ html body.site .hub-canvas .research-canvas__hero h1 {
   .hub-canvas .research-canvas__hero > .research-canvas__signal { grid-column: 1 / span 7; }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   body.site .hub-canvas .research-canvas__hero {
     grid-template-columns: minmax(0, 1fr) !important;
     grid-template-rows: auto !important;
