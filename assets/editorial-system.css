@@ -1,0 +1,721 @@
+/* Editorial system ---------------------------------------------------------
+   The public site has many specialist routes. This late, shared layer keeps
+   their reader-facing decisions coherent: quiet hierarchy, measured measure,
+   and diagrams that explain rather than decorate. Route styles may add a
+   subject-specific visual, but they should not override this reading contract.
+*/
+
+:root {
+  --ed-paper: #fbfaf7;
+  --ed-surface: #ffffff;
+  --ed-ink: #18212d;
+  --ed-copy: #3c4754;
+  --ed-muted: #66717d;
+  --ed-line: #d9dee3;
+  --ed-line-strong: #aab4bf;
+  --ed-blue: #1858b8;
+  --ed-blue-strong: #12478f;
+  --ed-blue-wash: #edf4ff;
+  --ed-red: #c63540;
+  --ed-red-wash: #fff1f1;
+  --ed-serif: "Source Serif 4", Iowan Old Style, "Palatino Linotype", Palatino, Georgia, serif;
+  --ed-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ed-measure: 44rem;
+  --ed-wide: 76rem;
+  --ed-gutter: clamp(1.125rem, 3vw, 2.5rem);
+}
+
+html {
+  background: var(--ed-paper) !important;
+  /* Wide comparison tables keep their own horizontal scroller; they must never
+     turn the entire phone viewport into a sideways canvas. */
+  overflow-x: clip !important;
+}
+
+body.site {
+  background: var(--ed-paper) !important;
+  color: var(--ed-ink) !important;
+  font-family: var(--ed-sans) !important;
+}
+
+/* A practical, book-like hierarchy. The modest scale is intentional: the
+   topic should lead, not a display treatment. */
+body.site :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--ed-ink) !important;
+  font-family: var(--ed-sans) !important;
+  font-weight: 500 !important;
+  text-wrap: balance;
+}
+
+body.site h1 {
+  max-width: 22ch !important;
+  font-size: clamp(2.15rem, 3.35vw, 2.9rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -.045em !important;
+}
+
+body.site h2 {
+  max-width: 28ch;
+  font-size: clamp(1.5rem, 2vw, 2rem) !important;
+  line-height: 1.18 !important;
+  letter-spacing: -.032em !important;
+}
+
+body.site h3 {
+  font-size: clamp(1.16rem, 1.55vw, 1.38rem) !important;
+  line-height: 1.3 !important;
+  letter-spacing: -.018em !important;
+}
+
+/* Reading comes before visual density. Small labels may remain compact, but
+   explanatory prose, choices, and controls never fall below a book-like
+   reading scale. */
+:root { --ed-reading: clamp(1.06rem, .32vw + 1rem, 1.2rem); }
+
+html body.site .nav-link {
+  min-height: 2.75rem !important;
+  font-size: .9rem !important;
+  font-weight: 560 !important;
+}
+
+html body.site :is(.note-body, .atlas-page__body, .blog-content) table {
+  font-size: .98rem !important;
+  line-height: 1.58 !important;
+}
+
+html body.site .focus-card p,
+html body.site .research-canvas__hero-copy > p:not(.research-canvas__eyebrow),
+html body.site .research-canvas :is(.research-canvas__boundary p, .research-canvas__inventory > header > p, .research-canvas__method p),
+html body.site .research-route-list small,
+html body.site .service-canvas :is(.service-canvas__lede, .service-path > p, .service-rhythm li p, .ai-boundaries li p, .service-canvas__cta p, .ej-analysis__header > p, .ej-bars p),
+html body.site .service-canvas > p,
+html body.site .service-field-notes > div > a {
+  font-size: var(--ed-reading) !important;
+  line-height: 1.65 !important;
+}
+
+html body.site .service-route-chooser strong {
+  font-size: clamp(1.05rem, .5vw + .95rem, 1.18rem) !important;
+  font-weight: 560 !important;
+  line-height: 1.25 !important;
+}
+
+html body.site .service-route-chooser small,
+html body.site .service-canvas__button,
+html body.site .service-canvas__text-link,
+html body.site .service-field-notes > header > a,
+html body.site .research-canvas__button {
+  font-size: 1rem !important;
+  line-height: 1.45 !important;
+}
+
+html body.site .service-canvas :is(h2, h3) { font-weight: 500 !important; }
+
+/* A section has one job at a time. These rhythm rules keep panels, lists and
+   decisions from collapsing into a single text mass as route styles vary. */
+html body.site :is(.service-canvas, .research-canvas, .diagnostics-canvas, .dataset-canvas, .ai-canvas, .scenario-canvas, .profile-canvas) > section {
+  margin-block: clamp(3.5rem, 7vw, 6.5rem) !important;
+}
+
+html body.site :is(.service-canvas, .research-canvas, .diagnostics-canvas, .dataset-canvas, .ai-canvas, .scenario-canvas, .profile-canvas) > section > header > :is(h2, h3) {
+  margin-block: .7rem 1.1rem !important;
+}
+
+html body.site .ej-analysis {
+  margin-block: clamp(3.5rem, 7vw, 6.5rem) !important;
+  padding-inline: 0 !important;
+}
+
+html body.site .ej-analysis__header { padding: clamp(2.75rem, 5vw, 4.25rem) 0 1.5rem !important; }
+html body.site .ej-analysis__header h2 { margin-block: .75rem .7rem !important; }
+html body.site .ej-analysis > footer { padding-block: 2.25rem !important; }
+
+/* Older route files include some headline rules with extra page selectors.
+   Keep this final system layer more specific so a section cannot silently
+   return to billboard typography as its subject-specific CSS evolves. */
+html body.site .page-content h2 {
+  font-size: clamp(1.45rem, 2vw, 1.95rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.18 !important;
+}
+
+html body.site .focus-intro h1,
+html body.site .hub-canvas .research-canvas__hero h1,
+html body.site .atlas-hero--focus h1,
+html body.site .evidence-canvas__hero h1,
+html body.site .education-canvas .education-poster h1,
+html body.site .diagnostic-desk__hero h1,
+html body.site .signal-hero h1,
+html body.site .focus-hero__copy h1,
+html body.site .intent-brief__hero h1,
+html body.site .missing-route__copy h1,
+html body.site.page-context--service .note-header h1,
+html body.site.page-context--skill-hub .atlas-hero h1,
+html body.site.page-context--legal .page-content--knowledge > h1,
+html body.site.page-context--dataset .dataset-hero h1,
+html body.page-context--knowledge .atlas-page > .note-header h1 {
+  max-width: 20ch !important;
+  font-family: var(--ed-sans) !important;
+  font-size: clamp(2.1rem, 3.15vw, 2.8rem) !important;
+  font-weight: 500 !important;
+  letter-spacing: -.045em !important;
+  line-height: 1.1 !important;
+}
+
+body.site :is(p, li, td, dd) { color: var(--ed-copy) !important; }
+body.site :is(a) { color: var(--ed-blue) !important; }
+body.site :is(a:hover, a:focus-visible) {
+  color: var(--ed-blue-strong) !important;
+  text-decoration-color: currentColor !important;
+}
+
+/* Site chrome ------------------------------------------------------------- */
+.wrapper { width: min(100% - (var(--ed-gutter) * 2), var(--ed-wide)) !important; max-width: var(--ed-wide) !important; }
+
+.site-header,
+.site-header--scrolled,
+.site-header--menu-open {
+  background: color-mix(in srgb, var(--ed-paper) 93%, transparent) !important;
+  border-bottom: 1px solid var(--ed-line) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.site-header__inner { min-height: 4.1rem !important; }
+.site-brand__mark { width: 2rem !important; height: 2rem !important; }
+.nav-links { gap: .1rem !important; }
+
+.nav-link {
+  min-height: 2.5rem !important;
+  border: 0 !important;
+  border-radius: .3rem !important;
+  color: var(--ed-copy) !important;
+  font-size: .78rem !important;
+  font-weight: 560 !important;
+  letter-spacing: .01em;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible,
+.nav-link.is-active {
+  background: transparent !important;
+  color: var(--ed-blue) !important;
+  box-shadow: inset 0 -2px 0 var(--ed-blue) !important;
+}
+
+.home-language-switcher,
+.language-switcher__summary {
+  border-color: var(--ed-line) !important;
+  border-radius: .3rem !important;
+  background: var(--ed-surface) !important;
+}
+
+/* Home: two calm entry paths, then progressive disclosure. */
+.page-context--home .page-content--home,
+.page-context--home .page-content {
+  gap: clamp(3.5rem, 8vw, 7rem) !important;
+  padding-bottom: clamp(4rem, 8vw, 7rem) !important;
+}
+
+.page-context--home .personal-home { color: var(--ed-ink); }
+
+.page-context--home .personal-hero {
+  width: min(100% - (var(--ed-gutter) * 2), var(--ed-wide)) !important;
+  min-height: 0 !important;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem) !important;
+  gap: clamp(2rem, 7vw, 6rem) !important;
+  border-bottom: 1px solid var(--ed-line) !important;
+  padding: clamp(4.5rem, 10vw, 8rem) 0 clamp(3rem, 7vw, 5rem) !important;
+}
+
+.page-context--home .personal-hero::before,
+.page-context--home .personal-hero::after { display: none !important; }
+
+body.site .personal-hero h1 {
+  max-width: 15ch !important;
+  font-size: clamp(2.2rem, 3.8vw, 3.1rem) !important;
+  line-height: 1.07 !important;
+}
+
+/* The current home uses focus-* cards rather than the older personal-* set.
+   Give both entry routes the same semantic blue/red language. */
+html body.site .focus-intro h1 { max-width: 17ch !important; font-size: clamp(2rem, 3.1vw, 2.7rem) !important; }
+
+html body.site .focus-card {
+  border-color: var(--ed-line) !important;
+  border-radius: .45rem !important;
+  background: var(--ed-surface) !important;
+  box-shadow: none !important;
+}
+
+html body.site .focus-card.focus-card--learn { border-top-color: var(--ed-blue) !important; }
+html body.site .focus-card.focus-card--ams { border-top-color: var(--ed-red) !important; }
+html body.site .focus-card:hover { background: var(--ed-blue-wash) !important; }
+html body.site .focus-card :is(h2, h3) { color: var(--ed-ink) !important; }
+
+.personal-hero__lead,
+.personal-home__heading > p,
+.personal-start__card > small,
+.personal-map__list a > small,
+.personal-evidence__list a > small {
+  color: var(--ed-copy) !important;
+  font-size: clamp(1.02rem, 1.3vw, 1.16rem) !important;
+  line-height: 1.68 !important;
+}
+
+.personal-hero__identity,
+.personal-machine {
+  border-color: var(--ed-line) !important;
+  border-radius: .5rem !important;
+  background: var(--ed-surface) !important;
+  box-shadow: none !important;
+}
+
+.personal-hero__portrait { border-radius: .35rem !important; }
+.personal-hero__facts { border-color: var(--ed-line) !important; }
+.personal-hero__facts :is(dt, dd) { color: var(--ed-copy) !important; }
+
+.personal-home__section,
+.page-context--home .personal-home__section {
+  width: min(100% - (var(--ed-gutter) * 2), var(--ed-wide)) !important;
+  border-color: var(--ed-line) !important;
+}
+
+.personal-home__heading h2,
+.personal-close h2 { max-width: 18ch !important; }
+.personal-start__grid,
+.personal-machine__paths,
+.personal-map__list,
+.personal-evidence__list { border-color: var(--ed-line) !important; }
+
+.personal-start__card,
+.personal-machine__paths a,
+.personal-map__list a,
+.personal-evidence__list a {
+  border-color: var(--ed-line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.personal-start__card { border-top-color: var(--ed-blue) !important; }
+.personal-start__card:nth-child(2) { border-top-color: var(--ed-red) !important; }
+
+.personal-start__card:hover,
+.personal-map__list a:hover,
+.personal-evidence__list a:hover { background: var(--ed-blue-wash) !important; }
+
+.personal-start__card h3,
+.personal-machine__paths strong,
+.personal-map__list a > strong,
+.personal-evidence__list a > strong { color: var(--ed-ink) !important; }
+
+body.site .portal-primary-link,
+body.site .personal-home .portal-primary-link,
+body.site .personal-home__actions a:first-child {
+  border: 1px solid var(--ed-blue) !important;
+  border-radius: .3rem !important;
+  background: var(--ed-blue) !important;
+  color: #fff !important;
+  font-size: .8rem !important;
+  font-weight: 600 !important;
+  letter-spacing: .01em;
+}
+
+body.site .portal-primary-link:hover,
+body.site .personal-home .portal-primary-link:hover {
+  background: var(--ed-blue-strong) !important;
+  border-color: var(--ed-blue-strong) !important;
+}
+
+/* Hubs, collections and services use an editorial grid instead of campaign
+   panels. Red marks tensions; blue marks routes, actions, and evidence. */
+:is(.research-canvas, .service-canvas, .diagnostics-canvas, .search-canvas, .dataset-canvas, .ai-canvas, .scenario-canvas, .profile-canvas) {
+  color: var(--ed-ink) !important;
+  font-family: var(--ed-sans) !important;
+}
+
+body.site :is(.research-canvas__hero, .service-canvas__hero, .diagnostics-canvas__hero, .search-canvas__hero, .dataset-canvas__hero, .ai-canvas__hero, .scenario-canvas__hero, .profile-canvas__hero) {
+  min-height: 0 !important;
+  gap: clamp(1.5rem, 4vw, 4rem) !important;
+  border-color: var(--ed-line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding-block: clamp(3rem, 7vw, 6rem) !important;
+}
+
+body.site :is(.research-canvas, .service-canvas, .diagnostics-canvas, .search-canvas, .dataset-canvas, .ai-canvas, .scenario-canvas, .profile-canvas) h1 {
+  max-width: 19ch !important;
+  color: var(--ed-ink) !important;
+  font-size: clamp(2.15rem, 3.35vw, 3rem) !important;
+  line-height: 1.08 !important;
+}
+
+/* Some older canvas files use html/body-qualified title rules. Match their
+   specificity here so no route can reintroduce billboard headings. */
+html body.site :is(.research-canvas, .service-canvas, .diagnostics-canvas, .search-canvas, .dataset-canvas, .ai-canvas, .scenario-canvas, .profile-canvas) h1 {
+  color: var(--ed-ink) !important;
+  font-size: clamp(2.1rem, 3.15vw, 2.8rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.1 !important;
+}
+
+:is(.research-canvas__eyebrow, .service-canvas__eyebrow, .search-canvas__eyebrow, .diagnostics-canvas__eyebrow, .about-canvas__eyebrow) {
+  color: var(--ed-red) !important;
+  font-size: .69rem !important;
+  font-weight: 650 !important;
+  letter-spacing: .13em !important;
+}
+
+:is(.research-canvas__signal, .research-canvas__boundary, .service-route-chooser, .service-canvas__cta, .research-canvas__inventory, .research-canvas__method, .service-paths, .service-rhythm, .ai-boundaries, .service-field-notes) {
+  border-color: var(--ed-line) !important;
+  border-radius: .5rem !important;
+  background: var(--ed-surface) !important;
+  box-shadow: none !important;
+}
+
+.research-canvas__signal { border-top: 3px solid var(--ed-blue) !important; }
+.research-canvas__boundary { border-inline-start: 3px solid var(--ed-red) !important; }
+.research-canvas__signal-line strong { color: var(--ed-ink) !important; font-size: 1.12rem !important; font-weight: 570 !important; }
+
+:is(.research-route-list, .service-route-list, .diagnostics-route-list) a,
+.service-route-chooser a,
+.service-path {
+  border-color: var(--ed-line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:is(.research-route-list, .service-route-list, .diagnostics-route-list) a:hover,
+.service-route-chooser a:hover { background: var(--ed-blue-wash) !important; }
+
+:is(.research-route-list, .service-route-list, .diagnostics-route-list) :is(strong, span, i),
+.service-route-chooser :is(strong, span, i) { color: var(--ed-blue) !important; }
+
+html body.site .service-canvas__button,
+html body.site .service-canvas__button.service-canvas__button--primary {
+  border: 1px solid var(--ed-blue) !important;
+  border-radius: .3rem !important;
+  background: var(--ed-blue) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+html body.site .service-canvas__button:hover,
+html body.site .service-canvas__button:focus-visible {
+  border-color: var(--ed-blue-strong) !important;
+  background: var(--ed-blue-strong) !important;
+}
+
+/* Discovery actions are routes, so they use the same blue as every other
+   primary action. The older research canvas still supplied a lime button. */
+html body.site .research-canvas__button {
+  border: 1px solid var(--ed-blue) !important;
+  border-radius: .3rem !important;
+  background: var(--ed-blue) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+html body.site .research-canvas__button:hover,
+html body.site .research-canvas__button:focus-visible {
+  border-color: var(--ed-blue-strong) !important;
+  background: var(--ed-blue-strong) !important;
+  color: #fff !important;
+}
+
+.hub-canvas__visual,
+.service-canvas__visual,
+.research-canvas__visual,
+.search-canvas__visual {
+  border: 1px solid var(--ed-line) !important;
+  border-radius: .4rem !important;
+  box-shadow: none !important;
+  overflow: hidden;
+}
+
+:is(.hub-canvas__visual, .service-canvas__visual, .research-canvas__visual, .search-canvas__visual) figcaption {
+  border-top: 1px solid var(--ed-line) !important;
+  background: var(--ed-paper) !important;
+  color: var(--ed-muted) !important;
+  font-family: var(--ed-sans) !important;
+  font-size: .72rem !important;
+  line-height: 1.45 !important;
+}
+
+/* Long-form reading ------------------------------------------------------- */
+.note-detail,
+.atlas-page,
+.blog-detail,
+.page-content--knowledge .prose { color: var(--ed-ink) !important; }
+
+.note-article,
+.atlas-page .note-article { max-width: min(100%, 48rem) !important; }
+
+.note-header,
+.atlas-page__header,
+.blog-header {
+  border-color: var(--ed-line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding-block: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 3vw, 2.5rem) !important;
+}
+
+.note-header h1,
+.atlas-page h1,
+.blog-detail h1,
+.page-content--knowledge > article h1 {
+  max-width: 18ch !important;
+  color: var(--ed-ink) !important;
+  font-size: clamp(2.15rem, 3.6vw, 3rem) !important;
+  line-height: 1.08 !important;
+}
+
+.note-subtitle {
+  max-width: 42rem !important;
+  color: var(--ed-copy) !important;
+  font-family: var(--ed-serif) !important;
+  font-size: clamp(1.12rem, 1.6vw, 1.3rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+}
+
+.note-body,
+.atlas-page__body,
+.blog-content,
+.page-content--knowledge > :is(p, ul, ol, blockquote) {
+  max-width: var(--ed-measure) !important;
+  color: var(--ed-copy) !important;
+  font-family: var(--ed-serif) !important;
+  font-size: clamp(1.08rem, .42vw + .95rem, 1.22rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.72 !important;
+}
+
+body.site :is(.note-body, .atlas-page__body, .blog-content) :is(p, li, td, dd) {
+  color: var(--ed-copy) !important;
+  font-family: var(--ed-serif) !important;
+  line-height: inherit !important;
+}
+
+:is(.note-body, .atlas-page__body, .blog-content) > :is(h2, h3) {
+  max-width: 30rem;
+  margin-top: clamp(2.8rem, 6vw, 4.5rem) !important;
+  color: var(--ed-ink) !important;
+}
+
+:is(.note-body, .atlas-page__body, .blog-content) > h2::before {
+  display: block;
+  width: 2.25rem;
+  height: .18rem;
+  margin-bottom: .9rem;
+  background: var(--ed-red);
+  content: "";
+}
+
+:is(.note-body, .atlas-page__body, .blog-content) :is(ul, ol) { padding-inline-start: 1.25rem !important; }
+:is(.note-body, .atlas-page__body, .blog-content) li + li { margin-top: .5rem; }
+
+:is(.note-body, .atlas-page__body, .blog-content) blockquote {
+  margin: 2rem 0 !important;
+  border-inline-start: 3px solid var(--ed-red) !important;
+  background: var(--ed-red-wash) !important;
+  padding: 1rem 1.25rem !important;
+  color: var(--ed-copy) !important;
+}
+
+:is(.note-body, .atlas-page__body, .blog-content) table {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto;
+  border-collapse: collapse;
+  border-top: 2px solid var(--ed-ink) !important;
+  font-family: var(--ed-sans) !important;
+  font-size: .88rem !important;
+  line-height: 1.5 !important;
+}
+
+:is(.note-body, .atlas-page__body, .blog-content) :is(th, td) { border-color: var(--ed-line) !important; padding: .8rem .7rem !important; }
+:is(.note-body, .atlas-page__body, .blog-content) th { color: var(--ed-ink) !important; font-weight: 620 !important; }
+
+:is(.note-body, .atlas-page__body, .blog-content) :not(pre) > code {
+  border: 1px solid var(--ed-line) !important;
+  border-radius: .18rem !important;
+  background: var(--ed-blue-wash) !important;
+  color: var(--ed-ink) !important;
+  padding: .08em .28em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  font-size: .82em !important;
+}
+
+:is(.note-body, .atlas-page__body, .blog-content) pre {
+  border: 1px solid var(--ed-line) !important;
+  border-radius: .35rem !important;
+  background: #f3f5f7 !important;
+  box-shadow: none !important;
+}
+
+.article-visual {
+  width: min(100%, 48rem) !important;
+  margin: 1.6rem 0 2.6rem !important;
+  border-color: var(--ed-line) !important;
+}
+
+.article-visual img {
+  border: 1px solid var(--ed-line) !important;
+  border-radius: .35rem !important;
+}
+
+.article-visual figcaption {
+  max-width: 44rem;
+  color: var(--ed-muted) !important;
+  font-family: var(--ed-sans) !important;
+  font-size: .92rem !important;
+  line-height: 1.55 !important;
+}
+
+.breadcrumbs,
+.note-meta,
+.atlas-meta-panel { color: var(--ed-muted) !important; font-family: var(--ed-sans) !important; }
+.breadcrumbs a { color: var(--ed-muted) !important; font-weight: 500 !important; }
+.note-meta :is(dt, dd), .atlas-meta-panel :is(dt, dd) { color: var(--ed-muted) !important; font-size: .73rem !important; }
+
+.article-author,
+.article-provenance,
+.article-disclosure,
+.article-service-cta,
+.site-share,
+.trust-strip,
+.semantic-related {
+  border-color: var(--ed-line) !important;
+  border-radius: .45rem !important;
+  box-shadow: none !important;
+}
+
+.article-service-cta { background: var(--ed-ink) !important; }
+.article-service-cta :is(h2, h3, p, a) { color: #fff !important; }
+
+.site-footer {
+  border-top: 1px solid var(--ed-line) !important;
+  background: transparent !important;
+}
+
+@media (max-width: 760px) {
+  body.site h1,
+  body.site :is(.research-canvas, .service-canvas, .diagnostics-canvas, .search-canvas, .dataset-canvas, .ai-canvas, .scenario-canvas, .profile-canvas) h1,
+  .note-header h1,
+  .atlas-page h1,
+  .blog-detail h1 {
+    font-size: clamp(1.95rem, 8.2vw, 2.35rem) !important;
+    line-height: 1.1 !important;
+  }
+
+  html body.site :is(.note-header h1, .atlas-page h1, .blog-detail h1) {
+    font-size: clamp(1.9rem, 8vw, 2.2rem) !important;
+    font-weight: 500 !important;
+  }
+
+  html body.site .atlas-page > .note-header.note-header--visual h1 {
+    font-size: clamp(1.9rem, 8vw, 2.2rem) !important;
+    font-weight: 500 !important;
+  }
+
+  html body.site .focus-intro h1,
+  html body.site .hub-canvas .research-canvas__hero h1,
+  html body.site .atlas-hero--focus h1,
+  html body.site .evidence-canvas__hero h1,
+  html body.site .education-canvas .education-poster h1,
+  html body.site .diagnostic-desk__hero h1,
+  html body.site .signal-hero h1,
+  html body.site .focus-hero__copy h1,
+  html body.site .intent-brief__hero h1,
+  html body.site .missing-route__copy h1,
+  html body.site.page-context--service .note-header h1,
+  html body.site.page-context--skill-hub .atlas-hero h1,
+  html body.site.page-context--legal .page-content--knowledge > h1,
+  html body.site.page-context--dataset .dataset-hero h1,
+  html body.page-context--knowledge .atlas-page > .note-header h1 {
+    font-size: clamp(1.9rem, 8vw, 2.2rem) !important;
+    font-weight: 500 !important;
+    line-height: 1.12 !important;
+  }
+
+  .page-context--home .personal-hero {
+    grid-template-columns: 1fr !important;
+    padding-top: 3.25rem !important;
+  }
+
+  .personal-hero__identity { max-width: 28rem; }
+  .note-body,
+  .atlas-page__body,
+  .blog-content,
+  .page-content--knowledge > :is(p, ul, ol, blockquote) { font-size: 1.08rem !important; line-height: 1.7 !important; }
+
+  html body.site :is(.note-body, .atlas-page__body, .blog-content) table {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Route cards are read as choices on a phone, not as compact metadata. */
+  html body.site .service-canvas :is(.service-canvas__lede, .service-path > p, .service-rhythm li p, .ai-boundaries li p, .service-canvas__cta p, .ej-analysis__header > p, .ej-bars p),
+  html body.site .service-canvas > p,
+  html body.site .service-field-notes > div > a {
+    font-size: 1.08rem !important;
+    line-height: 1.68 !important;
+  }
+
+  html body.site .service-route-chooser a,
+  html body.site .service-path { min-height: 3.25rem !important; }
+
+  html body.site :is(.service-canvas, .research-canvas, .diagnostics-canvas, .dataset-canvas, .ai-canvas, .scenario-canvas, .profile-canvas) > section {
+    margin-block: 3.5rem !important;
+  }
+
+  /* Give each analytical row a stable reading column: number, title, then
+     explanation. It prevents the 01/Process/Data run-on shown in compact view. */
+  html body.site .ej-analysis__header { padding: 2.5rem 0 1.35rem !important; }
+  html body.site .ej-bars { padding-block: 1.35rem !important; }
+  html body.site .ej-bars ol { margin-top: 1.15rem !important; gap: .9rem !important; }
+  html body.site .ej-analysis__lenses { margin-top: .35rem !important; }
+  html body.site .ej-analysis__lenses li {
+    display: grid !important;
+    grid-template-columns: 2.1rem minmax(0, 1fr) !important;
+    column-gap: .7rem !important;
+    row-gap: .25rem !important;
+    padding: 1.25rem 0 !important;
+  }
+  html body.site .ej-analysis__lenses li > span {
+    grid-row: 1 / span 2;
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+  }
+  html body.site .ej-analysis__lenses li > strong {
+    font-size: 1.16rem !important;
+    line-height: 1.25 !important;
+  }
+  html body.site .ej-analysis__lenses li > p {
+    grid-column: 2;
+    margin: 0 !important;
+  }
+  html body.site .ej-analysis > footer {
+    gap: 1.25rem !important;
+    padding-block: 1.75rem !important;
+  }
+  html body.site .ej-analysis > footer > div {
+    border-inline-start: 0 !important;
+    border-top: 1px solid var(--ed-line) !important;
+    padding: 1.1rem 0 0 !important;
+  }
+
+  html body.site .service-route-chooser small,
+  html body.site .service-canvas__button,
+  html body.site .service-canvas__text-link,
+  html body.site .service-field-notes > header > a,
+  html body.site .research-canvas__button {
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+  }
+
+  :is(.research-canvas__hero, .service-canvas__hero, .diagnostics-canvas__hero, .search-canvas__hero, .dataset-canvas__hero, .ai-canvas__hero, .scenario-canvas__hero, .profile-canvas__hero) { padding-block: 2.8rem !important; }
+}

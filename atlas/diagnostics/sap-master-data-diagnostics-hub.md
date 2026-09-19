@@ -3,6 +3,8 @@ layout: default
 title: "SAP Master Data Diagnostics Hub"
 description: "A review-candidate hub mapping MDG, BP, CVI, key mapping, and replication symptoms to SAP master data checks."
 permalink: /atlas/diagnostics/sap-master-data-diagnostics-hub/
+article_visual: master-data-diagnostic-layers
+og_image: /assets/img/articles/master-data-diagnostic-layers-matrix.webp
 last_modified_at: 2026-08-30
 atlas_section: diagnostics
 domain: SAP AMS
@@ -67,6 +69,8 @@ sitemap: false
   <div class="note-body">
     <h2>Core idea</h2>
     <p>Master data incidents usually fall into three layers: governance (MDG change request, approval, activation), synchronization (CVI between BP and customer/vendor), and replication (distribution to downstream systems). Duplicates, key mapping failures, and lock contention can cut across these layers. This hub helps the responder decide which layer to investigate first.</p>
+
+    {% include article-visual.html %}
 
     <h2>Symptom-to-check matrix</h2>
     <table>

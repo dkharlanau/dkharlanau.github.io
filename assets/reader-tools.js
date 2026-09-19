@@ -273,6 +273,9 @@
   const addReaderVisual = (article) => {
     const header = article.querySelector(":scope > .note-header");
     if (!header || header.querySelector(":scope > .reader-visual")) return;
+    // A dedicated editorial matrix is deliberately large enough to be read.
+    // Do not also add the generic, icon-led header diagram on those pages.
+    if (article.querySelector(".article-visual")) return;
     const visual = readerVisualForPath(window.location.pathname);
     if (!visual) return;
 
