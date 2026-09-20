@@ -1,6 +1,7 @@
 {% assign visual = site.data.article_visuals[page.article_visual] %}
 {% if visual %}
-<figure class="article-visual" id="article-visual">
+<figure class="article-visual" id="article-visual" itemscope itemtype="https://schema.org/ImageObject">
+  <meta itemprop="creditText" content="{{ visual.credit | escape }}" />
   <a href="{{ visual.src | relative_url }}" aria-label="Open illustration at full size: {{ visual.title | escape }}">
     <picture>
       {% if visual.mobile_src %}<source media="(max-width: 48rem)" srcset="{{ visual.mobile_src | relative_url }}" />{% endif %}
