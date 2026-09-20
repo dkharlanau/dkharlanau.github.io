@@ -4,7 +4,7 @@
   <meta itemprop="creditText" content="{{ visual.credit | escape }}" />
   <a href="{{ visual.src | relative_url }}" aria-label="Open illustration at full size: {{ visual.title | escape }}">
     <picture>
-      {% if visual.mobile_src %}<source media="(max-width: 48rem)" srcset="{{ visual.mobile_src | relative_url }}" />{% endif %}
+      {% if visual.mobile_src %}<source media="(max-width: 48rem)" srcset="{{ visual.mobile_src | relative_url }}" width="{{ visual.mobile_width }}" height="{{ visual.mobile_height }}" />{% endif %}
       <img itemprop="contentUrl" src="{{ visual.src | relative_url }}" alt="{{ visual.alt | escape }}" width="{{ visual.width }}" height="{{ visual.height }}" loading="lazy" decoding="async" />
     </picture>
   </a>
