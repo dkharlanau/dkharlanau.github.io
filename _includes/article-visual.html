@@ -4,9 +4,9 @@
   <a href="{{ visual.src | relative_url }}" aria-label="Open illustration at full size: {{ visual.title | escape }}">
     <picture>
       {% if visual.mobile_src %}<source media="(max-width: 48rem)" srcset="{{ visual.mobile_src | relative_url }}" />{% endif %}
-      <img src="{{ visual.src | relative_url }}" alt="{{ visual.alt | escape }}" width="{{ visual.width }}" height="{{ visual.height }}" loading="lazy" decoding="async" />
+      <img itemprop="contentUrl" src="{{ visual.src | relative_url }}" alt="{{ visual.alt | escape }}" width="{{ visual.width }}" height="{{ visual.height }}" loading="lazy" decoding="async" />
     </picture>
   </a>
-  <figcaption>{{ visual.caption }}</figcaption>
+  <figcaption itemprop="caption">{{ visual.caption }}</figcaption>
 </figure>
 {% endif %}
