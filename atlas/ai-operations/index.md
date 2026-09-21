@@ -4,7 +4,7 @@ layout: default
 title: "AI in Business for SAP Operations — Decision, Governance, and Delivery"
 description: "A practical AI-in-business cluster for SAP operations: choose valuable workflows, prepare knowledge, govern access, design human review, and measure pilots."
 permalink: /atlas/ai-operations/
-last_modified_at: 2026-09-12
+last_modified_at: 2026-09-21
 status: reviewed
 verified: true
 robots: index,follow
@@ -22,6 +22,7 @@ related:
   - /atlas/ai-operations/ai-ready-process-documentation/
   - /atlas/ai-operations/authorization-aware-ai-for-sap/
   - /atlas/ai-operations/prompts-agents-graphs/
+  - /atlas/ai-operations/prompts-agents-graphs/system-one-models-jev/
   - /scenarios/ai-pilots-for-sap-support-fail-before-value/
 ---
 
@@ -89,9 +90,9 @@ related:
 
 <section class="section">
   <header class="section-heading">
-    <p class="eyebrow">Architecture deep dive · Review candidate</p>
+    <p class="eyebrow">Architecture deep dive · Emerging patterns</p>
     <h2>What actually comes after prompts and agents?</h2>
-    <p>The deeper architecture is not a fashion sequence. This working cluster separates prompts, workflows, agent control loops, execution graphs, domain graphs, event provenance, state, and verified closed loops — then connects them through an illustrative SAP Business Partner case.</p>
+    <p>The deeper architecture is not a fashion sequence. This cluster separates prompts, workflows, typed decision models, agent control loops, execution graphs, domain graphs, event provenance, state, and verified closed loops — then connects them to enterprise and SAP cases.</p>
   </header>
   <div class="atlas-card-grid atlas-card-grid--ai-business">
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/">
@@ -99,6 +100,12 @@ related:
       <h2>From Prompts to Operational Intelligence</h2>
       <p>Understand which abstraction solves which problem, why “graph” means several different things, and when complexity is actually justified.</p>
       <span class="link-arrow">Read the architecture cluster</span>
+    </a>
+    <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/system-one-models-jev/">
+      <p class="eyebrow">Emerging decision model</p>
+      <h2>Jev and System One Models</h2>
+      <p>Learn why a fast typed judgment can be a better enterprise primitive than a generative agent when the answer space is already known.</p>
+      <span class="link-arrow">Explore the Jev pattern</span>
     </a>
   </div>
 </section>
