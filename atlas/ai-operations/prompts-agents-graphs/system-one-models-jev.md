@@ -23,7 +23,6 @@ tags:
   - sap-ai
   - workflow-automation
 related:
-  - /atlas/ai-operations/prompts-agents-graphs/
   - /atlas/ai-operations/prompts-agents-graphs/architecture-selection-guide/
   - /atlas/automation/rule-based-automation-vs-ai/
   - /atlas/ai-operations/ai-agent-for-sap-support/
