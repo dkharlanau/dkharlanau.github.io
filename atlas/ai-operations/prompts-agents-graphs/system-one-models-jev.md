@@ -7,13 +7,13 @@ atlas_section: ai-operations
 domain: Enterprise AI architecture
 subdomain: Machine-native decision models
 concept_type: emerging architecture pattern
-status: reviewed
-verified: true
+status: needs_verification
+verified: false
 level: 1
 last_modified_at: 2026-09-21
 author: Dzmitryi Kharlanau
-robots: index,follow
-sitemap: true
+robots: noindex,follow
+sitemap: false
 tags:
   - jev
   - system-one-models
