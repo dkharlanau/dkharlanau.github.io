@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-21
 hide_global_cta: true
 tags:
   - sap
@@ -326,6 +326,17 @@ source_links:
       {% for item in language.memory_model %}
       <a href="#sources"><span>{{ forloop.index }}</span><strong>{{ item }}</strong><small>Use this sentence to explain one layer before moving to the next.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="business-partner-api" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Master-data API deep dive</p>
+      <h2>Business Partner API: the object graph behind customer and supplier integration.</h2>
+      <p>Before building a BP interface, understand the hierarchy: central Business Partner, customer and supplier views, then company code, sales area, and purchasing organization. The deep dive also covers CVI, deep create versus updates, recovery, and assessment questions.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/integrations/business-partner-api/"><span>BP</span><strong>SAP Business Partner API — Data Model, Segments, CVI and Integration Design</strong><small>Learn how <code>API_BUSINESS_PARTNER</code> maps to real FI, SD, and MM master-data segments and how to design writes, retries, and reconciliation without treating BP as one flat payload.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>
 
