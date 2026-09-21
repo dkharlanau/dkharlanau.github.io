@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Architecture Selection Guide: Prompt, Workflow, Agent, RAG, or Graph?"
-description: "A practical decision guide for choosing the smallest AI architecture that solves the real problem without unnecessary agents, graphs, or autonomy."
+title: "Architecture Selection Guide: Prompt, Workflow, Typed Decision, Agent, RAG, or Graph?"
+description: "A practical decision guide for choosing between rules, prompts, workflows, typed decision models, agents, RAG, and graphs without unnecessary complexity."
 permalink: /atlas/ai-operations/prompts-agents-graphs/architecture-selection-guide/
 atlas_section: ai-operations
 domain: Enterprise AI architecture
@@ -10,7 +10,7 @@ concept_type: decision guide
 status: needs_verification
 verified: false
 level: 1
-last_modified_at: 2026-09-12
+last_modified_at: 2026-09-21
 author: Dzmitryi Kharlanau
 robots: noindex,follow
 sitemap: false
@@ -20,8 +20,10 @@ tags:
   - rag
   - graphs
   - decision-framework
+  - typed-decisions
 related:
   - /atlas/ai-operations/prompts-agents-graphs/
+  - /atlas/ai-operations/prompts-agents-graphs/system-one-models-jev/
   - /atlas/automation/rule-based-automation-vs-ai/
   - /atlas/ai-operations/ai-agent-for-sap-support/
 ---
@@ -31,7 +33,7 @@ related:
 <article class="section note-detail atlas-page">
   <header class="note-header">
     <p class="eyebrow">Decision guide · Use the smallest sufficient architecture</p>
-    <h1>Prompt, workflow, agent, RAG, or graph?</h1>
+    <h1>Prompt, workflow, typed decision, agent, RAG, or graph?</h1>
     <p class="note-subtitle">A mature architecture does not contain the largest number of fashionable components. It contains the smallest set of components that can meet the outcome, evidence, control, and recovery requirements.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
@@ -55,6 +57,7 @@ related:
     <div class="decision-table"><table><thead><tr><th>If the problem is...</th><th>Start with...</th><th>Do not jump straight to...</th></tr></thead><tbody>
       <tr><td>One bounded transformation or explanation</td><td>Prompt + structured output + evaluation</td><td>Agent</td></tr>
       <tr><td>Known sequence of steps</td><td>Deterministic workflow</td><td>Multi-agent orchestration</td></tr>
+      <tr><td>Need fuzzy judgment among known outputs</td><td>Typed probabilistic decision model</td><td>Open-ended agent or generated prose</td></tr>
       <tr><td>Need current external facts or actions</td><td>Tools with narrow contracts</td><td>Longer prompt</td></tr>
       <tr><td>Need information from a document corpus</td><td>Retrieval / RAG</td><td>Knowledge graph by default</td></tr>
       <tr><td>Next step depends on observations and cannot be fully preplanned</td><td>Agent loop</td><td>Large fixed workflow pretending to cover every branch</td></tr>
@@ -77,6 +80,10 @@ related:
   → human review
   → publish</code></pre>
     <p>This is not less advanced than an agent. It is more appropriate when predictability is part of the requirement.</p>
+
+    <h2>Use a typed decision model when ambiguity is bounded</h2>
+    <p>Some steps are not deterministic, but the application already knows the possible answer types. Routing, classification, scoring, and yes/no judgments often fit here. A typed probabilistic model can make the fuzzy judgment while normal code keeps the workflow, thresholds, and hard constraints explicit.</p>
+    <p>This is the architectural idea behind TypeSafe AI's Jev and System One Models: unstructured state can be judged into predefined Choice, Score, or yes/no outputs with probabilities. It is not a replacement for an LLM that must explain or reason through an open problem. See <a href="/atlas/ai-operations/prompts-agents-graphs/system-one-models-jev/">Jev and System One Models</a> for the detailed pattern and its current early-access boundary.</p>
 
     <h2>Use tools when the model needs reality</h2>
     <p>Retrieval and tools are often the real upgrade people attribute to agents. If a model answers poorly because it lacks live order status, give it a read tool. If it cannot create a ticket, expose a narrow ticket-creation tool. If it needs authoritative policy, retrieve the policy.</p>
@@ -163,7 +170,7 @@ Observability + verification + evaluation</code></pre>
 
     <h2>One question to keep</h2>
     <blockquote>What is the smallest explicit model of reality and control that would let this system make a better decision than a prompt alone?</blockquote>
-    <p>If the answer is “none,” keep the prompt. If the answer is “it needs to inspect a tool and choose the next check,” add agency. If it needs to understand connected entities and reconstruct change, add the relevant graph. Architecture should follow the missing capability.</p>
+    <p>If the answer is “none,” keep the prompt. If the answer is bounded but fuzzy, consider a typed decision model. If it needs to inspect a tool and choose the next check, add agency. If it needs to understand connected entities and reconstruct change, add the relevant graph. Architecture should follow the missing capability.</p>
 
     <h2>Continue</h2>
     <p>Return to the <a href="/atlas/ai-operations/prompts-agents-graphs/">cluster map</a>, or connect these concepts to the existing <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a> architecture.</p>

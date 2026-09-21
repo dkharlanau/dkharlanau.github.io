@@ -10,7 +10,7 @@ concept_type: knowledge cluster
 status: needs_verification
 verified: false
 level: 1
-last_modified_at: 2026-09-12
+last_modified_at: 2026-09-21
 author: Dzmitryi Kharlanau
 robots: noindex,follow
 sitemap: false
@@ -20,11 +20,14 @@ tags:
   - workflow-graphs
   - knowledge-graphs
   - operational-intelligence
+  - decision-intelligence
+  - system-one-models
   - sap
 related:
   - /atlas/ai-operations/ai-agent-for-sap-support/
   - /atlas/ai-operations/authorization-aware-ai-for-sap/
   - /atlas/ai-operations/ai-ready-process-documentation/
+  - /atlas/ai-operations/prompts-agents-graphs/system-one-models-jev/
   - /atlas/automation/operational-memory-for-sap-ams/
 ---
 
@@ -51,6 +54,8 @@ related:
   ↓ gives one model call a useful contract
 Workflow
   ↓ coordinates several known steps
+Typed decision model
+  ↓ makes bounded judgments with probabilities
 Agent
   ↓ chooses steps from feedback and tools
 State
@@ -81,7 +86,7 @@ Verified closed loop
 <section class="section">
   <header class="section-heading">
     <p class="eyebrow">Reading path</p>
-    <h2>Eight questions, in the order they become useful</h2>
+    <h2>Nine questions, in the order they become useful</h2>
   </header>
   <div class="atlas-card-grid atlas-card-grid--ai-business">
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/prompts-to-systems/">
@@ -90,44 +95,50 @@ Verified closed loop
       <p>What becomes commodity, what remains valuable, and where durable system advantage moves.</p>
       <span class="link-arrow">Start with the mental model</span>
     </a>
+    <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/system-one-models-jev/">
+      <p class="eyebrow">2 · Decisions</p>
+      <h2>Jev and System One Models</h2>
+      <p>Where fast typed probabilistic judgments fit between hard-coded rules and open-ended LLM or agent reasoning.</p>
+      <span class="link-arrow">Understand the decision layer</span>
+    </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/agents-and-control-loops/">
-      <p class="eyebrow">2 · Agency</p>
+      <p class="eyebrow">3 · Agency</p>
       <h2>Agents are feedback loops, not digital employees</h2>
       <p>Tools, observations, stopping conditions, autonomy boundaries, and why “multi-agent” is often premature.</p>
       <span class="link-arrow">Understand agency</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/three-graphs/">
-      <p class="eyebrow">3 · Graphs</p>
+      <p class="eyebrow">4 · Graphs</p>
       <h2>Three graphs people keep mixing together</h2>
       <p>Execution graphs, domain knowledge graphs, and event/provenance graphs — with different nodes, edges, and jobs.</p>
       <span class="link-arrow">Separate the graph types</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/state-memory-provenance/">
-      <p class="eyebrow">4 · Continuity</p>
+      <p class="eyebrow">5 · Continuity</p>
       <h2>State, memory, and provenance</h2>
       <p>Why dumping chat history into context is not memory, and why enterprise systems need temporal truth.</p>
       <span class="link-arrow">Model continuity</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/closed-loop-enterprise-ai/">
-      <p class="eyebrow">5 · Control</p>
+      <p class="eyebrow">6 · Control</p>
       <h2>The verified closed loop</h2>
       <p>Observe, diagnose, plan, act, verify, update — and why the verification step changes the architecture.</p>
       <span class="link-arrow">Close the loop</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/sap-business-partner-change-case/">
-      <p class="eyebrow">6 · SAP case</p>
+      <p class="eyebrow">7 · SAP case</p>
       <h2>A Business Partner change as a graph</h2>
       <p>An illustrative MDG → replication → S/4 → reconciliation chain and the questions an agent can answer from it.</p>
       <span class="link-arrow">Trace a concrete case</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/architecture-selection-guide/">
-      <p class="eyebrow">7 · Decisions</p>
+      <p class="eyebrow">8 · Architecture choice</p>
       <h2>When not to use an agent or a graph</h2>
       <p>A practical selection guide for prompts, rules, workflows, agents, retrieval, state, and graph models.</p>
       <span class="link-arrow">Choose the smallest architecture</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/ai-agent-for-sap-support/">
-      <p class="eyebrow">8 · Existing Atlas</p>
+      <p class="eyebrow">9 · Existing Atlas</p>
       <h2>AI Agent for SAP Support</h2>
       <p>Connect the architecture to evidence, authorization, review, and narrow action boundaries in SAP support.</p>
       <span class="link-arrow">Apply it to operations</span>
