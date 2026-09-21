@@ -26,7 +26,7 @@ structured_data:
   type: TechArticle
 primary_topic: "sap-business-partner-api"
 semantic_links:
-  - type: "parent"
+  - type: "related_topic"
     title: "SAP Integration Architecture"
     url: "/labs/enterprise-context/integrations/"
   - type: "related_topic"
@@ -127,6 +127,37 @@ source_links:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
     <p><strong>Memory shortcut:</strong> BP = identity. Customer/Supplier = commercial role. Company Code = accounting. Sales Area = selling. Purchasing Organization = buying.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="keys" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Keys and record identity</p>
+      <h2>Organizational segments are separate records with separate keys.</h2>
+      <p>This matters for reads, PATCH requests, duplicate prevention, and troubleshooting. Saying “update the customer” is usually too vague.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Customer company</h3><p><strong>Customer + Company Code.</strong> The same customer can have several FI-AR company-code records with different accounting settings.</p></div>
+      <div><h3>Customer sales area</h3><p><strong>Customer + Sales Organization + Distribution Channel + Division.</strong> This combination identifies the SD context.</p></div>
+      <div><h3>Supplier company</h3><p><strong>Supplier + Company Code.</strong> FI-AP behavior is company-code-dependent.</p></div>
+      <div><h3>Supplier purchasing org</h3><p><strong>Supplier + Purchasing Organization.</strong> Procurement behavior can differ by purchasing organization.</p></div>
+      <div><h3>Role and classification records</h3><p>Roles, tax numbers, identifications, industries, and similar children use their own keys. Treat them as records with lifecycle, not repeatable fields on one flat object.</p></div>
+      <div><h3>Address children</h3><p>Address, usage, and communication records have their own identifiers. Updates must target the intended child instead of assuming “the address” is a single value.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="specialized-entities" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Beyond the logistics core</p>
+      <h2>The API is wider than SD and MM.</h2>
+      <p>The service also exposes specialized entity families. A Lead should recognize that they exist, but should not force them into every integration scope.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Credit and rating</h3><p>Credit-worthiness and rating entities exist around the BP root. Their relevance depends on the solution and business process.</p></div>
+      <div><h3>Financial-services data</h3><p>The service includes financial-services extensions, reporting, and fiscal-year information. These are specialized views, not mandatory “BP basics”.</p></div>
+      <div><h3>Data-controller information</h3><p>Data-controller entities support privacy-related master data scenarios. Include them only when the business and legal design requires them.</p></div>
+      <div><h3>Payment and other extensions</h3><p>Some releases expose additional payment, address-independent communication, employment, and related entities. Verify the exact release contract before implementation.</p></div>
+    </div>
+    <p class="ecg-caption"><strong>Scope rule:</strong> separate “available in the service” from “required by my process”. A smaller, owned contract is easier to secure, test, retry, and operate.</p>
   </section>
 
   <section class="research-canvas__inventory" id="roles" data-reveal>
