@@ -196,7 +196,8 @@
   <script>
     /* A few legacy tools declare route CSS inside their page body. Moving the
        canonical theme link here keeps the visual system last in the cascade. */
-    document.body.append(document.querySelector('link[href*="evidence-journal.css"]'));
+    var routeTheme = document.querySelector('link[href*="evidence-journal.css"]');
+    if (routeTheme) document.body.append(routeTheme);
   </script>
 </body>
 
