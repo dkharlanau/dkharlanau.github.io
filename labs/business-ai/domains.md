@@ -7,7 +7,8 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-22
+last_reviewed: 2026-09-22
 hide_global_cta: true
 tags:
   - business-ai
@@ -31,32 +32,33 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Business AI / enterprise domain view</p>
-      <h1>Map the process first.<br />Then choose the technology.</h1>
-      <p>Business AI crosses the whole company: sales, procurement, planning, logistics, manufacturing, finance, HR, service, IT, legal, data, and knowledge work. Each domain starts from a business job and control boundary, not from one vendor platform.</p>
+      <h1>Start with the work.<br />Then place AI inside it.</h1>
+      <p>Sales, procurement, planning, logistics, manufacturing, finance, HR, service, IT, legal, data, and knowledge work do not need AI for the same reason. We use the domain view to keep the business job, system context, and ownership visible before choosing a model, agent, or platform.</p>
       <a class="research-canvas__button" href="#domain-list">Open the domain map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Enterprise view</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ domain_map.domains | size }}</strong><small>Business domains</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_cases | size }}</strong><small>Evidence cases</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>5</strong><small>Control questions per domain</small></div>
-      <em>SAP is one important system landscape. It is not the definition of Business AI.</em>
+      <div class="research-canvas__signal-line"><span>03</span><strong>5</strong><small>Questions per domain</small></div>
+      <em>SAP may be central to the landscape, but the business domain is wider than one application.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Context:</strong> this view supports enterprise architecture and Lead assessment. It connects business jobs to system touchpoints, AI technology families, control questions, and evidence-backed cases.</p>
-    <p><strong>Lead rule:</strong> start with process ownership, data, system of record, decision rights, and KPI. AI enters only where uncertainty, documents, language, prediction, ranking, optimization, or adaptive orchestration create a real gap.</p>
-    <p><strong>Control rule.</strong> Keep authorization, exact calculations, hard constraints, accounting controls, master identity, and physical safety outside free-form model behavior.</p>
+    <div>
+      <p><strong>A domain gives us the business context in which an AI idea has to survive.</strong> The same technical capability can be useful in one process and inappropriate in another because the data, authority, timing, and consequence of an error are different.</p>
+      <p>That is why the map keeps process ownership, enterprise systems, data, decisions, and controls next to the AI opportunity. Exact calculations, authorizations, accounting controls, master identity, and safety constraints still belong to the systems and rules that are designed to own them.</p>
+    </div>
     <a href="/labs/business-ai/technologies/">Open the technology landscape <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="domain-list" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Domain index</p>
-      <h2>{{ domain_map.domains | size }} enterprise domains.</h2>
-      <p>The method stays stable across domains: business job → data and systems → decision → action → controls → evidence.</p>
+      <h2>{{ domain_map.domains | size }} views of enterprise work.</h2>
+      <p>Across all of them we ask the same basic question: what job is being done, which data and systems carry the business truth, where judgment or uncertainty appears, and what evidence would show that an AI-assisted version is actually better.</p>
     </header>
     <div class="research-route-list">
       {% for domain in domain_map.domains %}
@@ -76,7 +78,7 @@ tags:
       <a href="#{{ domain.id }}"><span>SYS</span><strong>Enterprise system touchpoints</strong><small>{{ domain.system_touchpoints | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/business-ai/technologies/"><span>TECH</span><strong>Useful technology families</strong><small>{{ domain.technology_families | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
       {% for question in domain.lead_questions %}
-      <a href="#{{ domain.id }}"><span>?</span><strong>Architecture question {{ forloop.index }}</strong><small>{{ question }}</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
+      <a href="#{{ domain.id }}"><span>?</span><strong>Question {{ forloop.index }}</strong><small>{{ question }}</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
       {% endfor %}
       {% if domain.case_ids.size > 0 %}
         {% for case_id in domain.case_ids %}
@@ -87,18 +89,18 @@ tags:
           {% endfor %}
         {% endfor %}
       {% else %}
-      <a href="#{{ domain.id }}"><span>GAP</span><strong>Evidence gap</strong><small>No case is linked yet. The domain stays in the model so research gaps remain visible instead of disappearing from the map.</small><i class="material-symbols-outlined" aria-hidden="true">search</i></a>
+      <a href="#{{ domain.id }}"><span>GAP</span><strong>Evidence gap</strong><small>No case is linked yet. We keep the domain in the model so the research gap remains visible instead of disappearing from the map.</small><i class="material-symbols-outlined" aria-hidden="true">search</i></a>
       {% endif %}
     </div>
   </section>
   {% endfor %}
 
   <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Assessment answer shape</p><h2>Answer from business control to technology.</h2></div>
+    <div><p class="research-canvas__eyebrow">How to read the map</p><h2>Move from business context toward technology, not the other way around.</h2></div>
     <ol>
-      <li><span>01</span><strong>Business outcome</strong><p>Name the process problem and KPI before naming a model or platform.</p></li>
-      <li><span>02</span><strong>Ownership and boundary</strong><p>Explain the system of record, data ownership, deterministic rules, authorization, human approval, and failure path.</p></li>
-      <li><span>03</span><strong>Technology choice</strong><p>Choose extraction, retrieval, prediction, optimization, workflow, agents, RPA, or no AI based on the actual uncertain part of the job.</p></li>
+      <li><span>01</span><strong>Understand the business job</strong><p>Start with the process outcome and the information people or systems need to reach it.</p></li>
+      <li><span>02</span><strong>Locate the business truth</strong><p>Identify the systems, data owners, rules, and approval boundaries that already decide what is valid.</p></li>
+      <li><span>03</span><strong>Place AI in the uncertain part</strong><p>Extraction, retrieval, prediction, optimization, or agentic orchestration only make sense where they solve a real gap without replacing controls that should stay deterministic.</p></li>
     </ol>
   </section>
 
