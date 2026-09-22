@@ -29,6 +29,14 @@
   color: var(--rc-ink);
 }
 
+/* Grid and flex children default to min-width:auto, which lets wide tables
+   and interactive diagrams stretch the page. Allow them to shrink so their
+   own scroll regions contain the width. */
+.research-canvas > *,
+.research-canvas :is(section, article, header, nav, div, ul, ol, dl, table) {
+  min-width: 0;
+}
+
 .research-canvas :is(h1, h2, h3, p) { color: inherit; }
 .research-canvas :is(h1, h2, h3) { text-wrap: balance; }
 
