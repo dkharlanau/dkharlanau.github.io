@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "AI Ready — Evals and Reliability"
-description: "A practical guide to golden datasets, deterministic and model graders, retrieval evals, regression gates, traces, latency, and cost."
+description: "A practical guide to evaluation datasets, deterministic and model graders, retrieval evals, regression gates, revalidation, traces, latency, and cost."
 permalink: /labs/ai-ready/evals-reliability/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-12
+last_modified_at: 2026-09-22
 career_impact: mapped
 career_skills: [ai-evaluation, ai-readiness]
 hide_global_cta: true
@@ -20,193 +20,128 @@ tags: [ai, evals, testing, reliability, observability]
 
 # Evals and Reliability
 
-An AI change is not better because one answer looks better in chat. Prompts, models, retrieval, tool schemas, and agent logic need regression tests. Evals turn “I think this is better” into evidence.
+An AI change is not better because one answer looks better in chat. A new prompt, model, retrieval strategy, tool schema, or agent loop can improve one example and quietly damage another. Evals give us a repeatable way to decide whether behavior actually improved.
 
-## Problem
+The useful idea is simple: define what good looks like, run representative cases, measure the parts that matter, and keep important failures as regression tests.
 
-AI systems can regress silently when prompts, models, retrieval, tools, or policies change without repeatable tests.
+## Start with cases, not with a score
 
-## Build the dataset before tuning the system
+A small evaluation set is useful long before it becomes a benchmark. The first version should represent the work the system is expected to handle: ordinary cases, difficult cases, ambiguity, missing evidence, permission failures, stale data, unsafe requests, and tool failures.
 
-Keep a small golden set early. It should contain real decision shapes, not only friendly examples.
+Real incidents are particularly valuable. When a system fails in testing or production, that case tells us something the original dataset missed. Once fixed, it can become part of the regression set.
 
-Include:
+The goal is coverage of **decisions and failure conditions**, not a large number of nearly identical prompts. Twenty well-chosen cases can teach us more than hundreds of easy variations.
 
-- common easy cases;
-- hard cases;
-- ambiguous cases;
-- no-answer cases;
-- permission failures;
-- stale or conflicting data;
-- unsafe requests;
-- tool failures;
-- cases that broke in production or testing.
+## Measure the layer that can fail
 
-Choose cases by the decisions and failure conditions they cover. Report coverage by case type so a large set of similar happy-path questions cannot hide an untested permission boundary or recovery path.
+A final answer combines several components. If we reduce everything to one score, we lose the reason for the result.
 
-## Read the denominator before the score
-
-In the worked exercise below, 100 tasks lead to 60 completed, 35 accepted and 32 usable results. Completion is 60/100; usable output is 32/100. The 32/60 ratio describes usable output among completed tasks and must not be presented as overall success.
-
-Before comparing two runs, keep the evaluation population, acceptance criteria and observation window comparable. Record review time and correction time separately. The same usable-output count with twice the human effort is a different operating result.
-
-<p><a href="#study-case-title">Try the visual evaluation case →</a></p>
-
-## Separate what you measure
-
-| Layer | Example metric |
+| Layer | What we may evaluate |
 |---|---|
-| Classification | correct route / intent |
-| Retrieval | expected source in top K |
-| Grounding | claims supported by evidence |
-| Tool use | correct tool and arguments |
-| Safety | forbidden action not executed |
-| Agent loop | correct stop reason, no repeated calls |
-| Output | schema validity, required fields |
-| Operations | latency, cost, error rate |
+| Classification | correct route or intent |
+| Retrieval | expected evidence appears in the results |
+| Grounding | important claims are supported by retrieved evidence |
+| Tool use | correct tool, arguments, and authorization path |
+| Safety | forbidden action is not executed |
+| Agent loop | useful trajectory and correct stop reason |
+| Output | schema validity and required fields |
+| Operations | latency, cost, error rate, step count |
 
-A good final answer can hide bad retrieval, and weak prose can hide a correct tool result. Measure layers separately.
+A fluent answer can hide weak retrieval. A correct tool result can be wrapped in poor prose. An agent can reach a correct conclusion after ten unnecessary calls. These are different problems and should be visible as different measurements.
 
-## Use deterministic graders first
+## Use deterministic checks whenever the rule is exact
 
-If code can check the requirement, use code.
+If software can check a requirement directly, let software check it.
 
-Good deterministic checks:
+Schema validity, expected identifiers, required source IDs, forbidden tool calls, maximum step count, exact error states, and latency budgets are good examples. These checks are cheap, repeatable, and easy to explain when they fail.
 
-- JSON schema valid;
-- expected ID matches;
-- required source ID present;
-- forbidden tool not called;
-- maximum step count respected;
-- expected error state returned;
-- latency below budget.
+Model graders are useful for qualities that resist exact rules: whether an explanation covers the important evidence, whether a summary preserves the main limitation, or whether two pieces of prose express the same conclusion. Their criteria should still be narrow. A grader is another model-based component, so it needs its own validation and spot checks.
 
-Use a model grader for qualities that are hard to express as exact rules, such as explanation completeness or whether a summary preserves important evidence. Keep model-grader criteria narrow and test the grader itself.
+## Retrieval should be evaluated before generation
 
-## Retrieval evals
-
-Test retrieval before generation:
+When the system uses RAG, first ask whether it retrieved the right evidence.
 
 ```text
-question -> expected source IDs -> retrieval -> ranking check
+question -> expected source IDs -> retrieval -> ranking / coverage check
 ```
 
-Useful measures include recall at K, ranking position, permission correctness, stale-version rejection, and no-result behavior.
-
-Then test grounded generation:
+Only then evaluate what the model did with the evidence:
 
 ```text
-retrieved evidence -> answer -> claim/support check
+retrieved evidence -> answer -> claim / support check
 ```
 
-## Tool and agent evals
+This separation makes diagnosis faster. If the correct document never entered the context, rewriting the generation prompt may not solve the real problem.
 
-For tools, check selection, arguments, authorization path, output validation, and retries.
+Retrieval evaluation can also cover permission correctness, stale-version rejection, ranking quality, and the behavior when no adequate source exists.
 
-For agents, also check the trajectory:
+## Agent evaluation includes the path
 
-- Did it choose a useful first read?
-- Did it repeat equivalent calls?
-- Did it stop when evidence was enough?
-- Did it escalate when evidence was weak?
-- Did it request approval before a risky write?
+For an agent, the final answer is only one part of the behavior. We also care about the trajectory.
 
-The final sentence is only one part of agent quality.
+Did it choose a useful first read? Did it repeat equivalent calls? Did it stop after the evidence became sufficient? Did it escalate when uncertainty remained? Did it respect the tool boundary and request approval before a risky write?
 
-## Regression gate
+This is where traces become part of the evaluation dataset. They show not only what the agent concluded, but how it reached that conclusion.
 
-A practical release rule can be simple:
+## Read the denominator before the percentage
+
+Evaluation results are easy to make impressive by changing the denominator.
+
+Suppose 100 tasks are offered, 60 are completed, 35 are accepted by a reviewer, and 32 are usable without further correction. We can describe completion as `60/100` and usable output as `32/100`. The ratio `32/60` answers a different question: usable output among completed tasks.
+
+Both numbers can be valid. They are not interchangeable.
+
+The same principle applies when comparing two runs. Keep the evaluation population, success criteria, observation window, and review effort comparable. If the same number of outputs becomes usable but human correction time doubles, the operating result changed even if a headline pass rate did not.
+
+## Release gates should reflect risk
+
+Not every metric needs a hard threshold, but some failures should block a release.
+
+A team might decide that safety-critical cases and required schemas must have zero regressions, while retrieval, latency, and cost have agreed operating ranges. The exact thresholds depend on the application. The important point is that they are decided before the release result is known.
+
+One global score is rarely enough. A high average can hide a single permission failure or destructive tool call.
+
+## Revalidate the original evidence after a fix
+
+A merged patch is not proof that a finding is resolved. The strongest verification is usually the path that originally demonstrated the problem.
 
 ```text
-critical safety regressions = 0
-schema pass rate = 100%
-retrieval recall >= agreed threshold
-critical use cases = 100%
-p95 latency <= budget
-cost/request <= budget
+original failing case
+ -> bounded fix
+ -> rerun the failing evidence path
+ -> run nearby regression cases
+ -> close, revise, or reopen
 ```
 
-Do not chase one global score. Some cases should be hard gates.
+This answers two questions separately: did we fix the original problem, and did the change break something nearby?
 
-## Revalidate after remediation
+Keeping the original trace, test, reproduction case, or evidence record makes this process much stronger. After the fix, that artifact can become a permanent regression case.
 
-A proposed fix is not the end of the finding lifecycle. After remediation, rerun the narrowest test or evidence path that originally demonstrated the problem.
+## Keep enough version context to explain change
 
-Use this sequence:
+An evaluation result is meaningful only if we can tell what produced it. Record the dataset and case version, application version, model, instructions, retrieval configuration, tool contracts, grader version, and relevant usage or latency data.
+
+Otherwise an eval history becomes a sequence of numbers without an explanation for why they moved.
+
+## The practical loop
+
+We use evals as a feedback system rather than a one-time launch gate:
 
 ```text
-original finding
--> bounded fix
--> focused verification
--> revalidate original evidence path
--> regression check
--> close, revise, or reopen
+define expected behavior
+ -> collect representative cases
+ -> run the system
+ -> inspect failures
+ -> change one part
+ -> rerun focused and regression cases
+ -> add newly discovered failures
 ```
 
-Revalidation should answer two different questions:
+That loop keeps improvement tied to evidence. It also makes architecture discussions more concrete: instead of arguing that one prompt, model, or agent pattern “feels better”, we can point to the behaviors that changed and the cases that still fail.
 
-1. Is the original finding actually addressed?
-2. Did the fix introduce a regression, move the failure to another path, or weaken a nearby control?
+## Further reading
 
-Keep the original reproduction case, trace, failing test, scanner evidence, or approved runtime proof when possible. It becomes the strongest starting point for revalidation and should usually become a regression case after the issue is fixed.
-
-Do not mark a finding resolved only because the patch merged or the implementation looks plausible. The evidence that justified the finding should also provide the basis for closing it.
-
-## Trace every evaluated run
-
-Store enough information to explain why the result changed:
-
-- dataset and case version;
-- application version;
-- model version;
-- prompt/instruction version;
-- retrieval configuration;
-- tool schema version;
-- tool results or stable evidence IDs;
-- grader version;
-- latency and usage;
-- final decision.
-
-Without version context, an eval history becomes a spreadsheet of unexplained numbers, humanity’s favorite form of confidence.
-
-## Practical golden set
-
-For a deployment-investigation assistant, include cases such as:
-
-- obvious build failure;
-- dependency timeout;
-- configuration mismatch;
-- permission denied while reading logs;
-- two simultaneous causes;
-- stale runbook page;
-- no evidence for a safe conclusion;
-- a tool timeout during investigation;
-- hostile instructions inside a log or retrieved page;
-- proposed rollback without enough evidence.
-
-Expected output is not only the root cause. It can include required evidence, allowed tools, forbidden actions, and the correct stop state.
-
-## Failure modes
-
-- Testing only one prompt by hand.
-- Using only synthetic easy questions.
-- A model grader judges exact facts that code could check.
-- Retrieval changes without retrieval evals.
-- Production failure never becomes a regression case.
-- Dataset is edited without version history.
-- Average score hides a critical failure.
-- A finding is closed because a patch merged, without revalidating the original evidence path.
-
-## Build checklist
-
-1. Define the decisions that matter.
-2. Create golden cases before optimization.
-3. Add deterministic checks wherever possible.
-4. Evaluate retrieval and generation separately.
-5. Test tool trajectories and stop reasons.
-6. Keep critical cases as release gates.
-7. Revalidate the original finding after remediation.
-8. Add fixed failures back into the regression dataset.
-9. Track quality, latency, and cost together.
+- [OpenAI — A practical guide to building AI agents](https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/)
+- [OpenAI Academy — Builder Bootcamp: Evals](https://academy.openai.com/public/clubs/builders-etkn1/events/builder-bootcamp-evals-rzpwt996jy)
 
 Related: [Sample Eval Dataset](/labs/ai-ready/data/eval-sample.jsonl) · [Data and RAG](/labs/ai-ready/data-rag/) · [Production Readiness Lab](/labs/ai-ready/labs/production-readiness/)
