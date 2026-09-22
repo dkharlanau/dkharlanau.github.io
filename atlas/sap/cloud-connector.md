@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Cloud Connector"
-description: "Analytical overview of SAP Cloud Connector: what it is, where it sits, and how it breaks."
+description: "SAP Cloud Connector explained: reverse-invoke connectivity, virtual-to-internal mappings, resource allowlists, principal propagation, and high availability."
 permalink: /atlas/sap/cloud-connector/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "Cloud Connector"
 business_process: "System integration"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-22
 author: Dzmitryi Kharlanau
 
 tags:
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Integration</p>
     <h1>Cloud Connector</h1>
-    <p class="note-subtitle">Secure tunnel between SAP BTP cloud services and on-premise systems in hybrid landscapes.</p>
+    <p class="note-subtitle">Controlled connectivity from SAP BTP applications to selected resources inside a private network.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,92 +54,40 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>SAP Cloud Connector is an on-premise component that establishes a secure tunnel between SAP BTP and internal systems. It exposes selected on-premise resources (RFC, JDBC, HTTP) to cloud applications without opening inbound firewall ports.</p>
+    <p>SAP Cloud Connector is an on-premise component that gives selected SAP BTP applications a controlled path to systems inside a private network. Its most important property is the direction of trust: the connector establishes the connection outward and acts as a reverse-invoke proxy, so the company does not need to expose the whole internal landscape directly to the internet.</p>
 
-    <h2>Business purpose</h2>
-    <p>Enable hybrid cloud scenarios where BTP extensions, Integration Suite, and analytics services access on-premise data and functions securely. Maintain network perimeter integrity while extending SAP capabilities to the cloud.</p>
+    <h2>It exposes mappings and resources, not the whole network</h2>
+    <p>The configuration maps a virtual cloud-facing host to an internal system. On top of that mapping, administrators define which resources are accessible. For HTTP scenarios this can mean selected URL paths. For RFC, the allowlist can be narrowed to specific function modules. The cloud application sees the virtual endpoint rather than needing the real internal host name.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Cloud Connector runs inside the corporate network, connecting outward to SAP BTP subaccounts. It sits between BTP applications and on-premise backends (S/4HANA, ECC, databases, file servers). It is a critical dependency for hybrid integration, side-by-side extensions, and cloud analytics.</p>
+    <p>This is a useful security boundary. A working tunnel does not mean that every backend service is reachable. The connector can be connected to the subaccount while a particular application still fails because its system mapping, resource path, function module, or trust configuration is not allowed.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Cloud Connector instance: on-premise runtime.</li>
-      <li>Subaccount mapping: BTP subaccount to Cloud Connector.</li>
-      <li>Access control: exposed resources (RFC, JDBC, HTTP).</li>
-      <li>Location ID: identifier for multi-site deployments.</li>
-      <li>Principal propagation: user identity forwarding to backend.</li>
-      <li>Audit log: connection events and access attempts.</li>
-    </ul>
+    <h2>Protocol support depends on the scenario</h2>
+    <p>Cloud Connector supports several cloud-to-on-premise connectivity patterns, including HTTP and RFC, and current versions also provide options such as WebSocket RFC and TCP/TCP TLS for supported use cases. Each protocol has different access-control possibilities. RFC, for example, allows strict function-module allowlisting, while plain TCP provides less application-level visibility and therefore requires additional care.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: RFC and HTTP access for BTP extensions.</li>
-      <li>BTP: Kyma, CAP, Integration Suite, Datasphere.</li>
-      <li>Databases: JDBC access for HANA, Oracle, SQL Server.</li>
-      <li>External: on-premise file servers, legacy systems.</li>
-    </ul>
+    <p>That is why it is better to design the connectivity around the actual application protocol than to describe Cloud Connector as a generic “secure tunnel” and stop there. The security properties depend on what is mapped, which resources are exposed, and how the application authenticates to the backend.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Additional resource exposure via access control configuration.</li>
-      <li>Multi-site deployment with location IDs.</li>
-      <li>Custom principal propagation and SSO setup.</li>
-      <li>High-availability pairing of Cloud Connector instances.</li>
-    </ul>
+    <h2>Identity propagation is separate from network reachability</h2>
+    <p>Cloud Connector can participate in principal-propagation scenarios, but connectivity and identity are different concerns. A request can have a valid network route and still fail because the backend does not trust or authorize the propagated user. Conversely, a technically valid identity configuration is useless if the requested backend resource is not exposed through access control.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Cloud Connector status: connected, disconnected, or degraded.</li>
-      <li>Backend availability: RFC ping, HTTP health check.</li>
-      <li>Audit logs: failed access attempts, configuration changes.</li>
-      <li>BTP cockpit: subaccount connectivity and resource mapping.</li>
-    </ul>
+    <h2>High availability needs a second instance</h2>
+    <p>SAP supports a high-availability setup with a master and a shadow Cloud Connector. The master synchronizes its configuration to the shadow. If the master becomes unavailable, the shadow can take over and establish the connection to SAP BTP.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>No inbound firewall rules required.</li>
-      <li>Fine-grained resource exposure control.</li>
-      <li>Principal propagation for secure user context.</li>
-      <li>Supports RFC, JDBC, and HTTP protocols.</li>
-    </ul>
+    <p>This matters because Cloud Connector can sit on the critical path for several hybrid applications. If multiple business processes depend on the same instance, its availability becomes an architectural concern rather than a small infrastructure detail. We should therefore understand which applications depend on each connector and whether the deployment has an appropriate redundancy model.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Single point of failure if not deployed in HA pair.</li>
-      <li>Network latency for cloud-to-on-premise calls.</li>
-      <li>Version compatibility with BTP subaccount.</li>
-      <li>Operational burden: patching, certificate renewal, monitoring.</li>
-    </ul>
+    <h2>How to read a connectivity failure</h2>
+    <p>A useful diagnosis follows the path of the request. Is the Cloud Connector connected to the intended subaccount? Does the virtual system map to the correct internal target? Is the requested resource allowed? Can the connector reach the backend? Is the backend authentication or propagated identity accepted?</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Cloud Connector down — tunnel broken, all hybrid flows fail.</li>
-      <li>Backend unreachable — RFC or HTTP target system offline.</li>
-      <li>Certificate expiry — TLS handshake failure.</li>
-      <li>Version mismatch — Cloud Connector too old for BTP subaccount.</li>
-      <li>Resource not exposed — access control misconfiguration.</li>
-    </ul>
-
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-integration-landscape-map/">SAP Integration Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/sap-integration-suite/">SAP Integration Suite</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-    </ul>
+    <p>Keeping those layers separate prevents a common mistake: treating every hybrid connectivity error as a network outage. In many cases the network path is healthy and the failure is caused by deliberately restrictive access control, a wrong virtual mapping, or an application-level authorization problem.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP Cloud Connector Documentation — <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity/cloud-connector">SAP Help Portal</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf">SAP BTP Connectivity / Cloud Connector</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/ca5868997e48468395cf0ca4882f5783.html">Configure Access Control (RFC)</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/high-availability-setup">High Availability Setup</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Cloud Connector versions, supported protocols, and HA options vary by release and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Supported protocols, identity options, operational recommendations, and connectivity features change with Cloud Connector versions and SAP BTP services. Verify the current documentation for the exact protocol and application before implementing a production path.</p>
   </div>
 
   <section class="atlas-related">
@@ -147,6 +95,7 @@ sitemap: false
     <ul>
       <li><a href="/atlas/maps/sap-integration-landscape-map/">SAP Integration Landscape Map</a></li>
       <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
+      <li><a href="/atlas/sap/sap-integration-suite/">SAP Integration Suite</a></li>
       <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
     </ul>
   </section>
