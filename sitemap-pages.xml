@@ -26,7 +26,7 @@ permalink: /sitemap-pages.xml
         {% if is_atlas %}
           {% unless atlas_verified == true and atlas_status == 'reviewed' %}{% assign atlas_ok = false %}{% endunless %}
         {% endif %}
-        {% unless is_noindex or is_research or atlas_ok == false or is_html_page == false %}
+        {% unless is_noindex or is_research or is_atlas or atlas_ok == false or is_html_page == false %}
     <url>
       <loc>{{ page_path | absolute_url }}</loc>
       {% assign page_lastmod = page.significant_lastmod | default: page.content_updated_at | default: page.schema_updated_at | default: page.last_modified_at | default: page.updated | default: page.date | default: nil %}
@@ -54,7 +54,7 @@ permalink: /sitemap-pages.xml
           {% if doc_is_atlas %}
             {% unless doc_atlas_verified == true and doc_atlas_status == 'reviewed' %}{% assign doc_atlas_ok = false %}{% endunless %}
           {% endif %}
-          {% unless doc_is_noindex or doc_is_research or doc_atlas_ok == false %}
+          {% unless doc_is_noindex or doc_is_research or doc_is_atlas or doc_atlas_ok == false %}
     <url>
       <loc>{{ doc.url | absolute_url }}</loc>
       {% assign doc_lastmod = doc.significant_lastmod | default: doc.content_updated_at | default: doc.schema_updated_at | default: doc.last_modified_at | default: doc.updated | default: doc.date | default: nil %}

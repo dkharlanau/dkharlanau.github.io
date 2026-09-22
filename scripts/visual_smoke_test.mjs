@@ -202,6 +202,18 @@ function buildFailureSummary(result) {
 async function auditPage(page, viewport) {
   const audit = await page.evaluate(({ viewportWidth, viewportHeight }) => {
     const isVisible = (el) => {
+      // Descendants of a closed <details> can still report layout boxes in
+      // Chromium even though they are not painted or reachable. Treat only the
+      // closed disclosure's own <summary> (and its descendants) as visible.
+      let ancestor = el.parentElement;
+      while (ancestor) {
+        if (ancestor.matches?.('details:not([open])')) {
+          const summary = ancestor.querySelector(':scope > summary');
+          if (!summary || (el !== summary && !summary.contains(el))) return false;
+        }
+        ancestor = ancestor.parentElement;
+      }
+
       const style = window.getComputedStyle(el);
       const rect = el.getBoundingClientRect();
       return style.display !== 'none' && style.visibility !== 'hidden' && Number.parseFloat(style.opacity || '1') > 0.01 && rect.width > 1 && rect.height > 1;
