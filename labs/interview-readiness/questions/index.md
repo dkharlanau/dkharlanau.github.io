@@ -29,7 +29,7 @@ tags:
       <h1>One roadmap.<br />Four ways to be tested.</h1>
       <p>The bank now follows all 42 SAP Lead roadmap skills. Every skill has four question types: explain the model, diagnose a failure, design a solution, and challenge a weak requirement.</p>
       <a class="research-canvas__button" href="#question-bank">Open 168 questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Question depth">
       <p>Question depth</p>

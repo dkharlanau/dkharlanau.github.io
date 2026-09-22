@@ -27,7 +27,7 @@ tags:
       <h1>Twelve questions.<br />No comfortable sequence.</h1>
       <p>Interview Mode now samples the same 42-skill Question Bank used by the roadmap. You get two questions from each SAP Lead track, with Explain, Diagnose, Design, and Challenge pressure mixed across the session.</p>
       <a class="research-canvas__button" href="#session">Start session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Session design">
       <p>Balanced session</p>

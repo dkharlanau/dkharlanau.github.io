@@ -54,7 +54,7 @@ semantic_links:
       <h1>Turn Labs into<br />interview evidence.</h1>
       <p>This roadmap sits above the Labs. It puts technical material into career context: skills, interview signals, evidence routes, and practice. The goal is not to finish a reading list. The goal is to know what you can explain, diagnose, design, and defend as a Lead.</p>
       <a class="research-canvas__button" href="#career-tracks">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
     <figure class="system-opening-visual">
       <img src="/assets/img/labs/interview-readiness-field.webp" alt="Six SAP Lead preparation routes converging into one evidence and decision chain that can be defended in an interview." width="1664" height="936" decoding="async" fetchpriority="high" />

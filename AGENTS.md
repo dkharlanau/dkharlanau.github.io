@@ -205,6 +205,7 @@ Read `docs/ai/CONTENT_VERIFICATION_POLICY.md` for the full policy.
 
 ## Visual Detail Checks
 
+- The visual system is defined in `docs/editorial-design-system.md` (tokens, typography, spacing, components, page templates). Read it before changing shared CSS; update it in the same commit when the system changes.
 - For shared CSS changes, inspect the homepage, a profile, a hub, and a long article at desktop and mobile widths. Compare screenshots at the same viewport and state.
 - Check portrait/photo corners against their frames, media clipping, straight divider ends, spacing, text wrapping, and keyboard focus. A passing build does not establish visual quality.
 - Keep border radii on components, not universal selectors. Give a framed photo one clipping owner so inset image corners do not expose the frame background.

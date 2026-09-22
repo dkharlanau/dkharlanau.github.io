@@ -27,7 +27,7 @@ tags:
       <h1>See the gap.<br />Change the next session.</h1>
       <p>Progress is useful when it changes your preparation. This view combines roadmap depth with recent Interview Mode sessions and shows where confidence is still thin.</p>
       <a class="research-canvas__button" href="#practice-history">See recent practice <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Progress model">
       <p>Two signals</p>

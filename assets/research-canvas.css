@@ -5,6 +5,18 @@
 .page-context--knowledge:has(.research-canvas),
 .page-context--knowledge > .page-content:has(.research-canvas) { width: 100%; max-width: none; padding: 0; }
 
+/* Direct children of the full-width canvas page that are not part of the
+   canvas (breadcrumbs, share, FAQ) keep the medium editorial container. */
+.page-content:has(.research-canvas) > .breadcrumbs,
+.page-content:has(.research-canvas) > .ps-breadcrumbs,
+.page-content:has(.research-canvas) > .note-backlink,
+.page-content:has(.research-canvas) > .study-entry,
+.page-content:has(.research-canvas) > .site-share,
+.page-content:has(.research-canvas) > .page-faq {
+  width: min(calc(100% - 2 * var(--space-5)), var(--container-medium));
+  margin-inline: auto;
+}
+
 .research-canvas {
   --rc-ink: var(--color-text);
   --rc-soft: var(--color-text-muted);
@@ -159,6 +171,10 @@
   border-top: 1px solid var(--rc-line);
   border-bottom: 1px solid var(--rc-line);
   padding: var(--space-4) 0;
+}
+
+.research-canvas__boundary > :not(.material-symbols-outlined) {
+  grid-column: 2;
 }
 
 .research-canvas__boundary > .material-symbols-outlined {

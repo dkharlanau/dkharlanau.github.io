@@ -34,7 +34,7 @@ tags:
       <h1>Close the notes.<br />Build the answer.</h1>
       <p>Reading creates familiarity. This session checks whether the useful model can be rebuilt from memory, connected to neighbouring processes, applied to a new case, and defended under challenge.</p>
       <a class="research-canvas__button" href="#session">Start today's session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/contrast/">Contrast Lab</a><a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a><a href="/labs/interview-readiness/learning-science/">Learning Science</a><a href="/labs/interview-readiness/roadmap/">Career Roadmap</a><a href="/labs/assessment/practice-engine/">Assessment Practice</a><a href="/labs/assessment/progress/">Assessment Progress</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/contrast/">Contrast Lab</a><a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a><a href="/labs/interview-readiness/learning-science/">Learning Science</a><a href="/labs/interview-readiness/roadmap/">Career Roadmap</a><a href="/labs/assessment/practice-engine/">Assessment Practice</a><a href="/labs/assessment/progress/">Assessment Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Mastery loop">
       <p>Mastery loop</p>

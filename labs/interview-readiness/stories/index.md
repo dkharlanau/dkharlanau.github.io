@@ -27,7 +27,7 @@ tags:
       <h1>Do not remember projects<br />under interview pressure.</h1>
       <p>Prepare a small set of reusable stories before the interview. One strong story can cover architecture, stakeholder conflict, failure handling, delivery, and leadership if the decision is clear.</p>
       <a class="research-canvas__button" href="#story-builder">Add a story <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Story structure">
       <p>Story structure</p>

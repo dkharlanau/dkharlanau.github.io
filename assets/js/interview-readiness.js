@@ -244,7 +244,7 @@
 
   function normaliseSectionNavigation() {
     const sections = [
-      ['Dashboard', '/labs/interview-readiness/'],
+      ['Overview', '/labs/interview-readiness/'],
       ['Roadmap', '/labs/interview-readiness/roadmap/'],
       ['Questions', '/labs/interview-readiness/questions/'],
       ['Stories', '/labs/interview-readiness/stories/'],
