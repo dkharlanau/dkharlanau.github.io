@@ -263,64 +263,12 @@
     return Math.round(row.confidence - performance);
   }
 
-  function averageCalibrationGap(rows) {
-    const gaps = rows.map(calibrationGap).filter(value => value != null).map(Math.abs);
-    if (!gaps.length) return null;
-    return Math.round(gaps.reduce((sum, value) => sum + value, 0) / gaps.length);
-  }
-
   function calibrationLabel(row) {
     const gap = calibrationGap(row);
     if (gap == null) return '—';
     if (Math.abs(gap) <= 15) return `${Math.abs(gap)} pp close`;
     if (gap > 0) return `${gap} pp over`;
     return `${Math.abs(gap)} pp under`;
-  }
-
-  function createMetric(value, label) {
-    const article = document.createElement('article');
-    const strong = document.createElement('strong');
-    const span = document.createElement('span');
-    strong.textContent = String(value);
-    span.textContent = label;
-    article.append(strong, span);
-    return article;
-  }
-
-  function renderMetrics(rows) {
-    const metrics = $('mt-metrics');
-    if (!metrics) return;
-    const states = cards.map(card => stateFor(card, rows));
-    const gap = averageCalibrationGap(rows);
-    const repairs = cards.filter(card => repairDeferred(card, rows) || repairReady(card, rows)).length;
-    const delayedSkills = cards.filter(card => spacingStage(card, rows) > 0).length;
-    metrics.replaceChildren(
-      createMetric(rows.length, 'Scored retrievals'),
-      createMetric(cards.filter(card => isDue(card, rows)).length, 'Due reviews'),
-      createMetric(repairs, 'Repair items'),
-      createMetric(delayedSkills, 'Delayed-stage skills'),
-      createMetric(states.filter(state => state === 'retained').length, 'Retained skills'),
-      createMetric(gap == null ? '—' : `${gap} pp`, 'Calibration gap'),
-      createMetric(states.filter(state => state !== 'new').length, `Covered of ${cards.length}`)
-    );
-  }
-
-  function renderStateStrip(rows) {
-    const strip = $('mt-state-strip');
-    if (!strip) return;
-    strip.replaceChildren();
-    (contract.states || []).forEach(item => {
-      const count = cards.filter(card => stateFor(card, rows) === item.id).length;
-      const card = document.createElement('article');
-      const strong = document.createElement('strong');
-      const span = document.createElement('span');
-      const small = document.createElement('small');
-      strong.textContent = String(count);
-      span.textContent = item.label;
-      small.textContent = item.evidence;
-      card.append(strong, span, small);
-      strip.appendChild(card);
-    });
   }
 
   function renderSession(rows) {
@@ -500,8 +448,6 @@
   }
 
   function render(rows = history()) {
-    renderMetrics(rows);
-    renderStateStrip(rows);
     const session = renderSession(rows);
     renderPractice(rows, session);
     renderProfile(rows);

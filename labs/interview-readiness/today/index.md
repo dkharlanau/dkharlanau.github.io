@@ -55,12 +55,6 @@ tags:
     <p><strong>Scoring:</strong> self-score is a practice signal, not certification. Use Contrast Lab, Assessment Practice and human review when you need stronger evidence.</p>
   </section>
 
-  <section class="research-canvas__inventory" id="position" data-reveal>
-    <header><p class="research-canvas__eyebrow">Learning position</p><h2>Track retrieval, retention and calibration.</h2><p>The learning state is separate from the professional capability target in the Career Roadmap. Confidence is also separate from performance.</p></header>
-    <div class="mastery-metrics" id="mt-metrics" aria-label="Mastery metrics"></div>
-    <div class="mastery-state-strip" id="mt-state-strip" aria-label="Mastery states"></div>
-  </section>
-
   <section class="research-canvas__inventory" id="session" data-reveal>
     <header><p class="research-canvas__eyebrow">Today</p><h2>Five useful retrievals. Due work first.</h2><p>The selector prioritises overdue reviews, weak results, new coverage, and track diversity. A weak or high-mismatch answer returns after intervening items instead of repeating immediately.</p></header>
     <div class="mastery-session" id="mt-session"></div>
