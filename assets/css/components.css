@@ -1,0 +1,254 @@
+/* Editorial design system — components: buttons, tables, code, callouts,
+   minimal cards, disclosures, forms. */
+
+/* ---------- Buttons ---------- */
+
+.btn,
+button.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.btn--primary,
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.btn--primary:hover,
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  color: #fff;
+}
+
+.btn--secondary,
+.btn-secondary {
+  border-color: var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.btn--secondary:hover,
+.btn-secondary:hover {
+  border-color: var(--color-text-faint);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* Quiet text action */
+.btn--quiet {
+  min-height: 44px;
+  padding: var(--space-2) 0;
+  color: var(--color-accent);
+  background: none;
+  border: 0;
+}
+
+/* ---------- Tables ---------- */
+
+.note-body table,
+.atlas-page__body table,
+.page-content--knowledge table {
+  width: 100%;
+  margin: var(--space-5) 0;
+  border-collapse: collapse;
+  border-top: 2px solid var(--color-text);
+  border-bottom: 2px solid var(--color-text);
+  font-size: var(--text-md);
+  line-height: var(--leading-tight);
+}
+
+.note-body thead th,
+.atlas-page__body thead th {
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--color-text);
+  font-weight: 600;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.note-body tbody td,
+.note-body tbody th,
+.atlas-page__body tbody td,
+.atlas-page__body tbody th {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.note-body tbody tr:last-child td,
+.note-body tbody tr:last-child th {
+  border-bottom: 0;
+}
+
+/* Mobile: horizontal scroll instead of unreadable shrink.
+   The block-box trick keeps the native table layout intact. */
+@media (max-width: 767px) {
+  .note-body table,
+  .atlas-page__body table,
+  .page-content--knowledge table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .note-body table p,
+  .note-body table ul,
+  .note-body table ol,
+  .atlas-page__body table p {
+    white-space: normal;
+  }
+}
+
+/* ---------- Code blocks ---------- */
+
+pre {
+  margin: var(--space-5) 0;
+  padding: var(--space-4) var(--space-5);
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: inherit;
+}
+
+/* ---------- Callouts: Note / Important / Warning ---------- */
+
+.callout {
+  margin: var(--space-5) 0;
+  padding: var(--space-4) var(--space-5);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--color-surface);
+  font-size: var(--text-md);
+}
+
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+
+.callout__title {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-weight: 650;
+}
+
+.callout--note { border-left-color: var(--color-accent); }
+.callout--note .callout__title { color: var(--color-accent); }
+
+.callout--important { border-left-color: var(--color-warning); }
+.callout--important .callout__title { color: var(--color-warning); }
+
+.callout--warning { border-left-color: var(--color-danger); }
+.callout--warning .callout__title { color: var(--color-danger); }
+
+/* ---------- Cards: only for genuine collections ---------- */
+
+.card {
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+
+.card > :first-child { margin-top: 0; }
+.card > :last-child { margin-bottom: 0; }
+
+a.card {
+  display: block;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: border-color 120ms ease;
+}
+
+a.card:hover {
+  border-color: var(--color-text-faint);
+  color: var(--color-text);
+}
+
+a.card h2,
+a.card h3 {
+  color: var(--color-text);
+}
+
+/* ---------- Disclosure ---------- */
+
+details {
+  margin: var(--space-4) 0;
+}
+
+details > summary {
+  padding: var(--space-2) 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- Forms ---------- */
+
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+input[type="search"],
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+  max-width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+input::placeholder {
+  color: var(--color-text-faint);
+}
+
+/* ---------- Utility ---------- */
+
+.visually-hidden,
+.reader-toc__visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* External-link hint added by reader-tools.js */
+a.external-link::after {
+  content: "↗";
+  margin-inline-start: 0.15em;
+  font-size: 0.8em;
+  text-decoration: none;
+  display: inline-block;
+}
