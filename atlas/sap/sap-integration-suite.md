@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Integration Suite"
-description: "Analytical overview of SAP Integration Suite: what it is, where it sits, and how it breaks."
+description: "SAP Integration Suite explained: Cloud Integration, API Management, events, B2B integration, connectivity, and where each capability fits."
 permalink: /atlas/sap/sap-integration-suite/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "Integration Suite"
 business_process: "System integration"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-22
 author: Dzmitryi Kharlanau
 
 tags:
@@ -51,7 +51,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Product</p>
     <h1>SAP Integration Suite</h1>
-    <p class="note-subtitle">Cloud integration platform for APIs, events, and prebuilt integrations.</p>
+    <p class="note-subtitle">SAP BTP integration capabilities for process integration, APIs, events, B2B exchange, and hybrid connectivity.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -64,92 +64,39 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>SAP Integration Suite is a cloud-based integration platform that provides API management, integration flows, event mesh, data integration, and prebuilt integration content. It connects S/4HANA to SAP and non-SAP systems.</p>
+    <p>SAP Integration Suite is SAP's integration platform on SAP BTP. It is better understood as a set of related integration capabilities than as one universal middleware runtime. An integration architect chooses the capability that matches the interaction: process messages, govern APIs, exchange business events, connect trading partners, or reach non-SAP applications.</p>
 
-    <h2>Business purpose</h2>
-    <p>Reduce custom middleware by providing prebuilt integrations, standard protocols, and managed connectivity. Enable real-time and batch integration between cloud and on-premise systems.</p>
+    <h2>Cloud Integration handles message-based process integration</h2>
+    <p>Cloud Integration is the part most people mean when they talk about integration flows. An integration flow can receive a message, route it, transform or map the payload, call one or more systems, and apply error-handling logic. Adapters provide connectivity for different protocols and applications.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Integration Suite runs on SAP BTP. It sits between S/4HANA and satellite products (Ariba, EWM, TM, etc.), as well as external systems. It replaces or complements on-premise middleware like SAP PI/PO.</p>
+    <p>This makes Cloud Integration useful when the systems on both sides should remain decoupled from each other's technical details. It can connect SAP and non-SAP applications across cloud and on-premise landscapes, but the integration flow still needs an explicit contract: payload, identifiers, security, retry behavior, and ownership do not disappear because a managed integration service sits in the middle.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Integration flow: message routing, transformation, mapping.</li>
-      <li>API: REST, OData, SOAP exposure and management.</li>
-      <li>Event mesh: topic, subscription, event producer/consumer.</li>
-      <li>Prebuilt package: integration content for specific scenarios.</li>
-      <li>Connection: adapter, credential, endpoint.</li>
-      <li>Monitoring dashboard: message status, error, retry.</li>
-    </ul>
+    <h2>API Management solves a different problem</h2>
+    <p>API Management is about exposing and governing APIs. Policies can control access, traffic, and other API behavior while developer-facing artifacts make APIs easier to discover and consume. It does not replace the business logic of the backend and it does not automatically turn every integration flow into a good public API.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: OData, RFC, IDoc, business events.</li>
-      <li>Satellite products: Ariba, EWM, TM, IBP, Datasphere.</li>
-      <li>Non-SAP: REST, SOAP, JDBC, file, cloud storage.</li>
-      <li>Event mesh: SAP and third-party event producers.</li>
-    </ul>
+    <p>When an integration needs both mediation and API governance, the capabilities can work together. The architectural value comes from keeping the concerns visible: the backend implements business behavior, the integration layer mediates where necessary, and the API layer governs the consumer-facing contract.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom integration flows and mappings.</li>
-      <li>Custom API policies and rate limiting.</li>
-      <li>Event mesh topic extensions.</li>
-      <li>Side-by-side integration monitoring apps.</li>
-    </ul>
+    <h2>Events, B2B, and connectors extend the platform beyond request-response flows</h2>
+    <p>Integration Suite includes event capabilities for publishing and consuming business events, as well as capabilities for B2B integration such as Integration Advisor and Trading Partner Management. Open Connectors provides prebuilt connectivity to many non-SAP cloud applications. These are not interchangeable features; each addresses a different integration problem.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Message monitoring: processed, failed, retrying.</li>
-      <li>API health: latency, error rate, throughput.</li>
-      <li>Event mesh: topic lag, consumer health.</li>
-      <li>Integration content: version, update, deprecation.</li>
-    </ul>
+    <p>SAP also provides Migration Assessment for assessing SAP Process Orchestration scenarios and Edge Integration Cell for selected customer-managed runtime requirements. This is a more useful way to think about modernization than saying that Integration Suite simply “replaces PI/PO.” A migration can preserve some interface contracts, redesign others, and use different Integration Suite capabilities depending on the scenario.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Prebuilt integration content reduces development time.</li>
-      <li>Managed service reduces infrastructure overhead.</li>
-      <li>Unified platform for API, event, and data integration.</li>
-    </ul>
+    <h2>Prebuilt content is an accelerator, not the architecture</h2>
+    <p>Integration packages and predefined content can shorten implementation time because common mappings, flows, and connectivity patterns do not always need to start from an empty canvas. But prebuilt content still runs inside a real landscape with local master data, extensions, security rules, error ownership, and release dependencies.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Cloud-to-on-premise connectivity depends on cloud connector.</li>
-      <li>Prebuilt content may not cover custom scenarios.</li>
-      <li>Message volume and complexity affect pricing.</li>
-      <li>Error handling and retry logic require careful design.</li>
-    </ul>
+    <p>We therefore treat prebuilt content as a starting point to understand and govern, not as a reason to skip interface design. The durable questions remain the same: what business event or message starts the flow, which system owns each field, how duplicates are prevented, what happens after a timeout, and how operations can trace a failed exchange.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Integration flow failed — mapping, connection, or payload.</li>
-      <li>API timeout — backend slow or network issue.</li>
-      <li>Event not delivered — topic misconfiguration or consumer down.</li>
-      <li>Cloud connector down — on-premise system unreachable.</li>
-      <li>Certificate expired — SSL handshake failure.</li>
-    </ul>
-
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-integration-landscape-map/">SAP Integration Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/business-events/">Business Events</a></li>
-      <li><a href="/atlas/sap/idoc/">IDoc</a></li>
-    </ul>
+    <h2>Hybrid connectivity is part of the design</h2>
+    <p>Cloud applications often need to reach systems inside a private network. SAP Cloud Connector is one option for controlled cloud-to-on-premise access, depending on the integration capability and protocol. Other deployment and connectivity options also exist, including Edge Integration Cell for supported scenarios. The network path should therefore be designed explicitly instead of assuming that every Integration Suite flow uses the same tunnel.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/integration-suite/sap-integration-suite">SAP Integration Suite documentation</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf">SAP BTP Connectivity documentation</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Integration Suite features, prebuilt content, and pricing vary by release and must be verified against SAP's current product documentation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>SAP changes Integration Suite capabilities, service plans, regional availability, quotas, and runtime options over time. Verify the current documentation and commercial entitlement for the exact capability before using this page for a solution design.</p>
   </div>
 
   <section class="atlas-related">
@@ -158,6 +105,7 @@ sitemap: false
       <li><a href="/atlas/maps/sap-integration-landscape-map/">SAP Integration Landscape Map</a></li>
       <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
       <li><a href="/atlas/sap/business-events/">Business Events</a></li>
+      <li><a href="/atlas/sap/idoc/">IDoc</a></li>
     </ul>
   </section>
 
