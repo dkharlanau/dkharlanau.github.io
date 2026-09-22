@@ -82,8 +82,8 @@ sitemap: false
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP Help Portal — <a href="https://help.sap.com/docs/ABAP_PLATFORM_BW4HANA/b5670aaaa2364a29935f40b16499972d/48ba073157b85295e10000000a42189b.html">ABAP Platform</a>.</li>
-      <li>SAP Help Portal — <a href="https://help.sap.com/docs/abap-cross-product/roadmap-info/abap-platform-roadmap-information">ABAP Platform Roadmap Information</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/60741ff28706491f8a5792ff7afd1d37.html">ABAP Platform</a> (2025 FPS01 documentation).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/ef0301f6b908409c8e0802270a96a316.html">Working with ABAP for Cloud Development and Released APIs</a>.</li>
       <li>SAP Help Portal — <a href="https://help.sap.com/docs/abap-cloud/abap-cloud/abap-language">Cloud-Optimized ABAP Language</a>.</li>
     </ul>
 
