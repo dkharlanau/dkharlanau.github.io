@@ -1,17 +1,17 @@
 ---
 layout: default
 title: "SAP Pricing Condition Technique"
-description: "A conservative explanation of how SAP pricing condition technique works and where it usually breaks."
+description: "A clear explanation of how SAP S/4HANA Sales builds a price from pricing procedures, condition types, access sequences, and condition records."
 permalink: /atlas/sap/sap-pricing-condition-technique/
 atlas_section: sap
 domain: SAP operations
 subdomain: Sales pricing
-concept_type: support diagnostic
+concept_type: SAP concept
 sap_area: "SD pricing"
 business_process: Order to cash
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-05
+last_reviewed: 2026-09-22
 author: Dzmitryi Kharlanau
 
 tags:
@@ -20,8 +20,8 @@ tags:
   - pricing
 related:
   - /atlas/sap/sap-pricing-procedure-debugging/
+  - /atlas/sap/sales-domain/
   - /atlas/concepts/order-to-cash/
-  - /atlas/diagnostics/sap-sales-order-block-diagnosis/
 robots: noindex,follow
 sitemap: false
 ---
@@ -39,7 +39,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas SAP Note</p>
     <h1>SAP pricing condition technique</h1>
-    <p class="note-subtitle">How SAP assembles a sales price from conditions, and why the chain breaks more often than individual settings.</p>
+    <p class="note-subtitle">SAP does not look up one final sales price. It builds the result from a controlled sequence of price elements.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -47,54 +47,59 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Order to cash</dd></div>
       <div><dt>SAP area</dt><dd>Sales pricing</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until condition technique claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Noindex until pricing claims are verified against public SAP docs.</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>SAP pricing does not store a single "price" for a transaction. It builds the final price dynamically from a sequence of conditions: base price, discounts, surcharges, freight, tax, and statistical values. Each condition is found through a chain of logic that involves the pricing procedure, condition types, access sequences, and condition records. A failure at any step in the chain can produce an unexpected price, even when every individual setting appears correct.</p>
+    <h2>A price is assembled, not stored as one answer</h2>
+    <p>In SAP S/4HANA Sales, the value we call “the price” is usually the result of several pricing conditions. A base price may be followed by customer discounts, material discounts, surcharges, freight, taxes, statistical conditions, or other price elements. The pricing procedure defines which elements belong to the calculation and in which sequence SAP processes them.</p>
 
-    <h2>Why it matters</h2>
-    <p>Support teams often approach pricing issues by checking one condition at a time. This works when the problem is a missing condition record, but it fails when the problem is higher in the chain: the wrong pricing procedure is determined, the access sequence does not match the document context, or a manual change has hidden the automatic result. Understanding the full chain helps the support team ask better questions and collect better evidence.</p>
+    <p>This is the core idea of the condition technique: separate the <strong>structure of the calculation</strong> from the <strong>business values</strong> used inside that structure. The pricing procedure provides the structure. Condition types describe the individual price elements. Access sequences define how SAP searches for automatically maintained values. Condition records contain those values for specific key combinations and validity periods.</p>
 
-    <h2>The condition chain</h2>
+    <h2>Pricing procedure: the calculation framework</h2>
+    <p>Before SAP can calculate the price, it needs the relevant pricing procedure. In standard sales pricing, procedure determination uses the sales area together with pricing attributes from the sales document type and customer. The selected procedure then gives SAP an ordered set of steps to process.</p>
+
+    <p>A procedure can contain more than simple amounts. A step can be mandatory, statistical, manual-only, subject to a requirement, or connected to a subtotal or calculation rule. This is why two procedures containing the same-looking condition types can still produce different results.</p>
+
+    <h2>Condition type: what kind of price element is this?</h2>
+    <p>A condition type gives meaning to a pricing line. It can represent a base price, discount, surcharge, freight amount, tax, or another commercial element. The condition type also carries control information such as the calculation type and whether automatic record access is used.</p>
+
+    <p>Not every condition type needs an access sequence. Some conditions are designed for manual entry, and some are used for technical or statistical purposes. It is therefore better to think of the condition type as a pricing role rather than as a simple pointer to a table.</p>
+
+    <h2>Access sequence: where should SAP look?</h2>
+    <p>When a condition type uses automatic determination, its access sequence defines the search strategy. The sequence contains accesses to condition tables with different key combinations. A company might maintain a very specific price for one customer and material, a broader price for a customer group, and a general price for the material. The access sequence determines which combinations SAP tries and in which order.</p>
+
+    <p>The order matters because a more specific record is usually intended to win over a more general one. Once a valid record is found according to the configured access logic, SAP can use its value and scales for the condition.</p>
+
+    <h2>Condition record: the business value</h2>
+    <p>The condition record stores the maintained value for a key combination and validity period. This is where a base price of 100 EUR, a 5% customer discount, or another maintained condition value can live. The record can also contain scales, so the rate changes when quantity or another scale basis crosses a threshold.</p>
+
+    <p>Dates are therefore part of pricing logic, not an administrative detail. The same customer and material can legitimately receive different prices on two documents if the pricing dates fall into different condition-record validity periods.</p>
+
+    <h2>Putting the pieces together</h2>
+    <p>Suppose we sell 100 units of a material. SAP first determines the pricing procedure for the document. The procedure reaches the base-price condition type. Its access sequence searches from specific to broader keys until a valid record is found. The rate is copied into the document and the relevant scale is applied. The procedure then continues with discounts, surcharges, taxes, and other configured steps until the result is complete.</p>
+
+    <p>A manual condition or copied price can change that story. So can a requirement, formula, exclusion rule, pricing date, unit conversion, or copy-control pricing type. These mechanisms do not contradict the condition technique; they are part of the larger pricing framework around it.</p>
+
+    <h2>Why the model matters</h2>
+    <p>Without this structure, pricing looks like a collection of tables and condition codes. With it, the logic becomes easier to follow: <strong>which procedure was selected, which condition type is being processed, how does it search, which record was found, and how is the value calculated?</strong></p>
+
+    <p>The separate <a href="/atlas/sap/sap-pricing-procedure-debugging/">pricing debugging page</a> uses that model for incident analysis. This page stays with the concept itself so the two articles do not repeat the same troubleshooting checklist.</p>
+
+    <h2>Sources</h2>
     <ul>
-      <li><strong>Pricing procedure determination:</strong> the system selects a pricing procedure based on the sales area, document type, and customer. If the wrong procedure is selected, every condition inside it may be irrelevant.</li>
-      <li><strong>Condition types:</strong> within the procedure, each condition type represents a specific price element such as base price, discount, or tax. The sequence of condition types matters because later conditions can reference earlier ones.</li>
-      <li><strong>Access sequences:</strong> each condition type uses an access sequence to search for valid condition records. The access sequence defines which key combinations to try, in what order.</li>
-      <li><strong>Condition records:</strong> the actual price values are stored in condition records, which are valid for specific key combinations, date ranges, and scales. A missing or expired record is the most common cause of a missing price element.</li>
-      <li><strong>Calculation rules:</strong> once condition values are found, calculation rules determine how they combine into the final price. A rule may reference subtotals, statistical values, or other conditions.</li>
+      <li>SAP Learning — <a href="https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/introducing-the-condition-technique_dce0f313-dee6-470e-8851-3f1773cb5d45">Introducing the Condition Technique</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/19d48293097f4a2589433856b034dfa5/13617e81352644c9ad42ea1b40637258.html">Pricing Procedure Subtotal Lines</a>.</li>
     </ul>
-
-    <h2>Common failure patterns</h2>
-    <p>Pricing issues often come from mismatched context. A condition record exists but is not valid for the pricing date of the document. An access sequence tries key combinations in an order that does not match the business expectation. A copied document retains old pricing that no longer reflects current master data. A manual price change overrides the automatic result, and users forget to check whether the automatic result was ever found.</p>
-
-    <h2>Diagnostic questions</h2>
-    <ul>
-      <li>Which pricing procedure is being used for this document, and is it the expected one?</li>
-      <li>Which condition type is missing or unexpected?</li>
-      <li>Does the relevant condition record exist, and is it valid for the document's pricing date and key combination?</li>
-      <li>Is the issue an automatic pricing failure, a manual override, or a copy-control behavior?</li>
-      <li>Has the document been copied from another document that had different pricing?</li>
-      <li>Are there custom enhancements that modify pricing behavior beyond standard condition technique?</li>
-    </ul>
-
-    <h2>Support takeaway</h2>
-    <p>A useful pricing ticket should include the document number, item, pricing date, expected condition, actual condition result, customer and material context, and evidence of which step in the condition chain failed. Avoid asking a configuration team to "fix pricing" without showing which part of the chain is broken.</p>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page explains the condition technique conceptually. It is not a configuration guide for pricing procedures, condition types, access sequences, or calculation schemas. It does not cover release-specific transaction paths or table names. For configuration details, consult SAP Help Portal and system-specific documentation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
   </div>
 
   <section class="atlas-related">
     <h2>Related Atlas Pages</h2>
     <ul>
       <li><a href="/atlas/sap/sap-pricing-procedure-debugging/">SAP Pricing Procedure Debugging</a></li>
+      <li><a href="/atlas/sap/sales-domain/">Sales — SAP S/4HANA Domain</a></li>
       <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
-      <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a></li>
     </ul>
   </section>
 
