@@ -12,3 +12,15 @@
 .memory-atlas__result{margin-top:1rem;border:1px solid var(--border-color,#ddd);border-radius:1rem;padding:1rem}.memory-atlas__result strong{font-size:1.35rem}.memory-atlas__result p{margin:.45rem 0}.memory-atlas__prompt{margin-top:1rem;padding:1rem;border-left:3px solid currentColor;background:var(--surface,#fff)}
 @media (max-width:900px){.memory-atlas__chooser,.memory-atlas__connections{grid-template-columns:1fr}.memory-atlas__metrics{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.memory-atlas__metrics{grid-template-columns:1fr}.memory-atlas__mode{grid-template-columns:1fr 1fr}.memory-atlas__sequence,.memory-atlas__rebuild{grid-template-columns:repeat(7,10rem)}}
+
+/* Contain the interactive diagram: it scrolls inside its own region and
+   never stretches the page grid. */
+.memory-atlas__sequence,
+.memory-atlas__rebuild {
+  min-width: 0;
+  max-width: 100%;
+}
+.memory-atlas .ir-shell,
+.memory-atlas > * {
+  min-width: 0;
+}
