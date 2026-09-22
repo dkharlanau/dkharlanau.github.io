@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Dead Letter Queue"
-description: "A Dead Letter Queue (DLQ) is a secondary queue that receives messages after they have failed processing in the primary queue beyond a configured max retry."
+description: "A dead-letter or dead-message queue isolates messages that cannot be processed normally so they can be investigated without blocking healthy traffic."
 tags:
   - concept
   - sap-sd
@@ -13,6 +13,7 @@ parent: Concepts
 robots: noindex, follow
 sitemap: false
 verified: false
+last_reviewed: 2026-09-23
 related:
   - /atlas/maps/integration-monitoring-reliability-map/
   - /atlas/concepts/idempotency/
@@ -23,79 +24,52 @@ related:
   - /atlas/sap/business-events/
 ---
 
-
 # Dead Letter Queue
 
-> **Status**: Skeleton — under review.  
-> **Scope**: DLQ patterns for SAP event-driven and messaging integrations.
+> **Status**: Under review.  
+> **Scope**: Dead-letter and dead-message queue patterns for SAP messaging integrations.
 
-## What it is
+A dead-letter queue is a holding area for messages that the normal consumer path cannot process safely. The exact name and trigger vary by broker. SAP Event Mesh documentation uses the term **dead message queue**; other platforms commonly use **dead-letter queue (DLQ)**.
 
-A Dead Letter Queue (DLQ) is a secondary queue that receives messages after they have failed processing in the primary queue beyond a configured max retry limit. It isolates poison-pill messages so they do not block healthy messages.
+The important idea is not the label. A failed message should stop cycling through the normal path when further automatic redelivery is unlikely to help, while healthy messages continue to move.
 
-## When to use it
+## Retry and dead-letter handling solve different problems
 
-- Event consumers in SAP Event Mesh or Advanced Event Mesh
-- Cloud Integration iFlows with JMS or AMQP queues
-- Kafka consumers with retry topics and final dead-letter topic
-- Any asynchronous integration where poison messages could block processing
+A retry is appropriate when failure may be temporary: a receiver is unavailable, a network call times out, or a dependent service is overloaded. A dead-message queue is for the point where the broker or integration design decides that normal redelivery should stop.
 
-## When not to use it
+That boundary must be explicit. If every error is retried forever, one bad message can waste capacity or repeatedly block ordered processing. If messages are moved aside too quickly, temporary outages become manual incidents.
 
-- Synchronous HTTP APIs where immediate error response is preferred
-- Low-volume, manually monitored queues where direct inspection suffices
-- Scenarios where message loss is preferable to operational complexity
+There is no useful universal rule such as “retry three times.” The right policy depends on business urgency, expected outage duration, message ordering, idempotency, and the broker's own delivery semantics.
 
-## SAP landscape fit
+## SAP Event Mesh
 
-- **SAP Event Mesh**: Supports DLQ configuration per queue; messages moved after max redelivery
-- **Advanced Event Mesh**: Enhanced DLQ with replay capabilities and longer retention
-- **Cloud Integration**: JMS adapter supports dead letter queue configuration
-- **Kafka**: Not native; implement via retry topics and final dead-letter topic manually
+In SAP Event Mesh, a queue can be configured with a **Max Redelivery Count** and a **Dead Message Queue**. When a message reaches the configured redelivery limit, Event Mesh can move the undelivered message to that dead message queue instead of purging it. A message can also move there when it reaches the queue's maximum time-to-live, if a dead message queue is configured.
 
-## Design decisions
+This is a broker-level mechanism. It does not repair the message and it does not tell us why processing failed. Operations still need the original message, delivery information, correlation identifiers where available, and the consumer-side error that caused the rejection or missing acknowledgement.
 
-| Decision | Recommendation |
-|----------|---------------|
-| Max retries | 3-5 attempts with exponential backoff |
-| DLQ retention | Longer than source queue (e.g., 14 days vs 7 days) |
-| Alerting | Alert on DLQ depth > 0 and message age > 1 hour |
-| Redrive | Manual inspection → fix root cause → replay or discard |
-| Audit | Log all DLQ insertions with failure reason and original trace ID |
+A practical support sequence is therefore:
 
-## Operational failure modes
+1. identify whether the failure is transient or deterministic;
+2. inspect the consumer error and message content without changing production data;
+3. fix the consumer, configuration, authorization, or payload problem;
+4. confirm that replay is safe, especially if the consumer may already have produced a side effect;
+5. redeliver or recreate the message using the mechanism supported by the broker and application.
 
-- DLQ becomes a graveyard → no operational process to inspect and replay
-- Retention shorter than investigation time → messages expire before root cause found
-- DLQ depth grows silently → systemic consumer bug or downstream outage
-- Replay without fixing root cause → message returns to DLQ immediately
+The idempotency check in step four is critical. A message can look “failed” from the broker's point of view even when a downstream system completed part of the work before the acknowledgement was lost.
 
-## Monitoring/support model
+## Cloud Integration JMS is a different case
 
-- Monitor DLQ depth, message age, and insertion rate
-- Classify DLQ messages by error type (schema, downstream, timeout, auth)
-- Establish SLA for DLQ inspection (e.g., 4 hours for production)
-- Maintain runbook for common DLQ scenarios and redrive procedures
+SAP Cloud Integration also has a setting named **Dead-Letter Queue** in the JMS sender adapter, but it should not be treated as a general-purpose business-error DLQ. Current SAP documentation states that this option is used to take a message out of processing when repeated processing causes worker-node crashes; related adapter documentation describes scenarios such as repeated out-of-memory failures. SAP explicitly notes that this mechanism does not handle normal integration errors in the same way.
 
-## Ownership model
+For ordinary temporary processing failures, the JMS retry pattern keeps the message in queue storage and retries it according to the configured interval, exponential backoff, and maximum retry interval. This is why we need to distinguish the Event Mesh dead-message-queue pattern from Cloud Integration's special JMS dead-letter setting even though the names sound similar.
 
-- **Consumer domain**: owns DLQ processing, classification, and redrive
-- **Platform team**: owns DLQ infrastructure, retention, and alerting
-- **Producer domain**: owns schema correctness and payload validation
+## What good operations look like
 
-## AMS incident patterns
+A DLQ is useful only if somebody owns it. We want monitoring for message count and age, enough retained context to diagnose the failure, and a documented decision for replay versus discard. The queue should not become a second backlog that everyone assumes another team is watching.
 
-- DLQ depth spikes after deployment → check for schema change or consumer version mismatch
-- Message stuck in DLQ with schema error → verify producer schema registry and consumer version
-- DLQ message with downstream 503 → wait for backend recovery, then redrive
-- Auth error in DLQ → check consumer credentials and permission changes
+For a production integration, ownership normally sits with the team responsible for the consuming process, while the messaging platform team maintains broker configuration and observability. The producer still owns payload correctness and contract changes. These boundaries are more useful than a generic “integration team owns everything” model.
 
-## AI/agent opportunity
-
-- Auto-classify DLQ messages by failure pattern and suggest remediation
-- Predict DLQ growth from deployment and schema change events
-- Generate redrive commands with safety checks (idempotency verified)
-- Correlate DLQ spikes with upstream changes and alert proactively
+A growing DLQ is a symptom, not a KPI to optimize in isolation. We check what changed before the growth started: a deployment, schema change, authorization change, receiver outage, or new payload pattern. The goal is to remove the cause, then recover messages safely.
 
 ## Related Atlas pages
 
@@ -106,11 +80,11 @@ A Dead Letter Queue (DLQ) is a secondary queue that receives messages after they
 
 ## Source references
 
-- [AWS SQS Dead Letter Queues Developer Guide](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
-- [SAP Event Mesh documentation](https://help.sap.com/docs/event-mesh)
+- SAP Help Portal — [Create a Queue in SAP Event Mesh](https://help.sap.com/docs/integration-suite/sap-integration-suite/create-queue)
+- SAP Help Portal — [Queues and Queue Subscriptions](https://help.sap.com/docs/integration-suite/sap-integration-suite/queues-and-queue-subscriptions)
+- SAP Help Portal — [Apply the Retry Pattern with JMS Queue](https://help.sap.com/docs/integration-suite/sap-integration-suite/apply-retry-pattern-with-jms-queue)
+- SAP Help Portal — [Configure the XI Receiver Adapter](https://help.sap.com/docs/SAP_INTEGRATION_SUITE/51ab953548be4459bfe8539ecaeee98d/configure-xi-receiver-adapter)
 
 ## Verification limitations
 
-- DLQ capabilities vary by SAP product edition and broker type.
-- Content is synthesized from public documentation and operations practice.
-- No private implementation details are included.
+Dead-letter behavior depends on the broker, adapter, retry configuration, acknowledgement model, and product edition. This page deliberately avoids assuming that SAP Event Mesh, Advanced Event Mesh, Cloud Integration JMS, and third-party brokers implement one identical DLQ mechanism.
