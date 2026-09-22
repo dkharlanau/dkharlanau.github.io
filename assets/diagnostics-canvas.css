@@ -5,7 +5,7 @@
 .diagnostics-canvas :is(h1,h2,h3,p) { color: inherit; }
 .diagnostics-canvas h1, .diagnostics-canvas h2, .diagnostics-canvas h3 { text-wrap: balance; }
 .diagnostics-canvas .breadcrumbs { width: var(--diagnostic-width); margin: 0 auto; padding: 1rem 0 0; }
-.diagnostic-desk__eyebrow { margin: 0; color: var(--ps-signal) !important; font-family: var(--ps-mono); font-size: .67rem; font-weight: 700; letter-spacing: .09em; line-height: 1.35; text-transform: uppercase; }
+.diagnostic-desk__eyebrow { margin: 0; color: var(--ps-signal) !important; font-family: var(--font-mono); font-size: .67rem; font-weight: 700; letter-spacing: normal; line-height: 1.35; text-transform: none; }
 
 /* First screen */
 .diagnostic-desk__hero { display: grid; grid-template-columns: minmax(15rem, .94fr) minmax(23rem, 1.06fr); align-items: end; gap: clamp(3rem, 10vw, 11rem); width: var(--diagnostic-width); min-height: min(43rem, calc(100svh - var(--ps-header))); margin: 0 auto; padding: clamp(4.5rem, 10vw, 9rem) 0 clamp(4rem, 8vw, 7rem); }
@@ -19,19 +19,19 @@
 .diagnostic-desk__trace li { position: relative; display: grid; grid-template-columns: 2.75rem 1fr; column-gap: 1.2rem; }
 .diagnostic-desk__trace li::before { z-index: 1; grid-row: 1 / span 2; width: .75rem; height: .75rem; margin-top: .12rem; border-radius: 50%; background: var(--ps-page); box-shadow: 0 0 0 1px var(--ps-ink); content: ""; }
 .diagnostic-desk__trace li:first-child::before { background: var(--ps-signal); box-shadow: 0 0 0 5px var(--ps-signal-soft); }
-.diagnostic-desk__trace span { grid-column: 2; color: var(--ps-signal); font-family: var(--ps-mono); font-size: .63rem; font-weight: 700; letter-spacing: .08em; }
+.diagnostic-desk__trace span { grid-column: 2; color: var(--ps-signal); font-family: var(--font-mono); font-size: .63rem; font-weight: 700; letter-spacing: normal; }
 .diagnostic-desk__trace strong { grid-column: 2; margin-top: .22rem; font-size: clamp(1.25rem, 2vw, 1.7rem); letter-spacing: -.04em; line-height: 1; }
 .diagnostic-desk__trace small { grid-column: 2; max-width: 24rem; margin-top: .55rem; color: var(--ps-ink-soft); font-size: .88rem; line-height: 1.5; }
 
 /* First-pass structure */
 .diagnostic-desk__start, .diagnostic-desk__hubs, .diagnostics-canvas > .section { width: var(--diagnostic-width); margin: 0 auto; }
 .diagnostic-desk__start { display: grid; grid-template-columns: minmax(16rem, .85fr) minmax(18rem, 1.15fr); gap: clamp(2.5rem, 7vw, 8rem); border-top: 1px solid var(--ps-ink); padding: clamp(3.5rem, 6vw, 6.5rem) 0; }
-.diagnostic-desk__start h2, .diagnostic-desk__hubs h2 { max-width: 13ch; margin: .55rem 0 0; font-size: var(--ps-type-content-h2) !important; }
+.diagnostic-desk__start h2, .diagnostic-desk__hubs h2 { max-width: 13ch; margin: .55rem 0 0; font-size: clamp(1.45rem, 1.25rem + 1vw, 1.9rem) !important; }
 .diagnostic-desk__start header > p:last-child { max-width: 30rem; margin: 1rem 0 0; color: var(--ps-ink-soft); line-height: 1.58; }
 .diagnostic-desk__start > ol { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; margin: 0; padding: 0; list-style: none; }
 .diagnostic-desk__start > ol li { border-top: 1px solid var(--ps-line); padding: 1rem 1rem 1rem 0; }
 .diagnostic-desk__start > ol li:nth-child(2n) { border-inline-start: 1px solid var(--ps-line); padding-left: 1rem; }
-.diagnostic-desk__start > ol span { display: block; margin-bottom: .65rem; color: var(--ps-signal); font-family: var(--ps-mono); font-size: .62rem; font-weight: 700; }
+.diagnostic-desk__start > ol span { display: block; margin-bottom: .65rem; color: var(--ps-signal); font-family: var(--font-mono); font-size: .62rem; font-weight: 700; }
 .diagnostic-desk__start > ol strong { display: block; color: var(--ps-ink); font-size: .96rem; line-height: 1.25; }
 .diagnostic-desk__start > ol small { display: block; margin-top: .45rem; color: var(--ps-ink-soft); font-size: .8rem; line-height: 1.5; }
 .diagnostic-desk__start details { grid-column: 2; border-top: 1px solid var(--ps-line); border-bottom: 1px solid var(--ps-line); padding: .95rem 0; }
@@ -55,8 +55,8 @@
 /* The library stays comprehensive but scans as an indexed working surface. */
 .diagnostics-canvas > .section { border-bottom: 1px solid var(--ps-line); padding: clamp(3.3rem, 6vw, 6rem) 0; }
 .diagnostics-canvas > .section .section-heading { display: grid; grid-template-columns: minmax(15rem, .8fr) minmax(18rem, 1.2fr); gap: 2rem; margin-bottom: 2rem; }
-.diagnostics-canvas > .section .section-heading .eyebrow { align-self: start; color: var(--ps-signal); font-family: var(--ps-mono); font-size: .67rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
-.diagnostics-canvas > .section .section-heading h2 { max-width: 18ch; margin: 0; font-size: var(--ps-type-content-h2) !important; }
+.diagnostics-canvas > .section .section-heading .eyebrow { align-self: start; color: var(--ps-signal); font-size: .875rem; font-weight: 600; letter-spacing: normal; text-transform: none; }
+.diagnostics-canvas > .section .section-heading h2 { max-width: 18ch; margin: 0; font-size: clamp(1.45rem, 1.25rem + 1vw, 1.9rem) !important; }
 .diagnostics-canvas > .section .atlas-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--ps-line); border-bottom: 1px solid var(--ps-line); }
 .diagnostics-canvas > .section .atlas-card { display: flex; min-height: 10.6rem; flex-direction: column; align-items: flex-start; justify-content: space-between; border: 0; border-inline-start: 1px solid var(--ps-line); border-top: 1px solid var(--ps-line); border-radius: 0 !important; background: transparent; box-shadow: none !important; padding: 1.05rem; text-decoration: none; transition: background 160ms ease, color 160ms ease; }
 .diagnostics-canvas > .section .atlas-card:nth-child(-n+3) { border-top: 0; }

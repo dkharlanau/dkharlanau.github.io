@@ -6,7 +6,7 @@
 .scenario-canvas :is(h1,h2,h3,p) { color: inherit; }
 .scenario-canvas h1, .scenario-canvas h2, .scenario-canvas h3 { text-wrap: balance; }
 .scenario-canvas .breadcrumbs { width: var(--scenario-width); margin: 0 auto; padding: 1rem 0 0; }
-.scenario-canvas__eyebrow, .scenario-cluster header > span, .scenario-cluster header p, .scenario-route-selector__result > p { margin: 0; color: var(--ps-signal) !important; font-family: var(--ps-mono); font-size: .67rem; font-weight: 700; letter-spacing: .09em; line-height: 1.35; text-transform: uppercase; }
+.scenario-canvas__eyebrow, .scenario-cluster header > span, .scenario-cluster header p, .scenario-route-selector__result > p { margin: 0; color: var(--ps-signal) !important; font-family: var(--font-mono); font-size: .67rem; font-weight: 700; letter-spacing: normal; line-height: 1.35; text-transform: none; }
 
 /* Hero */
 .scenario-canvas__hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center; gap: 1.75rem clamp(1.5rem, 3vw, 2.6rem); width: var(--scenario-width); min-height: min(43rem, calc(100svh - var(--ps-header))); margin: 0 auto; padding: clamp(3.25rem, 5.5vw, 5.5rem) 0 clamp(2.8rem, 4.5vw, 4.5rem); }
@@ -30,16 +30,16 @@
 .scenario-canvas__sequence li:first-child { border-inline-start: 0; padding-inline-start: 0; }
 .scenario-canvas__sequence li::before { z-index: 1; grid-row: 1 / span 3; width: .7rem; height: .7rem; margin-top: .12rem; border-radius: 50%; background: var(--ps-page); box-shadow: 0 0 0 1px var(--ps-ink); content: ""; }
 .scenario-canvas__sequence li:first-child::before { background: var(--ps-signal); box-shadow: 0 0 0 5px var(--ps-signal-soft); }
-.scenario-canvas__sequence span { grid-column: 2; color: var(--ps-signal); font-family: var(--ps-mono); font-size: .63rem; font-weight: 700; letter-spacing: .08em; }
+.scenario-canvas__sequence span { grid-column: 2; color: var(--ps-signal); font-family: var(--font-mono); font-size: .63rem; font-weight: 700; letter-spacing: normal; }
 .scenario-canvas__sequence strong { grid-column: 2; margin-top: .22rem; font-size: clamp(1.15rem, 1.7vw, 1.45rem); letter-spacing: -.04em; line-height: 1.05; }
 .scenario-canvas__sequence small { grid-column: 2; max-width: 23rem; margin-top: .55rem; color: var(--ps-ink-soft); font-size: .88rem; line-height: 1.5; }
 
 /* Selector */
 .scenario-route-selector { width: var(--scenario-width); margin: 0 auto; border-top: 1px solid var(--ps-ink); border-bottom: 1px solid var(--ps-ink); padding: clamp(2.2rem, 4.5vw, 4.5rem) 0; }
 .scenario-route-selector header { display: grid; grid-template-columns: minmax(14rem, .85fr) minmax(14rem, 1.15fr); gap: 2rem; margin-bottom: clamp(1.8rem, 4vw, 3.5rem); }
-.scenario-route-selector h2 { max-width: 11ch; margin: .6rem 0 0; font-size: var(--ps-type-content-h2) !important; }
+.scenario-route-selector h2 { max-width: 11ch; margin: .6rem 0 0; font-size: clamp(1.45rem, 1.25rem + 1vw, 1.9rem) !important; }
 .scenario-route-selector__tabs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--ps-line); border-bottom: 1px solid var(--ps-line); }
-.scenario-route-selector__tabs button { position: relative; display: flex; min-height: 8.6rem; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: .75rem; border: 0; border-inline-start: 1px solid var(--ps-line); border-radius: 0; background: transparent; color: var(--ps-signal); padding: 1rem; font-family: var(--ps-mono); font-size: .62rem; font-weight: 700; letter-spacing: .07em; text-align: start; cursor: pointer; transition: background 180ms ease, color 180ms ease; }
+.scenario-route-selector__tabs button { position: relative; display: flex; min-height: 8.6rem; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: .75rem; border: 0; border-inline-start: 1px solid var(--ps-line); border-radius: 0; background: transparent; color: var(--ps-signal); padding: 1rem; font-family: var(--font-mono); font-size: .62rem; font-weight: 700; letter-spacing: .07em; text-align: start; cursor: pointer; transition: background 180ms ease, color 180ms ease; }
 .scenario-route-selector__tabs button:first-child { border-inline-start: 0; padding-inline-start: 0; }
 .scenario-route-selector__tabs button span { color: var(--ps-ink); font-family: Inter, sans-serif; font-size: .78rem; font-weight: 730; letter-spacing: -.01em; line-height: 1.25; text-transform: none; }
 .scenario-route-selector__tabs button:hover, .scenario-route-selector__tabs button[aria-selected="true"] { background: var(--ps-signal-soft); }
@@ -72,12 +72,12 @@
 /* Method, evidence and footer */
 .scenario-method, .scenario-atlas, .scenario-canvas__footer { width: var(--scenario-width); margin: 0 auto; }
 .scenario-method { display: grid; grid-template-columns: minmax(15rem, .82fr) minmax(18rem, 1.18fr); gap: clamp(2.5rem, 7vw, 8rem); border-top: 1px solid var(--ps-ink); padding: clamp(3.4rem, 6vw, 6rem) 0; }
-.scenario-method h2, .scenario-atlas h2 { max-width: 12ch; margin: .55rem 0 0; font-size: var(--ps-type-content-h2) !important; }
+.scenario-method h2, .scenario-atlas h2 { max-width: 12ch; margin: .55rem 0 0; font-size: clamp(1.45rem, 1.25rem + 1vw, 1.9rem) !important; }
 .scenario-method header > p:last-child, .scenario-atlas p:not(.scenario-canvas__eyebrow) { max-width: 30rem; margin: 1rem 0 0; color: var(--ps-ink-soft); line-height: 1.58; }
 .scenario-method > ol { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; margin: 0; padding: 0; list-style: none; }
 .scenario-method > ol li { border-top: 1px solid var(--ps-line); padding: 1rem 1rem 1rem 0; color: var(--ps-ink); font-size: .9rem; font-weight: 690; }
 .scenario-method > ol li:nth-child(2n) { border-inline-start: 1px solid var(--ps-line); padding-left: 1rem; }
-.scenario-method > ol span { display: block; margin-bottom: .65rem; color: var(--ps-signal); font-family: var(--ps-mono); font-size: .62rem; }
+.scenario-method > ol span { display: block; margin-bottom: .65rem; color: var(--ps-signal); font-family: var(--font-mono); font-size: .62rem; }
 .scenario-method details { grid-column: 2; border-top: 1px solid var(--ps-line); border-bottom: 1px solid var(--ps-line); padding: .95rem 0; }
 .scenario-method summary { display: flex; align-items: center; justify-content: space-between; color: var(--ps-ink); font-size: .83rem; font-weight: 700; cursor: pointer; }
 .scenario-method summary .material-symbols-outlined { font-size: 1.05rem; transition: transform 180ms ease; }
