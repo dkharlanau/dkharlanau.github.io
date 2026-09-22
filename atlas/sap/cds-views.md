@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "CDS Views"
-description: "Analytical overview of CDS Views: what they are, where they sit, and how they break."
+description: "ABAP CDS views explained: semantic data modeling, view entities, associations, annotations, and how applications consume them."
 permalink: /atlas/sap/cds-views/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "CDS"
 business_process: "Data access and analytics"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -43,7 +43,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Technology</p>
     <h1>CDS Views</h1>
-    <p class="note-subtitle">Core Data Services for semantic data modeling in SAP S/4HANA and BTP.</p>
+    <p class="note-subtitle">A semantic data-modeling layer in ABAP that describes data, relationships, and meaning above the physical tables.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -56,93 +56,48 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>CDS (Core Data Services) Views are semantic data models that define how data is structured, related, and exposed in SAP systems. They serve as the foundation for transactional applications (RAP), analytics (Datasphere, Analytics Cloud), and API exposure (OData).</p>
+    <h2>Why CDS exists</h2>
+    <p>ABAP Core Data Services (CDS) lets developers define reusable data models close to the application semantics instead of making every consumer reconstruct business meaning from database tables. A CDS entity can select and combine data, define relationships, add semantic annotations, and become a building block for other CDS entities or ABAP applications.</p>
 
-    <h2>Business purpose</h2>
-    <p>Provide a unified, business-friendly data layer that replaces direct table access. Enable consistent data definitions across transactions, reports, and integrations.</p>
+    <p>This is the useful shift: a table tells us how data is stored; a CDS model can tell us what the data represents and how it relates to the rest of the business model. That distinction is especially important in SAP S/4HANA, where application consumers should not assume that a physical table is the best long-term interface.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>CDS Views sit between the database (HANA) and consumers: Fiori apps, OData services, analytical tools, and custom programs. They are defined in ABAP (for S/4HANA) and in CAP (for BTP).</p>
+    <h2>View entities are the modern default</h2>
+    <p>Modern ABAP CDS development uses <strong>CDS view entities</strong>, defined with <code>DEFINE VIEW ENTITY</code>. SAP describes them as the successor to older DDIC-based CDS views. A view entity can select from database tables or other CDS entities, expose elements, define associations, and carry annotations that add technical or semantic information.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>CDS entity: table-like view with fields, associations, annotations.</li>
-      <li>Association: relationship between entities (1:1, 1:n).</li>
-      <li>Annotation: UI, analytics, search, and service metadata.</li>
-      <li>Projection: subset or transformation of a base entity.</li>
-      <li>Extension: adding fields to a released CDS view.</li>
-      <li>Table function: HANA-specific calculation logic.</li>
-    </ul>
+    <p>Once activated, the CDS entity becomes a repository object that other CDS models and ABAP SQL can use. This makes CDS compositional: a low-level entity can expose stable fields and associations, while higher-level entities add a projection or a domain-specific view for a particular application.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: RAP business objects, analytical queries, custom reports.</li>
-      <li>Datasphere: replication, remote access, semantic modeling.</li>
-      <li>Analytics Cloud: live connection, import.</li>
-      <li>OData: auto-generated service from CDS annotations.</li>
-      <li>Fiori: UI5 elements driven by CDS annotations.</li>
-    </ul>
+    <h2>Associations express relationships</h2>
+    <p>Associations are one of the most important CDS ideas. Instead of repeating join logic in every consumer, the model can describe how one entity relates to another. A sales document item, for example, may expose an association to its product or business partner. Consumers can follow that relationship when they need it rather than treating every data model as one giant flattened query.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom CDS views extending standard views.</li>
-      <li>Custom annotations for UI and analytics.</li>
-      <li>Table functions for HANA-optimized calculations.</li>
-      <li>Side-by-side consumption via OData.</li>
-    </ul>
+    <p>Cardinality still matters. An association that is modeled incorrectly can mislead consumers and can change query behavior. CDS makes relationships easier to express, but it does not remove the need to understand the underlying data.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Query performance: execution plan, filter pushdown.</li>
-      <li>Association depth: excessive joins causing timeouts.</li>
-      <li>Annotation consistency: UI5 rendering, analytics mapping.</li>
-      <li>Extension stability: released view changes on upgrade.</li>
-    </ul>
+    <h2>Annotations add meaning for frameworks</h2>
+    <p>Annotations enrich the model with metadata. Depending on the annotation vocabulary and consuming framework, they can describe labels, analytical semantics, authorization behavior, search characteristics, UI metadata, or service-related properties. Because annotations can be inherited and propagated through CDS layers, the effective value seen by a consumer may come from more than one definition.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Unified semantic layer for transactions and analytics.</li>
-      <li>Declarative modeling reduces boilerplate SQL.</li>
-      <li>Annotations drive UI and service generation.</li>
-    </ul>
+    <p>This is why an annotation problem is not always visible in the file currently open in the editor. SAP provides an Annotation Propagation view in the ABAP development tools so developers can trace where effective annotation values originate.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Complex CDS views with deep associations perform poorly.</li>
-      <li>Annotation errors are hard to debug.</li>
-      <li>Released view changes can break extensions.</li>
-      <li>HANA-specific features limit portability.</li>
-    </ul>
+    <h2>CDS is used by several application models</h2>
+    <p>ABAP CDS is a shared modeling foundation rather than a reporting-only technology. RAP uses CDS entities to model transactional business objects and service projections. ABAP analytics uses CDS to model dimensions, facts, cubes, hierarchies, and analytical queries. ABAP programs can read CDS entities through ABAP SQL. Other frameworks can consume metadata exposed from the same model.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>CDS view timeout — missing filter, deep association, or large volume.</li>
-      <li>Annotation mismatch — UI5 app not rendering expected fields.</li>
-      <li>OData metadata error — CDS annotation or association issue.</li>
-      <li>Extension broken — released view changed in upgrade.</li>
-      <li>Wrong data — association cardinality or filter logic error.</li>
-    </ul>
+    <p>That does not mean that every CDS view automatically becomes an OData API, a Fiori application, or an analytical query. Exposure requires the corresponding service or application model. Keeping these layers separate avoids a common misconception: CDS defines the model; another framework decides how that model is executed or exposed for a particular use case.</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-technology-landscape-map/">SAP Technology Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-datasphere/">SAP Datasphere</a></li>
-      <li><a href="/atlas/sap/rap/">RAP</a></li>
-      <li><a href="/atlas/sap/odata/">OData</a></li>
-    </ul>
+    <h2>ABAP CDS and CAP CDS are related, but not interchangeable</h2>
+    <p>SAP also uses the name Core Data Services in CAP. The two worlds share declarative modeling ideas and similar vocabulary, but they run in different development environments and have different runtimes and feature sets. On this page, “CDS view” refers to <strong>ABAP CDS</strong> in the ABAP platform context.</p>
+
+    <h2>What makes a CDS model durable</h2>
+    <p>A good CDS model does more than return the right rows today. Its entities have clear responsibility, associations reflect real relationships, semantic annotations are intentional, and consumers depend on stable released interfaces where required. Deep stacks of views, unnecessary associations, and accidental dependencies can make a model harder to understand and operate even when the individual definitions are valid.</p>
+
+    <p>In practice, we treat CDS as an application contract rather than a convenient SQL shortcut. That mindset makes it easier to decide which fields belong in a reusable model, which logic belongs in a higher layer, and which SAP-delivered entity is safe to consume.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP ABAP Keyword Documentation — <a href="https://help.sap.com/doc/abapdocu_latest_index_htm/latest/en-US/abencds_v2_views.htm">ABAP CDS - View Entities</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/abap-cloud/abap-data-models/analyticsdetails-annotations">ABAP Data Models</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/abap_platform/f2e545608079437ab165c105649b89db/119ff2bc079a48d5bb784b2bc3de19ef.html">Annotation Propagation View</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. CDS view availability, annotations, and performance characteristics vary by S/4HANA release and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Available CDS features, annotations, release states, and framework behavior depend on the ABAP product and release. Verify the specific entity and its release contract in the target environment before using it as a stable extension interface.</p>
   </div>
 
   <section class="atlas-related">
@@ -150,6 +105,7 @@ sitemap: false
     <ul>
       <li><a href="/atlas/maps/sap-technology-landscape-map/">SAP Technology Landscape Map</a></li>
       <li><a href="/atlas/sap/rap/">RAP</a></li>
+      <li><a href="/atlas/sap/cds-analytical-views/">CDS Analytical Views</a></li>
       <li><a href="/atlas/sap/odata/">OData</a></li>
     </ul>
   </section>
