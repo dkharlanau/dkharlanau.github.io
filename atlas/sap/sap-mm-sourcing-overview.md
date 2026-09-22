@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MM Sourcing Overview"
-description: "How sourcing works in SAP MM: info records, source lists, quota arrangements, outline agreements, and common sourcing failures."
+description: "How source determination works in SAP MM, including purchasing info records, source lists, quota arrangements, contracts, and scheduling agreements."
 permalink: /atlas/sap/sap-mm-sourcing-overview/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: MM purchasing / sourcing
 business_process: Procure to pay
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-09
+last_reviewed: 2026-09-22
 author: Dzmitryi Kharlanau
 tags:
   - procure-to-pay
@@ -20,7 +20,7 @@ tags:
   - sourcing
 related:
   - /atlas/sap/sap-mm-procurement-overview/
-  - /atlas/diagnostics/sap-incompletion-procedure-diagnostics/
+  - /atlas/diagnostics/sap-source-determination-diagnostics/
   - /atlas/sap/gr-ir-clearing-explained/
 robots: noindex,follow
 sitemap: false
@@ -39,7 +39,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas SAP Note</p>
     <h1>SAP MM sourcing overview</h1>
-    <p class="note-subtitle">How SAP decides which supplier to use, and why that decision sometimes fails.</p>
+    <p class="note-subtitle">How SAP connects a procurement requirement with a permitted and useful source of supply.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -47,88 +47,63 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay</dd></div>
       <div><dt>SAP area</dt><dd>MM purchasing / sourcing</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Noindex until sourcing claims are verified against public SAP docs.</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Sourcing in SAP MM is the set of rules and master data that determines which supplier fulfills a procurement need. It is not just about picking a vendor; it is about ensuring the chosen supplier is valid for the material, plant, and purchasing organization, and that the price and terms are agreed in advance. When sourcing fails, the symptom is usually a blocked purchase requisition or a PO that cannot be created. The root cause is almost always a gap in master data or an expired rule.</p>
+    <h2>What sourcing means in SAP MM</h2>
+    <p>A purchase requisition can describe a perfectly valid requirement and still not answer one important question: who should supply it? Source determination is the part of purchasing that connects the requirement with a source of supply. Depending on the scenario, that source may be represented by a purchasing info record, a source-list entry, a contract, a scheduling agreement, or a source participating in a quota arrangement.</p>
 
-    <h2>Key sections</h2>
+    <p>These objects do different jobs, so it helps not to treat them as interchangeable. An info record describes a purchasing relationship between a supplier and a material for an organizational context. A source list controls which sources are valid or preferred for a material and plant during a period. An outline agreement provides a longer-term commercial reference. A quota arrangement influences how requirements are distributed among several allowed sources.</p>
 
-    <h3>Info records</h3>
-    <p>An info record links a material, a supplier, and a purchasing organization. It stores the last price, planned delivery time, and terms. It is optional for manual PO creation but often required for automatic sourcing.</p>
+    <h2>Purchasing info records</h2>
+    <p>A purchasing info record stores supplier-material purchasing data such as prices and conditions, planned delivery time, and other procurement information. It gives SAP a maintained relationship to work with, but its existence alone does not mean that the supplier will always be selected. Source determination also considers the rest of the sourcing context.</p>
+
+    <p>This distinction is important. We can have a valid info record and still get no automatic source because another sourcing object restricts the choice, the validity does not fit, or the process requires a different reference.</p>
+
+    <h2>Source lists</h2>
+    <p>A source list is maintained for a material and plant over a validity period. It can identify permitted sources, fixed sources, or blocked sources. In processes where source-list use is required, an otherwise valid supplier relationship may still be unusable if the source-list entry is missing, expired, or excludes that source.</p>
+
+    <p>The date matters because sourcing is about a requirement at a point in time. A source that was valid last month is not automatically valid for a requisition with a delivery date next month.</p>
+
+    <h2>Quota arrangements</h2>
+    <p>A quota arrangement is used when procurement should be distributed across several sources. It is not simply a static percentage split applied independently to every purchase requisition. SAP keeps track of quantities already allocated to the sources and calculates a <em>quota rating</em>. During source determination, that rating helps decide which source should receive the next requirement.</p>
+
+    <p>The basic idea is balancing over time. A source with a larger quota should receive a larger share of the total requirement, but the next assignment also depends on what has already been allocated and on the quota base quantity. This is why two suppliers with the same current demand do not necessarily receive the next requisition in the way a simple percentage calculation would suggest.</p>
+
+    <h2>Contracts and scheduling agreements</h2>
+    <p>Contracts and scheduling agreements are outline agreements, but their operational use is different. A contract defines agreed conditions for a period or target quantity/value and is referenced by later purchasing documents. A scheduling agreement goes further by supporting delivery schedules against the agreement.</p>
+
+    <p>Both can act as sources of supply when they are valid for the requirement and the surrounding sourcing rules allow them. This means sourcing is not only about finding a supplier name. It can also be about finding the correct commercial document behind that supplier relationship.</p>
+
+    <h2>How the pieces work together</h2>
+    <p>There is no useful universal rule such as “SAP always checks info record, then source list, then quota.” The exact determination depends on the application and configuration. In classic purchasing source determination, a valid quota arrangement can have priority; the source list can then restrict or identify valid sources, and outline agreements or info records can provide source details. Other processes, such as MRP or PP/DS, have their own documented sourcing behavior.</p>
+
+    <p>That is why a sourcing issue should be explained in its process context. We first identify where the source is being determined — for example, during requisition processing, MRP, or another planning flow — and only then interpret the relevant master data.</p>
+
+    <h2>A small example</h2>
+    <p>Suppose a plant buys the same material from two suppliers. Both have valid purchasing data. A quota arrangement is configured because the business wants to distribute the volume. SAP does not merely alternate suppliers or assign a fixed percentage to each single requisition. It compares the maintained quotas with the quantities already allocated and uses the resulting quota rating when assigning the next source.</p>
+
+    <p>If the expected supplier is not selected, the explanation may be completely correct from SAP's point of view: the source is valid, but the current quota state favors the other supplier. That is a different problem from an expired source-list entry or a missing info record, even though all three can look like “wrong supplier determination” to the user.</p>
+
+    <h2>What this page does not cover</h2>
+    <p>Sourcing behavior differs across classic purchasing, MRP, PP/DS, SAP Ariba, retail scenarios, and custom processes. This page explains the core MM concepts rather than one universal search sequence. For a concrete incident, use the process-specific source-determination documentation and the system's actual master data.</p>
+
+    <h2>Sources</h2>
     <ul>
-      <li><strong>ME11</strong> — create info record.</li>
-      <li><strong>ME12</strong> — change info record.</li>
-      <li><strong>ME13</strong> — display info record.</li>
-      <li><strong>ME1N</strong> — list info records by material or supplier.</li>
+      <li>SAP Learning — <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/identifying-additional-aspects-of-source-determination">Identifying Additional Aspects of Source Determination</a>.</li>
+      <li>SAP Learning — <a href="https://learning.sap.com/courses/sourcing-in-sap-s4hana/introducing-quota-arrangements-in-sap-s-4hana">Introducing Quota Arrangements in SAP S/4HANA</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/57c7e45776bddf12e10000000a4450e5.html">Manage Sources of Supply</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8a57feade137489098f59374c06f1e0e/f006b753128eb44ce10000000a174cb4.html">Maintain Quota Arrangement</a>.</li>
     </ul>
-    <p>Common issue: the info record exists but is not marked as <em>standard</em> or <em>pipeline</em>, or the purchasing organization in the info record does not match the PR.</p>
-
-    <h3>Source lists</h3>
-    <p>A source list defines which suppliers are valid for a material in a specific plant during a specific time period. It can be mandatory or optional depending on plant configuration.</p>
-    <ul>
-      <li><strong>ME01</strong> — create source list.</li>
-      <li><strong>ME03</strong> — display source list.</li>
-      <li><strong>ME05</strong> — generate source list from info records and outline agreements.</li>
-    </ul>
-    <p>Common issue: the source list has expired (valid-to date in the past), or the supplier is blocked in the source list, or no source list exists and the plant requires one.</p>
-
-    <h3>Quota arrangements</h3>
-    <p>A quota arrangement splits procurement across multiple suppliers by percentage. It is used when no single supplier should receive all the volume.</p>
-    <ul>
-      <li><strong>MEQ1</strong> — maintain quota arrangement.</li>
-      <li><strong>MEQ4</strong> — display quota arrangement.</li>
-    </ul>
-    <p>Common issue: the quota arrangement does not add up to 100 percent, or one supplier has reached their quota and the system cannot assign the remainder, or the quota arrangement is not released.</p>
-
-    <h3>Outline agreements and contracts</h3>
-    <p>An outline agreement is a long-term arrangement with a supplier. A contract is a legal agreement without delivery schedules; a scheduling agreement includes delivery dates.</p>
-    <ul>
-      <li><strong>ME31K</strong> — create contract.</li>
-      <li><strong>ME32K</strong> — change contract.</li>
-      <li><strong>ME33K</strong> — display contract.</li>
-      <li><strong>ME38</strong> — maintain scheduling agreement delivery schedule.</li>
-    </ul>
-    <p>Common issue: the contract is expired, the target quantity is exhausted, or the contract is not released. A PO referencing an invalid contract will fail or fall back to manual sourcing.</p>
-
-    <h3>Automatic vs manual sourcing</h3>
-    <p>Automatic sourcing is triggered during PR-to-PO conversion or MRP. The system searches in this order: quota arrangement, source list, info record, outline agreement. If nothing is found, the PR remains without a source or the PO must be created manually. Manual sourcing means the user selects the supplier directly in <strong>ME21N</strong> or <strong>ME51N</strong>.</p>
-
-    <h3>Common sourcing failures</h3>
-    <ul>
-      <li><strong>Missing info record</strong> — the material has never been purchased from this supplier, or the info record was deleted.</li>
-      <li><strong>Expired source list</strong> — the valid-to date passed and no new source list was created.</li>
-      <li><strong>Blocked supplier</strong> — the supplier master has a blocking flag for the purchasing organization or company code.</li>
-      <li><strong>Quota arrangement mismatch</strong> — the quota is not released, or the assigned supplier is blocked, or the quota percentages do not cover the requirement.</li>
-      <li><strong>Organizational mismatch</strong> — the purchasing organization or plant in the PR does not match the sourcing master data.</li>
-    </ul>
-
-    <h3>Diagnostic questions</h3>
-    <ul>
-      <li>Does the material have a valid source list for this plant and time period?</li>
-      <li>Is there an info record for the intended supplier and purchasing organization?</li>
-      <li>Is the supplier blocked in the master data or in the source list?</li>
-      <li>Does a quota arrangement exist, and is it released and valid?</li>
-      <li>Is the plant configured to require a source list?</li>
-    </ul>
-
-    <h2>Support takeaway</h2>
-    <p>Most sourcing failures are master data issues, not system bugs. Before escalating a sourcing problem, verify the source list validity period, the info record purchasing organization, and the supplier blocking status. A quick check in <strong>ME03</strong> and <strong>ME13</strong> resolves the majority of cases.</p>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page covers standard MM sourcing. It does not cover SRM supplier management, Ariba sourcing, or vendor evaluation scoring. It does not detail MRP sourcing logic or batch-specific material determination.</p>
-
-    <p><em>This is not official SAP documentation and not a replacement for system-specific analysis.</em></p>
   </div>
 
   <section class="atlas-related">
     <h2>Related Atlas Pages</h2>
     <ul>
       <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP MM Procurement Overview</a></li>
-      <li><a href="/atlas/diagnostics/sap-incompletion-procedure-diagnostics/">SAP Incompletion Procedure Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-source-determination-diagnostics/">SAP Source Determination Diagnostics</a></li>
       <li><a href="/atlas/sap/gr-ir-clearing-explained/">SAP GR/IR Clearing Explained</a></li>
     </ul>
   </section>
