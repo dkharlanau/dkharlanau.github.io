@@ -224,6 +224,25 @@
    Class names match the de-facto standard used by atlas pages,
    blog/note layouts, and generated pages. Content needs no markup edits. */
 
+/* Mobile: the main wrapper already owns the gutter — article containers
+   must not add a second inset, or the reading column becomes too thin. */
+@media (max-width: 760px) {
+  body.page-context--knowledge .atlas-page,
+  body .note-detail,
+  body .note-article {
+    width: 100% !important;
+    padding-inline: 0 !important;
+  }
+
+  body .atlas-page > .note-header,
+  body .atlas-page > .note-body,
+  body .atlas-page > .atlas-meta-panel,
+  body .note-article > .note-header,
+  body .note-article > .note-body {
+    padding-inline: 0 !important;
+  }
+}
+
 .note-detail,
 .note-article {
   width: min(100%, var(--container-content));
