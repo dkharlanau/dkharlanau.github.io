@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MDG"
-description: "Analytical overview of SAP MDG: what it is, where it sits, and how it breaks."
+description: "SAP Master Data Governance explained: change requests, staging, validation, activation, data models, and governed distribution."
 permalink: /atlas/sap/sap-mdg/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "MDG"
 business_process: "Master data governance"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-22
 author: Dzmitryi Kharlanau
 
 tags:
@@ -46,7 +46,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Product</p>
     <h1>SAP MDG</h1>
-    <p class="note-subtitle">Master Data Governance for centralized creation, validation, and distribution.</p>
+    <p class="note-subtitle">A governance layer for changing master data before the change becomes active and spreads through the landscape.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -59,89 +59,39 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>SAP MDG (Master Data Governance) is a centralized hub for creating, validating, and distributing master data across the enterprise. It ensures consistency of business partners, materials, customers, vendors, and other master objects.</p>
+    <p>SAP Master Data Governance (MDG) is easiest to understand as a controlled path from a proposed master-data change to active, usable data. The important idea is not simply that MDG stores master data. It gives an organization a place to apply ownership, checks, workflow, and approval before a change is activated.</p>
 
-    <h2>Business purpose</h2>
-    <p>Prevent master data fragmentation. Enforce validation rules before data enters downstream systems. Distribute governed master data to S/4HANA, satellite systems, and external partners.</p>
+    <h2>The change request is the center of the governance flow</h2>
+    <p>In central governance, a user does not normally change the active record directly. The user creates a change request. The proposed data is held in a staging area while the request moves through the configured workflow. Checks can run during that process, including required-field checks, validations, and duplicate checks. When the request is approved, the governed data is activated.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>MDG sits upstream of S/4HANA and other target systems. It receives requests, runs workflows, applies validation, and replicates approved data. It is often the system of record for business partner and material master.</p>
+    <p>This separation between <em>proposed</em> data and <em>active</em> data is what makes MDG different from an ordinary maintenance screen. It gives reviewers a stable object to discuss, reject, correct, or approve without treating every intermediate edit as production master data.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Business partner: customer, vendor, contact, employee.</li>
-      <li>Material master: basic data, classification, units.</li>
-      <li>Change request: workflow-driven master data changes.</li>
-      <li>Data model: entity types, attributes, relationships, hierarchies.</li>
-      <li>Replication model: filter, mapping, distribution rules.</li>
-      <li>Key mapping: source-to-target identifier translation.</li>
-    </ul>
+    <h2>Data model, rules, and workflow solve different problems</h2>
+    <p>The MDG data model describes the entities, attributes, and relationships that belong to the governed object. Business rules and checks decide whether a proposed change is acceptable. Workflow decides who must act and in which order. These layers work together, but they are not interchangeable.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: direct replication, change pointers, ALE/IDoc.</li>
-      <li>Satellite systems: CRM, SCM, external ERP via replication.</li>
-      <li>External: data import, mass processing, API-based creation.</li>
-    </ul>
+    <p>For example, a Business Partner change can contain general data and role-specific or organizational data. The model defines what can be represented; validation can reject inconsistent values; workflow can route the request to the responsible steward. If approval succeeds, activation makes the accepted version available in the active area.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom data models and validation rules.</li>
-      <li>Workflow enhancements and approval rules.</li>
-      <li>Custom replication logic and key mapping.</li>
-      <li>Side-by-side data quality apps on BTP.</li>
-    </ul>
+    <h2>Activation and distribution are separate concerns</h2>
+    <p>Approval answers the governance question: <em>may this change become active?</em> Distribution answers a different question: <em>which other systems need the active data, and in what representation?</em> In a multi-system landscape, replication therefore needs its own configuration, filters, mappings, and monitoring.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Change request backlog: pending, rejected, approved.</li>
-      <li>Replication log: success, error, retry status.</li>
-      <li>Data quality score: validation rule violations.</li>
-      <li>Key mapping completeness: missing or duplicate mappings.</li>
-    </ul>
+    <p>That distinction matters in support. A successful change request does not by itself prove that every downstream target received and accepted the record. Likewise, a replication error does not necessarily mean that the governance workflow was wrong. We get a clearer diagnosis when we first separate the lifecycle of the change request from the lifecycle of the replicated message.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Centralized governance reduces duplicate and inconsistent master data.</li>
-      <li>Workflow-driven changes enforce approval and audit.</li>
-      <li>Flexible data models for custom master objects.</li>
-    </ul>
+    <h2>MDG is broader than one governance pattern</h2>
+    <p>Central Governance is the best-known pattern, but SAP MDG also provides capabilities for consolidating and mass-processing master data. These solve a different class of problem: bringing existing records together, matching or standardizing them, and applying controlled changes at scale. The exact capabilities available depend on the MDG product and release, so they should not be treated as one universal workflow.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Replication failures are common and hard to trace.</li>
-      <li>Key mapping complexity increases with system count.</li>
-      <li>Workflow configuration is release-specific and brittle.</li>
-      <li>Data model changes require careful migration planning.</li>
-    </ul>
+    <h2>What good governance changes</h2>
+    <p>A useful MDG design makes responsibility visible. It becomes clear who proposes a change, which rules are checked, who approves it, when it becomes active, and how it reaches the systems that depend on it. That traceability is more valuable than simply centralizing fields in one application.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Business partner not replicated — model filter or key mapping.</li>
-      <li>Duplicate master data — key mapping missing or wrong.</li>
-      <li>Change request stuck — workflow rule or approver issue.</li>
-      <li>Validation failure — custom rule too strict or data format mismatch.</li>
-      <li>Replication performance — large data volume or network latency.</li>
-    </ul>
-
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
-      <li><a href="/atlas/data-quality/sap-mdg-governance-patterns/">SAP MDG Governance Patterns</a></li>
-    </ul>
+    <p>It also changes the way we investigate master-data incidents. Instead of asking only whether a field is correct in the final table, we can ask where the record is in its lifecycle: still staged, rejected, approved but not activated, active but not replicated, or replicated but rejected by a target system. Those are different states and require different fixes.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_MASTER_DATA_GOVERNANCE/1b769cd8013643adac309014c812427e/77f5b94bdfcf4a2fa40d82098354fa11.html">Change Request Processing</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_MASTER_DATA_GOVERNANCE/38e78d5fbde74325885af5a4e7a4acf6/cf9b0955b37e3d6ae10000000a44176d.html">Data Modeling</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. MDG module scope, replication mechanisms, and configuration paths vary by release and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>MDG data models, workflow steps, validation logic, activation behavior, replication technologies, and available applications vary by object, product version, and deployment. This page explains the durable governance model rather than a release-specific configuration recipe.</p>
   </div>
 
   <section class="atlas-related">
