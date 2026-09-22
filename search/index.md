@@ -17,10 +17,6 @@ hide_site_share: true
       <h1>Find the SAP problem, route, or proof.</h1>
       <p>Search services, diagnostics, scenarios, labs, research, profile evidence, and public datasets.</p>
     </div>
-    <figure class="search-canvas__visual">
-      <img src="/assets/img/systems/erp-document-flow-journal.webp" alt="An ERP operating signal branching through document, data, warehouse, and integration evidence routes." width="1728" height="1081" decoding="async" fetchpriority="high" />
-      <figcaption>One operating question, several evidence boundaries.</figcaption>
-    </figure>
   </header>
 
   <form class="search-canvas__form" role="search" method="get" action="/search/">

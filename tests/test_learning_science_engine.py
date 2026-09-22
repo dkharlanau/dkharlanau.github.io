@@ -82,7 +82,7 @@ def test_mastery_engine_stores_calibration_metadata_but_not_answer_or_repair_tex
     assert "confidence," in js
     assert "mismatch," in js
     assert "calibrationGap" in js
-    assert "averageCalibrationGap" in js
+    assert "averageCalibrationGap" not in js
     assert "repair_after" in js
     assert "repairDeferred" in js
     assert "repairReady" in js

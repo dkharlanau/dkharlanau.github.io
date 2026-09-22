@@ -34,7 +34,7 @@ tags:
       <h1>Stop reviewing.<br />Make a decision.</h1>
       <p>These drills test the part of SAP Lead interviews that reading cannot prove: choosing a boundary, diagnosing a failure, defending a trade-off, and supporting a claim with evidence.</p>
       <a class="research-canvas__button" href="#drills">Choose a drill <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/practice/">Interview Mode</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/assessment/">Assessment</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/practice/">Interview Mode</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/assessment/">Assessment</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Drill loop">
       <p>Lead drill loop</p>

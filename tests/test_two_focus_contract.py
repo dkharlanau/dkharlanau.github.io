@@ -26,9 +26,8 @@ def test_home_routes_to_two_jobs_without_replacing_the_brand():
     assert len(re.findall(r'class="focus-card(?:\s|\")', home)) == 2
     assert "'/learn/' | relative_url" in home
     assert "'/services/sap-ams-consulting/' | relative_url" in home
-    assert "'/services/sap-ams-consulting/#diagnostic-example' | relative_url" in home
     assert home.count("<h1 ") == 1
-    assert "Problem</strong>" in home and "Verify</strong>" in home
+    assert 'role="search"' in home and "'/search/' | relative_url" in home and 'name="q"' in home
     header = read("_includes/header.html")
     assert "/assets/img/logo-d.svg" in header
     assert "{% if page_locale == 'en' %}" in header

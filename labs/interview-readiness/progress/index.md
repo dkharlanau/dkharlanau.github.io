@@ -26,8 +26,8 @@ tags:
       <p class="research-canvas__eyebrow">Interview Readiness / Progress</p>
       <h1>See the gap.<br />Change the next session.</h1>
       <p>Progress is useful when it changes your preparation. This view combines roadmap depth with recent Interview Mode sessions and shows where confidence is still thin.</p>
-      <a class="research-canvas__button" href="#progress-summary">Open progress <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a></nav>
+      <a class="research-canvas__button" href="#practice-history">See recent practice <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Progress model">
       <p>Two signals</p>
@@ -38,13 +38,8 @@ tags:
     </div>
   </header>
 
-  <section class="research-canvas__inventory" id="progress-summary" data-reveal>
-    <header><p class="research-canvas__eyebrow">Summary</p><h2>Readiness is depth plus coverage.</h2><p>One strong topic cannot compensate for an untouched track when the role crosses Sales, Logistics, Integration, AI, and leadership decisions.</p></header>
-    <div class="ir-grid" id="ir-progress-summary"></div>
-  </section>
-
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Track coverage</p><h2>Where the roadmap is solid, and where it is mostly optimism.</h2><p>Readiness is weighted from Not reviewed to Can defend. “Can explain” is useful. “Can defend” is the stronger Lead signal.</p></header>
+    <header><p class="research-canvas__eyebrow">Track coverage</p><h2>Where the roadmap is solid, and where it is mostly optimism.</h2><p>Readiness is weighted from Not reviewed to Can defend. “Can explain” is useful. “Can defend” is the stronger Lead signal. Every state here was chosen by you in this browser.</p></header>
     <div style="overflow-x:auto"><table class="ir-progress-table"><thead><tr><th>Track</th><th>Readiness</th><th>Not reviewed</th><th>Refreshed</th><th>Can explain</th><th>Can defend</th></tr></thead><tbody id="ir-track-table"></tbody></table></div>
   </section>
 
@@ -53,7 +48,7 @@ tags:
     <div class="ir-topic-list" id="ir-weak-topics"></div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="practice-history" data-reveal>
     <header><p class="research-canvas__eyebrow">Recent Interview Mode</p><h2>Mixed practice should expose cross-track weakness.</h2><p>This is a self-rating, not a certification. Use it as a signal for what to review next.</p></header>
     <div id="ir-practice-history"></div>
   </section>
@@ -74,7 +69,6 @@ tags:
   'use strict';
   const IR = window.InterviewReadiness;
   if (!IR) return;
-  const summaryEl = document.getElementById('ir-progress-summary');
   const table = document.getElementById('ir-track-table');
   const weak = document.getElementById('ir-weak-topics');
   const historyEl = document.getElementById('ir-practice-history');
@@ -82,18 +76,9 @@ tags:
   function render() {
     const data = IR.summary();
     const practice = IR.practiceHistory();
-    const stories = IR.storyBank();
-    const latest = practice[0];
-    summaryEl.replaceChildren();
-    [
-      ['Roadmap readiness',data.overall + '%',`${IR.TOPICS.length - data.statuses['not-reviewed']} of ${IR.TOPICS.length} topics touched`],
-      ['Interview sessions',String(practice.length),latest ? `Latest: ${latest.percent}%` : 'No mixed session saved yet'],
-      ['Prepared stories',String(stories.length),stories.length ? 'Browser-local story evidence' : 'Add incident, decision, and conflict stories']
-    ].forEach(([label,value,detail]) => {
-      const card = document.createElement('article'); card.className = 'ir-card';
-      card.innerHTML = `<p class="ir-kicker">${label}</p><p class="ir-metric">${value}</p><p class="ir-muted">${detail}</p>`;
-      summaryEl.appendChild(card);
-    });
+    const table = document.getElementById('ir-track-table');
+    const weak = document.getElementById('ir-weak-topics');
+    const historyEl = document.getElementById('ir-practice-history');
 
     table.replaceChildren();
     Object.entries(IR.TRACKS).forEach(([track,label]) => {

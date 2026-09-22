@@ -125,7 +125,7 @@ def test_primary_navigation_has_unique_labels_and_routes():
         assert len(labels) == len(set(labels))
         assert len(urls) == len(set(urls))
     assert primary_urls(registry) == [
-        "/learn/", "/services/sap-ams-consulting/", "/knowledge/", "/about/"
+        "/learn/", "/knowledge/", "/about/"
     ]
 
 

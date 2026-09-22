@@ -34,7 +34,7 @@ tags:
       <h1>Close the notes.<br />Build the answer.</h1>
       <p>Reading creates familiarity. This session checks whether the useful model can be rebuilt from memory, connected to neighbouring processes, applied to a new case, and defended under challenge.</p>
       <a class="research-canvas__button" href="#session">Start today's session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/contrast/">Contrast Lab</a><a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a><a href="/labs/interview-readiness/learning-science/">Learning Science</a><a href="/labs/interview-readiness/roadmap/">Career Roadmap</a><a href="/labs/assessment/practice-engine/">Assessment Practice</a><a href="/labs/assessment/progress/">Assessment Progress</a></nav>
+      <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/contrast/">Contrast Lab</a><a href="/labs/interview-readiness/memory-atlas/">Memory Atlas</a><a href="/labs/interview-readiness/learning-science/">Learning Science</a><a href="/labs/interview-readiness/roadmap/">Career Roadmap</a><a href="/labs/assessment/practice-engine/">Assessment Practice</a><a href="/labs/assessment/progress/">Assessment Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Mastery loop">
       <p>Mastery loop</p>
@@ -53,12 +53,6 @@ tags:
     <p><strong>Rule:</strong> answer and commit confidence before you reveal the reference. Familiarity is not evidence that you can retrieve the model in an assessment.</p>
     <p><strong>Scheduler:</strong> same-session success can repair fluency but does not advance the spacing stage. A stage grows only after a successful retrieval separated by a real delay.</p>
     <p><strong>Scoring:</strong> self-score is a practice signal, not certification. Use Contrast Lab, Assessment Practice and human review when you need stronger evidence.</p>
-  </section>
-
-  <section class="research-canvas__inventory" id="position" data-reveal>
-    <header><p class="research-canvas__eyebrow">Learning position</p><h2>Track retrieval, retention and calibration.</h2><p>The learning state is separate from the professional capability target in the Career Roadmap. Confidence is also separate from performance.</p></header>
-    <div class="mastery-metrics" id="mt-metrics" aria-label="Mastery metrics"></div>
-    <div class="mastery-state-strip" id="mt-state-strip" aria-label="Mastery states"></div>
   </section>
 
   <section class="research-canvas__inventory" id="session" data-reveal>
