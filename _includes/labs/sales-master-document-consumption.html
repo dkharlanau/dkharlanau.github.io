@@ -17,6 +17,35 @@
     {% endfor %}
   </section>
 
+  {% assign runtime_visual = site.data.labs.enterprise_context.visuals.sales_o2c_runtime.visual %}
+  {% include labs/semantic-lane-flow.html model=runtime_visual %}
+
+  <section class="research-canvas__inventory" id="o2c-event-ledger">
+    <header>
+      <p class="research-canvas__eyebrow">Runtime event ledger</p>
+      <h2>What actually changes in the system at each stage?</h2>
+      <p>A process step matters because it reads state, writes new state, crosses an ownership boundary, or creates proof. Use this ledger when an assessment question moves from “what is the document flow?” to “what does SAP update when this event happens?”</p>
+    </header>
+    <div class="smd-event-ledger">
+      {% for event in docmap.event_ledger %}
+      <details>
+        <summary>
+          <span>{% if event.order < 10 %}0{% endif %}{{ event.order }}</span>
+          <strong>{{ event.event }}</strong>
+          <small>{{ event.owner }} · {{ event.main_object }}</small>
+        </summary>
+        <div class="smd-event-ledger__body">
+          <section><h4>Reads</h4><ul>{% for item in event.reads %}<li>{{ item }}</li>{% endfor %}</ul></section>
+          <section><h4>Writes / updates</h4><ul>{% for item in event.writes %}<li>{{ item }}</li>{% endfor %}</ul></section>
+          <section><h4>Cross-process boundary</h4><ul>{% for item in event.cross_process %}<li>{{ item }}</li>{% endfor %}</ul></section>
+          <section><h4>Proof / evidence</h4><ul>{% for item in event.proof %}<li>{{ item }}</li>{% endfor %}</ul></section>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+    <p class="smd-doc-note"><strong>Lead rule:</strong> distinguish preparation from commit. Delivery creation prepares physical execution; PGI commits stock/value consequences. Billing creates the receivable/revenue boundary; incoming payment is a separate FI-AR clearing event.</p>
+  </section>
+
   <section class="research-canvas__inventory">
     <header>
       <p class="research-canvas__eyebrow">Document nodes</p>
