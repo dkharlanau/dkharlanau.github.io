@@ -303,39 +303,52 @@
       "code": "MEC.SD.COPY",
       "id": "MEC-SD-COPY",
       "title": "Copy Control",
-      "memory_hook": "A follow-on document inherits rules, not just fields.",
-      "question": "What is allowed to flow from source to target, and what is redetermined?",
+      "memory_hook": "Copy control is the contract between a predecessor and its follow-on document.",
+      "question": "What may flow from the source document into the target, what must be checked first, and when is the source considered referenced or complete?",
       "inputs": [
         {
           "name": "source document type",
-          "origin": "document/configuration"
+          "origin": "preceding document / configuration"
         },
         {
           "name": "target document type",
-          "origin": "document/configuration"
+          "origin": "new document / configuration"
         },
         {
           "name": "source item category",
-          "origin": "document"
+          "origin": "preceding sales item"
         },
         {
-          "name": "copying requirements / data transfer / quantity / pricing type",
-          "origin": "configuration"
+          "name": "source schedule line category",
+          "origin": "preceding schedule line when schedule-line copying is relevant"
+        },
+        {
+          "name": "copying requirements, data-transfer routines and switches",
+          "origin": "copy-control configuration"
+        },
+        {
+          "name": "completion rule",
+          "origin": "item category of the preceding sales item"
         }
       ],
-      "determination": "Copy-control settings at header/item level decide whether reference creation is allowed and how data, quantities, status and pricing move into the target.",
+      "determination": "A valid source-to-target relationship is the starting point. Copy control is maintained at header, item and schedule-line level. At each level SAP can check copying requirements, run data-transfer routines and apply transaction-specific switches. At item and schedule-line level, the target category can be proposed from the relevant category assignment when no valid target is entered. For reference progress, the item-level Document flow update setting updates referred quantities or values in the predecessor, while the completion rule in the preceding item's item category decides when that item becomes complete.",
       "outputs": [
         "target document content",
-        "reference status",
-        "document flow",
-        "pricing copy/redetermination behavior"
+        "target item and schedule-line mapping",
+        "document flow and reference status",
+        "referred quantity/value progress in the predecessor",
+        "pricing copy or redetermination behavior"
       ],
       "controls": [
-        "quotation-to-order",
-        "contract release",
-        "order-to-delivery",
-        "order/delivery-to-billing",
-        "returns and correction chains"
+        "whether a source/target document relationship is allowed",
+        "header, item and schedule-line transfer",
+        "copying requirements before transfer",
+        "field and business-data transfer",
+        "target item and schedule-line category proposal",
+        "item-number and other transaction switches",
+        "reference quantity/value updates",
+        "predecessor completion status",
+        "pricing copy/redetermination"
       ],
       "downstream": [
         "MEC.SD.BILL",
@@ -343,36 +356,73 @@
         "MEC.SD.TEXT"
       ],
       "configuration_surfaces": [
-        "Copy control for sales documents",
-        "Copy control for deliveries",
-        "Copy control for billing documents"
+        "Sales document → sales document copy control with header, item and schedule-line levels",
+        "Copying requirements at the relevant level",
+        "Data-transfer routines for header, partner, business, item or schedule-line data as required",
+        "Transaction-specific switches such as copying source item numbers",
+        "Item-level Document flow update when reference quantities or values must update the predecessor",
+        "Completion rule in the source item category; this decides when the preceding item is treated as completed",
+        "Target item/schedule-line category proposal must be valid in the corresponding category assignment",
+        "Classic/on-premise routine maintenance in VOFM; prefer suitable standard routines before creating custom logic"
       ],
       "classic_transactions": [
         "VTAA",
         "VTLA",
         "VTFA",
-        "VTFL"
+        "VTFL",
+        "VOFM"
       ],
       "failure_modes": [
         {
-          "symptom": "Reference document cannot be created",
-          "prove": "Check source/target pair → item category entry → copying requirement → status and completion rule."
+          "symptom": "Create with Reference is not possible for the expected document chain",
+          "prove": "Start with the source/target document-type relationship. Then check the relevant header, item and schedule-line entries before looking at transfer logic."
         },
         {
-          "symptom": "Wrong price or quantity in target",
-          "prove": "Check item-level pricing type, quantity rule and data-transfer routine before blaming pricing itself."
+          "symptom": "The target exists, but copying is rejected or stops with a warning/error",
+          "prove": "Check copying requirements first. They run before data-transfer routines and can reject the reference because of status, validity, sold-to or other business conditions."
+        },
+        {
+          "symptom": "Wrong fields, partners, business data or pricing arrive in the target",
+          "prove": "Trace the data-transfer routine, pricing type and switches at the level that owns the field. Do not treat every difference as a pricing or master-data defect."
+        },
+        {
+          "symptom": "A partial reference closes the predecessor too early, or keeps it open too long",
+          "prove": "Separate document-flow update from completion logic. The item-level update records reference progress; the completion rule in the preceding item category decides when the item becomes complete."
+        },
+        {
+          "symptom": "Reference quantities or values do not update in the predecessor as expected",
+          "prove": "Check the item-level Document flow update setting before changing the completion rule."
+        },
+        {
+          "symptom": "Unexpected target item or schedule-line category",
+          "prove": "Check the maintained target category and the corresponding category assignment. A target proposal must be allowed by the relevant assignment."
         }
       ],
       "tests": [
         {
           "id": "TEST-MEC-COPY-01",
-          "setup": "Create a quotation then create an order with reference.",
-          "assert": "Expected quantities, references, statuses and configured pricing behavior are transferred."
+          "setup": "Create a quotation for quantity 10, then create an order with reference for quantity 4 under a completion rule that requires full reference.",
+          "assert": "The quotation item remains partially referred and can still be referenced for the remaining quantity."
         },
         {
           "id": "TEST-MEC-COPY-02",
-          "setup": "Change pricing type between copy and repricing behavior in a controlled test configuration.",
-          "assert": "Target pricing changes exactly at the copy-control boundary."
+          "setup": "Reference the remaining quantity 6 from the same quotation.",
+          "assert": "The quotation item becomes completed when the full quantity has been referenced."
+        },
+        {
+          "id": "TEST-MEC-COPY-03",
+          "setup": "Create an inquiry and reference only part of its quantity in a quotation under a completion rule that completes on first reference.",
+          "assert": "The inquiry item is completed after the first valid reference even though the referenced quantity is partial."
+        },
+        {
+          "id": "TEST-MEC-COPY-04",
+          "setup": "Use a source document that intentionally fails a configured copying requirement, for example because the business condition for reference creation is not met.",
+          "assert": "The system blocks or warns before the transfer routines create the target content."
+        },
+        {
+          "id": "TEST-MEC-COPY-05",
+          "setup": "Compare a valid target item/schedule-line proposal with an invalid or unmaintained alternative.",
+          "assert": "Only target categories allowed by the relevant category assignment can be used."
         }
       ],
       "extension_points": [
@@ -381,8 +431,71 @@
       ],
       "source_refs": [
         "SRC-MEC-COPY",
-        "SRC-MEC-COPY-PRICE"
-      ]
+        "SRC-MEC-COPY-PRICE",
+        "SRC-MEC-COPY-SALES-ANALYSIS",
+        "SRC-MEC-COPY-SALES-CONFIG"
+      ],
+      "copy_levels": [
+        {
+          "level": "Header",
+          "match": "source sales document type → target sales document type",
+          "controls": "Header copying requirement, header/business/partner data transfer, and switches such as copying source item numbers."
+        },
+        {
+          "level": "Item",
+          "match": "source item category → target item category",
+          "controls": "Item requirement, item/business data transfer, quantity/value handling, pricing type, target category proposal, and Document flow update."
+        },
+        {
+          "level": "Schedule line",
+          "match": "source schedule line category → target schedule line category",
+          "controls": "Schedule-line requirement, schedule-line data transfer, and target category proposal when schedule-line copying is relevant."
+        }
+      ],
+      "control_stack": [
+        {
+          "name": "1. Source → target relationship",
+          "purpose": "Defines whether this document chain is supported at all."
+        },
+        {
+          "name": "2. Copying requirement",
+          "purpose": "Guards the copy. If the requirement fails, transfer should not continue."
+        },
+        {
+          "name": "3. Data-transfer routine",
+          "purpose": "Moves or derives the fields that belong in the target."
+        },
+        {
+          "name": "4. Switches",
+          "purpose": "Apply transaction-specific choices such as item-number transfer or other copy options."
+        },
+        {
+          "name": "5. Target category mapping",
+          "purpose": "Controls which target item and schedule-line categories are used or proposed."
+        },
+        {
+          "name": "6. Reference-status logic",
+          "purpose": "Document flow update records reference progress; the source item category's completion rule decides when the predecessor is complete."
+        }
+      ],
+      "reference_status_model": {
+        "document_flow_update": "At item level, Document flow update keeps referred quantities or values and the reference status of the preceding item in step with the follow-on document.",
+        "completion_rule_owner": "The completion rule is maintained in the item category of the preceding sales item, not in the copy-control table.",
+        "examples": [
+          {
+            "rule": "A",
+            "behavior": "Complete on the first valid reference.",
+            "example": "An inquiry item can become Completed as soon as a quotation refers to it, even when only part of the quantity is referenced."
+          },
+          {
+            "rule": "B",
+            "behavior": "Complete only after the full quantity is referenced.",
+            "example": "A quotation item stays Partially referred after a partial order and remains available for further reference until the total quantity is used."
+          }
+        ],
+        "rejection_note": "A reason for rejection also gives the item a Completed status."
+      },
+      "lead_answer": "I treat copy control as a source-to-target contract. First I prove the valid source/target relationship. Then I check the copying requirement, data-transfer routine, switches and target item/schedule-line mapping. For status questions I separate two controls: Document flow update records the reference progress, while the completion rule in the source item category decides when the predecessor is complete. That is why a quotation can remain partially referred after a partial order, while an inquiry can be completed after the first reference."
     },
     {
       "code": "MEC.SD.INCOMP",
