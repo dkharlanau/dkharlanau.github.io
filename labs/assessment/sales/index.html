@@ -116,6 +116,71 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="transaction-side-effects" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Order-to-Cash / business event side effects</p>
+      <h2>PGI, Billing, and Payment are three different commit points.</h2>
+      <p>A strong Sales answer should explain not only the document sequence but also what changes in the system when a business event is posted. This is where Sales becomes Inventory, Accounting, Controlling, Credit, Analytics, and Accounts Receivable.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">conversion_path</span>
+      <p><strong>Memory model:</strong> <strong>PGI = physical + valuation commit</strong> → <strong>Billing = commercial + receivable commit</strong> → <strong>Payment = cash + clearing event</strong>.</p>
+      <p>These are different states. Goods can be issued but not yet billed. An invoice can be posted but still be unpaid. A Lead should always name which state has actually been completed.</p>
+    </div>
+
+    <h3>1. Post Goods Issue — the physical event becomes system truth</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Stock and requirements</h3><p>Inventory quantity is reduced and the delivery requirement is updated in planning. The physical fulfillment event now affects both Inventory Management and the supply-demand picture.</p></div>
+      <div><h3>Material valuation</h3><p>The stock value changes. The accounting impact is based on the material valuation relevant for the posting. In a standard sell-from-stock scenario this is the point where inventory value leaves the balance sheet and the cost-side accounting impact is created.</p></div>
+      <div><h3>Accounting and Controlling</h3><p>The goods movement creates the material and accounting consequences required by the process. Controlling or profitability-related information may also be updated depending on the scenario and configuration.</p></div>
+      <div><h3>Billing readiness</h3><p>For delivery-related billing, PGI normally moves the delivery into the state from which it can become billing due. Think of this as a status transition into the billing worklist rather than as an isolated “list creation” event.</p></div>
+      <div><h3>Document flow</h3><p>Statuses and linked documents are updated. Document flow is therefore not only navigation; it is evidence of how far the process has moved and which downstream object should exist next.</p></div>
+      <div><h3>Lead meaning</h3><p>PGI is a cross-module commit point. After it, we are no longer looking only at an SD delivery: stock, value, accounting, planning, and billing eligibility have all changed.</p></div>
+    </div>
+
+    <h3>2. Save Billing Document — the customer charge becomes accounting truth</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Receivable and revenue</h3><p>The invoice becomes a source for Financial Accounting. In the standard case, the customer receivable is debited and revenue is credited, with tax and other configured account postings where applicable.</p></div>
+      <div><h3>Controlling / profitability</h3><p>Billing can update Controlling and profitability analysis. This is why a billing issue can be commercially correct on screen and still fail at the FI/CO handoff.</p></div>
+      <div><h3>Analytics</h3><p>Billing contributes to sales reporting and analytical views. The business event therefore changes both transactional accounting state and reporting state.</p></div>
+      <div><h3>Credit exposure</h3><p>If credit management is used, billing and open receivables can influence the customer's credit situation. A completed invoice can therefore affect future order decisions.</p></div>
+      <div><h3>Document status</h3><p>Related sales, delivery, billing, and accounting status is updated. A green billing document is not enough: the accounting transfer must also be complete.</p></div>
+      <div><h3>Invoice combination</h3><p>Several preceding documents can be combined only when relevant split characteristics are compatible. Payer, billing date, and destination country are useful examples, not the complete split key.</p></div>
+    </div>
+
+    <h3>3. Incoming Payment — Finance settles the open item</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Ownership changes</h3><p>Incoming payment is an Accounts Receivable process, not a core Sales execution step. Finance posts the payment against the customer open item.</p></div>
+      <div><h3>Typical posting</h3><p>The cash or bank side is debited and the customer receivable is credited or cleared according to the payment process.</p></div>
+      <div><h3>Differences matter</h3><p>Real payments may not match the invoice exactly. Finance can handle partial payments, residual items, cash discounts, deductions, write-offs, and reason codes according to policy and tolerance settings.</p></div>
+      <div><h3>Sales feedback loop</h3><p>Although payment is owned by Finance, overdue or unpaid receivables can change credit exposure and therefore influence later Sales orders.</p></div>
+    </div>
+
+    <h3>Do not collapse these states</h3>
+    <div class="ecg-input-grid">
+      <article><span>PGI</span><h3>Goods have left</h3><p>Physical stock and value have changed. This does not prove that the customer has been invoiced.</p></article>
+      <article><span>BILL</span><h3>Customer has been invoiced</h3><p>A receivable exists. This does not prove that cash has been received.</p></article>
+      <article><span>PAY</span><h3>Cash has been received and allocated</h3><p>The open item can be cleared or reduced. This is a Finance state, not a shipping state.</p></article>
+      <article><span>FLOW</span><h3>Document flow is process evidence</h3><p>Use it to prove which events happened and where the chain stopped, but confirm the corresponding logistics and accounting objects when diagnosing.</p></article>
+    </div>
+
+    <h3>Assessment drills</h3>
+    <ol>
+      <li><strong>What exactly happens at PGI?</strong> Do not stop at “stock decreases”. Explain inventory, requirements, valuation/accounting, billing readiness, and document flow.</li>
+      <li><strong>Why is PGI a stronger boundary than delivery creation?</strong> Delivery creation prepares execution; PGI commits the physical stock movement and its financial consequences.</li>
+      <li><strong>Billing document saved, but FI document is missing. Where is the failure?</strong> The Sales document exists, but the accounting handoff is incomplete. Check account determination, posting errors, tax/accounting data, and the release-to-accounting state instead of recreating the delivery.</li>
+      <li><strong>Can several deliveries become one invoice?</strong> Yes, when billing relevance and relevant split characteristics are compatible. Name payer, billing date, and destination country as examples, then say the full split logic is broader.</li>
+      <li><strong>Does invoice creation mean Order-to-Cash is complete?</strong> It can be the last core Sales step, but the receivable is still open until Finance receives and clears payment.</li>
+    </ol>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+      <p><strong>Cross-process route:</strong> use <a href="/labs/enterprise-context/shipping/">Shipping</a> for delivery execution, <a href="/labs/enterprise-context/billing/">Billing</a> for due state and FI handoff, and <a href="/labs/enterprise-context/finance-logistics/">FI/CO Logistics Bridge</a> for valuation, COGS, receivables, revenue, and reconciliation.</p>
+      <p><strong>Primary learning references:</strong> <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-the-shipping-process_e796d891-1485-4b97-874b-f4cbcbd9dbc9">SAP Learning: Shipping and PGI</a> · <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-the-billing-process-and-the-integration-to-sap-s-4hana-finance_e2dd5db3-73c3-4cda-8ad5-1e7f39f04fba">SAP Learning: Billing and Finance Integration</a>.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Answer depth</p>
