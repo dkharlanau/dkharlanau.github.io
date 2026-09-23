@@ -6,10 +6,10 @@ domain: "SAP Business AI"
 process_family: "Cross-enterprise / AI-enabled business processes"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
-verified_at: "2026-08-14"
-reviewed_together_at: "2026-08-14"
-review_note: "Reviewed together against current official SAP product, pricing, and Help Portal sources."
+updated_at: "2026-09-23"
+verified_at: "2026-09-23"
+reviewed_together_at: "2026-09-23"
+review_note: "Reviewed together against current official SAP product, pricing, Help Portal, and S/4HANA ISLM sources."
 
 business_question: "Which SAP AI component should own the user experience, build, runtime, model access, grounding, document processing, or governance?"
 
@@ -34,6 +34,7 @@ architecture_principles:
   - "Business Data Cloud and Knowledge Graph = ground AI in business context."
   - "SAP AI Agent Hub = govern AI assets across platforms."
   - "Use deterministic automation when an agent is not needed."
+  - "ISLM = manage the lifecycle of intelligent scenarios integrated with S/4HANA."
 
 layers:
   - id: AI-LAYER-EXPERIENCE
@@ -349,6 +350,29 @@ components:
     source_refs: [SRC-SAP-AI-AGENT-HUB, SRC-SAP-AI-AGENT-HUB-ACCESS]
     status: source_verified
 
+
+s4hana_islm:
+  title: "Intelligent Scenario Lifecycle Management (ISLM)"
+  memory_rule: "ISLM = S/4HANA INTELLIGENT-SCENARIO LIFECYCLE."
+  summary: >-
+    ISLM is the S/4HANA framework for managing intelligent scenarios that use machine learning. It gives the S/4HANA side a lifecycle model for scenarios without making every machine-learning workload an embedded ABAP implementation.
+  scenario_types:
+    - type: "Embedded"
+      architecture: "SAP S/4HANA and the machine-learning capability run in the same stack."
+      runtime: "SAP HANA machine-learning libraries such as PAL and APL."
+      fit: "Use when the scenario is designed to execute with in-database machine learning close to S/4HANA data."
+      memory: "Same stack."
+    - type: "Side-by-side"
+      architecture: "SAP S/4HANA and the machine-learning provider run in separate stacks."
+      runtime: "External ML services or custom models, for example SAP AI Core or generative AI scenarios on SAP BTP."
+      fit: "Use when the model runtime or AI service belongs outside the S/4HANA stack."
+      memory: "Separate stack."
+  boundary: >-
+    ISLM is not Joule, AI Core, or Generative AI Hub. It manages the S/4HANA intelligent-scenario lifecycle and connects the business application to the selected ML approach. The runtime still depends on whether the scenario is embedded or side-by-side.
+  lead_question: >-
+    First ask where the model should run and who owns its lifecycle. If the business scenario is tightly integrated with S/4HANA, ISLM can be the lifecycle framework; then decide whether execution should stay embedded with HANA ML or use a side-by-side provider.
+  source_refs: [SRC-SAP-ISLM-SCENARIOS]
+
 decision_guide:
   - need: "Business users need one AI entry point"
     primary_choice: PLT-JOULE
@@ -368,6 +392,9 @@ decision_guide:
   - need: "Run custom AI workloads"
     primary_choice: PLT-SAP-AI-CORE
     why: "AI Core owns runtime and lifecycle execution."
+  - need: "Manage an intelligent scenario integrated with S/4HANA"
+    primary_choice: PLT-SAP-AI-CORE
+    why: "Use ISLM as the S/4HANA scenario lifecycle framework; choose the runtime separately. AI Core is one side-by-side runtime option, not ISLM itself."
   - need: "Access foundation models"
     primary_choice: PLT-GENERATIVE-AI-HUB
     why: "Generative AI Hub provides governed model access and orchestration."
@@ -416,3 +443,5 @@ tags:
   - business-data-cloud
   - knowledge-graph
   - ai-governance
+  - islm
+  - machine-learning
