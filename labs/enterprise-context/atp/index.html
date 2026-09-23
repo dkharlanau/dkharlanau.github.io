@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-01
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -55,6 +55,8 @@ semantic_links:
     title: "Sales Billing — Enterprise Context Lab"
     url: "/labs/enterprise-context/billing/"
 source_links:
+  - title: "Running an Available-to-Promise (ATP) Check in SAP S/4HANA Sales"
+    url: "https://learning.sap.com/courses/performing-the-availability-check/running-an-available-to-promise-atp-check-in-sap-s-4hana-sales_a2b4c5e3-1618-418d-a4f6-efe5ff43f7f1"
   - title: "Controlling the Availability Check"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/3c7bbb53707db44ce10000000a174cb4.html"
   - title: "Product Availability Check (CA-ATP-PAC)"
@@ -84,6 +86,7 @@ source_links:
 {% assign graph = site.data.labs.enterprise_context.graphs.atp %}
 {% assign evidence = site.data.labs.enterprise_context.sources.atp %}
 {% assign atp_cfg = site.data.labs.enterprise_context.atp_playbook.configuration %}
+{% assign atp_deployment = atp_cfg.deployment_and_licensing %}
 {% assign atp_pal = site.data.labs.enterprise_context.atp_playbook.pal_supply %}
 {% assign atp_bop = site.data.labs.enterprise_context.atp_playbook.bop %}
 {% assign atp_abc = site.data.labs.enterprise_context.atp_playbook.abc_delivery %}
@@ -185,6 +188,85 @@ source_links:
         <p class="ecg-question"><strong>Check:</strong> {{ control.check_first }}</p>
       </article>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Edition and license</p>
+      <h2>Before configuration, know which S/4HANA edition you are in.</h2>
+      <p>{{ atp_deployment.principle }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% for edition in atp_deployment.editions %}
+      <div>
+        <h3>{{ edition.title }}</h3>
+        <p>{{ edition.runtime }}</p>
+        <ul>{% for value in edition.commercial_scope %}<li>{{ value }}</li>{% endfor %}</ul>
+      </div>
+      {% endfor %}
+      <div>
+        <h3>Lead question</h3>
+        <p>{{ atp_deployment.lead_rule }}</p>
+      </div>
+    </div>
+    <p class="ecg-caption"><strong>Memory rule:</strong> Public Edition already runs the aATP code line. Basic versus Advanced is mainly a capability and licensing boundary. Private Edition and on-premise add an activation decision as well.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">PAC in plain English</p>
+      <h2>How a requirement becomes a confirmed schedule line.</h2>
+      <p>Think of Product Availability Check as a time-based balance, not as a warehouse stock count. SAP checks the product in the delivering plant on the material availability date and asks whether cumulative ATP can cover the requirement.</p>
+    </header>
+
+    <div class="ecg-rail" aria-label="PAC confirmation flow">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Sales requirement</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Delivering plant</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Material availability date</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Cumulative ATP</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Confirmed schedule line</span>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      {% for outcome in graph.pac_confirmation_model.outcomes %}
+      <div>
+        <h3>{{ outcome.title }}</h3>
+        <p><strong>Condition:</strong> {{ outcome.condition }}</p>
+        <p>{{ outcome.result }}</p>
+        {% if outcome.atp_effect %}<p><strong>ATP effect:</strong> {{ outcome.atp_effect }}</p>{% endif %}
+        <p><strong>Sales-order proof:</strong> {{ outcome.document_proof }}</p>
+        <p><strong>Delivery meaning:</strong> {{ outcome.delivery_meaning }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">event_available</span>
+      <p><strong>Plant and date matter:</strong> {{ graph.pac_confirmation_model.plant_context.determination }} {{ graph.pac_confirmation_model.plant_context.why_it_matters }}</p>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">info</span>
+      <p><strong>Do not confuse the word "reserved":</strong> {{ graph.pac_confirmation_model.terminology_guardrail }}</p>
+    </div>
+
+    <div class="ecg-case">
+      <div class="ecg-case__intro">
+        <p class="research-canvas__eyebrow">Synthetic example</p>
+        <h3>A small number makes the logic visible.</h3>
+        <strong>Learning example · no customer data</strong>
+      </div>
+      <div class="ecg-case__body">
+        <p>Assume cumulative ATP on the material availability date is 10 pieces. Existing confirmed demand already consumes 6, so 4 pieces remain available for the next requirement.</p>
+        <ul>
+          <li>A new order for 3 pieces can be confirmed. The remaining ATP for later competing requirements becomes 1.</li>
+          <li>A new order for 7 pieces cannot be fully confirmed on that date. SAP looks forward for future ATP and can propose a later or partial confirmation according to the delivery option.</li>
+          <li>If no usable ATP appears later, the open quantity stays unconfirmed and cannot be delivered.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
