@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "RAP"
-description: "Analytical overview of RAP: what it is, where it sits, and how it breaks."
+description: "How the ABAP RESTful Application Programming Model structures business objects, behavior, services, and transactional applications."
 permalink: /atlas/sap/rap/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "RAP"
 business_process: "Application development"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -43,7 +43,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Technology</p>
     <h1>RAP</h1>
-    <p class="note-subtitle">RESTful Application Programming model for in-app extensions in S/4HANA.</p>
+    <p class="note-subtitle">The ABAP RESTful Application Programming Model for transactional business objects and services.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -56,90 +56,52 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>RAP (RESTful Application Programming Model) is SAP's framework for building business objects and services in S/4HANA. It combines CDS views for data modeling, behavior definitions for business logic, and service bindings for OData exposure.</p>
+    <h2>A business object model, not just an OData generator</h2>
+    <p>RAP, the ABAP RESTful Application Programming Model, is SAP's model for building transactional applications and services on the ABAP platform. It brings the data model, business-object behavior and service exposure into one development approach. OData is an important output, especially for SAP Fiori applications and web APIs, but the business object is the central idea.</p>
 
-    <h2>Business purpose</h2>
-    <p>Enable structured, upgrade-stable development of custom business objects inside S/4HANA. Reduce boilerplate by generating persistence, validation, and service layers from declarative definitions.</p>
+    <p>That distinction matters. A customer order is not simply a set of database rows exposed through HTTP. It has a structure, permitted operations, validations, determinations, actions, locking rules and a save sequence. RAP gives those rules an explicit place instead of leaving them scattered across UI code, service implementations and database updates.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>RAP sits within ABAP Cloud in S/4HANA. It is the recommended development model for in-app extensions, custom business objects, and Fiori app backends. It replaces BOPF and legacy custom development patterns.</p>
+    <h2>From data model to behavior</h2>
+    <p>The data model is normally defined with ABAP CDS entities. A root entity and its compositions describe the business-object structure; associations connect it to related information. A behavior definition then says what clients are allowed to do with that model: for example create, update, delete or execute a business action. It can also define transactional properties such as locking, authorization control, validations and determinations.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>CDS entity: data model with associations and annotations.</li>
-      <li>Behavior definition: create, update, delete, validation, determination.</li>
-      <li>Behavior implementation: ABAP classes for custom logic.</li>
-      <li>Service definition: OData service metadata.</li>
-      <li>Service binding: UI or Web API exposure.</li>
-      <li>Draft handling: temporary data before activation.</li>
-    </ul>
+    <p>RAP supports both <strong>managed</strong> and <strong>unmanaged</strong> business objects. With managed behavior, the framework can provide standard transactional handling for common operations while the application supplies the business-specific logic. With unmanaged behavior, the developer implements the essential transactional contract. That makes unmanaged RAP useful when a service must sit over existing application logic that cannot simply be replaced by framework-managed persistence.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: in-app extensions, custom business objects.</li>
-      <li>Fiori: UI5 apps via OData services.</li>
-      <li>BTP: side-by-side consumption of RAP services.</li>
-      <li>External: OData APIs for third-party access.</li>
-    </ul>
+    <p>The behavior implementation lives in ABAP behavior pools where custom handler logic is needed. RAP also provides Entity Manipulation Language (EML), ABAP statements for reading and modifying RAP business objects through their defined behavior. This lets ABAP code consume a business object through its transactional contract rather than bypassing it with direct table updates.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom entities and behavior definitions.</li>
-      <li>Custom validations and determinations.</li>
-      <li>Service extensions and custom actions.</li>
-      <li>Side-by-side apps consuming RAP OData services.</li>
-    </ul>
+    <h2>Service definition and service binding do different jobs</h2>
+    <p>Once a business object is ready for external consumption, a service definition selects the CDS entities that belong to the business service. A service binding then connects that definition to a specific protocol and service scenario. For example, a RAP service can be bound for an OData UI service or web API depending on the supported binding type in the target ABAP release.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Service performance: OData response time, throughput.</li>
-      <li>Draft stability: lock conflicts, activation failures.</li>
-      <li>Behavior implementation errors: validation, determination.</li>
-      <li>Upgrade impact: API stability, deprecated features.</li>
-    </ul>
+    <p>This separation is useful because the internal business object and the public service do not have to be identical. Projection layers can expose only the fields and behavior required for a particular consumer. A Fiori application may need annotations and actions for an interactive UI, while another consumer may need a narrower API contract.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Declarative development reduces boilerplate.</li>
-      <li>Upgrade-stable via released APIs and ABAP Cloud.</li>
-      <li>Native Fiori integration via OData and annotations.</li>
-    </ul>
+    <h2>Draft is a business interaction pattern</h2>
+    <p>Draft handling is optional, not a defining requirement of RAP. When a process needs users to work on changes before committing them to the active business object, draft-enabled behavior can preserve an intermediate state and support longer-running interaction. SAP supports draft capabilities for both managed and unmanaged RAP business objects.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Learning curve from classical ABAP to declarative model.</li>
-      <li>Draft handling complexity for multi-user scenarios.</li>
-      <li>Debugging is different from classical ABAP.</li>
-      <li>Not all S/4HANA objects have RAP equivalents yet.</li>
-    </ul>
+    <p>A simple API that performs short atomic operations may not need draft at all. Adding it automatically can make the transactional model harder to reason about. The decision should follow the interaction: do users need a recoverable work-in-progress state, or should each request change active data directly?</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Custom RAP service fails after upgrade — behavior or annotation change.</li>
-      <li>Draft lock conflict — user cannot edit, activation blocked.</li>
-      <li>OData metadata mismatch — UI5 app fails to load.</li>
-      <li>Validation error — custom logic rejecting valid data.</li>
-      <li>Performance degradation — inefficient CDS view or association.</li>
-    </ul>
+    <h2>RAP, ABAP Cloud, and existing ABAP</h2>
+    <p>RAP and ABAP Cloud are closely related but not synonyms. RAP is the application programming model; ABAP Cloud defines a cloud-ready ABAP development model with language restrictions and released APIs. RAP is used in modern ABAP development across supported ABAP environments, while the exact available features depend on the platform and release.</p>
+
+    <p>RAP also does not mean that existing application logic must be rewritten before it can participate. An unmanaged RAP business object can integrate legacy business logic while presenting a structured RAP contract to new consumers. This gives teams a migration path: modernize the service boundary and transactional model where useful without pretending that every mature S/4HANA process starts from a new database table.</p>
+
+    <h2>Example: a maintenance object</h2>
+    <p>Suppose a team needs a small business configuration application. CDS entities model the configuration records. The behavior definition enables the permitted changes and adds validation. A service definition exposes the relevant entities, and an OData V4 UI service binding makes the service available to the UI layer. SAP documents this pattern for business configuration applications built with RAP and the Custom Business Configurations app.</p>
+
+    <p>The important design question is not how quickly the artifacts can be generated. It is whether the business-object boundary is correct. If validation depends on rules owned by another object, or if updates bypass existing application logic, a technically valid RAP service can still create inconsistent business data.</p>
 
     <h2>Related Atlas links</h2>
     <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-technology-landscape-map/">SAP Technology Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/abap-cloud/">ABAP Cloud</a></li>
-      <li><a href="/atlas/sap/cds-views/">CDS Views</a></li>
-      <li><a href="/atlas/sap/odata/">OData</a></li>
+      <li><a href="/atlas/sap/abap-cloud/">ABAP Cloud</a> — the development model and released-API boundary used for cloud-ready ABAP.</li>
+      <li><a href="/atlas/sap/cds-views/">CDS Views</a> — the data-modeling foundation used by RAP.</li>
+      <li><a href="/atlas/sap/odata/">OData</a> — a common protocol used by RAP service bindings.</li>
+      <li><a href="/atlas/sap/fiori-ui5/">Fiori and UI5</a> — UI technologies that can consume RAP services.</li>
     </ul>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>ABAP RESTful Application Programming Model — <a href="https://help.sap.com/docs/abap-cloud/abap-rap/abap-restful-application-programming-model">SAP Help Portal</a>.</li>
+      <li>Developing Unmanaged Transactional Apps — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/fc4c71aa50014fd1b43721701471913d/f6cb3e3402694f5585068e5e5161a7c1.html">SAP Help Portal</a>.</li>
+      <li>Creating Business Configuration Apps with RAP — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/fa420dd6272b41858a7b31f8dc5090f8.html">SAP Help Portal</a>.</li>
     </ul>
-
-    <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. RAP availability, features, and supported objects vary by S/4HANA release and must be verified against the customer's system.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
   </div>
