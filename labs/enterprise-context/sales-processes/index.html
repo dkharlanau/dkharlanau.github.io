@@ -390,6 +390,99 @@ source_links:
       </article>
     </div>
 
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+      <p><strong>Billing detail we should remember:</strong> when we bill the release order, the release is still an ordinary sales-order flow and can be billed according to its billing relevance, for example order-related or delivery-related. In classic standard examples, <code>OR</code> is commonly used for the release order. When we bill the value contract directly, the billing plan makes the contract itself billing relevant; classic documentation also uses <code>WA</code> as a standard example. We treat those document-type codes as implementation anchors, not as universal design rules.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>We adjust open billing dates</h3>
+        <p>If we change the target value of a value-contract item, SAP can recalculate the still-open billing-plan dates so that the remaining contract value is distributed across the open dates.</p>
+      </div>
+      <div>
+        <h3>We do not assume unreleased value will bill itself</h3>
+        <p>A value contract that has not been completely released is not automatically billed. We therefore separate “billing plan exists” from “the contract is ready for automatic billing.”</p>
+      </div>
+      <div>
+        <h3>We control target reductions after billing</h3>
+        <p>If billed billing-plan dates already exist and we later reduce the target value, SAP does not automatically check whether the contract is now overbilled. We review the difference and, where required, create a credit memo.</p>
+      </div>
+    </div>
+
+    <header>
+      <p class="research-canvas__eyebrow">Value contract / Release authorization</p>
+      <h2>We control who may call off the agreement and who may receive the goods.</h2>
+      <p>Partner authorization is not the same as normal partner determination. We use it to decide whether another sold-to party may release against the contract and which additional ship-to parties are valid for the resulting release order.</p>
+    </header>
+
+    <div class="spa-compare-grid">
+      <article>
+        <span>AA</span>
+        <h3>We authorize additional releasing sold-to parties</h3>
+        <p>Partner function <code>AA</code> represents an additional sold-to party authorized to place release orders against the sales contract. We can maintain several AA partners.</p>
+      </article>
+      <article>
+        <span>AW</span>
+        <h3>We authorize additional receiving ship-to parties</h3>
+        <p>Partner function <code>AW</code> represents an additional ship-to party for the release order. If several valid ship-to parties exist, SAP can present the choices when we create the release.</p>
+      </article>
+      <article>
+        <span>KAB</span>
+        <h3>We keep the release-partner procedure explicit</h3>
+        <p>In the standard release-order partner setup, procedure <code>KAB</code> contains the AA and AW functions. We still verify the assigned partner procedure in the target system instead of assuming the standard template was kept unchanged.</p>
+      </article>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Rule blank — we do not check</h3>
+        <p>Any releasing partner can be accepted. We use this only when the business deliberately does not want partner authorization control.</p>
+      </div>
+      <div>
+        <h3>Rule A — we check contract partners</h3>
+        <p>We accept the contract sold-to party and the additional authorized releasing partners stored with partner function AA in the sales contract.</p>
+      </div>
+      <div>
+        <h3>Rule B — we check the hierarchy</h3>
+        <p>We can authorize partners below the contract sold-to party in the customer hierarchy. This is useful when a central agreement is consumed by subordinate customers.</p>
+      </div>
+      <div>
+        <h3>Rule C — we combine both models</h3>
+        <p>We accept a partner when it passes the contract-partner rule or the customer-hierarchy rule. We use this when a commercial agreement needs both explicit authorized partners and hierarchy-based releases.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">group</span>
+      <p><strong>Our distinction:</strong> <code>AA</code> answers “who else may order against this contract?” <code>AW</code> answers “where else may we ship the released goods?” We treat this as a header-level authorization model, not as an item-level material permission.</p>
+    </div>
+
+    <header>
+      <p class="research-canvas__eyebrow">Contract lifecycle / Dates and defaults</p>
+      <h2>We design the validity period as a rule, not just two manually entered dates.</h2>
+      <p>For contracts that use the relevant contract-profile functionality, we can default lifecycle behavior instead of asking users to calculate every start date, end date, cancellation rule, or follow-up manually.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>We determine the start date</h3>
+        <p>We can base contract dates on a rule such as the current date or another business event. The exact baseline dates depend on the contract model and deployment.</p>
+      </div>
+      <div>
+        <h3>We derive the end date</h3>
+        <p>We can combine a baseline date with a duration or date rule. This is useful when the commercial term is “one year from start” rather than a manually maintained calendar date.</p>
+      </div>
+      <div>
+        <h3>We control cancellation and follow-up</h3>
+        <p>A contract profile can provide default date-determination rules, cancellation behavior, and follow-up actions for the relevant contract type. We verify the exact profile fields for the S/4HANA edition we implement.</p>
+      </div>
+      <div>
+        <h3>We keep validity operational</h3>
+        <p>The validity period is not descriptive master data. It is part of release-order eligibility, so a wrong start or end date changes whether we can consume the agreement.</p>
+      </div>
+    </div>
+
     <header>
       <p class="research-canvas__eyebrow">Quantity contract / Down payment</p>
       <h2>We can collect money before we allow the release order to move into delivery.</h2>
@@ -423,6 +516,8 @@ source_links:
       <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/7b24a64d9d0941bda1afa753263d9e39/5c65b65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener">SAP Help — Release Orders</a> ·
       <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/5065b65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener">SAP Help — Value Contract</a> ·
       <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/7b24a64d9d0941bda1afa753263d9e39/005c5595d1a54258ba3d782030f99c7e.html" target="_blank" rel="noopener">SAP Help — Down Payment Processing for Sales Contracts</a> ·
+      <a href="https://help.sap.com/docs/PRODUCT_ID/a376cd9ea00d476b96f18dea1247e6a5/5f65b65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener">SAP Help — Partner Authorization for Release Orders</a> ·
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/3422bf53d25ab64ce10000000a174cb4.html" target="_blank" rel="noopener">SAP Help — Contract Profile</a> ·
       <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/e5c284520bd741968fb9c4768e91cc21.html" target="_blank" rel="noopener">SAP Help — Sales Scheduling Agreement Integration</a>.
     </p>
   </section>
