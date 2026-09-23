@@ -3,12 +3,44 @@ version: "1.0.0"
 type: analytics_architecture
 status: draft
 verified: false
-updated_at: "2026-08-15"
+updated_at: "2026-09-23"
 title: "SAP Sales Analytics Architecture"
 summary: >-
   A practical map for deciding where a Sales question should be answered: inside S/4HANA for operational action,
   through governed analytical queries for reusable semantics, in SAC/Datasphere for management views, or in
   process intelligence for event-based flow analysis. The KPI model remains the shared business language.
+
+
+embedded_analytics_stack:
+  memory_path: "S/4HANA TABLES → VDM / CDS → ANALYTICAL QUERY OR APP → USER"
+  principle: >-
+    Embedded analytics keeps operational analysis close to the transactional data. The important architecture boundary is the semantic layer: consuming tools should work with business-ready CDS models and queries rather than treating raw tables as the reporting contract.
+  layers:
+    - order: 1
+      layer: "SAP HANA database"
+      owns: "Transactional and master data persisted by SAP S/4HANA."
+      lead_check: "Which business event and source object actually represent the measure?"
+    - order: 2
+      layer: "Virtual Data Model (VDM) with CDS views"
+      owns: "Reusable semantics, joins, associations, calculations, dimensions, measures, and consumption metadata."
+      lead_check: "Is there a released or supported CDS view that already models the business meaning we need?"
+    - order: 3
+      layer: "Analytical query"
+      owns: "A governed multidimensional consumption model with selected measures, dimensions, filters, and analytical behavior."
+      lead_check: "Should this logic be reusable across several reports, or is it specific to one presentation?"
+    - order: 4
+      layer: "Analytical application"
+      owns: "How the user consumes the insight through Fiori analytical apps, Data Analyzer, multidimensional reports, review booklets, or SAP Analytics Cloud depending on scope and release."
+      lead_check: "Does the user only need to observe, or must the insight lead directly to an operational action?"
+  extensibility:
+    - "If a custom field is required in a business process and also matters for analytics, plan its analytical exposure as part of the same requirement."
+    - "Start from SAP-delivered or released semantic content. Create or extend custom CDS-based models when the standard content does not provide the required business meaning."
+    - "Keep reusable KPI logic in the semantic/query layer instead of rebuilding slightly different calculations in every dashboard."
+    - "Check analytical authorizations and data exposure when adding dimensions or fields."
+  boundary: >-
+    CDS is a semantic data-modeling technology. In SAP S/4HANA embedded analytics, it models S/4HANA business data for analytical consumption. Do not use the phrase 'universal language' as an architecture shortcut that implies every external system is automatically modeled or integrated.
+  fit_to_standard_question: >-
+    During a workshop, ask whether the standard analytical app and released CDS content answer the business question. If not, identify the missing field, dimension, measure, filter, or visualization before deciding whether to extend the semantic model or only the presentation.
 
 layers:
   - id: ANA.SD.OPERATIONAL
@@ -94,12 +126,14 @@ anti_patterns:
 lead_talking_points:
   - "Operational analytics answers what needs action now; management analytics answers how performance is moving."
   - "The semantic layer matters more than the chart. If two teams calculate OTIF differently, a better dashboard only makes the disagreement prettier."
+  - "For embedded analytics, think HANA → VDM/CDS → analytical query or app. Put reusable meaning in the semantic layer, not in each chart."
   - "Process intelligence is strongest when we need event flow, waiting time, rework and variants, not just the current status."
   - "For a custom KPI, first decide whether it belongs in S/4 analytical semantics, a broader analytical model, or only in a process-intelligence event model."
   - "The same business KPI may be presented in several tools, but its definition should remain governed and traceable."
 
 source_refs:
   - "SRC-SAP-S4-EMBEDDED-ANALYTICS"
+  - "SRC-SAP-S4-EMBEDDED-ANALYTICS-LEARNING"
   - "SRC-SAP-SAC-S4-LIVE"
   - "SRC-SAP-SAC-SALES-CONTENT"
   - "SRC-SAP-CUSTOM-ANALYTICAL-QUERIES"
