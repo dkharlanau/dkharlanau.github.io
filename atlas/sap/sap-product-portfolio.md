@@ -86,10 +86,10 @@ sitemap: false
       </tbody>
     </table>
 
-    <h2>SAP Business Suite is the umbrella, not one replacement application</h2>
-    <p>SAP currently describes <strong>SAP Business Suite</strong> as the combination of business applications, SAP Business Data Cloud, and SAP Business AI, powered by SAP Business Technology Platform. That is an architectural and portfolio umbrella. It should not be read as one monolithic application that replaces S/4HANA, SuccessFactors, Ariba, or the other products underneath it.</p>
+    <h2>Portfolio labels overlap, and they are moving quickly</h2>
+    <p>SAP's product index still features <strong>SAP Business Suite</strong> and describes business applications, SAP Business Data Cloud, and SAP Business AI as working together on SAP Business Technology Platform. At the same time, the current page behind that portfolio entry now leads with <strong>Autonomous Enterprise</strong>, <strong>SAP Autonomous Suite</strong>, and <strong>SAP Business AI Platform</strong>. These are portfolio and operating-model labels, not one transactional application that replaces S/4HANA, SuccessFactors, Ariba, or the other products underneath them.</p>
 
-    <p>This distinction matters in architecture discussions. A company can say it is adopting SAP Business Suite while still making separate design decisions about ERP deployment, HR ownership, procurement, planning, integration, data, and AI. The suite story connects those decisions; it does not erase their boundaries.</p>
+    <p>This distinction matters in architecture discussions. A company can adopt the wider SAP suite strategy while still making separate design decisions about ERP deployment, HR ownership, procurement, planning, integration, data, and AI. The umbrella story connects those decisions; it does not erase their boundaries.</p>
 
     <h2>Cloud ERP naming needs careful reading</h2>
     <p><strong>SAP Cloud ERP</strong> is now the main public cloud ERP label, with SAP S/4HANA Cloud Public Edition described as a foundational application. <strong>SAP Cloud ERP Private</strong> is the private-cloud option for organizations that need greater continuity with complex existing ERP processes and extensions.</p>
@@ -159,7 +159,7 @@ sitemap: false
     <h2>Source references</h2>
     <ul>
       <li>SAP — <a href="https://www.sap.com/products.html">SAP Products</a> (portfolio categories and featured products, accessed 2026-09-23).</li>
-      <li>SAP — <a href="https://www.sap.com/products/business-suite.html">SAP Business Suite</a>.</li>
+      <li>SAP — <a href="https://www.sap.com/products/business-suite.html">Autonomous Enterprise, SAP Autonomous Suite, and SAP Business AI Platform</a>.</li>
       <li>SAP — <a href="https://www.sap.com/products/erp/s4hana-erp.html">SAP Cloud ERP / SAP S/4HANA Cloud Public Edition</a>.</li>
       <li>SAP — <a href="https://www.sap.com/products/erp/s4hana-private-edition.html">SAP Cloud ERP Private</a>.</li>
       <li>SAP — <a href="https://www.sap.com/products/erp/grow.html">SAP GROW</a>.</li>
