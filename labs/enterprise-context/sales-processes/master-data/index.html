@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP S/4HANA Sales Master Data Graph — BP, Product, Conditions and Relationships"
-description: "A data-first map of SAP S/4HANA Sales master data: Business Partner, product, customer-material, hierarchies, texts, condition records, cross-selling, listing/exclusion, credit and adjacent logistics data."
+description: "A data-first map of SAP S/4HANA Sales master data and organizational context: Business Partner, product, sales area, enterprise structure, conditions, relationships, and adjacent logistics data."
 permalink: /labs/enterprise-context/sales-processes/master-data/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-09-23
 hide_global_cta: true
 sales_master_data_graph: true
 tags:
@@ -59,6 +59,56 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
     <p><strong>Boundary rule.</strong> Do not call everything master data. A customer is business master data. A price record is condition master data. A customer-material record is a relationship. Sales Organization is organizational context. A pricing procedure is configuration. A Sales Order is runtime data.</p>
     <a href="/labs/enterprise-context/data/sales-master-data.json">Open JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="organizational-context" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Enterprise structure / organizational context</p>
+      <h2>Organizational units are boundaries for responsibility and process context.</h2>
+      <p>In Sales, we should not treat the enterprise structure as a hierarchy to memorize. It is closer to an architecture model. Some units define a legal or accounting boundary, some define the commercial context, and others define where fulfillment is executed. Together they tell SAP which data is valid, which combinations are allowed, who owns the transaction, and where the process crosses into logistics or finance.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Architecture vocabulary.</strong> SAP calls these objects <em>organizational units</em> or elements of the <em>enterprise structure</em>. On this page we also use terms such as <strong>boundary</strong>, <strong>context key</strong>, <strong>execution node</strong>, and <strong>responsibility overlay</strong>. These are learning terms, not SAP object names.</p>
+      <p><strong>Memory rule:</strong> COMPANY CODE = financial truth · SALES ORG = who sells · CHANNEL = how we go to market · DIVISION = what product family · SALES AREA = commercial context · PLANT = where supply is planned or held · SHIPPING POINT = who executes the outbound delivery.</p>
+    </div>
+
+    <div class="ecg-input-grid">
+      <article><span>FI</span><h3>Company Code</h3><p><strong>Role:</strong> legal and accounting boundary. It is the smallest unit for which a complete set of external financial statements can be produced.</p><p><strong>Why Sales cares:</strong> every sales organization is assigned to one company code, so revenue and receivables ultimately land in a defined accounting entity.</p><p><strong>Architecture view:</strong> financial ownership boundary.</p></article>
+      <article><span>SELL</span><h3>Sales Organization</h3><p><strong>Role:</strong> the central commercial selling unit. Sales documents are processed in a sales organization.</p><p><strong>Why it exists:</strong> a group may need different selling responsibilities by country, region, business model, or product responsibility while still posting into the same company code.</p><p><strong>Architecture view:</strong> commercial responsibility boundary.</p></article>
+      <article><span>GTM</span><h3>Distribution Channel</h3><p><strong>Role:</strong> the route-to-market dimension, for example direct sales, wholesale, retail, or another meaningful sales channel.</p><p><strong>Why it exists:</strong> the same seller may use different commercial rules, product availability, prices, or customer data depending on how the customer is served.</p><p><strong>Architecture view:</strong> go-to-market dimension.</p></article>
+      <article><span>WHAT</span><h3>Division</h3><p><strong>Role:</strong> groups saleable products or services into a product line or responsibility area.</p><p><strong>Why it exists:</strong> product families may need different customer agreements, analysis, responsibilities, or commercial treatment.</p><p><strong>Architecture view:</strong> product-segmentation dimension.</p></article>
+      <article><span>CTX</span><h3>Sales Area</h3><p><strong>Role:</strong> the combination <strong>Sales Organization + Distribution Channel + Division</strong>.</p><p><strong>Why it matters:</strong> it defines an allowed commercial context and is a key scope for customer sales data. It answers a useful assessment question: <em>who sells what, and through which route?</em></p><p><strong>Architecture view:</strong> composite commercial context key, not a physical location.</p></article>
+      <article><span>PAIR</span><h3>Distribution Chain</h3><p><strong>Role:</strong> the combination <strong>Sales Organization + Distribution Channel</strong>.</p><p><strong>Why it matters:</strong> this pair is important when Sales connects to fulfillment. Delivering plants are assigned to distribution chains, so the combination links the commercial route to possible supply locations.</p><p><strong>Architecture view:</strong> commercial-to-logistics bridge.</p></article>
+      <article><span>SUPPLY</span><h3>Plant</h3><p><strong>Role:</strong> a logistics unit that can produce, plan, store, distribute, or provide services depending on the scenario.</p><p><strong>Why Sales cares:</strong> the delivering plant is a major input for availability, sourcing, shipping-point determination, stock, valuation, and fulfillment.</p><p><strong>Architecture view:</strong> fulfillment and planning node. A plant belongs to one company code but can serve several distribution chains.</p></article>
+      <article><span>SHIP</span><h3>Shipping Point</h3><p><strong>Role:</strong> organizational unit for outbound delivery processing and goods issue.</p><p><strong>Why it exists:</strong> the place or shipping responsibility that executes outbound work can be different from the broader plant. Each outbound delivery is managed by one shipping point.</p><p><strong>Architecture view:</strong> shipping execution node.</p></article>
+      <article><span>PEOPLE</span><h3>Sales Office &amp; Sales Group</h3><p><strong>Role:</strong> responsibility overlays for the regional office and the sales team.</p><p><strong>Why they are different:</strong> they help represent who manages the customer or market without changing the core Sales Area key.</p><p><strong>Architecture view:</strong> organizational responsibility overlays rather than the primary commercial context.</p></article>
+    </div>
+
+    <h3>Read the relationships as a graph</h3>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>finance</small></div><h3>Company Code → Sales Organization</h3><p class="ecg-question">Which accounting entity owns the selling unit?</p></header><div class="ecg-decision-columns"><div><h4>Relationship</h4><p>A sales organization is assigned to one company code. A company code can have several sales organizations.</p></div><div><h4>Design meaning</h4><p>Do not create a new company code merely because Sales wants another market view. Company code is an accounting boundary; sales organization is the commercial boundary.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>commercial</small></div><h3>Sales Organization + Channel + Division → Sales Area</h3><p class="ecg-question">Which combinations of seller, route-to-market, and product line are valid?</p></header><div class="ecg-decision-columns"><div><h4>Relationship</h4><p>The Sales Area is the valid three-part commercial context used by Sales processes and sales-area-dependent customer data.</p></div><div><h4>Design meaning</h4><p>Every new Sales Area creates another context that may require data, pricing, authorization, testing, reporting, and support. More combinations increase flexibility, but also increase operating cost.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>fulfillment</small></div><h3>Distribution Chain ↔ Plant</h3><p class="ecg-question">Which supply locations may serve this selling route?</p></header><div class="ecg-decision-columns"><div><h4>Relationship</h4><p>A plant can serve several distribution chains, and a distribution chain can work with several plants. The plant itself belongs to one company code.</p></div><div><h4>Design meaning</h4><p>This is where commercial design meets logistics. If the selling sales organization and delivering plant belong to different company codes, the process crosses a legal/accounting boundary and intercompany logic can become relevant.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>shipping</small></div><h3>Plant ↔ Shipping Point</h3><p class="ecg-question">Who executes the outbound delivery?</p></header><div class="ecg-decision-columns"><div><h4>Relationship</h4><p>Plants and shipping points can have many-to-many assignments. The responsible shipping point is determined for delivery processing and each outbound delivery is handled by one shipping point.</p></div><div><h4>Design meaning</h4><p>Plant describes the broader supply location. Shipping point describes the outbound execution responsibility. They solve different problems and should not be modeled as the same thing.</p></div></div></article>
+    </div>
+
+    <h3>Why SAP needs these layers</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Scope data</h3><p>Customer and product behavior is not always global. Organizational context lets the same business partner or product behave differently in a defined commercial or logistics scope.</p></div>
+      <div><h3>Constrain combinations</h3><p>The enterprise structure prevents arbitrary combinations. A valid Sales Area or plant assignment makes the allowed operating model explicit.</p></div>
+      <div><h3>Assign responsibility</h3><p>The model separates legal ownership, commercial ownership, supply responsibility, and shipping execution instead of hiding all responsibility in one department code.</p></div>
+      <div><h3>Drive determinations</h3><p>Organizational values are inputs to pricing, partner data, plant selection, shipping, billing, reporting, authorizations, and other decisions.</p></div>
+      <div><h3>Connect modules</h3><p>Company Code connects Sales to Finance. Plant connects Sales to MM/PP and Inventory. Shipping Point connects the order to delivery execution. The model is deliberately cross-functional.</p></div>
+      <div><h3>Control blast radius</h3><p>A shared organizational assignment can affect many customers, materials, and documents. A Lead should understand the scope before changing enterprise-structure configuration.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Source boundary:</strong> SAP documents these objects as organizational units of the enterprise structure. The boundary/context terminology and the design interpretations above are our learning model. They explain why the structure matters; they are not additional SAP object types.</p>
+      <p><a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/identifying-organizational-units-in-sap-s-4hana-sales_ddb48d1e-1f57-46bd-8d13-d8e4ef6d0560">SAP Learning: Organizational Units in S/4HANA Sales</a> · <a href="https://learning.sap.com/courses/fundamental-customizing-in-sap-s-4hana-sales/setting-up-the-enterprise-structure-in-sales-and-distribution">SAP Learning: Enterprise Structure in Sales and Distribution</a> · <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/maintaining-the-organizational-units-for-delivery-processing">SAP Learning: Organizational Units for Delivery Processing</a></p>
+    </div>
   </section>
 
   <section class="smd-learning" data-reveal>
