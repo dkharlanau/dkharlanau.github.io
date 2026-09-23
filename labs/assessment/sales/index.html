@@ -343,6 +343,33 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="output-control-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Cross-application / Output Control</p>
+      <h2>OBJECT → TYPE → RECEIVER → CHANNEL → FORM → RELEVANCE.</h2>
+      <p>Output Control is not only a Sales feature. It is a cross-application S/4HANA framework. In a Sales question, first identify whether the document uses SAP S/4HANA Output Management or classic SD output determination.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>1. Framework</h3><p>For <code>Sales_Document</code>, S/4HANA Output Management can be activated in Customizing. A framework switch applies to new documents; old documents keep the framework used when they were created.</p></div>
+      <div><h3>2. Decision tables</h3><p>Output Parameter Determination uses BRFplus rules. Conditions come from document attributes; results define output type, recipient, channel, printer/email settings, form template, and output relevance.</p></div>
+      <div><h3>3. Rule order</h3><p>Rows are checked from top to bottom, so specific rules should come before general rules. Receiver and channel rules can be exclusive when only the first matching result should be used.</p></div>
+      <div><h3>4. Processing</h3><p>If the right parameters are determined but the output still fails, move to rendering and channel processing. Do not debug the mail server before proving the determination.</p></div>
+    </div>
+
+    <div class="ecg-input-grid">
+      <article><span>8 steps</span><h3>Sales memory</h3><p>Output Type, Recipient, Channel, Printer Settings, E-Mail Settings, E-Mail Recipient, Form Template, Output Relevance.</p></article>
+      <article><span>Example</span><h3>Same sales org, different channel</h3><p>Germany + End Customer can return EMAIL, while Germany + Wholesale can return PRINT. Business attributes are conditions; channel is the result.</p></article>
+      <article><span>Trap</span><h3>Do not answer “NACE” automatically</h3><p>Classic output determination and S/4HANA Output Control are different models. First prove which framework owns the document.</p></article>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> SAP S/4HANA Output Control is a cross-application framework. For Sales I first confirm whether <code>Sales_Document</code> uses the S/4HANA framework or classic SD output determination. In the S/4HANA framework, Output Parameter Determination uses BRFplus decision tables. Document attributes are conditions and the rules return the output type, receiver, channel, channel-specific settings, form template, and output relevance. Rows are ordered from specific to general, and exclusive receiver or channel rules can stop additional matches. I troubleshoot from determination to relevance, form, and only then technical sending or printing.</p>
+      <a href="/atlas/sap/output-control/">Open Output Control deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="copy-control-memory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Sales document control / Copy control</p>
@@ -403,6 +430,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
       <a href="/labs/enterprise-context/tax/"><span>TAX</span><strong>Tax</strong><small>Tax determination boundary, master data dependency, pricing relationship, and financial consequence.</small><i class="material-symbols-outlined" aria-hidden="true">percent</i></a>
       <a href="/labs/enterprise-context/sales-processes/integrations/"><span>INT</span><strong>Sales Integration Map</strong><small>IDocs, APIs, events, handoffs, ownership, and process-specific integration choices.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/integration-operations/"><span>OPS</span><strong>Integration Operations &amp; Recovery</strong><small>Identity, commit state, retries, idempotency, ordering, recovery, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">sync_problem</i></a>
+      <a href="/atlas/sap/output-control/"><span>OUT</span><strong>S/4HANA Output Control</strong><small>Framework activation, BRFplus decision tables, channels, forms, relevance, and the boundary with classic NAST output.</small><i class="material-symbols-outlined" aria-hidden="true">outgoing_mail</i></a>
       <a href="/labs/enterprise-context/sales-analytics/"><span>ANA</span><strong>Sales Analytics</strong><small>Operational and analytical evidence for throughput, blocks, backlog, service, and business outcome.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
       <a href="/labs/assessment/cross-process/"><span>X</span><strong>Cross-Process Lead Cases</strong><small>Third-party, intercompany, make-to-order, returns, stock transfer, and other ownership-changing scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
     </div>
