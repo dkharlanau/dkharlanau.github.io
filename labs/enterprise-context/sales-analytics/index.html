@@ -137,6 +137,38 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="embedded-analytics-stack" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">S/4HANA embedded analytics</p>
+      <h2>Model the business meaning before choosing the chart.</h2>
+      <p>{{ architecture.embedded_analytics_stack.principle }}</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Memory path:</strong> {{ architecture.embedded_analytics_stack.memory_path }}</p>
+      <p>{{ architecture.embedded_analytics_stack.boundary }}</p>
+    </div>
+    <div class="ecg-determination-list">
+      {% for layer in architecture.embedded_analytics_stack.layers %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ layer.order }}</div>
+        <div class="ecg-determination-card__copy"><h3>{{ layer.layer }}</h3><p>{{ layer.owns }}</p><p><strong>Lead check:</strong> {{ layer.lead_check }}</p></div>
+      </article>
+      {% endfor %}
+    </div>
+    <h3>Fit-to-Standard and extensibility</h3>
+    <div class="ecg-heuristic-grid">
+      {% for item in architecture.embedded_analytics_stack.extensibility %}
+      <article><span>CHECK</span><p>{{ item }}</p></article>
+      {% endfor %}
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">forum</span>
+      <p><strong>Workshop question:</strong> {{ architecture.embedded_analytics_stack.fit_to_standard_question }}</p>
+      <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/describing-embedded-analytics_d536b335-62e2-402f-a2d3-c30bdc6a3a76" target="_blank" rel="noopener">SAP Learning: Describing Embedded Analytics <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Analytics architecture</p>
