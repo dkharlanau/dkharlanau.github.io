@@ -64,16 +64,10 @@ source_links:
     url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/exploring-system-landscapes_a9e94a19-4917-4f3c-b50a-774f1e80cbd0"
   - title: "Navigating Release Upgrades"
     url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/navigating-release-upgrades_ae2d796c-bafd-4e04-8b41-562ebda9eb49"
-  - title: "Fit-to-Standard Analysis Workshops"
+  - title: "Describing Fit-to-Standard Analysis Workshops"
     url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/describing-fit-to-standard-analysis-workshops_c77f59be-0b11-45b3-a63d-524bc2a1731e"
-  - title: "Preparing Fit-to-Standard Workshops"
+  - title: "Preparing for Fit-to-Standard Analysis Workshops"
     url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/preparing-for-fit-to-standard-analysis-workshops_c8389b30-8e01-449c-9131-0cbd31cb0284"
-  - title: "Conducting Fit-to-Standard Workshops"
-    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/conducting-fit-to-standard-analysis-workshops_e6b3f53d-871d-40bb-bf65-7ae7eacf9ff0"
-  - title: "Business Process Configuration for New Implementations"
-    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/defining-business-process-configurations-for-new-implementations_d6ff60c0-095d-4b72-93e9-a78a85c8f003"
-  - title: "Business Process Validation after System Conversion"
-    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/evaluating-current-processes-after-a-system-conversion_b2ac1860-e346-481b-807f-4c7688b6e7ce"
 # ai-discovery-managed:end
 ---
 {% assign topic = site.data.labs.enterprise_context.topics.deployment_models %}
