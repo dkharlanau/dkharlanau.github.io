@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-30
+last_modified_at: 2026-09-23
 hide_global_cta: true
 tags: [sap, mdg, workflow, data-quality, mass-processing]
 ---
@@ -57,6 +57,62 @@ tags: [sap, mdg, workflow, data-quality, mass-processing]
       {% for step in topic.process_model.central_governance.steps %}
       <a href="/labs/enterprise-context/data/topics.json"><span>STEP</span><strong>{{ step.title }}</strong><small>{{ step.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="snapshot-refresh" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Open change requests and backend updates</p>
+      <h2>Keep the change request in sync with the active master record.</h2>
+      <p>An open change request can live for hours or days. During that time, the active Material or Business Partner may still be changed in the backend. If the change request keeps an older snapshot, its later activation can conflict with those newer backend changes. SAP provides an automatic snapshot refresh so the open request can continue from the current master-data state instead of an outdated baseline.</p>
+    </header>
+
+    <div class="ecg-control-stack">
+      <article>
+        <span>01</span>
+        <h3>Why the refresh exists</h3>
+        <p>The refresh is designed to protect intended backend changes from being overwritten when an existing change request is activated. SAP describes the refresh as updating the snapshot and inactive data after relevant master-data updates.</p>
+        <strong>Lead point: approval history is not enough if the request is working with stale active data.</strong>
+      </article>
+      <article>
+        <span>02</span>
+        <h3>bgRFC prerequisite</h3>
+        <p>Configure the inbound bgRFC destination <code>MDG_SNAPSHOT_REFRESH</code> with queue prefix <code>MDG_SNAP_</code> in <code>SBGRFCCONF</code>. Use <code>SBGRFCMON</code> when you need to check whether background refresh processing is running or blocked.</p>
+        <strong>Operational proof: the queue is configured and processing without unresolved errors.</strong>
+      </article>
+      <article>
+        <span>03</span>
+        <h3>Material trigger</h3>
+        <p>For Material, use <code>MDGIMG</code> and navigate to Classic Mode in SAP MDG → Central Governance → Central Governance for Material → Activate Business Transaction Events. The <code>MDGCRU</code> application must be active for this refresh integration.</p>
+        <strong>Configuration proof: the Material refresh event is active in the target client.</strong>
+      </article>
+      <article>
+        <span>04</span>
+        <h3>Business Partner trigger</h3>
+        <p>For Business Partner, Customer, and Supplier, use <code>BUPA_CALL_FU</code> or the corresponding Activate Function Modules activity. The documented event is <code>BPOUT</code>, object <code>BUPX</code>, item <code>5500001</code>, with function module <code>MDG_BS_BP_SNAPSHOT_UPD</code> and the Call indicator active.</p>
+        <strong>Configuration proof: the BP outbound event calls the MDG snapshot-update function.</strong>
+      </article>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+      <p><strong>How we should think about it:</strong> snapshot refresh is a consistency safeguard inside Central Governance. It is not the same as DRF replication. Snapshot refresh keeps an open request aligned with changes to its source master object; DRF distributes activated master data to consuming systems.</p>
+      <p><strong>Test pattern:</strong> in a non-production system, open a change request, change the same master object through an approved backend path, confirm bgRFC processing, reopen the request, and verify that the intended backend change is still present before activation.</p>
+      <p><strong>Release boundary:</strong> do not copy the settings blindly between releases. Confirm the Help Portal topic and relevant SAP Notes for the exact S/4HANA release and support-package level.</p>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/50ec75e0419b45909abe72fe92a35275.html">SAP Help: Set Up Integration of Refresh Change Request in Master Data Updates <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="snapshot-refresh-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ</p>
+      <h2>Questions worth remembering for an assessment.</h2>
+    </header>
+    <div class="research-route-list">
+      <a href="#snapshot-refresh"><span>Q</span><strong>Why can a valid change request still be risky?</strong><small>Because validation and approval do not guarantee that the active master record stayed unchanged while the request was open. A stale snapshot can create a consistency problem at activation.</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
+      <a href="#snapshot-refresh"><span>Q</span><strong>What is the first technical dependency?</strong><small>bgRFC. The documented inbound destination is <code>MDG_SNAPSHOT_REFRESH</code> with queue prefix <code>MDG_SNAP_</code>.</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
+      <a href="#snapshot-refresh"><span>Q</span><strong>Where do Material and Business Partner differ?</strong><small>Material uses the MDGCRU Business Transaction Event activation in MDGIMG. Business Partner uses the BPOUT/BUPX event and function module MDG_BS_BP_SNAPSHOT_UPD.</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
+      <a href="#snapshot-refresh"><span>Q</span><strong>What do we monitor when refresh does not happen?</strong><small>Start with SBGRFCMON, then verify the inbound destination and the object-specific trigger. After that, check whether the backend update path actually reached the expected event for your release.</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
     </div>
   </section>
 
