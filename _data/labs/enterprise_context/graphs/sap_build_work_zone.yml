@@ -5,8 +5,8 @@ domain: "SAP BTP / Enterprise Experience"
 process_family: "Cross-solution user experience and digital workplace"
 status: researching
 created_at: "2026-08-27"
-updated_at: "2026-08-27"
-verified_at: "2026-08-27"
+updated_at: "2026-09-23"
+verified_at: "2026-09-23"
 
 summary: >-
   SAP Build Work Zone is the experience layer in front of business systems. It gives users a role-based place to find and use applications, tasks, information, and content from SAP, custom-built, and third-party systems. Standard edition is mainly an app-first business site and central entry point. Advanced edition adds a stronger digital workplace model with workspaces, collaboration, and richer content.
@@ -190,6 +190,76 @@ adjacent_products:
     relationship: "It can use content from Work Zone standard or advanced as part of the mobile experience."
     memory: "MOBILE ENTRY, NOT A NEW SYSTEM OF RECORD."
 
+
+fiori_my_home:
+  memory_path: "ROLE → CATALOG → APP ACCESS | ROLE → SPACE → PAGE → APP PLACEMENT"
+  summary: >-
+    My Home is the cross-device SAP Fiori launchpad entry page. It gives users a personal view of work, but it does not replace the authorization model or the business applications behind the content.
+  sections:
+    - name: "To-Dos"
+      purpose: "Bring My Inbox workflow tasks and Situation Handling situations into one attention list."
+      boundary: "The home page displays the work. Workflow and situation frameworks still own why the task or situation exists."
+    - name: "Pages"
+      purpose: "Give quick access to role-based pages and optional administrator-managed news."
+      boundary: "Pages are selected from the spaces and pages assigned through the user's business roles."
+    - name: "Apps and Activities"
+      purpose: "Collect favorite apps plus recent and frequently used activities."
+      boundary: "A favorite changes convenience, not authorization."
+    - name: "Insights"
+      purpose: "Show monitoring tiles and user-selected analytical, list, or table cards."
+      boundary: "The analytical source and authorization remain in the owning application and analytics model."
+  layout_rule: >-
+    Business catalogs answer which apps a role can use. Spaces and pages answer how those authorized apps are organized on the launchpad. A missing app can therefore be either an authorization problem or a placement problem.
+  reference_tool:
+    name: "SAP Fiori Apps Reference Library"
+    use: "Use the library to check app purpose, availability, technical requirements, business roles, catalogs, and implementation information for the relevant product release."
+    url: "https://fioriappslibrary.hana.ondemand.com/"
+
+mobile_entry:
+  memory_rule: "MOBILE IS AN ENTRY CHANNEL, NOT A SECOND AUTHORIZATION MODEL."
+  training_name: "SAP Mobile Start"
+  current_name: "Joule Work mobile app"
+  naming_note: >-
+    Current SAP documentation describes the Joule Work mobile app as the successor name for SAP Mobile Start. Older learning material can still use SAP Mobile Start.
+  setup_rule: >-
+    Mobile business content must be made available through SAP Build Work Zone. The design still depends on roles, spaces and pages, identity, SSO, destinations, and whether the target application supports the mobile experience.
+  source_boundary: "The mobile app presents work; the source system still owns transaction logic and business authorization."
+
+attention_routing:
+  memory_path: "EXCEPTION → SITUATION → RESPONSIBILITY → PERSON → ACTION"
+  principle: >-
+    Keep the question 'who should act?' separate from 'what happened?' and 'what sequence should run?'. These frameworks work together but own different decisions.
+  components:
+    - name: "Responsibility Management"
+      question: "Who is responsible?"
+      owns: "Teams, members, responsibility definitions, and member functions used to determine responsible people."
+      example: "A purchasing team can be selected from responsibility rules for an approval or a situation."
+    - name: "Situation Handling"
+      question: "What exception needs attention?"
+      owns: "Detection, notification, context, lifecycle, and resolution support for business situations."
+      example: "A shipping delay or unposted billing document becomes a situation for the responsible user."
+    - name: "Flexible Business Workflow"
+      question: "What sequence of tasks or approvals must run?"
+      owns: "Workflow steps, conditions, work items, and agent assignments inside the S/4HANA business process."
+      example: "A sales price approval creates work items that appear in My Inbox."
+    - name: "SAP Build Process Automation"
+      question: "Do we need a broader custom or cross-product automation?"
+      owns: "Low-code/no-code workflow and automation on SAP BTP, including cross-product scenarios."
+      example: "Use it when the process must orchestrate work beyond one S/4HANA flexible workflow boundary."
+    - name: "My Inbox / My Home To-Dos"
+      question: "Where does the user see assigned work?"
+      owns: "User-facing task consumption and attention entry."
+      example: "The user sees tasks and situations together, but the launchpad is not their orchestration engine."
+  situation_frameworks:
+    - framework: "Standard"
+      fit: "Use SAP-delivered situation templates and configure them for the business use case."
+      remember: "Delivered situations first."
+    - framework: "Extended"
+      fit: "Create custom object-based situations and handle selected warning or error messages from runs and reports."
+      remember: "Custom or message-based situations."
+  lead_rule: >-
+    Prefer the smallest framework that owns the requirement. Do not build a cross-product automation when a standard situation template or a native flexible workflow already solves the problem cleanly.
+
 integration_patterns:
   - pattern: "Content federation"
     use: "Expose roles and launchpad content from a source system and consume them in Work Zone."
@@ -345,6 +415,8 @@ memory_anchors:
   - "Task Center owns aggregated tasks. Process Automation owns workflow. Integration Suite owns integration. Identity services own trust."
   - "A tile can be central; the transaction does not become central."
   - "Design by persona and job, not by application catalogue."
+  - "Catalog = access. Space and page = placement."
+  - "Responsibility = who. Situation = what exception. Workflow = what sequence. My Home = where the user sees it."
 
 assessment_answer_short: >-
   SAP Build Work Zone is a BTP-based enterprise experience layer and central entry point. It gives users role-based access to applications, tasks, and content across SAP and non-SAP systems. I treat it as a system-of-engagement layer, not a system of record: S/4HANA and other applications still own business data and transaction logic. Standard edition is mainly for a cross-system business site and launchpad. Advanced edition adds collaborative workspaces and richer content.
@@ -369,3 +441,8 @@ source_refs:
   - SRC-SAP-WZ-TASK-CENTER
   - SRC-SAP-JOULE-WORK-MOBILE
   - SRC-SAP-WZ-RESTRICTIONS
+  - SRC-SAP-FIORI-MY-HOME
+  - SRC-SAP-MOBILE-START-WZ
+  - SRC-SAP-RESPONSIBILITY-MANAGEMENT
+  - SRC-SAP-SITUATION-HANDLING
+  - SRC-SAP-FLEXIBLE-BUSINESS-WORKFLOW
