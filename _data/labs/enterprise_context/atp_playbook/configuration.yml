@@ -1,8 +1,43 @@
 id: AATP-PLAYBOOK-CONFIG
 title: aATP Configuration and Release Guardrails
-updated_at: '2026-09-01'
+updated_at: '2026-09-23'
 release_scope:
 - SAP S/4HANA 2025 FPS01 where cited
+- Current SAP Learning deployment-model guidance accessed 2026-09-23
+
+deployment_and_licensing:
+  title: Know the edition before you discuss aATP
+  principle: >-
+    The name aATP does not mean the same activation and licensing conversation in every
+    S/4HANA edition. First identify the deployment model, then separate the technical code
+    line from the business functions that are licensed for use.
+  editions:
+  - id: ATP-DEPLOY-PUBLIC
+    title: SAP S/4HANA Cloud Public Edition
+    runtime: >-
+      aATP is the only ATP code line and is already active. There is no separate classic
+      ATP code line to switch to.
+    commercial_scope:
+    - Basic Available-to-Promise is part of the standard license and provides the basic availability functions.
+    - Advanced Available-to-Promise adds further functions and requires an additional license.
+    - SAP Learning currently describes these as Basic Available-to-Promise Processing (2LN) and Advanced Available-to-Promise Processing (1JW).
+    source_refs:
+    - SRC-SAP-AATP-DEPLOYMENT-LICENSE
+    - SRC-SAP-AATP-BASIC-PUBLIC-CLOUD
+  - id: ATP-DEPLOY-PRIVATE-ONPREM
+    title: SAP S/4HANA Cloud Private Edition and SAP S/4HANA on-premise
+    runtime: >-
+      aATP is not simply assumed to be active. It must be activated when the solution is
+      intended to use aATP.
+    commercial_scope:
+    - Using aATP requires an additional license.
+    - Configuration and activation options can differ from Public Edition, so edition-specific documentation matters.
+    source_refs:
+    - SRC-SAP-AATP-DEPLOYMENT-LICENSE
+  lead_rule: >-
+    Do not ask only "Is aATP active?" Ask which S/4HANA edition is in scope, which ATP code
+    line is used, and which licensed capability set the business actually needs.
+
 configuration_playbook:
   title: Configuration playbook — prove the control chain before tuning the result
   principle: aATP behavior is layered. Start with requirement eligibility and scope, then prove the feature-specific
