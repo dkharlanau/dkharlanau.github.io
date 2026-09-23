@@ -75,6 +75,15 @@ Route each useful input into one or more of these outcomes:
 5. **Source only** — keep a useful primary source as evidence without inflating the page with duplicate prose.
 6. **Uncertain** — do not publish a precise claim until the deployment model, release, or source is clear.
 
+### Expand to the process boundary
+
+Do not mirror the structure of the source material mechanically. Before editing, ask which neighboring processes are required to make the concept useful end to end.
+
+- A Sales note may require context from ATP, MM/Procurement, PP, Inventory Management, EWM, TM, Billing, FI/CO, tax, MDG, or integration operations.
+- Add only the neighboring concepts that explain ownership, a decision dependency, a financial consequence, or a likely assessment follow-up.
+- Prefer strengthening an existing owner page and its cross-links. Creating a new page is the exception, not the default.
+- When SAP training material gives a simplified sequence, keep the learning value but add the architectural boundary: which component owns the state, which document proves it, and what changes in a special process variant.
+
 ### Sales-first routing
 
 During the Sales preparation phase, prefer these existing routes instead of creating duplicate pages:
