@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -20,9 +20,9 @@ tags:
   - cogs
   - settlement
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-02"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + full editorial rewrite"
 search_intent: "SAP logistics integration with finance and accounting postings"
 # ai-discovery-managed:start
 structured_data:
@@ -51,6 +51,10 @@ semantic_links:
 source_links:
   - title: "Revenue-Related Events and Postings"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f63dd39a28bb4b90adbf9e608aff58ea/5051d053fdd61823e10000000a44538d.html"
+  - title: "Forwarding Billing Data to Financial Accounting"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9da51938e0a54f708ebda0b1f44aff05/9c70b6535fe6b74ce10000000a174cb4.html"
+  - title: "Cost Elements"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/5e23dc8fe9be4fd496f8ab556667ea05/82c2b70ff84c4eebb14fe45c12d5aed4.html"
   - title: "Manage COGS Splits"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/5e23dc8fe9be4fd496f8ab556667ea05/2de2215f7bb14aa09acda227e94d3657.html"
   - title: "Event-Based Revenue Recognition"
@@ -75,7 +79,6 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0fa84c9d9c634132b7c4abb9ffdd8f06/14bfe1818e1b4fec9f3e873599e2b754.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.finance_logistics %}
 {% assign evidence = site.data.labs.enterprise_context.sources.finance_logistics %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">FI/CO for Logistics</li></ol></nav>
@@ -83,128 +86,111 @@ source_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Cross-process bridge / FI & CO</p>
-      <h1>Start with the logistics event.<br />Then explain the value.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#event-map">Trace event to journal <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="FI CO logistics working model">
-      <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.baseline_event_map | size }}</strong><small>Event bridges</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · baseline plus explicit exceptions</em>
+      <p class="research-canvas__eyebrow">Cross-process bridge / FI &amp; CO</p>
+      <h1>Logistics creates the event.<br />Finance records what it was worth.</h1>
+      <p>A goods movement, billing document, supplier invoice, production receipt, or freight settlement can create a financial consequence. The useful model is not a list of debit and credit pairs. Follow the business event into valuation, G/L account determination, account assignment, and then any clearing or settlement that must happen later.</p>
+      <a class="research-canvas__button" href="#event-map">Follow the value flow <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
-    <p><strong>Working rule:</strong> do not start with debit and credit memorization. Start with the business event, expected value change, account logic, cost or revenue object, and the evidence that connects Finance back to Logistics.</p>
-    <a href="/labs/enterprise-context/data/finance-logistics-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+    <div>
+      <p><strong>Start from the business event, not from the G/L account.</strong> First establish what happened and what value should change. Then ask which account and management object should receive that value, which journal entry was created, and whether another event still has to clear or settle a temporary balance.</p>
+      <p>A correct accounting document proves that a posting exists. It does not prove that the logistics process is complete or that every open balance is wrong.</p>
+    </div>
+    <a href="/labs/enterprise-context/data/finance-logistics-graph.json">Open the structured finance bridge <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Financial completion model</p><h2>A posting can be correct and the process can still be open.</h2><p>This diagnostic frame separates event posting, matching or settlement, and end-to-end reconciliation. It prevents Finance from becoming a repair screen for an upstream logistics defect.</p></header>
-    <div class="ecg-decision-columns">
-      <div><h3>1. Event and posting</h3><ul><li>Which logistics event changed quantity, value, revenue, cost, or liability?</li><li>Did the expected value, account, and cost/revenue object result?</li><li>If not, find whether the wrong input came from Logistics or account/control logic.</li></ul></div>
-      <div><h3>2. Match or settle</h3><ul><li>Which later event should clear, settle, or match the open state?</li><li>For procurement, compare GR and invoice receipt before calling GR/IR wrong.</li><li>For production, separate order completion from CO settlement.</li></ul></div>
-      <div><h3>3. Reconcile</h3><ul><li>Does the financial state match the operational process state?</li><li>Is an open balance genuinely wrong, or is a later event still expected?</li><li>Close the issue with source-document and journal evidence, not a manual journal alone.</li></ul></div>
-    </div>
-    <p class="ecg-caption"><strong>Lead signal:</strong> “posted” answers whether an accounting event exists. It does not answer whether the process has cleared, settled, or reconciled.</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review confirms GR/IR separation between goods receipt and invoice receipt, and production-order settlement through settlement rules. The wider O2C, P2P, production, TM, account, valuation, and exception map was reviewed against the route source registry; the financial completion model remains an authored diagnostic frame.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Memory model</p><h2>Seven questions from event to reconciliation.</h2><p>This path works across Sales, Procurement, Production, Inventory, and Transportation.</p></header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}<article class="ecg-memory-card"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item.key }}</strong><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>{% endfor %}
-    </div>
-    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong> The journal is evidence of the event. It is not the beginning of the diagnosis.</p>
+    <header>
+      <p class="research-canvas__eyebrow">The accounting model</p>
+      <h2>Financial account and management assignment describe different parts of the same value flow.</h2>
+    </header>
+    <p>In SAP S/4HANA, cost elements are represented as G/L accounts and are part of the chart of accounts. Journal entries can also carry management-accounting dimensions such as cost centers, orders, projects, profit centers, or profitability context. This gives one posting both a financial meaning and, where relevant, an internal ownership context.</p>
+    <p>That distinction matters in logistics support. An amount can be correct while the G/L account is wrong. The G/L account can be correct while the production order, cost center, WBS element, or other assignment is wrong. Treating those as one problem usually leads to the wrong correction.</p>
+    <p>See SAP's current <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/5e23dc8fe9be4fd496f8ab556667ea05/82c2b70ff84c4eebb14fe45c12d5aed4.html" target="_blank" rel="noopener">Cost Elements</a> documentation for the S/4HANA account model.</p>
   </section>
 
   <section class="research-canvas__inventory" id="event-map" data-reveal>
-    <header><p class="research-canvas__eyebrow">Event map</p><h2>Read the financial consequence of the logistics event.</h2><p>These are baseline patterns. The caveat is part of the answer, not a footnote to forget.</p></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.baseline_event_map %}
-      <article class="ecg-determination-detail">
-        <header><div><span>EVT</span><small>logistics value event</small></div><h3>{{ item.event }}</h3><p class="ecg-question">{{ item.baseline_value_effect }}</p></header>
-        <div class="ecg-decision-columns"><div><h4>Posting reading</h4><p>{{ item.typical_posting_reading }}</p></div><div><h4>Ownership</h4><p>{{ item.ownership_boundary }}</p></div><div><h4>Caveat</h4><p>{{ item.caveat }}</p></div></div>
-      </article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Four process bridges</p>
+      <h2>The financial meaning depends on which logistics event happened.</h2>
+      <p>Order-to-cash, procure-to-pay, production, and transportation all create value changes, but they do not use the same intermediate states. Read each chain in its own business order.</p>
+    </header>
+
+    <h3>Sales: goods issue and billing are separate value events</h3>
+    <p>For a standard valuated outbound process, Post Goods Issue reduces inventory and typically creates the cost-of-goods-sold effect. Customer billing is a different event. When billing data is transferred to Financial Accounting, SAP can create the receivable and post revenue, sales deductions, accruals, and other configured accounts through account determination.</p>
+    <p>This separation explains why “the invoice is correct” does not prove the inventory and COGS side is correct, and why a completed goods issue does not prove that revenue was posted. Specialized revenue-recognition or valuated-stock-in-transit scenarios can also change timing or add adjustment postings, so the simple PGI-and-billing baseline is not universal. The <a href="/labs/enterprise-context/billing/">Sales Billing guide</a> covers the commercial side of that boundary.</p>
+
+    <h3>Procurement: GR/IR connects receipt and supplier invoice</h3>
+    <p>In standard valuated procurement, goods receipt updates stock or consumption and posts the counterpart to GR/IR. The supplier invoice creates the vendor liability and clears the matching GR/IR value. Price differences, quantity differences, taxes, account assignment, delivery costs, and posting sequence can change the detailed lines.</p>
+    <p>GR/IR is therefore not an error account by definition. It is a bridge between two business events that may happen on different dates and for different quantities. If the balance remains open, first determine whether a receipt, invoice, or correction is still expected. Only then decide whether the balance is an exception. Continue with <a href="/labs/enterprise-context/inventory-management/">Inventory Management</a> for the stock-event side.</p>
+
+    <h3>Production: the order collects cost before settlement resolves the difference</h3>
+    <p>Component issues, activity allocations, overhead, and other production events can debit the manufacturing cost object. When finished material is received, SAP credits the manufacturing order or product cost collector according to the costing design and posts the inventory effect. The remaining difference between actual debits and the value credited at goods receipt is handled by the applicable Product Cost by Order or Product Cost by Period logic.</p>
+    <p>Settlement rules and receivers are scenario-specific. This is why physical completion and financial completion are not the same state: a production order can be finished operationally while work in process, variance, or settlement processing still remains. The <a href="/labs/enterprise-context/production/">Production guide</a> covers the planning and execution objects that create those financial events.</p>
+
+    <h3>Transportation: freight cost moves through a cross-module handoff</h3>
+    <p>Transportation Management calculates and settles freight charges, but carrier invoice verification belongs to the procurement and finance chain. In SAP's documented freight-settlement processes, confirming or posting freight costs can create accruals and follow-on service-procurement documents such as a purchase order and service entry sheet that later support invoice verification. The exact document chain depends on the settlement scenario.</p>
+    <p>For support, keep the stages distinct: charge calculation, freight settlement, procurement follow-on documents, accrual or cost posting, supplier invoice, and any reversal or dispute. A correct freight charge does not prove that the financial handoff completed.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Controls</p><h2>Separate value, G/L, object, clearing, and recognition.</h2><p>One amount can be correct while its account, receiver, or timing is wrong.</p></header>
-    <div class="ecg-input-grid">
-      {% for item in graph.control_layers %}<article><span>CTRL</span><h3>{{ item.title }}</h3><p>{{ item.purpose }}</p><p><strong>Ask:</strong> {{ item.diagnostic_question }}</p></article>{% endfor %}
+    <header>
+      <p class="research-canvas__eyebrow">Where the value goes</p>
+      <h2>Valuation, account determination, and account assignment answer different questions.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Valuation</h3><p>How much value should move? Material price control, purchase price, billing value, freight charge, quantity, currency, and scenario-specific valuation rules can influence the answer.</p></div>
+      <div><h3>G/L account</h3><p>Which financial category receives the value? Inventory, consumption, COGS, revenue, GR/IR, variance, accrual, and clearing accounts are selected by the relevant account-determination logic.</p></div>
+      <div><h3>Management object</h3><p>Which object owns the cost or revenue context? Depending on the process, that can include a cost center, manufacturing order, WBS element, sales-order item, profit center, or profitability assignment.</p></div>
     </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Process bridges</p><h2>Four chains cover most logistics-to-finance assessment questions.</h2><p>Use the process chain first, then dive into account determination or Controlling.</p></header>
-    <div class="research-route-list">
-      {% for item in graph.process_bridges %}<a href="#runtime"><span>FLOW</span><strong>{{ item.title }}</strong><small>{{ item.path }} · Checks: {{ item.lead_checks | join: ", " }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>{% endfor %}
-    </div>
+    <p>Changing a material price, sales value, or logistics document to compensate for a pure account-determination defect mixes these layers. The safer correction fixes the first wrong decision and then reprocesses or reverses the affected business event according to the supported process.</p>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
-    <header><p class="research-canvas__eyebrow">Diagnostic runtime</p><h2>Find the first wrong value decision.</h2><p>Do not fix the accounting line until you know whether Logistics sent the wrong event, value, or assignment.</p></header>
-    <div class="ecg-determination-list">
-      {% for stage in graph.runtime_pipeline %}
-      <article class="ecg-determination-detail"><header><div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>finance bridge</small></div><h3>{{ stage.title }}</h3><p class="ecg-question">{{ stage.question }}</p></header><div class="ecg-decision-columns"><div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div></div></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Reconciliation</p><h2>An open balance is a question, not automatically an error.</h2><p>Decide whether a matching business event is missing, different, or still expected.</p></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.reconciliation_models %}<article class="ecg-determination-detail"><header><div><span>REC</span><small>reconciliation</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.question }}</p></header><div class="ecg-decision-columns"><div><h4>Expected end state</h4><p>{{ item.expected_end_state }}</p></div><div><h4>Possible causes</h4><ul>{% for cause in item.causes %}<li>{{ cause }}</li>{% endfor %}</ul></div><div><h4>Evidence</h4><ul>{% for value in item.evidence %}<li>{{ value }}</li>{% endfor %}</ul></div></div></article>{% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Reading an incident</p>
+      <h2>Move from source document to journal, then to the state that should close it.</h2>
+    </header>
+    <p>Begin with the logistics reference and prove the quantity or commercial event. For a goods movement, read the material document and the before-and-after stock state. For billing, prove the billing document and its accounting-transfer status. For procurement, use the purchase-order history to place goods receipt and invoice receipt in sequence. For production or freight, identify the cost object or settlement document that carries the value.</p>
+    <p>Next reproduce the valuation and account inputs that were valid at posting time. A wrong amount points toward quantity, price, valuation, currency, or condition logic. A correct amount on the wrong G/L points toward account determination. A correct account with the wrong receiver points toward account assignment or derivation.</p>
+    <p>Then read the accounting document as evidence: amount, currency, G/L account, assignment, reference, reversal state, and posting status. If that journal is correct, follow the temporary state forward. GR/IR needs the matching procurement event; a manufacturing-order balance needs the appropriate close and settlement logic; freight accruals need their invoice-verification path. Reconciliation is complete when the operational and financial states tell the same business story.</p>
   </section>
 
   <section class="research-canvas__inventory" id="failures" data-reveal>
-    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>Do not use Finance as a repair screen for Logistics.</h2><p>Manual journals can make a balance look better while the source process stays wrong.</p></header>
-    <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}<article class="ecg-determination-detail"><header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header><div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div></div></article>{% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>A small source error can become a closing problem.</h2><p>Trace the effect before deciding which team should own the correction.</p></header>
-    <div class="research-route-list">
-      {% for item in graph.impact_traces %}<a href="#lead-lens"><span>TRACE</span><strong>{{ item.start }}</strong><small>{{ item.path | join: " → " }} · {{ item.lead_question }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>{% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">A useful example</p>
+      <h2>An open GR/IR balance can be correct.</h2>
+    </header>
+    <p>Suppose 100 units were received but the supplier has invoiced only 80. SAP documentation for quantity variances explains that the unmatched balance can remain on GR/IR because another invoice is still expected. If no more goods or invoices will arrive, the residual becomes a clearing and reconciliation problem.</p>
+    <p>The sequence matters. A manual journal posted before the business state is understood may improve the account balance while hiding the real difference between receipt and invoice history. The first question is whether the process is incomplete, mismatched, or genuinely wrong—not how to make the account zero today.</p>
   </section>
 
   <section class="research-canvas__inventory" id="lead-lens" data-reveal>
-    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>Connect operational truth and financial truth.</h2><p>The answer is strong when you can explain the event, value, account, object, open state, exception, and proof.</p></header>
-    <div class="ecg-input-grid">
-      <article><span>ASK</span><h3>What I ask first</h3><ul>{% for item in graph.lead_lens.what_i_ask_first %}<li>{{ item }}</li>{% endfor %}</ul></article>
-      <article><span>OWN</span><h3>Decision ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
-      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
-      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
-      <article><span>PROVE</span><h3>Proof of cause</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
-      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
+    <header>
+      <p class="research-canvas__eyebrow">Ownership</p>
+      <h2>The owner follows the first wrong state.</h2>
+    </header>
+    <p>If the material quantity or billing value is wrong before accounting, the correction belongs upstream in the logistics or commercial process. If the business value is correct but the G/L account is wrong, investigate account determination. If the account is correct but the cost or revenue object is wrong, investigate account assignment and derivation. If all postings are correct but a temporary balance remains open, find the missing or mismatched follow-on event before treating Finance as the repair layer.</p>
+    <p>This is the practical FI/CO boundary for a logistics consultant: understand enough accounting to explain why the value moved, where it landed, and what should happen next—without turning every logistics defect into a manual journal.</p>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/billing/"><span>O2C</span><strong>Sales Billing</strong><small>Follow the commercial document into its Financial Accounting handoff.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Read the stock event, movement semantics, valuation context, and warehouse boundary.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production</strong><small>Connect component consumption, output receipt, order cost, and financial close.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment prompts</p><h2>Practice the boundary between modules.</h2><p>Explain the baseline, then name the exception that could change it.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>Primary SAP documentation behind the baseline.</h2>
+      <p>The article is independently written. Product behavior was rechecked against SAP S/4HANA 2025 FPS01 and current SAP S/4HANA Cloud documentation. Detailed tax, localization, Material Ledger actual costing, and specialized revenue-recognition design remain outside this page.</p>
+    </header>
     <div class="research-route-list">
-      {% for item in graph.assessment_prompts %}<a href="/labs/assessment/"><span>Q</span><strong>{{ item }}</strong><small>Trace event → value → account/object → journal → reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>{% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Sources</p><h2>Primary SAP documentation checks the baseline and the exceptions.</h2><p>This page is deliberately not a full Finance course. It keeps the financial depth that a logistics Lead needs to reason across boundaries.</p></header>
-    <div class="research-route-list">
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/5e23dc8fe9be4fd496f8ab556667ea05/82c2b70ff84c4eebb14fe45c12d5aed4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Cost Elements</strong><small>SAP S/4HANA 2025 FPS01 · checked 2026-09-23</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9da51938e0a54f708ebda0b1f44aff05/9c70b6535fe6b74ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Forwarding Billing Data to Financial Accounting</strong><small>SAP S/4HANA 2025 FPS01 · checked 2026-09-23</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% for source in evidence.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}
     </div>
   </section>
