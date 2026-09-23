@@ -154,21 +154,27 @@ input_domains:
     purpose: >-
       Procedures, mappings, condition records, checks, and search strategies convert
       document and master-data context into runtime decisions.
+    source_refs:
+      - SRC-SAP-SD-DATA-SOURCE-LEARNING
 
 field_provenance:
   title: "Field provenance: which source supplied this value?"
   summary: >-
     Use this map when a sales-order value looks wrong. First identify the runtime field,
-    then trace the partner, master-data record, document type, or previous determination
-    that supplied it. Partner functions matter because different partners own different
-    commercial, logistics, billing, payment, and tax context.
+    then trace the partner, master-data record, document type, preceding document, or
+    previous determination that supplied it. Partner functions matter because different
+    partners own different commercial, logistics, billing, payment, and tax context.
+    The rows below focus on standard defaulting when master data participates; creation
+    with reference, explicit interface values, and manual overrides can change the runtime source.
   partner_memory:
     - partner: "Sold-to party"
       owns: "Commercial sales context"
       examples:
         - "Incoterms in standard SD"
         - "customer pricing procedure"
-        - "sales data such as price-list context"
+        - "sales office / sales group and price-list context"
+        - "complete-delivery and order-combination defaults"
+        - "delivery priority, with customer-material data able to specialize the item"
       caveat: >-
         Do not assume every customer-derived field comes from sold-to. Payment, logistics,
         and tax rules deliberately read other partner roles.
@@ -178,6 +184,7 @@ field_provenance:
         - "delivery address"
         - "delivering-plant fallback"
         - "shipping data and destination geography"
+        - "shipping condition when the sales document type is configured to read ship-to"
         - "tax destination and ship-to tax liability"
       caveat: >-
         Incoterms are not normally switched to ship-to in standard SD just because delivery
@@ -230,16 +237,102 @@ field_provenance:
 
     - field: "Shipping condition"
       level: "Header"
-      partner_role: "Customer master / document type"
-      source: "Customer master, unless the sales document type supplies a shipping condition"
-      mechanism: "default with document-type override"
+      partner_role: "Sold-to / Ship-to / Sales document type"
+      source: "Sold-to or ship-to sales-area data, depending on sales-document-type configuration; direct document-type value has highest priority"
+      mechanism: "configurable partner source with document-type override"
       rule: >-
-        If a shipping condition is maintained both in customer master data and in the
-        sales document type, the sales document type takes precedence.
+        In current S/4HANA configuration, the sales document type can control whether
+        partner master data is read from sold-to, ship-to, or ship-to with sold-to fallback.
+        If a shipping condition is maintained directly in the sales document type, that
+        value takes precedence over the partner master default.
       downstream: "Shipping-point determination, route determination, and logistics scheduling context."
       technical_hint: "The runtime sales-order header field is VBAK-VSBED."
       source_refs:
+        - SRC-SAP-SD-SHIPPING-DATA-LEARNING
         - SRC-SAP-SD-SHIPPING-POINTS
+
+    - field: "Delivery priority"
+      level: "Item / shipping"
+      partner_role: "Sold-to, with customer-material specialization"
+      source: "Sold-to sales-area shipping data; customer-material information can provide a more specific item value"
+      mechanism: "master-data default"
+      rule: >-
+        Standard sales-order item defaulting uses the sold-to customer structure rather
+        than automatically reading a different ship-to party's delivery priority. A relevant
+        customer-material information record can also provide the delivery priority.
+      downstream: "Delivery selection and prioritization."
+      technical_hint: "Customer sales-area field KNVV-LPRIO; sales-order item field VBAP-LPRIO; customer-material field KNMT-LPRIO."
+      source_refs:
+        - SRC-SAP-SD-DELIVERY-PRIORITY
+        - SRC-SAP-SD-DELIVERY-PRIORITY-HELP
+
+    - field: "Complete delivery"
+      level: "Header"
+      partner_role: "Sold-to"
+      source: "Sold-to business-partner / customer sales-area shipping data"
+      mechanism: "master-data default with manual override"
+      rule: >-
+        The complete-delivery requirement is copied from the sold-to party into the sales
+        order and can be changed in the order where the process permits.
+      downstream: "Whether all order items must be delivered together in one outbound delivery."
+      source_refs:
+        - SRC-SAP-SD-COMPLETE-PARTIAL-DELIVERY
+        - SRC-SAP-SD-MASTER-DATA
+
+    - field: "Partial delivery per item"
+      level: "Item"
+      partner_role: "Customer-material → Sold-to"
+      source: "Customer-material information record first, then business-partner/customer master data"
+      mechanism: "prioritized master-data default"
+      rule: >-
+        Customer-material information, when maintained, takes priority over the business
+        partner for the item-level partial-delivery agreement. The order value can then be
+        changed manually where allowed.
+      downstream: "Availability-check reaction and how many partial deliveries may be created for an item."
+      source_refs:
+        - SRC-SAP-SD-COMPLETE-PARTIAL-DELIVERY
+
+    - field: "Order combination"
+      level: "Header / item delivery terms"
+      partner_role: "Sold-to"
+      source: "Sold-to master data"
+      mechanism: "master-data default with manual override"
+      rule: >-
+        The order-combination indicator is determined from the sold-to party master data
+        and can be changed in the order. It permits items from multiple sales orders to be
+        combined only when the remaining delivery-combination criteria also match.
+      downstream: "Collective outbound-delivery creation and delivery split behavior."
+      source_refs:
+        - SRC-SAP-SD-ORDER-COMBINATION
+        - SRC-SAP-SD-MASTER-DATA
+
+    - field: "Sales office / Sales group"
+      level: "Header"
+      partner_role: "Sold-to"
+      source: "Sold-to sales-area master data or explicit document input"
+      mechanism: "master-data proposal"
+      rule: >-
+        These organizational sales fields belong to the sold-to sales context. A useful
+        diagnostic nuance is that changing the sold-to party in an existing sales document
+        does not automatically redetermine the existing sales office and sales group.
+      downstream: "Sales responsibility, reporting, output context, and process selection."
+      source_refs:
+        - SRC-SAP-SD-PARTNER-FUNCTIONS
+        - SRC-SAP-SD-CHANGE-SOLDTO
+
+    - field: "Customer account assignment group"
+      level: "Header / business data"
+      partner_role: "Customer sales-area context"
+      source: "Customer sales-area accounting data, copied into sales-document business data"
+      mechanism: "master-data default feeding account determination"
+      rule: >-
+        The customer account assignment group is not the final G/L account. It is one
+        criterion used later together with material/account-key context in revenue account determination.
+      downstream: "Revenue G/L account determination during billing-to-FI transfer."
+      technical_hint: "Customer account assignment group is represented by KTGRD in sales-document business data."
+      source_refs:
+        - SRC-SAP-SD-ACCOUNT-DETERMINATION-LEARNING
+        - SRC-SAP-SD-SALES-ORDER-HEADER
 
     - field: "Customer pricing procedure"
       level: "Header / pricing context"
@@ -284,11 +377,12 @@ field_provenance:
     - field: "Route"
       level: "Item"
       partner_role: "Ship-to + logistics context"
-      source: "Departure geography + ship-to destination geography + shipping condition + material transportation group"
+      source: "Departure geography + ship-to destination geography + determined shipping condition + material transportation group"
       mechanism: "Customizing lookup"
       rule: >-
         Route determination joins the departure side, destination side, shipping policy,
-        and material transportation attributes.
+        and material transportation attributes. Remember that the shipping condition can
+        itself come from sold-to, ship-to, or the sales document type depending on configuration.
       downstream: "Transportation lead time and delivery / transportation scheduling."
       technical_hint: "Sales-order item route is VBAP-ROUTE."
       source_refs:
