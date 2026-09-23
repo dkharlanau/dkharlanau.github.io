@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-04
+last_modified_at: 2026-09-23
 hide_global_cta: true
 tags:
   - sap
@@ -54,6 +54,14 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/b89b8b9026e1456bb2a1df7c0d59c937/f70e688a7cf54c1a8980cc3298b57e30.html"
   - title: "SAP S/4HANA and SAP S/4HANA Cloud Private Edition"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/7a5f78fab9ed44e081abf9dcc2372da5.html"
+  - title: "RISE with SAP Methodology and Clean Core for Private Edition"
+    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/identifying-characteristics-of-sap-s-4hana-cloud-private-edition_acb947e5-5ff5-4786-9706-06cc7944ac1f"
+  - title: "Private Edition Transition Paths"
+    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/describing-the-customer-transition-paths-to-sap-s-4hana-cloud-private-edition_b8aa0951-21d6-44d0-b9f5-81cd24b2b8bb"
+  - title: "SAP Cloud ALM Project Setup"
+    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/setting-up-the-implementation-project-in-sap-cloud-alm_df1ca7cd-da97-4de0-b04a-2fc55e715885"
+  - title: "Private Edition Release Upgrades"
+    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/navigating-release-upgrades_ae2d796c-bafd-4e04-8b41-562ebda9eb49"
 # ai-discovery-managed:end
 ---
 {% assign topic = site.data.labs.enterprise_context.topics.deployment_models %}
@@ -140,6 +148,74 @@ source_links:
       {% for model in topic.deployment_models %}
       <a href="/labs/enterprise-context/data/catalog.json"><span>!</span><strong>{{ model.short_title }}</strong><small>{{ model.watch_out }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
       {% endfor %}
+    </div>
+  </section>
+
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Private Edition implementation model</p>
+      <h2>The ERP is only one part of the implementation system.</h2>
+      <p>For Private Edition, we should connect methodology, governance, project tooling, identity, and extension architecture. Memorizing the product names separately is less useful than understanding who owns what.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      <article class="ecg-memory-card"><span>CORE</span><strong>SAP S/4HANA</strong><h3>The transactional business core.</h3><p>Configuration and business processes live here. Clean Core asks us to keep changes controlled so upgrades and operations remain manageable.</p></article>
+      <article class="ecg-memory-card"><span>METHOD</span><strong>SAP Activate + RISE with SAP Methodology</strong><h3>Activate structures the delivery; RISE adds Clean Core governance.</h3><p>RISE adds Q-Gates, reports, the Clean Core runbook, and a stronger governance loop around the implementation.</p></article>
+      <article class="ecg-memory-card"><span>ALM</span><strong>SAP Cloud ALM</strong><h3>Project execution before go-live, operational visibility after go-live.</h3><p>It turns roadmap tasks into assignable work and later supports monitoring of connected systems and business processes.</p></article>
+      <article class="ecg-memory-card"><span>ID</span><strong>SAP Cloud Identity Services</strong><h3>IAS authenticates; IPS provisions identities.</h3><p>Identity is a landscape service, not an S/4HANA business-process function.</p></article>
+      <article class="ecg-memory-card"><span>BTP</span><strong>SAP BTP</strong><h3>Extend, integrate, and automate around the core.</h3><p>When a requirement should not be tightly coupled to S/4HANA, BTP gives us a side-by-side boundary for apps, workflows, integration, and automation.</p></article>
+      <article class="ecg-memory-card"><span>GATE</span><strong>Clean Core Q-Gates</strong><h3>Progress is checked against architecture quality, not only schedule.</h3><p>At the end of implementation phases, the team reviews Clean Core dimensions and the evidence captured in the success plan.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Lead memory model:</strong> S/4HANA is the business core. Cloud ALM controls the lifecycle. Cloud Identity controls access. BTP is the extension and integration platform. RISE with SAP Methodology governs how the transformation stays clean.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transition paths</p>
+      <h2>First decide what we want to preserve.</h2>
+      <p>The transition choice is a business-transformation decision before it becomes a migration-tool decision.</p>
+    </header>
+    <div class="research-route-list">
+      {% for path in topic.private_edition_transition_paths %}
+      <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/describing-the-customer-transition-paths-to-sap-s-4hana-cloud-private-edition_b8aa0951-21d6-44d0-b9f5-81cd24b2b8bb" target="_blank" rel="noopener"><span>PATH</span><strong>{{ path.name }}</strong><small><b>{{ path.memory }}</b> {{ path.meaning }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+    <p><strong>System Conversion vs Lift &amp; Shift:</strong> conversion changes an SAP ERP system into SAP S/4HANA. Lift &amp; Shift mainly changes where an already compatible system runs.</p>
+    <p><strong>Upgrade vs Update:</strong> an upgrade changes the base release. An update applies an FPS or SPS inside the release lifecycle.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Release lifecycle</p>
+      <h2>Private Edition gives timing flexibility, not freedom from upgrades.</h2>
+      <p>After the 2023 release, the base-release cycle moved to every two years and mainstream maintenance is seven years. The implementation team still needs a deliberate upgrade strategy.</p>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">01</div><div class="ecg-determination-card__copy"><h3>Base release</h3><p>{{ topic.private_edition_release_cycle.base_release_frequency }} {{ topic.private_edition_release_cycle.mainstream_maintenance }}</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">02</div><div class="ecg-determination-card__copy"><h3>FPS</h3><p>{{ topic.private_edition_release_cycle.fps }}</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">03</div><div class="ecg-determination-card__copy"><h3>SPS</h3><p>{{ topic.private_edition_release_cycle.sps }}</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">04</div><div class="ecg-determination-card__copy"><h3>Responsibility boundary</h3><p>{{ topic.private_edition_release_cycle.upgrade_boundary }}</p></div></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment FAQ</p>
+      <h2>Short answers that preserve the architecture boundary.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">Q1</div><div class="ecg-determination-card__copy"><h3>What is the difference between SAP Activate and RISE with SAP Methodology?</h3><p>SAP Activate provides the implementation phases, tasks, and deliverables. RISE with SAP Methodology extends the delivery with Clean Core governance, integrated tools, reports, and Q-Gates.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">Q2</div><div class="ecg-determination-card__copy"><h3>What is SAP Cloud ALM doing here?</h3><p>During implementation it manages the project work and SAP roadmap content. After go-live it continues as an operations and monitoring layer.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">Q3</div><div class="ecg-determination-card__copy"><h3>Why does BTP matter for Clean Core?</h3><p>It gives us a place for loosely coupled extensions, integrations, workflows, and applications when the requirement should not be built directly into the ERP core.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">Q4</div><div class="ecg-determination-card__copy"><h3>Who owns a Private Edition upgrade?</h3><p>SAP can execute the technical upgrade. The customer and implementation partner still own preparation, remediation, regression testing, business testing, integration validation, and readiness.</p></div></article>
     </div>
   </section>
 
