@@ -180,7 +180,7 @@ source_links:
       <p>The transition choice is a business-transformation decision before it becomes a migration-tool decision.</p>
     </header>
     <div class="research-route-list">
-      {% for path in topic.private_edition_transition_paths %}
+      {% for path in topic.private_edition_transition_paths.items %}
       <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/describing-the-customer-transition-paths-to-sap-s-4hana-cloud-private-edition_b8aa0951-21d6-44d0-b9f5-81cd24b2b8bb" target="_blank" rel="noopener"><span>PATH</span><strong>{{ path.name }}</strong><small><b>{{ path.memory }}</b> {{ path.meaning }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       {% endfor %}
     </div>
