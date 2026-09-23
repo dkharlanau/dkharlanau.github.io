@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Output Control"
-description: "Analytical overview of Output Control in SAP: what it is, where it sits, and how it breaks."
+description: "SAP output management explained: how business documents become print, email, PDF, or electronic output, and why S/4HANA output frameworks must be identified per application."
 permalink: /atlas/sap/output-control/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "Output Management"
 business_process: "Document communication"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Integration</p>
     <h1>Output Control</h1>
-    <p class="note-subtitle">SAP's mechanism for generating and distributing documents: print, email, PDF, and electronic output.</p>
+    <p class="note-subtitle">How SAP turns a business document into the right output for the right recipient, channel, and form.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -49,97 +49,49 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Document communication</dd></div>
       <div><dt>SAP area</dt><dd>Output Management</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until integration claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Noindex until output-management claims are verified against public SAP docs.</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>Output Control is SAP's framework for determining when, how, and to whom business documents are output. It covers print, email, PDF generation, XML, and electronic submission. It applies to sales orders, invoices, purchase orders, delivery notes, and many other documents.</p>
+    <p>A business document is not useful to a customer or supplier merely because it exists in SAP. An invoice may need a PDF by email, a purchase document may need a printout, and another process may hand data to an electronic channel. Output management is the layer that decides whether output is relevant, which output should be created, who receives it, how it is sent, and which form is rendered.</p>
 
-    <h2>Business purpose</h2>
-    <p>Automate document distribution to customers, suppliers, and internal stakeholders. Ensure the right document format reaches the right recipient at the right time. Support compliance with electronic invoicing and reporting requirements.</p>
+    <p>The first thing to establish in SAP S/4HANA is <strong>which output framework the application actually uses</strong>. There is no single mechanism behind every sales, procurement, finance, service, and logistics document. SAP S/4HANA and SAP S/4HANA Cloud Private Edition still contain application areas that use classic condition-based output as well as areas that use SAP S/4HANA Output Control. Treating them as one framework is a common source of wrong configuration and wrong troubleshooting.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Output Control sits between document creation (SD, MM, FI) and distribution channels (printer, email, EDI, portal). It uses condition techniques, access sequences, and output types to determine output behavior.</p>
+    <h2>Follow the output item from business decision to delivery</h2>
+    <p>In SAP S/4HANA Output Control, the application supplies a business object and the framework determines output parameters such as the output type, receiver, channel, printer or queue settings, email settings, and form template. BRFplus-based rules are used for output parameter determination in supported scenarios. Form data providers supply application data, and Adobe-based forms are used in many current Output Control scenarios to create the rendered document.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Output type: what to output (invoice, order confirmation, delivery note).</li>
-      <li>Condition technique: access sequence, condition table, output determination.</li>
-      <li>Transmission medium: print, email, fax, EDI, XML, PDF.</li>
-      <li>Partner function: who receives the output (sold-to, bill-to, vendor).</li>
-      <li>Form: Smart Form, Adobe Form, or SAPscript.</li>
-      <li>Spool request: print queue and status.</li>
-    </ul>
+    <p>That sequence matters because each step answers a different question. If no output item is created, the problem is not yet a printer problem. If an output item exists with the expected receiver and channel but rendering fails, changing recipient determination will not help. If the PDF is correct but the email never leaves the system, the business document and form may already be healthy.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>SD/MM/FI: document creation triggers output determination.</li>
-      <li>Email: SMTP configuration, address determination.</li>
-      <li>EDI: IDoc output for trading partners.</li>
-      <li>Adobe/Smart Forms: form design and rendering.</li>
-      <li>External: electronic invoicing platforms, tax authorities.</li>
-    </ul>
+    <h2>The framework depends on the application</h2>
+    <p>SAP documentation for current S/4HANA releases explicitly shows different output frameworks side by side. For example, some service scenarios can use <em>Conditions for Output</em> or <em>SAP S/4HANA Output Control</em>. Sales also retains classic output-determination analysis for condition-based scenarios. By contrast, current S/4HANA Output Control documentation for applications such as RFQs describes the cross-application Output Control framework and its Output Parameter Determination configuration.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom output types and condition tables.</li>
-      <li>Custom form designs (Adobe, Smart Forms).</li>
-      <li>Custom transmission mediums and channels.</li>
-      <li>Side-by-side output management on BTP.</li>
-    </ul>
+    <p>This is why generic advice such as “check NACE” or “check BRFplus” is weak. Both can be reasonable in the right context and completely irrelevant in another. Start from the application object and release, identify the framework, then follow that framework's determination and processing model.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Output log: SFP, NACE, or application-specific output logs.</li>
-      <li>Spool monitor: SP01, SP02 for print status.</li>
-      <li>Email queue: SOST, SCOT for email transmission.</li>
-      <li>Form rendering: Adobe Document Services, Smart Forms trace.</li>
-    </ul>
+    <h2>Recipient, channel, and form are separate decisions</h2>
+    <p>An output can be correctly relevant but still wrong in three independent ways. The <strong>receiver</strong> answers who should get it. The <strong>channel</strong> answers how it should leave the application, for example print or email. The <strong>form template</strong> answers what the rendered document looks like and which application data it displays.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Flexible condition-based output determination.</li>
-      <li>Multiple transmission mediums in one framework.</li>
-      <li>Integrated with SAP forms and document management.</li>
-    </ul>
+    <p>Keeping those decisions separate makes requirements clearer. A customer asking for invoices in another language is mainly a form and data problem. A customer asking to receive the same invoice at a different address is mainly a recipient/contact problem. A request to move from print to email changes the channel. One business document can therefore be correct while one output parameter is not.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Configuration is release-specific and often under-documented.</li>
-      <li>Adobe Document Services requires separate setup and licensing.</li>
-      <li>Email deliverability depends on SMTP and network.</li>
-      <li>Output determination errors are hard to trace.</li>
-    </ul>
+    <h2>Classic output determination follows a different model</h2>
+    <p>Classic application output uses condition technique concepts such as output types, condition records, access sequences, partner functions, and transmission media. SAP's Sales documentation still provides output-determination analysis that shows which accesses were attempted and which condition records were found. That is a useful diagnostic model for classic SD output, but it should not be copied mechanically into an application using S/4HANA Output Control.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Output not generated — condition table, access sequence, or partner missing.</li>
-      <li>Email not sent — SMTP error, address invalid, or queue blocked.</li>
-      <li>Print spool stuck — printer offline, format mismatch, or authorization.</li>
-      <li>Form not rendered — Adobe services, missing font, or form version.</li>
-      <li>Duplicate output — condition or trigger misconfiguration.</li>
-    </ul>
+    <p>The coexistence of frameworks also matters during conversion projects. A form can look familiar while the determination mechanism behind it has changed. Before migrating custom logic, we need to know whether the requirement belongs to determination, data provisioning, form layout, or transmission. Otherwise a project can reproduce an old technical solution even when the new framework provides a different extension point.</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-integration-landscape-map/">SAP Integration Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sales-domain/">Sales Domain</a></li>
-      <li><a href="/atlas/sap/sourcing-and-procurement-domain/">Sourcing and Procurement Domain</a></li>
-    </ul>
+    <h2>Diagnose the stage that actually failed</h2>
+    <p>A compact way to read an output problem is to follow four stages: <strong>relevance and determination → output parameters → rendering → transmission</strong>. Ask whether the document produced an output item, whether the expected receiver/channel/form were selected, whether the document rendered successfully, and whether the selected channel completed processing.</p>
+
+    <p>This approach is more durable than a transaction-code checklist. The exact tools differ by application and release, but the evidence still tells us where the chain stopped. It also prevents a common support mistake: resending output repeatedly when the underlying receiver, form data, or determination rule is already wrong.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/PRODUCT_ID/af9ef57f504840d2b81be8667206d485/e1ec29ba0931452ead76f6d59e1300f9.html">Output Management for Manage RFQs - Internal Sourcing Request</a> (SAP S/4HANA 2025 FPS01).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6ffdb753128eb44ce10000000a174cb4.html">Output Determination Analysis (SD)</a> (SAP S/4HANA 2025 FPS01).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/aff0b3f5f46c42a2b2c0fabfc233bab2/da97600aec5247d1b7086b9165dd286b.html">Output Management for Delivery Documents</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Output Control configuration, form technologies, and transmission mechanisms vary by S/4HANA release and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Output frameworks, supported channels, form technologies, configuration apps, and migration rules are application- and release-specific. Verify the exact business object and product release before applying a configuration or support procedure.</p>
   </div>
 
   <section class="atlas-related">
