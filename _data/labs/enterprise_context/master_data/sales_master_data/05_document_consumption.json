@@ -493,7 +493,19 @@
         "DOC.LE.DELIVERY.HEADER",
         "DOC.SD.BILLING.HEADER"
       ],
-      "rule": "Partner function selects the business role; address usage and validity narrow the physical location. Supported address-dependent data can then refine document defaults."
+      "rule": "Partner determination establishes the business role. Address determination then uses the configured address rule, BP address usages, and validity periods to propose the physical location. For customer address determination, SAP checks the target usage first and falls back to the general address overview when the required future validity interval is not fully covered.",
+      "sequence": [
+        "Partner is added or changed in the SD document.",
+        "Read address-determination settings for the partner function and partner object.",
+        "Resolve the target address usage, for example BBP003 Send goods to Delivery Address.",
+        "Evaluate customer addresses valid from the current system date through December 31, 9999.",
+        "If the target usage is empty or does not cover the full interval, also search the BP address overview.",
+        "Propose the valid BP address; a later manual document-specific address is not master data."
+      ],
+      "source_refs": [
+        "SRC-SDMD-ADDRESS-DETERMINATION",
+        "SRC-SDMD-MULTI-ADDRESS-BF-SD"
+      ]
     },
     {
       "topic": "Sales item proposal",
@@ -558,6 +570,17 @@
         "DOC.SD.BILLING.HEADER"
       ],
       "check": "source document partners → billing partner procedure → copied/changed runtime partner"
+    },
+    {
+      "question": "Why does the order have the correct ship-to partner but the wrong physical address?",
+      "path": [
+        "MD.SD.BP",
+        "MD.SD.ADDRESS",
+        "MD.SD.PARTNERREL",
+        "MEC.SD.PARTNER",
+        "DOC.SD.SALES_ORDER.HEADER"
+      ],
+      "check": "partner identity → address determination setting → address usage → validity/fallback → BP address UUID or document-specific override"
     }
   ],
   "source_refs": [
