@@ -112,6 +112,81 @@ private_edition_implementation:
     clean_core_rule: "Check standard functionality first, then approved in-app extensibility, then side-by-side design where it gives a cleaner boundary."
     source_refs: [SRC-SAP-PCE-RISE-METHODOLOGY]
 
+
+fit_to_standard_analysis:
+  purpose: "Use working standard processes to decide what the customer can adopt and what must be configured, extended, integrated, or redesigned before Realize."
+  lead_memory: "Show standard first. Challenge the gap. Capture the decision. Feed Realize."
+  why_it_matters: >-
+    Fit-to-Standard is not a workshop where we design every process from zero.
+    We start from an executable standard process, let business experts see how it works,
+    and spend workshop time on the few places where standard behavior does not meet a real business need.
+
+  new_implementation:
+    focus: "Demonstrate the scoped SAP Best Practice processes in a sandbox and compare them with the customer's business needs."
+    default_position: "Adopt the standard process unless a legal, control, operational, integration, or material business requirement justifies a deviation."
+    result: "Configuration values and a prioritized list of genuine gaps that must be resolved in Realize."
+    source_refs: [SRC-SAP-PCE-FIT-TO-STANDARD-OVERVIEW]
+
+  system_conversion:
+    focus: "Use Fit-to-Standard mainly for processes that are new, need replacement, or cannot continue unchanged after conversion."
+    converted_processes: "Processes that convert directly are validated through formal business process testing instead of being redesigned in every Fit-to-Standard workshop."
+    improvement_boundary: "After converted processes are proven to work, the team can evaluate further improvements and new innovations."
+    source_refs: [SRC-SAP-PCE-FIT-TO-STANDARD-OVERVIEW, SRC-SAP-PCE-CONVERSION-PROCESS-VALIDATION]
+
+  workshop_outputs:
+    - area: "Configuration"
+      collect: "Validate existing L2 Business Driven Configuration Questionnaire answers and gather the L3 values needed for detailed configuration."
+    - area: "User experience"
+      collect: "Business roles plus required space and page adjustments."
+    - area: "Extensibility"
+      collect: "Key-user in-app extensions that are genuinely needed."
+    - area: "Output"
+      collect: "Required form and email changes for the process."
+    - area: "Analytics"
+      collect: "Analytical app changes or reporting needs."
+    - area: "Data migration"
+      collect: "Migration values or the business owner who can provide the legacy data."
+    - area: "Integration"
+      collect: "Additional interfaces or integration requirements discovered while walking the process."
+    - area: "Change impact"
+      collect: "What changes for users, roles, controls, or operating procedures so the change team can prepare."
+    source_refs: [SRC-SAP-PCE-FIT-TO-STANDARD-PREPARE]
+
+  workshop_design:
+    principle: "Organize workshops around people and process effort, not only around a module name."
+    steps:
+      - "Use SAP Signavio Process Navigator process flows to identify the business roles that perform most activities."
+      - "Group processes that need the same customer experts so participants stay relevant for most of the session."
+      - "Use the length and complexity of the Test Procedures section as a practical effort signal."
+      - "As an initial planning baseline, SAP learning content suggests roughly 1–2 processes for a half-day workshop and 2–3 for a full day, then adjust for complexity."
+    source_refs: [SRC-SAP-PCE-FIT-TO-STANDARD-PREPARE]
+
+  workshop_execution:
+    facilitation: "A practical pattern is to have one consultant run the system demonstration and discussion while another records requirements."
+    cloud_alm: "Capture each requirement separately against the scoped process in SAP Cloud ALM so it becomes a traceable backlog item."
+    decision_question: "Is this a configuration choice, a real gap, an extension, an integration need, a data issue, or simply a change-management concern?"
+    source_refs: [SRC-SAP-PCE-FIT-TO-STANDARD-CONDUCT]
+
+  after_explore:
+    new_implementation: "For a new implementation, SAP Best Practices content can be activated with SAP Best Practices Solution Builder using transaction /n/SMB/BBI."
+    process_documentation: "SAP Signavio Process Navigator provides the process documentation used to understand the standard scope and process flow."
+    realize: "The configuration team then applies the collected configuration values and resolves the prioritized requirements in the development system during Realize."
+    source_refs: [SRC-SAP-PCE-BEST-PRACTICES-CONFIG, SRC-SAP-PCE-FIT-TO-STANDARD-CONDUCT]
+
+  assessment_answer: >-
+    Fit-to-Standard means we demonstrate an executable standard process first and use the workshop to find
+    the minimum justified delta. In a new implementation we compare SAP Best Practices with the customer's
+    needs and collect configuration plus gaps. In a system conversion we focus workshops on new or replacement
+    processes, while directly converted processes are validated separately through testing. The output is a
+    traceable, prioritized backlog that drives configuration and design in Realize.
+
+  source_refs:
+    - SRC-SAP-PCE-FIT-TO-STANDARD-OVERVIEW
+    - SRC-SAP-PCE-FIT-TO-STANDARD-PREPARE
+    - SRC-SAP-PCE-FIT-TO-STANDARD-CONDUCT
+    - SRC-SAP-PCE-BEST-PRACTICES-CONFIG
+    - SRC-SAP-PCE-CONVERSION-PROCESS-VALIDATION
+
 private_edition_transition_paths:
   source_refs: [SRC-SAP-PCE-TRANSITION-PATHS]
   items:
