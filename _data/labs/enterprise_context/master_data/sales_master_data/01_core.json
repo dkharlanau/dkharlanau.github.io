@@ -161,7 +161,7 @@
       "code": "MD.SD.ADDRESS",
       "title": "Business Partner Address / Address Usage",
       "entity_class": "relationship_record",
-      "memory_hook": "One identity can expose several valid physical endpoints.",
+      "memory_hook": "Partner determination answers who; address determination answers where.",
       "business_question": "Which physical address of this business partner is valid for this partner role, date, and sales transaction?",
       "scope": "A Business Partner can hold multiple addresses. Address usages and validity periods define which addresses are suitable for purposes such as delivery or billing; supported address-dependent customer data can refine Sales behavior.",
       "key_dimensions": [
@@ -243,9 +243,11 @@
       ],
       "lead_questions": [
         "Is the defect about partner identity or physical address?",
-        "Is the address usage valid for this partner function and date?",
+        "Which address usage should apply to this partner function?",
+        "Do the valid addresses cover the required period, or will SAP fall back to the general address overview?",
         "Did address-dependent data override the normal customer default?",
-        "Is the document using BP master data or a document-specific override?"
+        "Is the document using BP master data or a document-specific override?",
+        "Is the requested variation really sales-area-specific even though BP address usage is not?"
       ],
       "relations": [
         {
@@ -266,8 +268,65 @@
       ],
       "source_refs": [
         "SRC-SDMD-MULTI-ADDRESS",
-        "SRC-SDMD-ADDRESS-DEPENDENT"
-      ]
+        "SRC-SDMD-ADDRESS-DEPENDENT",
+        "SRC-SDMD-ADDRESS-DETERMINATION",
+        "SRC-SDMD-MULTI-ADDRESS-BF-BP",
+        "SRC-SDMD-MULTI-ADDRESS-BF-SD"
+      ],
+      "activation": {
+        "applies_to": "SAP S/4HANA on-premise and private-cloud deployments that use the multiple-address business functions.",
+        "sequence": [
+          {
+            "order": 1,
+            "business_function": "BPCUSTOMER_MULTIPLE_ADDRESSES",
+            "client_specific_variant": "BPCUSTOMER_MULTIPLE_ADDRESSES2",
+            "purpose": "Enable address-dependent customer data in Business Partner master data."
+          },
+          {
+            "order": 2,
+            "business_function": "Q2C_MULTIPLE_BP_ADDRESSES",
+            "client_specific_variant": "Q2C_MULTIPLE_BP_ADDRESSES2",
+            "purpose": "Enable SD applications and documents to consume multiple BP addresses and related address-dependent data."
+          }
+        ],
+        "guardrails": [
+          "Activate the two functions in this order and use matching cross-client or client-specific variants.",
+          "The business functions are irreversible after activation.",
+          "Activation does not automatically change existing master data. Existing SD documents can continue to be processed."
+        ]
+      },
+      "address_determination": {
+        "trigger": "Runs as part of partner determination when a partner is added or changed in an SD document.",
+        "partner_scope": [
+          "Customer (KU) partner functions, except Payer",
+          "Contact Person (AP); SAP documents a separate contact-person address determination path"
+        ],
+        "configuration": [
+          {
+            "level": "Partner determination procedure",
+            "controls": [
+              "All Addresses Allowed",
+              "Address Determination"
+            ],
+            "impact": "Applies to a particular partner object, for example a sales document header."
+          },
+          {
+            "level": "Generic partner function",
+            "controls": [
+              "Address Determination"
+            ],
+            "impact": "Applies across SD partner objects for that partner function."
+          }
+        ],
+        "example_mapping": "BBP003 Send goods maps to the BP delivery-address usage; the mapping is maintained in Assign Transaction to Address Type.",
+        "sequence": [
+          "Start with addresses assigned to the target address usage.",
+          "For customer address determination, evaluate validity from the current system date through December 31, 9999.",
+          "If the target usage returns no address or does not fully cover that interval, also search the general address overview."
+        ],
+        "sales_area_note": "BP address-to-usage assignments apply across the customer's sales areas, so address determination for a given BP is independent of sales area.",
+        "document_override": "A manually entered document-specific address is transaction data. The previously active BP address can remain as the BP reference address."
+      }
     },
     {
       "code": "MD.SD.PRODUCT",
