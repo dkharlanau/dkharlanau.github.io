@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-23
 hide_global_cta: true
 sales_mechanism_library: true
 tags:
@@ -121,6 +121,65 @@ tags:
       <article><span>Customer gets nothing</span><p><code>BILL</code> / sales object exists → <code>OUTPUT</code> → output item → rule result → recipient → channel → dispatch/rendering status.</p></article>
       <article><span>Wrong planning behavior</span><p><code>ICAT</code> + MRP/strategy context → <code>REQTYPE</code> → requirements class → planning, account assignment, and ATP interaction.</p></article>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="copy-control-deep-dive" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mechanism deep dive / Copy control</p>
+      <h2>Reference creation is a controlled source → target contract.</h2>
+      <p>When we create a document with reference, SAP does more than copy fields. It checks whether the source and target are allowed, validates business requirements, transfers data through routines, chooses target item and schedule-line behavior, and updates reference status when configured.</p>
+    </header>
+
+    {% for mechanism in library["01_commercial"].mechanisms %}
+    {% if mechanism.code == "MEC.SD.COPY" %}
+    <div class="sm-trace-grid">
+      {% for level in mechanism.copy_levels %}
+      <article>
+        <span>{{ level.level }}</span>
+        <p><strong>{{ level.match }}</strong><br />{{ level.controls }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Read the control in order.</strong> A source/target relationship makes the process possible. Copying requirements decide whether this reference is allowed now. Data-transfer routines move or derive fields. Switches change transaction behavior. Target category mapping controls item and schedule-line results. Reference-status logic then decides what the predecessor should show after the copy.</p>
+    </div>
+
+    <div class="sm-trace-grid">
+      {% for step in mechanism.control_stack %}
+      <article>
+        <span>{{ step.name }}</span>
+        <p>{{ step.purpose }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Do not mix two controls.</strong> {{ mechanism.reference_status_model.document_flow_update }}</p>
+      <p>{{ mechanism.reference_status_model.completion_rule_owner }}</p>
+    </div>
+
+    <div class="sm-trace-grid">
+      {% for example in mechanism.reference_status_model.examples %}
+      <article>
+        <span>Completion rule {{ example.rule }}</span>
+        <p><strong>{{ example.behavior }}</strong><br />{{ example.example }}</p>
+      </article>
+      {% endfor %}
+      <article>
+        <span>Rejected item</span>
+        <p>{{ mechanism.reference_status_model.rejection_note }}</p>
+      </article>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>Lead answer:</strong> {{ mechanism.lead_answer }}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
   </section>
 
   <section class="research-canvas__inventory" id="mechanism-cards" data-reveal>

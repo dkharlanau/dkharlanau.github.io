@@ -343,6 +343,35 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="copy-control-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales document control / Copy control</p>
+      <h2>SOURCE → CHECK → TRANSFER → TARGET → STATUS.</h2>
+      <p>Copy control explains how one sales document becomes the next. For an assessment, the important point is not the transaction code. It is the control chain between the predecessor and the follow-on document.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>1. Source → target</h3><p>First prove that the document-type relationship exists. Copy control is structured at header, item, and schedule-line level, so the valid chain can depend on more than the two header document types.</p></div>
+      <div><h3>2. Copying requirement</h3><p>This is the gate. SAP checks whether the reference is allowed before it transfers data. A requirement can reject the copy because of business conditions such as status, validity, customer context, or an already completed reference.</p></div>
+      <div><h3>3. Data transfer and switches</h3><p>Transfer routines decide which fields move or are derived. Switches control specific behavior, for example whether source item numbers are copied into the target.</p></div>
+      <div><h3>4. Target categories</h3><p>At item and schedule-line level, the target category must be valid for the relevant category assignment. If no valid target is entered, SAP can propose one from that assignment.</p></div>
+      <div><h3>5. Document flow update</h3><p>At item level, this setting updates referred quantities or values and therefore supports the reference status of the preceding document.</p></div>
+      <div><h3>6. Completion rule</h3><p>The completion rule belongs to the source item category. It decides when the predecessor item becomes Completed. This is separate from the copy-control switch that updates document flow.</p></div>
+    </div>
+
+    <div class="ecg-input-grid">
+      <article><span>Rule A</span><h3>First reference can complete</h3><p>An inquiry item can be completed as soon as a quotation refers to it, even when only part of the quantity is referenced.</p></article>
+      <article><span>Rule B</span><h3>Full quantity must be referenced</h3><p>A quotation can stay Partially referred after a partial order. Further orders can still reference the remaining quantity until the full quantity is used.</p></article>
+      <article><span>Reject</span><h3>Rejection also closes the item</h3><p>If a reason for rejection is entered, the item receives Completed status.</p></article>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I see copy control as a source-to-target contract. I first check the valid source and target relationship, then the copying requirement, transfer routine, switches, and item or schedule-line mapping. If the question is about partial reference or predecessor status, I separate two controls: Document flow update records the reference progress, while the completion rule in the source item category decides when that item is complete.</p>
+      <a href="/labs/enterprise-context/sales-processes/mechanisms/#mec-sd-copy">Open Copy Control deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="core-routes" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Priority / Core</p>
