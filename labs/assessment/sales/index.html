@@ -199,6 +199,31 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="multiple-address-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales master data / Multiple Address Handling</p>
+      <h2>IDENTITY → ROLE → ADDRESS → BEHAVIOR.</h2>
+      <p>The feature is easier to explain when we separate the legal customer from the physical location used in one transaction.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Identity</h3><p>One Business Partner can represent the legal customer instead of creating another customer record for every branch or warehouse.</p></div>
+      <div><h3>Role</h3><p>Sold-to, ship-to, bill-to, and payer are partner functions. The role answers who participates in the process.</p></div>
+      <div><h3>Address</h3><p>The same BP can have several valid addresses, including several valid addresses for the same role such as ship-to.</p></div>
+      <div><h3>Behavior</h3><p>An address can carry address-dependent data such as delivering plant, shipping condition, Incoterms, tax classification, or unloading point. Selecting another address can therefore change process behavior.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> Multiple Address Handling separates customer identity from physical location. Instead of creating several customer masters for one legal entity, we can maintain several BP addresses with usages and validity periods. Partner determination chooses the business role, address determination narrows the valid physical locations, and supported address-dependent data is copied into the sales document. I would pay special attention to migration, because activation does not consolidate old records automatically and integrations may need the BP address UUID rather than only the customer number or free-text address.</p>
+      <a href="/labs/enterprise-context/sales-processes/master-data/#multiple-address-handling">Open the detailed model <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+    <div class="ecg-input-grid">
+      <article><span>TRAP</span><h3>Partner ≠ address</h3><p>A wrong ship-to partner and a correct ship-to partner with the wrong physical address are different defects and have different owners.</p></article>
+      <article><span>VALID</span><h3>Validity matters</h3><p>Address usage and date validity are part of determination. A branch move can be modeled without changing the customer identity.</p></article>
+      <article><span>DATA</span><h3>The address can drive data</h3><p>Do not debug plant or shipping condition only in ordinary customer master data if the selected address has address-dependent values.</p></article>
+      <article><span>API</span><h3>Use address identity</h3><p>Where supported, APIs identify the selected BP address using a UUID. This is stronger than passing only formatted address text.</p></article>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Answer depth</p>
