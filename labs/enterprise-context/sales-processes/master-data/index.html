@@ -111,6 +111,153 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="multiple-address-handling" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business Partner / Multiple Address Handling</p>
+      <h2>One legal identity can have many operational addresses.</h2>
+      <p>Multiple Address Handling changes the data model behind Sales. Instead of representing every physical location as another customer master, we can keep one business partner for the legal entity and attach several valid addresses to it. Sales documents then select the address that fits the partner function and business context.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <p><strong>Memory model:</strong> <strong>IDENTITY → ROLE → ADDRESS → ADDRESS DATA → DOCUMENT</strong>.</p>
+      <p>A partner function answers <em>who plays the role?</em> An address answers <em>which physical location of that partner is relevant now?</em> Do not create another BP only because the same legal entity has another warehouse, office, or billing location.</p>
+    </div>
+
+    <h3>Why SAP introduced this model</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Old representation</h3><p>The classic customer master model has one standard address per customer master. A legal entity with several physical locations was therefore often represented by several customer records, and usually several linked BP records.</p></div>
+      <div><h3>Problem</h3><p>The same legal identity is duplicated. Name, tax, credit, commercial, and relationship data can drift because the records are maintained separately.</p></div>
+      <div><h3>New representation</h3><p>One BP/customer can hold several physical addresses. Each address can have semantic usage, validity, and selected address-dependent attributes.</p></div>
+      <div><h3>Architecture meaning</h3><p>The legal identity stays stable while physical endpoints become child contexts. This reduces identity duplication and moves location-specific behavior to the address level.</p></div>
+    </div>
+
+    <h3>Five layers to understand</h3>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header><div><span>01</span><small>identity</small></div><h3>Business Partner</h3><p class="ecg-question">Which legal or business entity are we dealing with?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Stable object</h4><p>The BP represents the business identity. Customer roles and sales-area data make that identity usable in Sales.</p></div>
+          <div><h4>Lead rule</h4><p>Do not split identity only to represent geography. Split the BP when the business entity, governance, tax, credit, or contractual responsibility is genuinely different.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>02</span><small>role</small></div><h3>Partner Function</h3><p class="ecg-question">What role does the partner play in this document?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Examples</h4><p>Sold-to, ship-to, bill-to, payer, and contact person are document roles. They are not addresses.</p></div>
+          <div><h4>Important consequence</h4><p>The same BP can have several valid addresses for the same partner function. For example, one ship-to customer can have several valid delivery addresses.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>03</span><small>address</small></div><h3>Address Usage and Validity</h3><p class="ecg-question">Which addresses are valid for this purpose and date?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Semantic usage</h4><p>Addresses can be classified for purposes such as standard address, delivery address, or billing address. Address determination restricts which addresses are proposed for each partner function.</p></div>
+          <div><h4>Time dimension</h4><p>Addresses and their usages can have validity periods. Sales documents check validity when proposing and saving addresses, which matters for branch moves and planned address changes.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>04</span><small>behavior</small></div><h3>Address-Dependent Data</h3><p class="ecg-question">Does business behavior change when the physical location changes?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Examples</h4><p>Address-dependent customer data can include sales office, sales group, delivery block, shipping condition, delivering plant, Incoterm locations, sales tax classification, external references, unloading points, and receiving points.</p></div>
+          <div><h4>Precedence</h4><p>When both address-dependent and ordinary customer-dependent values exist for a supported field, the address-dependent value has priority. Selecting another address can therefore change document behavior, not only the printed street.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>05</span><small>document</small></div><h3>Address Selection in SD Documents</h3><p class="ecg-question">Which valid address should this transaction consume?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Sales document</h4><p>During creation or change, the system proposes suitable addresses for partner functions and allows an alternative valid address to be selected at header or item level where supported.</p></div>
+          <div><h4>Downstream</h4><p>The selected address and supported address-dependent data are propagated into follow-on processing. Delivery and billing consume the chosen context, although address selection is not generally a free-change function in delivery and billing apps.</p></div>
+        </div>
+      </article>
+    </div>
+
+    <h3>Address determination is part of partner determination</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Address type</h3><p>Customizing defines semantic address types such as delivery and billing addresses.</p></div>
+      <div><h3>Address determination transaction</h3><p>The address type is linked to an address-determination purpose. Standard examples include <code>BBP003</code> for sending goods and <code>BBP004</code> for sending bills.</p></div>
+      <div><h3>Partner function assignment</h3><p>Ship-to and bill-to partner functions can be assigned to the corresponding address-determination transaction. This lets partner determination narrow the valid address set.</p></div>
+      <div><h3>Save-time control</h3><p>The system performs a final validity check when the document is saved. A selected address that is no longer valid should not silently remain part of a new transaction.</p></div>
+    </div>
+
+    <h3>Example: one customer, three warehouses</h3>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warehouse</span>
+      <p>Assume one legal customer has warehouses in Berlin, Hamburg, and Munich. We do not need three customer identities only to represent these locations. One BP can carry three delivery addresses. Each address can have its own unloading point, receiving hours, shipping condition, or delivering plant where supported.</p>
+      <p>In the sales order, the ship-to partner can remain the same BP while the selected <strong>Business Partner Address</strong> changes. That choice can then change fulfillment inputs. This is why an address problem can look like a shipping or plant-determination problem downstream.</p>
+    </div>
+
+    <h3>Document-specific address vs master-data address</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Master-data address</h3><p>Reusable BP address with address usage, validity, and supported address-dependent data. This is the preferred source when the location is a stable business fact.</p></div>
+      <div><h3>Document-specific address</h3><p>A user can manually change an address for one document in supported apps. SAP stores it as a document-specific address and retains the previous BP-derived address as a BP reference address.</p></div>
+      <div><h3>Lead risk</h3><p>If users repeatedly overwrite addresses in documents, the master-data model may be wrong. A stable branch or warehouse should normally be governed as master data, not recreated manually in every order.</p></div>
+    </div>
+
+    <h3>API and integration boundary</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Address identity</h3><p>Sales APIs can use <code>BusinessPartnerAddressUUID</code> to identify the exact BP address that the document should consume.</p></div>
+      <div><h3>Do not send only text</h3><p>For governed integrations, address text alone is weak identity. When the API supports it, use the BP and the stable address UUID so that the receiving process can keep the link to master data.</p></div>
+      <div><h3>Partner limitations</h3><p>In the Sales Order A2X API, BP address UUIDs are supported for customer-type partner functions except Payer, and for contact-person partner functions. Check the exact API and release before generalizing this rule to every object.</p></div>
+      <div><h3>Document-specific reference</h3><p>APIs also expose a reference UUID when a document-specific address replaces a BP-derived address. This preserves the lineage between the transactional override and its original master-data address.</p></div>
+    </div>
+
+    <h3>Migration and activation are architecture decisions</h3>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header><div><span>A</span><small>activate</small></div><h3>Enable the data model before SD consumption</h3></header>
+        <div class="ecg-decision-columns">
+          <div><h4>On-premise / Private-style configuration</h4><p>SAP documents two capabilities: the BP/customer master-data function for address-dependent data and the Q2C function that enables SD documents to consume multiple BP addresses. The master-data capability is enabled first.</p></div>
+          <div><h4>Irreversibility</h4><p>For systems using these business functions, activation is irreversible. It does not automatically consolidate existing customers, so migration planning is a separate workstream.</p></div>
+        </div>
+      </article>
+      <article class="ecg-determination-detail">
+        <header><div><span>B</span><small>consolidate</small></div><h3>Create a Golden Record only when the records represent one entity</h3></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Goal</h4><p>Multiple customer records that represent the same legal entity can be consolidated into one leading BP, with former record-specific attributes moved to address-dependent entities where supported.</p></div>
+          <div><h4>Do not force consolidation</h4><p>If legally important data cannot be harmonized, the records may need to remain separate. Different physical addresses do not prove that two records are the same legal entity.</p></div>
+        </div>
+      </article>
+      <article class="ecg-determination-detail">
+        <header><div><span>C</span><small>integrate</small></div><h3>Review every external contract that identifies customers by old customer number</h3></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Why</h4><p>Consolidation changes the relationship between legacy customer numbers, BP identity, partner functions, and physical addresses. EDI mappings, APIs, output, analytics, and downstream replicas can all depend on the old model.</p></div>
+          <div><h4>Proof</h4><p>Test order creation, partner/address determination, delivery, billing, output, interfaces, analytics, and historical-document display before cutover.</p></div>
+        </div>
+      </article>
+    </div>
+
+    <h3>Diagnostic path</h3>
+    <div class="ecg-input-grid">
+      <article><span>1</span><h3>Wrong partner or wrong address?</h3><p>First separate identity/partner determination from address determination. A correct BP with a wrong address is a different failure from a wrong ship-to partner.</p></article>
+      <article><span>2</span><h3>Is the address valid?</h3><p>Check address validity and address-usage validity for the document date.</p></article>
+      <article><span>3</span><h3>Is the usage suitable?</h3><p>A billing address should not automatically appear as a delivery address unless the configured usage allows it.</p></article>
+      <article><span>4</span><h3>Which data came with the address?</h3><p>If plant, Incoterms, shipping condition, tax classification, or unloading point changed, inspect address-dependent data and precedence.</p></article>
+      <article><span>5</span><h3>Header or item?</h3><p>An item-specific partner or address can diverge from the header. Always inspect the level where the wrong behavior occurs.</p></article>
+      <article><span>6</span><h3>Master address or manual override?</h3><p>Determine whether the document uses a BP-derived address or a document-specific address before correcting master data.</p></article>
+    </div>
+
+    <h3>Assessment questions</h3>
+    <ol>
+      <li><strong>Why was Multiple Address Handling introduced?</strong> To represent one legal customer with several physical locations without multiplying customer identities, while allowing Sales documents to consume the correct address and location-specific data.</li>
+      <li><strong>What is the difference between partner function and address?</strong> Partner function defines the role in the process; address identifies the physical location of the selected partner for that role.</li>
+      <li><strong>Can one ship-to party have several ship-to addresses?</strong> Yes. One BP can have several valid addresses suitable for the same partner function.</li>
+      <li><strong>Can choosing another address change more than the street?</strong> Yes. Supported address-dependent data can be propagated to the document and can change fulfillment or commercial inputs.</li>
+      <li><strong>Why is this a migration topic?</strong> Existing duplicate customer records may need consolidation, external customer-number mappings can change, activation is not the same as consolidation, and integrations must preserve address identity.</li>
+      <li><strong>How would you diagnose a wrong delivering plant after the user selected another ship-to address?</strong> Confirm partner and selected BP address, then inspect address usage, validity, address-dependent delivering plant and precedence before changing plant determination logic.</li>
+    </ol>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Deployment boundary:</strong> SAP S/4HANA on-premise documentation describes business-function activation and migration explicitly. SAP S/4HANA Cloud Public Edition exposes the same business concept through its configuration and master-data capabilities, but the enablement path is release- and edition-specific. Do not copy on-premise activation steps into Public Cloud.</p>
+      <p><strong>Primary references:</strong> <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/03c04db2a7434731b7fe21dca77440da/9494ae375ef74a2a962388b96a086393.html">SAP Help: Multiple Address Handling in SD Documents</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/589d635467744384b6d9800bd023e43f.html">SAP Help: Feature Overview</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/7b24a64d9d0941bda1afa753263d9e39/d5af44c1bbd74df8b01946486b807984.html">SAP Help: Address Selection in SD Documents</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7113856e409647838af7891e1429b807/057dc5c1c73e4f69a7d2ede8686409eb.html">SAP Help: Multiple Addresses in Customer Master Data</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/03c04db2a7434731b7fe21dca77440da/ff846779ead940cb96025b25bb23c28a.html">SAP Help: Sales Order API Example</a>.</p>
+      <p>For the wider identity, role, CVI, and governance model, continue with <a href="/labs/enterprise-context/business-partner/">SAP Business Partner</a>.</p>
+    </div>
+  </section>
+
   <section class="smd-learning" data-reveal>
     <div>
       <p class="research-canvas__eyebrow">Mental model</p>
