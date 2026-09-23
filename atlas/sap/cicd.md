@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "CI/CD"
-description: "Analytical overview of CI/CD for SAP and enterprise development: what it is, where it sits, and how it breaks."
+description: "How continuous integration and delivery fit SAP development, testing, deployment, and transport management."
 permalink: /atlas/sap/cicd/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "CI/CD"
 business_process: "Application development"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Technology</p>
     <h1>CI/CD</h1>
-    <p class="note-subtitle">Continuous integration and continuous delivery for SAP and enterprise development.</p>
+    <p class="note-subtitle">Continuous integration and delivery for SAP and enterprise development.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,92 +54,49 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>CI/CD is the practice of automating build, test, and deployment stages for software changes. In the SAP context it covers ABAP Git, gCTS, BTP CI/CD services, and third-party tools such as GitHub Actions, GitLab CI, Jenkins, and Azure DevOps.</p>
+    <h2>CI/CD is not the transport system</h2>
+    <p>CI/CD automates the path from a source-code change to a tested, releasable version of software. Continuous integration (CI) gives developers fast feedback: fetch the change, build it, run tests and quality checks, and stop early when something is wrong. Continuous delivery (CD) takes a version that passed those checks and prepares or promotes it toward a target environment.</p>
 
-    <h2>Business purpose</h2>
-    <p>Reduce manual effort, catch defects early, and deliver changes to production faster and more predictably. Automated pipelines enforce quality gates before code reaches any SAP system.</p>
+    <p>In an SAP landscape, this does not remove transport management. A pipeline answers questions such as <em>does this version build and pass our checks?</em> The transport or deployment mechanism answers a different question: <em>how does this approved version move into the next system or tenant?</em> Good delivery design connects the two without pretending they are the same thing.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>CI/CD pipelines run outside SAP systems, typically on cloud-hosted runners or on-premise build servers. They interact with SAP systems via gCTS, abapGit, BTP transport management, or direct deployment APIs.</p>
+    <h2>The shape depends on the SAP development model</h2>
+    <p>For applications on SAP BTP, source code normally lives in Git and the pipeline can look familiar to teams outside SAP. SAP Continuous Integration and Delivery provides predefined pipelines that connect to Git repositories and automate build, test and deployment steps for supported development scenarios. A team can also use its existing CI platform when that better fits the engineering landscape.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Pipeline definition: YAML or Groovy scripts describing stages.</li>
-      <li>Source repository: Git commits, branches, pull requests.</li>
-      <li>Build artifact: compiled code, transport request, or container image.</li>
-      <li>Test suite: unit tests, integration tests, static analysis results.</li>
-      <li>Deployment target: development, quality, or production SAP system.</li>
-      <li>Transport request: ABAP change container for landscape promotion.</li>
-    </ul>
+    <p>Promotion between BTP environments is a separate concern. SAP Cloud Transport Management manages development artifacts and application-specific content across a transport landscape. For supported content, a pipeline can hand a release to Cloud Transport Management instead of deploying independently to every environment. This separation is useful when QA and production promotion need their own authorization, audit trail or approval process.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>SAP BTP: Cloud Foundry deployments, Kyma container builds.</li>
-      <li>S/4HANA: gCTS, abapGit, transport management.</li>
-      <li>Git providers: GitHub, GitLab, Bitbucket webhooks and runners.</li>
-      <li>Testing: ATC, ABAP unit, SAP Fiori test automation.</li>
-      <li>Monitoring: pipeline dashboards, deployment logs, system health checks.</li>
-    </ul>
+    <p>ABAP has a different lifecycle. In classic Change and Transport System (CTS), development and Customizing changes are recorded in transport requests and tasks and moved through the SAP landscape using transport tools. Git-enabled Change and Transport System (gCTS) adds Git-based software distribution while retaining important CTS concepts: ABAP objects are still recorded in requests and tasks, then represented as files and commits in Git repositories. SAP explicitly supports integrating gCTS into CI pipelines.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom pipeline stages for security scanning or compliance checks.</li>
-      <li>Pre-deployment validation scripts against target system metadata.</li>
-      <li>Post-deployment smoke tests and health verification.</li>
-      <li>Integration with ticketing systems for change tracking.</li>
-    </ul>
+    <p>This is why "put SAP in Git" is too simple as a design rule. CAP applications, ABAP Cloud software components, classic ABAP development and configuration content have different lifecycle mechanisms. The pipeline must follow the delivery model of the artifact rather than force every SAP change into one generic Git workflow.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Pipeline execution logs: stage duration, failure points, retry counts.</li>
-      <li>Test coverage reports and static analysis score trends.</li>
-      <li>Deployment frequency, lead time, change failure rate.</li>
-      <li>System availability after deployment via health endpoints.</li>
-    </ul>
+    <h2>A release path in practice</h2>
+    <p>Consider a CAP service deployed on SAP BTP. A developer changes the service in a feature branch. The pull request triggers automated checks. After merge, the pipeline builds the deployable artifact and runs the tests that are reliable enough to act as release gates. The resulting version can be deployed to a development environment and, where the scenario is supported, handed to SAP Cloud Transport Management for controlled promotion to QA and production.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Fast feedback loops for developers through automated testing.</li>
-      <li>Repeatable, auditable deployments across landscapes.</li>
-      <li>Reduced risk of production incidents from manual errors.</li>
-      <li>Support for both ABAP and modern cloud-native stacks.</li>
-    </ul>
+    <p>The useful part is not the number of pipeline stages. It is the chain of evidence: we know which commit produced the artifact, which checks ran, which artifact was promoted, and which target received it. Rebuilding a supposedly identical artifact separately for QA and production weakens that traceability. So does letting a deployment job fetch unpinned dependencies or silently change configuration at release time.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>ABAP transport dependencies can block parallel development.</li>
-      <li>Pipeline secrets and credentials require strict rotation policies.</li>
-      <li>Test data availability limits integration test coverage.</li>
-      <li>Complex multi-system landscapes increase pipeline maintenance.</li>
-    </ul>
+    <h2>Quality gates should match the technology</h2>
+    <p>A pipeline is valuable when its checks can reject a bad change before the change reaches a shared environment. Typical gates include unit tests, static analysis, dependency and security checks, and deployability tests. For ABAP development, ABAP Unit and ABAP Test Cockpit can be part of an automated quality strategy where the chosen lifecycle and tooling support them. For cloud applications, the build may also validate descriptors, package dependencies and deployment artifacts.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Pipeline failure — syntax error, missing dependency, or runner timeout.</li>
-      <li>Deployment blocked — transport conflict, locked object, or missing approval.</li>
-      <li>Test flakiness — unstable test data or environment drift.</li>
-      <li>Credential expiry — service user or certificate rotation missed.</li>
-      <li>Post-deployment regression — missing smoke test or data inconsistency.</li>
-    </ul>
+    <p>Not every test belongs in CI. Tests that depend on unstable shared data or a large integrated landscape can become slow and flaky. It is often better to keep fast deterministic checks close to the commit, then run broader integration or business-process tests after deployment to a controlled test environment. A red pipeline should mean something; routinely ignored failures destroy the gate.</p>
+
+    <h2>Where SAP delivery pipelines become difficult</h2>
+    <p>The hard part is usually the boundary between software automation and landscape governance. Credentials need access to repositories and target systems without becoming permanent administrator secrets. Transport dependencies can make an otherwise valid ABAP change unsafe to import alone. Configuration may differ between environments even when the application artifact is identical. A successful technical deployment also does not prove that a business process still works with the target system's data and integrations.</p>
+
+    <p>These problems are easier to manage when the pipeline keeps responsibilities visible: source control identifies the change, CI verifies it, an immutable or clearly identified artifact represents the release, the relevant SAP transport/deployment mechanism moves it, and post-deployment checks confirm that the target is healthy. Approvals can then protect high-risk transitions without turning every build into a manual process.</p>
 
     <h2>Related Atlas links</h2>
     <ul>
-      <li><a href="/atlas/sap/cap/">CAP</a></li>
-      <li><a href="/atlas/sap/abap-cloud/">ABAP Cloud</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/documentation-as-code/">Documentation as Code</a></li>
+      <li><a href="/atlas/sap/cap/">CAP</a> — application model commonly delivered through Git-based cloud pipelines.</li>
+      <li><a href="/atlas/sap/abap-cloud/">ABAP Cloud</a> — ABAP development model with its own software lifecycle.</li>
+      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a> — platform context for cloud runtimes and delivery services.</li>
+      <li><a href="/atlas/sap/documentation-as-code/">Documentation as Code</a> — applying repository workflows to technical documentation.</li>
     </ul>
 
     <h2>Source references</h2>
     <ul>
-      <li>GitHub Actions documentation — <a href="https://docs.github.com/en/actions">docs.github.com/en/actions</a>.</li>
-      <li>GitLab CI/CD documentation — <a href="https://docs.gitlab.com/ee/ci/">docs.gitlab.com/ee/ci</a>.</li>
-      <li>SAP BTP Continuous Integration and Delivery — <a href="https://help.sap.com/docs/btp/sap-business-technology-platform/continuous-integration-and-delivery">SAP Help Portal</a>.</li>
+      <li>SAP Continuous Integration and Delivery — <a href="https://help.sap.com/docs/continuous-integration-and-delivery">SAP Help Portal</a>.</li>
+      <li>Change and Transport System, including gCTS — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/4a368c163b08418890a406d413933ba7">SAP Help Portal</a>.</li>
+      <li>SAP Cloud Transport Management — <a href="https://help.sap.com/docs/cloud-transport-management">SAP Help Portal</a>.</li>
     </ul>
-
-    <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public documentation. Specific SAP CI/CD features, supported tools, and BTP service availability vary by release and must be verified against current SAP documentation.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
   </div>
