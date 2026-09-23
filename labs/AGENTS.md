@@ -137,6 +137,35 @@ The deep technical explanation stays in the owning SAP Enterprise route.
 
 This workflow should make the repository better while the user studies: fewer duplicates, stronger explanations, better oral recall, and clearer evidence boundaries.
 
+## Semantic visual models
+
+Use data-driven visuals when a relationship, process, ownership boundary, decision chain, or runtime state is easier to understand spatially than as prose.
+
+The preferred pattern is derived from the repository's sibling **Visual Workbench** project:
+
+1. **Model meaning first** — store stable semantic nodes, groups/lanes, stages, relationships, owners, statuses, and views. Do not store hand-picked x/y coordinates or presentation colors in the knowledge model.
+2. **Choose the visual method from the question**:
+   - ordered business sequence → process;
+   - validation, commit points, or failure gates → checkpoint-flow;
+   - movement of information → data-flow;
+   - cross-team or cross-module responsibility → handoff / semantic lanes;
+   - dependencies without one useful sequence → dependency-map / relationship.
+3. **Reuse one semantic source** for the human view and machine-readable endpoint where practical. Do not maintain a diagram and a separate JSON explanation of the same process.
+4. **Keep normal flow dominant**. Exceptions, risks, and controls should be visible but must not make every node look exceptional.
+5. **Use lanes only for meaningful ownership boundaries**, for example Sales, Supply, Logistics, Finance, EWM, TM, or Integration.
+6. **Prefer HTML/CSS/SVG generated from data over decorative images** for conceptual SAP diagrams. Images are still appropriate when the subject itself is visual and cannot be represented accurately as a semantic model.
+7. **Keep the owning domain authoritative**. A visual projection may connect Sales, MM, PP, EWM, TM, and FI/CO, but it must not duplicate or redefine their detailed rules.
+8. **Add a small validation contract** for reusable visuals: unique node IDs, resolved groups, resolved edges, deterministic ordering, and synchronization with the underlying process/event dataset.
+
+For Order-to-Cash runtime views, the first reference implementation is:
+
+- semantic model: `_data/labs/enterprise_context/visuals/sales_o2c_runtime.json`
+- reusable renderer: `_includes/labs/semantic-lane-flow.html`
+- event model: `_data/labs/enterprise_context/master_data/sales_master_data/05_document_consumption.json`
+- machine surface: `/labs/enterprise-context/data/sales-master-data.json`
+
+Do not import or copy the full Visual Workbench rendering engine into the site merely to draw one diagram. Reuse its semantic grammar and keep the website renderer deliberately lightweight unless a later requirement justifies a formal adapter.
+
 ## Rendered markup safety
 
 Lab pages frequently mix Markdown, Liquid, and hand-written HTML. A Jekyll build can succeed even when Markdown inside an HTML wrapper is left as literal browser text.
