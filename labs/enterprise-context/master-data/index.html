@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -25,6 +25,12 @@ tags:
 
 {% assign graph = site.data.labs.enterprise_context.graphs.master_data %}
 {% assign evidence = site.data.labs.enterprise_context.sources.master_data %}
+{% assign sales_master_core = site.data.labs.enterprise_context.master_data.sales_master_data["01_core"] %}
+{% assign bp_address = sales_master_core.entities | where: "code", "MD.SD.ADDRESS" | first %}
+{% assign sales_master_sources = site.data.labs.enterprise_context.sources.sales_master_data_registry.sources %}
+{% assign address_det_source = sales_master_sources | where: "id", "SRC-SDMD-ADDRESS-DETERMINATION" | first %}
+{% assign bp_multi_bf_source = sales_master_sources | where: "id", "SRC-SDMD-MULTI-ADDRESS-BF-BP" | first %}
+{% assign sd_multi_bf_source = sales_master_sources | where: "id", "SRC-SDMD-MULTI-ADDRESS-BF-SD" | first %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">Master Data</li></ol>
@@ -109,6 +115,98 @@ tags:
       <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">BP + Credit Management</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--decision">Credit Segment</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Risk policy / limit</span></div>
     </div>
     <p class="ecg-lead-lens"><strong>Lead lens:</strong> When order creation works but billing or credit does not, I do not call the customer master “correct”. I ask: correct for which role and organizational level?</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="multiple-address-handling" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Multiple addresses</p>
+      <h2>Partner determination answers who. Address determination answers where.</h2>
+      <p>{{ bp_address.scope }}</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>01</span><small>activation</small></div>
+          <h3>Enable master data first, SD consumption second.</h3>
+          <p class="ecg-question">The two capabilities are related, but they are not the same switch.</p>
+        </header>
+        <div class="ecg-decision-columns">
+          {% for step in bp_address.activation.sequence %}
+          <div>
+            <h4>{{ step.order }}. {{ step.business_function }}</h4>
+            <p>{{ step.purpose }}</p>
+            <p><strong>Client-specific variant:</strong> {{ step.client_specific_variant }}</p>
+          </div>
+          {% endfor %}
+        </div>
+        <ul>{% for item in bp_address.activation.guardrails %}<li>{{ item }}</li>{% endfor %}</ul>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>02</span><small>configuration</small></div>
+          <h3>Address rules live inside partner determination.</h3>
+          <p class="ecg-question">{{ bp_address.address_determination.trigger }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          {% for item in bp_address.address_determination.configuration %}
+          <div>
+            <h4>{{ item.level }}</h4>
+            <ul>{% for control in item.controls %}<li>{{ control }}</li>{% endfor %}</ul>
+            <p>{{ item.impact }}</p>
+          </div>
+          {% endfor %}
+          <div>
+            <h4>Partner scope</h4>
+            <ul>{% for item in bp_address.address_determination.partner_scope %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+        </div>
+        <p>{{ bp_address.address_determination.example_mapping }}</p>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>03</span><small>runtime</small></div>
+          <h3>Usage narrows the address set; validity decides whether it can be used.</h3>
+        </header>
+        <div class="ecg-rail" aria-label="Multiple address determination flow">
+          <div class="ecg-rail__branch">
+            <span class="ecg-node ecg-node--input">Partner function</span>
+            <span class="ecg-arrow" aria-hidden="true">→</span>
+            <span class="ecg-node ecg-node--decision">Address rule</span>
+            <span class="ecg-arrow" aria-hidden="true">→</span>
+            <span class="ecg-node ecg-node--decision">Address usage</span>
+            <span class="ecg-arrow" aria-hidden="true">→</span>
+            <span class="ecg-node ecg-node--decision">Validity</span>
+            <span class="ecg-arrow" aria-hidden="true">→</span>
+            <span class="ecg-node ecg-node--output">SD document address</span>
+          </div>
+        </div>
+        <ol>{% for item in bp_address.address_determination.sequence %}<li>{{ item }}</li>{% endfor %}</ol>
+        <p><strong>Sales-area boundary:</strong> {{ bp_address.address_determination.sales_area_note }}</p>
+        <p><strong>Document override:</strong> {{ bp_address.address_determination.document_override }}</p>
+      </article>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Assessment scenario</h4>
+        <p>A customer is one legal entity but has several receiving locations. Do not create several customer identities automatically. First decide whether one BP with multiple addresses and address-dependent data represents the business correctly.</p>
+      </div>
+      <div>
+        <h4>Lead check</h4>
+        <p>Separate the questions: who is the ship-to party, which physical address is valid, which address-dependent defaults change, and whether APIs or downstream systems preserve the BP address UUID.</p>
+      </div>
+    </div>
+
+    <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ bp_address.memory_hook }} A correct partner number can still carry the wrong physical location.</p>
+
+    <div class="ecg-source-list">
+      <article><span>SAP</span><h3>{{ address_det_source.title }}</h3><p>{{ address_det_source.release_scope }} · {{ address_det_source.product_scope }}</p><a href="{{ address_det_source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+      <article><span>SAP</span><h3>{{ bp_multi_bf_source.title }}</h3><p>{{ bp_multi_bf_source.release_scope }} · {{ bp_multi_bf_source.product_scope }}</p><a href="{{ bp_multi_bf_source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+      <article><span>SAP</span><h3>{{ sd_multi_bf_source.title }}</h3><p>{{ sd_multi_bf_source.release_scope }} · {{ sd_multi_bf_source.product_scope }}</p><a href="{{ sd_multi_bf_source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
