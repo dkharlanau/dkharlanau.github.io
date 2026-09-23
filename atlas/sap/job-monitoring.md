@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Job Monitoring"
-description: "Analytical overview of Job Monitoring in SAP: what it is, where it sits, and how it breaks."
+description: "SAP job monitoring explained across classic ABAP background jobs, application jobs, SAP Cloud ALM, and SAP BTP Job Scheduling service."
 permalink: /atlas/sap/job-monitoring/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "Job Monitoring"
 business_process: "Operations and observability"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -40,7 +40,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Technology</p>
     <h1>Job Monitoring</h1>
-    <p class="note-subtitle">Monitoring background jobs and batch processes in SAP systems.</p>
+    <p class="note-subtitle">Understanding whether scheduled work started when expected, finished correctly, and produced the business result the process depends on.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -53,97 +53,66 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>Job monitoring is the operational practice of tracking background jobs and batch processes in SAP. It covers job status, logs, variant issues, scheduling conflicts, and dependency chains to ensure periodic and event-driven workloads complete on time.</p>
+    <p>Many SAP processes depend on work that runs without a user waiting on a screen: MRP, period-end processing, interfaces, housekeeping, data replication, mass updates, and application-specific calculations. Job monitoring is how we determine whether that work was scheduled, whether it actually ran, and what happened when it did.</p>
 
-    <h2>Business purpose</h2>
-    <p>Ensure critical batch workloads complete within business windows. Detect job failures, delays, and resource contention before they cascade into process outages. Support audit and SLA reporting for automated background processing.</p>
+    <p>There is no single SAP job model across every product. In an ABAP system we may be looking at classic background processing or at the newer application-job framework. On SAP BTP, a cloud application can use SAP Job Scheduling service. SAP Cloud ALM can then provide central monitoring for supported job and automation types. These layers are related, but they are not interchangeable.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Job monitoring is a core operations function in S/4HANA and NetWeaver. It uses transaction SM37, job log analysis, and CCMS monitoring. In cloud and hybrid landscapes, SAP Cloud ALM and BTP Job Scheduling service provide centralized visibility.</p>
+    <h2>Classic ABAP jobs have a clear execution lifecycle</h2>
+    <p>A classic ABAP background job contains a job definition and one or more steps. A step can run an ABAP program or another supported executable. The start condition can be immediate, a date and time, completion of another job, an event, or an operation-mode change. Periodic scheduling adds recurrence to the applicable start conditions.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Job definition: program name, variant, user, target server.</li>
-      <li>Job status: scheduled, released, ready, active, finished, cancelled.</li>
-      <li>Job log: step-level output, error messages, runtime.</li>
-      <li>Variant: parameter set that controls program behavior.</li>
-      <li>Dependency chain: predecessor/successor relationships between jobs.</n      <li>TBTCO / TBTCP: job control and step tables.</li>
-    </ul>
+    <p>The lifecycle matters because a delay and a failure are different problems. Current ABAP Platform documentation distinguishes states such as Planned, Released, Ready, Active, Finished, and Canceled, with additional states such as Released/Suspended and Intercepted. A Ready job has already met its start condition but is waiting for a background work process; a Canceled job started but terminated abnormally. Those two symptoms point us toward different evidence.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: periodic reporting, data replication, material ledger closing, MRP runs.</li>
-      <li>BTP: Job Scheduling service for cloud-native and hybrid workloads.</li>
-      <li>CCMS: monitoring infrastructure for alert generation.</li>
-      <li>External: ITSM tools, email, SMS, and webhook notifications.</li>
-    </ul>
+    <p><code>SM36</code> remains the classic scheduling transaction and <code>SM37</code> the central job overview. In <code>SM37</code>, we can select jobs by name, scheduling user, status, time window, start condition, or step and then inspect scheduling data, job steps, logs, and generated output where applicable. At database level, <code>TBTCO</code> contains job-header information and <code>TBTCP</code> job-step information, but normal diagnosis should start from the supported job-management tools rather than from tables.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom monitoring jobs that check other job statuses.</li>
-      <li>Event-based triggers instead of time-based scheduling.</li>
-      <li>External dashboard integration via RFC or OData.</li>
-      <li>Automated restart and cleanup for failed job categories.</li>
-    </ul>
+    <h2>Job status and application outcome are not the same thing</h2>
+    <p>A Finished status tells us that the background-processing framework completed all job steps successfully. It does not by itself prove that the business process produced the result somebody expected. A program can finish while recording application warnings, rejecting individual business objects, or producing an empty result because its selection parameters found nothing.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>SM37 — job selection and status overview.</li>
-      <li>Job log — step output, error text, and runtime analysis.</li>
-      <li>Variant comparison — detect unauthorized or incorrect parameter changes.</li>
-      <li>Dependency tracking — identify broken chains and missing predecessors.</li>
-      <li>Resource contention — work process and database lock analysis.</li>
-    </ul>
+    <p>The job log is therefore one layer of evidence, not the whole answer. SAP documents job-log entries primarily as messages written by the running program and background-processing framework. A short dump can be reached from an abnormal termination message when one exists. Application logs, spool output, job results, and business documents are separate evidence and should be checked according to the program that ran.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Native SM37 provides comprehensive job visibility out of the box.</li>
-      <li>Job logs capture step-level detail for root cause analysis.</li>
-      <li>CCMS integration enables proactive alerting.</li>
-      <li>Cloud ALM unifies job monitoring across hybrid landscapes.</li>
-    </ul>
+    <p>This distinction prevents a common support mistake: repeating a technically finished job simply because downstream data is missing. Before a rerun, we need to know whether the original execution failed, completed with application-level exceptions, used the wrong parameters, or actually succeeded and the problem lies later in the process.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Job logs can be verbose and hard to search at scale.</li>
-      <li>Variant changes are not always audited or versioned.</li>
-      <li>Dependency chains are often implicit and fragile.</li>
-      <li>Long-running jobs can block work processes and cause contention.</li>
-    </ul>
+    <h2>Dependencies are part of the schedule, not an informal convention</h2>
+    <p>Classic background processing can start one job after another job or after a defined event. That makes predecessor relationships useful for real process sequencing: for example, an extraction job can wait until its preparation job completes successfully instead of relying on two independent clock times.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Job cancelled — variant error, authorization failure, or data issue.</li>
-      <li>Job delayed — predecessor failure, resource shortage, or lock conflict.</li>
-      <li>Job log missing — spool or output management issue.</li>
-      <li>Duplicate job — scheduling conflict or manual re-trigger.</li>
-      <li>MRP or material ledger job failure — master data inconsistency.</li>
-    </ul>
+    <p>When a chain is late, the useful question is therefore not only “is this job running?” We need to ask whether its start condition has been reached. A successor can be healthy and still not start because its predecessor has not completed, an event has not been raised, or the job is Ready and waiting for execution capacity.</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/integration-monitoring/">Integration Monitoring</a></li>
-    </ul>
+    <h2>Application jobs use a different operational surface</h2>
+    <p>The ABAP application-job framework exposes business-oriented jobs through job templates and Fiori applications. In current ABAP Platform documentation, the <em>Application Jobs</em> app can schedule jobs from templates, define recurrence and parameters, monitor existing jobs, display logs and results, cancel jobs, and work with supported job chains. SAP also recommends using specialized application-job apps for scheduling when a business area provides one, while using the general app to monitor application jobs.</p>
+
+    <p>This model is especially important in cloud-oriented SAP products, where an administrator may not have the same low-level job-management access as in a classic private ABAP system. The practical diagnostic object becomes the application job, its template and parameters, its execution status, and its application-specific result rather than an assumption that every problem should be investigated through <code>SM37</code>.</p>
+
+    <h2>SAP Cloud ALM adds cross-system observability</h2>
+    <p>SAP Cloud ALM Job &amp; Automation Monitoring can collect execution data from supported SAP systems and services, including connected ABAP systems. For SAP ABAP jobs, SAP documents both job-log and application-log exceptions. Alerting can evaluate execution status, application status, runtime, and start delay. This is useful when an operations team needs one view across several managed systems instead of opening each local monitor separately.</p>
+
+    <p>Cloud ALM does not erase the local execution model. When an alert says that a job failed or started late, the root cause still belongs to the managed system or service: an ABAP job, an application job, a process automation, or another supported workload. Central monitoring tells us where to look and gives us cross-system history; the local job and application evidence explain what actually happened.</p>
+
+    <h2>SAP BTP Job Scheduling service is a scheduler for cloud workloads</h2>
+    <p>SAP Job Scheduling service on BTP is a separate service for defining one-time and recurring jobs, calling application action endpoints, and running supported long-running tasks. It should not be described as a replacement UI for S/4HANA background jobs. It schedules work for cloud applications using its own jobs, tasks, schedules, APIs, and dashboard.</p>
+
+    <p>The service can integrate with SAP Cloud ALM. SAP added this integration so selected Job Scheduling service executions can be visible in Job &amp; Automation Monitoring. That is the useful architectural boundary: Job Scheduling service owns the cloud schedule and execution contract; Cloud ALM can provide central operational visibility.</p>
+
+    <h2>A useful investigation follows the execution model</h2>
+    <p>For a late or missing result, first identify what actually owns the workload: classic ABAP background processing, an application job, BTP Job Scheduling service, or another scheduler. Then compare the intended start condition with the actual execution state. If the job ran, read the job and application evidence before changing the schedule or restarting it. If it did not run, investigate release state, predecessor or event conditions, suspension or interception, and available execution capacity.</p>
+
+    <p>The final check belongs to the business process. A job can be technically green while the expected invoice, planning result, replication record, or closing output is still absent. Good monitoring connects scheduler state to application evidence and then to the business object that the job was meant to change.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP NetWeaver Job Selection (SM37) — <a href="https://help.sap.com/docs/sap-netweaver/sap-netweaver-750/job-selection-sm37">SAP Help Portal</a>.</li>
-      <li>SAP BTP Job Scheduling Service — <a href="https://help.sap.com/docs/btp/sap-business-technology-platform/job-scheduling-service">SAP Help Portal</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/b07e7195f03f438b8e7ed273099d74f3/4b2b2b4a365474fee10000000a421937.html">Specifying Job Start Conditions</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/b07e7195f03f438b8e7ed273099d74f3/4b308aa91dd90a93e10000000a421937.html">Possible Status of Background Jobs</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/37e7a011a524405882af49cce79f0fb4.html">Application Jobs</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/cloud-alm/applicationhelp/jm-alerting">Job &amp; Automation Monitoring: Alerting</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/job-scheduling/sap-job-scheduling-service/using-sap-job-scheduling-service">Using SAP Job Scheduling Service</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Job scheduling tools, CCMS availability, and Cloud ALM features vary by release and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Available job types, applications, monitoring content, authorizations, and restart options depend on the SAP product, deployment, and release. This page separates the main execution models and monitoring layers; it is not a release-specific operations procedure.</p>
   </div>
 
   <section class="atlas-related">
     <h2>Related pages</h2>
     <ul>
+      <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a></li>
       <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
       <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
       <li><a href="/atlas/sap/integration-monitoring/">Integration Monitoring</a></li>
