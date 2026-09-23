@@ -191,6 +191,32 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">ATP relevance</p>
+      <h2>There is no single switch that explains every ATP result.</h2>
+      <p>{{ graph.atp_relevance_controls.principle }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% for group in graph.atp_relevance_controls.groups %}
+      <div>
+        <h3>{{ group.title }}</h3>
+        <p>{{ group.explanation }}</p>
+        <ul>
+          {% for object in group.objects %}
+          <li><strong>{{ object.name }}:</strong> {{ object.role }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+      <div>
+        <h3>How to troubleshoot it</h3>
+        <p>{{ graph.atp_relevance_controls.lead_rule }}</p>
+      </div>
+    </div>
+    <p class="ecg-caption"><strong>Assessment point:</strong> requirements objects, sales-document controls, and material-planning settings can all matter, but they do not perform the same job. Start from the document requirement and expand only when evidence points to planning strategy or requirements determination.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Edition and license</p>
       <h2>Before configuration, know which S/4HANA edition you are in.</h2>
       <p>{{ atp_deployment.principle }}</p>
@@ -242,11 +268,6 @@ source_links:
     </div>
 
     <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">event_available</span>
-      <p><strong>Plant and date matter:</strong> {{ graph.pac_confirmation_model.plant_context.determination }} {{ graph.pac_confirmation_model.plant_context.why_it_matters }}</p>
-    </div>
-
-    <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">info</span>
       <p><strong>Do not confuse the word "reserved":</strong> {{ graph.pac_confirmation_model.terminology_guardrail }}</p>
     </div>
@@ -264,6 +285,151 @@ source_links:
           <li>A new order for 7 pieces cannot be fully confirmed on that date. SAP looks forward for future ATP and can propose a later or partial confirmation according to the delivery option.</li>
           <li>If no usable ATP appears later, the open quantity stays unconfirmed and cannot be delivered.</li>
         </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Check level</p>
+      <h2>First decide where the requirement exists: plant, or plant plus storage location.</h2>
+      <p>{{ graph.location_check_model.plant_determination.principle }}</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Plant determination priority</h3>
+        <ol>{% for value in graph.location_check_model.plant_determination.priority %}<li>{{ value }}</li>{% endfor %}</ol>
+        <p><strong>Override:</strong> {{ graph.location_check_model.plant_determination.manual_override }}</p>
+      </div>
+      <div>
+        <h3>Sales order</h3>
+        <p>{{ graph.location_check_model.sales_order_level.basic_atp }}</p>
+        <p><strong>With ABC:</strong> {{ graph.location_check_model.sales_order_level.aatp_abc }}</p>
+      </div>
+      <div>
+        <h3>Outbound delivery</h3>
+        <p>{{ graph.location_check_model.delivery_level }}</p>
+      </div>
+    </div>
+
+    <div class="ecg-rail" aria-label="ATP check level logic">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Requirement</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Plant ATP</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Storage-location ATP if relevant</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Lowest relevant cumulative ATP limits confirmation</span>
+      </div>
+    </div>
+    <p class="ecg-caption"><strong>Rule:</strong> {{ graph.location_check_model.level_rule }} {{ graph.location_check_model.guardrail }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Requirement date</p>
+      <h2>ATP does not normally check the customer's requested delivery date directly.</h2>
+      <p>Scheduling first translates the customer request into the date on which the material must be ready for shipping. That material availability date is the requirement date used by ATP.</p>
+    </header>
+
+    <div class="ecg-rail" aria-label="Backward and forward scheduling around ATP">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Requested delivery date</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Backward scheduling</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Material availability date</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">ATP check</span>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Backward scheduling works</h3>
+        <p>{{ graph.scheduling_confirmation_model.backward.logic }}</p>
+        <p><strong>Confirmation:</strong> {{ graph.scheduling_confirmation_model.backward.result }}</p>
+      </div>
+      <div>
+        <h3>Requested date cannot be met</h3>
+        <ul>{% for value in graph.scheduling_confirmation_model.forward.trigger %}<li>{{ value }}</li>{% endfor %}</ul>
+        <p>{{ graph.scheduling_confirmation_model.forward.logic }}</p>
+      </div>
+      <div>
+        <h3>BPS boundary</h3>
+        <p>{{ graph.scheduling_confirmation_model.bps_boundary }}</p>
+        <p><strong>No scheduling:</strong> {{ graph.scheduling_confirmation_model.no_scheduling }}</p>
+      </div>
+    </div>
+
+    <div class="ecg-rail" aria-label="Forward scheduling after shortage">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">No confirmation on original MAD</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Find earliest available material date</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Forward scheduling</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">New feasible delivery date</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Delivery agreement</p>
+      <h2>A valid ATP proposal still has to respect how the customer may receive the order.</h2>
+      <p>Availability calculates possible quantities and dates. Complete- and partial-delivery rules decide how those confirmations may become deliveries.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Complete delivery</h3>
+        <p><strong>{{ graph.delivery_agreements.complete_delivery.level }}</strong></p>
+        <p>{{ graph.delivery_agreements.complete_delivery.effect }}</p>
+        <p><strong>Proposed from:</strong> {{ graph.delivery_agreements.complete_delivery.proposal_source }}</p>
+      </div>
+      <div>
+        <h3>Partial delivery</h3>
+        <p><strong>{{ graph.delivery_agreements.partial_delivery.level }}</strong></p>
+        <p>{{ graph.delivery_agreements.partial_delivery.effect }}</p>
+        <ul>{% for value in graph.delivery_agreements.partial_delivery.proposal_sources %}<li>{{ value }}</li>{% endfor %}</ul>
+      </div>
+      <div>
+        <h3>Order override</h3>
+        <p>{{ graph.delivery_agreements.manual_change }}</p>
+        <p class="ecg-question">A shortage can therefore change not only the confirmed date, but also whether the order waits as one delivery or is split over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Replenishment and reconfirmation</p>
+      <h2>MRP can create supply. That does not automatically repair an old confirmation.</h2>
+      <p>{{ graph.replenishment_and_reconfirmation.lead_contrast }}</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>{{ graph.replenishment_and_reconfirmation.mrp_path.title }}</h3>
+        <ol>{% for value in graph.replenishment_and_reconfirmation.mrp_path.steps %}<li>{{ value }}</li>{% endfor %}</ol>
+      </div>
+      <div>
+        <h3>{{ graph.replenishment_and_reconfirmation.sbc_path.title }}</h3>
+        <p><strong>Edition:</strong> {{ graph.replenishment_and_reconfirmation.sbc_path.edition_boundary }}</p>
+        <ol>{% for value in graph.replenishment_and_reconfirmation.sbc_path.steps %}<li>{{ value }}</li>{% endfor %}</ol>
+      </div>
+      <div>
+        <h3>Replenishment lead time</h3>
+        <p>{{ graph.replenishment_and_reconfirmation.replenishment_lead_time.principle }}</p>
+        <p class="ecg-question"><strong>Risk:</strong> {{ graph.replenishment_and_reconfirmation.replenishment_lead_time.risk }}</p>
+      </div>
+    </div>
+
+    <div class="ecg-rail" aria-label="MRP versus Supply Creation-Based Confirmation">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Shortage</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">MRP creates future receipt</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">BOP / reconfirmation</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Improved existing confirmation</span>
+      </div>
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Shortage</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">SBC asks PP/DS to create supply</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Supply proposal + confirmation in one flow</span>
       </div>
     </div>
   </section>
