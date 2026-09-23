@@ -7,10 +7,10 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-03
-last_reviewed: 2026-09-03
+last_modified_at: 2026-09-23
+last_reviewed: 2026-09-23
 publication_wave: "sap-experience-review-2026-09"
-review_method: "current SAP Build Work Zone standard/advanced + SAP Task Center primary sources + page-level architecture-boundary review"
+review_method: "current SAP Build Work Zone, Fiori My Home, mobile, Responsibility Management, Situation Handling, workflow, and SAP Task Center primary sources + architecture-boundary review"
 search_intent: "SAP Build Work Zone standard advanced edition Workspaces Workpages content federation Task Center Fiori launchpad SAP Start"
 structured_data:
   type: TechArticle
@@ -205,6 +205,75 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="fiori-my-home" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP Fiori / My Home</p>
+      <h2>One home page, several kinds of work.</h2>
+      <p>{{ graph.fiori_my_home.summary }}</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Memory path:</strong> {{ graph.fiori_my_home.memory_path }}</p>
+      <p>{{ graph.fiori_my_home.layout_rule }}</p>
+    </div>
+    <div class="ecg-memory-grid">
+      {% for item in graph.fiori_my_home.sections %}
+      <article class="ecg-memory-card"><span>HOME</span><strong>{{ item.name }}</strong><h3>{{ item.purpose }}</h3><p><strong>Boundary:</strong> {{ item.boundary }}</p></article>
+      {% endfor %}
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+      <p><strong>{{ graph.fiori_my_home.reference_tool.name }}:</strong> {{ graph.fiori_my_home.reference_tool.use }}</p>
+      <a href="{{ graph.fiori_my_home.reference_tool.url }}" target="_blank" rel="noopener">Open the SAP Fiori Apps Reference Library <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="mobile-entry" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mobile entry</p>
+      <h2>{{ graph.mobile_entry.memory_rule }}</h2>
+      <p>{{ graph.mobile_entry.naming_note }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Training name</h3><p>{{ graph.mobile_entry.training_name }}</p></div>
+      <div><h3>Current SAP documentation</h3><p>{{ graph.mobile_entry.current_name }}</p></div>
+      <div><h3>Setup boundary</h3><p>{{ graph.mobile_entry.setup_rule }}</p></div>
+    </div>
+    <div class="research-canvas__boundary"><span class="material-symbols-outlined" aria-hidden="true">smartphone</span><p>{{ graph.mobile_entry.source_boundary }}</p></div>
+  </section>
+
+  <section class="research-canvas__inventory" id="attention-routing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Responsibility, situations, and workflow</p>
+      <h2>Who, what, sequence, surface.</h2>
+      <p>{{ graph.attention_routing.principle }}</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">notification_important</span>
+      <p><strong>Memory path:</strong> {{ graph.attention_routing.memory_path }}</p>
+    </div>
+    <div class="ecg-determination-list">
+      {% for item in graph.attention_routing.components %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">{{ item.question }}</p>
+          <h3>{{ item.name }}</h3>
+          <p><strong>Owns:</strong> {{ item.owns }}</p>
+          <p><strong>Example:</strong> {{ item.example }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <h3>Situation Handling: Standard vs Extended</h3>
+    <div class="ecg-memory-grid">
+      {% for item in graph.attention_routing.situation_frameworks %}
+      <article class="ecg-memory-card"><span>{{ item.framework | upcase }}</span><strong>{{ item.remember }}</strong><h3>{{ item.fit }}</h3></article>
+      {% endfor %}
+    </div>
+    <div class="research-canvas__boundary"><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Lead rule:</strong> {{ graph.attention_routing.lead_rule }}</p></div>
+  </section>
+
   <section class="research-canvas__inventory" id="integration-patterns" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">How work appears in the site</p>
@@ -278,7 +347,7 @@ source_links:
 
   <section class="research-canvas__inventory" id="current-signals" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Current product signals / reviewed 2026-09-03</p>
+      <p class="research-canvas__eyebrow">Current product signals / reviewed 2026-09-23</p>
       <h2>The experience layer is broader than a tile launchpad.</h2>
       <p>These points are release-sensitive and should be checked again for a real project.</p>
     </header>
