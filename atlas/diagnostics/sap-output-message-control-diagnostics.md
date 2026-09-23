@@ -7,11 +7,11 @@ atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
 concept_type: diagnostic guide
-sap_area: "Output determination / NAST"
+sap_area: "S/4HANA Output Control / classic output determination"
 business_process: Integration
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-13
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -54,6 +54,21 @@ sitemap: false
   </aside>
 
   <div class="note-body">
+    <h2>First question: which output framework owns the document?</h2>
+    <p>Before opening NACE, NAST, BRFplus, SOST, or a spool monitor, identify the framework. SAP S/4HANA Sales can use either classic Output Determination (SD-BF-OC) or SAP S/4HANA Output Control for the application object type <code>Sales_Document</code>. A framework change applies to new documents; existing documents remain with the framework that was active when they were created.</p>
+
+    <div class="table-wrap" role="region" aria-label="Output diagnostic branch" tabindex="0">
+      <table>
+        <thead><tr><th>If the document uses...</th><th>Start with...</th><th>Do not assume...</th></tr></thead>
+        <tbody>
+          <tr><td>Classic output determination</td><td>Output condition technique, message record, partner/medium, NAST processing</td><td>That BRFplus decision tables control this document</td></tr>
+          <tr><td>SAP S/4HANA Output Control</td><td>Output item, Output Parameter Determination, receiver/channel/relevance/form, then technical processing</td><td>That NACE or a missing NAST record explains the failure</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>For the modern framework, trace the layers in this order: <strong>framework → output type → receiver → channel → output relevance → form → technical processing</strong>. Use the dedicated <a href="/atlas/sap/output-control/">SAP S/4HANA Output Control guide</a> for configuration and decision-table logic.</p>
+
     <h2>Core idea</h2>
     <p>Output determination controls how SAP documents communicate with external systems and users — via print, email, fax, EDI, or IDoc. When an expected output is missing, sent to the wrong address, or fails with a processing error, the support goal is to identify whether the issue is in the condition technique, output type, partner function, medium, or processing program.</p>
 
