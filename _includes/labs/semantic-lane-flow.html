@@ -1,0 +1,53 @@
+{% assign visual = include.model %}
+{% if visual and visual.nodes and visual.groups %}
+<section class="semantic-flow" aria-label="{{ visual.title }}">
+  <header class="semantic-flow__header">
+    <div>
+      <p class="research-canvas__eyebrow">Semantic process view</p>
+      <h3>{{ visual.title }}</h3>
+      {% if visual.description %}<p>{{ visual.description }}</p>{% endif %}
+    </div>
+    <small>Visual Workbench grammar · semantic source · no manual coordinates</small>
+  </header>
+
+  <div class="semantic-flow__sequence" aria-label="Main process sequence">
+    {% for node in visual.nodes %}
+    <div class="semantic-flow__sequence-node">
+      <span>{{ forloop.index }}</span>
+      <strong>{{ node.label }}</strong>
+      {% if node.subtitle %}<small>{{ node.subtitle }}</small>{% endif %}
+    </div>
+    {% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}
+    {% endfor %}
+  </div>
+
+  <div class="semantic-flow__canvas" style="--semantic-columns: {{ visual.nodes | size }};">
+    {% for group in visual.groups %}
+    <div class="semantic-flow__lane">
+      <div class="semantic-flow__lane-label">
+        <strong>{{ group.label }}</strong>
+        {% if group.description %}<small>{{ group.description }}</small>{% endif %}
+      </div>
+      <div class="semantic-flow__lane-grid" style="--semantic-columns: {{ visual.nodes | size }};">
+        {% for node in visual.nodes %}
+          {% if node.group == group.id %}
+          <article class="semantic-flow__node semantic-flow__node--{{ node.type }} semantic-flow__node--{{ node.status }}" style="grid-column: {{ forloop.index }};">
+            <span>{{ node.type }}</span>
+            <strong>{{ node.label }}</strong>
+            {% if node.subtitle %}<small>{{ node.subtitle }}</small>{% endif %}
+            {% if node.owner %}<em>{{ node.owner }}</em>{% endif %}
+          </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="semantic-flow__edge-list" aria-label="Handoffs">
+    {% for edge in visual.edges %}
+    <span><code>{{ edge.from }}</code> {{ edge.label }} <code>{{ edge.to }}</code></span>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
