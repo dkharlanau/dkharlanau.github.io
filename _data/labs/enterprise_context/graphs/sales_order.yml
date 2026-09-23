@@ -10,7 +10,7 @@ process_family: "Order-to-Cash"
 process_step: "Create Sales Order"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-09-23"
 verified_at: null
 
 thesis: >-
@@ -154,6 +154,195 @@ input_domains:
     purpose: >-
       Procedures, mappings, condition records, checks, and search strategies convert
       document and master-data context into runtime decisions.
+
+field_provenance:
+  title: "Field provenance: which source supplied this value?"
+  summary: >-
+    Use this map when a sales-order value looks wrong. First identify the runtime field,
+    then trace the partner, master-data record, document type, or previous determination
+    that supplied it. Partner functions matter because different partners own different
+    commercial, logistics, billing, payment, and tax context.
+  partner_memory:
+    - partner: "Sold-to party"
+      owns: "Commercial sales context"
+      examples:
+        - "Incoterms in standard SD"
+        - "customer pricing procedure"
+        - "sales data such as price-list context"
+      caveat: >-
+        Do not assume every customer-derived field comes from sold-to. Payment, logistics,
+        and tax rules deliberately read other partner roles.
+    - partner: "Ship-to party"
+      owns: "Delivery destination and logistics context"
+      examples:
+        - "delivery address"
+        - "delivering-plant fallback"
+        - "shipping data and destination geography"
+        - "tax destination and ship-to tax liability"
+      caveat: >-
+        Incoterms are not normally switched to ship-to in standard SD just because delivery
+        happens there.
+    - partner: "Bill-to party"
+      owns: "Invoice recipient context"
+      examples:
+        - "invoice address"
+        - "document printing and electronic communication data"
+      caveat: >-
+        Bill-to answers who receives the invoice; it is not the same role as the payer.
+    - partner: "Payer"
+      owns: "Payment and selected tax-identity context"
+      examples:
+        - "payment terms at header level"
+        - "billing schedules and bank details"
+        - "possible VAT / sales-tax-ID source depending on the configured tax rule"
+      caveat: >-
+        Tax identity is rule-driven. Depending on the sales-organization rule, payer,
+        ship-to, or sold-to can supply the relevant tax ID and classification.
+
+  fields:
+    - field: "Incoterms"
+      level: "Header / business data"
+      partner_role: "Sold-to"
+      source: "Sold-to party sales-area master data"
+      mechanism: "master-data default"
+      rule: >-
+        Standard SD sales documents determine Incoterms from the sold-to party, not the
+        ship-to party. This source cannot be switched through ordinary Customizing.
+      downstream: "Commercial terms carried into later sales, delivery, and billing processing."
+      technical_hint: "Sales-document business data includes VBKD-INCO1 and the newer Incoterms location/version fields where used."
+      source_refs:
+        - SRC-SAP-SD-INCOTERMS-SOLDTO
+        - SRC-SAP-SD-MASTER-DATA
+
+    - field: "Payment terms"
+      level: "Header / business data"
+      partner_role: "Payer"
+      source: "Payer customer master data"
+      mechanism: "master-data default with document override"
+      rule: >-
+        SAP documents the payer's master-data payment terms as the header default for a
+        quotation or sales order; the document value can be edited where the process permits.
+      downstream: "Billing, due-date calculation, payment processing, and cash-discount context."
+      technical_hint: "Terms of payment are represented by ZTERM in sales-document business data."
+      source_refs:
+        - SRC-SAP-SD-MASTER-DATA
+        - SRC-SAP-SD-PAYER-PAYMENT-TERMS
+
+    - field: "Shipping condition"
+      level: "Header"
+      partner_role: "Customer master / document type"
+      source: "Customer master, unless the sales document type supplies a shipping condition"
+      mechanism: "default with document-type override"
+      rule: >-
+        If a shipping condition is maintained both in customer master data and in the
+        sales document type, the sales document type takes precedence.
+      downstream: "Shipping-point determination, route determination, and logistics scheduling context."
+      technical_hint: "The runtime sales-order header field is VBAK-VSBED."
+      source_refs:
+        - SRC-SAP-SD-SHIPPING-POINTS
+
+    - field: "Customer pricing procedure"
+      level: "Header / pricing context"
+      partner_role: "Sold-to"
+      source: "Sold-to party sales-area master data"
+      mechanism: "input to pricing-procedure determination"
+      rule: >-
+        Pricing-procedure determination combines sales area, document pricing procedure,
+        and the customer pricing procedure supplied by the sold-to party.
+      downstream: "Selects the pricing procedure before condition types and access sequences are evaluated."
+      source_refs:
+        - SRC-SAP-SD-PRICING-PROCEDURE
+        - SRC-SAP-SD-PRICING-DETERMINATION-LEARNING
+
+    - field: "Delivering plant"
+      level: "Item"
+      partner_role: "CMIR → Ship-to → Material"
+      source: "Customer-material information record, then ship-to customer master, then material master"
+      mechanism: "prioritized default"
+      rule: >-
+        The more specific customer-material source is checked first; the ship-to partner is
+        the customer-master fallback before the material master.
+      downstream: "Availability, shipping-point determination, tax departure country, and fulfillment location."
+      technical_hint: "Sales-order item plant is VBAP-WERKS."
+      source_refs:
+        - SRC-SAP-SD-DELIVERING-PLANT
+        - SRC-SAP-SD-MASTER-DATA
+
+    - field: "Shipping point"
+      level: "Item"
+      partner_role: "Derived"
+      source: "Delivering plant + shipping condition + material loading group"
+      mechanism: "Customizing lookup"
+      rule: >-
+        The shipping point is a result, not a master-data field to debug in isolation.
+        Trace the plant, shipping condition, and loading group first.
+      downstream: "Outbound-delivery execution, scheduling, and route context."
+      technical_hint: "Sales-order item shipping point is VBAP-VSTEL."
+      source_refs:
+        - SRC-SAP-SD-SHIPPING-POINTS
+
+    - field: "Route"
+      level: "Item"
+      partner_role: "Ship-to + logistics context"
+      source: "Departure geography + ship-to destination geography + shipping condition + material transportation group"
+      mechanism: "Customizing lookup"
+      rule: >-
+        Route determination joins the departure side, destination side, shipping policy,
+        and material transportation attributes.
+      downstream: "Transportation lead time and delivery / transportation scheduling."
+      technical_hint: "Sales-order item route is VBAP-ROUTE."
+      source_refs:
+        - SRC-SAP-SD-ROUTE-DETERMINATION
+
+    - field: "Tax / VAT determination inputs"
+      level: "Header + item / pricing"
+      partner_role: "Ship-to + plant + material"
+      source: "Departure country + destination country + customer tax classification + material tax classification"
+      mechanism: "pricing condition technique"
+      rule: >-
+        SAP treats VAT as a tax-pricing decision, not as one customer field. Core criteria
+        include departure and destination geography plus customer and material tax liability/classification.
+        The order API also exposes customer tax classifications copied from the goods-recipient master data.
+      downstream: "Tax condition, tax code/rate, tax amount, and billing/accounting context."
+      source_refs:
+        - SRC-SAP-SD-TAX-DETERMINATION
+        - SRC-SAP-SD-SALES-ORDER-HEADER
+        - SRC-SAP-SD-CONDITION-TECHNIQUE
+
+    - field: "Tax departure country / region"
+      level: "Header tax context"
+      partner_role: "Plant"
+      source: "Country / region of the delivering plant"
+      mechanism: "derived tax geography"
+      rule: "For tax determination, SAP uses the plant country or region as the normal departure country or region."
+      downstream: "Domestic/export/import classification and tax determination."
+      source_refs:
+        - SRC-SAP-SD-SALES-ORDER-HEADER
+
+    - field: "Tax destination / VAT registration country"
+      level: "Header tax context"
+      partner_role: "Ship-to"
+      source: "Country / region of the ship-to party"
+      mechanism: "derived tax geography"
+      rule: >-
+        For tax determination, SAP uses the ship-to country or region as the normal tax
+        destination / VAT registration country in the sales-order context.
+      downstream: "Tax-country context, condition access, and billing tax data."
+      source_refs:
+        - SRC-SAP-SD-SALES-ORDER-HEADER
+
+    - field: "VAT registration / sales-tax-ID source"
+      level: "Header tax identity"
+      partner_role: "Rule-dependent"
+      source: "Sales-organization rule for the sales tax identification number"
+      mechanism: "priority rule"
+      rule: >-
+        SAP distinguishes tax-ID source from simple ship-to geography. With the documented
+        blank rule, payer can take priority when it has a tax ID and differs from sold-to;
+        otherwise ship-to can be used, then sold-to. Rule A uses sold-to; rule B uses payer.
+      downstream: "Tax identity and classification used by order and billing tax determination."
+      source_refs:
+        - SRC-SAP-SD-TAX-DETERMINATION
 
 objects:
   - id: OBJ-SD-SALES-ORDER
@@ -486,6 +675,48 @@ determinations:
       than the final amount because it shows where the expected path stopped.
     source_refs:
       - SRC-SAP-SD-PRICING-PROCEDURE
+      - SRC-SAP-SD-CONDITION-TECHNIQUE
+
+  - id: DET-SD-TAX
+    title: "Tax / VAT Determination"
+    memory_key: "PRICE"
+    level: header_and_item
+    question: "Which tax logic, rate, and amount apply to this sale?"
+    mechanism: condition_technique
+    inputs:
+      - "tax departure country / region, normally derived from the delivering plant"
+      - "tax destination country / region, normally derived from the ship-to party"
+      - "customer tax classification / tax liability"
+      - "material tax classification / tax liability"
+      - "sales-organization rule for the sales tax identification number / VAT identity"
+      - "tax condition types, access sequences, and condition records"
+    output:
+      - "tax condition"
+      - "tax code / rate where applicable"
+      - "tax amount"
+    downstream_effects:
+      - "order commercial value"
+      - "billing tax data"
+      - "FI tax posting context"
+    common_failures:
+      - "wrong partner drives tax identity or destination context"
+      - "wrong plant changes the tax departure country"
+      - "customer or material tax classification is missing or unexpected"
+      - "wrong pricing procedure, tax condition, access, or condition record"
+      - "tax-ID source rule is misunderstood as a fixed partner rule"
+    check_first:
+      - "Separate tax geography, tax liability/classification, and VAT / tax-ID source; they are different inputs."
+      - "Check plant/departure country and ship-to/destination country."
+      - "Check customer and material tax classifications."
+      - "Check the sales-organization rule that selects the tax-ID source when partner roles differ."
+      - "Then use pricing analysis to trace the tax condition and access sequence."
+    remember: "VAT is pricing plus geography plus tax liability plus a rule for tax identity."
+    lead_lens: >-
+      A tax issue is often a partner or geography issue before it is a condition-record issue.
+      Do not assume that one partner function owns every tax field.
+    source_refs:
+      - SRC-SAP-SD-TAX-DETERMINATION
+      - SRC-SAP-SD-SALES-ORDER-HEADER
       - SRC-SAP-SD-CONDITION-TECHNIQUE
 
   - id: DET-SD-AVAILABILITY
