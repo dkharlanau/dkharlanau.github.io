@@ -570,6 +570,17 @@
         "DOC.SD.BILLING.HEADER"
       ],
       "check": "source document partners → billing partner procedure → copied/changed runtime partner"
+    },
+    {
+      "question": "Why does the order have the correct ship-to partner but the wrong physical address?",
+      "path": [
+        "MD.SD.BP",
+        "MD.SD.ADDRESS",
+        "MD.SD.PARTNERREL",
+        "MEC.SD.PARTNER",
+        "DOC.SD.SALES_ORDER.HEADER"
+      ],
+      "check": "partner identity → address determination setting → address usage → validity/fallback → BP address UUID or document-specific override"
     }
   ],
   "source_refs": [
