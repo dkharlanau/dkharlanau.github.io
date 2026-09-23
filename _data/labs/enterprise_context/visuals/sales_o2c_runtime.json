@@ -1,0 +1,172 @@
+{
+  "visual": {
+    "version": 1,
+    "title": "Order-to-Cash runtime state",
+    "description": "A semantic handoff view of the main business events from sales order creation to incoming-payment clearing.",
+    "kind": "handoff",
+    "direction": "right",
+    "theme": "paper",
+    "density": "balanced",
+    "groups": [
+      {
+        "id": "sales",
+        "label": "Sales",
+        "order": 1,
+        "description": "Commercial demand, customer promise and billing ownership."
+      },
+      {
+        "id": "supply",
+        "label": "Supply",
+        "order": 2,
+        "description": "Availability, sourcing, procurement and production boundary."
+      },
+      {
+        "id": "logistics",
+        "label": "Logistics",
+        "order": 3,
+        "description": "Delivery, warehouse, transport and goods movement execution."
+      },
+      {
+        "id": "finance",
+        "label": "Finance",
+        "order": 4,
+        "description": "Valuation, receivable, revenue, payment and clearing."
+      }
+    ],
+    "nodes": [
+      {
+        "id": "order",
+        "label": "Sales Order",
+        "type": "system",
+        "subtitle": "Demand + commercial context",
+        "owner": "Sales",
+        "group": "sales",
+        "status": "neutral",
+        "tags": [
+          "document",
+          "master-data-consumer"
+        ]
+      },
+      {
+        "id": "supply",
+        "label": "Supply Confirmed",
+        "type": "checkpoint",
+        "subtitle": "ATP / sourcing",
+        "owner": "ATP · MM · PP",
+        "group": "supply",
+        "status": "neutral",
+        "tags": [
+          "promise",
+          "supply"
+        ]
+      },
+      {
+        "id": "delivery",
+        "label": "Outbound Delivery",
+        "type": "step",
+        "subtitle": "Pick · pack · transport",
+        "owner": "Shipping · EWM · TM",
+        "group": "logistics",
+        "status": "neutral",
+        "tags": [
+          "execution"
+        ]
+      },
+      {
+        "id": "pgi",
+        "label": "Post Goods Issue",
+        "type": "checkpoint",
+        "subtitle": "Stock + value commit",
+        "owner": "Shipping · IM",
+        "group": "logistics",
+        "status": "warning",
+        "tags": [
+          "inventory",
+          "accounting-boundary"
+        ]
+      },
+      {
+        "id": "billing",
+        "label": "Billing Document",
+        "type": "checkpoint",
+        "subtitle": "Receivable + revenue",
+        "owner": "Sales Billing",
+        "group": "sales",
+        "status": "neutral",
+        "tags": [
+          "billing",
+          "accounting-boundary"
+        ]
+      },
+      {
+        "id": "payment",
+        "label": "Payment Cleared",
+        "type": "outcome",
+        "subtitle": "Cash + open-item clearing",
+        "owner": "FI-AR",
+        "group": "finance",
+        "status": "success",
+        "tags": [
+          "cash",
+          "completion"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": "order",
+        "to": "supply",
+        "label": "Requirement",
+        "type": "flow"
+      },
+      {
+        "from": "supply",
+        "to": "delivery",
+        "label": "Executable promise",
+        "type": "flow"
+      },
+      {
+        "from": "delivery",
+        "to": "pgi",
+        "label": "Physical issue",
+        "type": "flow"
+      },
+      {
+        "from": "pgi",
+        "to": "billing",
+        "label": "Billing ready",
+        "type": "flow"
+      },
+      {
+        "from": "billing",
+        "to": "payment",
+        "label": "Open receivable",
+        "type": "flow"
+      }
+    ],
+    "views": [
+      {
+        "id": "executive",
+        "title": "O2C business milestones",
+        "focus": "executive",
+        "kind": "process"
+      },
+      {
+        "id": "controls",
+        "title": "Commit points and handoffs",
+        "focus": "controls",
+        "kind": "checkpoint-flow"
+      },
+      {
+        "id": "finance",
+        "title": "Financial boundary",
+        "focus": "flow",
+        "kind": "handoff",
+        "includeGroups": [
+          "sales",
+          "finance"
+        ]
+      }
+    ]
+  }
+}
