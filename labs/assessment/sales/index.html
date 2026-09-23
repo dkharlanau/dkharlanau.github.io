@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-20
+last_modified_at: 2026-09-23
 hide_global_cta: true
 tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
 ---
@@ -60,6 +60,59 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
           <li>Evidence-based diagnosis instead of trial-and-error repair.</li>
         </ul>
       </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="enterprise-structure-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Topic 01 / Enterprise structure</p>
+      <h2>Do not memorize boxes. Explain the boundary each box creates.</h2>
+      <p>For an assessment, organizational structure is stronger when we can explain both the SAP definition and the architectural reason for the unit.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Financial boundary</h3><p><strong>Company Code</strong> owns external accounting. A Sales Organization belongs to one Company Code; a Plant also belongs to one Company Code.</p></div>
+      <div><h3>Commercial boundary</h3><p><strong>Sales Organization</strong> answers who sells. <strong>Distribution Channel</strong> answers how we go to market. <strong>Division</strong> answers which product or service family is in scope.</p></div>
+      <div><h3>Commercial context key</h3><p><strong>Sales Area = Sales Organization + Distribution Channel + Division.</strong> It is a valid selling context and a scope for sales-area-dependent customer data.</p></div>
+      <div><h3>Commercial-to-logistics bridge</h3><p><strong>Distribution Chain = Sales Organization + Distribution Channel.</strong> Delivering plants are assigned to this pair, which connects the selling model to fulfillment.</p></div>
+      <div><h3>Fulfillment node</h3><p><strong>Plant</strong> is where supply can be planned, produced, stored, distributed, or serviced. It connects Sales to ATP, MM, PP, inventory, valuation, and delivery.</p></div>
+      <div><h3>Shipping execution node</h3><p><strong>Shipping Point</strong> owns outbound delivery processing. Each outbound delivery is handled by one shipping point.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">schema</span>
+      <p><strong>60-second answer:</strong> I see the Sales enterprise structure as a set of responsibility boundaries. Company Code gives the accounting entity. Sales Organization is the commercial seller. Channel and Division add route-to-market and product context; together with Sales Organization they form the Sales Area. The Distribution Chain connects that commercial context to possible delivering plants. The Plant owns the broader fulfillment location, while the Shipping Point owns outbound execution. The design is useful because the same customer, product, and process can behave differently in a controlled context without mixing legal, commercial, and logistics responsibility.</p>
+      <a href="/labs/enterprise-context/sales-processes/master-data/#organizational-context">Open the detailed organizational-context model <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="o2c-control-handoffs" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Order-to-Cash / control handoffs</p>
+      <h2>SOURCE → SHIP → BILL → COLLECT.</h2>
+      <p>The Sales order is not the whole process. It creates or carries demand, but fulfillment crosses several logistics and finance owners before cash is collected.</p>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>source</small></div><h3>How will the material be supplied?</h3><p class="ecg-question">Stock, external supply, or own production?</p></header><div class="ecg-decision-columns"><div><h4>Main paths</h4><ul><li>Use available stock.</li><li>Replenish through Procurement, for example purchase requisition / purchase order depending on the process.</li><li>Replenish through in-house production, for example planned or production orders depending on planning and execution.</li><li>Use a special branch such as third-party processing where the supplier can deliver directly to the customer.</li></ul></div><div><h4>Lead distinction</h4><p><strong>Sourcing is not ATP.</strong> Sourcing describes how supply is obtained. ATP describes whether and when the requested quantity can be confirmed under the relevant availability rules. They interact, but they answer different questions.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>ship</small></div><h3>Turn the confirmed promise into physical execution</h3><p class="ecg-question">Which document owns outbound execution?</p></header><div class="ecg-decision-columns"><div><h4>Execution object</h4><p>The outbound delivery starts shipping execution and controls or supports picking, packing, warehouse processing, transport planning, and goods issue.</p></div><div><h4>Boundary</h4><p>EWM can own warehouse execution and TM can own transport planning/execution when they are in scope. Posting goods issue changes stock quantity and value and creates the accounting impact of the physical issue.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>bill</small></div><h3>Convert fulfillment into a customer charge</h3><p class="ecg-question">What makes the transaction billable?</p></header><div class="ecg-decision-columns"><div><h4>Billing basis</h4><p>Physical-product scenarios are commonly delivery-related; service and other scenarios can be order-related. Special processes can use different billing triggers, so the preceding document is part of the process design.</p></div><div><h4>Finance handoff</h4><p>The billing document transfers commercial data to Finance. Typical accounting includes customer receivables, revenue, and tax-related postings according to configuration.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>collect</small></div><h3>Billing is not payment</h3><p class="ecg-question">Who owns the open receivable after Sales has billed?</p></header><div class="ecg-decision-columns"><div><h4>Owner</h4><p>Incoming payment belongs to Finance / Accounts Receivable rather than core Sales processing. Payment clears or reduces the customer open item.</p></div><div><h4>Why Sales still cares</h4><p>Unpaid receivables can affect credit exposure and therefore future Sales orders. The process boundary changes, but the business outcome is still connected.</p></div></div></article>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Process vocabulary</h3><p><strong>Sales Order Management</strong> captures commercial demand and its controls. <strong>Sourcing</strong> decides how supply is obtained. <strong>Shipping / Delivery Processing</strong> owns outbound execution. <strong>Inventory Management</strong> records the stock movement at goods issue. <strong>Billing</strong> creates the customer charge and accounting handoff. <strong>Accounts Receivable</strong> owns collection and clearing.</p></div>
+      <div><h3>Assessment trap</h3><p>Do not say “the Sales process ends with delivery” or “billing means the customer paid”. Physical completion, commercial invoicing, accounting posting, and cash collection are separate states with different owners.</p></div>
+    </div>
+
+    <h3>Oral drills</h3>
+    <ol>
+      <li><strong>Why do we need both Sales Area and Distribution Chain?</strong> Sales Area adds the product/division dimension for the commercial context. Distribution Chain is the Sales Organization + Channel pair used in important Sales-to-logistics assignments such as delivering plants.</li>
+      <li><strong>Why is Plant not part of the Sales Area?</strong> Plant is a logistics and fulfillment node, not the definition of who sells what through which commercial route. One selling context can use several plants.</li>
+      <li><strong>Stock exists, but the order is not confirmed. What does that tell you?</strong> Physical stock, ATP scope/policy, plant, dates, requirements, and sourcing are different layers. Start with the confirmation decision, not with the stock number alone.</li>
+      <li><strong>Where does Sales stop after billing?</strong> Billing creates the commercial and accounting handoff. Customer payment and clearing are owned by Finance/AR, although credit management can bring the financial state back into future Sales decisions.</li>
+    </ol>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Primary learning references:</strong> <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/identifying-organizational-units-in-sap-s-4hana-sales_ddb48d1e-1f57-46bd-8d13-d8e4ef6d0560">Organizational Units in SAP S/4HANA Sales</a> · <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-sales-order-management_cad9dfbe-bafc-4ed9-ac2e-6fd8422430e4">Order-to-Cash Process Steps</a> · <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-the-shipping-process_e796d891-1485-4b97-874b-f4cbcbd9dbc9">Shipping Process</a> · <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-the-billing-process-and-the-integration-to-sap-s-4hana-finance_e2dd5db3-73c3-4cda-8ad5-1e7f39f04fba">Billing and Finance Integration</a>.</p>
     </div>
   </section>
 
