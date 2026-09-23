@@ -291,6 +291,37 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Cumulative ATP guardrail</p>
+      <h2>Stock exists is not an ATP answer.</h2>
+      <p>{{ graph.cumulative_atp_guardrails.principle }}</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>How confirmations consume the promise</h3>
+        <ul>{% for value in graph.cumulative_atp_guardrails.consumption_logic %}<li>{{ value }}</li>{% endfor %}</ul>
+      </div>
+      <div>
+        <h3>Use the right view</h3>
+        <p><strong>Use:</strong></p>
+        <ul>{% for value in graph.cumulative_atp_guardrails.monitoring.use %}<li>{{ value }}</li>{% endfor %}</ul>
+        <p><strong>Do not use as ATP proof:</strong></p>
+        <ul>{% for value in graph.cumulative_atp_guardrails.monitoring.do_not_use_as_atp_proof %}<li>{{ value }}</li>{% endfor %}</ul>
+        <p>{{ graph.cumulative_atp_guardrails.monitoring.reason }}</p>
+      </div>
+      <div>
+        <h3>Shortage check</h3>
+        <p>{{ graph.cumulative_atp_guardrails.shortage_check.problem }}</p>
+        <p><strong>Control:</strong> {{ graph.cumulative_atp_guardrails.shortage_check.control }}</p>
+        <p class="ecg-question"><strong>Lead lens:</strong> {{ graph.cumulative_atp_guardrails.shortage_check.lead_lens }}</p>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Assessment trap:</strong> inventory, MRP coverage, and cumulative ATP answer different questions. If someone says “but I can see stock,” the next question is: “How much cumulative ATP is still free for this requirement on its material availability date?”</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Check level</p>
       <h2>First decide where the requirement exists: plant, or plant plus storage location.</h2>
       <p>{{ graph.location_check_model.plant_determination.principle }}</p>
