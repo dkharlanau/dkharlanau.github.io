@@ -604,19 +604,90 @@ source_links:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Backorder Processing</p>
-      <h2>BOP is a prioritization engine, not a repair job.</h2>
-      <p>When supply changes, BOP can revisit existing confirmations. I read variant, segment, strategy, and sorting before I call a worse confirmation a defect.</p>
+      <h2>BOP revisits promises when business priority or supply has changed.</h2>
+      <p>{{ atp_bop.why_bop.principle }}</p>
     </header>
+
+    <div class="ecg-input-grid">
+      {% for trigger in atp_bop.why_bop.triggers %}
+      <article>
+        <span>WHY BOP {{ forloop.index }}</span>
+        <h3>{{ trigger.title }}</h3>
+        <p>{{ trigger.explanation }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">swap_horiz</span>
+      <p><strong>Classic versus aATP:</strong> {{ atp_bop.classic_boundary.rule }}</p>
+    </div>
+
+    <div class="ecg-rail" aria-label="BOP design flow">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Filters</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Segment</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Prioritizers</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Confirmation strategy</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Reconfirmed requirements</span>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Segment</h3>
+        <p>{{ atp_bop.segment_variant_model.segment.purpose }}</p>
+        <p class="ecg-question">{{ atp_bop.segment_variant_model.segment.lead_question }}</p>
+      </div>
+      <div>
+        <h3>Multiple segments</h3>
+        <p>{{ atp_bop.segment_variant_model.multiple_segments.purpose }}</p>
+        <p class="ecg-question">{{ atp_bop.segment_variant_model.multiple_segments.lead_question }}</p>
+      </div>
+      <div>
+        <h3>Variant</h3>
+        <p>{{ atp_bop.segment_variant_model.variant.purpose }}</p>
+        <p class="ecg-question">{{ atp_bop.segment_variant_model.variant.lead_question }}</p>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Strategy guardrail:</strong> {{ atp_bop.strategy_model.guardrail }}</p>
+
     <div class="ecg-determination-list">
       {% for strategy in graph.bop_strategies %}
       <article class="ecg-determination-detail">
         <header>
-          <div><span>{{ strategy.code }}</span><small>confirmation strategy</small></div>
+          <div><span>{{ strategy.code }}</span><small>processing strategy</small></div>
           <h3>{{ strategy.meaning }}</h3>
           <p class="ecg-question">{{ strategy.lead_question }}</p>
         </header>
       </article>
       {% endfor %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{{ graph.bop_skip_handling.code }}</span><small>special handling</small></div>
+          <h3>{{ graph.bop_skip_handling.meaning }}</h3>
+          <p class="ecg-question">{{ graph.bop_skip_handling.lead_question }}</p>
+        </header>
+      </article>
+    </div>
+
+    <div class="ecg-case">
+      <div class="ecg-case__intro">
+        <p class="research-canvas__eyebrow">Memory model</p>
+        <h3>Think in business promises, not strategy names.</h3>
+      </div>
+      <div class="ecg-case__body">
+        <ul>
+          <li><strong>Win:</strong> must reach the target.</li>
+          <li><strong>Gain:</strong> must not become worse.</li>
+          <li><strong>Improve:</strong> try to improve, but worsening is allowed.</li>
+          <li><strong>Redistribute:</strong> better, equal, or worse is allowed.</li>
+          <li><strong>Fill:</strong> cannot improve; may become worse.</li>
+          <li><strong>Lose:</strong> remove the confirmation.</li>
+          <li><strong>Skip:</strong> keep the current confirmation and do not recheck it.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
