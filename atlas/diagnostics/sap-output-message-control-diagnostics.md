@@ -70,7 +70,7 @@ sitemap: false
     <p>For the modern framework, trace the layers in this order: <strong>framework → output type → receiver → channel → output relevance → form → technical processing</strong>. Use the dedicated <a href="/atlas/sap/output-control/">SAP S/4HANA Output Control guide</a> for configuration and decision-table logic.</p>
 
     <h2>Core idea</h2>
-    <p>Output determination controls how SAP documents communicate with external systems and users — via print, email, fax, EDI, or IDoc. When an expected output is missing, sent to the wrong address, or fails with a processing error, the support goal is to identify whether the issue is in the condition technique, output type, partner function, medium, or processing program.</p>
+    <p>An output incident can fail in three different places: <strong>determination</strong> (what should be produced and for whom), <strong>business relevance</strong> (whether the document is allowed to issue the output), or <strong>technical processing</strong> (rendering and delivery through print, email, or integration). The exact configuration objects depend on the active output framework.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -83,55 +83,60 @@ sitemap: false
 
     <h2>Likely causes</h2>
     <ul>
-      <li><strong>Condition not met:</strong> the output condition record does not match the document characteristics (partner, document type, sales area).</li>
-      <li><strong>Output type disabled:</strong> the output type is not active for the document type or has been deactivated.</li>
-      <li><strong>Wrong partner function:</strong> the output is determined for a partner function that is missing or has wrong address data.</li>
-      <li><strong>Processing program error:</strong> the program or form assigned to the output type fails during execution.</li>
-      <li><strong>Communication method issue:</strong> the email server, fax gateway, or printer is unreachable or misconfigured.</li>
+      <li><strong>Wrong framework assumption:</strong> the consultant checks NAST while the document uses S/4HANA Output Control, or checks BRFplus while the document uses classic output determination.</li>
+      <li><strong>Determination rule not matched:</strong> document attributes do not satisfy the expected classic condition record or modern decision-table rule.</li>
+      <li><strong>Wrong receiver or channel:</strong> partner data, rule order, or non-exclusive rules produce an unexpected target or multiple outputs.</li>
+      <li><strong>Output not relevant:</strong> in S/4HANA Output Control, business status checks can keep an output item in preparation.</li>
+      <li><strong>Form or rendering error:</strong> the selected template, data source, form logic, or Adobe rendering fails.</li>
+      <li><strong>Communication issue:</strong> spool, mail, EDI/SOA, or another channel fails after determination was already correct.</li>
     </ul>
 
     <h2>Where to check in SAP</h2>
+    <h3>SAP S/4HANA Output Control</h3>
     <ul>
-      <li>NACE — condition technique for output determination.</li>
-      <li>VV33 / VV23 — output condition records for sales / purchasing.</li>
-      <li>SP01 / SOST — spool and send requests.</li>
-      <li>SOST — email send status and error details.</li>
-      <li>WE02 — IDoc output status if the output medium is IDoc.</li>
+      <li>Check the output items and determined parameters in the business document or relevant output UI.</li>
+      <li>Use <strong>Output Parameter Determination</strong> to inspect and simulate the relevant decision step.</li>
+      <li>Check Output Relevance before treating a prepared item as a technical send failure.</li>
+      <li>Then move to the selected channel: spool/print, mail transmission, EDI/SOA, or form rendering.</li>
     </ul>
 
-    <h2>Key tables / transactions / objects</h2>
+    <h3>Classic output determination</h3>
     <ul>
-      <li><strong>NAST</strong> — output messages.</li>
-      <li><strong>TNAPR</strong> — output programs and forms.</li>
-      <li><strong>TVARVC</strong> — variant variables (if used in output programs).</li>
-      <li><strong>SOOD / SOFM</strong> — SAPoffice documents and send requests.</li>
+      <li>NACE and application-specific output Customizing — condition-technique design.</li>
+      <li>Application-specific condition records — verify the key that should determine the message.</li>
+      <li>NAST — message existence, processing status, timing, and error context.</li>
+      <li>SP01 / SOST — print and email processing where applicable.</li>
+      <li>WE02 / WE05 — IDoc processing when classic message output creates an IDoc.</li>
     </ul>
+
+    <h2>Key objects</h2>
+    <p>Do not expect one shared runtime table for both frameworks. In the classic branch, <strong>NAST</strong> is a key message-control object and <strong>TNAPR</strong> links output types to processing programs/forms. In S/4HANA Output Control, diagnose the output item and its determined parameters instead of treating a missing NAST record as proof of failure.</p>
 
     <h2>Diagnostic workflow</h2>
     <ol>
-      <li>Identify the document number, output type, and the expected output medium.</li>
-      <li>Check the document output screen (e.g., VF03 for billing, ME23N for PO) to see if the output was determined.</li>
-      <li>If not determined, check the condition technique (NACE) and condition records (VV33/VV23).</li>
-      <li>If determined but not processed, check NAST for status and error text.</li>
-      <li>For email, check SOST for send status and recipient address.</li>
-      <li>For print, check SP01 for spool requests and printer status.</li>
-      <li>For IDoc, check WE02 for generated IDoc and its status.</li>
+      <li>Identify the business document, expected output type, receiver, channel, and timing.</li>
+      <li>Prove which output framework owns this document.</li>
+      <li>If it uses S/4HANA Output Control, compare the actual output item with the expected decision-table results: output type → receiver → channel → relevance → form.</li>
+      <li>If it uses classic output determination, prove message determination through the relevant condition technique and message record.</li>
+      <li>Only after determination is correct, move to technical processing: rendering, spool, mail, EDI/IDoc/SOA, or another supported channel.</li>
+      <li>Prove final delivery and record whether the failure affected one document, one partner, one rule, or the whole channel.</li>
     </ol>
 
     <h2>Typical fixes or next actions</h2>
     <ul>
-      <li>Create or update the output condition record to match the document characteristics.</li>
-      <li>Activate the output type if it was disabled.</li>
-      <li>Correct the partner function or address data if the output is sent to the wrong recipient.</li>
-      <li>Fix the processing program or form if it fails during execution.</li>
-      <li>Resolve communication method issues (email server, printer, fax gateway) with the infrastructure team.</li>
+      <li>Correct the matching rule: classic condition record or S/4HANA decision-table condition.</li>
+      <li>Correct receiver/partner or address data when determination points to the wrong party.</li>
+      <li>Fix rule order or the Exclusive setting when several modern rules match unexpectedly.</li>
+      <li>Correct Output Relevance when a valid output item is blocked by the wrong status logic.</li>
+      <li>Fix the selected form/template or rendering logic when determination is correct but the document is wrong.</li>
+      <li>Resolve channel infrastructure only after the functional parameters are proven.</li>
     </ul>
 
     <h2>Support takeaway</h2>
-    <p>Output issues are usually condition technique or communication method problems. A useful ticket should include: document number, output type, expected medium, actual result, NAST status, error text, and whether the issue is isolated or recurring.</p>
+    <p>A useful output ticket should include the document number, active output framework, expected output type, expected receiver/channel, actual output-item or message status, error text, and whether the issue is isolated or recurring. This prevents a classic NAST incident and a modern Output Control incident from being investigated with the same checklist.</p>
 
-    <h2>Purchase order output troubleshooting</h2>
-    <p>PO output issues are a common support ticket in procurement. When a supplier reports they did not receive a purchase order, the support goal is to trace the output from creation through processing to delivery.</p>
+    <h2>Purchase order output troubleshooting: classic branch example</h2>
+    <p>The checklist below is specifically for a purchasing scenario that uses classic NAST-based message determination. Do not apply it to a purchase order that uses SAP S/4HANA Output Management. When a supplier reports they did not receive a purchase order, first prove the active framework, then trace output from determination through processing to delivery.</p>
     <ul>
       <li><strong>Check output determination (NACE):</strong> verify that the output type for purchase orders is active for the document type and purchasing organization.</li>
       <li><strong>Check condition records (VV23):</strong> confirm that an output condition record exists for the supplier, document type, and output medium (print, email, EDI, Business Network).</li>
@@ -144,7 +149,7 @@ sitemap: false
     <p>A useful PO output ticket should include: PO number, output type, expected medium, supplier number, NAST status, error text if any, and whether the issue affects one supplier or multiple suppliers.</p>
 
     <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame, not an output determination configuration guide. It does not cover Smart Forms, Adobe Forms, or condition technique design. It does not replace SAP's output management documentation.</p>
+    <p>This page is a diagnostic frame, not a complete configuration guide. The detailed S/4HANA decision-table model, channel assignment, callback-class boundary, form selection, and technical prerequisites are explained in the <a href="/atlas/sap/output-control/">Output Control guide</a>. Classic condition-technique design remains a separate branch.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
 
