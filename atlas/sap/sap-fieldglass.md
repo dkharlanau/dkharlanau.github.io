@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Fieldglass"
-description: "SAP's external workforce management platform — contingent workers, consultants, and service procurement."
+description: "SAP Fieldglass explained: contingent workforce, statements of work, worker profiles, and the integration boundary with procurement and ERP."
 permalink: /atlas/sap/sap-fieldglass/
 atlas_section: sap
 domain: SAP operations
@@ -12,7 +12,7 @@ business_process: "External workforce management"
 status: needs_verification
 verified: false
 last_synced: 2026-07-14
-last_reviewed: 2026-07-14
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Product</p>
     <h1>SAP Fieldglass</h1>
-    <p class="note-subtitle">SAP's external workforce management platform — contingent workers, consultants, and service procurement.</p>
+    <p class="note-subtitle">Cloud applications for contingent workers, external services, and visibility over nonpayroll workers.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,89 +54,44 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>SAP Fieldglass is a cloud platform for managing the non-employee workforce — contractors, freelancers, consultants, and outsourced service providers. It covers the full lifecycle: requisition and hiring, onboarding, time and expense tracking, invoicing, and compliance. It is the system of record for who the external workers are and what they are delivering.</p>
+    <p>SAP Fieldglass is SAP's vendor-management portfolio for external labor and services. The important distinction is between <strong>contingent workforce management</strong>, where an individual worker is engaged for an assignment, and <strong>services procurement</strong>, where a supplier delivers work under a statement of work. SAP Fieldglass Worker Profile Management adds another use case: tracking nonpayroll workers who may not have entered through either sourcing flow.</p>
 
-    <h2>Business purpose</h2>
-    <p>Bring visibility and control to external labor spend, which is often the least-governed part of the workforce. The value is a single place to source, track, and pay contingent workers while enforcing rate, tenure, and compliance rules.</p>
+    <h2>Contingent labor follows a worker assignment</h2>
+    <p>A standard contingent process can begin with a job posting and candidates or job seekers. After selection, a work order describes the commercial and operational terms of the assignment. SAP's current Fieldglass documentation shows that a work order can carry start and end dates, worker settings, time-sheet rules, rates, cost allocation, and a purchase-order reference, depending on company configuration.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Fieldglass bridges HCM and procurement. It connects to SuccessFactors for worker and organizational data and to Ariba and S/4HANA for purchase orders and invoicing. Worker spend ultimately posts into finance, so the financial and HR views of the same person must reconcile.</p>
+    <p>Once the assignment is active, the worker can record time or expenses when those processes are enabled. Approved quantities and rates can then contribute to invoicing. The useful model is therefore not simply “worker → invoice.” The job posting, work order, worker record, time or expense evidence, and invoice each answer a different question about demand, authorization, execution, and payment.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Worker profiles and assignment details.</li>
-      <li>Time sheets and expense submissions.</li>
-      <li>Rate cards and job postings.</li>
-      <li>Service entry sheets for statement-of-work services.</li>
-      <li>Compliance documents — certifications, insurance, right-to-work.</li>
-    </ul>
+    <h2>Services procurement starts from a statement of work</h2>
+    <p>A statement of work (SOW) is a buyer-supplier agreement for services. SAP describes SOWs as suitable for larger or ongoing work outside the scope of one job posting. Multiple workers can be associated with an SOW, and payment can be driven by time sheets, events, fees, schedules, or milestones according to the configured commercial model.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA — purchase order and invoice processing.</li>
-      <li>SAP SuccessFactors — worker and organizational data.</li>
-      <li>SAP Ariba — services procurement and supplier management.</li>
-      <li>Identity providers and background check services.</li>
-    </ul>
+    <p>This is a different operating model from hiring one contingent worker. The SOW defines the service commitment and its invoicing rules; the evidence of delivery may be time, a completed event, a fee, or another approved service record. In integrated procurement scenarios, that evidence can be converted or mapped into ERP procurement documents such as service entry sheets, but the exact document path depends on the integration scenario.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Configuration — workflows, approval rules, rate structures, compliance checks.</li>
-      <li>Integration framework — connectors to ERP, HR, and identity systems.</li>
-      <li>Custom fields and forms — capture company-specific worker data.</li>
-      <li>Reporting and analytics — spend and workforce dashboards.</li>
-    </ul>
+    <h2>Worker Profile Management solves a visibility problem</h2>
+    <p>Not every external worker is sourced through a job posting or an SOW. SAP Fieldglass Worker Profile Management is designed to maintain standardized records for nonpayroll workers, including people who sit outside the normal vendor-management workflow. SAP positions it around visibility, onboarding and offboarding, access, certifications, and compliance.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Time sheet approval queues — aging and rejected submissions.</li>
-      <li>Invoice matching errors — Fieldglass vs. S/4HANA discrepancies.</li>
-      <li>Compliance document expiry alerts — lapsed certifications.</li>
-      <li>Integration sync logs — worker and financial data replication status.</li>
-    </ul>
+    <p>This matters when discussing “the Fieldglass worker.” A worker profile can be used for workforce visibility, while a work order represents a contingent assignment and an SOW represents a service agreement. Treating those objects as interchangeable makes integrations and reporting harder to reason about.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Purpose-built for contingent workforce, not a repurposed HR tool.</li>
-      <li>Strong rate, tenure, and compliance controls.</li>
-      <li>Clean bridge between procurement and HR views of external labor.</li>
-      <li>Good statement-of-work and milestone billing support.</li>
-    </ul>
+    <h2>ERP integration is a document contract, not a generic sync</h2>
+    <p>SAP provides Fieldglass integration with SAP ERP and SAP S/4HANA for supported editions and processes. Current SAP material describes exchanges that can include master data, purchase requisitions and purchase orders, time sheets, service entry sheets, invoices, and other procurement objects. Which documents actually move depends on whether the customer is running contingent workforce management, services procurement, or another supported integration scenario.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Time sheet and approval friction drives user workarounds.</li>
-      <li>Invoice matching to S/4HANA is sensitive to PO and rate drift.</li>
-      <li>Compliance tracking depends on disciplined document upkeep.</li>
-      <li>Integration setup across HR, procurement, and finance is multi-team.</li>
-    </ul>
+    <p>Some current services-procurement scenarios also involve SAP Business Network and SAP Integration Suite, managed gateway for spend management and SAP Business Network. For example, SAP documents a 4R2 flow in which service documents move between S/4HANA Cloud, SAP Fieldglass, and SAP Business Network. That path should not be assumed for every Fieldglass implementation.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Time sheet rejection loops between worker, manager, and system rules.</li>
-      <li>Invoice mismatches between Fieldglass and S/4HANA.</li>
-      <li>Worker onboarding workflow failures.</li>
-      <li>Compliance document expiry without renewal, blocking assignments.</li>
-    </ul>
+    <h2>Start support from the business object</h2>
+    <p>When an external-workforce process fails, the first question is which business model is in use. For contingent labor, we trace the job posting, work order, worker, submitted time or expense, approval, and invoice. For services procurement, we trace the SOW, its line items or events, the proof of service, invoicing state, and any ERP or Business Network document created from it.</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/sap/sap-product-portfolio/">SAP Product Portfolio</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-ariba/">SAP Ariba</a></li>
-      <li><a href="/atlas/sap/sap-successfactors/">SAP SuccessFactors</a></li>
-    </ul>
+    <p>This avoids vague “Fieldglass integration” diagnosis. A missing worker, an incorrect rate, an unapproved time sheet, a service-entry mismatch, and an ERP invoice failure belong to different stages and often to different owners.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP Fieldglass product documentation — SAP Help Portal (help.sap.com), public-safe topic discovery only.</li>
+      <li>SAP — <a href="https://www.sap.com/products/spend-management/services-procurement.html">SAP Fieldglass Services Procurement</a>.</li>
+      <li>SAP — <a href="https://www.sap.com/products/spend-management/worker-profile-management.html">SAP Fieldglass Worker Profile Management</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_Fieldglass/3b75472dc6104b0e8224345605250b54/3b4b67af57ee4f2e82949e1256fa735a.html">Work Order Field Definitions</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_Fieldglass/83ee364ad6f849fc82ad6e5dd1bef38a/28598019c7e644a2aa0bd1e04166ab81.html">Statements of Work</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/sisgw/sap-ariba-cloud-integration-gateway-overview-guide/service-procurement-with-ariba-network-and-sap-fieldglass-4r2">Service Procurement with SAP Business Network and SAP Fieldglass (4R2)</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Specific module scope, integration options, and compliance feature coverage must be verified against SAP's current product documentation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>SAP Fieldglass editions, workflow configuration, connectors, document mappings, and S/4HANA integration patterns vary by customer and release. Verify the subscribed Fieldglass solution and the exact integration scenario before treating these object relationships as a system-specific design.</p>
   </div>
 
   <section class="atlas-related">
@@ -145,6 +100,7 @@ sitemap: false
       <li><a href="/atlas/sap/sap-product-portfolio/">SAP Product Portfolio</a></li>
       <li><a href="/atlas/sap/sap-ariba/">SAP Ariba</a></li>
       <li><a href="/atlas/sap/sap-successfactors/">SAP SuccessFactors</a></li>
+      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
     </ul>
   </section>
 
