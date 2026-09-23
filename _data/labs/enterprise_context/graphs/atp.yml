@@ -197,6 +197,43 @@ location_check_model:
   - SRC-SAP-AATP-CHECK-DETAIL-LEARNING
   - SRC-SAP-AATP-ABC-CURRENT
 
+cumulative_atp_guardrails:
+  title: "Do not use stock as a substitute for cumulative ATP"
+  principle: >-
+    Availability is a promise calculation over time. A stock app can show physical or
+    book stock and still miss whether that quantity has already been consumed by earlier
+    requirements. The decisive number for a new ATP statement is cumulative ATP.
+  consumption_logic:
+    - "A confirmed requirement reduces cumulative ATP available to later competing requirements."
+    - "Requirements consume the nearest eligible stock or receipt when looking backward from the requirement date."
+    - "After the sales order is saved, the reduced ATP situation becomes relevant for the next requirement."
+    - "Without additional prioritization logic, this naturally behaves like first come, first served."
+  monitoring:
+    use:
+      - "Availability Overview when you need to inspect cumulative ATP."
+    do_not_use_as_atp_proof:
+      - "Stock: Single Material"
+      - "Monitor Stock/Requirements List"
+      - "Check Material Coverage"
+    reason: >-
+      These views are useful for inventory or planning context, but they do not by
+      themselves prove the cumulative ATP quantity available to a new requirement.
+  shortage_check:
+    problem: >-
+      Existing confirmations can become unsupported when a receipt that originally covered
+      them is postponed or reduced. The sales order does not automatically lose its old
+      confirmation only because the receipt changed.
+    control: >-
+      The checking group can activate a shortage check so that cumulative requirements or
+      confirmed quantities are considered when a new or changed requirement is checked.
+    lead_lens: >-
+      A shortage check helps prevent overconfirmation, but its exact variant changes which
+      requirement quantities are accumulated. Read the configured checking-group behavior
+      before explaining a result.
+  source_refs:
+  - SRC-SAP-ATP-LEARNING-FOUNDATION
+  - SRC-SAP-AATP-CHECK-DETAIL-LEARNING
+
 scheduling_confirmation_model:
   title: "Which date does ATP actually check?"
   backward:
