@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - atp
   - logistics
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-01"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP sales order processing with item category and schedule line determination"
@@ -79,6 +79,16 @@ source_links:
     url: "https://help.sap.com/docs/s4hana-best-practices/setting-up-sell-from-stock-bd9-e9718dcb7c964bb736ee48ffe4a2c207/set-pricing-procedure-determination"
   - title: "Product Availability Check (CA-ATP-PAC)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/86990a56d448792de10000000a44538d.html"
+  - title: "Getting Started with Text Control"
+    url: "https://learning.sap.com/courses/setting-up-text-control-in-sap-s-4hana-sales/getting-started-with-text-control_ad3393c4-2569-44e0-81ba-3a603d272903"
+  - title: "Customizing Manual Text Entry"
+    url: "https://learning.sap.com/courses/setting-up-text-control-in-sap-s-4hana-sales/customizing-manual-text-entry_c4a52369-7079-4376-8342-d2dac745d545"
+  - title: "Customizing Automatic Text Transfer"
+    url: "https://learning.sap.com/courses/setting-up-text-control-in-sap-s-4hana-sales/customizing-automatic-text-transfer_d7c10739-6c61-403b-8f86-d9d24bfb6730"
+  - title: "Configuring Special Features of Text Control"
+    url: "https://learning.sap.com/courses/setting-up-text-control-in-sap-s-4hana-sales/configuring-special-features-of-text-control_b12fb939-7803-4033-9c75-875fba49f3eb"
+  - title: "Analyzing Text Sources"
+    url: "https://learning.sap.com/courses/setting-up-text-control-in-sap-s-4hana-sales/analyzing-text-sources_f5fa3309-d7ce-42b7-83be-f9a5bd83784e"
 # ai-discovery-managed:end
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.sales_order %}
@@ -279,6 +289,165 @@ source_links:
     <p class="ecg-caption">These rails show reasoning dependencies. They intentionally hide technical branches that are not needed to understand the core idea.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="text-determination" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Text control</p>
+      <h2>Automatic text transfer is a search strategy.</h2>
+      <p>Texts in Sales are not only free-form notes. SAP can propose them from master data, a reference document, a material, a customer-material record, or another permitted source. The useful model is: <strong>context → text procedure → text ID → access sequence → first valid source → text in the document</strong>.</p>
+    </header>
+
+    <div class="ecg-rail" aria-label="Automatic text determination flow">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Document Type / Item Category</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Text Procedure</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Text ID</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Access Sequence</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">First Valid Source</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Document Text</span>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Text object</h3>
+        <p>A text object tells us where a text belongs. For sales documents, <strong>VBBK</strong> is the header text object and <strong>VBBP</strong> is the item text object.</p>
+        <p>Customer, material, customer-material, delivery, billing, and standard texts are other possible source objects.</p>
+      </div>
+      <div>
+        <h3>Text ID</h3>
+        <p>The text ID is the business meaning of a text inside an object: an internal note, packing instruction, form header, shipping note, or another controlled text.</p>
+        <p>The technical ID has four characters. Different IDs can have different transfer, output, display, and completeness behavior.</p>
+      </div>
+      <div>
+        <h3>Text procedure</h3>
+        <p>The procedure is the set of text IDs available in a context. Header procedures are assigned through the relevant document type. Sales-document item procedures are assigned through the item category.</p>
+        <p>So the same customer and material can show different text IDs in two document types or item categories.</p>
+      </div>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h3>How the access sequence works</h3>
+        <p>An access sequence is an ordered list of possible sources. Each access says which text object and source text ID to read. It can also use language, partner, reference-document, or other requirements.</p>
+        <p><strong>The accesses are exclusive.</strong> As soon as one access finds a valid text, SAP transfers it and does not execute the later accesses.</p>
+      </div>
+      <div>
+        <h3>A practical fallback example</h3>
+        <ol>
+          <li>Try the same text from the directly preceding document.</li>
+          <li>If nothing is found, try a customer sales-area text.</li>
+          <li>If that also fails, try a customer central text.</li>
+          <li>If no configured source returns a valid text, the target text stays empty until another rule or a user supplies it.</li>
+        </ol>
+      </div>
+    </div>
+
+    <p class="ecg-caption">Think of the access sequence as a controlled fallback chain, not as concatenation. If the requirement is to combine several sources into one text, that is a separate design problem.</p>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Duplicate</h3>
+        <p>The transferred text is stored as its own database record. Source and target are independent after transfer. Changing the source later does not change the existing document text, and changing the document text does not change the source.</p>
+        <p>Use duplication when the document needs a stable historical snapshot.</p>
+      </div>
+      <div>
+        <h3>Reference</h3>
+        <p>The document initially points to the source text. If the source changes, the referenced text changes too because there is still only one text instance.</p>
+        <p>If a user edits the referenced text in the document, SAP automatically creates a duplicate. From that moment, source and document are independent.</p>
+      </div>
+      <div>
+        <h3>Design question</h3>
+        <p>Ask what the text represents. A negotiated instruction that must remain exactly as agreed usually behaves differently from a centrally maintained operational note that should stay current until somebody intentionally changes it.</p>
+        <p>This is a business-history decision, not only a storage setting.</p>
+      </div>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h3>One field controls two behaviors</h3>
+        <p>The <strong>Text is mandatory or should be displayed</strong> setting has two different effects.</p>
+        <ol>
+          <li><strong>Display during transfer:</strong> SAP can show the transferred text in a dialog during sales-document processing so the user can review or edit it.</li>
+          <li><strong>Mandatory for completeness:</strong> if no text is transferred or entered, the document is incomplete.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Mandatory text and incompleteness</h3>
+        <p>For the classic/private configuration model, SAP documents hard-coded text incompleteness procedures <strong>50</strong> and <strong>51</strong>. Their field settings are maintained through view <strong>V_TVUVF</strong> with transaction <strong>SM31</strong>.</p>
+        <p>SAP Note <strong>385982 — Incompleteness of texts Customizing</strong> is the reference mentioned by SAP for this special area.</p>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Direct predecessor means direct</h3>
+        <p>For accesses to <strong>VBBK</strong> or <strong>VBBP</strong>, SAP normally reads the directly preceding document.</p>
+        <p>Inquiry → Quotation → Order means the order reads the quotation. It does not skip the quotation and read the inquiry directly. The text has to survive each step if it is required later.</p>
+      </div>
+      <div>
+        <h3>Billing can choose a different source</h3>
+        <p>In delivery-related billing, the direct predecessor is the delivery. Billing configuration can still choose whether VBBK/VBBP texts come from that delivery or from the underlying sales order.</p>
+        <p>The choice is made at billing-type level and applies to the relevant billing texts.</p>
+      </div>
+      <div>
+        <h3>Generate changed accesses</h3>
+        <p>In transaction <strong>VOTXN</strong>, after creating or changing an access sequence, generate the accesses after saving with <strong>Texts → Generate access</strong>.</p>
+        <p>If configuration looks correct but runtime behavior does not follow it, this is one of the first technical checks worth making.</p>
+      </div>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h3>When standard access logic is not enough</h3>
+        <p>In classic/private/on-premise-style configuration, transaction <strong>VOFM</strong> can be used to create a data transfer routine for texts. The routine is assigned to an access and can add ABAP logic that decides which text should be procured.</p>
+        <p>The customer namespace for these routines is <strong>50–99</strong>. SAP also provides sample routines <strong>1</strong> and <strong>2</strong> to show the available structures.</p>
+      </div>
+      <div>
+        <h3>Example: dynamic standard text by material</h3>
+        <p>A custom routine can build a standard-text name from the current material, then let the access read text object <strong>TEXT</strong>. SAP's training example uses a pattern such as <strong>ZMAT:&lt;material&gt;</strong> and standard texts maintained in <strong>SO10</strong>.</p>
+        <p>This is useful for a real dynamic rule, but normal text objects, partner/language rules, and standard access requirements should be preferred when they already express the requirement.</p>
+      </div>
+    </div>
+
+    <div class="ecg-priority">
+      <strong>Fast diagnostic path</strong>
+      <span>1. Open the header or item text and choose <strong>Display log</strong>.</span>
+      <span>2. Confirm the actual text procedure and target text ID.</span>
+      <span>3. Read the access sequence from top to bottom and identify the first access that should succeed.</span>
+      <span>4. Check source object, source text ID, language, partner role, and direct predecessor.</span>
+      <span>5. Only then check duplicate/reference, mandatory/display, generated accesses, or a VOFM routine.</span>
+    </div>
+
+    <p class="ecg-lead-lens"><strong>Lead lens:</strong> text determination is a small rule engine. When the wrong text appears, find the first successful access. When no text appears, find the first access that should have succeeded and prove why it did not. This is much faster than starting with Customizing tables.</p>
+
+    <div class="ecg-drill-list">
+      <details>
+        <summary><span>01</span><strong>Customer text exists, but the order is empty</strong><small>Where do we start?</small></summary>
+        <div><p>Use the determination log first. Then check the target text ID, procedure assignment, access sequence, source text ID, partner, and language. If the access sequence was changed in classic configuration, confirm that it was generated.</p></div>
+      </details>
+      <details>
+        <summary><span>02</span><strong>Reference or duplicate?</strong><small>What is the practical difference?</small></summary>
+        <div><p>Duplicate creates an independent document copy. Reference keeps the document linked to the source until the document text is edited; that edit creates a duplicate and breaks the live dependency.</p></div>
+      </details>
+      <details>
+        <summary><span>03</span><strong>Why did the order copy the quotation text, not the inquiry text?</strong><small>The inquiry had the original note.</small></summary>
+        <div><p>VBBK/VBBP access reads the direct predecessor. In an Inquiry → Quotation → Order chain, the order sees the quotation. The quotation must first receive the inquiry text if the information should continue to the order.</p></div>
+      </details>
+      <details>
+        <summary><span>04</span><strong>When should we use VOFM?</strong><small>Can every requirement become a routine?</small></summary>
+        <div><p>Use a routine when the standard source objects, sequence, partner/language rules, and access requirements cannot express the rule clearly. A routine adds code, ownership, testing, and upgrade risk, so it should solve a real gap rather than replace normal configuration.</p></div>
+      </details>
+    </div>
+
+    <p class="ecg-caption"><strong>Scope:</strong> the transaction-based examples VOTXN, VOFM, SM31, and SO10 follow the SAP S/4HANA Cloud Private Edition / classic configuration model used by the cited SAP learning content. Deployment-specific configuration surfaces can differ.</p>
+  </section>
+
   <section class="ecg-anatomy" data-reveal>
     <div>
       <p class="research-canvas__eyebrow">Decision anatomy</p>
@@ -298,7 +467,7 @@ source_links:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Decision catalogue</p>
-      <h2>Eleven decisions worth tracing.</h2>
+      <h2>Twelve decisions worth tracing.</h2>
       <p>Open each card as a small diagnostic machine. The goal is not to remember every field. The goal is to remember the dependency shape.</p>
     </header>
 

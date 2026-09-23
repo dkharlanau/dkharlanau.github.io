@@ -10,7 +10,7 @@ process_family: "Order-to-Cash"
 process_step: "Create Sales Order"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-09-23"
 verified_at: null
 
 thesis: >-
@@ -22,6 +22,7 @@ model_boundary:
   release_scope:
     - "SAP S/4HANA 2025 FPS01 where cited"
     - "SAP S/4HANA best-practice configuration where cited"
+    - "SAP S/4HANA Cloud Private Edition text-control behavior where cited"
   note: >-
     This is a learning and reasoning model. The exact runtime path depends on edition,
     activated scope, configuration, master data, enhancements, and customer design.
@@ -229,6 +230,53 @@ determinations:
     source_refs:
       - SRC-SAP-SD-PARTNER-DETERMINATION
       - SRC-SAP-SD-MASTER-DATA
+
+
+  - id: DET-SD-TEXT-DETERMINATION
+    title: "Text Determination and Automatic Transfer"
+    memory_key: "TEXT"
+    level: header_and_item
+    question: "Which text should appear automatically, where should SAP search for it, and should it be referenced or duplicated?"
+    mechanism: access_sequence
+    inputs:
+      - "target text object and text ID"
+      - "text determination procedure assigned to the actual document type or item category"
+      - "access sequence assigned to the target text ID"
+      - "ordered source text objects and source text IDs"
+      - "partner function, language, reference-document context, and access requirements"
+      - "optional VOFM data transfer routine in classic/private/on-premise-style configuration"
+    output:
+      - "proposed or transferred text"
+      - "reference or duplicate relationship to the source text"
+      - "possible incompleteness status when the text is mandatory"
+    downstream_effects:
+      - "instructions shown to the document processor"
+      - "text available for output processing"
+      - "text available to follow-on document transfer"
+      - "document completeness when the text is mandatory"
+    common_failures:
+      - "the target text ID is not part of the procedure assigned to the actual document context"
+      - "an earlier access finds a valid but unexpected source, so later accesses are not executed"
+      - "the source text exists under the wrong language, partner, text ID, or text object"
+      - "VBBK or VBBP reads the direct predecessor, not an older document in the chain"
+      - "an access sequence was changed but its accesses were not generated"
+      - "a custom data transfer routine returns no text or selects a different text than expected"
+    check_first:
+      - "Open the text determination log for the actual header or item text and read the runtime search path."
+      - "Confirm which text procedure is assigned to the document type or item category and that the target text ID is present."
+      - "Read the access sequence in order because the first valid hit ends the search."
+      - "Verify the source object's text ID, language, partner role, and direct predecessor context."
+      - "Then check duplicate/reference behavior, mandatory/display settings, and any custom transfer routine."
+    remember: "Procedure says which text IDs exist; access sequence says where to look; the first valid access wins."
+    lead_lens: >-
+      Text control is a small determination engine. Separate source selection, copy semantics,
+      incompleteness, and custom ABAP logic instead of treating every missing note as master-data maintenance.
+    source_refs:
+      - SRC-SAP-SD-TEXT-CONTROL-BASICS
+      - SRC-SAP-SD-TEXT-MANUAL-CONFIG
+      - SRC-SAP-SD-TEXT-AUTO-TRANSFER
+      - SRC-SAP-SD-TEXT-SPECIAL-FEATURES
+      - SRC-SAP-SD-TEXT-ANALYSIS
 
   - id: DET-SD-ITEM-CATEGORY
     title: "Item Category Determination"
@@ -733,6 +781,21 @@ impact_traces:
     lesson: "Separate commercial risk control from logistics correctness."
     caveat: "The exact check set depends on credit-management configuration."
 
+
+  - id: TRACE-SD-MISSING-TEXT
+    title: "Why was an expected text not transferred?"
+    direction: backward
+    path:
+      - "Missing / Unexpected Text"
+      - "Text Determination Log"
+      - "Target Text ID + Procedure Assignment"
+      - "Access Sequence"
+      - "First Intended Access"
+      - "Source Object / Text ID / Language / Partner"
+      - "Reference Document / Requirement / Transfer Routine"
+    lesson: "Treat automatic text transfer as an ordered runtime search. Find the first access that should have succeeded and prove why it did not."
+    caveat: "The VOTXN, VOFM, SM31, and SO10 examples are classic/private/on-premise-style configuration patterns; deployment-specific configuration surfaces can differ."
+
 expert_heuristics:
   - id: HEUR-SD-FIRST-WRONG-DECISION
     context: "Troubleshooting a wrong sales-order result"
@@ -862,6 +925,18 @@ assessment_drills:
       - "check mapping/default suppression"
       - "separate integration values from S/4 determination"
 
+  - id: DRILL-SD-06
+    title: "Customer text exists, order text is empty"
+    prompt: "A required customer instruction exists in master data, but the sales-order text is empty. How do you investigate?"
+    expected_reasoning:
+      - "open the text determination log"
+      - "confirm target text ID and procedure assignment"
+      - "read the access sequence in order"
+      - "check source object, source text ID, partner function, and language"
+      - "check direct predecessor and access requirements"
+      - "check generated accesses and any VOFM transfer routine in classic configuration"
+      - "check mandatory/display and duplicate/reference behavior only after source determination is understood"
+
 source_refs:
   - SRC-SAP-SD-DOCUMENT-CONTROL
   - SRC-SAP-SD-MASTER-DATA
@@ -878,3 +953,8 @@ source_refs:
   - SRC-SAP-AATP-ALTERNATIVE-CONFIRMATION
   - SRC-SAP-SD-CREDIT-CHECK
   - SRC-SAP-BATCH-SEARCH-STRATEGY
+  - SRC-SAP-SD-TEXT-CONTROL-BASICS
+  - SRC-SAP-SD-TEXT-MANUAL-CONFIG
+  - SRC-SAP-SD-TEXT-AUTO-TRANSFER
+  - SRC-SAP-SD-TEXT-SPECIAL-FEATURES
+  - SRC-SAP-SD-TEXT-ANALYSIS
