@@ -35,7 +35,7 @@ tags:
   </ol>
 </nav>
 
-<div class="research-canvas sales-master-data">
+<div class="research-canvas sales-master-data context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Sales / data layer / {{ md.index.version }}</p>
@@ -59,6 +59,29 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
     <p><strong>Boundary rule.</strong> Do not call everything master data. A customer is business master data. A price record is condition master data. A customer-material record is a relationship. Sales Organization is organizational context. A pricing procedure is configuration. A Sales Order is runtime data.</p>
     <a href="/labs/enterprise-context/data/sales-master-data.json">Open JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-data-coverage" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Coverage audit / Core Sales data</p>
+      <h2>The core is covered. Keep the boundaries explicit.</h2>
+      <p>{{ md.index.coverage_audit.conclusion }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Core Sales data</h3>
+        <ul>{% for item in md.index.coverage_audit.core_covered %}<li>{{ item }}</li>{% endfor %}</ul>
+      </div>
+      <div>
+        <h3>Adjacent data Sales consumes</h3>
+        <ul>{% for item in md.index.coverage_audit.adjacent_covered %}<li>{{ item }}</li>{% endfor %}</ul>
+      </div>
+      <div>
+        <h3>Not another master object</h3>
+        <ul>{% for item in md.index.coverage_audit.intentional_boundaries %}<li>{{ item }}</li>{% endfor %}</ul>
+      </div>
+    </div>
+    <p class="ecg-caption"><strong>Assessment rule:</strong> when asked about “Sales master data”, start with BP/customer, product, customer-material and conditions, then add partner/address/hierarchy/text/reusable proposal data. Keep organizational structure, configuration, and runtime documents in separate layers.</p>
   </section>
 
   <section class="research-canvas__inventory" id="organizational-context" data-reveal>
