@@ -116,6 +116,170 @@ classic_control_foundation:
       source_refs:
         - SRC-SAP-AATP-SCOPE
 
+atp_relevance_controls:
+  title: "What decides whether ATP is relevant?"
+  principle: >-
+    ATP relevance is not controlled by one switch. Several sales, requirements, and
+    planning objects can influence whether a requirement enters the availability logic
+    and which planning behavior surrounds it.
+  groups:
+  - title: "Sales and requirements control"
+    explanation: >-
+      These objects decide whether the sales or delivery requirement participates in
+      availability and requirements logic.
+    objects:
+    - name: "Requirements Class"
+      role: "Defines requirement and planning behavior used by sales and MRP."
+    - name: "Requirements Type"
+      role: "Connects the material/planning context to the applicable requirements class."
+    - name: "Schedule Line Category"
+      role: "Controls availability-check and transfer-of-requirements relevance in the sales document."
+    - name: "Delivery Item Category"
+      role: "Can control availability behavior again at delivery stage."
+  - title: "Material and planning context"
+    explanation: >-
+      These objects influence the material-specific checking and planning context rather
+      than acting as one common ATP activation flag.
+    objects:
+    - name: "Checking Group"
+      role: "Material/plant-side key used with the checking rule to determine availability control and scope."
+    - name: "Planning Strategy"
+      role: "Defines how customer requirements interact with planning and planned independent requirements."
+    - name: "MRP Group"
+      role: "Provides material-planning control that can influence requirements determination and planning behavior."
+    - name: "Strategy Group"
+      role: "Material master entry point for one or more planning strategies."
+  lead_rule: >-
+    Do not troubleshoot all eight objects at once. Start with the actual document
+    requirement, schedule line, checking group, and checking rule. Expand into
+    requirements and planning strategy only when the symptom points there.
+  source_refs:
+  - SRC-SAP-ATP-LEARNING-FOUNDATION
+  - SRC-SAP-AATP-CHECK-DETAIL-LEARNING
+  - SRC-SAP-ATP-CONTROL
+
+location_check_model:
+  title: "Where is availability checked?"
+  plant_determination:
+    principle: >-
+      A sales-order item needs a delivering plant. SAP normally proposes it from master
+      data, but the user can overwrite the proposed plant manually.
+    priority:
+    - "Customer-Material Info Record"
+    - "Ship-To Party master record"
+    - "Material Master Record"
+    manual_override: "A manually entered plant in the order item overrides the proposed value."
+  sales_order_level:
+    basic_atp: >-
+      In a sales document, availability is normally checked for the delivering plant.
+      Classic/basic ATP does not automatically determine a storage location for the sales
+      item. A storage-location-specific check therefore needs a storage location on the item.
+    aatp_abc: >-
+      With aATP Alternative-Based Confirmation, the system can automatically consider an
+      alternative plant or storage location when the original location cannot provide the
+      requested confirmation.
+  delivery_level: >-
+    Outbound delivery items usually contain both plant and storage location. If storage
+    location inspection is active, the availability check therefore runs at plant and
+    storage-location level for the delivery item.
+  level_rule: >-
+    The requirement drives the level of detail. Plant-only requirements are checked at
+    plant level. If storage location is part of the requirement and storage-location
+    inspection is active, both levels matter; the level with the lowest cumulative ATP
+    quantity limits the result.
+  guardrail: >-
+    Storage-location inspection can be deactivated in availability-check Customizing. If
+    it is deactivated, the check remains at plant level even when a storage location is present.
+  source_refs:
+  - SRC-SAP-ATP-LEARNING-FOUNDATION
+  - SRC-SAP-AATP-CHECK-DETAIL-LEARNING
+  - SRC-SAP-AATP-ABC-CURRENT
+
+scheduling_confirmation_model:
+  title: "Which date does ATP actually check?"
+  backward:
+    start: "Requested delivery date"
+    logic: >-
+      Backward scheduling calculates the dates needed to meet the customer request. For ATP,
+      the decisive result is the material availability date.
+    result: >-
+      The material availability date becomes the requirement date. If it is today or later
+      and sufficient cumulative ATP exists on that date, the requested delivery date can be confirmed.
+  forward:
+    trigger:
+    - "Backward scheduling produces a date in the past."
+    - "The material is not available on the calculated material availability date."
+    logic: >-
+      SAP looks for the earliest date on which the material can be available. That new
+      material availability date becomes the starting point for forward scheduling to
+      calculate one or more feasible delivery dates.
+  no_scheduling: >-
+    If scheduling is deactivated for the sales document, the requested delivery date is
+    also the material availability date used by the check.
+  bps_boundary: >-
+    When aATP Business Process Scheduling is used, BPS can calculate the process dates,
+    but PAC still needs an availability-relevant date. The conceptual boundary remains:
+    scheduling builds the date; ATP checks supply on that date.
+  source_refs:
+  - SRC-SAP-ATP-LEARNING-FOUNDATION
+  - SRC-SAP-AATP-SCHEDULING
+
+delivery_agreements:
+  title: "Availability does not decide the delivery shape alone"
+  complete_delivery:
+    level: "Sales order header"
+    proposal_source: "Sold-to Party business partner master"
+    effect: >-
+      If complete delivery is required, one unavailable item can make the whole order wait
+      until all items can be delivered together.
+  partial_delivery:
+    level: "Sales order item"
+    proposal_sources:
+    - "Customer-Material Info Record — higher priority"
+    - "Sold-to Party business partner master"
+    effect: >-
+      If partial delivery is allowed, available items or partial item quantities can be
+      delivered earlier while the remaining quantity follows later.
+  manual_change: "The proposed delivery parameters can be changed manually in the sales order."
+  source_refs:
+  - SRC-SAP-ATP-LEARNING-FOUNDATION
+
+replenishment_and_reconfirmation:
+  title: "What happens when supply does not exist yet?"
+  replenishment_lead_time:
+    principle: >-
+      An ATP check can use the material replenishment lead time. This design only stays
+      reliable when material planning is executed regularly enough to turn the assumed
+      future replenishment into real supply.
+    risk: >-
+      If planning is not frequent enough, a quantity may have been confirmed based on the
+      replenishment horizon but later fall back inside the horizon without sufficient real
+      supply. This can surface as a delivery-creation problem.
+  mrp_path:
+    title: "Normal MRP path"
+    steps:
+    - "Sales requirements are transferred to planning when the planning strategy makes them relevant."
+    - "MRP detects the shortage and creates a procurement proposal such as a purchase requisition or planned order."
+    - "According to the ATP scope, those future receipt elements can contribute to cumulative ATP."
+    - "An already created sales order does not automatically repeat its availability check when the ATP situation improves."
+    - "Backorder Processing is therefore needed to improve or rebuild the existing confirmation before goods receipt, unless another explicit reconfirmation process is used."
+  sbc_path:
+    title: "Supply Creation-Based Confirmation path"
+    edition_boundary: "SAP S/4HANA Cloud Private Edition and SAP S/4HANA on-premise with aATP active."
+    steps:
+    - "The availability check identifies an uncovered quantity."
+    - "aATP integrates with PP/DS and can trigger planned orders, purchase requisitions, or stock transfer requisitions for the missing quantity."
+    - "PP/DS evaluates supply feasibility, including capacity and component availability according to its logic."
+    - "The procurement proposal date is used to build the sales-order confirmation."
+    - "No separate MRP run is required for this supply creation."
+    - "The requirement is confirmed against the created proposal immediately, so BOP is not required for that confirmation step."
+  lead_contrast: >-
+    MRP creates future supply and then existing orders need reconfirmation. SBC creates
+    supply as part of the availability interaction and returns the confirmation in the same flow.
+  source_refs:
+  - SRC-SAP-ATP-LEARNING-FOUNDATION
+  - SRC-SAP-AATP-SBC-LEARNING
+
 pac_confirmation_model:
   title: "From requirement to confirmed schedule line"
   principle: >-
@@ -192,6 +356,7 @@ runtime_pipeline:
     inputs:
       - "product/material"
       - "delivering plant"
+      - "storage location when present and relevant"
       - "requested quantity"
       - "requested delivery date"
       - "sales document and partner context"
@@ -259,6 +424,7 @@ runtime_pipeline:
       - "PAC result"
       - "requested quantity/date"
       - "delivery-option/default settings by sales area"
+      - "complete-delivery and partial-delivery agreements"
     output:
       - "confirmation schedule lines and delivery proposal"
     failure_signal: "PAC found future quantity, but the selected delivery option does not present it in the way the user expected."
