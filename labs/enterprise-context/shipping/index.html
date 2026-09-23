@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Shipping & Delivery Scheduling — Enterprise Context Lab"
-description: "A practical SAP shipping map for shipping point, route, scheduling, delivery due processing, EWM/TM boundaries, extensions, and diagnostics."
+description: "A practical SAP S/4HANA shipping guide to shipping point determination, route determination, delivery scheduling, delivery due processing, and the handoff to EWM and TM."
 permalink: /labs/enterprise-context/shipping/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -20,9 +20,9 @@ tags:
   - sap-ewm
   - sap-tm
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-01"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "SAP primary sources + factual review + editorial rewrite"
 search_intent: "SAP SD shipping, delivery, route determination, picking and PGI"
 # ai-discovery-managed:start
 structured_data:
@@ -62,23 +62,14 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/9dbdba53422bb54ce10000000a174cb4.html?locale=en-US&state=PRODUCTION&version=2025.001"
   - title: "Prerequisites for Processing Deliveries in Sales Orders"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/571bbf53d25ab64ce10000000a174cb4.html"
-  - title: "Selection Criteria"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/c71abf53d25ab64ce10000000a174cb4.html"
+  - title: "Outbound Delivery Creation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/c81fbf53f106b44ce10000000a174cb4.html"
   - title: "Integration of Sales Document Scheduling"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/94b155b3c1524164add6b448dc3186dc.html"
-  - title: "Routing and Determination Methods"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/1c53592e48544b028196f90feff7fd12.html?locale=en-US&state=PRODUCTION&version=2025.001"
-  - title: "Route Determination in Deliveries"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/2d95c3180a974e0aad07556ee4d28e94/4061b6531de6b64ce10000000a174cb4.html?locale=en-US"
-  - title: "Delivery Split"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/1afec908ce36453f869aadc9d67f49b5.html"
-  - title: "Split Outbound Delivery"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/cfd1f56b7d9b43bea48f9bca7323380d.html"
-  - title: "Routes — Route Determination Customizing Reference"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e08e0da88aa64d9095334cdb5fa3b25d/3a587ab2c38d4a0f9f72f94943a71c19.html"
+  - title: "Internal TM Component Integration"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/04474a8485384e3fbfcb346d943b3217.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.shipping %}
 {% assign evidence = site.data.labs.enterprise_context.sources.shipping %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -88,472 +79,142 @@ source_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Deep vertical / Shipping & Scheduling</p>
-      <h1>A delivery date is the end of a chain,<br />not one lead-time field.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#shipping-memory">Start with nine questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="Shipping deep-dive inventory">
-      <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · source-tracked · no client data</em>
+      <p class="research-canvas__eyebrow">Enterprise Context Lab / Shipping & Scheduling</p>
+      <h1>A delivery date is the result of several logistics decisions.</h1>
+      <p>SAP does not calculate a customer delivery date from one lead-time field. The sales document supplies a delivering plant and business context; Shipping determines an execution point and route; scheduling works backward or forward through several activities; availability confirms what can actually be promised; and delivery creation starts the physical execution process.</p>
+      <a class="research-canvas__button" href="#shipping-memory">Follow the logistics chain <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
-    <p><strong>My working rule:</strong> I find the first wrong shipping input or calculated date. I do not change transit time until the final delivery date looks acceptable.</p>
-    <a href="/labs/enterprise-context/data/shipping-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead answer frame</p>
-      <h2>Trace the date back to the first logistics decision.</h2>
-      <p>A final delivery date is a downstream result. The Lead-level task is to identify which plant, shipping, route, calendar, or scheduling decision first moved away from the expected business path.</p>
-    </header>
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>1. Execution context</h3>
-        <ul><li>Confirm the delivering plant before debugging Shipping.</li><li>Trace plant + shipping condition + loading group into shipping point.</li><li>Trace origin, destination, shipping policy, and transportation group into route.</li></ul>
-      </div>
-      <div>
-        <h3>2. Date construction</h3>
-        <ul><li>Separate route/transit data from pick-pack, loading, and calendar effects.</li><li>Trace requested delivery date backward to material availability, loading, GI, and transportation dates.</li><li>Check whether ATP is consuming the date you actually intended.</li></ul>
-      </div>
-      <div>
-        <h3>3. Execute and prove</h3>
-        <ul><li>Distinguish delivery-due state from warehouse or transport execution.</li><li>Identify the handoff to EWM or TM instead of changing SD to repair their downstream state.</li><li>Prove the corrected dates and the executable delivery path end to end.</li></ul>
-      </div>
+    <div>
+      <p><strong>Keep the layers separate:</strong> plant, shipping point, route, scheduling dates, ATP confirmation, outbound delivery, warehouse work, and transportation planning describe different decisions.</p>
+      <p>A late confirmed date can originate in Shipping, but it can also be the correct result of an availability constraint. A correct sales-order date does not prove that the order is ready for delivery creation or that warehouse and transport execution can finish on time.</p>
     </div>
-    <p class="ecg-caption"><strong>Boundary with ATP:</strong> Shipping builds important logistics dates and execution context. ATP evaluates the promise against its requirement date, supply-demand scope, and policy controls. Diagnose the first wrong owner before changing lead times or confirmations.</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review confirms the shipping-point input model and the classic route-determination context, including the role of route data in scheduling. The wider execution and EWM/TM boundary was reviewed as an authored integration model and remains separated from release-specific SAP behavior.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
+    <a href="/labs/enterprise-context/data/shipping-graph.json">Open the structured shipping model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="shipping-memory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
-      <h2>Nine questions before touching route or scheduling configuration.</h2>
-      <p>I use this sequence because shipping is strongly upstream-dependent. A wrong plant can make a perfectly configured shipping point and route produce the wrong result.</p>
+      <p class="research-canvas__eyebrow">The core model</p>
+      <h2>From a sales requirement to an executable delivery.</h2>
+      <p>The useful model is a chain of ownership. Each step contributes information that the next step can use, but no single step owns the whole promise.</p>
     </header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article class="ecg-memory-card">
-        <span>0{{ forloop.index }}</span>
-        <strong>{{ item.key }}</strong>
-        <h3>{{ item.question }}</h3>
-        <p>{{ item.answer }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <p class="ecg-caption"><strong>PLANT → CONDITION → POINT → ROUTE → TIMES → CALENDAR → SCHEDULE → DUE → EXECUTE.</strong> This is my diagnostic path, not a claim that every SAP technical call runs in this exact visual order.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Dependency chain</p>
-      <h2>Shipping starts before shipping.</h2>
-      <p>The most expensive mistake is debugging a downstream value while an upstream determination is already wrong.</p>
-    </header>
-    <div class="ecg-rail" aria-label="Shipping dependency chain">
+    <div class="ecg-rail" aria-label="Shipping and delivery chain">
       <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Customer + Product</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Plant Determination</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Delivering Plant</span>
-      </div>
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Plant + Shipping Condition + Loading Group</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Shipping Point</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Execution Location</span>
-      </div>
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Departure + Destination + Shipping Condition + Transportation Group</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Route</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Transit / Planning Context</span>
-      </div>
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Route + Point + Times + Calendars</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Scheduling</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">MAD / Load / GI / Delivery Dates</span>
+        <span class="ecg-node ecg-node--input">Sales requirement</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Delivering plant</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Shipping point + route</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Scheduling + ATP</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Delivery due</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Outbound delivery</span>
       </div>
     </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Runtime path</p>
-      <h2>Follow the first stage that diverges from expectation.</h2>
-      <p>Each stage produces an input for the next one. That makes the path useful for both assessment answers and incident troubleshooting.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for stage in graph.runtime_pipeline %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>shipping stage</small></div>
-          <h3>{{ stage.title }}</h3>
-          <p class="ecg-question">{{ stage.question }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Inputs / controls</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
+    <p>The sales order already contains important shipping inputs, but delivery creation is not a passive copy. SAP can re-evaluate delivery quantities and availability, redetermine the route, check scheduling, determine the picking location, and update order status while the outbound delivery is created.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Shipping point</p>
-      <h2>Three standard inputs, one operational consequence.</h2>
-      <p>Shipping point is not just a field on the order. It identifies the organizational unit that will process the delivery and directly affects scheduling and grouping.</p>
+      <h2>The shipping point defines where the delivery is processed.</h2>
+      <p>A shipping point is an organizational unit for shipping execution. SAP can determine it automatically for a sales-order item. The exact determination model is configurable: a plant can be sufficient, while a more differentiated setup can also use the ship-to party's shipping condition and the material's loading group.</p>
     </header>
-    <div class="ecg-input-grid">
-      {% for input in graph.shipping_point_model.inputs %}
-      <article>
-        <span>INPUT</span>
-        <h3>{{ input.label }}</h3>
-        <p>{{ input.role }}</p>
-      </article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div><h3>Delivering plant</h3><p>The plant is an upstream decision. If it is wrong, Shipping starts from the wrong physical context before route or scheduling logic is even evaluated.</p></div>
+      <div><h3>Shipping condition</h3><p>This represents the agreed shipping treatment. It can come from the ship-to party, and a sales document type can also supply a shipping condition that takes precedence in the documented standard behavior.</p></div>
+      <div><h3>Loading group</h3><p>The material master can classify how the material is normally loaded, for example manually or by forklift. In a multi-shipping-point design, this can participate in shipping-point determination.</p></div>
     </div>
-    <div class="ecg-rail" aria-label="Shipping point determination">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Delivering Plant</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--input">Shipping Condition</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--input">Loading Group</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Shipping Point Assignment</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Shipping Point</span>
-      </div>
-    </div>
-    <div class="ecg-diagnostic">
-      <div><h4>What changes downstream</h4><ul>{% for value in graph.shipping_point_model.consequences %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h4>Remember</h4><p>{{ graph.shipping_point_model.output }}</p></div>
-    </div>
-    <p class="ecg-lead-lens"><strong>Lead lens:</strong> If two items need one physical delivery but determination sends them to different shipping points, the design contains a business contradiction. Forcing one delivery is not a substitute for resolving it.</p>
+    <p>One outbound delivery is processed through one shipping point. If order items resolve to different shipping points, they cannot simply be forced into the same standard delivery. SAP also documents that the shipping point is no longer editable after the delivery has been created, so an alternative shipping point must be selected earlier in the order or stock transport order process.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Route</p>
-      <h2>Order route and delivery route are two runtime contexts.</h2>
-      <p>I do not assume the route proposed in the sales order must survive unchanged. Delivery processing can have additional information, especially weight-group context.</p>
+      <h2>The route connects geography, transport characteristics, and scheduling.</h2>
+      <p>In classic Sales route determination, SAP uses the departure context of the shipping point, the destination context of the ship-to party, the shipping condition, and the material's transportation group. The result is more than a descriptive route: route data influences transportation scheduling.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Classic sales route determination">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Departure zone</span><span class="ecg-arrow" aria-hidden="true">+</span>
+        <span class="ecg-node ecg-node--input">Destination zone</span><span class="ecg-arrow" aria-hidden="true">+</span>
+        <span class="ecg-node ecg-node--input">Shipping condition</span><span class="ecg-arrow" aria-hidden="true">+</span>
+        <span class="ecg-node ecg-node--input">Transportation group</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Route</span>
+      </div>
+    </div>
+    <p>The route proposed in the sales order is not necessarily final. Depending on delivery configuration, SAP can determine the route again when the delivery is created. At that point the total delivery weight is known, so the weight group can participate as an additional factor. In the sales order a route can differ by item; in the delivery one route applies to all items.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Delivery and transportation scheduling</p>
+      <h2>Four durations create several operational dates.</h2>
+      <p>It is useful to stop saying “lead time” and name the activity. Standard delivery scheduling distinguishes transit time, loading time, pick/pack time, and transportation lead time. Each describes a different part of getting the goods from availability to the customer.</p>
     </header>
     <div class="ecg-decision-columns">
-      <div><h3>Sales-order key</h3><ul>{% for value in graph.route_model.sales_order_inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Delivery adds</h3><ul>{% for value in graph.route_model.delivery_additional_input %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Route drives next</h3><ul>{% for value in graph.route_model.route_data_that_matters_next %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Transit time</h3><p>How long the goods need to travel from the shipping point to the customer. SAP determines this from the route.</p></div>
+      <div><h3>Loading time</h3><p>How long loading takes. The documented determination can use shipping point, route, and the material's loading group.</p></div>
+      <div><h3>Pick/pack time</h3><p>How long the goods need to be picked and packed before loading. Shipping-point and product/order characteristics can influence this duration.</p></div>
+      <div><h3>Transportation lead time</h3><p>How early transportation must be organized, for example to reserve a truck or other capacity. SAP determines this from the route.</p></div>
     </div>
-    <div class="ecg-rail" aria-label="Route determination key">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Departure Zone</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--input">Destination Zone</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--input">Shipping Condition</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--input">Transportation Group</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Proposed Route</span>
-      </div>
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Order Key</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--input">Delivery Weight Group</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Delivery Redetermination</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Actual Route</span>
-      </div>
-    </div>
-    <p class="ecg-lead-lens"><strong>My rule:</strong> {{ graph.route_model.diagnostic_rule }}</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Scheduling anatomy</p>
-      <h2>Do not collapse four durations into “lead time”.</h2>
-      <p>The fastest way to lose a date discussion is to speak about one generic lead time. I separate the physical activities because each has different master/configuration inputs.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.scheduling_times %}
-      <article class="ecg-determination-detail">
-        <header><div><span>TIME</span><small>duration</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.purpose }}</p></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Common inputs</h4><ul>{% for value in item.common_inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Drives</h4><p>{{ item.drives }}</p></div>
-          <div><h4>Diagnostic lens</h4><p>Check the exact duration and its determination key before changing any date.</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Times vs dates</p>
-      <h2>A duration says how long. A calendar says when.</h2>
-      <p>This distinction is basic, but it explains many “SAP added too many days” incidents. A weekend or closed working window can move a calculated date without changing the stored duration.</p>
-    </header>
-    <div class="ecg-input-grid">
-      {% for item in graph.scheduling_dates %}
-      <article>
-        <span>DATE</span>
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.business_meaning }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <div class="ecg-rail" aria-label="Backward scheduling path">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Requested Delivery</span><span class="ecg-arrow" aria-hidden="true">− Transit</span>
-        <span class="ecg-node ecg-node--decision">Goods Issue</span><span class="ecg-arrow" aria-hidden="true">− Loading</span>
-        <span class="ecg-node ecg-node--decision">Loading Date</span><span class="ecg-arrow" aria-hidden="true">− Pick/Pack</span>
-        <span class="ecg-node ecg-node--output">Material Availability</span>
-      </div>
-    </div>
-    <p class="ecg-caption">Transportation planning lead time is calculated in the transportation-scheduling branch. Calendars and working times adjust the activities while the system calculates the dates.</p>
-  </section>
-
-  <section class="ecg-anatomy" data-reveal>
-    <div>
-      <p class="research-canvas__eyebrow">Backward vs forward</p>
-      <h2>One asks what must happen. The other asks what can happen.</h2>
-      <p>I use this difference to explain date shifts without making scheduling sound mysterious.</p>
-    </div>
-    <div class="ecg-anatomy__questions">
-      <article><span>BACKWARD</span><h3>Start from the requested delivery date.</h3><p>Calculate the dates required to deliver on time.</p></article>
-      <article><span>PAST?</span><h3>Check whether required activities fall before the feasible start.</h3><p>A requested date can be commercially desired but operationally impossible.</p></article>
-      <article><span>FORWARD</span><h3>Start from the earliest feasible point.</h3><p>Calculate the earliest material availability, shipping, and resulting delivery dates.</p></article>
-    </div>
+    <p>Backward scheduling starts from the requested delivery date. It subtracts transit time to reach the goods issue date, loading time to reach the loading date, and pick/pack time to reach the material availability date. Transportation scheduling also establishes when transport planning must start. If backward scheduling reaches an infeasible point, forward scheduling determines the earliest feasible dates instead.</p>
+    <p>Calendars and working times matter independently of the stored durations. A weekend, a closed shipping window, or different carrier working days can move the result even when no lead-time value changed.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">ATP boundary</p>
-      <h2>Scheduling tells ATP when the material must be available.</h2>
-      <p>The material availability date is a bridge between shipping logic and the promise engine. If the date entering ATP is wrong, an availability check can be technically correct and still produce the wrong business promise.</p>
+      <h2>Scheduling constructs the requirement date; ATP tests the promise.</h2>
+      <p>Shipping scheduling and availability checking are tightly connected but they answer different questions. Scheduling calculates when the material must be available for the requested logistics path. ATP or aATP then evaluates whether the requested quantity can be confirmed for the relevant date under the configured availability and scarcity rules.</p>
     </header>
-    <div class="ecg-rail" aria-label="Scheduling to ATP boundary">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Requested Delivery Date</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Shipping Scheduling</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Material Availability Date</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">ATP / aATP</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Confirmed Qty / Date</span>
-      </div>
-    </div>
-    <p><a href="/labs/enterprise-context/atp/">Open the ATP / aATP Promise Engine →</a></p>
+    <p>A date problem can therefore masquerade as a stock problem. If the material availability date entering ATP is already too early or too late because plant, route, duration, or calendar logic is wrong, the availability check can be technically correct and still produce an unwanted business result.</p>
+    <p><a href="/labs/enterprise-context/atp/">See the ATP and aATP promise model →</a></p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Delivery due</p>
-      <h2>A correct date does not guarantee a delivery.</h2>
-      <p>Before delivery creation, the order still has to be due, delivery relevant, unblocked, and inside the selection context used by operations.</p>
+      <p class="research-canvas__eyebrow">Delivery due and creation</p>
+      <h2>A confirmed order still has to become due and pass delivery checks.</h2>
+      <p>SAP documents a schedule line as due for shipping when the relevant material-availability or transportation-scheduling date is reached. The order, item, and schedule line must also satisfy delivery prerequisites. A header delivery block, for example, can prevent creation even when the dates look correct.</p>
     </header>
-    <div class="ecg-rail" aria-label="Delivery due path">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Schedule Line</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Delivery Relevance + Due Date</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--decision">No Delivery / Credit Block</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--decision">Due-list Selection</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Outbound Delivery</span>
-      </div>
-    </div>
-    <p class="ecg-lead-lens"><strong>Lead lens:</strong> “Not in VL10” is a symptom. I classify it as date, delivery relevance, block/status, organizational selection, or execution grouping before changing configuration.</p>
+    <p>When the outbound delivery is created, SAP starts the shipping process rather than merely freezing the sales order into another document. Standard processing can check the order and material, determine the delivery quantity, check availability, calculate weight and volume, redetermine the route, check delivery scheduling, determine a picking location, perform batch determination where required, and update sales-order status.</p>
+    <p>Items are combined only when the shipping criteria are compatible. A split therefore has a business or execution reason somewhere in the document context; it should not be treated as a random document-generation problem.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Architecture choice</p>
-      <h2>Classic scheduling and TM/BPS scheduling solve different complexity levels.</h2>
-      <p>I keep them separate. The correct choice depends on who owns transportation logic and how much routing intelligence the business requires.</p>
+      <p class="research-canvas__eyebrow">Warehouse and transportation boundaries</p>
+      <h2>The outbound delivery is the handoff, not the end of execution.</h2>
+      <p>After delivery creation, detailed warehouse and transportation processes can have their own objects, statuses, dates, and decisions. This is where a simple SD-only mental model becomes misleading.</p>
     </header>
-    <div class="ecg-control-stack">
-      {% for mode in graph.architecture_modes %}
-      <article>
-        <span>ARCHITECTURE</span>
-        <h3>{{ mode.title }}</h3>
-        <p>{{ mode.when_it_fits }}</p>
-        <h4>Strengths</h4><ul>{% for value in mode.strengths %}<li>{{ value }}</li>{% endfor %}</ul>
-        <h4>Watch</h4><ul>{% for value in mode.watchouts %}<li>{{ value }}</li>{% endfor %}</ul>
-      </article>
-      {% endfor %}
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Warehouse execution</strong><small>EWM owns detailed warehouse requests, warehouse tasks, warehouse orders, stock positioning, picking, staging, packing, and related execution decisions for EWM-managed processes.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/transportation-management/"><span>TM</span><strong>Transportation planning</strong><small>TM can consume order- or delivery-based transportation demand, build planning units, create executable freight plans, and coordinate transport execution.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
-    <p class="ecg-lead-lens"><strong>Decision rule:</strong> if the requirement needs network-path logic, means of transport, transportation profiles, or TM-owned durations, I do not try to make Sales configuration impersonate a transportation planning system.</p>
+    <p>SAP's current S/4HANA documentation also describes tighter TM/EWM integration through Advanced Shipping and Receiving. In such scenarios, warehouse requests and handling units in EWM and freight units in TM participate in one integrated execution flow. That does not make SD, EWM, and TM the same layer; it makes ownership boundaries more important.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Execution boundary</p>
-      <h2>The sales plan can still change in warehouse and transport execution.</h2>
-      <p>Outbound delivery creation is not the end of shipping architecture. EWM and TM can consume route/grouping data, redetermine execution details, and create later splits.</p>
+      <p class="research-canvas__eyebrow">A compact diagnostic example</p>
+      <h2>Why “the customer date is wrong” is not yet a root cause.</h2>
     </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.execution_boundaries %}
-      <article class="ecg-determination-detail">
-        <header><div><span>INT</span><small>execution</small></div><h3>{{ item.title }}</h3><p>{{ item.principle }}</p></header>
-        <div class="ecg-remember"><strong>Lead question</strong><p>{{ item.lead_question }}</p></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Delivery split</p>
-      <h2>A split is evidence that two items cannot stay in one execution document.</h2>
-      <p>The important question is where and why the divergence appeared. Sales, TM, EWM, and physical loading can all be part of that story.</p>
-    </header>
-    <div class="ecg-rail" aria-label="Delivery split investigation">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">One Sales Order</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Compare Shipping Point / Route / Header Context</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Delivery Creation</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">TM / EWM / Loading Changes</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">One or Multiple Deliveries</span>
-      </div>
-    </div>
-    <p class="ecg-lead-lens"><strong>My rule:</strong> I first identify the exact process stage where the split happened. Otherwise an EWM load split can easily be “fixed” in SD, which is a creative way to move the defect into another team.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Extensions</p>
-      <h2>Extend the layer that owns the decision.</h2>
-      <p>Custom shipping logic becomes expensive when route, transportation, and warehouse decisions are mixed inside one enhancement. I prefer a clear owner and an explainable fallback path.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for ext in graph.extension_layers %}
-      <article class="ecg-determination-detail">
-        <header><div><span>EXT</span><small>shipping</small></div><h3>{{ ext.title }}</h3><p class="ecg-question">{{ ext.principle }}</p></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Typical trap</h4><p>{{ ext.trap }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead reasoning</p>
-      <h2>Six habits that make shipping incidents smaller.</h2>
-      <p>These are practitioner heuristics, deliberately separated from SAP-documented behavior.</p>
-    </header>
-    <div class="ecg-heuristic-grid">
-      {% for heuristic in graph.practitioner_heuristics %}
-      <article>
-        <span>HEURISTIC {{ forloop.index }}</span>
-        <h3>{{ heuristic.statement }}</h3>
-        <p>{{ heuristic.context }}</p>
-        {% if heuristic.checks %}<h4>Check</h4><ul>{% for value in heuristic.checks %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Failure catalogue</p>
-      <h2>Classify the symptom before changing the design.</h2>
-      <p>The same late customer date can originate from plant, shipping point, route, duration, calendar, ATP, due processing, or downstream execution.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}
-      <article class="ecg-determination-detail">
-        <header><div><span>FAIL</span><small>diagnostic</small></div><h3>{{ failure.symptom }}</h3></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Likely causes</h4><ul>{% for value in failure.likely_causes %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Check first</h4><ol>{% for value in failure.first_checks %}<li>{{ value }}</li>{% endfor %}</ol></div>
-          <div><h4>Lead lens</h4><p>Find the first wrong input, calculation, status, or ownership boundary before proposing a fix.</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Impact traces</p>
-      <h2>Trace the consequence, not only the field.</h2>
-      <p>A shipping value matters because later engines consume it. These compact traces are designed for whiteboard explanations.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for trace in graph.impact_traces %}
-      <article class="ecg-determination-detail">
-        <header><div><span>TRACE</span><small>impact</small></div><h3>{{ trace.title }}</h3></header>
-        <div class="ecg-priority">
-          {% for value in trace.path %}<span>{{ forloop.index }}. {{ value }}</span>{% endfor %}
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Synthetic cases</p>
-      <h2>Three small cases for practicing the reasoning path.</h2>
-      <p>These examples are fictional. Their purpose is to force a diagnostic sequence without pretending to describe a real client incident.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.synthetic_cases %}
-      <article class="ecg-determination-detail">
-        <header><div><span>CASE</span><small>synthetic</small></div><h3>{{ item.title }}</h3><p>{{ item.situation }}</p></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Investigation</h4><ol>{% for value in item.investigation %}<li>{{ value }}</li>{% endfor %}</ol></div>
-          <div><h4>Lesson</h4><p>{{ item.lesson }}</p></div>
-          <div><h4>Assessment move</h4><p>State what information is still missing before proposing configuration or code.</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Assessment drills</p>
-      <h2>Answer in a sequence, not as a list of transactions.</h2>
-      <p>A Lead answer should show control flow, master/configuration inputs, downstream impact, and a safe troubleshooting order.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for drill in graph.assessment_drills %}
-      <article class="ecg-determination-detail">
-        <header><div><span>Q{{ forloop.index }}</span><small>Lead drill</small></div><h3>{{ drill.question }}</h3></header>
-        <div class="ecg-remember"><strong>Expected reasoning</strong><p>{{ drill.expected_answer }}</p></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead takeaways</p>
-      <h2>What I want to remember without the page.</h2>
-    </header>
-    <div class="ecg-input-grid">
-      {% for item in graph.lead_takeaways %}
-      <article><span>{{ forloop.index }}</span><p>{{ item }}</p></article>
-      {% endfor %}
-    </div>
+    <p>Assume an order is confirmed two days later than expected. The stock figure looks healthy, so the first reaction is to blame ATP. But the material availability date is already one day later because the order received an unexpected route, and another day is added because the relevant shipping calendar is closed. ATP is only confirming against the date it received.</p>
+    <p>The useful fix is not to relax availability or overwrite the final date. It is to identify why the shipping input changed: wrong plant, shipping point, route, duration, or calendar. Once that first divergence is corrected, scheduling and the availability check can be evaluated again on the intended business path.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Primary evidence</p>
-      <h2>Sources used to verify the factual layer.</h2>
-      <p>The explanations above are independently written. These links verify SAP behavior and release scope.</p>
+      <h2>Use SAP documentation for release-sensitive behavior.</h2>
+      <p>The article uses SAP S/4HANA 2025 FPS01 and current SAP S/4HANA Cloud documentation for shipping-point determination, route determination, scheduling, outbound-delivery creation, and TM/EWM integration. The explanatory model is independently written.</p>
     </header>
     <div class="ecg-source-list">
       {% for source in evidence.sources %}
       <article>
         <span>{{ source.publisher }} · {{ source.release_scope }}</span>
-        <h3><a href="{{ source.url }}" rel="noopener noreferrer">{{ source.title }}</a></h3>
+        <h3><a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.title }}</a></h3>
         <p>{{ source.product_scope }}</p>
         {% if source.note %}<small>{{ source.note }}</small>{% endif %}
       </article>
