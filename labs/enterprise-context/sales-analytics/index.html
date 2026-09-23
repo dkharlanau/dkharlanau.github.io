@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP Sales KPI & Analytics — Enterprise Context Lab"
-description: "Business-first SAP Sales KPIs, process metrics, operational drivers and root-cause analytics linked to Sales processes and mechanisms."
+description: "Business-first SAP Sales KPIs, operational monitoring apps, process metrics, fulfillment issues, and root-cause analytics linked to Order-to-Cash."
 permalink: /labs/enterprise-context/sales-analytics/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting]
@@ -53,6 +53,67 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
       {% for item in model.common_language %}
       <article><span>TERM</span><h3>{{ item.term }}</h3><p>{{ item.definition }}</p></article>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="fulfillment-monitoring-apps" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Operational monitoring / Sales Order Fulfillment</p>
+      <h2>Observe the process, trace one order, then resolve the exception.</h2>
+      <p>SAP provides several apps around the same Order-to-Cash flow. They are easier to understand when we separate the job each app performs instead of memorizing app IDs.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+      <p><strong>Memory path:</strong> <strong>F2577 OBSERVE</strong> → <strong>F2981 TRACE</strong> → <strong>F0029A RESOLVE</strong>.</p>
+      <p>This is our operating model for learning. The SAP app names and exact capabilities can evolve by release, while the business jobs remain useful: portfolio visibility, single-order process trace, and exception management.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>F2577 — Track Sales Orders</h3>
+        <p><strong>Business job:</strong> answer “Where are my orders now?” across a list of sales orders.</p>
+        <p>The app gives an end-to-end fulfillment overview and shows whether an order is complete, still being processed, or has issues. It can expose process phases such as order processing, supply, transportation, delivery, invoicing, proof-of-delivery/in-transit context, and accounting clearing status depending on the process.</p>
+        <p><strong>Best use:</strong> customer inquiry, manager request, order portfolio review, fast status check.</p>
+        <p><strong>Architecture view:</strong> operational visibility layer.</p>
+      </div>
+      <div>
+        <h3>F2981 — Track Sales Order Details</h3>
+        <p><strong>Business job:</strong> answer “What happened to this specific order?”</p>
+        <p>From the Track Sales Orders result, we can drill into one order and inspect the fulfillment process, subsequent documents, statuses, items, and issues in more detail.</p>
+        <p><strong>Best use:</strong> document-flow trace and first-level investigation for a single order.</p>
+        <p><strong>Architecture view:</strong> process trace / case view.</p>
+      </div>
+      <div>
+        <h3>F0029A — Sales Order Fulfillment - Analyze and Resolve Issues</h3>
+        <p><strong>Business job:</strong> answer “Which orders are blocked or at risk, why, and what action should we take?”</p>
+        <p>The app is issue-oriented. It helps internal sales users find fulfillment impediments, analyze them, and navigate or act to resolve them. Depending on the process and release, issues can belong to order processing, supply, delivery, billing, compliance, credit, or other fulfillment areas.</p>
+        <p><strong>Best use:</strong> exception queue, prioritization, operational recovery.</p>
+        <p><strong>Architecture view:</strong> exception-management workbench.</p>
+      </div>
+    </div>
+
+    <h3>Why these apps matter to a Lead</h3>
+    <div class="ecg-input-grid">
+      <article><span>OBSERVE</span><h3>Status is not diagnosis</h3><p>F2577 can tell us that an order is late, incomplete, not invoiced, or not cleared. That signal tells us where to look next; it does not by itself prove the root cause.</p></article>
+      <article><span>TRACE</span><h3>Document flow becomes evidence</h3><p>F2981 helps connect the sales order to downstream documents and statuses. We use that trace to find the first missing or wrong state.</p></article>
+      <article><span>RESOLVE</span><h3>Issue management is action-oriented</h3><p>F0029A starts from exceptions. It is useful when the business goal is not “show me the status” but “show me what prevents fulfillment and help me remove the blocker”.</p></article>
+      <article><span>OWNER</span><h3>The app can cross module boundaries</h3><p>A Sales fulfillment issue can actually belong to supply, production, delivery, billing, credit, compliance, or accounting. Monitoring should reveal the boundary, not encourage the Sales team to own every fix.</p></article>
+    </div>
+
+    <h3>Use the process phases as a diagnostic map</h3>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">01</div><div class="ecg-determination-card__copy"><h3>Order Processing</h3><p>Is the order itself complete and executable? Check blocks, incompletion, approval, commercial data, and other order-level controls.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">02</div><div class="ecg-determination-card__copy"><h3>Supply Processing</h3><p>Can the requested material be supplied? Trace stock, procurement, production, confirmation, and supply-related blocks.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">03</div><div class="ecg-determination-card__copy"><h3>Transportation / Delivery</h3><p>Has the promise moved into logistics execution? Trace delivery creation, warehouse state, transport, picking, PGI, and delivery completion.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">04</div><div class="ecg-determination-card__copy"><h3>Invoicing</h3><p>Is the transaction billable, and has the billing document been created without a block or split issue?</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">05</div><div class="ecg-determination-card__copy"><h3>Accounting</h3><p>Has the financial posting happened, and has the relevant customer open item been cleared? This is where the process crosses into FI/AR.</p></div></article>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Release note:</strong> SAP Learning material may still use the label <em>Sales Order Fulfillment Issues (Version 2)</em> for F0029A. Current SAP Help and recent Public Cloud documentation use <em>Sales Order Fulfillment - Analyze and Resolve Issues</em>. Use the app ID when release naming is ambiguous.</p>
+      <p><strong>Primary references:</strong> <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6d40c601bc2f46a898ad1f9efe227cf7.html">SAP Help: Track Sales Orders</a> · <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials-zh/utilize-monitoring-apps-in-sap-s-4hana-sales_b6a7a775-db33-43bf-9f08-7b5e3c649e57">SAP Learning: Monitoring Apps in S/4HANA Sales</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/ee9ee0ca4c3942068ea584d2f929b5b1/e4784bd2f66f4ca5bf76394e88acc790.html">SAP Help: Fulfillment Monitoring Apps</a>.</p>
     </div>
   </section>
 
