@@ -307,3 +307,181 @@
   .context-graph .ecg-drill-list summary small { grid-column:2; }
   .context-graph .ecg-drill-list details > div { margin-left:0; }
 }
+
+/* Semantic lane flow — lightweight site renderer for Visual Workbench-compatible models */
+.semantic-flow {
+  width:var(--rc-width);
+  margin:2rem auto 0;
+  border-top:1px solid var(--ecg-dark);
+  border-bottom:1px solid var(--ecg-line);
+  padding:1.4rem 0 1.6rem;
+}
+.semantic-flow__header {
+  display:flex;
+  justify-content:space-between;
+  gap:2rem;
+  align-items:end;
+  margin-bottom:1rem;
+}
+.semantic-flow__header h3 {
+  margin:.15rem 0 0;
+  font-family:"Source Serif 4",Georgia,serif;
+  font-size:clamp(1.45rem,2vw,2rem) !important;
+}
+.semantic-flow__header p:last-child {
+  max-width:50rem;
+  margin:.55rem 0 0;
+  color:var(--ecg-soft);
+  font-size:.84rem;
+  line-height:1.55;
+}
+.semantic-flow__header > small {
+  max-width:18rem;
+  color:var(--ecg-soft);
+  font-family:var(--font-mono);
+  font-size:.68rem;
+  line-height:1.45;
+  text-align:right;
+}
+.semantic-flow__sequence {
+  display:flex;
+  align-items:stretch;
+  gap:.5rem;
+  overflow-x:auto;
+  padding:.8rem 0 1.15rem;
+  border-top:1px solid var(--ecg-line);
+  scrollbar-width:thin;
+}
+.semantic-flow__sequence-node {
+  display:flex;
+  min-width:9.5rem;
+  max-width:12rem;
+  flex-direction:column;
+  gap:.22rem;
+  border:1px solid var(--ecg-line);
+  background:var(--ecg-paper);
+  padding:.75rem .8rem;
+}
+.semantic-flow__sequence-node span {
+  color:var(--ecg-accent);
+  font-family:var(--font-mono);
+  font-size:.68rem;
+}
+.semantic-flow__sequence-node strong {
+  font-size:.8rem;
+  line-height:1.3;
+}
+.semantic-flow__sequence-node small {
+  color:var(--ecg-soft);
+  font-size:.7rem;
+  line-height:1.35;
+}
+.semantic-flow__sequence > i {
+  display:grid;
+  place-items:center;
+  flex:0 0 1.1rem;
+  color:var(--ecg-accent);
+  font-style:normal;
+}
+.semantic-flow__canvas {
+  overflow-x:auto;
+  border-top:1px solid var(--ecg-dark);
+  border-bottom:1px solid var(--ecg-line);
+  scrollbar-width:thin;
+}
+.semantic-flow__lane {
+  display:grid;
+  min-width:64rem;
+  grid-template-columns:11rem minmax(52rem,1fr);
+  border-bottom:1px solid var(--ecg-line);
+}
+.semantic-flow__lane:last-child { border-bottom:0; }
+.semantic-flow__lane-label {
+  padding:.9rem 1rem .9rem 0;
+  border-inline-end:1px solid var(--ecg-line);
+}
+.semantic-flow__lane-label strong {
+  display:block;
+  font-size:.78rem;
+}
+.semantic-flow__lane-label small {
+  display:block;
+  margin-top:.35rem;
+  color:var(--ecg-soft);
+  font-size:.68rem;
+  line-height:1.4;
+}
+.semantic-flow__lane-grid {
+  display:grid;
+  grid-template-columns:repeat(var(--semantic-columns),minmax(8rem,1fr));
+  gap:.55rem;
+  align-items:center;
+  min-height:6.5rem;
+  padding:.7rem;
+}
+.semantic-flow__node {
+  display:flex;
+  min-width:0;
+  min-height:4.7rem;
+  flex-direction:column;
+  justify-content:center;
+  gap:.2rem;
+  border:1px solid var(--ecg-line);
+  background:var(--ecg-paper);
+  padding:.55rem .62rem;
+}
+.semantic-flow__node > span {
+  color:var(--ecg-soft);
+  font-family:var(--font-mono);
+  font-size:.58rem;
+  text-transform:uppercase;
+}
+.semantic-flow__node > strong {
+  font-size:.75rem;
+  line-height:1.25;
+}
+.semantic-flow__node > small,
+.semantic-flow__node > em {
+  color:var(--ecg-soft);
+  font-size:.64rem;
+  font-style:normal;
+  line-height:1.3;
+}
+.semantic-flow__node--checkpoint {
+  border-color:var(--ecg-dark);
+}
+.semantic-flow__node--outcome {
+  border-color:color-mix(in srgb,var(--ecg-accent) 55%,var(--ecg-line));
+  background:color-mix(in srgb,var(--ecg-accent) 7%,var(--ecg-paper));
+}
+.semantic-flow__node--warning {
+  border-inline-start:3px solid var(--ecg-accent);
+}
+.semantic-flow__edge-list {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+  padding-top:.85rem;
+}
+.semantic-flow__edge-list span {
+  border:1px solid var(--ecg-line);
+  padding:.35rem .5rem;
+  color:var(--ecg-soft);
+  font-size:.68rem;
+}
+.semantic-flow__edge-list code {
+  color:var(--ecg-dark);
+  font-size:.65rem;
+}
+
+@media (max-width:760px) {
+  .semantic-flow__header {
+    align-items:start;
+    flex-direction:column;
+    gap:.6rem;
+  }
+  .semantic-flow__header > small {
+    max-width:none;
+    text-align:left;
+  }
+}
