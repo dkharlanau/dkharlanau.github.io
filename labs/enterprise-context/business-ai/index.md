@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 tags:
   - sap
@@ -15,9 +15,9 @@ tags:
   - joule
   - btp
   - architecture
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "lead-architecture-search-wave-03"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "primary sources + factual review + ISLM architecture boundary review + page-level editorial review"
 search_intent: "SAP Business AI architecture with Joule, agents and SAP data grounding"
 # ai-discovery-managed:start
 structured_data:
@@ -125,6 +125,35 @@ source_links:
       {% for component in topic.components %}
       <a href="{{ component.official_docs_url }}" target="_blank" rel="noopener"><span>{% if component.type == 'ai_asset' %}AI{% else %}PLT{% endif %}</span><strong>{{ component.title }}</strong><small><b>{% if component.remember %}{{ component.remember }}{% else %}{{ component.architecture_role }}{% endif %}</b> {{ component.description }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="islm" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">S/4HANA machine learning lifecycle</p>
+      <h2>{{ topic.s4hana_islm.title }}</h2>
+      <p>{{ topic.s4hana_islm.summary }}</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">memory</span>
+      <p><strong>{{ topic.s4hana_islm.memory_rule }}</strong></p>
+      <p>{{ topic.s4hana_islm.boundary }}</p>
+    </div>
+    <div class="ecg-memory-grid">
+      {% for scenario in topic.s4hana_islm.scenario_types %}
+      <article class="ecg-memory-card">
+        <span>{{ scenario.type | upcase }}</span>
+        <strong>{{ scenario.memory }}</strong>
+        <h3>{{ scenario.architecture }}</h3>
+        <p><strong>Runtime:</strong> {{ scenario.runtime }}</p>
+        <p><strong>Fit:</strong> {{ scenario.fit }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <p><strong>Lead question:</strong> {{ topic.s4hana_islm.lead_question }}</p>
+      <a href="https://help.sap.com/docs/PRODUCT_ID/7989a582039547ae91d8f483e487058d/1674e0ba8d3f4da7a2e0490111c59044.html" target="_blank" rel="noopener">SAP Help: Intelligent Scenarios in ISLM <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
     </div>
   </section>
 
