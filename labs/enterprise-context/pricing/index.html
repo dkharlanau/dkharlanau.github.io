@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP Sales Pricing Engine — Enterprise Context Lab"
-description: "A practical SAP Sales pricing map: procedure, conditions, accesses, records, calculations, extensions, billing differences, and diagnostics."
+description: "A practical SAP Sales pricing guide to pricing procedure determination, condition technique, condition records, calculation, billing repricing, extensions, and diagnostics."
 permalink: /labs/enterprise-context/pricing/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,9 +19,9 @@ tags:
   - billing
   - extensibility
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-01"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "SAP S/4HANA 2025 FPS01 + SAP S/4HANA Cloud Public Edition 2608 primary-source recheck + full editorial pass"
 search_intent: "SAP SD pricing procedure, condition technique and pricing troubleshooting"
 # ai-discovery-managed:start
 structured_data:
@@ -78,7 +78,6 @@ source_links:
     url: "https://help.sap.com/docs/variant-configuration-and-pricing/supported-standard-pricing-exits/supported-standard-pricing-exits"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.pricing %}
 {% assign evidence = site.data.labs.enterprise_context.sources.pricing %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -89,320 +88,143 @@ source_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Deep vertical / Sales Pricing</p>
-      <h1>Pricing is a search path,<br />not a number.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#pricing-memory">Start with seven questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Pricing is a determination chain,<br />not a condition record.</h1>
+      <p>SAP Sales pricing builds a commercial value from document context, a pricing procedure, condition types, access sequences, condition records, and calculation rules. When a price looks wrong, the fastest route is usually to find the first place where that chain differs from the expected design.</p>
+      <a class="research-canvas__button" href="#pricing-memory">Follow the pricing chain <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Pricing deep-dive inventory">
+    <div class="research-canvas__signal" aria-label="Sales pricing article scope">
       <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.pricing_pipeline | size }}</strong><small>Runtime stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.extension_layers | size }}</strong><small>Extension models</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · source-tracked · no client data</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Choose</strong><small>Pricing procedure</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Search</strong><small>Condition records</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Calculate</strong><small>Commercial result</small></div>
+      <em>SAP S/4HANA 2025 FPS01 · SAP S/4HANA Cloud 2608</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-    <p><strong>My working rule:</strong> when pricing is wrong, I do not start with the condition record. I find the first place where the actual path differs from the expected path.</p>
+    <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
+    <p><strong>Core distinction:</strong> the pricing procedure defines what may be calculated; condition records provide business values; the document supplies the runtime context. A valid record in the database proves only that the record exists.</p>
     <a href="/labs/enterprise-context/data/pricing-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead answer frame</p>
-      <h2>Do not explain pricing from the final net value.</h2>
-      <p>A short Lead answer should show where the pricing path first diverged. That gives the interviewer a diagnosis, not a list of configuration objects.</p>
-    </header>
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>1. Context and procedure</h3>
-        <ul><li>State the expected commercial result and document context.</li><li>Confirm the pricing procedure before checking one condition.</li><li>If the procedure is wrong, trace its determination inputs upstream.</li></ul>
-      </div>
-      <div>
-        <h3>2. Search and calculation</h3>
-        <ul><li>Check condition eligibility, access sequence, and runtime key.</li><li>Prove whether a valid record was found and whether it stayed active.</li><li>Separate rate, base, scale, formula, and final condition value.</li></ul>
-      </div>
-      <div>
-        <h3>3. Boundary and proof</h3>
-        <ul><li>Compare order and billing as separate pricing contexts when required.</li><li>Check custom-field or routine inputs before changing shared configuration.</li><li>Explain blast radius, proof of cause, and proof of corrected value.</li></ul>
-      </div>
-    </div>
-    <p class="ecg-caption"><strong>Good diagnostic sentence:</strong> “The record exists, but first I need to prove that the expected procedure, condition, access, and runtime key were actually used.”</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review confirms the condition-technique search model and pricing-procedure determination inputs. Extensions and billing behavior were reviewed against the source registry; practitioner heuristics remain explicitly identified as authored reasoning.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="pricing-memory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
-      <h2>Seven questions are enough to start.</h2>
-      <p>I use the same sequence in workshops and diagnostics. It is simple enough to remember and deep enough to stop random configuration changes.</p>
+      <p class="research-canvas__eyebrow">The pricing model</p>
+      <h2>The system first chooses a procedure, then works through its conditions.</h2>
+      <p>Current SAP documentation describes pricing procedure determination from the sales area, the customer pricing procedure, and the document pricing procedure. The resulting pricing procedure defines the condition types that can participate and the sequence in which they are processed.</p>
     </header>
 
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article class="ecg-memory-card">
-        <span>0{{ forloop.index }}</span>
-        <strong>{{ item.key }}</strong>
-        <h3>{{ item.question }}</h3>
-        <p>{{ item.answer }}</p>
-      </article>
-      {% endfor %}
-    </div>
-
-    <p class="ecg-caption"><strong>CONTEXT → PROCEDURE → CONDITION → ACCESS → RECORD → CALC → EXTEND.</strong> If I can explain these seven points from the actual document, most pricing discussions become much shorter.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Runtime path</p>
-      <h2>Follow the engine in the same order it can fail.</h2>
-      <p>The final net value hides too much. I prefer to separate context, procedure selection, condition eligibility, search, record match, calculation, condition interaction, and final result.</p>
-    </header>
-
-    <div class="ecg-determination-list">
-      {% for stage in graph.pricing_pipeline %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>0{{ stage.order }}</span><small>pricing stage</small></div>
-          <h3>{{ stage.title }}</h3>
-          <p class="ecg-question">{{ stage.question }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Inputs / controls</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Output</h4>{% if stage.output.first %}<ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul>{% else %}<p>{{ stage.output }}</p>{% endif %}</div>
-          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Condition controls</p>
-      <h2>A found condition is not automatically an active value.</h2>
-      <p>This is where many "but the record exists" investigations go wrong. A requirement, scale, exclusion, subtotal, or alternative calculation can change what happens after the search.</p>
-    </header>
-
-    <div class="ecg-control-stack">
-      {% for control in graph.condition_controls %}
-      <article>
-        <span>{{ control.title }}</span>
-        <h3>{{ control.purpose }}</h3>
-        <p class="ecg-question">{{ control.diagnostic_question }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="ecg-anatomy" data-reveal>
-    <div>
-      <p class="research-canvas__eyebrow">How I read pricing analysis</p>
-      <h2>I look for the first divergence.</h2>
-      <p>Pricing analysis is more useful than the final amount because it tells me what the engine tried, what it found, and what it did not use.</p>
-    </div>
-    <ol>
-      <li><span>01</span><strong>Procedure</strong><p>Was the expected pricing procedure determined?</p></li>
-      <li><span>02</span><strong>Step</strong><p>Is the expected condition type in the procedure and eligible?</p></li>
-      <li><span>03</span><strong>Access</strong><p>Which condition tables were checked, and in which order?</p></li>
-      <li><span>04</span><strong>Key</strong><p>Which runtime field values formed the access key?</p></li>
-      <li><span>05</span><strong>Result</strong><p>Was the condition missing, found, inactive, excluded, or manually changed?</p></li>
-      <li><span>06</span><strong>Math</strong><p>What rate, base, scale, formula, and subtotal produced the value?</p></li>
-    </ol>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Classic extension path</p>
-      <h2>When standard pricing communication is not enough.</h2>
-      <p>I keep the classic SD path explicit because many productive S/4HANA landscapes still contain it. The important part is not memorizing exit names. It is understanding where custom data enters pricing and whether sales and billing use the same logic.</p>
-    </header>
-
-    {% assign classic = graph.extension_layers | where: "id", "PRC-EXT-CLASSIC" | first %}
-    <p class="ecg-caption"><strong>Design principle.</strong> {{ classic.principle }}</p>
-    <div class="ecg-determination-list">
-      {% for ext in classic.patterns %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>CLASSIC</span><small>extension</small></div>
-          <h3>{{ ext.title }}</h3>
-          <p class="ecg-question">{{ ext.when }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Typical trap</h4><p>{{ ext.trap }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Clean-core extension path</p>
-      <h2>Prefer released extension mechanisms when they fit.</h2>
-      <p>The modern path is cleaner when the requirement is really data or a small explicit rule: expose the field to pricing communication, connect it to condition technique, and use released pricing BAdIs for requirement or calculation logic.</p>
-    </header>
-
-    {% assign clean = graph.extension_layers | where: "id", "PRC-EXT-CLEAN-CORE" | first %}
-    <p class="ecg-caption"><strong>Design principle.</strong> {{ clean.principle }}</p>
-    <div class="ecg-determination-list">
-      {% for ext in clean.patterns %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>CLEAN CORE</span><small>extension</small></div>
-          <h3>{{ ext.title }}</h3>
-          <p class="ecg-question">{{ ext.when }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Why it matters</h4><p>Make the extension visible in configuration and pricing analysis instead of hiding business behavior in document-specific code.</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">A classic custom-field chain</p>
-      <h2>The field is only the beginning.</h2>
-      <p>A frequent design mistake is to celebrate when a custom field exists on the order. Pricing does not care about the celebration. The value must reach pricing communication and then be consumed by the condition technique.</p>
-    </header>
-    <div class="ecg-rail" aria-label="Custom pricing field dependency chain">
+    <div class="ecg-rail" aria-label="Sales pricing determination chain">
       <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Business Attribute</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Pricing Communication</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Field Catalog</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Condition Table</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Access Sequence</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Condition Type</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Condition Record</span>
+        <span class="ecg-node ecg-node--input">Document context</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Pricing procedure</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Condition type</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Access sequence</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Condition record</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Price element</span>
       </div>
     </div>
+
+    <p>The distinction matters during support. If the wrong pricing procedure was selected, adding another condition record cannot repair the real cause. If the correct procedure and condition type are present but no record is found, the problem has moved further down the chain into the access sequence, runtime key, validity, or master data.</p>
+
+    <p>SAP's current <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/50ce78a27e4546c3914360f1b17961e2.html" target="_blank" rel="noopener">Example of Pricing Process</a> shows this same sequence explicitly: determine the pricing procedure, read its condition types, follow the assigned access sequence, and use the valid condition record that matches the runtime values.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Order vs billing</p>
-      <h2>Correct order pricing does not prove correct billing pricing.</h2>
-      <p>When custom pricing fields or routines are involved, I compare both documents as separate runtime contexts. The useful question is not "why did billing change the price?" but "where is the first difference between the two pricing paths?"</p>
+      <p class="research-canvas__eyebrow">Condition technique</p>
+      <h2>An access sequence is a search strategy.</h2>
+      <p>A condition type can use an access sequence to search several condition tables in a defined order. Each table represents a key combination such as customer and material, a broader customer group, or a more general material price.</p>
     </header>
 
-    <div class="ecg-rail" aria-label="Order and billing pricing comparison">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Sales Order</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Pricing Analysis</span><span class="ecg-arrow" aria-hidden="true">↔</span>
-        <span class="ecg-node ecg-node--decision">Compare Context & Custom Fields</span><span class="ecg-arrow" aria-hidden="true">↔</span>
-        <span class="ecg-node ecg-node--decision">Billing Pricing Analysis</span><span class="ecg-arrow" aria-hidden="true">←</span>
-        <span class="ecg-node ecg-node--input">Billing Document</span>
-      </div>
-    </div>
-    <p class="ecg-caption">Classic implementations often need equivalent pricing-communication population on the billing side. The diagnostic goal is parity of required inputs, not blind duplication of code.</p>
+    <p>Suppose a list price first searches <em>customer + material</em>, then <em>price list + currency + material</em>, then <em>material</em>. If the first access finds nothing and the second finds a valid record, pricing can use the second result. An exclusive access can stop the search after the first successful match. The result therefore depends on the actual runtime key, not on which record looks most specific when viewed separately.</p>
+
+    <p>Condition records are pricing master data. They hold values such as prices, discounts, surcharges, freight, or tax-related amounts together with their key fields and validity. SAP's current Sales documentation also supports APIs for condition records, pricing procedures, condition types, access sequences, condition tables, and the pricing field catalog. That separation is useful: the master data and the determination design are related, but they are not the same object.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead reasoning</p>
-      <h2>Five habits that prevent expensive pricing fixes.</h2>
-      <p>These are reasoning heuristics, not SAP configuration rules. They are here because the fastest technical fix is often the slowest architecture decision.</p>
+      <p class="research-canvas__eyebrow">Calculation</p>
+      <h2>Finding a record is only the start of the calculation.</h2>
+      <p>The pricing procedure controls how individual price elements interact. Requirements can decide whether a condition is relevant; scales can change a rate; formulas can change the base or amount; subtotals can feed later conditions; and condition exclusion can suppress one result in favor of another.</p>
     </header>
-    <div class="ecg-heuristic-grid">
-      {% for heuristic in graph.practitioner_heuristics %}
-      <article>
-        <span>HEURISTIC {{ forloop.index }}</span>
-        <h3>{{ heuristic.statement }}</h3>
-        <p>{{ heuristic.context }}</p>
-        {% if heuristic.checks %}<h4>Check</h4><ul>{% for value in heuristic.checks %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-        {% if heuristic.questions %}<h4>Ask</h4><ul>{% for value in heuristic.questions %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-        {% if heuristic.anti_patterns %}<h4>Avoid</h4><ul>{% for value in heuristic.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-      </article>
-      {% endfor %}
+
+    <p>This is why the useful evidence is the complete price element, not only its rate. A 10% discount can be technically correct and still produce the wrong value if its base is wrong. A condition can be found but inactive. A manual condition can coexist with automatic pricing. Group conditions can also make one item's pricing depend on quantities or values across related items.</p>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Rate</h3><p>What amount, percentage, or quantity-based rate was determined?</p></div>
+      <div><h3>Base</h3><p>Which value or quantity did the condition use for its calculation?</p></div>
+      <div><h3>Interaction</h3><p>Did a requirement, scale, formula, exclusion rule, subtotal, or group condition change the final effect?</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Failure patterns</p>
-      <h2>Symptoms are shortcuts to the first checks.</h2>
-      <p>I do not treat these as root causes. They are triage routes that help decide where to look before opening Customizing or code.</p>
+      <p class="research-canvas__eyebrow">A concrete example</p>
+      <h2>“The condition record exists, but the sales order has no price.”</h2>
+      <p>This symptom is useful because it shows why pricing should be read from the document outward rather than from master data inward.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>SYMPTOM</span><small>triage</small></div>
-          <h3>{{ failure.symptom }}</h3>
-          <p class="ecg-question">Find the first check that does not match the expected design.</p>
-        </header>
-        <div class="ecg-diagnostic"><div><h4>Check first</h4><ol>{% for value in failure.first_checks %}<li>{{ value }}</li>{% endfor %}</ol></div><div><h4>Do not start with</h4><p>Creating another condition record or changing the procedure before the trace explains the failure.</p></div></div>
-      </article>
-      {% endfor %}
-    </div>
+
+    <p>First confirm which pricing procedure the document actually uses. Then check whether the expected condition type is in that procedure and whether its requirement allows it to run. If the condition type uses an access sequence, pricing analysis should show which accesses were attempted and the field values used for each key. Only then does the existence, validity, currency, unit, and scale of the condition record become decisive.</p>
+
+    <p>If the record is found, continue into the calculation. A zero or unexpected value may come from the condition base, a scale, a formula, an exclusion rule, or another condition that changes the result. The diagnosis is complete when we can name the first pricing decision that differs from the expected design—not when we have merely found a table entry that looks plausible.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Impact traces</p>
-      <h2>Change one pricing input and trace both directions.</h2>
-      <p>Forward tracing shows what the change can affect. Backward tracing explains why a result appeared.</p>
+      <p class="research-canvas__eyebrow">Order and billing</p>
+      <h2>The invoice does not have to repeat the order's pricing calculation.</h2>
+      <p>When a billing document is created with reference to an earlier document, copying control decides how relevant data moves into Billing. Pricing is one of those controls.</p>
     </header>
-    <div class="ecg-traces">
-      {% for trace in graph.impact_traces %}
-      <article class="ecg-trace">
-        <div class="ecg-trace__head"><span>{{ trace.direction }}</span><h3>{{ trace.title }}</h3></div>
-        <div class="ecg-trace__path">{% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
-        <p><strong>Lesson:</strong> {{ trace.lesson }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
 
-  {% for scenario in graph.synthetic_cases %}
-  <section class="ecg-case" data-reveal>
-    <div class="ecg-case__intro">
-      <p class="research-canvas__eyebrow">Synthetic exercise {{ forloop.index }}</p>
-      <h2>{{ scenario.title }}</h2>
-      <p>{{ scenario.description }}</p>
-      <strong>Synthetic example · no customer data</strong>
-    </div>
-    <div class="ecg-case__body">
-      <h3>Facts</h3><ul>{% for value in scenario.facts %}<li>{{ value }}</li>{% endfor %}</ul>
-      <h3>Reasoning path</h3><ol>{% for value in scenario.reasoning_path %}<li>{{ value }}</li>{% endfor %}</ol>
-      <p><strong>Lesson:</strong> {{ scenario.lesson }}</p>
-    </div>
+    <p>SAP's 2025 FPS01 documentation states that, for delivery-related billing, quantities can come from the delivery while prices can come from the sales order. The same copying-control layer can also specify whether pricing is copied or redetermined according to the configured pricing type. Correct pricing in the order therefore does not prove that the billing document will have the same price elements.</p>
+
+    <p>This boundary becomes especially important when a billing document has a different pricing date, tax context, custom field, manual condition, or repricing rule. Compare the order and billing document as two pricing contexts and identify the first difference. The <a href="/labs/enterprise-context/billing/">Billing guide</a> covers the broader copying-control and invoice lifecycle.</p>
   </section>
-  {% endfor %}
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Assessment drills</p>
-      <h2>Answer with a diagnostic path, not a definition.</h2>
-      <p>A Lead answer should show sequence, boundaries, extension choice, and downstream consequences before proposing a configuration change.</p>
+      <p class="research-canvas__eyebrow">Extensibility</p>
+      <h2>Extend the pricing model at a defined point, not wherever code is convenient.</h2>
+      <p>Pricing extensions are deployment- and scenario-specific. The important design question is which input or calculation the standard model cannot express, and which supported extension point owns that gap.</p>
     </header>
-    <div class="ecg-drill-list">
-      {% for drill in graph.assessment_drills %}
-      <details>
-        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.title }}</strong><small>{{ drill.prompt }}</small></summary>
-        <div><p>Expected reasoning path</p><ol>{% for value in drill.expected_reasoning %}<li>{{ value }}</li>{% endfor %}</ol></div>
-      </details>
-      {% endfor %}
+
+    <p>In SAP S/4HANA Cloud, released key-user extensibility supports custom fields for Sales and Billing pricing communication and custom logic for selected pricing functions such as requirements, condition base values, and condition amounts. Classic and private-edition landscapes can also contain established pricing routines and enhancement patterns. Those mechanisms should not be described as interchangeable across editions.</p>
+
+    <p>A custom pricing field also needs an end-to-end path. The business value must exist in the document context, be available to pricing communication, be exposed through the pricing field catalog where required, participate in the condition-table or calculation design, and be populated in every runtime context that depends on it. Creating the field alone does not make it a pricing input.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Process boundaries</p>
+      <h2>Pricing owns the commercial value, not every downstream consequence.</h2>
+      <p>Several neighboring processes consume pricing results, but they answer different questions.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Sales document</h3><p>Which pricing procedure and runtime context apply, and which price elements are calculated?</p></div>
+      <div><h3>Billing</h3><p>Which pricing elements are copied, retained, or redetermined when the invoice is created?</p></div>
+      <div><h3>Finance</h3><p>How do the resulting billing values feed account determination, receivables, revenue, tax, and other accounting effects?</p></div>
+    </div>
+
+    <p class="ecg-caption">If the commercial price is correct but the accounting result is wrong, the investigation has crossed out of Pricing. Continue with <a href="/labs/enterprise-context/finance-logistics/">FI/CO for Logistics</a> rather than changing condition records.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Related context</p><h2>Follow the process that consumes the price.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/sales-order/"><span>SD</span><strong>Sales Order</strong><small>See the document, partner, item, schedule-line, credit, and availability decisions that provide pricing context.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/billing/"><span>SD</span><strong>Sales Billing</strong><small>Understand how pricing is copied or redetermined when a billable reference becomes an invoice.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="/labs/enterprise-context/sales-diagnostics/"><span>OPS</span><strong>Sales Diagnostic Casebook</strong><small>Apply the same first-divergence method across broader Sales incidents.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/"><span>FI</span><strong>FI/CO for Logistics</strong><small>Continue from commercial values into account determination and financial posting.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Standard behavior and extension points stay source-tracked.</h2>
-      <p>Primary SAP documentation is used to verify condition technique, pricing procedures, analysis, exclusion, custom fields, custom logic, and classic pricing enhancement patterns. The diagnostic method remains independently written.</p>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>Current SAP documentation behind this model.</h2>
+      <p>The article is independently written. The pricing-procedure, condition-technique, billing, and extensibility claims are grounded in SAP documentation; the diagnostic sequence is an editorial model for reading those mechanisms coherently.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
@@ -414,8 +236,8 @@ source_links:
   <section class="ecg-machine" data-reveal>
     <div>
       <p class="research-canvas__eyebrow">For tools and AI</p>
-      <h2>The diagnostic path is machine-readable too.</h2>
-      <p>The pricing pipeline, extension layers, failure modes, traces, heuristics, and assessment drills are exposed as JSON for later graph views and grounded evaluation.</p>
+      <h2>The supporting pricing model remains machine-readable.</h2>
+      <p>The structured pricing graph and source registry remain available for grounded navigation and later diagnostic tooling.</p>
     </div>
     <div class="ecg-machine__actions">
       <a class="research-canvas__button" href="/labs/enterprise-context/data/pricing-graph.json">Pricing graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
