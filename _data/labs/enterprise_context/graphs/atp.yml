@@ -129,9 +129,9 @@ atp_relevance_controls:
       availability and requirements logic.
     objects:
     - name: "Requirements Class"
-      role: "Defines requirement and planning behavior used by sales and MRP."
+      role: "Contains requirement and planning controls that can affect availability and transfer-of-requirements behavior."
     - name: "Requirements Type"
-      role: "Connects the material/planning context to the applicable requirements class."
+      role: "Is determined from the material/operation context and identifies the applicable requirements class."
     - name: "Schedule Line Category"
       role: "Controls availability-check and transfer-of-requirements relevance in the sales document."
     - name: "Delivery Item Category"
@@ -144,11 +144,11 @@ atp_relevance_controls:
     - name: "Checking Group"
       role: "Material/plant-side key used with the checking rule to determine availability control and scope."
     - name: "Planning Strategy"
-      role: "Defines how customer requirements interact with planning and planned independent requirements."
+      role: "Defines how customer requirements interact with material planning and planned independent requirements."
     - name: "MRP Group"
-      role: "Provides material-planning control that can influence requirements determination and planning behavior."
+      role: "Can contribute material-specific planning controls around requirements and availability behavior."
     - name: "Strategy Group"
-      role: "Material master entry point for one or more planning strategies."
+      role: "Material master entry point for the planning strategies that influence requirements determination."
   lead_rule: >-
     Do not troubleshoot all eight objects at once. Start with the actual document
     requirement, schedule line, checking group, and checking rule. Expand into
@@ -156,6 +156,7 @@ atp_relevance_controls:
   source_refs:
   - SRC-SAP-ATP-LEARNING-FOUNDATION
   - SRC-SAP-AATP-CHECK-DETAIL-LEARNING
+  - SRC-SAP-AATP-REQ-CLASS-LEARNING
   - SRC-SAP-ATP-CONTROL
 
 location_check_model:
