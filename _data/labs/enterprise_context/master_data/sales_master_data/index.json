@@ -2,14 +2,14 @@
   "id": "INDEX-SD-MASTER-DATA",
   "title": "SAP S/4HANA Sales Master Data Graph",
   "version": "0.2.0",
-  "updated_at": "2026-08-15",
+  "updated_at": "2026-09-23",
   "status": "draft",
   "verified": false,
   "summary": {
-    "entity_count": 17,
+    "entity_count": 19,
     "groups": 4,
     "behavior_profiles": 8,
-    "design_goal": "Explain Sales behavior through the data that mechanisms read.",
+    "design_goal": "Explain Sales behavior through the data, relationships, conditions, organizational context, and runtime events that mechanisms read.",
     "primary_question": "Which maintained object supplied this value, under which scope and validity, and what does it change downstream?"
   },
   "group_order": [
@@ -32,36 +32,202 @@
       "What is more specific and can refine/override the generic source?",
       "Which failure signal proves I should inspect this object?"
     ],
-    "memory_chain": "PARTY → PRODUCT → BEHAVIOR → RELATIONSHIP → CONDITION → DECISION → DOCUMENT → FULFILLMENT"
+    "memory_chain": "PARTY → ADDRESS → PRODUCT → RELATIONSHIP → CONDITION → DECISION → DOCUMENT → EVENT"
   },
   "fast_paths": [
-    {"question": "Wrong price", "path": ["MD.SD.BP", "MD.SD.PRODUCT", "MD.SD.CUSTHIER", "MD.SD.PRODHIER", "MD.SD.PRICE", "MEC.SD.PRICE"]},
-    {"question": "Wrong ship-to / payer", "path": ["MD.SD.BP", "MD.SD.PARTNERREL", "MEC.SD.PARTNER"]},
-    {"question": "Wrong item category", "path": ["MD.SD.PRODUCT", "MD.SD.BEHAVIOR", "MEC.SD.ICAT"]},
-    {"question": "Wrong shipping point", "path": ["MD.SD.BP", "MD.SD.PRODUCT", "MEC.SD.PLANT", "MEC.SD.SHIPPT"]},
-    {"question": "Wrong customer-specific product behavior", "path": ["MD.SD.BP", "MD.SD.PRODUCT", "MD.SD.CMIR"]},
-    {"question": "Product substituted unexpectedly", "path": ["MD.SD.MATDET", "MD.SD.PRODUCT", "MEC.SD.ICAT", "MEC.SD.ATP"]},
-    {"question": "Packaging / HU behavior is wrong", "path": ["MD.SD.PRODUCT", "BEH.SD.PACKAGING_HU", "Delivery", "EWM"]},
-    {"question": "Returnable packaging balance is wrong", "path": ["MD.SD.PRODUCT", "BEH.SD.RETURNABLE", "SD.RTNBL", "Inventory Management"]},
-    {"question": "Batch or serial trace is wrong", "path": ["MD.SD.PRODUCT", "BEH.SD.BATCH", "BEH.SD.SERIAL", "Delivery"]},
-    {"question": "Item rejected before pricing", "path": ["MD.SD.LISTEXCL", "MD.SD.BP", "MD.SD.PRODUCT"]},
-    {"question": "Wrong text/output wording", "path": ["MD.SD.TEXT", "MEC.SD.TEXT", "MEC.SD.OUTPUT"]},
-    {"question": "Credit block", "path": ["MD.SD.BP", "MD.SD.CREDIT", "MEC.SD.CREDIT"]}
+    {
+      "question": "Wrong price",
+      "path": [
+        "MD.SD.BP",
+        "MD.SD.PRODUCT",
+        "MD.SD.CUSTHIER",
+        "MD.SD.PRODHIER",
+        "MD.SD.PRICE",
+        "MEC.SD.PRICE"
+      ]
+    },
+    {
+      "question": "Wrong ship-to / payer",
+      "path": [
+        "MD.SD.BP",
+        "MD.SD.PARTNERREL",
+        "MEC.SD.PARTNER"
+      ]
+    },
+    {
+      "question": "Wrong ship-to address or address-dependent defaults",
+      "path": [
+        "MD.SD.BP",
+        "MD.SD.ADDRESS",
+        "MD.SD.PARTNERREL",
+        "MEC.SD.PARTNER",
+        "DOC.SD.SALES_ORDER.HEADER"
+      ]
+    },
+    {
+      "question": "Wrong item category",
+      "path": [
+        "MD.SD.PRODUCT",
+        "MD.SD.BEHAVIOR",
+        "MEC.SD.ICAT"
+      ]
+    },
+    {
+      "question": "Wrong shipping point",
+      "path": [
+        "MD.SD.BP",
+        "MD.SD.PRODUCT",
+        "MEC.SD.PLANT",
+        "MEC.SD.SHIPPT"
+      ]
+    },
+    {
+      "question": "Wrong customer-specific product behavior",
+      "path": [
+        "MD.SD.BP",
+        "MD.SD.PRODUCT",
+        "MD.SD.CMIR"
+      ]
+    },
+    {
+      "question": "Product substituted unexpectedly",
+      "path": [
+        "MD.SD.MATDET",
+        "MD.SD.PRODUCT",
+        "MEC.SD.ICAT",
+        "MEC.SD.ATP"
+      ]
+    },
+    {
+      "question": "Packaging / HU behavior is wrong",
+      "path": [
+        "MD.SD.PRODUCT",
+        "BEH.SD.PACKAGING_HU",
+        "Delivery",
+        "EWM"
+      ]
+    },
+    {
+      "question": "Returnable packaging balance is wrong",
+      "path": [
+        "MD.SD.PRODUCT",
+        "BEH.SD.RETURNABLE",
+        "SD.RTNBL",
+        "Inventory Management"
+      ]
+    },
+    {
+      "question": "Batch or serial trace is wrong",
+      "path": [
+        "MD.SD.PRODUCT",
+        "BEH.SD.BATCH",
+        "BEH.SD.SERIAL",
+        "Delivery"
+      ]
+    },
+    {
+      "question": "Item rejected before pricing",
+      "path": [
+        "MD.SD.LISTEXCL",
+        "MD.SD.BP",
+        "MD.SD.PRODUCT"
+      ]
+    },
+    {
+      "question": "Wrong text/output wording",
+      "path": [
+        "MD.SD.TEXT",
+        "MEC.SD.TEXT",
+        "MEC.SD.OUTPUT"
+      ]
+    },
+    {
+      "question": "Credit block",
+      "path": [
+        "MD.SD.BP",
+        "MD.SD.CREDIT",
+        "MEC.SD.CREDIT"
+      ]
+    },
+    {
+      "question": "Recurring product set is not proposed",
+      "path": [
+        "MD.SD.ITEMPROPOSAL",
+        "MD.SD.PRODUCT",
+        "DOC.SD.SALES_ORDER.ITEM"
+      ]
+    }
   ],
   "boundary_notes": [
-    {"class": "Master data", "rule": "Maintained object with lifecycle beyond one sales document, for example BP or Product."},
-    {"class": "Behavior profile", "rule": "A learning and architecture layer that explains how master-data choices change runtime behavior. It is not another SAP master-data object."},
-    {"class": "Relationship record", "rule": "Maintains a specific relationship such as customer-material or hierarchy membership."},
-    {"class": "Condition record", "rule": "Validity-based value selected by configured condition technique; the record is data, the access logic is configuration."},
-    {"class": "Configuration", "rule": "Determination procedures, condition types, access sequences, item categories and other control logic. Not master data."},
-    {"class": "Runtime document data", "rule": "Values copied or determined into inquiry/quotation/order/delivery/billing documents; after copy they have their own lifecycle."},
-    {"class": "Organizational context", "rule": "Sales organization, distribution channel, division, plant and company code scope data/rules but are organizational structure, not classic business master data."}
+    {
+      "class": "Master data",
+      "rule": "Maintained object with lifecycle beyond one sales document, for example BP or Product."
+    },
+    {
+      "class": "Behavior profile",
+      "rule": "A learning and architecture layer that explains how master-data choices change runtime behavior. It is not another SAP master-data object."
+    },
+    {
+      "class": "Relationship record",
+      "rule": "Maintains a specific relationship such as customer-material or hierarchy membership."
+    },
+    {
+      "class": "Condition record",
+      "rule": "Validity-based value selected by configured condition technique; the record is data, the access logic is configuration."
+    },
+    {
+      "class": "Configuration",
+      "rule": "Determination procedures, condition types, access sequences, item categories and other control logic. Not master data."
+    },
+    {
+      "class": "Runtime document data",
+      "rule": "Values copied or determined into inquiry/quotation/order/delivery/billing documents; after copy they have their own lifecycle."
+    },
+    {
+      "class": "Organizational context",
+      "rule": "Sales organization, distribution channel, division, plant and company code scope data/rules but are organizational structure, not classic business master data."
+    }
   ],
   "known_gaps": [
-    "Sales deals/promotions and settlement-management master data deserve a separate commercial-agreements layer.",
-    "Output parameter determination is intentionally kept in the mechanism/configuration layer until its deployment-specific rule data model is modeled.",
-    "Product compliance/customer compliance is adjacent and should become its own compliance graph rather than being hidden inside generic Sales master data.",
-    "Retail assortments/site/article master data are industry-specific and should be modeled under the Retail industry layer.",
-    "Empties/full-products behavior stays as an industry extension until beverage or deposit logistics receives its own model."
-  ]
+    "Sales deals/promotions and settlement-management data belong to a separate commercial-agreements layer rather than the universal Sales master-data core.",
+    "Dynamic product proposal and recommendation logic are optional/specialized order-entry layers beyond the core Sales Item Proposal.",
+    "Output parameter determination stays in the mechanism/configuration layer until its deployment-specific rule data model is modeled.",
+    "Product compliance/customer compliance is adjacent and should remain its own compliance graph.",
+    "Retail assortments/site/article master data remain industry-specific.",
+    "Empties/full-products behavior remains an industry extension until beverage or deposit logistics has its own model."
+  ],
+  "coverage_audit": {
+    "reviewed_at": "2026-09-23",
+    "conclusion": "Core Sales master data coverage is broad. Remaining gaps are mainly specialized commercial-agreement, recommendation, compliance, and industry layers rather than missing universal Sales master objects.",
+    "core_covered": [
+      "Business Partner / Customer",
+      "Business Partner multiple addresses and address usage",
+      "Customer sales-area data and partner functions",
+      "Product / Material and sales/plant/UoM views",
+      "Customer Material",
+      "Customer and Product Hierarchies",
+      "Sales Item Proposals",
+      "Reusable master texts",
+      "Pricing condition records",
+      "Material determination",
+      "Material listing / exclusion",
+      "Free goods condition records",
+      "Cross-selling assignments"
+    ],
+    "adjacent_covered": [
+      "Credit master data",
+      "Units of measure and quantity constraints",
+      "Batch and classification",
+      "Sales BOM / product structure",
+      "Variant configuration context"
+    ],
+    "intentional_boundaries": [
+      "Sales organization, distribution channel, division, company code, plant, and shipping point are enterprise structure / organizational context, not classic business master data.",
+      "Pricing procedures, access sequences, condition types, partner procedures, item categories, schedule lines, copy control, output rules, and determination procedures are configuration/mechanisms, not master data records.",
+      "Tax classifications are customer/product attributes and tax results are condition/pricing outcomes; they do not require a second generic Sales master-data entity.",
+      "Payment terms, Incoterms, delivery priority, shipping condition, account-assignment groups, and similar values are high-leverage attributes of BP/product/sales views, not separate master objects.",
+      "Customer expected price is primarily transactional/inbound-order context and exception handling, not a universal reusable Sales master record.",
+      "Sales deals, promotions, condition contracts, settlement management, omnichannel promotion services, compliance, and Retail assortments are specialized commercial or industry layers and should stay outside the universal core."
+    ]
+  }
 }
