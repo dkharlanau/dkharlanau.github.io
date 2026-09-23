@@ -577,11 +577,14 @@ bop_strategies:
   - code: "LOSE"
     meaning: "Remove current confirmation and release the quantity."
     lead_question: "Which requirements should intentionally lose their promise?"
-  - code: "SKIP"
-    meaning: "Keep current confirmation and do not include the requirement in the availability check."
-    lead_question: "Which requirements should be protected from this BOP recheck?"
+bop_skip_handling:
+  code: "SKIP"
+  meaning: "Keep the current confirmation and exclude the requirement from this availability recheck."
+  lead_question: "Which requirements should remain frozen rather than compete again for supply?"
+  guardrail: "Model Skip separately from the six processing strategy codes to avoid the common six-versus-seven documentation confusion."
 bop_source_refs:
   - SRC-SAP-AATP-BOP-STRATEGIES
+  - SRC-SAP-AATP-BOP-LEARNING
 
 extension_layers:
   - id: AATP-EXT-ABC
