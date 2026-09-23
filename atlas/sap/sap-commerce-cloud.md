@@ -86,7 +86,7 @@ sitemap: false
     <ul>
       <li>SAP Commerce Cloud — <a href="https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD/20125f0eca6340dba918bda360e3cdfa/280fc217b07d49c8b64cb4398ded3c7c.html">About SAP Commerce Cloud</a>.</li>
       <li>SAP — <a href="https://www.sap.com/products/crm/commerce-cloud/composable-storefront.html">Composable Storefront</a>.</li>
-      <li>SAP Commerce Cloud — <a href="https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD/9fef7032b3304324b8891e84f19f2bf3/8c19b01586691014a955e40de67d96a5.html">OCC REST API</a>.</li>
+      <li>SAP Commerce Cloud — <a href="https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD/3476714bba0b4cb9b3eb58c270e44439/2948414bda21402e95840e93209d1d5d.html">OCC REST API documentation</a>.</li>
       <li>SAP S/4HANA Order Management Integration — <a href="https://help.sap.com/docs/SAP_COMMERCE_INTEGRATIONS/47ad58c1a27447949aad8addbee46fca/1ad1f75d5fe345189d75a2292e748014.html">Synchronous order-management configuration</a>.</li>
       <li>SAP Asynchronous Order Management Integration — <a href="https://help.sap.com/docs/SAP_COMMERCE_INTEGRATIONS/8ce6157b995e418093b6e5410bcd74b2/8bc19f9786691014b849cc9daf31e4d8.html">Functionality in Asynchronous Order Management</a>.</li>
     </ul>
