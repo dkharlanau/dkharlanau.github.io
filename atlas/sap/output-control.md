@@ -222,6 +222,24 @@ sitemap: false
       <li><strong>Test the runtime output.</strong> Check determination, relevance, rendering, channel processing, and final delivery.</li>
     </ol>
 
+    <h2>Technical prerequisites and platform boundary</h2>
+    <p>The functional rules are only one layer. In SAP S/4HANA and SAP S/4HANA Cloud Private Edition, the technical setup also matters. SAP's conversion and operations documentation lists the following prerequisites for Output Control:</p>
+    <ul>
+      <li><strong>bgRFC must be configured.</strong> Output processing uses background RFC; without the required configuration, output processing cannot run.</li>
+      <li><strong>A storage system and storage category must exist.</strong> Rendered PDF output needs a content repository/storage setup.</li>
+      <li><strong>BRFplus must be active and usable.</strong> The decision-table layer depends on it.</li>
+      <li><strong>Adobe Document Services must be available when Adobe forms are used.</strong></li>
+    </ul>
+
+    <p>This gives us a useful ownership split. Functional consultants own business rules, application-object behavior, receivers, channels, and form selection. Basis/platform teams may own bgRFC, storage, spool, mail infrastructure, and ADS connectivity. Form developers own layout and form logic. Integration teams own EDI/SOA endpoints and message recovery.</p>
+
+    <h2>Extensibility and scale</h2>
+    <p>Output Parameter Determination can use application-specific fields, and SAP documentation describes extensibility through CDS for supported scenarios. This means we are not limited to one fixed global decision table. However, extra fields should be added only when they represent stable business rules; otherwise the table becomes difficult to explain and test.</p>
+
+    <p>The framework can return multiple messages, receivers, and channels at the same time. That is a capability, not an accident. It also means governance matters: a broad non-exclusive fallback rule can create duplicate communication if row order is not designed carefully.</p>
+
+    <p>For large documents, rendering can become a performance boundary. Current SAP S/4HANA Cloud Sales documentation recommends avoiding print or email output for sales or billing documents with more than 1,000 items because PDF rendering can become technically expensive; complex forms and heavy item-level logic can reduce the safe limit further. For high-volume cases, scheduled output processing is often a better operating model than synchronous user-time rendering.</p>
+
     <h2>How to diagnose Output Control</h2>
     <p>Do not start from the printer or email server. First locate the layer where expected and actual behavior diverge.</p>
 
@@ -297,6 +315,9 @@ sitemap: false
       <li><a href="https://learning.sap.com/courses/customizing-output-control-in-sap-s-4hana-sales/defining-output-parameters-for-sales-orders">SAP Learning: Defining Output Parameters for Sales Orders</a></li>
       <li><a href="https://learning.sap.com/courses/customizing-output-control-in-sap-s-4hana-sales/explaining-the-concept-of-output-control">SAP Learning: Explaining the Concept of Output Control</a></li>
       <li><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration/configuring-output-management_c8269e30-dda5-4096-962d-a7e81384bfed">SAP Learning: Configuring Output Management in SAP S/4HANA Cloud Public Edition Sales</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/d736578415a340cba84b944798a699b5.html">SAP Help: SAP S/4HANA Output Control</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/05e1f995c35e4716b99ce6d8a04d1473.html">SAP Help: How Does Output Control Work?</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/d9cc17d1aa404aee9bf2d10599c9a8d1.html">SAP Help: Output Management for Sales Documents and Billing Process Documents</a></li>
     </ul>
 
     <h2>Verification boundary</h2>
