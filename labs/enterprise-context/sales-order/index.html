@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -61,6 +61,18 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/b964b65334e6b54ce10000000a174cb4.html"
   - title: "Partner Determination Procedure"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/0e71bd534f22b44ce10000000a174cb4.html"
+  - title: "Partner Functions"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/806fbd534f22b44ce10000000a174cb4.html"
+  - title: "Incoterms Source in SD Sales Documents"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/2487878"
+  - title: "Sales Order Header"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/19d48293097f4a2589433856b034dfa5/28d644581efca007e10000000a441470.html"
+  - title: "Analyzing the Determination of Taxes"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/analyzing-the-determination-of-taxes_bc2ea09a-670d-4fb5-8866-11c17e698e39"
+  - title: "Introducing the Condition Technique"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/introducing-the-condition-technique_dce0f313-dee6-470e-8851-3f1773cb5d45"
+  - title: "Payment Terms from Payer Master Data"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6f1d59146ff144748b1ee315026ff2df.html"
   - title: "Determining Sales Document Item Categories"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/dc89c95360267214e10000000a174cb4.html"
   - title: "Schedule Line Categories"
@@ -209,6 +221,59 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="field-provenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Field provenance</p>
+      <h2>{{ graph.field_provenance.title }}</h2>
+      <p>{{ graph.field_provenance.summary }}</p>
+    </header>
+
+    <div class="ecg-memory-grid">
+      {% for item in graph.field_provenance.partner_memory %}
+      <article class="ecg-memory-card">
+        <span>PARTNER</span>
+        <strong>{{ item.partner }}</strong>
+        <h3>{{ item.owns }}</h3>
+        <ul>{% for value in item.examples %}<li>{{ value }}</li>{% endfor %}</ul>
+        <p>{{ item.caveat }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="ecg-determination-list">
+      {% for item in graph.field_provenance.fields %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{{ item.partner_role }}</span><small>{{ item.level }}</small></div>
+          <h3>{{ item.field }}</h3>
+          <p class="ecg-question">{{ item.source }}</p>
+        </header>
+
+        <div class="ecg-decision-columns">
+          <div>
+            <h4>Mechanism</h4>
+            <p>{{ item.mechanism }}</p>
+          </div>
+          <div>
+            <h4>Rule</h4>
+            <p>{{ item.rule }}</p>
+          </div>
+          <div>
+            <h4>Used next</h4>
+            <p>{{ item.downstream }}</p>
+          </div>
+        </div>
+
+        {% if item.technical_hint %}
+        <p class="ecg-lead-lens"><strong>Technical hint:</strong> {{ item.technical_hint }}</p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+
+    <p class="ecg-caption"><strong>Assessment shortcut:</strong> sold-to is mainly commercial context; ship-to drives destination and logistics context; bill-to owns invoice-recipient context; payer owns payment context. Tax is the exception to simple memorization: geography, classifications, and tax-ID origin are separate decisions.</p>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Three projections</p>
@@ -298,7 +363,7 @@ source_links:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Decision catalogue</p>
-      <h2>Eleven decisions worth tracing.</h2>
+      <h2>{{ graph.determinations | size }} decisions worth tracing.</h2>
       <p>Open each card as a small diagnostic machine. The goal is not to remember every field. The goal is to remember the dependency shape.</p>
     </header>
 
