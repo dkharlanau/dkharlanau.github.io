@@ -10,7 +10,7 @@ process_family: "Order-to-Cash"
 process_step: "Confirm Sales Order Requirement"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-09-23"
 verified_at: null
 
 thesis: >-
@@ -115,6 +115,59 @@ classic_control_foundation:
       check_first: "Compare the expected supply element with the configured scope before asking why it was ignored."
       source_refs:
         - SRC-SAP-AATP-SCOPE
+
+pac_confirmation_model:
+  title: "From requirement to confirmed schedule line"
+  principle: >-
+    Product Availability Check is a time-based promise calculation. For the requested
+    product and delivering plant, SAP checks whether cumulative ATP can cover the
+    requirement on the requirement date. In a sales order, this requirement date is
+    normally the material availability date calculated by scheduling.
+  plant_context:
+    determination: >-
+      The delivering plant can be determined automatically by sales plant determination
+      or entered manually in the sales order.
+    why_it_matters: >-
+      Availability is checked for the product at that plant. A different plant means a
+      different ATP situation.
+    source_refs:
+    - SRC-SAP-AATP-DEPLOYMENT-LICENSE
+  outcomes:
+  - id: ATP-PAC-OUTCOME-NOW
+    title: "Enough cumulative ATP on the requirement date"
+    condition: "Cumulative ATP covers the requested requirement quantity."
+    result: "The requested quantity can be confirmed on that date."
+    atp_effect: >-
+      The confirmed requirement reduces cumulative ATP available to later competing
+      requirements. SAP Learning describes this quantity as reserved for the current
+      sales requirement.
+    document_proof: >-
+      The sales order contains a confirmed schedule line with confirmed quantity and date.
+    delivery_meaning: "The confirmed quantity is the quantity that can move toward delivery."
+  - id: ATP-PAC-OUTCOME-LATER
+    title: "Not enough now, but cumulative ATP exists later"
+    condition: "The requirement cannot be fully covered on its requirement date."
+    result: >-
+      SAP checks cumulative ATP forward in time. Future availability can become the basis
+      for a later or partial delivery proposal, depending on the active delivery option.
+    document_proof: "Read the confirmed schedule lines and proposed dates, not only the requested date."
+    delivery_meaning: "Only the confirmed quantity/date combination is available for delivery planning."
+  - id: ATP-PAC-OUTCOME-NONE
+    title: "No usable cumulative ATP in the future"
+    condition: "No cumulative ATP can cover the requirement within the relevant horizon."
+    result: "The requirement remains unconfirmed."
+    document_proof: "The schedule line has no confirmed quantity for delivery."
+    delivery_meaning: "An unconfirmed quantity cannot be delivered."
+  terminology_guardrail: >-
+    "Reserved" in this ATP explanation does not mean that PAC creates a separate MM
+    reservation document. It means that an already confirmed quantity is no longer
+    available to another competing requirement in the ATP calculation.
+  source_refs:
+  - SRC-SAP-AATP-PAC
+  - SRC-SAP-AATP-SCHEDULING
+  - SRC-SAP-AATP-DELIVERY-OPTIONS
+  - SRC-SAP-AATP-DEPLOYMENT-LICENSE
+  - SRC-SAP-AATP-BASIC-PUBLIC-CLOUD
 
 runtime_pipeline:
   - id: ATP-STAGE-ELIGIBILITY
