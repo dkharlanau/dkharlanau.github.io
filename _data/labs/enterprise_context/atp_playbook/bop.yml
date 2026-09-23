@@ -1,8 +1,121 @@
 id: AATP-PLAYBOOK-BOP
 title: Backorder Processing Design
-updated_at: '2026-09-01'
+updated_at: '2026-09-23'
 release_scope:
 - SAP S/4HANA 2025 FPS01 where cited
+- Current SAP Learning content accessed 2026-09-23
+
+why_bop:
+  title: Why Backorder Processing exists
+  principle: >-
+    A saved sales order does not continuously improve or worsen its confirmation every
+    time the supply situation changes. BOP is the controlled reconfirmation step that
+    revisits existing requirements and redistributes cumulative ATP according to business priority.
+  triggers:
+  - title: New supply appears after the order was saved
+    explanation: >-
+      Transfer of requirements and MRP can create future receipts, but an existing sales
+      order does not automatically rerun its availability check just because the ATP
+      situation improved.
+  - title: A later order has higher business priority
+    explanation: >-
+      Normal ATP consumption is sequence-driven: earlier requirements consume cumulative
+      ATP first. BOP lets the business use another priority, such as delivery priority,
+      instead of document-entry sequence.
+  - title: A receipt moves and an old confirmation becomes unrealistic
+    explanation: >-
+      If a confirmation was based on a planned receipt and that receipt moves later, the
+      old confirmation can remain in the order until a reconfirmation process revisits it.
+  source_refs:
+  - SRC-SAP-AATP-BOP-LEARNING
+
+classic_boundary:
+  title: Classic BOP versus aATP BOP
+  rule: >-
+    When aATP is active for the material, the classic backorder/rescheduling transactions
+    CO06, V_RA, and V_V2 are not the processing path for that material. aATP uses its own
+    BOP model and SAP Fiori applications for automated reconfirmation and operational release.
+  classic_transactions:
+  - "CO06 — Backorder Processing"
+  - "V_RA — Order Processing selection list"
+  - "V_V2 — Rescheduling sales and stock transfer documents by material"
+  source_refs:
+  - SRC-SAP-AATP-BOP-LEARNING
+
+segment_variant_model:
+  title: Segment selects and sorts; variant turns the design into a run
+  segment:
+    purpose: >-
+      A segment is a reusable selection and prioritization definition. Filters decide which
+      requirements enter the segment; prioritizers decide their sequence.
+    lead_question: "Which requirements are in this business priority group, and in what order should they consume supply?"
+  multiple_segments:
+    purpose: >-
+      Multiple segments let the business create different priority groups. The BOP variant
+      then combines those groups with confirmation strategies so scarce supply can move
+      between them deliberately.
+    lead_question: "Which group should protect supply, compete for it, or release it to another group?"
+  variant:
+    purpose: >-
+      A BOP variant is the executable policy. It combines segments, their assigned
+      confirmation strategies, optional global filters, execution settings, and exception handling.
+    lead_question: "Which exact variant ran, with which segment order and strategy assignment?"
+  execution_flow:
+  - "Define filters and prioritizers in BOP segments."
+  - "Assign segments and confirmation strategies in the BOP variant."
+  - "Simulate when the priority policy is new or materially changed."
+  - "Schedule or execute the BOP run."
+  - "Review results and exceptions in Monitor BOP Run."
+  source_refs:
+  - SRC-SAP-AATP-BOP-LEARNING
+  - SRC-SAP-AATP-BOP-CONFIG
+
+strategy_model:
+  title: Six processing strategies plus Skip handling
+  guardrail: >-
+    Current SAP Help/API exposes six processing confirmation-strategy codes: Win, Gain,
+    Improve, Redistribute, Fill, and Lose. SAP Learning material also lists Skip in the
+    same lesson. For assessment purposes, treat Skip separately: it preserves the current
+    confirmation and excludes the requirement from the availability recheck rather than
+    competing for a new confirmation.
+  processing_strategies:
+  - code: WIN
+    intent: "Guarantee the target."
+    behavior: >-
+      The requirement must be fully confirmed on the requested date, or immediately when
+      the requested material availability date is already in the past.
+    downside: "If the target cannot be met, exception handling can stop or isolate processing for the affected product/location context."
+  - code: GAIN
+    intent: "Never become worse; improve if possible."
+    behavior: "The requirement must retain at least its existing confirmation and may improve."
+    downside: "If the existing confirmation cannot be retained, exception handling is triggered."
+  - code: IMPROVE
+    intent: "Try to retain or improve, but allow deterioration."
+    behavior: "The requirement seeks an equal or better result, but a worse confirmation is allowed when supply is insufficient."
+    downside: "Use it when improvement is preferred but not a hard promise."
+  - code: REDISTRIBUTE
+    intent: "Let business priority decide."
+    behavior: "The requirement can receive a better, equal, or worse confirmation."
+    downside: "Supply can be taken from lower-priority requirements and moved to higher-priority ones."
+  - code: FILL
+    intent: "Do not gain; keep or give back supply."
+    behavior: "The requirement cannot gain quantity or an earlier date; it can stay equal or become worse."
+    downside: "Useful as a donor pool for higher-priority requirements."
+  - code: LOSE
+    intent: "Release the confirmation."
+    behavior: "The current confirmation is removed and the requirement remains unconfirmed."
+    downside: "Use only when the business explicitly wants this demand to release its promise."
+  skip_handling:
+    code: SKIP
+    intent: "Freeze this requirement for this BOP recheck."
+    behavior: >-
+      The current confirmation is retained and the requirement is not included in the
+      availability check. SAP Help also uses Skip for requirements with Fixed Date and Quantity
+      that are not included in BOP unless configuration explicitly says otherwise.
+  source_refs:
+  - SRC-SAP-AATP-BOP-STRATEGIES
+  - SRC-SAP-AATP-BOP-LEARNING
+
 bop_design:
   title: Backorder Processing — selection, priority, exceptions, and runtime scope
   blocks:
@@ -13,8 +126,7 @@ bop_design:
     purpose: Defines whether the requirement must win, retain, improve, redistribute, fill, lose, or be skipped.
     check: What is the intended business promise if supply is insufficient?
   - title: Variant
-    purpose: Combines segments, strategies, global filters, runtime options, and exception handling into one executable
-      policy.
+    purpose: Combines segments, strategies, global filters, runtime options, and exception handling into one executable policy.
     check: Which variant actually ran, in simulation or update mode?
   - title: Global segment
     purpose: Defines the overall set of requirements in scope and the remainder group behavior.
@@ -23,13 +135,11 @@ bop_design:
     purpose: Provides a second policy when Win or Gain expectations cannot be fulfilled.
     check: Should processing stop, isolate failed material-plant combinations, or continue with a fallback?
   - title: Availability Change Log filter
-    purpose: Limits BOP to material-plant-MRP-area combinations whose supply, demand, or relevant master-data situation
-      changed since the previous successful run.
+    purpose: Limits BOP to material-plant-MRP-area combinations whose supply, demand, or relevant master-data situation changed since the previous successful run.
     check: Does the run need a full population or only changed availability situations?
   lead_rules:
   - Use simulation before a new or materially changed priority policy updates productive confirmations.
-  - For Win and Gain, define exception and fallback behavior deliberately; SAP recommends fallback handling for
-    these strategies.
+  - For Win and Gain, define exception and fallback behavior deliberately; SAP recommends fallback handling for these strategies.
   - Keep selection and priority explainable before adding BAdIs.
   - Use ACL filtering when the business wants change-driven processing rather than repeated full-scope BOP.
   source_refs:
@@ -37,3 +147,4 @@ bop_design:
   - SRC-SAP-AATP-BOP-STRATEGIES
   - SRC-SAP-AATP-BOP-CONFIG
   - SRC-SAP-AATP-BOP-ACL
+  - SRC-SAP-AATP-BOP-LEARNING
