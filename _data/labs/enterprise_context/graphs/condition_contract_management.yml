@@ -5,7 +5,7 @@ domain: "SAP S/4HANA Settlement Management"
 process_family: "Rebate and Subsequent Settlement"
 status: researching
 created_at: "2026-08-15"
-updated_at: "2026-08-25"
+updated_at: "2026-09-24"
 verified_at: "2026-08-25"
 
 summary: >-
@@ -409,3 +409,64 @@ source_refs:
   - SRC-SAP-CCM-ACCRUALS
   - SRC-SAP-CCM-CLASSIC-REBATE
   - SRC-SAP-CCM-SETTLEMENT-DOCUMENT
+
+
+settlement_type_memory:
+  - type: "Delta accruals"
+    meaning: "Recalculate the accumulated accrual requirement and post the difference; existing accruals are cleared in the run."
+    closes_period: false
+    source_refs:
+      - SRC-SAP-CCM-PRICING-COURSE-MAINTAIN
+      - SRC-SAP-CCM-PRICING-COURSE-SETTLEMENT
+  - type: "Partial settlement"
+    meaning: "Provisionally settle part of the contract duration; later settlement can still reconsider the period."
+    closes_period: false
+    note: "Cumulative partial settlement can roll earlier periods forward so higher scale levels are recognized earlier."
+    source_refs:
+      - SRC-SAP-CCM-PRICING-COURSE-MAINTAIN
+  - type: "Final settlement"
+    meaning: "Permanently settle a defined contract period. A contract can contain more than one final-settlement period."
+    closes_period: true
+    source_refs:
+      - SRC-SAP-CCM-PRICING-COURSE-MAINTAIN
+      - SRC-SAP-CCM-PRICING-COURSE-SETTLEMENT
+  - type: "Delta settlement"
+    meaning: "Correct a period that was already finally settled when later postings or corrections change its business volume."
+    closes_period: false
+    note: "Delta settlement can be repeated; previous delta settlements are considered."
+    source_refs:
+      - SRC-SAP-CCM-PRICING-COURSE-MAINTAIN
+
+configuration_layers:
+  - order: 1
+    layer: "Pricing including condition contract conditions"
+    purpose: "Define rebate, accrual, and settlement pricing with as few condition types and accesses as practical."
+  - order: 2
+    layer: "Condition contract maintenance"
+    purpose: "Define contract types, business-volume selection, validity, partners, conditions, and release behavior."
+  - order: 3
+    layer: "Condition contract settlement"
+    purpose: "Define settlement process, calendar/date types, settlement documents, pricing, tax, and FI integration."
+
+standard_sales_rebate_memory:
+  contract_type_examples:
+    - "0S01 — basic sales rebate"
+    - "0S02 — sales rebate for multiple customers"
+    - "0SG1 to 0SG4 — goods-related tax variants"
+    - "0ST1 to 0ST4 — TPM integration variants for service-taxation patterns"
+  pricing:
+    - id: "RES1"
+      role: "Commercial rebate condition maintained in the condition contract"
+      standard_access_sequence: "RE01"
+      standard_procedure_example: "A10005"
+    - id: "REA1"
+      role: "Accrual condition maintained in the condition contract"
+      accrual_indicator: true
+    - id: "RED1"
+      role: "Delta-accrual calculation condition"
+      accrual_indicator: false
+      references: "REA1"
+      standard_procedure_example: "A10006"
+  source_refs:
+    - SRC-SAP-CCM-CLASSIC-REBATE
+    - SRC-SAP-CCM-PRICING-COURSE-SETTLEMENT
