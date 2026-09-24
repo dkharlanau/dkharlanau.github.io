@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-24
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -198,6 +198,35 @@ source_links:
         <p><a href="/labs/enterprise-context/billing/">Follow the later billing boundary →</a></p>
       </div>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration-controls" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration controls around the order</p>
+      <h2>A correct item can still stop, copy differently, or communicate incorrectly.</h2>
+      <p>Document type, item category, and schedule line explain the core order behavior. Three other controls answer different questions: is required data complete, what happens when a follow-on document is created with reference, and what output is produced after the business object exists?</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Incompleteness</h3>
+        <p>An incompleteness procedure checks whether required business data is present and can make a later function unavailable when a configured field is missing. For example, an order may exist but still be incomplete for a follow-on step because a required plant, partner, or commercial field is absent.</p>
+        <p><strong>Boundary:</strong> incompleteness proves that required data is missing; it does not prove why the value is missing. The root cause can still be master data, determination, reference-document transfer, or manual input.</p>
+      </div>
+      <div>
+        <h3>Copy control</h3>
+        <p>Copy control governs the transition from a source document to a target document. It defines allowed source/target combinations, checks requirements, transfers data, and can influence quantities, prices, status, and document flow. A quotation-to-order problem can therefore be a copy-control problem even when both documents are individually valid.</p>
+        <p><strong>Public Edition boundary:</strong> SAP provides standard copy-control table entries in Public Edition; do not assume the same freedom to add or remove document pairings that exists in Private Edition or classic customizing.</p>
+      </div>
+      <div>
+        <h3>Output</h3>
+        <p>Output is a communication decision after the business document exists. In Public Edition Sales, determination separates output type, receiver, channel, form template, and output relevance. A correct order can therefore have a wrong or missing confirmation without the order itself being wrong.</p>
+        <p><strong>Boundary:</strong> start Public Edition output questions with Output Parameter Determination, not with NAST or classic message control unless the scenario explicitly names that framework.</p>
+      </div>
+    </div>
+
+    <p><strong>Final-review memory rule:</strong> incompleteness controls whether required data is sufficient, copy control governs the document-to-document transition, and output governs what is communicated. They are separate from item-category and schedule-line behavior.</p>
+    <p>Official scope: <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration">Sales Configuration</a> · <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration/introducing-copy-control_aa545c09-ccd9-4734-92e5-d1fc42fdb056">Copy Control</a> · <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration/configuring-output-management_c8269e30-dda5-4096-962d-a7e81384bfed">Output Management</a>. Use the <a href="/atlas/diagnostics/sap-incompletion-procedure-diagnostics/">incompleteness diagnostic</a>, <a href="/labs/enterprise-context/sales-processes/mechanisms/">mechanism library</a>, and <a href="/atlas/diagnostics/sap-output-message-control-diagnostics/">output diagnostic</a> only when the compact model is not enough.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
