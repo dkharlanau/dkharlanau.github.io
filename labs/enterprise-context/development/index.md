@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-24
 hide_global_cta: true
 tags:
   - sap
@@ -18,7 +18,7 @@ tags:
   - btp
   - clean-core
   - architecture
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-24
 publication_wave: "lead-architecture-search-wave-03"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP clean core development with ABAP Cloud, RAP, CAP and BTP"
@@ -170,6 +170,126 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Extension decision flow</p>
+      <h2>Do not start with a tool. Start with the boundary.</h2>
+      <p>{{ topic.extensibility_decision_flow.principle }}</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in topic.extensibility_decision_flow.questions %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ item.order }}</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ item.question }}</h3>
+          <p><strong>Yes:</strong> {{ item.yes }}</p>
+          <p><strong>No:</strong> {{ item.no }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">alt_route</span>
+    <p><strong>Lead shortcut:</strong> small supported last-mile change → key user. Tight ERP transaction → on-stack ABAP Cloud. External users, cross-system ownership, SaaS, independent scaling or lifecycle → side-by-side on BTP.</p>
+    <p><strong>Do not use BTP as camouflage:</strong> if ten lines of local business logic need S/4HANA state in the same transaction, a remote service usually makes the design more fragile, not cleaner.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Key-user toolbox</p>
+      <h2>Use in-app extensibility for small supported changes, not for a hidden custom application.</h2>
+      <p>{{ topic.key_user_toolbox.rule }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.key_user_toolbox.capabilities %}
+      <a href="/labs/enterprise-context/data/development.json"><span>KEY</span><strong>{{ item.name }}</strong><small>{{ item.use }}</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Can this app be extended?</p>
+      <h2>Check the exact app before promising a key-user extension.</h2>
+      <p>Extensibility is exposed by app and business context. Similar apps can support different extension points.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for check in topic.key_user_toolbox.app_support_check %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ forloop.index }}</div>
+        <div class="ecg-determination-card__copy"><h3>Verification step</h3><p>{{ check }}</p></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Current Clean Core model</p>
+      <h2>Use Levels A–D. The old Tier 1/2/3 model is now historical.</h2>
+      <p>{{ topic.clean_core_levels.principle }} {{ topic.clean_core_levels.classification_rule }}</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in topic.clean_core_levels.levels %}
+      <article class="ecg-memory-card">
+        <span>LEVEL {{ item.level }}</span>
+        <strong>{{ item.title }}</strong>
+        <h3>{{ item.lead_view }}</h3>
+        <p>{{ item.meaning }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">history</span>
+    <p><strong>Why we still learn Tier 1/2/3:</strong> {{ topic.three_tier_history.why_remember }}</p>
+    <p><strong>Current position:</strong> {{ topic.three_tier_history.current_position }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Old 3-tier model</p>
+      <h2>Useful vocabulary for existing landscapes, but not the current qualification model.</h2>
+      <p>Status: {{ topic.three_tier_history.status }}.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.three_tier_history.tiers %}
+      <a href="/labs/enterprise-context/data/development.json"><span>{{ item.tier }}</span><strong>{{ item.tier }}</strong><small>{{ item.meaning }}</small><i class="material-symbols-outlined" aria-hidden="true">history_edu</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Extension governance</p>
+      <h2>Building the extension is only half the job.</h2>
+      <p>A Lead also needs to know what depends on the extension, how it moves through the landscape, and how it will be retired.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      <article class="ecg-memory-card">
+        <span>INV</span>
+        <strong>{{ topic.extension_governance.inventory.tool }}</strong>
+        <h3>Know the dependency graph before you change the object.</h3>
+        <p>{{ topic.extension_governance.inventory.purpose }} {{ topic.extension_governance.inventory.lead_use }}</p>
+      </article>
+      <article class="ecg-memory-card">
+        <span>MOVE</span>
+        <strong>Transport is edition-specific</strong>
+        <h3>Do not memorize one path for every S/4HANA product.</h3>
+        <p>{{ topic.extension_governance.transport.public_cloud }} {{ topic.extension_governance.transport.private_onprem }}</p>
+      </article>
+      <article class="ecg-memory-card">
+        <span>OLD</span>
+        <strong>{{ topic.extension_governance.discovery_resource.title }}</strong>
+        <h3>Status: {{ topic.extension_governance.discovery_resource.status }}</h3>
+        <p>{{ topic.extension_governance.discovery_resource.guidance }}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Runtime choice</p>
       <h2>On-stack, Cloud Foundry, Kyma or BTP ABAP Environment?</h2>
       <p>The runtime changes networking, operations, scaling and lifecycle. This is where side-by-side architecture becomes real rather than decorative.</p>
@@ -183,7 +303,7 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Clean core, without religion</p>
+      <p class="research-canvas__eyebrow">Clean core in practice</p>
       <h2>{{ topic.clean_core_reality.definition }}</h2>
       <p>{{ topic.clean_core_reality.sap_reality_check }}</p>
     </header>
