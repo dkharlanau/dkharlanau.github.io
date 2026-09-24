@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-24
 hide_global_cta: true
 tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
 ---
@@ -113,6 +113,42 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
       <p><strong>Primary learning references:</strong> <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/identifying-organizational-units-in-sap-s-4hana-sales_ddb48d1e-1f57-46bd-8d13-d8e4ef6d0560">Organizational Units in SAP S/4HANA Sales</a> · <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-sales-order-management_cad9dfbe-bafc-4ed9-ac2e-6fd8422430e4">Order-to-Cash Process Steps</a> · <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-the-shipping-process_e796d891-1485-4b97-874b-f4cbcbd9dbc9">Shipping Process</a> · <a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-the-billing-process-and-the-integration-to-sap-s-4hana-finance_e2dd5db3-73c3-4cda-8ad5-1e7f39f04fba">Billing and Finance Integration</a>.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="shipping-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales assessment / Shipping recall</p>
+      <h2>DUE → DELIVERY → EXECUTE → PGI → BILLING DUE.</h2>
+      <p>Use this when the assessor asks what Shipping does, why the delivery document matters, or how the customer date becomes an executable plan.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> Shipping turns a due order or other logistics requirement into physical execution. The delivery document is the central object: it carries the shipping context, supports picking and packing, provides status, drives output, and is the reference for goods issue. Before delivery creation, scheduling works backward from the requested delivery date using transit, loading, pick/pack, and transportation-planning time. If the plan is no longer feasible, forward scheduling finds a new feasible date. Operations can create deliveries individually or through the delivery due list. At goods issue, stock and accounting state change, and a normal delivery-related process can move toward billing.</p>
+      <a href="/labs/enterprise-context/shipping/">Open the Shipping & Scheduling deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+
+    <div class="ecg-input-grid">
+      <article><span>ROLE</span><h3>Why do we need a delivery document?</h3><p>It is the logistics execution object and status carrier for picking, packing, output, goods issue, and the handoff to warehouse or transportation execution.</p></article>
+      <article><span>POINT</span><h3>What determines the shipping point?</h3><p>In the classic model: delivering plant + shipping condition + loading group. Verify the plant first because it is upstream of the shipping point.</p></article>
+      <article><span>DATES</span><h3>Which four durations matter?</h3><p>Transit time, loading time, pick/pack time, and transportation planning lead time. Do not collapse them into one generic “lead time”.</p></article>
+      <article><span>DUE</span><h3>Due list vs delivery monitor?</h3><p>The due list finds operations that require delivery creation. The delivery monitor observes deliveries that already exist and supports follow-on processing.</p></article>
+      <article><span>SPLIT</span><h3>Why can one order create several deliveries?</h3><p>Different shipping or grouping criteria can require separate delivery documents. A later split can also come from TM or EWM execution, so first identify where the split happened.</p></article>
+      <article><span>EWM</span><h3>Where does SD Shipping stop?</h3><p>The delivery owns the ERP shipping document and PGI context; detailed bins, quants, warehouse tasks, warehouse orders, and stock-removal execution belong to EWM when EWM is in scope.</p></article>
+    </div>
+
+    <h3>Likely follow-up traps</h3>
+    <ol>
+      <li><strong>“The delivery always comes from a sales order.”</strong> No. Delivery documents also support stock transport, subcontracting, supplier returns, inbound purchase-order processes, and project-driven scenarios.</li>
+      <li><strong>“A late delivery date means ATP is wrong.”</strong> Not necessarily. First read the scheduling chain and the material availability date that ATP received.</li>
+      <li><strong>“Precise scheduling means ATP checks the exact time.”</strong> No. Precise scheduling can calculate to the minute, while ATP checks the material availability date.</li>
+      <li><strong>“One IDoc basic type is universal for every delivery interface.”</strong> Avoid this assumption. Confirm the scenario, message type, basic type, release, and receiving system.</li>
+    </ol>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Primary learning references:</strong> <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/explaining-the-concept-and-structure-of-a-delivery-document">Delivery document concept and structure</a> · <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/processing-outbound-deliveries">Processing outbound deliveries</a> · <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/adjusting-delivery-and-transportation-scheduling">Delivery and transportation scheduling</a> · <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/using-special-functions-in-deliveries">Special delivery functions</a>.</p>
     </div>
   </section>
 
