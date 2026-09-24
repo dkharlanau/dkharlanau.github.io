@@ -290,6 +290,57 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Side-by-side toolbox</p>
+      <h2>Build outside S/4HANA when independence is part of the requirement.</h2>
+      <p>{{ topic.side_by_side_toolbox.principle }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for signal in topic.side_by_side_toolbox.choose_when %}
+      <a href="/labs/enterprise-context/data/development.json"><span>BTP</span><strong>Side-by-side signal</strong><small>{{ signal }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Low-code and pro-code</p>
+      <h2>SAP Build, BAS, CAP and BTP ABAP Environment solve different parts of the stack.</h2>
+      <p>Do not confuse the development environment, programming model and runtime.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in topic.side_by_side_toolbox.sap_build.components %}
+      <article class="ecg-memory-card">
+        <span>BUILD</span>
+        <strong>{{ item.name }}</strong>
+        <h3>{{ item.use }}</h3>
+      </article>
+      {% endfor %}
+      <article class="ecg-memory-card">
+        <span>BAS</span>
+        <strong>SAP Business Application Studio</strong>
+        <h3>{{ topic.side_by_side_toolbox.pro_code.bas }}</h3>
+      </article>
+      <article class="ecg-memory-card">
+        <span>CAP</span>
+        <strong>CAP</strong>
+        <h3>{{ topic.side_by_side_toolbox.pro_code.cap }}</h3>
+      </article>
+      <article class="ecg-memory-card">
+        <span>ABAP</span>
+        <strong>SAP BTP ABAP Environment</strong>
+        <h3>{{ topic.side_by_side_toolbox.pro_code.abap }}</h3>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+    <p><strong>Architecture boundary:</strong> {{ topic.side_by_side_toolbox.integration_boundary }}</p>
+    <p><strong>Cost:</strong> {{ topic.side_by_side_toolbox.cost_warning }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Runtime choice</p>
       <h2>On-stack, Cloud Foundry, Kyma or BTP ABAP Environment?</h2>
       <p>The runtime changes networking, operations, scaling and lifecycle. This is where side-by-side architecture becomes real rather than decorative.</p>
@@ -351,6 +402,51 @@ source_links:
       <a href="/labs/enterprise-context/data/development.json"><span>{{ item.priority_for_sap_lead }}</span><strong>{{ item.language }}</strong><small>{{ item.learn_for }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       {% endfor %}
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Custom code migration</p>
+      <h2>Retire before you adapt.</h2>
+      <p>{{ topic.custom_code_migration.boundary }} {{ topic.custom_code_migration.lead_rule }}</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for step in topic.custom_code_migration.flow %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ step.order }}</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.action }}</p>
+          <p><strong>Output:</strong> {{ step.output }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">database</span>
+    <p><strong>Simplification Database:</strong> {{ topic.custom_code_migration.simplification_database.role }}</p>
+    <p><strong>Lead view:</strong> {{ topic.custom_code_migration.simplification_database.lead_view }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Migration toolbox</p>
+      <h2>The tools cover different points in the conversion lifecycle.</h2>
+      <p>Do not reduce custom code migration to one ATC run.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.custom_code_migration.tools %}
+      <a href="/labs/enterprise-context/data/development.json"><span>CODE</span><strong>{{ item.name }}</strong><small>{{ item.use }}</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">smart_toy</span>
+    <p><strong>{{ topic.custom_code_migration.ai_assistant.tool }}:</strong> {{ topic.custom_code_migration.ai_assistant.value }}</p>
+    <p><strong>Boundary:</strong> {{ topic.custom_code_migration.ai_assistant.lead_boundary }}</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
