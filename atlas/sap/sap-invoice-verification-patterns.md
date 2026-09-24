@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Invoice Verification Patterns"
-description: "Practical patterns and diagnostic questions for SAP invoice verification, including MIRO, MR8M, tolerance checks, and common variance scenarios."
+description: "How SAP invoice verification compares supplier invoices with purchasing history, why invoices are blocked, and how to read a variance before correcting it."
 permalink: /atlas/sap/sap-invoice-verification-patterns/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: MM / FI / invoice verification
 business_process: Procure to pay
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-09
+last_reviewed: 2026-09-22
 author: Dzmitryi Kharlanau
 tags:
   - procure-to-pay
@@ -39,7 +39,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas SAP Note</p>
     <h1>SAP invoice verification patterns</h1>
-    <p class="note-subtitle">How MIRO and MR8M handle invoices, what variances look like in practice, and where to check first.</p>
+    <p class="note-subtitle">An invoice can be posted and still be wrong for payment. Invoice verification is where SAP separates those two questions.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -47,57 +47,41 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay</dd></div>
       <div><dt>SAP area</dt><dd>MM / FI / invoice verification</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP docs.</dd></div>
+      <div><dt>Reviewed</dt><dd>2026-09-22</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Invoice verification in SAP is the step where a supplier invoice is matched against the purchase order and goods receipt. The system checks price, quantity, tax, and delivery date against configured tolerances. When a mismatch exceeds tolerance, the invoice is blocked for manual review. Understanding the common patterns of variance helps an AMS operator decide whether the issue is master data, process timing, or a real business dispute.</p>
+    <h2>Invoice verification is a consistency check</h2>
+    <p>A supplier invoice arrives late in the procurement process, after SAP may already know the purchase order, the expected price, and one or more goods receipts. Invoice verification brings those facts together. The important question is not simply whether the invoice can be entered. It is whether the invoice is consistent enough with the purchasing history to be paid without further review.</p>
 
-    <h2>Key sections</h2>
+    <p>When we enter an invoice with purchase-order reference, SAP proposes expected values from the purchasing documents. Depending on the scenario, goods-receipt information can also be part of that reference. The invoice brings the supplier's actual quantity and amount. SAP compares the two and applies configured tolerance rules. Small differences can be accepted; larger differences can make the invoice unsuitable for payment until somebody resolves the cause.</p>
 
-    <h3>The MIRO entry and matching logic</h3>
-    <p>Transaction <strong>MIRO</strong> is the standard entry point for invoice receipt. The system proposes quantities and amounts from the PO and GR. The user can accept, adjust, or enter a completely different invoice. The match happens at the PO item level, and the result is an invoice document and an accounting document. If the invoice is blocked, the block reason is stored in the document and visible in <strong>MIR4</strong> or <strong>MRBR</strong>.</p>
+    <h2>A payment block is not the same as a posting error</h2>
+    <p>This distinction explains many confusing support cases. SAP can allow an invoice to be posted while automatically blocking it for payment because a tolerance limit was exceeded. The accounting document therefore exists, but Financial Accounting cannot pay the supplier line until the block is released. A block can also be set manually, and other blocking reasons exist in standard invoice verification.</p>
 
-    <h3>Common variance patterns</h3>
+    <p>That means the presence of an accounting document does not prove that the invoice passed every business check. Conversely, a blocked invoice is not automatically a bad invoice. It may be a valid invoice that arrived before the remaining goods, a price change that procurement has not reflected in the order, or simply a difference that requires confirmation.</p>
+
+    <h2>Read the variance in business context</h2>
+    <p>Quantity and price are the two patterns we meet most often. If the supplier invoices more than has been received in a goods-receipt-based process, the system may be waiting for another receipt. If the price differs from the purchase order, the question is whether the supplier is wrong or the order is outdated. Schedule and quality-related checks can also matter in specific configurations.</p>
+
+    <p>We therefore start with the document history rather than with tolerance configuration. Which purchase-order item is involved? What has actually been received? What quantity and price did the supplier invoice? Was the order changed? Is another delivery still expected? Once those facts are clear, the block usually becomes easier to interpret.</p>
+
+    <h2>Fix the business mismatch before releasing the block</h2>
+    <p>A blocked invoice can become valid later. For example, missing goods can arrive or the purchase-order price can be corrected after agreement with the supplier. SAP documentation makes an important point here: when the original blocking reason is no longer valid, the invoice can still remain blocked until the block is explicitly released. In classic SAP terminology, blocked invoices can be reviewed and released with the <strong>Release Blocked Invoices</strong> function (app ID <strong>MRBR</strong> in current S/4HANA documentation).</p>
+
+    <p>If the invoice itself is wrong, release is not the answer. The document may need to be reversed or corrected according to the process. The goal is to make the procurement evidence and the supplier claim agree, not to make the red status disappear.</p>
+
+    <h2>A useful way to explain an invoice issue</h2>
+    <p>For support, we try to describe one variance in one sentence: “PO item 10 was ordered for 100 pieces, 80 have been received, and the supplier invoiced 100.” That is more useful than “MIRO is blocked.” The first description exposes the process state; the second only names the symptom.</p>
+
+    <p>Once the mismatch is explicit, responsibility also becomes clearer. Purchasing owns an outdated price agreement, goods receiving owns a missing or incorrect receipt, Accounts Payable owns invoice-entry mistakes, and the supplier owns a genuinely incorrect invoice. SAP is the place where those facts meet.</p>
+
+    <h2>Sources</h2>
     <ul>
-      <li><strong>Price variance</strong> — invoice price differs from PO price. If the difference exceeds the price tolerance (configured in tolerance keys VP, PP, PS), the invoice is blocked. Check the PO price history in <strong>ME23N</strong> and whether a new info record or contract price was intended.</li>
-      <li><strong>Quantity variance</strong> — invoice quantity exceeds the GR quantity plus delivery tolerance. Common with partial deliveries or returns not yet processed. Check the PO history in <strong>ME23N</strong> and the GR documents in <strong>MIGO</strong> or <strong>MB51</strong>.</li>
-      <li><strong>Blocked invoice</strong> — triggered by price, quantity, or manual block. Use <strong>MRBR</strong> to review blocked invoices and see the block reason code. Release is either automatic (if the variance drops below tolerance) or manual (via <strong>MRBR</strong> or workflow).</li>
-      <li><strong>Tax mismatch</strong> — tax code or tax amount does not match the PO or supplier master. Often caused by jurisdiction changes, tax code updates, or supplier master data errors. Check the tax code in the PO and the supplier master tax classification.</li>
-      <li><strong>Delivery date variance</strong> — invoice date or delivery date falls outside the allowed window. Relevant for cash discount and late delivery penalties.</li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/7870b6531de6b64ce10000000a174cb4.html">SAP Help: Blocking Invoices</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/74497657a11a0522e10000000a44147b.html">SAP Help: Release Blocked Invoices</a></li>
     </ul>
-
-    <h3>Tolerance checks and configuration</h3>
-    <p>Tolerances are defined per company code and control how much variance is acceptable before blocking. Key tolerance keys include:</p>
-    <ul>
-      <li><strong>VP</strong> — price variance percentage</li>
-      <li><strong>PP</strong> — price variance absolute amount</li>
-      <li><strong>PS</strong> — price variance for small differences</li>
-      <li><strong>DQ</strong> — excess quantity without price variance</li>
-      <li><strong>DW</strong> — quantity variance when no GR exists</li>
-    </ul>
-    <p>If an invoice is blocked, the block reason in <strong>MRBR</strong> maps to the tolerance key that was exceeded.</p>
-
-    <h3>Reversals and corrections</h3>
-    <p><strong>MR8M</strong> cancels an invoice document and reverses the accounting entries. It does not delete the document; it creates a reversal document. After MR8M, the PO history is updated and the GR/IR balance is adjusted. If the original invoice was already paid, the reversal may create a credit memo situation or require a manual refund process.</p>
-
-    <h3>Where to check</h3>
-    <ul>
-      <li><strong>PO history</strong> — <strong>ME23N</strong> shows GR and IR documents linked to the PO item.</li>
-      <li><strong>GR documents</strong> — <strong>MB51</strong> or <strong>MIGO</strong> display the material document, movement type, and quantity.</li>
-      <li><strong>Invoice documents</strong> — <strong>MIR4</strong> or <strong>MRBR</strong> show the invoice, block status, and variance details.</li>
-      <li><strong>GR/IR account</strong> — <strong>FBL3N</strong> on the GR/IR reconciliation account shows open items and clearing status.</li>
-    </ul>
-
-    <h2>Support takeaway</h2>
-    <p>When an invoice is blocked, the first question is which tolerance was exceeded and whether the variance is justified by a business change (new price agreement, partial delivery, return). Do not release blocked invoices without checking the PO history and GR status. A useful ticket includes: invoice number, PO number, GR document, block reason code, and the expected versus actual price or quantity.</p>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page covers standard invoice verification in MIRO. It does not cover evaluated receipt settlement (ERS), consignment settlement, pipeline material invoicing, or IDoc-based invoice entry. It does not replace SAP configuration documentation for tolerance keys or release strategies.</p>
-
-    <p><em>This is not official SAP documentation and not a replacement for system-specific analysis.</em></p>
   </div>
 
   <section class="atlas-related">

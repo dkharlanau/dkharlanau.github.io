@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Data Lineage"
-description: "Data lineage tracks the flow of data from origin to destination, showing transformations, dependencies, and impacts across the data lifecycle."
+description: "Data lineage shows where data comes from, how it changes, and which downstream objects depend on it across an SAP data landscape."
 tags:
   - concept
   - sap-s4hana
@@ -15,6 +15,7 @@ parent: Concepts
 robots: noindex, follow
 sitemap: false
 verified: false
+last_reviewed: 2026-09-23
 related:
   - /atlas/maps/data-mesh-architecture-map/
   - /atlas/concepts/data-mesh-for-sap-landscapes/
@@ -24,65 +25,46 @@ related:
   - /atlas/sap/sap-s4hana/
 ---
 
-
 # Data Lineage
 
-> **Status**: Skeleton — under review.  
+> **Status**: Under review.  
 > **Scope**: Data provenance and impact analysis for SAP landscapes.
 
-## What it is
+Data lineage answers a simple question that becomes difficult in a large landscape: **where did this value come from?** It follows data from its source through transformations and models to the object that a report, API, data product, or analytical application consumes.
 
-Data lineage tracks the flow of data from origin to destination, showing transformations, dependencies, and impacts across the data lifecycle. It enables change impact analysis, debugging, and compliance.
+Impact analysis asks the opposite question: **what will be affected if we change this object?** The same dependency graph can therefore support two different jobs. Lineage looks upstream; impact analysis looks downstream.
 
-## When to use it
+## Why it matters in SAP work
 
-- Impact analysis before changing a CDS view or extractor
-- Debugging data quality issues by tracing transformations
-- Compliance audits requiring provenance documentation
-- Root cause analysis for analytics report discrepancies
+In a small report, a consultant may still know the path from source table to output. In an S/4HANA, Datasphere, and analytics landscape, the path can cross CDS views, replicated tables, transformations, semantic models, and several consuming applications. At that point, memory and naming conventions are not enough.
 
-## When not to use it
+We normally use lineage for three kinds of work:
 
-- Simple, direct table-to-report flows where manual documentation suffices
-- Rapid prototyping where lineage tooling overhead exceeds value
-- Legacy systems without metadata extraction capabilities
+- tracing a wrong analytical value back toward its source;
+- checking downstream dependencies before changing a model or interface;
+- documenting how important data is produced for governance, audit, or support.
 
-## SAP landscape fit
+Lineage is most useful when it records actual technical dependencies. A diagram that only says “S/4HANA → Datasphere → Analytics” is architecture documentation, not detailed lineage.
 
-- **SAP Datasphere**: Built-in Impact and Lineage Analysis for tables, views, and analytic models
-- **Column-level lineage**: Supported for tables, graphical/SQL views, and analytic models
-- **Dependency Analysis**: Reveals associations and data access controls linked to an object
-- **Third-party tools**: Collibra, Manta, OvalEdge for cross-system landscapes
+## SAP Datasphere: lineage and impact are different views of the same graph
 
-## Design decisions
+SAP Datasphere provides **Impact and Lineage Analysis** for supported catalog and modeling assets. SAP defines lineage as the objects used as sources by the selected object, while impact shows objects that use the selected object as a source. The diagram can therefore help us move from a symptom toward an upstream cause, or from a planned change toward the objects that may be affected.
 
-| Decision | Recommendation |
-|----------|---------------|
-| Native vs third-party | Datasphere native for SAP-centric; third-party for multi-vendor landscapes |
-| Granularity | Column-level for precise impact analysis; table-level for overview |
-| Automation | Extract metadata from CDS views, Datasphere models, and SAC stories |
-| Documentation | Layer business meaning on top of technical lineage via catalog |
+This does not mean that every relationship in a landscape is automatically visible. The current Datasphere documentation notes, for example, that associations are not shown in the impact and lineage diagram. Coverage also depends on which systems and assets are represented in the catalog. We should treat the diagram as evidence of known dependencies, not as proof that no other dependency exists.
 
-## Operational failure modes
+A practical example is a sales analytic model with an unexpected net-value figure. We can start at the analytic asset, follow lineage into its views and source objects, and identify where the value was filtered, joined, or transformed. If we instead want to rename or remove a source field, the impact side of the graph helps identify models that depend on it before we make the change.
 
-- Datasphere lineage scoped to tenant; cross-system lineage requires manual stitching
-- Column analysis gaps for data flows and transformation flows
-- Legacy systems (ECC, BW) lack native lineage metadata
-- Lineage decays without automated metadata extraction
+## Granularity changes the answer
 
-## Monitoring/support model
+Object-level lineage tells us that model A depends on table B. Column-level lineage tries to answer a harder question: which source fields contribute to this particular output field? The second is more useful for precise change impact, but it is also harder to capture across transformations, custom code, external tools, and older systems.
 
-- Regular lineage audits for critical data products
-- Impact analysis before schema changes or deprecation
-- Integration with data catalog for business glossary overlay
-- Third-party augmentation for non-SAP sources
+For that reason, we should not promise enterprise-wide column lineage simply because one platform offers detailed lineage inside its own scope. Cross-system lineage usually requires metadata from several products and, in some landscapes, a catalog or governance tool that can connect them.
 
-## AI/agent opportunity
+## What good lineage needs
 
-- Auto-discover lineage from query logs and metadata
-- Predict impact of schema changes from lineage graphs
-- Generate compliance documentation from lineage metadata
-- Detect lineage gaps and recommend manual documentation
+Useful lineage is maintained as part of the delivery process, not reconstructed only when an audit or incident starts. At minimum, we want stable object identities, source and target relationships, transformation context, ownership, and enough metadata to distinguish an active production path from an obsolete one.
+
+The operational test is simple: if a model changes today, can we identify the important consumers before they fail? If a KPI is wrong tomorrow, can we trace the value far enough upstream to find the responsible transformation or source? If the answer is no, the lineage is not yet doing useful work.
 
 ## Related Atlas pages
 
@@ -92,11 +74,9 @@ Data lineage tracks the flow of data from origin to destination, showing transfo
 
 ## Source references
 
-- [SAP Docs GitHub — Datasphere Lineage](https://github.com/SAP-docs/sap-datasphere/blob/main/docs/Acquiring-Preparing-Modeling-Data/impact-and-lineage-analysis-9da4892.md)
-- [SAP Datasphere documentation](https://help.sap.com/docs/datasphere)
+- SAP Help Portal — [Catalog Concepts: Impact and Lineage](https://help.sap.com/docs/SAP_DATASPHERE/aca3ccb4b2f84eb8b6154e8fd2812c0e/5772386034824e2ba7146fe7b3109d21.html)
+- SAP Help Portal — [SAP Datasphere documentation](https://help.sap.com/docs/SAP_DATASPHERE)
 
 ## Verification limitations
 
-- Cross-system lineage requires manual stitching or third-party tools.
-- Content is synthesized from public SAP documentation.
-- No private implementation details are included.
+Lineage coverage varies by product, connection, object type, and modeling technique. This page describes the concept and current SAP Datasphere behavior without assuming that one tool provides complete end-to-end lineage for every SAP and non-SAP system.

@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "AI Ready — Agent Architecture"
-description: "A practical guide to workflows, routers, tool loops, orchestrator-worker patterns, budgets, termination, approvals, and agent failure modes."
+description: "A practical guide to workflows, routers, bounded tool loops, orchestration, budgets, approvals, and agent control."
 permalink: /labs/ai-ready/agent-architecture/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-22
 hide_global_cta: true
 tags: [ai, agents, workflow, orchestration, tools, approval]
 ---
@@ -18,151 +18,107 @@ tags: [ai, agents, workflow, orchestration, tools, approval]
 
 # Agent Architecture
 
-An agent is useful when the next step cannot be fully defined before the request starts. That is the reason to add autonomy. “Agents are modern” is not a reason.
+An agent is useful when the system cannot know every next step before the task starts. That is the architectural reason to add autonomy. The word *agent* by itself is not a design goal.
 
-## Problem
+If a task always follows the same sequence, a normal workflow is easier to test, operate, and explain. When the next useful action depends on evidence found during the run, a bounded agent can earn its extra complexity.
 
-Unbounded agents add cost, latency, and risk when a deterministic workflow would be enough.
+## Autonomy should grow with the problem
 
-## Start with the least autonomous shape
+We normally start with the least autonomous shape that can solve the task.
 
-Use this order:
-
-1. deterministic function;
-2. deterministic workflow;
-3. workflow with one model decision;
-4. router to known paths;
-5. bounded tool loop;
-6. orchestrator with workers;
-7. broader agent only when evidence proves the simpler shapes are not enough.
-
-Every extra decision point creates another place to test, trace, secure, and pay for.
-
-## Pattern 1: workflow
+A stable process may need only a deterministic workflow with one model call inside it:
 
 ```text
 input -> validate -> retrieve -> model -> schema check -> output
 ```
 
-Use when the steps are stable. A model can still be used inside a workflow for classification, extraction, or explanation.
+The model may classify a request, extract fields, or write an explanation, while the application still owns the sequence.
 
-## Pattern 2: router
+A router adds one model decision when several known paths exist:
 
 ```text
-request -> model/router
+request -> router
              |-- research workflow
              |-- coding workflow
              |-- support workflow
              |-- data-analysis workflow
 ```
 
-Use when the possible paths are known, but the correct path depends on messy input.
+The routes are known; only the selection is uncertain.
 
-## Pattern 3: bounded tool loop
+A tool loop is different. Here the result of one read changes what should happen next:
 
 ```text
 question
-  -> model selects read
-  -> application validates
-  -> tool returns evidence
-  -> model decides: enough / another read / escalate
-  -> stop on explicit condition
+  -> choose an allowed read
+  -> validate and execute the tool
+  -> inspect evidence
+  -> decide: enough / another read / escalate
+  -> stop
 ```
 
-Use for investigations where each result changes the next useful read.
+This is the point where an agent becomes more than a routed workflow. The model is controlling part of the path rather than only one decision inside a fixed path.
 
-## Pattern 4: orchestrator and workers
+## The best agent is usually bounded
 
-Use when independent tasks can run in parallel and have a clear merge rule. Example: one worker checks logs, one checks documentation, and one checks recent code changes before an orchestrator compares the evidence.
+A useful agent does not need unlimited freedom. It needs enough room to investigate, plus clear limits around that room.
 
-Do not use workers only to make the diagram look important. Parallel agents can repeat the same search, disagree, and multiply latency without improving the answer.
+Consider a deployment investigation. We may allow the agent to inspect deployment status, failing job logs, recent changes, environment configuration, dependency health, service events, and relevant runbooks. It can choose the order because each result changes the next useful read.
 
-## Give the loop a budget
+The same agent does not automatically receive permission to restart production or roll back a release. Finding a suspicious change and executing a corrective action are different capabilities.
 
-A production agent needs hard limits:
-
-- maximum steps;
-- maximum tool calls;
-- maximum wall-clock time;
-- cost/token budget;
-- allowed tool set;
-- allowed data scope;
-- retry limit;
-- maximum worker count;
-- termination conditions.
-
-Useful stop states include: `resolved`, `insufficient_evidence`, `permission_denied`, `approval_required`, `tool_failure`, and `budget_exhausted`.
-
-## Separate investigation from action
-
-A strong general pattern is:
+This separation gives us a practical architecture:
 
 ```text
-read tools -> diagnosis -> proposed change -> validation -> approval -> write tool
+read -> interpret -> gather more evidence if needed
+     -> form a diagnosis
+     -> prepare a proposed change
+     -> validate
+     -> approve
+     -> execute through a narrow write path
 ```
 
-The investigation can be adaptive. The write path should be much more deterministic.
+The investigative part may be adaptive. The write path should usually be much more controlled.
 
-For high-impact actions, the model should produce a prepared change with evidence and expected effect. A human or policy engine approves it. The application then executes through a narrow write tool.
+## Budgets are part of the design
 
-## Practical example
+Without explicit limits, an agent can continue searching long after the useful information has stopped increasing. That increases cost and latency and may also increase risk.
 
-Question: “Why did deployment `deploy-284` fail?”
+Useful limits include maximum steps, tool calls, wall-clock time, model or token cost, retries, parallel workers, and the set of tools the agent may call. Data scope matters just as much: an agent that can read every repository or every customer record has a much larger failure surface than one that can read only the current workspace.
 
-A bounded agent may choose among:
+The run also needs explicit stop states. `resolved` is only one of them. `insufficient_evidence`, `permission_denied`, `approval_required`, `tool_failure`, and `budget_exhausted` are legitimate outcomes. A reliable system is allowed to stop without pretending it solved the task.
 
-- deployment status;
-- failing job logs;
-- recent commits;
-- environment configuration;
-- dependency health;
-- service events;
-- relevant runbook sections.
+## Multi-agent designs solve a narrower problem than they appear to
 
-It stops when evidence supports a cause, when no authorized read can reduce uncertainty, or when a change is required.
+An orchestrator with workers can help when work is genuinely independent and the results can be merged cleanly. For example, one worker may inspect logs, another may check documentation, and another may review recent code changes. The orchestrator then compares the evidence.
 
-The agent should not roll back production just because it found a suspicious commit. Diagnosis and correction are different permissions.
+That pattern is useful because the work can proceed independently, not because three agents are automatically smarter than one. Workers can repeat the same search, receive overlapping context, disagree without a resolution rule, and multiply latency. If one agent with good tools can do the work clearly, adding more agents usually adds coordination rather than capability.
 
-## Failure modes
+## Trace the path, not only the answer
 
-- No stop condition.
-- Same tool is called repeatedly with equivalent arguments.
-- Agent uses a write tool to “check” current state.
-- Workers receive more data than they need.
-- A tool error is interpreted as “object does not exist”.
-- The model invents a root cause after weak retrieval.
-- Approval exists in the prompt, not in the application.
-- Agent state cannot be reconstructed from traces.
+An agent can reach a plausible final answer through a poor sequence of actions. That is why the trace matters.
 
-## What to trace
+For each step, we want enough information to reconstruct what happened: request or trace ID, model and instruction version, selected tool, sanitized arguments, authorization result, tool status and latency, evidence identifiers, remaining budget, approvals, and the final stop reason.
 
-For every step capture:
+This is especially important when the agent fails. If two runs produce different conclusions, the trace should show whether the difference came from the model, the retrieved evidence, a tool failure, a permission boundary, or a changed instruction.
 
-- trace and request ID;
-- model and prompt version;
-- selected tool;
-- sanitized arguments;
-- authorization result;
-- tool status and latency;
-- evidence IDs;
-- agent decision;
-- budget remaining;
-- approval event if present;
-- final stop reason.
+## Evaluate the trajectory
 
-## Test the loop, not only the answer
+Testing only the final sentence misses much of agent behavior. A useful evaluation set should include cases where the first read is enough, evidence conflicts, a relevant tool is forbidden, a tool times out, data is stale, two causes remain possible, a write is required, approval is rejected, or the budget runs out.
 
-Good eval cases include:
+We also need hostile content inside tool results. A log line or retrieved document can contain instructions that the agent should treat as data rather than authority.
 
-- first tool gives enough evidence;
-- first tool gives conflicting evidence;
-- relevant tool is forbidden;
-- tool times out;
-- data is stale;
-- two causes are possible;
-- a write is required;
-- user rejects approval;
-- budget is exhausted;
-- hostile instructions arrive inside a tool result.
+The questions are practical: Did the agent choose a useful first action? Did it repeat equivalent calls? Did it stop when the evidence was sufficient? Did it escalate when it was not? Did it keep write actions behind the correct control?
+
+## A simple rule to remember
+
+Use a workflow when the path is known. Add model routing when the path is known but the choice is messy. Use a bounded agent when the next useful action genuinely depends on what the system discovers.
+
+More autonomy should solve a real uncertainty. Otherwise it is only more moving parts.
+
+## Further reading
+
+- [OpenAI — A practical guide to building AI agents](https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/)
+- [Anthropic — Building Effective AI Agents](https://www.anthropic.com/engineering/building-effective-agents)
 
 Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [System Boundaries](/labs/ai-ready/system-boundaries/) · [Agent with Approval Lab](/labs/ai-ready/labs/agent-approval/)

@@ -7,7 +7,8 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-22
+last_reviewed: 2026-09-22
 hide_global_cta: true
 tags:
   - business-ai
@@ -34,8 +35,8 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Business AI / implementation cases</p>
-      <h1>Collect evidence.<br />Keep the missing pieces visible.</h1>
-      <p>These are not “best AI companies”. They are public cases that expose enough process, technology, or outcome detail to learn from. A missing KPI is recorded as a missing KPI, not repaired with imagination.</p>
+      <h1>Read the case.<br />Keep the evidence separate.</h1>
+      <p>We use public implementation stories to understand what a company tried, where AI entered the process, and what result was reported. The useful part is not the headline number by itself. It is the combination of process context, implementation detail, source quality, and the limits that remain visible around the claim.</p>
       <a class="research-canvas__button" href="#case-list">Open cases <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
@@ -43,22 +44,24 @@ tags:
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ all_cases | size }}</strong><small>Cases</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_sources | size }}</strong><small>Sources</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>0</strong><small>Grade A so far</small></div>
-      <em>That zero is intentional. Public customer stories rarely disclose enough measurement detail for the strongest evidence grade.</em>
+      <em>That zero is useful. Public case studies often describe outcomes without enough measurement detail for the strongest evidence grade.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
-    <p><strong>Evidence rule:</strong> reported numbers are useful, but a vendor/customer case study is not the same thing as an audited experiment.</p>
-    <p><strong>Catalog rule.</strong> For every strong-looking number, keep the source owner, baseline, time period, and missing measurement visible when known.</p>
+    <div>
+      <p><strong>A case study is evidence, but it is not neutral evidence.</strong> Vendor and customer stories can show that a solution existed, which process it touched, and what the participants reported. They do not automatically tell us what would happen in another company.</p>
+      <p>For every result we therefore keep the source owner, reported metric, known baseline or period, and the missing pieces visible when the source provides them. We do not turn an absent KPI into an estimate.</p>
+    </div>
     <a href="/labs/business-ai/patterns/">Open reusable patterns <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="case-list" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Case index</p>
-      <h2>From sales and procurement to planning, manufacturing, and master data.</h2>
-      <p>The set deliberately mixes generative AI, document AI, forecasting, recommendation, optimization, embodied execution, and data foundations. The business job decides the method, not the conference agenda.</p>
+      <h2>Different processes, different reasons to use AI.</h2>
+      <p>The collection spans sales, procurement, planning, manufacturing, service, master data, and other enterprise work. It also mixes several technical approaches: generative AI, document processing, forecasting, recommendation, optimization, and data foundations. We keep them together because the business job is the more useful comparison point than the technology label.</p>
     </header>
     <div class="research-route-list">
       {% for item in all_cases %}
@@ -102,8 +105,8 @@ tags:
   <section class="research-canvas__inventory" id="evidence-grades" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Evidence model</p>
-      <h2>Do not give every source the same weight.</h2>
-      <p>The grade is about the evidence behind the result, not about whether the company or technology is good.</p>
+      <h2>The source tells us how confidently we can read the result.</h2>
+      <p>The grade does not score the company or the technology. It describes how much support the public material gives to the reported outcome. That distinction matters when we compare a measured deployment with a polished customer story that gives only a headline claim.</p>
     </header>
     <div class="case-evidence-list case-evidence-list--grades">
       {% for grade_pair in catalog.evidence_grades %}

@@ -1,16 +1,16 @@
 ---
 layout: default
-title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
-description: "A practical SAP S/4HANA Business Partner guide for Lead-level design: roles, groupings, account groups, CVI, number ranges, field control, partner functions, customer and supplier extensions, APIs, governance, and validation."
+title: "SAP Business Partner — Roles, CVI and Organizational Data"
+description: "A practical SAP S/4HANA Business Partner guide explaining shared identity, customer and supplier roles, organizational data, CVI, number assignment, partner functions, governance, and supported integration."
 permalink: /labs/enterprise-context/business-partner/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-03
-last_reviewed: 2026-09-03
+last_modified_at: 2026-09-23
+last_reviewed: 2026-09-23
 publication_wave: "sap-master-data-review-2026-09"
-review_method: "current SAP S/4HANA 2025 FPS01 primary sources + source-registry review + page-level factual review"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + source-registry review + full editorial pass"
 search_intent: "SAP Business Partner CVI configuration roles grouping account groups number ranges field control customer supplier S4HANA"
 structured_data:
   type: TechArticle
@@ -95,242 +95,171 @@ source_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Deep vertical / SAP Business Partner</p>
-      <h1>One identity.<br />Several business contexts.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#bp-role-model">Start with the role model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>One party.<br />Several SAP contexts.</h1>
+      <p>Business Partner gives SAP S/4HANA a shared identity for a person, organization, or group. Customer and supplier roles then add the accounting, sales, and purchasing data needed by real processes. CVI connects these layers to the customer and supplier master-data objects that SAP applications still use.</p>
+      <a class="research-canvas__button" href="#bp-role-model">Understand the layers <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Business Partner deep-dive inventory">
       <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.configuration_layers | size }}</strong><small>Configuration layers</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.limitations_and_guardrails | size }}</strong><small>Guardrails</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.assessment_drills | size }}</strong><small>Lead drills</small></div>
-      <em>Reviewed against current SAP primary sources · historical study material kept secondary</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.role_model | size }}</strong><small>Core role contexts</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.current_primary_source_refs | size }}</strong><small>Primary references</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.failure_modes | size }}</strong><small>Modeled failure patterns</small></div>
+      <em>Rechecked against SAP S/4HANA 2025 FPS01 documentation</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">hub</span>
     <div>
-      <p><strong>Lead thesis:</strong> {{ graph.lead_thesis }}</p>
-      <p><strong>Source boundary:</strong> {{ graph.source_policy }}</p>
+      <p><strong>Useful mental model:</strong> identity → role → organizational data → process.</p>
+      <p>A saved BP is only the beginning. The party becomes usable in Sales, Procurement, or Finance when the corresponding role and organizational data are complete and CVI has synchronized the required customer or supplier object.</p>
     </div>
-    <a href="/labs/enterprise-context/master-data/#evidence">Current SAP source registry <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a href="#evidence">See the source boundary <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="bp-role-model" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Role model</p>
-      <h2>Do not ask whether the BP is complete. Ask: complete for which role and level?</h2>
-      <p>The standard role codes are useful assessment anchors because they show how one legal identity becomes process-ready in Finance, Sales, and Procurement.</p>
+      <p class="research-canvas__eyebrow">Identity and roles</p>
+      <h2>Business Partner is not a renamed customer or supplier screen.</h2>
+      <p>The BP category describes the identity itself. Standard BP roles add the business context in which that identity can act. This is why one organization can be both a customer and a supplier without duplicating its shared identity data.</p>
     </header>
     <div class="ecg-determination-list">
       {% for item in graph.role_model %}
       <article class="ecg-determination-detail">
         <header><div><span>{{ item.role }}</span><small>BP role</small></div><h3>{{ item.name }}</h3><p class="ecg-question">{{ item.scope }}</p></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Typical data</h4><p>{{ item.typical_data }}</p></div>
-          <div><h4>Lead question</h4><p>{{ item.lead_question }}</p></div>
-        </div>
+        <p>{{ item.typical_data }}</p>
       </article>
       {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Configuration stack</p>
-      <h2>Ten layers explain most BP design and support incidents.</h2>
-      <p>Use the stack as a trace. If a document fails, identify the first layer that does not match the intended business context.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.configuration_layers %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if item.order < 10 %}0{% endif %}{{ item.order }}</span><small>layer</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.failure_signal }}</p></header>
-        <div><h4>What it controls</h4><ul>{% for value in item.controls %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Number design</p>
-      <h2>{{ graph.number_strategy.decision }}</h2>
-      <p>{{ graph.number_strategy.lead_rule }}</p>
-    </header>
-    <div class="ecg-decision-columns">
-      {% for option in graph.number_strategy.options %}
-      <div>
-        <h3>{{ option.name }}</h3>
-        <p>{{ option.value }}</p>
-        <h3>Benefits</h3><ul>{% for value in option.benefits %}<li>{{ value }}</li>{% endfor %}</ul>
-        <h3>Constraints</h3><ul>{% for value in option.constraints %}<li>{{ value }}</li>{% endfor %}</ul>
-      </div>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Field control</p>
-      <h2>One missing field can be controlled by more than one layer.</h2>
-      <p>{{ graph.field_control_model.lead_rule }}</p>
-    </header>
-    <div class="ecg-decision-columns">
-      <div><h3>Possible states</h3><ul>{% for value in graph.field_control_model.states %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Trace when the field looks wrong</h3><ul>{% for value in graph.field_control_model.inspect_when_wrong %}<li>{{ value }}</li>{% endfor %}</ul></div>
     </div>
     <div class="ecg-diagnostic">
-      <div><h4>Shared-data guardrail</h4><p>{{ graph.shared_data_guardrail.principle }}</p><ul>{% for value in graph.shared_data_guardrail.high_impact_examples %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h4>Controls</h4><ul>{% for value in graph.shared_data_guardrail.controls %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div>
+        <h4>Category is about identity</h4>
+        <p>Person, Organization, and Group describe what kind of party the BP represents. Category affects the available identity fields; it is not the same concept as a customer or supplier role.</p>
+      </div>
+      <div>
+        <h4>Role is about business use</h4>
+        <p>FLCU00 and FLVN00 add company-code accounting context. FLCU01 adds customer sales-area data. FLVN01 adds supplier purchasing-organization data. General BP data remains shared across those contexts.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">A concrete example</p>
+      <h2>The same company can sit on both sides of the trading relationship.</h2>
+      <p>Suppose Alpine Components GmbH buys finished goods from us and also supplies packaging. If it is the same governed legal identity, a common design is one Organization BP with customer and supplier roles. Its name and address are shared; its Sales data belongs to a sales area, Purchasing data belongs to a purchasing organization, and accounting data belongs to company codes.</p>
+    </header>
+    <div class="ecg-diagnostic">
+      <div><h4>What stays shared</h4><p>Identity data such as the legal name and general address should not be copied merely because the party has more than one business role. A change here can affect several processes.</p></div>
+      <div><h4>What stays contextual</h4><p>Sales, purchasing, and company-code data can be complete for one organizational unit and missing for another. “The BP exists” therefore does not prove that the partner is process-ready everywhere.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">CVI and numbering</p>
+      <h2>CVI synchronizes related objects; it does not collapse them into one table.</h2>
+      <p>In SAP S/4HANA, Business Partner is the leading object for creating customer or supplier master data. Customer/Vendor Integration synchronizes BP with the customer and supplier objects used by downstream applications. The design therefore has to keep several concepts separate.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>BP grouping</h3>
+        <p>Grouping controls the BP number-range strategy. It belongs to the Business Partner layer.</p>
+      </div>
+      <div>
+        <h3>Customer / supplier account group</h3>
+        <p>Account groups classify the customer or supplier master record and influence its number assignment, field status, and permitted partner functions.</p>
+      </div>
+      <div>
+        <h3>CVI mapping</h3>
+        <p>CVI connects the BP grouping and role design to the customer or supplier account group and number assignment. Equal BP and customer/supplier numbers are possible, but they are a design choice with prerequisites rather than proof that the mapping is correct.</p>
+      </div>
+    </div>
+    <p class="ecg-caption">Current SAP documentation describes Business Partner as the leading object for customer/supplier master data and documents both grouping-to-account-group mapping and same-number or different-number assignment. See <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/25b46c8241fd4852bf7876d87bed8fd0.html" rel="nofollow noopener">Business Partner Approach (Customer/Supplier Integration)</a> and <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d31005aa10649649041a0b205f5f4f7/def9c5536a51204be10000000a174cb4.html" rel="nofollow noopener">Number Assignment for Processing Direction BP to Customer/Vendor</a>.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Organizational readiness</p>
+      <h2>General data answers who the party is. Organizational data answers where it can transact.</h2>
+      <p>This distinction explains many incidents that look mysterious from the BP overview. The identity can be correct while one required organizational slice is absent or incomplete.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Finance</h3><p>FLCU00 and FLVN00 carry customer or supplier accounting data at company-code level, including controls required for posting and payment processes.</p></div>
+      <div><h3>Sales</h3><p>FLCU01 carries customer data for the sales area. A customer can therefore work in one sales organization / distribution channel / division and still be unavailable in another.</p></div>
+      <div><h3>Procurement</h3><p>FLVN01 carries supplier purchasing data by purchasing organization. A valid supplier identity does not automatically make the supplier usable by every purchasing organization.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Partner model</p>
-      <h2>Relationship and partner function are different ideas.</h2>
-      <p>{{ graph.partner_model.distinction }}</p>
+      <h2>Partner function and BP relationship answer different questions.</h2>
+      <p>In Sales, partner functions such as sold-to, ship-to, bill-to, and payer describe who performs a role in the commercial process. Procurement has its own partner functions. A BP relationship instead connects two BP identities — for example, an organization and a related contact or another organization. Treating the two mechanisms as interchangeable makes master-data design harder to reason about.</p>
     </header>
-    <div class="ecg-decision-columns">
-      <div><h3>Customer functions</h3><ul>{% for item in graph.partner_model.customer_functions %}<li><strong>{{ item.code }} — {{ item.name }}:</strong> {{ item.business_meaning }}</li>{% endfor %}</ul></div>
-      <div><h3>Supplier functions</h3><ul>{% for item in graph.partner_model.supplier_functions %}<li><strong>{{ item.code }} — {{ item.name }}:</strong> {{ item.business_meaning }}</li>{% endfor %}</ul></div>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Supplier / Procurement</p><h2>The supplier role can change pricing, confirmation, receipt, and invoice behavior.</h2></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.supplier_controls %}
-      <article class="ecg-determination-detail">
-        <header><div><span>MM</span><small>supplier</small></div><h3>{{ item.area }}</h3><p class="ecg-question">{{ item.lead_question }}</p></header>
-        <div><h4>Important controls</h4><ul>{% for value in item.important_fields %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Customer / Sales</p><h2>The customer role is a commercial and fulfillment control plane.</h2></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.customer_controls %}
-      <article class="ecg-determination-detail">
-        <header><div><span>SD</span><small>customer</small></div><h3>{{ item.area }}</h3><p class="ecg-question">{{ item.lead_question }}</p></header>
-        <div><h4>Important controls</h4><ul>{% for value in item.important_fields %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Finance integration</p><h2>Company-code data is part of the BP design, not a later accounting detail.</h2><p>{{ graph.finance_controls.lead_rule }}</p></header>
-    <div class="ecg-decision-columns">
-      <div><h3>Customer and supplier</h3><ul>{% for value in graph.finance_controls.shared_customer_supplier %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Supplier-sensitive fields</h3><ul>{% for value in graph.finance_controls.supplier_specific_attention %}<li>{{ value }}</li>{% endfor %}</ul></div>
+    <div class="ecg-diagnostic">
+      <div><h4>Process role</h4><p>Use partner determination when the question is “who should act as ship-to, payer, goods supplier, or another process partner?”.</p></div>
+      <div><h4>Identity relationship</h4><p>Use BP relationships when the question is “how are these two business partners related?”. The relationship does not by itself replace Sales or Purchasing partner determination.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Extensions</p>
-      <h2>Extend the semantic model, not only the screen.</h2>
-      <p>Each extension needs a consumer. A field or relationship with no process, API, governance, or analytical consumer becomes maintenance debt.</p>
+      <p class="research-canvas__eyebrow">When the BP exists but the process still fails</p>
+      <h2>Trace the missing context before changing shared master data.</h2>
+      <p>A successful save proves that a BP record could be stored. It does not prove that every customer or supplier segment, organizational view, partner assignment, field requirement, or downstream replica is complete.</p>
     </header>
     <div class="ecg-determination-list">
-      {% for item in graph.extensions %}
       <article class="ecg-determination-detail">
-        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>extension</small></div><h3>{{ item.title }}</h3></header>
-        <div class="ecg-decision-columns"><div><h4>Value</h4><p>{{ item.value }}</p></div><div><h4>Guardrail</h4><p>{{ item.guardrail }}</p></div></div>
+        <header><div><span>SD</span><small>sales area</small></div><h3>The customer works in one sales area but not another</h3></header>
+        <p>Start with the FLCU01 sales-area extension and its required data. Do not change the general BP merely because the failing document uses the same party.</p>
       </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Limitations & guardrails</p><h2>What the BP model does not solve automatically.</h2></header>
-    <div class="ecg-input-grid">
-      {% for value in graph.limitations_and_guardrails %}<article><span>!</span><p>{{ value }}</p></article>{% endfor %}
-    </div>
-    <div class="ecg-diagnostic"><div><h4>Deployment boundary</h4><p>{{ graph.deployment_boundary.principle }}</p></div><div><h4>One-time accounts</h4><p>{{ graph.one_time_account_policy.warning }}</p></div></div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">One-time policy</p><h2>Make the exception measurable.</h2><p>{{ graph.one_time_account_policy.use_when }}</p></header>
-    <div><ul>{% for value in graph.one_time_account_policy.policy_questions %}<li>{{ value }}</li>{% endfor %}</ul></div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Lead decisions</p><h2>Five design choices that should be explicit before migration or build.</h2></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.design_decisions %}
       <article class="ecg-determination-detail">
-        <header><div><span>?</span><small>decision</small></div><h3>{{ item.question }}</h3></header>
-        <div class="ecg-decision-columns"><div><h4>Default direction</h4><p>{{ item.preferred }}</p></div><div><h4>When to split</h4><p>{{ item.split_when }}</p></div><div><h4>Risk</h4><p>{{ item.risk }}</p></div></div>
+        <header><div><span>MM</span><small>purchasing org</small></div><h3>The supplier exists but cannot be used by a purchasing organization</h3></header>
+        <p>Check FLVN01 and the exact purchasing-organization data. Compare the failing organizational context with one that works.</p>
       </article>
-      {% endfor %}
+      <article class="ecg-determination-detail">
+        <header><div><span>CVI</span><small>mapping</small></div><h3>The BP exists but the expected customer or supplier object does not</h3></header>
+        <p>Check the BP role, grouping-to-account-group mapping, number assignment, mandatory fields, and the synchronized customer or supplier object before treating the issue as an application error.</p>
+      </article>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">CVI diagnostics</p><h2>Trace the mapping before blaming the application.</h2></header>
-    <div class="ecg-determination-list">
-      {% for step in graph.cvi_diagnostic_sequence %}
-      <article class="ecg-determination-detail"><header><div><span>{% if step.order < 10 %}0{% endif %}{{ step.order }}</span><small>{{ step.check }}</small></div><h3>{{ step.question }}</h3></header></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Validation</p><h2>BP save → mapping proof → process proof.</h2><p>{{ graph.validation_flow.proof_rule }}</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Governance, extensibility and distribution</p>
+      <h2>Shared identity data deserves wider impact analysis than a local sales or purchasing field.</h2>
+      <p>Names, addresses, tax identifiers, bank data, and relationships can be reused by several roles. Governance should therefore distinguish shared identity from company-code, sales-area, and purchasing-organization ownership instead of applying one approval model to every BP change.</p>
+    </header>
     <div class="ecg-decision-columns">
-      <div><h3>Master data</h3><ul>{% for value in graph.validation_flow.master_data_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Procure-to-Pay</h3><ul>{% for value in graph.validation_flow.procure_to_pay %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Order-to-Cash</h3><ul>{% for value in graph.validation_flow.order_to_cash %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div>
+        <h3>Custom fields</h3>
+        <p>SAP exposes separate extensibility contexts for Business Partner, customer company, customer sales, supplier company, supplier purchasing organization, and other BP-related entities. Put a new attribute at the level that owns its meaning, then verify that the required UI and interface exposure are supported.</p>
+      </div>
+      <div>
+        <h3>Integration</h3>
+        <p>SAP's Business Partner integration documentation covers OData, IDoc, and SOAP interfaces, and Business Partner data can also participate in governed replication scenarios. Treat interface success as transport evidence; then reconcile keys, roles, organizational data, relationships, and extensions in the target.</p>
+      </div>
+      <div>
+        <h3>MDG</h3>
+        <p>SAP Master Data Governance can govern Business Partner data and replicate approved master data to client systems. The governance workflow should reinforce clear ownership; it should not hide uncertainty about whether a field is global or organizational.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>Symptoms become useful when tied to the controlling layer.</h2></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.failure_modes %}
-      <article class="ecg-determination-detail">
-        <header><div><span>ERR</span><small>{{ item.likely_layer }}</small></div><h3>{{ item.title }}</h3></header>
-        <div><h4>Trace</h4><ul>{% for value in item.trace %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Anti-patterns</p><h2>Fast fixes that create long BP projects.</h2></header>
-    <div><ul>{% for value in graph.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul></div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Answer with layers, trade-offs, and a proof path.</h2></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.assessment_drills %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>Lead drill</small></div><h3>{{ item.question }}</h3></header>
-        <div><h4>Strong answer should mention</h4><ul>{% for value in item.expected %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Study filter</p><h2>What is worth keeping — and what stays in 2019.</h2></header>
-    <div class="ecg-decision-columns">
-      <div><h3>Keep the concepts</h3><ul>{% for value in graph.study_filter.keep %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Do not copy blindly</h3><ul>{% for value in graph.study_filter.do_not_treat_as_current_standard %}<li>{{ value }}</li>{% endfor %}</ul></div>
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Deployment boundary</p>
+      <h2>Keep the data model stable; verify the configuration surface for the target system.</h2>
+      <p>This article uses SAP S/4HANA 2025 FPS01 on-premise / private-edition documentation for concrete BP and CVI behavior. The underlying distinctions — identity, role, organizational data, customer/supplier synchronization, and process readiness — are durable. Exact configuration activities, apps, transactions, and extensibility options depend on the deployment model and release, so implementation steps should always be checked against the target system's current documentation.</p>
+    </header>
   </section>
 
   <section class="research-canvas__inventory" id="evidence" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Current SAP references are reused from the Master Data source registry.</h2>
-      <p>The book is a secondary study input. Product behavior and modern extensibility should be verified against current primary SAP documentation.</p>
+      <h2>Primary SAP documentation carries the product facts.</h2>
+      <p>The structured Lab model keeps current SAP references separate from practitioner interpretation and older study material. The references below cover BP structure and roles, supported extensibility and APIs, DRF, and MDG.</p>
     </header>
     <div class="ecg-source-list">
       {% for ref in graph.current_primary_source_refs %}
@@ -341,6 +270,18 @@ source_links:
         {% endfor %}
       {% endfor %}
     </div>
-    <p class="ecg-caption"><strong>Secondary study input:</strong> Jawad Akhtar, <em>Business Partners and Customer-Vendor Integration (CVI) in SAP S/4HANA</em>, SAP PRESS, 2019. This page uses independent wording and does not reproduce the publication.</p>
+    <p class="ecg-caption"><strong>Secondary study input:</strong> Jawad Akhtar, <em>Business Partners and Customer-Vendor Integration (CVI) in SAP S/4HANA</em>, SAP PRESS, 2019. It is kept as historical study material, not as the authority for current product behavior.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Related context</p>
+      <h2>Continue from the party model into governance or runtime behavior.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3><a href="/labs/enterprise-context/mdg/domains/business-partner/">MDG Business Partner, Customer & Supplier</a></h3><p>How identity, customer, and supplier slices fit into an MDG governance model.</p></div>
+      <div><h3><a href="/labs/enterprise-context/master-data/">Sales Master Data Architecture</a></h3><p>How BP data interacts with product, pricing, credit, replication, and document behavior.</p></div>
+      <div><h3><a href="/labs/enterprise-context/credit/">SAP Credit Management</a></h3><p>How Business Partner credit master data becomes part of the sales and risk process.</p></div>
+    </div>
   </section>
 </div>

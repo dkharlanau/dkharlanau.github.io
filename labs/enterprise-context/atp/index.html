@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "SAP ATP and aATP Promise Engine — Enterprise Context Lab"
-description: "A practical SAP ATP and aATP playbook: control chain, PAC, Product Allocation design, Supply Protection, BOP, ABC, Release for Delivery, extensions, and diagnostics."
+title: "SAP ATP and aATP — Product Availability, Prioritization and Reconfirmation"
+description: "A practical SAP S/4HANA guide to ATP and advanced ATP: Product Availability Check, scope, Product Allocation, Supply Protection, Backorder Processing, Alternative-Based Confirmation and Release for Delivery."
 permalink: /labs/enterprise-context/atp/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-01
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -23,10 +23,10 @@ tags:
   - release-for-delivery
   - availability-change-log
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-01"
-review_method: "primary sources + factual review + page-level editorial review"
-search_intent: "SAP ATP vs aATP availability check and product confirmation"
+review_method: "SAP Help Portal 2025 FPS01 + existing source registry + page-level editorial review"
+search_intent: "SAP ATP vs aATP availability check product confirmation"
 # ai-discovery-managed:start
 structured_data:
   type: TechArticle
@@ -55,45 +55,25 @@ semantic_links:
     title: "Sales Billing — Enterprise Context Lab"
     url: "/labs/enterprise-context/billing/"
 source_links:
-  - title: "Controlling the Availability Check"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/3c7bbb53707db44ce10000000a174cb4.html"
   - title: "Product Availability Check (CA-ATP-PAC)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/86990a56d448792de10000000a44538d.html"
   - title: "Scope of Availability Check"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html"
-  - title: "Scheduling"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/ac970a564b52fb37e10000000a44147b.html"
-  - title: "Delivery Options"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/7ddf05566d667c65e10000000a44147b.html"
-  - title: "Determination of Check Horizon"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/e5960a56d1478c5be10000000a44147b.html"
   - title: "Product Allocation (CA-ATP-PAL)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/cfc8aa5747c46c10e10000000a441470.html"
   - title: "Supply Protection (CA-ATP-SUP)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/c4b704762cbd4611a3ee2dc00c7a7277.html"
-  - title: "Using Supply Protection and Product Allocation"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/e9861099432c4fd9a569f129f2d4ceb1.html"
-  - title: "Confirmation Strategies"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9905622a5c1f49ba84e9076fc83a9c2c/1ba3a457ef816b10e10000000a441470.html"
   - title: "How to Configure and Execute a Backorder Processing Run"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/02a4a457ef816b10e10000000a441470.html"
-  - title: "Extensibility in Backorder Processing"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/9b3e8891f11e414883d322e515b4845d.html"
+  - title: "Alternative-Based Confirmation (CA-ATP-ABC)"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/61ce286def63461487ee039b7c375070.html"
+  - title: "Release for Delivery"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/aa1e635779d88467e10000000a4450e5.html"
+  - title: "Configuring Availability Change Log"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/0dfe180b0124429fbe0113a152729205.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.atp %}
 {% assign evidence = site.data.labs.enterprise_context.sources.atp %}
-{% assign atp_cfg = site.data.labs.enterprise_context.atp_playbook.configuration %}
-{% assign atp_pal = site.data.labs.enterprise_context.atp_playbook.pal_supply %}
-{% assign atp_bop = site.data.labs.enterprise_context.atp_playbook.bop %}
-{% assign atp_abc = site.data.labs.enterprise_context.atp_playbook.abc_delivery %}
-{% assign atp_assessment = site.data.labs.enterprise_context.atp_playbook.assessment %}
-{% assign atp_extensions = graph.extension_layers | concat: atp_abc.extension_layers %}
-{% assign atp_heuristics = graph.practitioner_heuristics | concat: atp_assessment.practitioner_heuristics %}
-{% assign atp_failures = graph.failure_modes | concat: atp_assessment.failure_modes %}
-{% assign atp_traces = graph.impact_traces | concat: atp_assessment.impact_traces %}
-{% assign atp_cases = graph.synthetic_cases | concat: atp_assessment.synthetic_cases %}
-{% assign atp_drills = graph.assessment_drills | concat: atp_assessment.assessment_drills %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">ATP / aATP</li></ol>
@@ -102,464 +82,225 @@ source_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Deep vertical / Availability Promise</p>
-      <h1>ATP is a promise engine.<br />Not a stock screenshot.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#atp-memory">Start with nine questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">Sales / availability promise</p>
+      <h1>ATP answers a promise question.<br />It does not show a stock snapshot.</h1>
+      <p>A sales order asks whether a quantity can be confirmed for a date. SAP answers that question from the requirement context, scheduling, the configured scope of check, relevant supply and demand, and any active advanced ATP policy. Physical stock is only one input.</p>
+      <a class="research-canvas__button" href="#atp-memory">Build the promise <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="ATP deep-dive inventory">
-      <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.advanced_capabilities | size | plus: 2 }}</strong><small>aATP capability blocks</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · source-tracked · no client data</em>
+    <div class="research-canvas__signal" aria-label="ATP summary">
+      <p>Useful distinction</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>PAC</strong><small>Can we confirm?</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Policy</strong><small>Who may consume scarce supply?</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Recheck</strong><small>Who keeps the confirmation later?</small></div>
+      <em>Quantity + date + policy + later changes</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
-    <p><strong>My working rule:</strong> if ATP looks wrong, I first reconstruct the promise: requirement, plant, material availability date, scope, supply/demand, and policy restrictions.</p>
-    <a href="/labs/enterprise-context/data/atp-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead answer frame</p>
-      <h2>Separate promise logic from the stock number.</h2>
-      <p>A good ATP answer explains why a requirement could or could not be confirmed on a date. It does not stop at “stock exists” or “ATP is zero”.</p>
-    </header>
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>1. Build the requirement</h3>
-        <ul><li>Confirm ATP relevance and the actual requirement quantity.</li><li>Check plant and material availability date before reading supply.</li><li>Separate a scheduling-date problem from an availability problem.</li></ul>
-      </div>
-      <div>
-        <h3>2. Build the promise</h3>
-        <ul><li>Check scope and the supply-demand picture used by the availability check.</li><li>Explain the PAC result before adding advanced policy controls.</li><li>Then inspect PAL, Supply Protection, alternatives, or BOP when they are active.</li></ul>
-      </div>
-      <div>
-        <h3>3. Prove the owner</h3>
-        <ul><li>Show whether the first divergence is date, supply, scope, or business policy.</li><li>Trace alternative plant/product decisions into Shipping, EWM, TM, tax, or margin impact.</li><li>Close with proof of confirmation and downstream business feasibility.</li></ul>
-      </div>
-    </div>
-    <p class="ecg-caption"><strong>Boundary with Shipping:</strong> ATP answers what can be promised. Shipping and scheduling explain how the logistics dates and execution context are built. A wrong upstream date can make a correct availability check look wrong.</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review confirms the advanced ATP simulation API scope, Supply Protection behavior, and the complementary PAL/Supply Protection model. Classic ATP controls, BOP, alternatives, and integration boundaries were reviewed against the route source registry; authored diagnostic framing remains explicitly separate.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
+    <p><strong>Start with the confirmation, not the stock figure.</strong> SAP describes Product Availability Check (PAC) as determining the date and quantity in which a requirement can be fulfilled. The scope of check determines which stocks, receipts, issues and requirements participate in that calculation.</p>
+    <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/86990a56d448792de10000000a44538d.html" target="_blank" rel="noopener">SAP: Product Availability Check <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="atp-memory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
-      <h2>Nine questions are enough to stop random ATP troubleshooting.</h2>
-      <p>I use the sequence from document control to business policy. It keeps a supply problem separate from a date problem, a scope problem, or a prioritization problem.</p>
+      <p class="research-canvas__eyebrow">The core model</p>
+      <h2>A promise is built from context before it is limited by policy.</h2>
+      <p>When a confirmation looks wrong, it helps to separate the basic availability calculation from the commercial rules around scarce supply. Mixing those layers is why an ATP incident often turns into a search through unrelated configuration.</p>
     </header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article class="ecg-memory-card">
-        <span>0{{ forloop.index }}</span>
-        <strong>{{ item.key }}</strong>
-        <h3>{{ item.question }}</h3>
-        <p>{{ item.answer }}</p>
-      </article>
-      {% endfor %}
+
+    <div class="ecg-rail" aria-label="ATP promise chain">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Requirement</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Plant + dates</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Scope of check</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Supply − demand</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">aATP policy</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Confirmed qty / date</span>
+      </div>
     </div>
-    <p class="ecg-caption"><strong>TRIGGER → WHERE → WHEN → SCOPE → NET → PROMISE → PROTECT → REBALANCE → ALTERNATIVE.</strong> This is the shortest path I know from "why zero confirmation?" to a useful technical conversation.</p>
+
+    <p>The sales document provides the requirement and its business context. Scheduling matters because the requested delivery date is not automatically the same date on which material must be available. PAC can perform backward and forward scheduling when it searches for a confirmation.</p>
+
+    <p>The availability scope is equally important. In current SAP S/4HANA documentation, the checking rule and checking group work together to determine which supply and demand elements are considered. The same physical inventory can therefore produce different confirmation results when the check context differs.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Classic control foundation</p>
-      <h2>Before supply, prove that the requirement is controlled correctly.</h2>
-      <p>Classic ATP concepts still matter in an aATP landscape. Schedule-line relevance, checking group, checking rule, and scope are part of the control chain. If this chain is wrong, advanced capabilities only make the wrong context more sophisticated.</p>
+      <p class="research-canvas__eyebrow">Product Availability Check</p>
+      <h2>PAC is the foundation. aATP does not remove the need to understand it.</h2>
+      <p>Product Availability Check calculates whether the requirement can be confirmed, and if so, in what quantity and on what date. Before looking at Product Allocation, Supply Protection or Backorder Processing, the basic PAC result should make sense.</p>
     </header>
-    <div class="ecg-input-grid">
-      {% for control in graph.classic_control_foundation.controls %}
-      <article>
-        <span>CONTROL {{ forloop.index }}</span>
-        <h3>{{ control.title }}</h3>
-        <p>{{ control.role }}</p>
-        <p class="ecg-question"><strong>Check:</strong> {{ control.check_first }}</p>
-      </article>
-      {% endfor %}
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Requirement</h3>
+        <p>Confirm the product, plant, requested quantity, requested delivery date and the material availability date used by the check. A date problem can look like a supply problem.</p>
+      </div>
+      <div>
+        <h3>Scope</h3>
+        <p>Check which stock, receipts, issues and requirements are included. Current SAP S/4HANA configuration also allows scope behavior such as check horizon and delayed-supply handling to influence the result.</p>
+      </div>
+      <div>
+        <h3>Result</h3>
+        <p>Read the confirmed quantity together with its date. “Zero today, full next week” and “zero everywhere” are different outcomes and usually point to different causes.</p>
+      </div>
     </div>
+
+    <p class="ecg-caption">A useful troubleshooting question is: <strong>what was the first input or rule that made this confirmation inevitable?</strong> That is more precise than asking why ATP is “wrong”.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Configuration playbook</p>
-      <h2>Configure aATP as a chain, not as a pile of switches.</h2>
-      <p>{{ atp_cfg.configuration_playbook.principle }}</p>
+      <p class="research-canvas__eyebrow">Advanced ATP</p>
+      <h2>The advanced functions solve different scarcity problems.</h2>
+      <p>aATP is not one extra check. It is a set of capabilities around availability, prioritization, substitution and later redistribution. The names are similar enough to blur together, but their business questions are different.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for layer in atp_cfg.configuration_playbook.layers %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>CFG 0{{ forloop.index }}</span><small>control layer</small></div>
-          <h3>{{ layer.title }}</h3>
-          <p class="ecg-question">{{ layer.business_question }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Controls</h4><ul>{% for value in layer.controls %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Failure pattern</h4><p>{{ layer.failure_pattern }}</p></div>
-          <div><h4>Lead check</h4><p>Prove this layer before changing the next one.</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Runtime path</p>
-      <h2>Follow the promise in the same order it can fail.</h2>
-      <p>The final confirmed quantity hides too much. I separate ATP relevance, requirement context, scheduling, scope, PAC, delivery proposal, business restrictions, alternatives, and later reconfirmation.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for stage in graph.runtime_pipeline %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>0{{ stage.order }}</span><small>promise stage</small></div>
-          <h3>{{ stage.title }}</h3>
-          <p class="ecg-question">{{ stage.question }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Inputs / controls</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Output</h4>{% if stage.output.first %}<ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul>{% else %}<p>{{ stage.output }}</p>{% endif %}</div>
-          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">aATP capability map</p>
-      <h2>Different business questions hide behind the word "availability".</h2>
-      <p>I keep these capability blocks separate because each solves a different problem. PAC calculates, PAL limits, SUP protects, BOP redistributes, ABC searches alternatives, Release for Delivery handles the last operational decision, and ACL narrows change-driven processing.</p>
-    </header>
     <div class="ecg-view-grid">
-      {% for capability in graph.advanced_capabilities %}
       <article class="ecg-view-card">
-        <span>{{ capability.title }}</span>
-        <h3>{{ capability.full_name }}</h3>
-        <p class="ecg-question">{{ capability.business_question }}</p>
-        <p><strong>Remember:</strong> {{ capability.remember }}</p>
+        <span>PAC</span>
+        <h3>Product Availability Check</h3>
+        <p>Can this requirement be confirmed for a quantity and date from the supply-and-demand picture defined by the scope of check?</p>
       </article>
-      {% endfor %}
+      <article class="ecg-view-card">
+        <span>PAL</span>
+        <h3>Product Allocation</h3>
+        <p>How much may a matching business segment consume against planned allocation quantities over time?</p>
+      </article>
+      <article class="ecg-view-card">
+        <span>SUP</span>
+        <h3>Supply Protection</h3>
+        <p>Which quantities should remain protected for selected demand groups instead of being consumed by other demand?</p>
+      </article>
+      <article class="ecg-view-card">
+        <span>BOP</span>
+        <h3>Backorder Processing</h3>
+        <p>When the situation changes, which existing requirements should be rechecked and how should available supply be reassigned by business priority?</p>
+      </article>
+      <article class="ecg-view-card">
+        <span>ABC</span>
+        <h3>Alternative-Based Confirmation</h3>
+        <p>If the original requirement cannot be confirmed as intended, can a configured alternative produce a better confirmation?</p>
+      </article>
       <article class="ecg-view-card">
         <span>R4D</span>
         <h3>Release for Delivery</h3>
-        <p class="ecg-question">Which final due-order confirmations need controlled manual adjustment before logistics execution?</p>
-        <p><strong>Remember:</strong> Last operational promise gate.</p>
-      </article>
-      <article class="ecg-view-card">
-        <span>ACL</span>
-        <h3>Availability Change Log</h3>
-        <p class="ecg-question">Which availability situations actually changed and should drive a focused BOP run?</p>
-        <p><strong>Remember:</strong> Change-driven runtime scope.</p>
+        <p>Which due sales orders should receive limited material before the process moves into delivery execution?</p>
       </article>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">PAL and SUP</p>
-      <h2>One caps demand. The other protects supply.</h2>
-      <p>I explain this in business terms first. Product Allocation limits how much a matching group may consume from constrained supply. Supply Protection keeps quantities protected from demand belonging to other groups. The characteristic and time-bucket design matters because badly aligned models can block each other.</p>
+      <p class="research-canvas__eyebrow">Allocation and protection</p>
+      <h2>PAL and Supply Protection both constrain scarce supply, but in opposite ways.</h2>
+      <p>Product Allocation starts from planned allocation quantities and characteristics. A matching requirement consumes against the allocation available to that combination. Supply Protection starts from protected quantities and demand groups; PAC reduces what other demand can consume when the protection applies.</p>
     </header>
-    <div class="ecg-rail" aria-label="Product allocation and supply protection mental model">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Available Supply</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">SUP: keep minimum protected</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">PAL: limit group consumption</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Commercially Available Promise</span>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Product Allocation</h3>
+        <p>Think of PAL as a commercial allocation rule. It answers how much of constrained capacity or supply a matching segment may consume during a period. The design depends on allocation objects, characteristic combinations, planning data and assignment.</p>
+      </div>
+      <div>
+        <h3>Supply Protection</h3>
+        <p>Think of SUP as a reservation of opportunity rather than physical stock. It protects a defined quantity for matching demand groups. SAP explicitly warns that demand paths which bypass Supply Protection can undermine the model.</p>
+      </div>
+      <div>
+        <h3>Used together</h3>
+        <p>They can be complementary, but the characteristic design and time logic must be understood. A tight allocation and an overlapping protection rule can both restrict the same commercial promise even though physical supply exists.</p>
       </div>
     </div>
-    <p class="ecg-caption">The exact execution design depends on active methods and configuration. The mental model is about intent: protection and allocation are policy constraints, not inventory creation.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Product Allocation design</p>
-      <h2>PAL is a chain from business characteristic to consumed time bucket.</h2>
-      <p>{{ atp_pal.pal_design.lead_formula }}</p>
+      <p class="research-canvas__eyebrow">Reconfirmation</p>
+      <h2>The first confirmation is not necessarily the final allocation of supply.</h2>
+      <p>Supply and demand move after an order is created. Backorder Processing (BOP) exists to recheck selected requirements and apply business priority again. This is why a later confirmation change is not automatically a defect.</p>
     </header>
-    <div class="ecg-input-grid">
-      {% for item in atp_pal.pal_design.objects %}
-      <article>
-        <span>PAL {{ forloop.index }}</span>
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.purpose }}</p>
-        <p class="ecg-question"><strong>Trap:</strong> {{ item.trap }}</p>
-      </article>
-      {% endfor %}
-    </div>
+
+    <p>A BOP variant defines the population and processing behavior, with segments used to select and prioritize requirements. Depending on the strategy, a run can improve, retain, reduce or remove confirmations. The important operational question is therefore not only “what changed?” but “which BOP rule selected this requirement and what priority did it receive?”</p>
+
+    <p>The Availability Change Log (ACL) supports a different concern. It records changes that affect the availability situation for supported objects and can be consumed by follow-on processes such as BOP. It is a way to focus reprocessing on changed availability situations; it is not a replacement for understanding the BOP variant itself.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Alternatives and delivery</p>
+      <h2>A better confirmation can change the fulfillment design.</h2>
+      <p>Alternative-Based Confirmation can evaluate configured substitutes when the original requirement is not the best available promise. The commercial result may improve, but the alternative still has to make sense for the downstream process.</p>
+    </header>
+
+    <p>An alternative product or location can change more than the ATP result. Delivery execution, transportation, warehouse processing, customer acceptance and commercial conditions may also change. For that reason, ABC belongs in an end-to-end order-fulfillment design, not in an isolated availability-check discussion.</p>
+
+    <p>Release for Delivery sits later in the process. SAP describes the app as a way to prioritize due sales orders for materials with limited availability before subsequent logistics processes such as picking or packing. It is a controlled operational decision over scarce supply, not another way to calculate stock.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">One example</p>
+      <h2>“We have 100 pieces in stock. Why did the order confirm only 20?”</h2>
+      <p>The stock figure is not enough to answer. Several very different explanations can lead to the same visible result.</p>
+    </header>
+
     <div class="ecg-decision-columns">
-      <div><h3>Parameters that change the result</h3><ul>{% for value in atp_pal.pal_design.parameters %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Sequence logic</h3><ul>{% for value in atp_pal.pal_design.sequence_logic %}<li><strong>{{ value.title }}:</strong> {{ value.explanation }}</li>{% endfor %}</ul></div>
-      <div><h3>Operate it</h3><ul>{% for value in atp_pal.pal_design.operations %}<li>{{ value }}</li>{% endfor %}</ul></div>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Supply Protection guardrails</p>
-      <h2>Protection only works if every demand path respects the boundary.</h2>
-      <p>Supply Protection is powerful because it creates a commercial boundary over physical supply. That also means a bypass path or overprotection can become a serious fulfillment defect.</p>
-    </header>
-    <div class="ecg-heuristic-grid">
-      {% for item in atp_pal.supply_protection_guardrails.items %}
-      <article>
-        <span>SUP {{ forloop.index }}</span>
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.lesson }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Backorder Processing</p>
-      <h2>BOP is a prioritization engine, not a repair job.</h2>
-      <p>When supply changes, BOP can revisit existing confirmations. I read variant, segment, strategy, and sorting before I call a worse confirmation a defect.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for strategy in graph.bop_strategies %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>{{ strategy.code }}</span><small>confirmation strategy</small></div>
-          <h3>{{ strategy.meaning }}</h3>
-          <p class="ecg-question">{{ strategy.lead_question }}</p>
-        </header>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">BOP configuration and operations</p>
-      <h2>The variant defines both business priority and operational blast radius.</h2>
-      <p>I separate who is selected, who is processed first, what happens on an exception, and whether the run should revisit the whole population or only availability situations that changed.</p>
-    </header>
-    <div class="ecg-input-grid">
-      {% for block in atp_bop.bop_design.blocks %}
-      <article>
-        <span>BOP {{ forloop.index }}</span>
-        <h3>{{ block.title }}</h3>
-        <p>{{ block.purpose }}</p>
-        <p class="ecg-question"><strong>Check:</strong> {{ block.check }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">policy</span>
-      <p><strong>Lead rules:</strong> {{ atp_bop.bop_design.lead_rules | join: " · " }}</p>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Alternative-Based Confirmation</p>
-      <h2>Availability can change the sourcing decision.</h2>
-      <p>ABC can evaluate substitute products, plants, or storage locations. That can improve the confirmation and still create new freight, route, tax, warehouse, or margin consequences. I therefore treat alternative selection as an Order-to-Cash design decision, not as an isolated ATP feature.</p>
-    </header>
-    <div class="ecg-rail" aria-label="Alternative-Based Confirmation reasoning chain">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Original Requirement</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Original PAC Result</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Substitution Strategy</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Alternative Determination</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Alternative Confirmation</span>
+      <div>
+        <h3>The 100 is not all available to this requirement</h3>
+        <p>Other requirements may already consume part of the quantity, or the scope of check may include demand and exclude a receipt the user expected to count.</p>
+      </div>
+      <div>
+        <h3>The date is different</h3>
+        <p>The order may need the product on a material availability date that is earlier than the user assumes. A later receipt can exist and still be too late for the requested promise.</p>
+      </div>
+      <div>
+        <h3>Policy limits the promise</h3>
+        <p>PAL may restrict the matching segment, or Supply Protection may reserve part of the quantity for another protected group. The physical stock is real; the commercial availability is intentionally narrower.</p>
       </div>
     </div>
-    <div class="ecg-decision-columns">
-      <div><h3>What current ABC can do</h3><ul>{% for value in atp_abc.abc_current_design.capabilities %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>Design chain</h3><ol>{% for value in atp_abc.abc_current_design.design_chain %}<li>{{ value }}</li>{% endfor %}</ol></div>
-      <div><h3>Lead boundary</h3><p>Availability-based substitution is not free. Validate customer acceptance and downstream route, shipping point, freight, tax, warehouse, and margin consequences.</p></div>
-    </div>
+
+    <p class="ecg-caption">The diagnosis becomes useful when it names the exact branch: <strong>date, scope, competing demand, allocation, protection, alternative logic, or later reconfirmation.</strong></p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Release for Delivery</p>
-      <h2>The last scarce-supply decision can be operational.</h2>
-      <p>{{ atp_abc.release_for_delivery.purpose }}</p>
+      <p class="research-canvas__eyebrow">Diagnostic path</p>
+      <h2>When a promise looks wrong, reconstruct it once from left to right.</h2>
+      <p>This is the shortest diagnostic sequence that still respects the SAP model. It is intentionally smaller than a transaction checklist.</p>
     </header>
-    <div class="ecg-input-grid">
-      {% for value in atp_abc.release_for_delivery.capabilities %}
-      <article>
-        <span>R4D {{ forloop.index }}</span>
-        <h3>{{ value }}</h3>
-      </article>
-      {% endfor %}
-    </div>
-    <p class="ecg-caption"><strong>Extension boundary:</strong> {{ atp_abc.release_for_delivery.extensibility | join: " · " }}</p>
-  </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Release-sensitive guardrails</p>
-      <h2>Do not memorize early aATP limitations as permanent product facts.</h2>
-      <p>aATP has changed substantially. For assessment work and project design, I separate stable concepts from release-sensitive capabilities, app setup, and restrictions.</p>
-    </header>
-    <div class="ecg-heuristic-grid">
-      {% for item in atp_cfg.release_guardrails.items %}
-      <article>
-        <span>VERIFY {{ forloop.index }}</span>
-        <p>{{ item.statement }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Released extension paths</p>
-      <h2>Extend prioritization only after standard policy is visible.</h2>
-      <p>I prefer standard BOP segments, sorting, confirmation strategies, and ABC determination first. When they cannot express the rule, released BAdIs are easier to govern if the business decision remains explicit and testable.</p>
-    </header>
     <div class="ecg-determination-list">
-      {% for ext in atp_extensions %}
       <article class="ecg-determination-detail">
-        <header>
-          <div><span>EXT {{ forloop.index }}</span><small>released enhancement</small></div>
-          <h3>{{ ext.title }}</h3>
-          <p class="ecg-question">{{ ext.principle }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Typical trap</h4><p>{{ ext.trap }}</p></div>
-        </div>
+        <header><div><span>01</span><small>context</small></div><h3>Freeze one requirement</h3><p class="ecg-question">What exact product, plant, quantity and dates did SAP check?</p></header>
+        <p>Use one reproducible document item. Do not compare different orders until the first result can be explained.</p>
       </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Integration boundary</p>
-      <h2>The promise sits between Sales and the supply network.</h2>
-      <p>ATP reads a sales requirement but its answer depends on dates, location, inventory, future receipts, planning demand, and later delivery execution. External order channels may also ask for a simulated promise without creating an order.</p>
-    </header>
-    <div class="ecg-heuristic-grid">
-      {% for integration in graph.integration_boundary %}
-      <article>
-        <span>{{ integration.direction }}</span>
-        <h3>{{ integration.title }}</h3>
-        <ul>{% for value in integration.details %}<li>{{ value }}</li>{% endfor %}</ul>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead reasoning</p>
-      <h2>Lead habits that keep availability analysis grounded.</h2>
-      <p>These are practitioner heuristics, not SAP configuration rules. They make the diagnostic path explainable to Sales, Supply Chain, and technical teams at the same time.</p>
-    </header>
-    <div class="ecg-heuristic-grid">
-      {% for heuristic in atp_heuristics %}
-      <article>
-        <span>HEURISTIC {{ forloop.index }}</span>
-        <h3>{{ heuristic.statement }}</h3>
-        <p>{{ heuristic.context }}</p>
-        {% if heuristic.checks %}<h4>Check</h4><ul>{% for value in heuristic.checks %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-        {% if heuristic.questions %}<h4>Ask</h4><ul>{% for value in heuristic.questions %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-        {% if heuristic.anti_patterns %}<h4>Avoid</h4><ul>{% for value in heuristic.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-      </article>
-      {% endfor %}
-    </div>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">conversion_path</span>
-      <p><strong>Migration / redesign rule:</strong> {{ atp_cfg.migration_heuristic.statement }}</p>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Failure patterns</p>
-      <h2>Start from the symptom, then reconstruct the promise.</h2>
-      <p>I treat symptoms as routing hints, not root causes. The goal is to find the first point where actual context differs from the intended design.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for failure in atp_failures %}
       <article class="ecg-determination-detail">
-        <header>
-          <div><span>SYMPTOM</span><small>triage</small></div>
-          <h3>{{ failure.symptom }}</h3>
-          <p class="ecg-question">Do not change ATP configuration until the current result can be explained.</p>
-        </header>
-        <div class="ecg-diagnostic">
-          <div><h4>Likely causes</h4><ul>{% for value in failure.likely_causes %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Check first</h4><ol>{% for value in failure.first_checks %}<li>{{ value }}</li>{% endfor %}</ol></div>
-        </div>
+        <header><div><span>02</span><small>scope</small></div><h3>Explain the basic PAC result</h3><p class="ecg-question">Which stocks, receipts, issues and requirements were included, and what did the check horizon permit?</p></header>
+        <p>If the base supply-and-demand picture is wrong, advanced policy is not the first problem.</p>
       </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Impact traces</p>
-      <h2>A promise has upstream causes and downstream consequences.</h2>
-      <p>These traces are useful in design workshops because they stop the conversation from treating ATP as an isolated checkbox.</p>
-    </header>
-    <div class="ecg-traces">
-      {% for trace in atp_traces %}
-      <article class="ecg-trace">
-        <div class="ecg-trace__head"><span>TRACE {{ forloop.index }}</span><h3>{{ trace.title }}</h3></div>
-        <div class="ecg-trace__path">{% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
-        <p><strong>Lesson:</strong> {{ trace.explanation }}</p>
+      <article class="ecg-determination-detail">
+        <header><div><span>03</span><small>policy</small></div><h3>Add only the active aATP controls</h3><p class="ecg-question">Did PAL, Supply Protection or ABC intentionally change what PAC could confirm?</p></header>
+        <p>Read the matching characteristics and time logic rather than assuming the policy from the customer name or sales organization.</p>
       </article>
-      {% endfor %}
+      <article class="ecg-determination-detail">
+        <header><div><span>04</span><small>later change</small></div><h3>Separate original confirmation from reconfirmation</h3><p class="ecg-question">Was the order later touched by BOP, an availability-changing event or a delivery-stage decision?</p></header>
+        <p>A correct original confirmation and a correct later redistribution can produce two different quantities at two different times.</p>
+      </article>
     </div>
   </section>
 
-  {% for scenario in atp_cases %}
-  <section class="ecg-case" data-reveal>
-    <div class="ecg-case__intro">
-      <p class="research-canvas__eyebrow">Synthetic exercise {{ forloop.index }}</p>
-      <h2>{{ scenario.title }}</h2>
-      <p>{{ scenario.task }}</p>
-      <strong>Synthetic example · no customer data</strong>
-    </div>
-    <div class="ecg-case__body">
-      <h3>Context</h3><ul>{% for value in scenario.context %}<li>{{ value }}</li>{% endfor %}</ul>
-      {% if scenario.lead_answer_shape %}<h3>Lead answer shape</h3><ol>{% for value in scenario.lead_answer_shape %}<li>{{ value }}</li>{% endfor %}</ol>{% endif %}
-    </div>
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">conversion_path</span>
+    <p><strong>Boundary with fulfillment:</strong> ATP proves a promise, not delivery completion. A confirmed quantity can still meet problems in shipping, warehouse execution, transportation, credit, compliance or another downstream control. Keep the availability decision and the execution decision separate.</p>
+    <a href="/labs/enterprise-context/shipping/">Continue to Shipping <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
-  {% endfor %}
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="evidence" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Assessment drills</p>
-      <h2>Answer with sequence, business intent, and boundaries.</h2>
-      <p>A Lead answer should explain what is known, what is missing, which control layer owns the behavior, and what downstream process can change if the proposed fix is applied.</p>
-    </header>
-    <div class="ecg-drill-list">
-      {% for drill in atp_drills %}
-      <details>
-        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.question }}</strong><small>Open expected dimensions</small></summary>
-        <div><p>Expected reasoning dimensions</p><ol>{% for value in drill.expected_dimensions %}<li>{{ value }}</li>{% endfor %}</ol></div>
-      </details>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Availability behavior and enhancement points stay source-tracked.</h2>
-      <p>Primary SAP documentation is used to verify ATP control, PAC, scope, scheduling, PAL sequence design, SUP guardrails, BOP and ACL behavior, ABC, Release for Delivery, released BAdIs, and the availability-check API. The diagnostic method remains independently written.</p>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>The capability model is checked against SAP documentation.</h2>
+      <p>The source registry tracks current SAP S/4HANA documentation for PAC, scope and scheduling, Product Allocation, Supply Protection, Backorder Processing, Alternative-Based Confirmation, Release for Delivery and related extensibility. Release-sensitive behavior should still be checked against the target system release before design decisions are made.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
@@ -570,9 +311,9 @@ source_links:
 
   <section class="ecg-machine" data-reveal>
     <div>
-      <p class="research-canvas__eyebrow">For tools and AI</p>
-      <h2>The promise model is machine-readable too.</h2>
-      <p>The control chain, configuration playbook, PAL/BOP/ABC design, Release for Delivery, extensions, failures, traces, heuristics, synthetic cases, and assessment drills are exposed as JSON for later graph views and grounded evaluation.</p>
+      <p class="research-canvas__eyebrow">Structured material</p>
+      <h2>The deeper models remain available without crowding the article.</h2>
+      <p>The machine-readable layer keeps the detailed control graph, playbook, source registry, failure patterns and practice material. This page stays focused on the concepts a reader needs to understand the promise.</p>
     </div>
     <div class="ecg-machine__actions">
       <a class="research-canvas__button" href="/labs/enterprise-context/data/atp-graph.json">ATP graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>

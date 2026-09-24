@@ -1,17 +1,17 @@
 ---
 layout: default
 title: "SAP Stock Transfer and In-Transit Inventory"
-description: "How stock transport orders, transfer postings, and in-transit inventory work in SAP, with common visibility and reconciliation issues."
+description: "How one-step transfers, two-step transfers, and stock transport orders represent stock moving between SAP organizational units."
 permalink: /atlas/sap/sap-stock-transfer-in-transit/
 atlas_section: sap
 domain: SAP operations
 subdomain: Logistics and inventory
 concept_type: SAP concept
-sap_area: MM / WM / logistics execution
+sap_area: MM / logistics execution
 business_process: Inventory management
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-09
+last_reviewed: 2026-09-22
 author: Dzmitryi Kharlanau
 tags:
   - sap-mm
@@ -39,74 +39,53 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas SAP Note</p>
     <h1>SAP stock transfer and in-transit inventory</h1>
-    <p class="note-subtitle">One-step vs two-step transfers, stock transport orders, and why in-transit stock sometimes disappears from reports.</p>
+    <p class="note-subtitle">The key question is not only where stock moved, but which transfer process SAP used to represent the journey.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
   <aside class="atlas-meta-panel">
     <dl>
       <div><dt>Process</dt><dd>Inventory management</dd></div>
-      <div><dt>SAP area</dt><dd>MM / WM / logistics execution</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP docs.</dd></div>
+      <div><dt>SAP area</dt><dd>MM / logistics execution</dd></div>
+      <div><dt>Reviewed</dt><dd>2026-09-22</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Stock transfer is the movement of material from one organizational unit to another: plant to plant, storage location to storage location, or warehouse to warehouse. SAP supports two main approaches: transfer posting (direct movement) and stock transport order (a purchase order-like document that tracks the transfer). The critical difference is visibility: a transfer posting can be one-step or two-step, and a two-step transfer creates in-transit stock that is easy to miss in standard stock reports.</p>
+    <h2>There is more than one way to move stock</h2>
+    <p>When material moves between storage locations or plants, SAP can represent the movement in different ways. The three broad procedures are a one-step transfer posting, a two-step transfer posting, and a transfer using a stock transport order. They can describe similar physical movement, but they leave different document trails and give the business different visibility while the goods are travelling.</p>
 
-    <h2>Key sections</h2>
+    <p>This distinction matters because “stock is missing after transfer” is often not an inventory-loss problem. The quantity may simply be sitting in an intermediate stock category created by the chosen process.</p>
 
-    <h3>Transfer posting vs stock transport order</h3>
+    <h2>One step means one posting event</h2>
+    <p>In a one-step transfer posting, SAP records the removal from the issuing unit and the receipt into the receiving unit together. For a plant-to-plant transfer, the system creates the issuing and receiving material-document items as part of one posting. There is no separate period in which the receiving team still needs to confirm the arrival.</p>
+
+    <p>This is efficient when the physical and system movements can be treated as one event. It is less suitable when the journey itself matters—for example, when plants are far apart or different people control goods issue and goods receipt.</p>
+
+    <h2>Two steps make the journey visible</h2>
+    <p>A two-step transfer separates removal and placement into storage. After the first posting, SAP manages the quantity as <strong>stock in transfer</strong> at the receiving plant. It is not yet unrestricted-use stock there. The second posting moves that quantity out of stock in transfer and into the receiving stock.</p>
+
+    <p>That intermediate state is useful operationally because it answers a real question: how much material has left one plant but has not yet been received by the other? It also explains why storage-location stock alone can give an incomplete picture during reconciliation.</p>
+
+    <h2>A stock transport order adds a purchasing document to the flow</h2>
+    <p>A stock transport order, or STO, gives the transfer a purchasing-document backbone. It can support planning, delivery processing, goods issue, goods receipt, and—depending on the scenario—additional logistics or intercompany processing. After goods issue, SAP can manage the quantity as stock in transit until the receiving side posts the receipt.</p>
+
+    <p>It is useful to keep the terms separate. SAP documentation uses <strong>stock in transfer</strong> for the intermediate quantity in a two-step transfer posting, while STO processes commonly use <strong>stock in transit</strong>. The business meaning is similar—goods have left the source but are not yet available at the destination—but the document flow is different.</p>
+
+    <h2>Valuation follows the process as well</h2>
+    <p>A plant-to-plant transfer can have accounting effects, especially when valuation prices differ between plants or company codes. SAP documentation for transfer postings describes the transfer value as being based on the issuing plant and explains that price differences may arise at the receiving plant depending on price control. This is one reason not to reduce stock transfers to “subtract here, add there.” Quantity and value move under the rules of the chosen scenario.</p>
+
+    <h2>How we read a transfer that looks incomplete</h2>
+    <p>We first identify the process: direct one-step, direct two-step, or STO. Then we follow the related goods movements in sequence. In a two-step transfer, the open question is whether the receiving step was posted. In an STO flow, we look at the order and its goods-issue and goods-receipt history. That approach is more reliable than starting from one stock report and assuming anything absent from unrestricted stock has disappeared.</p>
+
+    <p>The useful end state is a simple explanation: the material is still in transfer, still in transit against an STO, already received, or reversed. Once that state is known, the correction usually follows the document flow naturally.</p>
+
+    <h2>Sources</h2>
     <ul>
-      <li><strong>Transfer posting</strong> — initiated directly in <strong>MIGO</strong> or <strong>MB1B</strong> without a preceding document. Used for ad-hoc movements. One-step (301) or two-step (303/305, 313/315).</li>
-      <li><strong>Stock transport order</strong> — a purchase order of type UB (intra-company) or NB with item category U (inter-company). Created in <strong>ME21N</strong>, tracked like a PO, and processed through <strong>MIGO</strong> with reference. Provides document trail, delivery scheduling, and billing for inter-company transfers.</li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/9e64bd534f22b44ce10000000a174cb4.html">SAP Help: Transfer Postings and Stock Transfers — Overview</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/bf64bd534f22b44ce10000000a174cb4.html">SAP Help: Two-Step Procedure — Plant</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/af9ef57f504840d2b81be8667206d485/a35eb6531de6b64ce10000000a174cb4.html">SAP Help: Transfer Posting — From Plant to Plant</a></li>
     </ul>
-
-    <h3>One-step vs two-step transfer</h3>
-    <ul>
-      <li><strong>One-step</strong> — stock leaves the source and arrives at the destination in a single material document. Simple, but no visibility of goods in transit. Best for immediate movements within the same plant.</li>
-      <li><strong>Two-step</strong> — step 1 (303/313) removes stock from the source and puts it in transit. Step 2 (305/315) receives it at the destination. The in-transit stock is visible in <strong>MMBE</strong> under the in-transit category, but not in standard storage location stock reports.</li>
-    </ul>
-
-    <h3>In-transit stock handling</h3>
-    <p>In-transit stock is a special stock category. It is not available for consumption or sales at either the sending or receiving plant until the second step is posted. Common issues include:</p>
-    <ul>
-      <li>The receiving plant forgets to post the second step, leaving stock in transit indefinitely.</li>
-      <li>The user runs a stock report at storage location level and does not see the in-transit quantity, leading to false conclusions about total stock.</li>
-      <li>Valuation differences in cross-plant transfers when the plants use different valuation classes or currency.</li>
-    </ul>
-
-    <h3>Cross-plant transfers</h3>
-    <p>When transferring between plants, the system checks plant-to-plant relationships, availability control, and valuation. For stock transport orders, the supplying plant delivers the material and the receiving plant posts the GR. In inter-company scenarios, billing and invoicing may be involved. Check the stock transport order in <strong>ME23N</strong> and the delivery in <strong>VL03N</strong> if SD delivery is used.</p>
-
-    <h3>Key transactions and tables</h3>
-    <ul>
-      <li><strong>MB1B</strong> — transfer posting with movement type.</li>
-      <li><strong>MIGO</strong> — goods movement with reference to stock transport order or direct transfer.</li>
-      <li><strong>ME2N</strong> — display stock transport orders by number.</li>
-      <li><strong>MMBE</strong> — stock overview including in-transit.</li>
-      <li><strong>MB51</strong> — material document history.</li>
-      <li><strong>EKPO</strong> — purchase order items (includes stock transport orders).</li>
-      <li><strong>MKPF / MSEG</strong> — material document headers and items.</li>
-    </ul>
-
-    <h3>Diagnostic questions for in-transit issues</h3>
-    <ul>
-      <li>Was the transfer one-step or two-step? If two-step, was the second step posted?</li>
-      <li>Does <strong>MMBE</strong> show in-transit stock that is not reflected in the receiving plant's storage location?</li>
-      <li>Is the stock transport order fully delivered and fully received?</li>
-      <li>Are there partial quantities in transit from multiple transfer documents?</li>
-      <li>Does the movement type match the transfer scenario (plant-to-plant, sloc-to-sloc, with or without SD delivery)?</li>
-    </ul>
-
-    <h2>Support takeaway</h2>
-    <p>In-transit stock is the most common blind spot in inventory reconciliation. When a user claims stock is missing after a transfer, check <strong>MMBE</strong> first for the in-transit category, then <strong>MB51</strong> for the movement type and document flow. A complete two-step transfer should show both a 303 and a 305 (or 313 and 315) in the material document history.</p>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page covers MM-based stock transfers. It does not cover WM transfer requirements, EWM stock transfers, or handling unit movements. It does not detail inter-company billing and invoicing configuration.</p>
-
-    <p><em>This is not official SAP documentation and not a replacement for system-specific analysis.</em></p>
   </div>
 
   <section class="atlas-related">

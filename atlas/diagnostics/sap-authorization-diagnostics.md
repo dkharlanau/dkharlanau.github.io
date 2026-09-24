@@ -1,7 +1,7 @@
 ---
 layout: default
 title: SAP Authorization and Role Diagnostics
-description: Diagnose SAP authorization failures by separating the failed check from role design, organizational values, user context, and business access need.
+description: Diagnose SAP authorization failures from the failed runtime check, execution identity, role values, generated profile, and user context.
 permalink: /atlas/diagnostics/sap-authorization-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -12,7 +12,7 @@ business_process: SAP AMS support
 status: reviewed
 verified: true
 level: 2
-last_reviewed: '2026-06-13'
+last_reviewed: '2026-09-23'
 author: Dzmitryi Kharlanau
 tags:
 - sap-ams
@@ -40,7 +40,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP authorization and role diagnostics</h1>
-    <p class="note-subtitle">First prove which authorization check failed. Then decide whether access is missing, the role is wrong, or the process should not grant that access at all.</p>
+    <p class="note-subtitle">Start from the authorization check that actually failed, then prove which identity, field value, and role state caused it.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -53,55 +53,70 @@ sitemap: true
   </aside>
 
   <div class="note-body">
-    <h2>Not every disabled action is an authorization issue</h2>
-    <p>A user who cannot perform an action may be missing an authorization, but the same symptom can come from document status, customizing, workflow, field control, or application logic. Security work starts with evidence of a failed authorization check, not with a request to copy another user's roles.</p>
-    <p>The business question matters too. Even when a technical authorization is missing, the correct answer may be “request approved access” rather than “add the object.” Roles exist to express a control model, not to make error messages disappear.</p>
+    <p>An authorization incident becomes much easier once we stop asking, “Which role is missing?” and ask a narrower question: <strong>which authorization check failed, for which user, with which field values, while doing which business action?</strong></p>
 
-    <h2>Choose the evidence for the type of failure</h2>
-    <div class="decision-table"><table><thead><tr><th>Situation</th><th>Useful evidence</th><th>Important caution</th></tr></thead><tbody>
-      <tr><td>Dialog user gets a clear authorization error</td><td>Reproduce the action and inspect the failed check immediately, for example with SU53 where appropriate.</td><td>SU53 shows recent failed checks in that user context. It is not a complete explanation of the role design.</td></tr>
-      <tr><td>The failure is indirect or hard to reproduce</td><td>Use an authorization trace approved for the environment and narrow it to the user/action.</td><td>Trace data can be noisy and sensitive. Collect only what is needed.</td></tr>
-      <tr><td>Background job fails</td><td>Job log, execution user, failed authorization evidence, and the job's business function.</td><td>The interactive user's SU53 does not describe the background user's checks.</td></tr>
-      <tr><td>RFC, interface, or service call fails</td><td>Technical user, called function/service, error trace, and target-side authorization evidence.</td><td>Do not solve a technical-user issue by broadening a human role.</td></tr>
-      <tr><td>Access differs by company code, plant, or sales organization</td><td>Authorization object fields and organizational values in the assigned role.</td><td>The object may exist in the role but with the wrong value scope.</td></tr>
-    </tbody></table></div>
+    <p>That distinction matters because SAP evaluates access at runtime. A user can have the expected role name and still fail because one activity or organizational value is missing. The same visible error can also come from a check executed under an RFC, workflow, or background user rather than the person in the browser.</p>
 
-    <h2>A clean diagnostic sequence</h2>
+    <aside class="callout">
+      <strong>Working rule:</strong> capture the failed check first. Change the role only after the authorization object, checked values, execution identity, and business need agree.
+    </aside>
+
+    <h2>SU53 is the fastest snapshot after a real denial</h2>
+    <p>For a fresh ABAP authorization error, <code>SU53</code> is usually the quickest place to start. SAP documents it as authorization error analysis for an access-denied error that has just occurred. It shows the failed authorization check and lets us compare that check with the user’s authorization data.</p>
+
+    <p>Timing matters. Reproduce the exact action, then run <code>SU53</code> immediately. Capture the authorization object, every checked field and value, the user, the business action, and the approximate timestamp together. If the user performs other actions first, a later failed check can replace the evidence we wanted.</p>
+
+    <p>A failed check is evidence, not automatically the root cause. Applications can test an authorization and continue down another code path when the check fails. The useful question is whether the failed object and values correspond to the action the user could not complete. If that link is unclear, move to a trace rather than granting access from one screenshot.</p>
+
+    <h2>Use an authorization trace when one snapshot is not enough</h2>
+    <p><code>STAUTHTRACE</code> records authorization checks during a controlled test. SAP describes it as the authorization-focused form of the system trace: it can be restricted to a user, records the authorization object with the checked field values, and can show the ABAP call point where a check occurred.</p>
+
+    <p>This is more useful when one process performs several checks, the failure occurs in another session, or a technical user is involved. Keep the trace narrow: choose the correct user, start it, reproduce one representative path, stop it, and evaluate the sequence. A long unrestricted trace creates noise and makes a simple incident harder to read.</p>
+
+    <p>The trace answers a question that a role list cannot: <strong>what did the application actually check at runtime?</strong> PFCG content tells us what a role can grant. Runtime evidence tells us what this execution requested.</p>
+
+    <h2>Read the authorization object field by field</h2>
+    <p>Suppose the trace shows an object with <code>ACTVT = 02</code> and a sales organization value that the user does not hold. “The object is missing” is then too coarse. The role may already contain the object for display activity, for another sales organization, or through a different authorization instance.</p>
+
+    <p>Interpret each field in the business context. Activity, organizational level, document type, authorization group, and other object-specific fields answer different questions. A correction should grant the approved action for the approved scope, not merely make the failed line disappear.</p>
+
+    <p>This is why copying a broad role is a poor diagnostic technique. It changes many variables at once. The incident may disappear, but we no longer know whether the missing element was one activity value, one plant, one service authorization, or unrelated access that arrived with the copied role.</p>
+
+    <h2>Separate role design from what the user has at runtime</h2>
+    <p>A PFCG role, its generated authorization profile, the user assignment, and the user’s current authorization buffer are related states, but they are not the same state.</p>
+
+    <p>SAP documents that after authorization data in a role changes, its authorization profile must be regenerated. User assignments then have to be reflected in the user master through user comparison or the configured automatic/background process. <code>SU56</code> shows the authorizations available in the user buffer and is useful when the role definition looks correct but runtime behavior still disagrees.</p>
+
     <ol>
-      <li><strong>Capture the exact action.</strong> User, transaction or app, business object, activity, organizational context, timestamp, and message.</li>
-      <li><strong>Confirm that an authorization check actually failed.</strong> If there is no failed check, return to functional diagnosis instead of forcing the issue into security.</li>
-      <li><strong>Identify the object, field, and value.</strong> The useful evidence is more specific than “no access.”</li>
-      <li><strong>Check the intended role.</strong> Does the user's business role normally include this activity and organizational scope?</li>
-      <li><strong>Check role and user state.</strong> If the role should contain the authorization, verify role maintenance, generated profiles, assignment/user comparison, and current user context as relevant to the landscape.</li>
-      <li><strong>Check governance before changing access.</strong> Confirm the business reason, role owner, approval path, and segregation-of-duties impact.</li>
-      <li><strong>Retest the original action.</strong> A role change is not proven until the required task works with the intended scope and no unnecessary access was added.</li>
+      <li><strong>Prove the failed runtime check.</strong> Record the object and checked values.</li>
+      <li><strong>Inspect what the user currently has.</strong> Compare the failed values with the user buffer and effective assignments.</li>
+      <li><strong>Locate the intended role.</strong> Identify which role is supposed to grant that business responsibility.</li>
+      <li><strong>Check generation and assignment state.</strong> Confirm the role authorization data, generated profile, assignment validity, and user comparison are current.</li>
+      <li><strong>Retest the same business action.</strong> Do not substitute a different transaction or a broader emergency role for the original test.</li>
     </ol>
 
-    <h2>Useful SAP tools</h2>
+    <p>The order matters. Otherwise a correct role design can be blamed for an assignment problem, or a missing authorization value can be misdiagnosed as a buffer problem.</p>
+
+    <h2>Trace the identity that actually executes the step</h2>
+    <p>The person reporting the error is not always the user evaluated by the failing check. A dialog action can trigger an RFC call, workflow step, background job, OData request, or middleware process under another identity.</p>
+
+    <p>For a dialog failure, trace the dialog user. For a background step, identify the job user. For an integration, determine whether the backend sees a technical user, a propagated business user, or another configured identity. A trace attached to the wrong user can be perfectly accurate and still answer the wrong question.</p>
+
+    <p>Fiori adds another useful boundary. A user can authenticate, open the launchpad, and see an app while the backend later rejects an OData service or business authorization. Current SAP S/4HANA documentation distinguishes launchpad and general OData authorizations from app-specific backend authorizations. In landscapes with separate front-end and back-end layers, both sides can therefore matter to one visible symptom.</p>
+
+    <h2>Make the smallest justified change</h2>
+    <p>Once the missing check is understood, change the role that owns that business responsibility. Prefer explicit values over wildcards and keep organizational scope aligned with the user’s job. If the proposed fix grants materially more access than the failed action requires, the diagnosis is not finished.</p>
+
+    <p>After the change, regenerate the profile when required, complete the relevant user comparison or assignment update, and retest the exact step that originally failed. Then check adjacent actions that should remain restricted. A successful retest proves the required path works; it does not by itself prove that the resulting role is least-privilege.</p>
+
+    <p>For sensitive access, keep the original evidence and the approved change through the local security process. That gives the incident a useful chain: symptom → failed check → business justification → role change → successful retest.</p>
+
+    <h2>Source references</h2>
     <ul>
-      <li><strong>SU53</strong> for recent failed authorization checks in the current user's context.</li>
-      <li><strong>PFCG</strong> for role content, organizational levels, profiles, and role maintenance.</li>
-      <li><strong>SU01</strong> for user assignments and user-master context.</li>
-      <li><strong>SU56</strong> for the user's authorization buffer.</li>
-      <li><strong>ST01</strong> or the approved authorization trace tooling in the landscape for cases that need deeper evidence.</li>
+      <li>SAP ABAP Platform 2025 FPS01 — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/ad77b44570314f6d8c3a8a807273084c/526716b3439b11d1896f0000e8322d00.html">Analyzing Authorization Checks</a>.</li>
+      <li>SAP ABAP Platform — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/c6e6d078ab99452db94ed7b3b7bbcccf/927ac87d293a47d8a17368c9f45661f4.html">Using the System Trace to Record Authorization Checks (Transaction STAUTHTRACE)</a>.</li>
+      <li>SAP ABAP Platform 2025 FPS01 — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/ad77b44570314f6d8c3a8a807273084c/52671538439b11d1896f0000e8322d00.html">Regenerate the Authorization Profile Following Changes</a>.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/22bbe89ef68b4d0e98d05f0d56a7f6c8/cd6e1b6b87dd423ca491f2cd38b7bf4f.html">General Authorizations Required for SAP Fiori</a>.</li>
     </ul>
-    <p>The tool is chosen after the failure is understood. Running every security transaction is not a diagnostic method; it is sightseeing with production access.</p>
-
-    <h2>What not to use as a fix</h2>
-    <ul>
-      <li>Do not copy a powerful colleague's roles as a shortcut.</li>
-      <li>Do not add broad wildcard values to make one check pass.</li>
-      <li>Do not assume a missing object should always be added. The application or process may be intentionally restricted.</li>
-      <li>Do not treat logout/login or buffer refresh as a root-cause correction when the role itself is wrong.</li>
-    </ul>
-
-    <h2>What a useful access request contains</h2>
-    <p>Include the user, exact business task, application or transaction, authorization object/field/value when known, organizational scope, evidence of the failed check, expected role, and business approval. This gives the security team enough information to make a controlled decision instead of reverse-engineering the incident from “please give same access as John.”</p>
-
-    <h2>The practical end state</h2>
-    <p>A good authorization diagnosis explains both sides: which check stopped the user and why the requested access is legitimate for that role. Technical evidence without business ownership creates over-access; business urgency without technical evidence creates guesswork.</p>
-
-    <h2>Boundaries</h2>
-    <p>This page is a support diagnostic. It does not replace role architecture, privileged-access controls, segregation-of-duties analysis, or the security team's approval process.</p>
   </div>
 </article>

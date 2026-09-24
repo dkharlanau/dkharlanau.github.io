@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Datasphere"
-description: "Analytical overview of SAP Datasphere: what it is, where it sits, and how it breaks."
+description: "SAP Datasphere explained: spaces, data acquisition, semantic modeling, analytic models, and how it fits into an SAP analytics landscape."
 permalink: /atlas/sap/sap-datasphere/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "Datasphere"
 business_process: "Analytics and reporting"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -42,7 +42,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Product</p>
     <h1>SAP Datasphere</h1>
-    <p class="note-subtitle">Data warehousing and semantic data layer for SAP analytics.</p>
+    <p class="note-subtitle">A cloud data-warehouse and semantic-modeling service for combining, governing, and exposing analytical data.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -55,90 +55,39 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>SAP Datasphere is a cloud data warehousing solution that provides a semantic data layer, data integration, and modeling capabilities. It replaces SAP BW/4HANA for new cloud-centric analytics architectures and connects to S/4HANA via CDS views and replication.</p>
+    <p>SAP Datasphere is a cloud service for integrating, storing, modeling, and exposing data for analytical use. It is most useful when the analytical question crosses the boundary of one transactional application: we may need history, data from several systems, harmonized business definitions, or a reusable model that can serve more than one consuming tool.</p>
 
-    <h2>Business purpose</h2>
-    <p>Consolidate transactional data from S/4HANA and other sources into a unified semantic layer. Enable self-service analytics, enterprise reporting, and data science without replicating logic into every tool.</p>
+    <p>It should not be described simply as “the replacement for BW/4HANA.” SAP landscapes can contain Datasphere, SAP BW or BW/4HANA, SAP BW bridge, and other data platforms in different combinations. The architectural question is what responsibility Datasphere has in the specific landscape, not which older product name it supposedly removes.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Datasphere sits between S/4HANA (source) and Analytics Cloud (consumer). It can also feed external BI tools. It runs on SAP BTP as a managed service.</p>
+    <h2>Spaces define working and governance boundaries</h2>
+    <p>Datasphere content is organized in <strong>spaces</strong>. A space gives a team a scoped area for data and modeling objects and is also tied to resource and authorization decisions. This makes the space more than a folder. It is one of the places where ownership becomes concrete: who can model the data, which connections and objects are available, and which content can be shared with other spaces.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Space: organizational and security boundary.</li>
-      <li>Table / view: raw or modeled data.</li>
-      <li>Data flow: ETL/ELT pipeline for data movement.</li>
-      <li>Semantic model: business-friendly view of data.</li>
-      <li>Remote table: live access without replication.</li>
-      <li>Replication flow: scheduled or real-time data sync.</li>
-    </ul>
+    <p>That boundary matters when several domains share data. A finance model should not need to copy customer definitions into every project just because sales owns the source. At the same time, cross-space sharing should be intentional. If every space imports and transforms the same source differently, the platform can reproduce the same semantic fragmentation that the warehouse was meant to solve.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: CDS views, SLT, data flows.</li>
-      <li>Analytics Cloud: live connection or import.</li>
-      <li>Non-SAP sources: JDBC, OData, file, cloud storage.</li>
-      <li>BTP: HANA Cloud, Data Intelligence.</li>
-    </ul>
+    <h2>Remote access and replication solve different problems</h2>
+    <p>Datasphere can work with remote data in supported connection scenarios or persist data locally. A remote table can provide virtual access to source data without copying it into Datasphere; a replication flow moves data into a target so that it can be processed locally. SAP currently positions replication flows, often combined with transformation flows, as the preferred load-and-transform approach for eligible scenarios compared with older data flows.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom data flows and transformations.</li>
-      <li>Custom semantic models and calculations.</li>
-      <li>Side-by-side data quality apps on BTP.</li>
-    </ul>
+    <p>Neither pattern is automatically better. Remote access avoids another copy and can preserve freshness, but query behavior depends on the remote source and connection. Replication gives local control over history, transformation, and workload, but introduces data movement, storage, scheduling, and freshness decisions. We choose the pattern from the analytical requirement rather than treating “live” as inherently modern or “replicated” as inherently slow.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Data flow status: success, failure, runtime.</li>
-      <li>Replication lag: source to Datasphere latency.</li>
-      <li>Query performance: execution time, data volume.</li>
-      <li>Space usage: storage, memory, compute.</li>
-    </ul>
+    <h2>The semantic model is the real product of the warehouse</h2>
+    <p>A warehouse becomes useful when raw records are turned into stable business meaning. Datasphere lets modelers describe facts, dimensions, texts, hierarchies, measures, attributes, keys, and associations. An <strong>analytic model</strong> can then expose a focused multidimensional view for a specific analytical question.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Semantic layer unifies data from multiple sources.</li>
-      <li>Managed service reduces infrastructure overhead.</li>
-      <li>Tight integration with S/4HANA CDS views.</li>
-    </ul>
+    <p>This distinction prevents a common design mistake. A source table or replicated dataset is not yet an analytical contract. Revenue, quantity, customer, product, fiscal period, unit, and currency need consistent definitions before a dashboard can use them safely. SAP's current modeling guidance also moves analytical consumption toward fact-based semantic models and analytic models rather than treating every generic view as the final BI interface.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Replication latency for near-real-time use cases.</li>
-      <li>Learning curve for BW practitioners migrating to Datasphere.</li>
-      <li>Cost: storage, compute, and data transfer.</li>
-      <li>Data quality issues propagate from source systems.</li>
-    </ul>
+    <h2>Consumption should preserve the model instead of rebuilding it</h2>
+    <p>SAP Analytics Cloud can consume Datasphere analytical content through supported live patterns, and Datasphere can expose selected content to other clients through supported interfaces such as OData or ODBC/JDBC. The important design goal is to keep central business rules in a governed model where possible. If every story, spreadsheet, or external BI tool rebuilds the same calculations independently, the semantic layer has failed even if the connectivity works.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Data flow failed — source connection, transformation error.</li>
-      <li>Replication lag — SLT issue, network, or volume.</li>
-      <li>Query timeout — model complexity or missing filter.</li>
-      <li>Space quota exceeded — storage or compute limit.</li>
-      <li>Analytics Cloud connection error — certificate or network.</li>
-    </ul>
-
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/sap/analytics-technology-domain/">Analytics Technology Domain</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-analytics-cloud/">SAP Analytics Cloud</a></li>
-      <li><a href="/atlas/sap/cds-views/">CDS Views</a></li>
-    </ul>
+    <p>When numbers disagree, we trace the model from the consumer back to the fact source: filters and measures in the consuming model, associations and calculations in Datasphere, transformation or replication logic, and finally source-system semantics. That path is usually more productive than treating the warehouse as a black box between SAP S/4HANA and a dashboard.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP Datasphere — <a href="https://help.sap.com/docs/SAP_DATASPHERE/c8a54ee704e94e15926551293243fd1d/5c1e3d4a49554fcd8fcf199d664d1109.html">Modeling Data in the Data Builder</a>.</li>
+      <li>SAP Datasphere — <a href="https://help.sap.com/docs/SAP_DATASPHERE/c8a54ee704e94e15926551293243fd1d/34ae0a2ea6e94483b19f632a2843d56d.html">Use Replication Flows and Transformation Flows</a>.</li>
+      <li>SAP Datasphere — <a href="https://help.sap.com/docs/SAP_DATASPHERE/c8a54ee704e94e15926551293243fd1d/b05ddf48de704f8484804ea6cf953c8c.html">Dimensions in the Analytic Model</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Datasphere features, integration mechanisms, and pricing vary by release and must be verified against SAP's current product documentation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Connectors, replication capabilities, semantic-model features, consumption interfaces, quotas, and integration with other SAP data products change over time. Verify the current documentation for the exact source, target, tenant, and commercial entitlement before using this page as an implementation specification.</p>
   </div>
 
   <section class="atlas-related">
@@ -147,6 +96,7 @@ sitemap: false
       <li><a href="/atlas/sap/analytics-technology-domain/">Analytics Technology Domain</a></li>
       <li><a href="/atlas/sap/sap-analytics-cloud/">SAP Analytics Cloud</a></li>
       <li><a href="/atlas/sap/cds-views/">CDS Views</a></li>
+      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
     </ul>
   </section>
 

@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Integration Operations & Recovery — Enterprise Context Lab"
-description: "A practical SAP integration operations model for identity, ordering, retries, AIF, IDoc, qRFC/bgRFC, Integration Suite, exceptions, reconciliation, and proof of business completion."
+description: "A practical SAP integration operations model for tracing one business message across transport, application processing, retries, ordering, duplicate handling, and business reconciliation."
 permalink: /labs/enterprise-context/integration-operations/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-24
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -20,9 +20,9 @@ tags:
   - operations
   - idempotency
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-24
 publication_wave: "logistics-search-wave-02"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "SAP primary sources + nearby Labs review + full editorial rewrite"
 search_intent: "SAP interface monitoring, recovery and business reconciliation"
 # ai-discovery-managed:start
 structured_data:
@@ -78,117 +78,137 @@ source_links:
 {% assign graph = site.data.labs.enterprise_context.graphs.integration_operations %}
 {% assign evidence = site.data.labs.enterprise_context.sources.integration_operations %}
 
-<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Integration Operations</li></ol></nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Integration Operations</li></ol>
+</nav>
 
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Cross-process / Integration Operations</p>
-      <h1>Green message.<br />Wrong business state.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#runtime">Trace message to business completion <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="Integration operations working model">
-      <p>Reviewed operating model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Recovery stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.technology_runbooks | size }}</strong><small>Runtime families</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
-      <em>Transport success is not business completion.</em>
+      <h1>A successful message is only one checkpoint.</h1>
+      <p>An integration incident is closed only when the intended business state exists in the receiver. Middleware, queues, IDocs and AIF can each prove part of the path, but none of them alone proves that the business process completed correctly.</p>
+      <a class="research-canvas__button" href="#runtime">Trace the path end to end <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">sync_problem</span>
-    <p><strong>Working rule:</strong> before any retry, prove message identity, first failed hop, receiver commit state, ordering dependency, and duplicate protection. Close the incident only when the business result is reconciled.</p>
+    <div>
+      <p><strong>Keep three states separate:</strong> transport state, application-processing state, and business state.</p>
+      <p>A message can be technically delivered while the receiver rejects it, or application processing can finish while the resulting document is still wrong for the business process.</p>
+    </div>
     <a href="/labs/enterprise-context/data/integration-operations-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">End-to-end trace</p>
+      <h2>Start with one business message, not with a monitor.</h2>
+      <p>The fastest investigation usually follows one message from the business event to the receiver outcome. Every hop should add evidence, not replace the evidence from the next layer.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Integration recovery path">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Business event</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Message identity</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Transport / queue</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Receiver processing</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Business object</span>
+      </div>
+    </div>
+    <p>Begin with a stable correlation value: an IDoc number, external document number, message ID, business key, queue unit or another identifier that survives the handoff. Then establish where the message last had a known-good state. Only after that should we decide whether the next action is a retry, a data correction, a queue recovery, an application reprocessing step, or no replay at all.</p>
+    <p>The important boundary is the receiver commit. A timeout or missing acknowledgement can leave the sender unsure whether the receiver already wrote the business object. Replaying in that state without checking the receiver can turn an integration incident into a duplicate-business-object incident.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Completion model</p>
-      <h2>Three green lights mean three different things.</h2>
-      <p>I separate technical delivery, application processing, and business reconciliation. A monitor can prove one layer while the next layer is still wrong.</p>
+      <p class="research-canvas__eyebrow">Delivery semantics</p>
+      <h2>Reliability and ordering solve different problems.</h2>
+      <p>SAP runtimes use different mechanisms to control delivery. The names vary, but the design questions are stable: may a message be retried, can duplicates appear at the receiver boundary, and must related updates remain in sequence?</p>
     </header>
     <div class="ecg-decision-columns">
-      <div><h3>1. Transport complete</h3><ul><li>The expected message identity reached the intended receiver path.</li><li>Delivery semantics and ordering behaved as designed.</li><li>Retries did not create an uncontrolled duplicate.</li></ul></div>
-      <div><h3>2. Application complete</h3><ul><li>The receiver processing state and commit outcome are known.</li><li>The expected business object or update exists once.</li><li>Application errors are corrected or deliberately rejected with ownership.</li></ul></div>
-      <div><h3>3. Business complete</h3><ul><li>The downstream process state matches the sender's business intent.</li><li>Reconciliation proves quantity, value, status, or object consistency.</li><li>The incident closes on business evidence, not only a green middleware status.</li></ul></div>
+      <div><h3>qRFC</h3><p>qRFC extends transactional RFC with queues so calls assigned to a queue can be serialized. Outbound and inbound queues place ordering at different sides of the connection. If a predecessor in the same sequence cannot complete, later work can remain blocked behind it.</p></div>
+      <div><h3>bgRFC</h3><p>bgRFC stores processing units in the database and supports transactional units as well as queued units. Queued units follow FIFO processing. The bgRFC monitor shows the state of those units; it does not replace validation of the application object created by the unit.</p></div>
+      <div><h3>Integration Suite</h3><p>Cloud Integration can provide retries, queues and duplicate-handling patterns, but end-to-end exactly-once behavior depends on the complete sender, middleware and receiver design. SAP explicitly recommends duplicate handling as close as possible to the application that writes the data.</p></div>
     </div>
-    <p class="ecg-caption"><strong>Lead signal:</strong> before replay, answer “did the receiver commit?” Before closure, answer “did the business process reconcile?”</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> six claim-level checks already cover duplicate handling, ordering, queue behavior, monitoring, handled exceptions, and AIF correction/restart behavior. The three-layer completion model is an authored operating frame and does not turn the whole page into a verified product statement.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
+    <p>Ordering should be requested only where the business dependency requires it. A sequence such as create → change → cancel must not be reordered for the same object. Independent messages usually do not need to share one serialized queue, because one bad item can then hold back unrelated work.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Memory model</p><h2>Eight questions from identity to completion.</h2><p>This model works for IDoc, AIF, queues, RFC, middleware, APIs, and event-driven flows.</p></header>
-    <div class="ecg-memory-grid">{% for item in graph.memory_model.questions %}<article class="ecg-memory-card"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item.key }}</strong><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>{% endfor %}</div>
-    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong></p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Control layers</p><h2>Recovery is architecture, not a restart button.</h2><p>Identity, delivery semantics, ordering, retry policy, ownership, and reconciliation must agree.</p></header>
-    <div class="ecg-input-grid">{% for item in graph.control_layers %}<article><span>CTRL</span><h3>{{ item.title }}</h3><p>{{ item.purpose }}</p><p><strong>Ask:</strong> {{ item.diagnostic_question }}</p></article>{% endfor %}</div>
-  </section>
-
-  <section class="research-canvas__inventory" id="runtime" data-reveal>
-    <header><p class="research-canvas__eyebrow">Recovery runtime</p><h2>Find commit state before replay.</h2><p>The dangerous case is not the obvious hard failure. It is the timeout or handled exception where nobody knows whether the receiver already committed.</p></header>
-    <div class="ecg-determination-list">{% for stage in graph.runtime_pipeline %}<article class="ecg-determination-detail"><header><div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>recovery stage</small></div><h3>{{ stage.title }}</h3><p class="ecg-question">{{ stage.question }}</p></header><div class="ecg-decision-columns"><div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div></div></article>{% endfor %}</div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Runtime families</p><h2>Use the right monitor, but keep one operating model.</h2><p>The tools differ. The questions about identity, commit, ordering, and business proof do not.</p></header>
-    <div class="ecg-determination-list">{% for item in graph.technology_runbooks %}<article class="ecg-determination-detail"><header><div><span>OPS</span><small>runbook</small></div><h3>{{ item.title }}</h3></header><div class="ecg-decision-columns"><div><h4>Monitor</h4><p>{{ item.monitor }}</p></div><div><h4>Use for</h4><p>{{ item.use_for }}</p></div><div><h4>Recovery rule</h4><p>{{ item.recovery_rule }}</p></div></div></article>{% endfor %}</div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Recovery patterns</p><h2>Retry is only one option.</h2><p>Choose the pattern from failure class and commit state, not from habit.</p></header>
-    <div class="ecg-input-grid">{% for item in graph.recovery_patterns %}<article><span>REC</span><h3>{{ item.title }}</h3><p>{{ item.use_when }}</p><p><strong>Controls:</strong> {{ item.controls | join: " · " }}</p></article>{% endfor %}</div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Ordering & idempotency</p><h2>Reliable delivery can still create duplicates.</h2><p>{{ graph.idempotency_model.principle }}</p></header>
-    <div class="ecg-decision-columns"><div><h3>Ordering rule</h3><p>{{ graph.ordering_model.principle }}</p></div><div><h3>Idempotency questions</h3><ul>{% for item in graph.idempotency_model.questions %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h3>Examples that need order</h3><ul>{% for item in graph.ordering_model.examples %}<li>{{ item }}</li>{% endfor %}</ul></div></div>
+    <header>
+      <p class="research-canvas__eyebrow">Application processing</p>
+      <h2>Transport success ends where application responsibility begins.</h2>
+    </header>
+    <p>An IDoc, AIF interface or application API can fail after the transport layer has already done its job. At that point, the useful evidence is application-specific: processing status, application log, failed mapping or validation, target document reference, and whether the receiver transaction committed.</p>
+    <p><a href="/labs/enterprise-context/aif/">SAP Application Interface Framework</a> is particularly useful when an interface is AIF-enabled because it can expose business keys, application errors and supported correction or reprocessing actions inside the SAP backend. Those capabilities depend on the interface technology and configuration; an AIF error does not automatically mean that the payload can be edited or restarted.</p>
+    <p>IDoc processing has the same operating principle. A technical IDoc record is not the final business result. Read the current status and application message, then follow the reference to the sales order, delivery, posting, master-data object or other target that the interface was meant to create or change.</p>
   </section>
 
   <section class="research-canvas__inventory" id="failures" data-reveal>
-    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>The expensive failures are often technically plausible.</h2><p>Duplicate commits, reordered updates, partial commits, retry storms, and unowned errors can all survive a superficial monitor check.</p></header>
-    <div class="ecg-determination-list">{% for failure in graph.failure_modes %}<article class="ecg-determination-detail"><header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header><div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div></div></article>{% endfor %}</div>
+    <header>
+      <p class="research-canvas__eyebrow">Recovery</p>
+      <h2>Replay only after the failure class is clear.</h2>
+      <p>Repeatedly pressing restart is not a recovery strategy. The safe action depends on what has already happened.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Nothing reached the receiver</h3><p>After correcting the connectivity or transient transport problem, a retry may be the correct action if the interface contract supports it.</p></div>
+      <div><h3>The receiver rejected the message</h3><p>Fix the shared cause—such as mapping, configuration or authoritative master data—then reprocess through the supported application mechanism. Do not turn the error monitor into a second source system.</p></div>
+      <div><h3>Commit state is uncertain</h3><p>Check the receiver first. Search by the business key and correlation ID, then determine whether the intended object already exists before replaying anything.</p></div>
+    </div>
+    <p>Queues add one more rule: repair the earliest blocking unit before treating later queued work as separate incidents. With serialized qRFC or queued bgRFC processing, later messages can be waiting correctly because an earlier dependency has not completed.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Observability</p><h2>Measure business risk, not only message volume.</h2><p>{{ graph.observability_model.lead_rule }}</p></header>
-    <div class="ecg-input-grid">{% for item in graph.observability_model.dimensions %}<article><span>KPI</span><h3>{{ item }}</h3><p>Use the measure to expose aging, ownership, or business-completion risk.</p></article>{% endfor %}</div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>Trace the failure past the monitor.</h2><p>These chains make the business consequence visible.</p></header>
-    <div class="research-route-list">{% for item in graph.impact_traces %}<a href="#lead-lens"><span>TRACE</span><strong>{{ item.start }}</strong><small>{{ item.path | join: " → " }} · {{ item.lead_question }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>{% endfor %}</div>
+    <header>
+      <p class="research-canvas__eyebrow">Duplicates and idempotency</p>
+      <h2>“Exactly once” is not permission to ignore duplicate design.</h2>
+    </header>
+    <p>Duplicate handling is strongest when the receiver can recognize the same business request and make that check part of the same transaction that writes the application data. SAP's Cloud Integration guidance makes this boundary explicit: when a receiver is not idempotent, middleware can reduce duplicate risk, but a lost acknowledgement after a successful receiver commit can still leave a residual duplicate scenario on retry.</p>
+    <p>The practical design question is therefore not only “what quality of service did we configure?” It is “what identifier lets the receiver prove that this business operation has already been applied?” For an order, that may be an external order ID; for master data, a source-system key; for an event, a stable event or message identifier plus application-side duplicate logic.</p>
   </section>
 
   <section class="research-canvas__inventory" id="lead-lens" data-reveal>
-    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>The recovery question is: what business effect exists now?</h2><p>Everything else follows from that.</p></header>
-    <div class="ecg-input-grid">
-      <article><span>ASK</span><h3>What I ask first</h3><ul>{% for item in graph.lead_lens.what_i_ask_first %}<li>{{ item }}</li>{% endfor %}</ul></article>
-      <article><span>OWN</span><h3>Ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
-      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
-      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
-      <article><span>PROVE</span><h3>Proof</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
-      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
+    <header>
+      <p class="research-canvas__eyebrow">Business reconciliation</p>
+      <h2>The last check belongs in the business process.</h2>
+      <p>Integration monitoring tells us how a message was processed. Reconciliation tells us whether the business intent arrived intact.</p>
+    </header>
+    <p>For a sales-order interface, the useful proof is not a completed integration-flow log. It is one correctly created sales order with the expected external reference, partners, quantities and status. For master-data replication, the proof is the expected target object and relevant attributes. For a posting interface, it is the intended accounting or logistics document and the values that matter to the process.</p>
+    <p>This is also where ownership becomes clear. Integration support can prove transport and mediation. The receiving application team can prove processing and commit state. The business process owner decides whether the resulting state is actually acceptable. Closing an incident before those views meet is how technically green interfaces produce recurring business defects.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Example</p>
+      <h2>The integration flow completed, but no sales order appears.</h2>
+    </header>
+    <p>Start with the external order number and message ID. Confirm that the sender created one request and that the middleware delivered it to the expected receiver. If the receiver uses IDoc or AIF-backed processing, inspect that application state next. A mapping or organizational-data error may explain why transport completed while SD did not create the document.</p>
+    <p>After fixing the cause, establish whether an SAP sales order was already committed under the same external reference. If none exists and the interface supports controlled reprocessing, replay the original request through that mechanism. If an order already exists, do not create another simply to make the middleware log look clean. Reconcile the original request to the one SAP document and close on that business evidence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Related architecture</p>
+      <h2>Use the runtime model after the integration pattern has been chosen.</h2>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/integrations/"><span>ARC</span><strong>Integration Architecture</strong><small>Choose the interaction, contract, transport and platform before designing the operating model.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/aif/"><span>AIF</span><strong>Application Interface Framework</strong><small>Go deeper into SAP-side monitoring, business keys, error handling and supported reprocessing.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/integrations/drf/"><span>DRF</span><strong>Data Replication Framework</strong><small>See how business-object selection and replication fit before transport and target processing.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment prompts</p><h2>Practice incidents where green is not enough.</h2></header>
-    <div class="research-route-list">{% for item in graph.assessment_prompts %}<a href="/labs/assessment/"><span>Q</span><strong>{{ item }}</strong><small>Trace identity → commit → recovery → reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>{% endfor %}</div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Sources</p><h2>Current SAP monitoring and delivery-semantics documentation.</h2><p>The operating model stays technology-neutral enough to work across AIF, IDoc, RFC queues, and Integration Suite.</p></header>
-    <div class="research-route-list">{% for source in evidence.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}</div>
+    <header>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>SAP documentation for the runtime boundaries used here.</h2>
+      <p>The sources cover AIF, IDoc monitoring, qRFC/bgRFC processing, Integration Suite monitoring, queues, retries and duplicate handling. The end-to-end operating model is independently written.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
   </section>
 
   <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>

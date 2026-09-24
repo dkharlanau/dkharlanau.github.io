@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP Transportation Management — Transport to Settle"
-description: "A Lead-level SAP TM map from transportation demand and Freight Units to planning, master data, Freight Orders, EWM execution, carrier tendering, charges, and freight settlement."
+description: "A practical SAP S/4HANA Transportation Management guide from order- and delivery-based demand through Freight Units, freight documents, EWM execution, carrier tendering, charges, and settlement."
 permalink: /labs/enterprise-context/transportation-management/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-24
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -16,9 +16,9 @@ tags:
   - transportation
   - logistics
   - assessment
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-24
 publication_wave: "logistics-search-wave-02"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "SAP S/4HANA 2025 FPS01 primary sources + factual review + editorial rewrite"
 search_intent: "SAP Transportation Management process and freight execution architecture"
 # ai-discovery-managed:start
 structured_data:
@@ -53,26 +53,20 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/ea229f34c04a4fbb9b5557c190f8b35d.html"
   - title: "Delivery-Based Transportation Requirement"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/29b3aa3c47dc4cfb84456d6ece7c7e2a.html"
-  - title: "Consumption of Order-Based Transportation Requirements"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/fc5544db448c48719a359b92101b24fe.html"
   - title: "Creation and Editing of Freight Units"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/2e86e6dc652b4f4aa4ac39c2d88595ca.html"
-  - title: "Planning"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/ceb2c99144e84056a9a707798aa9a0db.html"
-  - title: "Manual Planning"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/754ad382eed9479db61ef1cf5876fc0b.html"
-  - title: "Planning Profile"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/6605b496678b472295c3e836b4a679c5.html"
-  - title: "Freight Order Management"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/ff8bbbea9bd0421b9f833793d8d52b3d.html"
-  - title: "Selection of Carriers"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/2dc3f4a78f2646cdb5fc2b04b6642e73.html"
+  - title: "Freight Booking"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/bb8ae3ba0b00454fa1b797aeda9a4917.html"
   - title: "Tendering"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/c336c907db3742eeb97e9138dd419970.html"
+  - title: "Integration with Extended Warehouse Management"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/bd1fbe54f20dc40ae10000000a441470.html"
+  - title: "Freight Settlement"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/7eb8bdf270d84b16ab8a755d09b11e81.html"
+  - title: "Freight Cost Confirmation and Posting"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/e20847867fbd47519282074a954ffd24.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.transportation_management %}
-{% assign evidence = site.data.labs.enterprise_context.sources.transportation_management %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Transportation Management</li></ol>
@@ -82,161 +76,156 @@ source_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Enterprise Context / SAP TM</p>
-      <h1>{{ graph.title }}</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#runtime">Trace the process <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Transportation demand is not a freight plan.</h1>
+      <p>SAP Transportation Management sits between the business need to move goods and the transport that is actually planned, executed, and settled. The useful chain is demand → Freight Unit → freight document → execution → charges → settlement. Each step creates a different business state, so a green status in one step does not prove that the next one exists.</p>
+      <a class="research-canvas__button" href="#lead-answer-frame">Follow the transport chain <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="TM mental model">
-      <p>Lead memory path</p>
+    <div class="research-canvas__signal" aria-label="SAP TM process summary">
+      <p>Transport-to-settle</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Demand</strong><small>OTR / DTR</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>Plan</strong><small>Freight Unit → FO / FB</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>Settle</strong><small>Charges → FSD → MM</small></div>
-      <em>Primary-source review {{ graph.verified_at }}</em>
+      <em>SAP S/4HANA 2025 FPS01 · primary-source review</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">route</span>
-    <p><strong>The boundary:</strong> ERP documents explain why goods must move. TM decides how transportation demand becomes a feasible, executable, and settleable freight plan.</p>
-    <p><strong>Do not collapse the objects:</strong> OTR/DTR = demand, Freight Unit = planning unit, Freight Order/Freight Booking = capacity and execution document.</p>
-    <a href="/labs/enterprise-context/shipping/">Compare with SD shipping and scheduling <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <div>
+      <p><strong>Keep the objects separate.</strong> A sales order or purchase order explains why goods should move. An OTR or DTR represents transportation demand. A Freight Unit is a planning unit. A Freight Order or Freight Booking represents planned transportation capacity and execution. A Freight Settlement Document carries freight-cost settlement into Materials Management.</p>
+      <p>Most TM investigations become easier once we identify which of those states is the first one that is missing or wrong.</p>
+    </div>
+    <a href="/labs/enterprise-context/data/transportation-management-graph.json">Open the structured TM model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="lead-answer-frame" data-reveal>
-    <header><p class="research-canvas__eyebrow">Lead answer frame</p><h2>Demand is not the plan, and the plan is not settlement.</h2><p>A short TM answer should preserve the ownership changes from ERP demand through planning and execution to freight cost completion.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Transportation demand</p>
+      <h2>TM starts by translating an ERP document into transport demand.</h2>
+      <p>Order and delivery integration let TM plan against business documents from Sales, Materials Management, and Logistics Execution. The first important distinction is whether planning starts from the order or from the delivery.</p>
+    </header>
+
     <div class="ecg-decision-columns">
-      <div><h3>01 · Demand</h3><p>Start with the ERP business document and prove the transportation demand object is complete and relevant.</p></div>
-      <div><h3>02 · Planning unit</h3><p>Explain Freight Unit Building and the attributes that define what can be planned together or separately.</p></div>
-      <div><h3>03 · Feasible plan</h3><p>Trace locations, times, resources, capacities, constraints, incompatibilities, and planning profile before blaming the optimizer.</p></div>
-      <div><h3>04 · Execution</h3><p>Separate Freight Order or Booking ownership from warehouse execution and carrier communication. Confirmations must reconcile across the boundary.</p></div>
-      <div><h3>05 · Charges and settlement</h3><p>Keep transport execution, charge calculation, settlement document, and downstream MM/FI completion as separate states.</p></div>
-      <div><h3>06 · Proof</h3><p>Find the first wrong object, show downstream impact, and prove the corrected demand, plan, execution state, and financial handoff.</p></div>
+      <div>
+        <h3>Order-Based Transportation Requirement</h3>
+        <p>An OTR represents transportation demand from an order. It allows transportation planning to begin before the final delivery exists. In SAP's document model, the OTR corresponds to the source order and can produce Freight Units for planning.</p>
+      </div>
+      <div>
+        <h3>Delivery-Based Transportation Requirement</h3>
+        <p>A DTR represents demand from a delivery. Where order-based planning is also used, delivery-based demand can consume the Freight Units that came from the related OTR. This is a transition of demand, not a second independent shipment that should be planned again.</p>
+      </div>
     </div>
-    <p class="ecg-caption"><strong>Evidence boundary:</strong> reviewed SAP product facts support selected TM object and process behavior. The six-step diagnostic frame is an authored assessment model and does not change page verification state.</p>
-  </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">TM deep dives</p><h2>Go deeper where the architecture becomes interesting.</h2><p>The core page explains the object flow. These three branches explain why a plan is feasible, why a freight amount is calculated, and how system boundaries communicate without fighting over ownership.</p></header>
-    <div class="research-route-list">
-      <a href="/labs/enterprise-context/transportation-management/planning/"><span>01</span><strong>VSR Planning & Constraints</strong><small>Hard vs soft constraints, penalty costs, planning profiles, time windows, resources, initial solutions, and optimizer diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
-      <a href="/labs/enterprise-context/transportation-management/charges/"><span>02</span><strong>Charge Management</strong><small>Freight agreements, calculation sheets, charge types, rate tables, scales, rates, calculation bases, and settlement trace.</small><i class="material-symbols-outlined" aria-hidden="true">payments</i></a>
-      <a href="/labs/enterprise-context/transportation-management/integrations/"><span>03</span><strong>Integration Contracts, APIs & Events</strong><small>ERP demand integration, OData, SOAP B2B services, communication scenarios, execution events, and publish-subscribe patterns.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Memory model</p><h2>{{ graph.memory_model.path }}</h2><p>{{ graph.thesis }}</p></header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article><span>{{ item.key }}</span><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Object model</p><h2>Every TM document needs one clear job.</h2><p>This is the part worth remembering before transaction codes, apps, or configuration paths start breeding in captivity.</p></header>
-    <div class="ecg-decision-columns">
-      {% for item in graph.object_model %}
-      <article><h3>{{ item.object }}</h3><p><strong>{{ item.role }}</strong></p><p>{{ item.remember }}</p></article>
-      {% endfor %}
-    </div>
+    <p>The design choice changes when transportation becomes visible and which document changes can still affect the plan. It is therefore better to ask “which business document currently owns the transportation demand?” than to assume that every process always passes through both requirement types in the same way.</p>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
-    <header><p class="research-canvas__eyebrow">Runtime pipeline</p><h2>Follow the first wrong business state.</h2><p>A Lead-level diagnosis starts before the Freight Order. If demand or Freight Unit Building is wrong, later planning is merely wrong with better graphics.</p></header>
-    <div class="ecg-rail">
-      {% for step in graph.runtime_pipeline %}
-      <article>
-        <span>{{ step.order }}</span><div><h3>{{ step.title }}</h3><p><strong>{{ step.question }}</strong></p><p>Inputs: {{ step.inputs | join: " · " }}</p><p>Output: {{ step.output | join: " · " }}</p><small>Failure signal: {{ step.failure_signal }}</small></div>
-      </article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Planning unit</p>
+      <h2>The Freight Unit is the handoff from demand to planning.</h2>
+      <p>TM does not normally plan a sales-order item or delivery item directly. Freight Unit Building turns transportation-relevant quantities into units that the planner can assign to transport capacity.</p>
+    </header>
+
+    <p>The Freight Unit Building rule controls how demand is grouped or split. SAP supports strategies that can consolidate demand strongly, keep units closer to individual items, or group compatible parts of one request. That choice affects planning freedom: too much fragmentation creates unnecessary planning objects, while overly large units can remove useful consolidation options.</p>
+
+    <p>A Freight Unit also carries transportation dates and locations that planning must respect. If the planned route or timing looks unreasonable, check the demand and Freight Unit before changing optimizer settings. The planner can only work with the world represented by those objects.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Planning components</p><h2>Planning is a chain of decisions, not one optimizer button.</h2></header>
-    <div class="ecg-decision-columns">
-      {% for item in graph.planning_components %}
-      <article><h3>{{ item.title }}</h3><p>{{ item.role }}</p><p><strong>Lead lens:</strong> {{ item.lead_lens }}</p></article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Transportation planning</p>
+      <h2>Planning assigns transportable demand to executable capacity.</h2>
+      <p>Manual planning and optimization work with Freight Units, locations, dates, resources, capacities, network data, costs, and constraints. Their result is not another demand object; it is a freight document that describes how transportation should be executed.</p>
+    </header>
+
+    <p>TM uses Freight Orders and Freight Bookings as freight documents. A Freight Booking specifically represents reserved freight space on a ship or in an airplane and is also used during execution. Freight Orders cover other freight-order scenarios and are the central object in many road processes. In multimodal designs, several freight documents can therefore participate in one end-to-end movement.</p>
+
+    <p>This is why “the Freight Unit exists” and “the transport is planned” are different statements. A Freight Unit can still be unplanned, partly planned, or assigned differently across its stages. The planning result must be read at the relevant stage and freight-document level.</p>
+
+    <p><a href="/labs/enterprise-context/transportation-management/planning/">Open the VSR planning and constraints deep dive →</a></p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Master data</p><h2>The plan is only as good as the world model behind it.</h2><p>When planning looks irrational, first prove the network, capacity, product, carrier, and commercial master data. The optimizer is usually an efficient messenger of bad assumptions.</p></header>
-    <div class="ecg-decision-columns">
-      {% for item in graph.master_data_map %}
-      <article><h3>{{ item.title }}</h3><p><strong>Objects:</strong> {{ item.objects | join: " · " }}</p><p>{{ item.controls }}</p><p><strong>Check first:</strong> {{ item.check_first }}</p></article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Carrier commitment</p>
+      <h2>A feasible plan does not mean a carrier has accepted the work.</h2>
+      <p>Carrier selection and tendering sit after the planning question. They decide who should perform the transport and whether that carrier has actually committed to it.</p>
+    </header>
+
+    <p>Carrier selection can use configured eligibility and ranking information. Tendering then supports a commercial conversation around a freight request for quotation, carrier responses, and award or rejection. SAP supports several tendering strategies, including direct and broadcast patterns. The important boundary is simple: planning creates a transport proposal; tendering resolves external commitment.</p>
+
+    <p>That distinction matters operationally. A freight document may contain a route and dates while the subcontracting or tendering state is still unresolved. Treating “planned” as “accepted by the carrier” hides a real business dependency.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Functional and commercial scope</p><h2>Basic and Advanced TM are not just two marketing labels.</h2><p>The same S/4HANA landscape can expose TM objects while the permitted functional scope still depends on the entitlement. Architecture and licensing have to be checked together.</p></header>
-    <div class="ecg-decision-columns">
-      {% for item in graph.scope_boundary %}
-      <article><h3>{{ item.title }}</h3><p>{{ item.role }}</p><p><strong>Boundary:</strong> {{ item.commercial_boundary }}</p><p><strong>Lead lens:</strong> {{ item.lead_lens }}</p></article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Warehouse execution</p>
+      <h2>TM owns transportation; EWM owns detailed warehouse work.</h2>
+      <p>The two products meet around deliveries, loading, unloading, quantities, and transport execution, but they do not become one execution engine.</p>
+    </header>
+
+    <p>SAP supports more than one TM–EWM integration pattern. In Advanced Shipping and Receiving with embedded components, the process is based on the TM Freight Order and does not use the EWM transportation unit or vehicle. SAP also documents direct integration based on deliveries and EWM transportation units, where TM planning results are sent to EWM and warehouse execution results such as loading or quantity discrepancies return to TM.</p>
+
+    <p>That difference is important when diagnosing status mismatches. First identify the integration pattern, then ask whether the disputed state belongs to transport execution or warehouse execution. Applying an Advanced Shipping and Receiving assumption to an EWM-TU scenario can send the investigation to the wrong object.</p>
+
+    <p><a href="/labs/enterprise-context/ewm/">Open the EWM execution model →</a> · <a href="/labs/enterprise-context/shipping/">Open the SD shipping boundary →</a></p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Integration boundaries</p><h2>Decide ownership before debugging messages.</h2><p>The most expensive confusion is usually not technical. It is two components both being treated as if they own the same business state.</p></header>
-    <div class="ecg-decision-columns">
-      {% for item in graph.integration_boundaries %}
-      <article><h3>{{ item.boundary }}</h3><p><strong>Ownership:</strong> {{ item.ownership }}</p><p><strong>Handoff:</strong> {{ item.handoff }}</p><p><strong>Ask:</strong> {{ item.diagnostic_question }}</p></article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Charges and settlement</p>
+      <h2>Transport execution and freight-cost settlement finish on different tracks.</h2>
+      <p>TM can calculate transportation charges on freight documents, but a calculated amount is not yet a supplier invoice and not yet a completed financial process.</p>
+    </header>
+
+    <p>For freight settlement, TM creates a Freight Settlement Document and posts it to Materials Management. SAP uses the settlement information to create the purchasing follow-on documents, including a purchase order and service entry sheet. The confirmed service entry then provides the basis for invoice verification or evaluated receipt settlement in MM.</p>
+
+    <p>Execution status can also participate in freight-cost confirmation before settlement is posted. This keeps an important boundary visible: a truck can finish its physical journey while cost confirmation, the Freight Settlement Document, or the MM follow-on process is still incomplete.</p>
+
+    <p><a href="/labs/enterprise-context/transportation-management/charges/">Open the charge-management deep dive →</a> · <a href="/labs/enterprise-context/finance-logistics/">Follow the finance boundary →</a></p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Deployment patterns</p><h2>Embedded does not mean boundary-free.</h2></header>
-    <div class="ecg-decision-columns">
-      {% for item in graph.deployment_patterns %}
-      <article><h3>{{ item.title }}</h3><p>{{ item.fit }}</p><p><strong>Caution:</strong> {{ item.caution }}</p></article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">A practical trace</p>
+      <h2>“The shipment happened, but the freight cost is not ready for invoice verification.”</h2>
+      <p>This symptom crosses several TM states, so starting from the invoice is usually too late in the chain.</p>
+    </header>
+
+    <p>First prove that the correct transportation demand became the intended Freight Units and freight document. Then separate carrier commitment from physical execution: the transport may have been planned without the expected tendering result, or executed while a required event or cost-confirmation state is still missing. If execution is complete, move to charge calculation and the Freight Settlement Document. Only after the FSD is posted does the investigation move into the MM purchasing and invoice-verification follow-on.</p>
+
+    <p>The value of this sequence is not the order of screens. It is the change of business ownership: source document → TM demand → planning → carrier and execution → TM settlement → MM follow-on. The first incorrect state tells us which layer deserves attention.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>What I would check first.</h2></header>
-    <div class="ecg-decision-columns">
-      {% for item in graph.failure_modes %}
-      <article><h3>{{ item.symptom }}</h3><p><strong>First checks:</strong> {{ item.first_checks | join: " · " }}</p><p><strong>Avoid:</strong> {{ item.avoid }}</p></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment cards</p><h2>Questions that expose whether the model is understood.</h2></header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.assessment_cards %}
-      <article><span>Q</span><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Synthetic case</p><h2>{{ graph.synthetic_case.title }}</h2><p>{{ graph.synthetic_case.lesson }}</p></header>
-    <div class="ecg-rail">
-      {% for step in graph.synthetic_case.steps %}
-      <article><span>{{ forloop.index }}</span><div><h3>{{ step }}</h3><small>Synthetic learning path, not a client case.</small></div></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Primary evidence</p><h2>Source-backed facts, independently explained.</h2><p>{{ evidence.policy }}</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Deep dives</p>
+      <h2>Keep the parent model small; go deeper at the real boundary.</h2>
+      <p>The overview explains how the main TM objects connect. These pages hold the detail that would otherwise make the transport-to-settle story hard to follow.</p>
+    </header>
     <div class="research-route-list">
-      {% for source in evidence.sources %}
-      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="/labs/enterprise-context/transportation-management/planning/"><span>01</span><strong>VSR Planning & Constraints</strong><small>Planning profiles, constraints, costs, time windows, resources, and optimizer behavior.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/enterprise-context/transportation-management/charges/"><span>02</span><strong>Charge Management</strong><small>Freight agreements, calculation sheets, rate tables, scales, and settlement amounts.</small><i class="material-symbols-outlined" aria-hidden="true">payments</i></a>
+      <a href="/labs/enterprise-context/transportation-management/integrations/"><span>03</span><strong>Integration Contracts, APIs & Events</strong><small>System boundaries, business messages, APIs, events, and external communication.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>Current SAP documentation behind this model.</h2>
+      <p>The explanation is independently written. Product behavior was checked against SAP S/4HANA 2025 FPS01 documentation.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in page.source_links %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>SAP Help Portal</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">data_object</span>
-    <p><strong>Machine-readable:</strong> the same TM model is available as JSON for retrieval, graph tooling, and assessment experiments.</p>
+    <p><strong>Machine-readable:</strong> the structured TM model remains available for retrieval and graph tooling.</p>
     <a href="/labs/enterprise-context/data/transportation-management-graph.json">Open TM graph JSON <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 </div>

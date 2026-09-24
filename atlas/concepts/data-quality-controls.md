@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Data Quality Controls"
-description: "Data quality controls enforce and monitor dimensions of data fitness for use: accuracy, completeness, consistency, timeliness, validity, and uniqueness."
+description: "Data quality controls prevent, detect, measure, and correct data that is not fit for its intended business use."
 tags:
   - concept
   - sap-master-data
@@ -15,6 +15,7 @@ parent: Concepts
 robots: noindex, follow
 sitemap: false
 verified: false
+last_reviewed: 2026-09-23
 related:
   - /atlas/maps/data-mesh-architecture-map/
   - /atlas/maps/sap-data-products-map/
@@ -26,76 +27,59 @@ related:
   - /atlas/sap/sap-s4hana/
 ---
 
-
 # Data Quality Controls
 
-> **Status**: Skeleton — under review.  
-> **Scope**: Data quality dimensions, rules, and monitoring for SAP landscapes.
+> **Status**: Under review.  
+> **Scope**: Preventive, detective, and corrective controls for important SAP data.
 
-## What it is
+A data quality control is not simply a mandatory field. It is any control that helps keep data fit for a defined business use. Some controls stop bad data before it is saved, some detect problems after the fact, and some support correction once a problem is known.
 
-Data quality controls enforce and monitor dimensions of data fitness for use: accuracy, completeness, consistency, timeliness, validity, and uniqueness. In SAP landscapes, they span MDG validation rules, Datasphere metrics, and operational process controls.
+That distinction matters in SAP because data quality problems appear at different layers. A missing tax classification may block an order. A duplicate business partner may not fail immediately but can fragment reporting and credit exposure. A stale analytical extract may be technically valid and still be unsuitable for a daily decision.
 
-## When to use it
+## Start with the business use, not the dimension list
 
-- Master data governance via SAP MDG
-- Analytical data product quality commitments
-- Operational process validation (e.g., three-way match, credit check)
-- Compliance and audit requirements for data provenance
+Terms such as completeness, validity, consistency, timeliness, uniqueness, and accuracy are useful, but they are not controls by themselves. The useful question is: **what must be true for this data to support the process safely?**
 
-## When not to use it
+For a business partner, that might mean required address fields, valid tax information, and no probable duplicate above an agreed threshold. For an analytical data product, the concern may be freshness, reconciliation to a source total, and stable semantics. The same field can therefore have different quality expectations in different processes.
 
-- One-off extracts where quality is verified by consumer
-- Rapid prototyping where formal quality rules are premature
-- Legacy systems where quality rule configuration is prohibitively complex
+We usually separate controls into three layers:
 
-## SAP landscape fit
+1. **Preventive controls** reject or constrain data before it enters the productive process.
+2. **Detective controls** measure existing data and surface exceptions, duplicates, or rule violations.
+3. **Corrective controls** route bad data to an owner or governed process for repair.
 
-- **SAP MDG**: Validation rules, derivation rules, duplicate checks, and workflow-based approval
-- **SAP Datasphere**: Data quality metrics and scorecards for analytical data
-- **SAP Data Intelligence**: Rulebooks, profiling, and metadata explorer for broader landscapes
-- **S/4HANA**: Incompletion procedures, field status, and document parking for operational quality
+A strong design uses all three where the business risk justifies them. Trying to prevent every possible error at entry time often creates unusable forms and brittle rules; detecting everything downstream leaves operations cleaning up avoidable problems.
 
-## Quality dimensions
+## Where SAP MDG fits
 
-| Dimension | Definition | SAP Control |
-|-----------|-----------|-------------|
-| Accuracy | Correctness against reality | MDG validation, external reference checks |
-| Completeness | Presence of required elements | Incompletion procedure, mandatory fields |
-| Consistency | Absence of contradictions | Cross-field validation, matching rules |
-| Timeliness | Freshness for intended use | Replication latency monitoring, delta extraction |
-| Validity | Conformance to syntax/rules | Domain checks, format validation, regex |
-| Uniqueness | No unexpected duplicates | MDG duplicate check, number range validation |
+SAP Master Data Governance provides several mechanisms that belong to different parts of this control model. In MDG processes, validation can check whether a record meets defined quality requirements before it is accepted. SAP's current documentation uses the simple example that data can be saved only when Street and House Number are maintained.
 
-## Design decisions
+MDG also supports duplicate checking for master data. For example, when a new business partner is created, configured matching logic can compare entered attributes with existing records and warn about potential duplicates. The result is not the same as a hard uniqueness constraint: duplicate detection is often probabilistic and depends on the configured search and thresholds.
 
-| Decision | Recommendation |
-|----------|---------------|
-| Shift-left | Enforce quality at point of authorship (MDG, S/4HANA) rather than downstream cleansing |
-| Automation | Automated quality scorecards with alerting for threshold breaches |
-| Ownership | Domain team owns quality rules for their data products |
-| Monitoring | Dashboard with trends, not just point-in-time snapshots |
+For ongoing quality management, SAP MDG Data Quality Management supports validation rules, derivation scenarios, data quality KPIs, evaluation results, and trend monitoring for supported master-data domains. This is important because a rule that protects one change request does not tell us whether thousands of existing records are already inconsistent.
 
-## Operational failure modes
+## Operational controls are related, but not the same thing
 
-- Accuracy requires "true" reference that may not exist; hardest dimension to validate automatically
-- MDG rules domain-specific; out-of-the-box rules rarely cover all requirements
-- Timeliness expectations vary by use case (real-time vs monthly)
-- Quality degradation often discovered by downstream consumer complaint
+S/4HANA process configuration can also protect data and transactions: required fields, incompletion checks, status controls, tolerances, and business validations all reduce the chance that unusable information moves forward. These controls are valuable, but we should not label every process check as “data quality governance.”
 
-## Monitoring/support model
+A three-way match, for example, is primarily a transactional control over purchasing and invoice processing. It may reveal a data problem, but its main purpose is not to maintain master-data quality. Keeping that distinction clear makes ownership easier: master-data governance, application configuration, and process control are related disciplines, not interchangeable labels.
 
-- MDG data quality scorecards and duplicate check reports
-- Datasphere data quality metrics for analytical pipelines
-- Automated alerting for quality threshold breaches
-- Regular data quality audits with business stakeholder review
+## A practical control chain
 
-## AI/agent opportunity
+Suppose supplier bank data is business-critical. A sensible control chain might look like this:
 
-- Suggest quality rules from historical error patterns
-- Predict quality degradation from source system changes
-- Auto-classify data quality issues by dimension and severity
-- Generate remediation recommendations from quality rule violations
+- validate required structure when the record is created or changed;
+- apply approval for sensitive changes;
+- run duplicate or consistency checks where they are meaningful;
+- monitor existing records for rule violations;
+- route exceptions to an accountable data owner;
+- measure whether the exception population is actually shrinking.
+
+The last step is often missed. A dashboard that counts errors but does not connect them to ownership and correction is monitoring, not control.
+
+## What we would check when quality drops
+
+When a quality KPI worsens, the first question is not “which tool failed?” We check whether the business rule changed, whether a new source or migration introduced data, whether a validation stopped running, whether users found a workaround, and whether the metric itself still represents the intended business rule. Good quality management treats the rule, the process, and the measurement as one system.
 
 ## Related Atlas pages
 
@@ -106,11 +90,10 @@ Data quality controls enforce and monitor dimensions of data fitness for use: ac
 
 ## Source references
 
-- [SAP Datasphere documentation](https://help.sap.com/docs/datasphere)
-- [Academic reference on data quality dimensions](https://arxiv.org/pdf/2401.12011)
+- SAP Help Portal — [Working with MDG, Data Quality Management](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/03f3f2e3d99a47b39fc106e52304e665.html)
+- SAP Help Portal — [Configure Validation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/d2207d5496ac104ee10000000a423f68.html)
+- SAP Help Portal — [Duplicate Check](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/4d523f354bf74b049cfd5f59aa56aac4.html)
 
 ## Verification limitations
 
-- Quality rule implementation varies by domain and organizational maturity.
-- Content is synthesized from public SAP documentation and academic references.
-- No private implementation details are included.
+Exact validation, matching, and monitoring options depend on the master-data domain, deployment model, and enabled SAP components. This page describes the control model and verified MDG capabilities without assuming that the same rule engine or quality metric exists for every data object.

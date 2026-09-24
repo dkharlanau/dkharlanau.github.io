@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP S/4HANA"
-description: "Analytical overview of SAP S/4HANA: what it is, where it sits, and how it breaks."
+description: "SAP S/4HANA explained: the ERP application, HANA foundation, core data-model changes, deployment variants, and extension boundaries."
 permalink: /atlas/sap/sap-s4hana/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "S/4HANA"
 business_process: "Enterprise operations"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -49,7 +49,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Product</p>
     <h1>SAP S/4HANA</h1>
-    <p class="note-subtitle">SAP's core ERP for financials, logistics, manufacturing, and enterprise operations.</p>
+    <p class="note-subtitle">SAP's ERP application suite for running core business transactions on the SAP HANA database.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -62,90 +62,50 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>SAP S/4HANA is SAP's modern ERP suite, built on the SAP HANA in-memory database. It replaces SAP ECC and consolidates financial and logistics data into a single source of truth with real-time analytics.</p>
+    <p>SAP S/4HANA is an ERP application suite built for the SAP HANA database. It runs the business transactions behind areas such as finance, sales, sourcing and procurement, manufacturing, asset management, service, and supply-chain execution, depending on the licensed scope and deployment.</p>
 
-    <h2>Business purpose</h2>
-    <p>Run the core financial, logistics, manufacturing, sales, procurement, and human resources processes of an enterprise. Provide real-time visibility, simplified data model, and modern extensibility.</p>
+    <p>The useful distinction is between the <strong>business application</strong> and the <strong>technical platform</strong>. SAP HANA is the database. ABAP Platform provides much of the application runtime and development foundation. SAP S/4HANA is the business application layer above them. A Fiori app, a CDS view, an ABAP class, and a sales order can all belong to the same solution landscape while serving very different roles.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>S/4HANA is the transactional core. Around it orbit satellite products (Ariba, EWM, TM, IBP, Datasphere, Analytics Cloud, Integration Suite) and the extension platform (BTP). It connects to external systems via APIs, events, and documents.</p>
+    <h2>The data model changed, but it did not become one giant table</h2>
+    <p>S/4HANA simplified several parts of the older SAP ERP data model, but statements such as “everything is stored in one table” are misleading. In Finance, the Universal Journal uses <code>ACDOCA</code> as the central line-item structure for many accounting processes. Other application areas still have their own business objects, persistence, indexes, and compatibility structures.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Universal Journal (ACDOCA) — single table for financial and management accounting.</li>
-      <li>Material ledger — actual costing, inventory valuation.</li>
-      <li>Business partner — unified master data for customers, vendors, contacts.</li>
-      <li>Organizational structure: company code, plant, storage location, sales org, purchasing org.</li>
-      <li>Document chain: sales order → delivery → billing → accounting.</li>
-    </ul>
+    <p>Material Ledger is another important S/4HANA foundation. SAP documents Material Ledger as mandatory in S/4HANA, while <strong>actual costing remains optional</strong>. Those are separate statements: using the Material Ledger data structures does not mean every customer must run an actual-costing close.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>Satellite products: Ariba, EWM, TM, IBP via BTP and Integration Suite.</li>
-      <li>Analytics: CDS views, Datasphere, Analytics Cloud.</li>
-      <li>Extensions: ABAP Cloud, RAP, CAP on BTP.</li>
-      <li>External: OData, IDoc, RFC, business events.</li>
-    </ul>
+    <h2>Business Partner is the leading master-data object for customers and suppliers</h2>
+    <p>Customer and supplier master data is another major change from SAP ERP. In S/4HANA, Business Partner is the leading object for creating customer and supplier master data. Customer/Supplier Integration, commonly known as CVI, keeps the Business Partner model synchronized with the customer and supplier application structures that business processes still use.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>In-app: ABAP Cloud, RAP, CDS, BAdIs.</li>
-      <li>Side-by-side: CAP, Kyma, Node.js, Java on BTP.</li>
-      <li>UI: Fiori launchpad, custom apps.</li>
-      <li>Data: custom fields, business objects, analytical models.</li>
-    </ul>
+    <p>This matters during both implementation and conversion. A customer or supplier is not simply renamed to “BP.” The Business Partner carries shared identity and relationship data, while customer and supplier roles add the application-specific views needed for sales, purchasing, and accounting. For conversions from SAP ERP, SAP requires the relevant customer and supplier records to be converted to Business Partners.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>System: SM21, SLG1, ST22, ST03.</li>
-      <li>Financial: universal journal reconciliation, material ledger closing.</li>
-      <li>Integration: IDoc, OData, event monitoring.</li>
-      <li>Performance: SQL trace, SAT, workload analysis.</li>
-    </ul>
+    <h2>A transaction still crosses several application layers</h2>
+    <p>Consider an ordinary order-to-cash flow. A sales order uses master data, pricing, availability logic, partner data, and organizational assignments. Delivery adds logistics execution. Billing creates the commercial invoice and, where relevant, accounting postings. The resulting journal entries become part of Finance. S/4HANA integrates these steps, but it does not erase their process boundaries.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Single source of truth for financial and logistics data.</li>
-      <li>Real-time analytics via HANA and CDS views.</li>
-      <li>Modern extensibility with Clean Core strategy.</li>
-      <li>Cloud and on-premise deployment options.</li>
-    </ul>
+    <p>That is why support work should follow the business document chain instead of starting with a random table or transaction code. A wrong sales price, a blocked delivery, and an accounting posting error can appear in one end-to-end process while originating in completely different configuration or data layers.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Upgrade and migration complexity from ECC.</li>
-      <li>Custom code remediation burden.</li>
-      <li>HANA hardware and licensing costs.</li>
-      <li>Business partner convergence complexity.</li>
-    </ul>
+    <h2>Deployment changes the operating and extension model</h2>
+    <p>SAP currently offers S/4HANA in several deployment models. SAP S/4HANA Cloud Public Edition is positioned as the public-cloud ERP foundation of SAP Cloud ERP. SAP S/4HANA Cloud Private Edition and SAP S/4HANA on-premise provide a different degree of lifecycle control and extensibility. The exact feature scope, upgrade model, and available extension techniques are therefore deployment-specific.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Universal journal reconciliation mismatch.</li>
-      <li>Material ledger closing errors.</li>
-      <li>Business partner replication failures.</li>
-      <li>Custom dump after release change.</li>
-      <li>Performance degradation after data volume growth.</li>
-    </ul>
+    <p>This distinction is more useful than saying that “S/4HANA supports cloud and on-premise.” A design that is valid in an on-premise or private-edition system may not be available in Public Edition, and a public-cloud extension should not be described using unrestricted classic ABAP assumptions.</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-product-landscape-map/">SAP Product Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/abap-platform/">ABAP Platform</a></li>
-    </ul>
+    <h2>Extensions should start from the supported contract</h2>
+    <p>Modern S/4HANA extensibility ranges from configuration and key-user extensions to developer extensibility with ABAP Cloud and side-by-side applications on SAP BTP. RAP, CDS, released APIs, business events, and documented enhancement points are important parts of that model.</p>
+
+    <p>Clean core is not the absence of custom requirements. It is a way of controlling dependencies on the ERP core. Before adding custom logic, we should know which system owns the business rule, which released interface or extension point is the contract, and how the extension survives an upgrade. Direct access to an internal object may work technically while creating a poor lifecycle dependency.</p>
+
+    <h2>Integration and analytics are part of the landscape, not one built-in mechanism</h2>
+    <p>S/4HANA exposes different integration styles for different business interactions, including OData and other APIs, IDocs, SOAP services, and business events. SAP Integration Suite can mediate and govern cross-system integrations, but it is not required for every interface. The right path depends on the released interface, interaction pattern, landscape, and operating model.</p>
+
+    <p>Analytics follows the same principle. S/4HANA includes embedded analytical capabilities based on CDS and the analytical engine for operational analysis close to the transaction. Cross-system data harmonization, enterprise planning, and larger analytical architectures may use SAP Datasphere, SAP Analytics Cloud, or other platforms. Embedded analytics should not be presented as a replacement for every data-warehouse or planning use case.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP — <a href="https://www.sap.com/products/erp/s4hana-erp.html">SAP S/4HANA Cloud Public Edition and SAP Cloud ERP</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/25b46c8241fd4852bf7876d87bed8fd0.html">Business Partner Approach (Customer/Supplier Integration)</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMI-SE/af9ef57f504840d2b81be8667206d485/97f1d353ca9f4408e10000000a174cb4.html">Installation: Actual Costing/Material Ledger</a>.</li>
+      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">Feature scope for SAP S/4HANA 2025</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Specific features, deployment options, and licensing terms must be verified against SAP's current product documentation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Feature scope, terminology, lifecycle policy, available APIs, and extension options differ across SAP S/4HANA deployments and releases. Verify a requirement against the documentation for the exact target product and release before treating it as implementable.</p>
   </div>
 
   <section class="atlas-related">
@@ -154,6 +114,7 @@ sitemap: false
       <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
       <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
       <li><a href="/atlas/sap/abap-platform/">ABAP Platform</a></li>
+      <li><a href="/atlas/sap/abap-cloud/">ABAP Cloud</a></li>
     </ul>
   </section>
 

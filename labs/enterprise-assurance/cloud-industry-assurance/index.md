@@ -1,13 +1,14 @@
 ---
 layout: default
 title: "Cloud and Industry Assurance — Enterprise Assurance"
-description: "A practical guide to PCI DSS, TISAX, BSI C5, CSA STAR, ISO cloud controls, operational management standards, automotive assurance and industrial cybersecurity."
+description: "A practical guide to PCI DSS, TISAX, BSI C5, CSA STAR and ISO cloud controls for enterprise vendor and architecture decisions."
 permalink: /labs/enterprise-assurance/cloud-industry-assurance/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-28
+last_modified_at: 2026-09-23
+last_reviewed: 2026-09-23
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -31,40 +32,40 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Cloud and industry / specific evidence</p>
-      <h1>Generic assurance is not always enough.</h1>
-      <p>Payment data, automotive information, public cloud services, industrial environments, and regulated operations can require evidence that goes deeper than a general quality or security certificate.</p>
-      <a class="research-canvas__button" href="#sector-map">Open the sector map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Choose assurance from the risk, not from the logo.</h1>
+      <p>A general security certificate may be useful, but it does not answer every cloud or industry question. Payment data, automotive information and cloud services each bring their own scope rules, control models and forms of evidence.</p>
+      <a class="research-canvas__button" href="#sector-map">See the assurance routes <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Cloud and industry assurance summary">
       <p>Decision path</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>Data</strong><small>What information is exposed?</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Sector</strong><small>Which industry rules matter?</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Evidence</strong><small>What assessment is accepted?</small></div>
-      <em>Checked 28 Aug 2026 · draft learning material</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Risk</strong><small>What are we trying to prove?</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Scope</strong><small>Which service and data are in scope?</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Evidence</strong><small>What kind of assessment exists?</small></div>
+      <em>Reviewed 23 Sep 2026 · draft learning material</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
-    <p><strong>Simple rule:</strong> add sector-specific evidence when the business risk is sector-specific. More badges do not automatically mean more assurance.</p>
+    <p><strong>The useful distinction is not “compliant or not”.</strong> We need to know which risk the scheme addresses, which service boundary it covers, how the evidence was produced, and which controls still belong to the customer.</p>
   </section>
 
   <section class="research-canvas__inventory" id="sector-map" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Core schemes</p>
-      <h2>Five assurance routes worth knowing.</h2>
-      <p>Each route exists because a particular risk, industry, or cloud context needs a more specific control model.</p>
+      <p class="research-canvas__eyebrow">Five routes</p>
+      <h2>Different schemes answer different assurance questions.</h2>
+      <p>They can complement one another, but they are not interchangeable. A payment-security standard, an automotive assessment and a cloud-control attestation prove different things.</p>
     </header>
+
     <div class="ecg-determination-list">
       <article class="ecg-determination-card">
         <div class="ecg-determination-card__index">PCI</div>
         <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Payment card security</p>
+          <p class="research-canvas__eyebrow">Payment-card security</p>
           <h3>PCI DSS v4.0.1</h3>
-          <p><strong>Question:</strong> does the environment store, process, transmit cardholder data, or otherwise affect the security of the cardholder data environment?</p>
-          <p><strong>Use:</strong> payment platforms, e-commerce, payment integrations, call centers, infrastructure, service providers, and SAP-connected payment processes where PCI scope applies.</p>
-          <p><strong>Current status:</strong> PCI DSS v4.0.1 is the active version in 2026. PCI DSS v4.0 was retired at the end of 2024.</p>
-          <p><strong>Do not assume:</strong> that an ERP system becomes “PCI compliant” because a payment service provider is compliant. Scope, segmentation, integrations, logs, access, storage, and customer responsibilities still matter.</p>
+          <p>PCI DSS applies to entities that store, process or transmit cardholder data or sensitive authentication data, and to environments that can affect the security of the cardholder data environment. Version 4.0.1 is the active PCI DSS version; version 4.0 was retired on 31 December 2024.</p>
+          <p>For an SAP-connected payment flow, the important work is scope. We trace where card data can appear, whether tokenization or redirect patterns keep SAP components outside the cardholder data environment, which integrations can affect that environment, and who operates the security controls.</p>
+          <p>A payment provider's PCI evidence does not automatically make the surrounding ERP process compliant. Customer architecture, access, logging, network boundaries and operating practices still matter.</p>
         </div>
       </article>
 
@@ -73,46 +74,42 @@ tags:
         <div class="ecg-determination-card__copy">
           <p class="research-canvas__eyebrow">Automotive information security</p>
           <h3>TISAX</h3>
-          <p><strong>Question:</strong> can an automotive partner demonstrate an accepted information-security assessment level for the information it exchanges with OEMs and suppliers?</p>
-          <p><strong>Use:</strong> prototypes, development information, personal data, production information, supplier collaboration, engineering services, and other sensitive automotive relationships.</p>
-          <p><strong>How it works:</strong> TISAX uses the VDA Information Security Assessment and an ENX-governed assessment and result-exchange model.</p>
-          <p><strong>2026 note:</strong> ISA 6.0.1 remains relevant for assessments in 2026. ENX has announced the ISA 2027 transition for assessments ordered from 2027, so version and assessment timing should be checked.</p>
+          <p>TISAX provides a common assessment and exchange model for information security in automotive relationships. It uses the VDA Information Security Assessment catalogue and an ENX-governed process for assessment and result exchange.</p>
+          <p>The version transition matters in 2026. ISA2027 has been published, but it becomes the basis for TISAX assessments ordered from 1 January 2027. Existing labels keep their validity, and assessments already started under ISA 6 follow the ENX transition rules.</p>
+          <p>For a supplier or service provider, we therefore check more than the existence of a TISAX label. We match the participant, assessment scope, locations, assessment objectives and the information actually exchanged with the OEM or supplier network.</p>
         </div>
       </article>
 
       <article class="ecg-determination-card">
         <div class="ecg-determination-card__index">C5</div>
         <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Cloud assurance</p>
+          <p class="research-canvas__eyebrow">Cloud control evidence</p>
           <h3>BSI C5</h3>
-          <p><strong>Question:</strong> what evidence exists that a cloud provider’s controls meet the German BSI cloud security criteria?</p>
-          <p><strong>Use:</strong> cloud-provider due diligence, especially in German and European enterprise or regulated contexts where C5 is requested or expected.</p>
-          <p><strong>Important:</strong> C5 is based on an attestation engagement by independent auditors. It is not a “BSI certificate”.</p>
-          <p><strong>Type 1 vs Type 2:</strong> a Type 1 report addresses control design at a date. A Type 2 report adds operating effectiveness over a period and gives stronger operational evidence. BSI guidance treats Type 2 as the more informative route for ongoing assurance.</p>
+          <p>The German Federal Office for Information Security (BSI) publishes the C5 criteria for cloud services, but a C5 report is not a BSI product certificate. Independent auditors perform the attestation engagement against the criteria.</p>
+          <p>BSI distinguishes Type 1 and Type 2 reporting. Type 1 examines the description, implementation and design of controls at a point in time. Type 2 adds testing of operating effectiveness over a period, which makes it the stronger basis when we want evidence that controls actually operated.</p>
+          <p>The report still needs to match the cloud service we use. We read the system description, criteria, auditor results, exceptions, subservice organizations and customer responsibilities instead of reducing the decision to “C5 compliant”.</p>
         </div>
       </article>
 
       <article class="ecg-determination-card">
         <div class="ecg-determination-card__index">STAR</div>
         <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Cloud transparency</p>
+          <p class="research-canvas__eyebrow">Cloud transparency and assurance</p>
           <h3>CSA STAR</h3>
-          <p><strong>Question:</strong> how does a cloud provider demonstrate controls against the Cloud Security Alliance Cloud Controls Matrix?</p>
-          <p><strong>Level 1:</strong> self-assessment and public transparency. Useful for discovery, but it is not independent assurance.</p>
-          <p><strong>Level 2:</strong> third-party assurance. STAR Certification combines ISO/IEC 27001 with the CCM; STAR Attestation uses a SOC 2 engagement with the CCM.</p>
-          <p><strong>AI extension:</strong> CSA has also introduced STAR for AI assurance routes. Treat this as an additional cloud/AI control layer, not a replacement for use-case evaluation or regulation.</p>
+          <p>CSA STAR uses the Cloud Controls Matrix as a common cloud-security frame. Level 1 is a provider self-assessment published in the STAR Registry. It is useful for transparency and early comparison, but it is not independent assurance.</p>
+          <p>Level 2 adds third-party assessment. STAR Certification combines ISO/IEC 27001 with the Cloud Controls Matrix; STAR Attestation extends a SOC 2 engagement with the Cloud Controls Matrix. The registry shows which route and version applies to a specific provider or service.</p>
+          <p>The practical value is comparability. We can use one cloud-control model to ask better questions across providers, while still checking the exact certification or attestation scope.</p>
         </div>
       </article>
 
       <article class="ecg-determination-card">
         <div class="ecg-determination-card__index">ISO</div>
         <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Cloud control guidance</p>
+          <p class="research-canvas__eyebrow">Cloud-specific control guidance</p>
           <h3>ISO/IEC 27017:2026 and ISO/IEC 27018:2025</h3>
-          <p><strong>27017:</strong> adds cloud-specific information-security controls and guidance for cloud service providers and cloud service customers.</p>
-          <p><strong>27018:</strong> adds guidance for protecting personally identifiable information when a public cloud provider acts as a PII processor.</p>
-          <p><strong>Use:</strong> deepen an ISO/IEC 27001-based cloud assessment and clarify shared-control responsibilities.</p>
-          <p><strong>Boundary:</strong> these are not substitutes for checking the provider’s exact service scope, customer configuration, contracts, data flows, access design, or regulatory obligations.</p>
+          <p>ISO/IEC 27017:2026 builds on ISO/IEC 27002 with cloud-specific security guidance and controls for both cloud service customers and providers. It applies across public, private and hybrid cloud models.</p>
+          <p>ISO/IEC 27018:2025 focuses on protecting personally identifiable information when a public cloud provider acts as a PII processor. It complements an ISO/IEC 27001-based information security management system; it does not replace privacy law, contracts or customer-side data governance.</p>
+          <p>These standards are especially useful for clarifying shared responsibility. They help us ask who should operate a control, but the answer must still be mapped to the actual service, contract, tenant configuration and data flow.</p>
         </div>
       </article>
     </div>
@@ -120,154 +117,77 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Scenario routing</p>
-      <h2>Start from the information and business context.</h2>
+      <p class="research-canvas__eyebrow">Evidence shape</p>
+      <h2>The assurance method matters as much as the framework name.</h2>
+      <p>Two providers may mention the same framework while offering very different evidence. Before comparing them, normalize what you actually received.</p>
     </header>
-    <div class="research-route-list">
-      <a href="/labs/enterprise-assurance/vendor-due-diligence/"><span>CARD</span><strong>SAP order-to-cash with card payments</strong><small>Identify the cardholder data environment and connected systems first. Use PCI DSS evidence for the components and providers inside or affecting that scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-assurance/vendor-due-diligence/"><span>AUTO</span><strong>Automotive supplier collaboration</strong><small>When OEM requirements include TISAX, verify the assessment objective, participant, location, scope, label validity, and the information being exchanged.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-assurance/vendor-due-diligence/"><span>DE</span><strong>Cloud service for a German enterprise</strong><small>C5 can provide detailed cloud assurance. Combine it with service-specific contracts, architecture, resilience, data-protection, and customer-control evidence.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-assurance/vendor-due-diligence/"><span>CLOUD</span><strong>Multi-cloud supplier comparison</strong><small>CSA STAR can add a common cloud-control view. Distinguish Level 1 self-assessment from Level 2 independent assurance before comparing providers.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-    </div>
-  </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Evidence strength</p>
-      <h2>The same logo can hide different levels of evidence.</h2>
-      <p>Before comparing vendors, normalize what each provider has actually supplied.</p>
-    </header>
     <div class="ecg-memory-grid">
-      <article class="ecg-memory-card"><span>SELF</span><strong>Self-assessment</strong><h3>The provider describes its own control position.</h3><p>Useful for transparency and early screening. It is weaker than independent assurance.</p></article>
-      <article class="ecg-memory-card"><span>CERT</span><strong>Certification</strong><h3>An independent certification body confirms conformity to a certifiable standard within a defined scope.</h3><p>Good management-system evidence, but still read the certificate boundary.</p></article>
-      <article class="ecg-memory-card"><span>AUDIT</span><strong>Independent attestation</strong><h3>An auditor reports on defined controls, criteria, tests, and often operating effectiveness.</h3><p>Can provide deeper evidence for a service boundary, especially in Type 2 engagements.</p></article>
-      <article class="ecg-memory-card"><span>TEST</span><strong>Technical evidence</strong><h3>Penetration tests, vulnerability evidence, resilience tests, configurations, logs, or control samples answer technical questions a badge cannot.</h3><p>Use them when the decision needs proof below the management-system or assurance-report layer.</p></article>
+      <article class="ecg-memory-card"><span>SELF</span><strong>Self-assessment</strong><h3>The provider describes its own control position.</h3><p>Useful for transparency and screening. The customer still needs to decide how much independent evidence the risk requires.</p></article>
+      <article class="ecg-memory-card"><span>CERT</span><strong>Certification</strong><h3>A certification body confirms conformity within a defined scope.</h3><p>Read the certified entity, services, locations, standard edition and validity rather than relying on the logo.</p></article>
+      <article class="ecg-memory-card"><span>ATTEST</span><strong>Independent attestation</strong><h3>An auditor reports against stated criteria and controls.</h3><p>For Type 2 engagements, operating-effectiveness testing can show whether controls worked over the assessment period.</p></article>
+      <article class="ecg-memory-card"><span>TECH</span><strong>Technical evidence</strong><h3>Tests and operational records answer questions above frameworks alone.</h3><p>Penetration tests, recovery exercises, configuration evidence, vulnerability results and logs may be needed when the decision depends on technical behavior.</p></article>
     </div>
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">warning</span>
-    <p><strong>Do not stack badges blindly:</strong> ISO/IEC 27001 + SOC 2 + C5 + STAR may be useful for one provider, but the value comes from complementary scope and evidence. Four overlapping artifacts with the wrong service boundary can still leave the main risk unproven.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Beyond cloud and IT</p>
-      <h2>A standard can drive ERP requirements without certifying the ERP system.</h2>
-      <p>Enterprise systems also support environmental, safety, energy, anti-bribery, automotive, and industrial-control obligations. These standards often shape master data, approvals, evidence, traceability, workflows, reporting, and supplier requirements.</p>
-    </header>
-    <div class="ecg-determination-list">
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">14001</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Environmental management</p>
-          <h3>ISO 14001:2026</h3>
-          <p><strong>Question:</strong> can the organization systematically manage environmental aspects, obligations, objectives, performance, and continual improvement?</p>
-          <p><strong>System connection:</strong> SAP EHS, waste and emissions data, purchasing requirements, material data, plant processes, compliance tasks, environmental KPIs, and audit evidence can support the management system.</p>
-          <p><strong>2026 change:</strong> ISO 14001:2026 was published in April 2026 and replaced ISO 14001:2015. This is another reason to check the edition rather than repeat an old certificate reference.</p>
-        </div>
-      </article>
-
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">45001</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Occupational health and safety</p>
-          <h3>ISO 45001:2018</h3>
-          <p><strong>Question:</strong> does the organization manage occupational health and safety risks through a structured management system?</p>
-          <p><strong>System connection:</strong> incidents, hazards, risk assessments, training, permits, corrective actions, contractor data, and EHS workflows can become ERP or EHS-system requirements.</p>
-          <p><strong>Version note:</strong> ISO 45001:2018 is still current on 28 August 2026, but a second edition is already at Draft International Standard stage. Treat the edition as a live transition topic.</p>
-        </div>
-      </article>
-
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">50001</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Energy management</p>
-          <h3>ISO 50001:2018</h3>
-          <p><strong>Question:</strong> can the organization systematically improve energy performance, including energy efficiency, use, and consumption?</p>
-          <p><strong>System connection:</strong> meters, equipment, production volumes, energy baselines, energy-performance indicators, maintenance data, and analytics may need integration across ERP, manufacturing, IoT, and reporting platforms.</p>
-          <p><strong>Boundary:</strong> the standard defines the management system. A dashboard alone is not an energy management system.</p>
-        </div>
-      </article>
-
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">37001</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Anti-bribery</p>
-          <h3>ISO 37001:2025</h3>
-          <p><strong>Question:</strong> can the organization prevent, detect, and respond to bribery through policies, due diligence, financial and non-financial controls, monitoring, and improvement?</p>
-          <p><strong>System connection:</strong> supplier onboarding, third-party due diligence, approval limits, payments, gifts and benefits, conflicts, audit trails, purchasing controls, and exception workflows can support the anti-bribery control model.</p>
-          <p><strong>Version check:</strong> ISO 37001:2025 replaced the 2016 edition.</p>
-        </div>
-      </article>
-
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">AUTO</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Automotive quality and product engineering</p>
-          <h3>IATF 16949:2016, ISO/SAE 21434:2021, and ISO 26262:2018</h3>
-          <p><strong>IATF 16949:</strong> automotive quality management and supplier-chain discipline. As of August 2026, the 2016 first edition remains published while IATF is actively preparing the second edition.</p>
-          <p><strong>ISO/SAE 21434:</strong> cybersecurity engineering across the road-vehicle lifecycle. <strong>ISO 26262:</strong> functional safety for safety-related electrical and electronic vehicle systems.</p>
-          <p><strong>System connection:</strong> SAP QM, PP, batch and serial traceability, change records, supplier quality, document control, complaints, production evidence, and integration with engineering systems can support required evidence. They do not make SAP itself “ISO 26262 certified”.</p>
-        </div>
-      </article>
-
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">62443</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Industrial and OT cybersecurity</p>
-          <h3>IEC 62443 series</h3>
-          <p><strong>Question:</strong> how should asset owners, service providers, product suppliers, and industrial automation components manage cybersecurity across industrial automation and control systems?</p>
-          <p><strong>Useful parts:</strong> IEC 62443-2-1 covers asset-owner security programs, IEC 62443-2-4 covers IACS service providers, IEC 62443-4-1 covers secure product development lifecycle requirements, and IEC 62443-4-2 covers technical security requirements for components.</p>
-          <p><strong>System connection:</strong> this becomes important when ERP, MES, integration platforms, maintenance systems, historians, plant connectivity, or remote services cross the IT/OT boundary.</p>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">factory</span>
-    <p><strong>Lead distinction:</strong> ISO 14001, ISO 45001, ISO 50001, IATF 16949, ISO 26262, and similar frameworks can create system requirements and audit-evidence needs. That does not mean the ERP application itself receives the organization’s management-system certification.</p>
+    <p><strong>Do not stack badges blindly.</strong> ISO/IEC 27001, SOC 2, C5 and STAR can complement one another, but four artifacts with the wrong service boundary can still leave the main risk unproven.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">SAP connection</p>
-      <h2>Use the assurance scheme as one layer of the architecture decision.</h2>
-      <p>SAP Trust Center currently exposes several cloud assurance schemes across its portfolio, including PCI DSS, TISAX, BSI C5, CSA STAR and cloud-related ISO standards. The presence of a scheme in the portfolio does not mean every SAP offering has the same assessment scope.</p>
+      <h2>For SAP cloud services, start with the exact offering.</h2>
+      <p>SAP's Trust Center portfolio includes schemes such as BSI C5, CSA STAR, PCI DSS, TISAX, ISO/IEC 27017 and ISO/IEC 27018. Coverage is not uniform across every SAP product, entity, region or period.</p>
     </header>
+
     <ol class="research-canvas__steps">
-      <li><span>01</span><strong>Find the exact SAP offering</strong><p>Use SAP Compliance Finder rather than relying on a general SAP compliance page.</p></li>
-      <li><span>02</span><strong>Find the compliance entity</strong><p>Check the legal or operational entity connected to the service.</p></li>
-      <li><span>03</span><strong>Find the period or issue date</strong><p>Assurance evidence is time-bound. Record the period you are relying on.</p></li>
-      <li><span>04</span><strong>Map customer responsibilities</strong><p>Connect provider assurance to your SAP roles, integrations, data, configuration, business controls, and operations.</p></li>
+      <li><span>01</span><strong>Identify the service</strong><p>Use the SAP Compliance Finder for the product or cloud service that is actually in scope, not the SAP brand in general.</p></li>
+      <li><span>02</span><strong>Match the compliance entity</strong><p>Confirm that the document covers the SAP entity, service boundary and region relevant to the architecture.</p></li>
+      <li><span>03</span><strong>Match the date</strong><p>Certificates, attestations and assessment reports are time-bound. Record the issue date or assessment period relied on for the decision.</p></li>
+      <li><span>04</span><strong>Map the customer side</strong><p>Provider evidence does not prove customer role design, integrations, configuration, business approvals, data handling or operational monitoring. Those controls need their own owners and evidence.</p></li>
     </ol>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Official source desk</p>
+      <p class="research-canvas__eyebrow">Questions for review</p>
+      <h2>Can you explain the boundary without the badge?</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">Q1</div><div class="ecg-determination-card__copy"><h3>Why is a provider's PCI DSS evidence not enough for an SAP payment process?</h3><p>Because PCI scope follows the card-data environment and systems that can affect its security. Customer integrations, access, logging, storage and network design may remain in scope.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">Q2</div><div class="ecg-determination-card__copy"><h3>What does a C5 Type 2 report add over Type 1?</h3><p>Type 2 adds testing of operating effectiveness over a period. Type 1 focuses on description, implementation and control design at a point in time.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">Q3</div><div class="ecg-determination-card__copy"><h3>What is the difference between STAR Level 1 and Level 2?</h3><p>Level 1 is provider self-assessment and transparency. Level 2 uses third-party certification or attestation built around the Cloud Controls Matrix.</p></div></article>
+      <article class="ecg-determination-card"><div class="ecg-determination-card__index">Q4</div><div class="ecg-determination-card__copy"><h3>Why do ISO/IEC 27017 and 27018 not settle the whole cloud-risk decision?</h3><p>They provide cloud-security and privacy guidance, but the real control boundary still depends on the service, contract, configuration, data flow and customer responsibilities.</p></div></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Related assurance work</p>
+      <h2>Keep the scheme in its proper layer.</h2>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-assurance/service-organization-reports/"><span>SOC</span><strong>Service-organization reports</strong><small>Understand SOC 1, SOC 2, SOC 3 and ISAE 3402 evidence before relying on an attestation report.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-assurance/iso-management-systems/"><span>ISO</span><strong>ISO management systems</strong><small>Use the management-system guide for ISO/IEC 27001, ISO 22301, ISO/IEC 42001 and related organizational standards.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-assurance/vendor-due-diligence/"><span>VENDOR</span><strong>Vendor due diligence</strong><small>Turn the assurance artifact into a scoped risk and procurement decision.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Official sources</p>
       <h2>Use the scheme owner for current requirements.</h2>
     </header>
     <ul>
-      <li><a href="https://www.pcisecuritystandards.org/document_library/?class=pcidss&amp;doc=pci_dss" rel="noopener">PCI Security Standards Council — PCI DSS</a></li>
-      <li><a href="https://www.enx.com/en-US/TISAX/" rel="noopener">ENX — TISAX</a></li>
-      <li><a href="https://portal.enx.com/en-US/TISAX/isa/" rel="noopener">ENX — Information Security Assessment and transition information</a></li>
-      <li><a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html" rel="noopener">German BSI — C5</a></li>
-      <li><a href="https://cloudsecurityalliance.org/star" rel="noopener">Cloud Security Alliance — STAR</a></li>
-      <li><a href="https://www.iso.org/standard/76559.html" rel="noopener">ISO/IEC 27017:2026</a></li>
-      <li><a href="https://www.iso.org/standard/76560.html" rel="noopener">ISO/IEC 27018:2025</a></li>
-      <li><a href="https://www.iso.org/standard/14001" rel="noopener">ISO 14001:2026</a></li>
-      <li><a href="https://www.iso.org/standard/63787.html" rel="noopener">ISO 45001:2018</a></li>
-      <li><a href="https://www.iso.org/standard/69426.html" rel="noopener">ISO 50001:2018</a></li>
-      <li><a href="https://www.iso.org/standard/37001" rel="noopener">ISO 37001:2025</a></li>
-      <li><a href="https://www.iatfglobaloversight.org/iatf-publications/" rel="noopener">IATF — IATF 16949 publications</a></li>
-      <li><a href="https://www.iatfglobaloversight.org/news/30-july-2026-iatf-stakeholder-communique-iatf-16949-2nd-edition-update-information/" rel="noopener">IATF — 2026 second-edition status</a></li>
-      <li><a href="https://www.iso.org/standard/70918.html" rel="noopener">ISO/SAE 21434:2021</a></li>
-      <li><a href="https://www.iso.org/publication/PUB200262.html" rel="noopener">ISO 26262:2018 series</a></li>
-      <li><a href="https://webstore.iec.ch/en/publication/33615" rel="noopener">IEC 62443-4-1:2018</a></li>
-      <li><a href="https://webstore.iec.ch/en/publication/67631" rel="noopener">IEC 62443-2-4:2023</a></li>
-      <li><a href="https://www.sap.com/about/trust-center/certification-compliance.html" rel="noopener">SAP Trust Center — certifications and compliance</a></li>
+      <li><a href="https://blog.pcisecuritystandards.org/just-published-pci-dss-v4-0-1" rel="noopener">PCI Security Standards Council — PCI DSS v4.0.1 and v4.0 retirement</a></li>
+      <li><a href="https://portal.enx.com/en-US/news/isa2027/" rel="noopener">ENX — ISA2027 transition for TISAX assessments</a></li>
+      <li><a href="https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/CloudComputing/ComplianceControlsCatalogue-Cloud_Computing-C5.pdf" rel="noopener">German BSI — Cloud Computing Compliance Criteria Catalogue (C5)</a></li>
+      <li><a href="https://cloudsecurityalliance.org/star" rel="noopener">Cloud Security Alliance — STAR levels and assurance routes</a></li>
+      <li><a href="https://www.iso.org/standard/27017" rel="noopener">ISO — ISO/IEC 27017:2026</a></li>
+      <li><a href="https://www.iso.org/standard/27018" rel="noopener">ISO — ISO/IEC 27018:2025</a></li>
+      <li><a href="https://www.sap.com/about/trust-center/certification-compliance/compliance-finder.html" rel="noopener">SAP Trust Center — Compliance Finder</a></li>
     </ul>
   </section>
 </div>

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Product Portfolio"
-description: "The complete SAP product portfolio organized by category, with practical notes on what each product actually does and where it fits."
+description: "A practical map of the current SAP product portfolio: how cloud ERP, line-of-business applications, data, AI, BTP, networks, and transformation products fit together."
 permalink: /atlas/sap/sap-product-portfolio/
 atlas_section: sap
 domain: SAP operations
@@ -11,8 +11,8 @@ sap_area: "Cross-product"
 business_process: "Enterprise operations"
 status: needs_verification
 verified: false
-last_synced: 2026-07-14
-last_reviewed: 2026-07-14
+last_synced: 2026-09-23
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -45,235 +45,132 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Reference</p>
     <h1>SAP Product Portfolio</h1>
-    <p class="note-subtitle">Every major SAP product, what it does, and where it sits — synced from sap.com/products as of 2026-07-14.</p>
+    <p class="note-subtitle">A practical map of the SAP landscape: which products run the business, which extend it, and where the important system boundaries sit.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
   <aside class="atlas-meta-panel">
     <dl>
-      <div><dt>Scope</dt><dd>Full SAP product portfolio</dd></div>
-      <div><dt>Source</dt><dd>sap.com/products (public)</dd></div>
-      <div><dt>Last synced</dt><dd>2026-07-14</dd></div>
+      <div><dt>Scope</dt><dd>Current portfolio structure and major product families</dd></div>
+      <div><dt>Source</dt><dd>SAP public product pages and product documentation</dd></div>
+      <div><dt>Last synced</dt><dd>2026-09-23</dd></div>
       <div><dt>Indexing</dt><dd>Noindex until product claims are verified against public SAP docs.</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>How SAP organizes its portfolio</h2>
-    <p>SAP groups its products into 14 portfolio categories. Some products appear in more than one category because they serve multiple functions. The table below lists every major product under its primary category, with a plain-language note on what it actually does.</p>
+    <h2>Read the portfolio as a landscape, not a shopping list</h2>
+    <p>SAP has many product names, but the useful question is not how many products exist. It is which role each product plays in an enterprise landscape. Some products run core transactions. Others plan work before execution, connect companies, govern data, analyze processes, or provide the technology used to extend and integrate applications.</p>
 
-    <h2>Cloud ERP</h2>
+    <p>SAP's public product index currently groups the portfolio into 14 categories. Those categories are useful for navigation, but they are not technical layers and they do not define one fixed architecture. A product can serve more than one business domain, and one end-to-end process can cross several products.</p>
+
     <table>
       <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
+        <tr><th>Portfolio category</th><th>What it represents in practice</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>SAP S/4HANA Cloud, public edition</strong></td><td>Ready-to-run cloud ERP with pre-configured best practices. SAP manages upgrades; you get the latest features every release cycle.</td><td>Mid-to-large companies that want standard ERP without infrastructure overhead.</td></tr>
-        <tr><td><strong>SAP S/4HANA Cloud, private edition</strong></td><td>S/4HANA in a dedicated cloud environment. More flexibility than public edition, closer to on-premise control, but SAP still handles the infrastructure.</td><td>Large enterprises migrating from ECC that need custom code and industry depth.</td></tr>
-        <tr><td><strong>SAP S/4HANA (on-premise)</strong></td><td>The self-hosted version. Full control over upgrades, custom code, and infrastructure. Still supported but SAP is pushing customers toward cloud.</td><td>Organizations with strict data residency or deep customization requirements.</td></tr>
-        <tr><td><strong>SAP Cloud ERP (GROW with SAP)</strong></td><td>A packaged entry point for midmarket companies adopting S/4HANA Cloud. Bundles ERP with onboarding tools and adoption services.</td><td>Midsize companies moving to cloud ERP for the first time.</td></tr>
-        <tr><td><strong>SAP Business One</strong></td><td>ERP designed for small businesses. Covers finance, sales, purchasing, inventory, and light manufacturing. Runs on SQL Server or HANA.</td><td>Companies with roughly 10–500 employees that outgrew spreadsheets.</td></tr>
-        <tr><td><strong>SAP Business ByDesign</strong></td><td>Cloud ERP suite for midmarket companies. Covers finance, HR, procurement, project management, CRM, and supply chain in one subscription.</td><td>Growing companies that want a single cloud suite without assembling modules.</td></tr>
+        <tr><td><strong>Business AI</strong></td><td>Joule, assistants, agents, and AI services that work across business applications rather than forming a separate ERP.</td></tr>
+        <tr><td><strong>Business applications</strong></td><td>The modular application portfolio spanning finance, supply chain, procurement, HR, and customer experience.</td></tr>
+        <tr><td><strong>Business data cloud</strong></td><td>Governed business data, analytics, planning, data engineering, and data products across SAP and third-party sources.</td></tr>
+        <tr><td><strong>Business network</strong></td><td>Cross-company collaboration with suppliers, logistics partners, and other trading partners.</td></tr>
+        <tr><td><strong>Business process transformation</strong></td><td>SAP Signavio capabilities for process modeling, analysis, mining, and transformation.</td></tr>
+        <tr><td><strong>Business technology platform</strong></td><td>Integration, application development, automation, extension, and platform services.</td></tr>
+        <tr><td><strong>Cloud ERP</strong></td><td>Core cloud ERP applications and the operating model around SAP Cloud ERP.</td></tr>
+        <tr><td><strong>CRM and customer experience</strong></td><td>Commerce, sales, service, marketing, and customer engagement applications.</td></tr>
+        <tr><td><strong>Financial management</strong></td><td>Core finance plus treasury, consolidation, compliance, and related financial capabilities.</td></tr>
+        <tr><td><strong>Human capital management</strong></td><td>SAP SuccessFactors and related applications for core HR and talent processes.</td></tr>
+        <tr><td><strong>Small and midsize enterprise</strong></td><td>ERP and business-management options aimed at smaller and growing organizations.</td></tr>
+        <tr><td><strong>Spend management</strong></td><td>SAP Ariba, SAP Fieldglass, and SAP Concur families for procurement, external workforce, travel, and expense.</td></tr>
+        <tr><td><strong>Supply chain management</strong></td><td>Planning, manufacturing, warehouse, transportation, asset, and logistics applications.</td></tr>
+        <tr><td><strong>Sustainability management</strong></td><td>Applications for emissions, footprint, ESG, environmental, health, and safety processes.</td></tr>
       </tbody>
     </table>
 
-    <h2>Business technology platform (BTP)</h2>
+    <h2>Portfolio labels overlap, and they are moving quickly</h2>
+    <p>SAP's product index still features <strong>SAP Business Suite</strong> and describes business applications, SAP Business Data Cloud, and SAP Business AI as working together on SAP Business Technology Platform. At the same time, the current page behind that portfolio entry now leads with <strong>Autonomous Enterprise</strong>, <strong>SAP Autonomous Suite</strong>, and <strong>SAP Business AI Platform</strong>. These are portfolio and operating-model labels, not one transactional application that replaces S/4HANA, SuccessFactors, Ariba, or the other products underneath them.</p>
+
+    <p>This distinction matters in architecture discussions. A company can adopt the wider SAP suite strategy while still making separate design decisions about ERP deployment, HR ownership, procurement, planning, integration, data, and AI. The umbrella story connects those decisions; it does not erase their boundaries.</p>
+
+    <h2>Cloud ERP naming needs careful reading</h2>
+    <p><strong>SAP Cloud ERP</strong> is now the main public cloud ERP label, with SAP S/4HANA Cloud Public Edition described as a foundational application. <strong>SAP Cloud ERP Private</strong> is the private-cloud option for organizations that need greater continuity with complex existing ERP processes and extensions.</p>
+
+    <p><strong>SAP GROW</strong> and <strong>RISE with SAP</strong> are better understood as adoption and transformation offerings around cloud ERP, not as separate ERP engines. SAP states that GROW is an entry point to cloud ERP built on SAP S/4HANA Cloud Public Edition. RISE with SAP can have SAP Cloud ERP or SAP Cloud ERP Private at its core. Treating GROW, RISE, Public Edition, and Private Edition as four equivalent products obscures the real deployment choice.</p>
+
+    <p><a href="/atlas/sap/sap-business-one/">SAP Business One</a> remains a separate ERP product for small businesses with its own architecture, data model, APIs, and lifecycle. It should not be described as a reduced S/4HANA edition.</p>
+
+    <h2>Line-of-business applications usually own a specific part of the process</h2>
+    <p>The rest of the application portfolio becomes easier to understand when we ask what each product is authoritative for.</p>
+
     <table>
       <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
+        <tr><th>Product family</th><th>Primary role</th><th>Boundary to remember</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>SAP Integration Suite</strong></td><td>Cloud middleware for connecting SAP and non-SAP systems. Includes API management, event mesh, and pre-built integration content.</td><td>Anyone connecting S/4HANA to satellite products, third-party apps, or legacy systems.</td></tr>
-        <tr><td><strong>SAP Build</strong></td><td>Low-code and pro-code development suite. Build Apps (no-code UI), Build Process Automation (workflows, RPA), Build Code (pro-code with Joule copilot).</td><td>Business users building simple apps; professional developers building extensions.</td></tr>
-        <tr><td><strong>SAP HANA Cloud</strong></td><td>The HANA database as a managed cloud service. Multi-model (relational, graph, spatial, JSON) with elastic scaling.</td><td>Teams that need HANA capabilities without managing database infrastructure.</td></tr>
-        <tr><td><strong>SAP Datasphere</strong></td><td>Data fabric that connects, models, and catalogs data across SAP and non-SAP sources. Preserves business context (semantics) instead of flattening everything into tables.</td><td>Data teams building a unified data layer without moving all data into one warehouse.</td></tr>
-        <tr><td><strong>SAP Analytics Cloud</strong></td><td>BI, planning, and predictive analytics in one cloud tool. Connects live to S/4HANA, Datasphere, and third-party sources.</td><td>Finance and business analysts doing reporting, planning, and what-if scenarios.</td></tr>
-        <tr><td><strong>SAP Master Data Governance (MDG)</strong></td><td>Central governance for business partner, material, and financial master data. Enforces validation rules and approval workflows before data enters the system.</td><td>Enterprises where bad master data causes downstream incidents across modules.</td></tr>
-        <tr><td><strong>SAP Cloud Identity Services</strong></td><td>Identity authentication and provisioning for SAP cloud apps. Handles SSO, user lifecycle, and access policies.</td><td>IT teams managing user access across SAP cloud landscape.</td></tr>
-        <tr><td><strong>SAP BTP, Kyma runtime</strong></td><td>Kubernetes-based runtime on BTP for deploying microservices and serverless functions. Used for side-by-side extensions.</td><td>Developers building cloud-native extensions to SAP systems.</td></tr>
+        <tr><td><strong>SAP SuccessFactors</strong></td><td>Core HR, talent, learning, recruiting, compensation, and related workforce processes.</td><td>Employee Central can be the HR system of record, but authority still depends on the customer's HR and payroll architecture.</td></tr>
+        <tr><td><strong>SAP Ariba</strong></td><td>Sourcing, supplier management, contracts, buying, and invoicing.</td><td>The Ariba application process and the external supplier-network conversation are related but not the same boundary.</td></tr>
+        <tr><td><strong>SAP Fieldglass</strong></td><td>Contingent workforce and services procurement.</td><td>Contingent labor, statement-of-work services, and worker profiles use different business objects and controls.</td></tr>
+        <tr><td><strong>SAP Concur</strong></td><td>Travel, expense, and invoice processes.</td><td>An approved expense or invoice still needs the appropriate ERP/accounting integration to become a financial posting.</td></tr>
+        <tr><td><strong>SAP Commerce Cloud</strong></td><td>Digital commerce for B2B and B2C scenarios.</td><td>Catalog, pricing, stock, order capture, and fulfillment ownership are architecture choices; Commerce is not automatically the system of record for all of them.</td></tr>
+        <tr><td><strong>SAP Sales Cloud and SAP Service Cloud</strong></td><td>Sales and customer-service processes.</td><td>CRM activity can coexist with ERP-owned orders, billing, logistics, and accounting.</td></tr>
       </tbody>
     </table>
 
-    <h2>Business AI</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP Joule</strong></td><td>SAP's AI copilot embedded across cloud products. Answers questions, triggers workflows, and provides contextual recommendations inside SAP apps.</td><td>End users in SAP cloud products who want natural-language interaction with their data.</td></tr>
-        <tr><td><strong>SAP Joule Agents</strong></td><td>Autonomous AI agents that execute multi-step business processes across SAP applications. They coordinate with each other and escalate to humans when needed.</td><td>Organizations automating cross-functional workflows with human oversight.</td></tr>
-        <tr><td><strong>SAP Joule Studio</strong></td><td>Development environment for building custom Joule skills and agents. Part of SAP Build.</td><td>Developers creating custom AI agents grounded in SAP business context.</td></tr>
-        <tr><td><strong>SAP Business AI (embedded)</strong></td><td>AI capabilities built into SAP products — predictive analytics in IBP, invoice matching in Ariba, demand forecasting in S/4HANA. Not a separate product; it ships inside each app.</td><td>Everyone using SAP cloud products. AI features activate per product license.</td></tr>
-      </tbody>
-    </table>
+    <h2>Supply-chain products separate planning from physical execution</h2>
+    <p>The supply-chain portfolio is not one linear stack. <a href="/atlas/sap/sap-ibp/">SAP Integrated Business Planning</a> plans demand, supply, inventory, and response scenarios. <a href="/atlas/sap/sap-ewm/">SAP Extended Warehouse Management</a> controls warehouse execution. <a href="/atlas/sap/sap-tm/">SAP Transportation Management</a> plans and executes transportation. SAP Digital Manufacturing connects production execution with the wider manufacturing landscape.</p>
 
-    <h2>Spend management</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP Ariba Buying</strong></td><td>Procurement catalog and purchase order management. Employees buy from approved catalogs; the system enforces compliance and approval rules.</td><td>Procurement teams managing indirect spend.</td></tr>
-        <tr><td><strong>SAP Ariba Sourcing</strong></td><td>Strategic sourcing — RFPs, RFQs, auctions, supplier negotiations. Handles both indirect and direct materials sourcing.</td><td>Sourcing professionals running competitive bidding events.</td></tr>
-        <tr><td><strong>SAP Ariba Contracts</strong></td><td>Contract lifecycle management. Authoring, negotiation, approval, renewal tracking, and obligation management.</td><td>Legal and procurement teams managing supplier contracts.</td></tr>
-        <tr><td><strong>SAP Ariba Supplier Lifecycle</strong></td><td>Supplier onboarding, qualification, performance tracking, and risk assessment across the full supplier relationship.</td><td>Procurement teams managing large supplier bases.</td></tr>
-        <tr><td><strong>SAP Fieldglass</strong></td><td>External workforce management. Tracks contingent workers, consultants, freelancers, and service providers. Covers hiring, onboarding, time tracking, invoicing, and compliance.</td><td>Companies with significant contractor or temporary workforce.</td></tr>
-        <tr><td><strong>SAP Concur Expense</strong></td><td>Travel and expense management. Employees submit expenses via mobile; the system matches receipts, enforces policy, and feeds approved expenses into ERP for reimbursement.</td><td>Any company with employee travel and expense reporting.</td></tr>
-        <tr><td><strong>SAP Concur Travel</strong></td><td>Corporate travel booking integrated with expense. Employees book flights, hotels, and cars within company policy; bookings flow automatically into expense reports.</td><td>Companies managing corporate travel programs.</td></tr>
-        <tr><td><strong>SAP Concur Invoice</strong></td><td>Automated invoice capture, matching, and approval. Reduces manual AP processing and catches duplicate or non-compliant invoices.</td><td>Accounts payable teams processing high invoice volumes.</td></tr>
-      </tbody>
-    </table>
+    <p>The key boundary is planning versus execution. A plan in IBP is not yet a production, warehouse, or transportation transaction. Likewise, a warehouse task or freight order belongs to an execution model with its own statuses and operational evidence. Integration between products should therefore be read object by object, not as a generic statement that “the supply chain is integrated.”</p>
 
-    <h2>Human capital management (HCM)</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP SuccessFactors Employee Central</strong></td><td>Core HR system of record. Employee master data, organizational structure, position management, time-off tracking, and global payroll integration.</td><td>HR teams replacing on-premise SAP HCM or legacy HR systems.</td></tr>
-        <tr><td><strong>SAP SuccessFactors Recruiting</strong></td><td>Applicant tracking and recruitment marketing. Job posting, candidate pipeline, interview scheduling, and offer management. Now includes SmartRecruiters as SAP's ATS platform.</td><td>Talent acquisition teams.</td></tr>
-        <tr><td><strong>SAP SuccessFactors Learning</strong></td><td>Learning management system. Course catalog, compliance training, certifications, and learning analytics.</td><td>L&amp;D teams managing employee training programs.</td></tr>
-        <tr><td><strong>SAP SuccessFactors Performance &amp; Goals</strong></td><td>Performance reviews, goal setting, continuous feedback, and calibration. Links individual goals to company strategy.</td><td>HR teams running formal performance management cycles.</td></tr>
-        <tr><td><strong>SAP SuccessFactors Compensation</strong></td><td>Salary planning, bonus calculations, long-term incentives, and pay-for-performance modeling.</td><td>Compensation and benefits teams.</td></tr>
-        <tr><td><strong>SAP SuccessFactors Succession &amp; Development</strong></td><td>Talent pipeline management, succession planning, career pathing, and development plans.</td><td>HR and leadership teams planning workforce continuity.</td></tr>
-        <tr><td><strong>SAP SuccessFactors Workforce Analytics</strong></td><td>HR reporting and analytics. Headcount, turnover, diversity, span-of-control, and workforce planning dashboards.</td><td>HR analysts and business leaders needing people data.</td></tr>
-        <tr><td><strong>SAP SuccessFactors Onboarding</strong></td><td>Pre-day-one and first-90-days workflows. Paperwork, equipment requests, training assignments, and manager checklists.</td><td>HR teams streamlining new hire experience.</td></tr>
-      </tbody>
-    </table>
+    <h2>Business Data Cloud changes the way the data portfolio is presented</h2>
+    <p>SAP Business Data Cloud is now a top-level part of the portfolio. SAP describes it as a managed data and analytics solution that brings together capabilities including SAP Datasphere, SAP Analytics Cloud, SAP HANA Cloud, SAP Master Data Governance, SAP BW, SAP Databricks, and governed SAP data products.</p>
 
-    <h2>CRM and customer experience (CX)</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP Commerce Cloud</strong></td><td>B2B and B2C e-commerce platform (formerly Hybris). Product catalog, pricing, promotions, order management, and omnichannel storefronts.</td><td>Companies selling online with complex B2B pricing or large product catalogs.</td></tr>
-        <tr><td><strong>SAP Sales Cloud</strong></td><td>CRM for sales teams. Lead management, opportunity tracking, pipeline forecasting, quote generation, and territory management.</td><td>Field and inside sales teams.</td></tr>
-        <tr><td><strong>SAP Service Cloud</strong></td><td>Customer service platform. Case management, knowledge base, self-service portal, field service scheduling, and omnichannel support.</td><td>Customer service and support organizations.</td></tr>
-        <tr><td><strong>SAP Emarsys</strong></td><td>Marketing automation and customer engagement. Email campaigns, personalization, loyalty programs, and cross-channel marketing orchestration.</td><td>Marketing teams running B2C campaigns at scale.</td></tr>
-        <tr><td><strong>SAP Customer Data Cloud</strong></td><td>Customer identity and consent management (formerly Gigya). Registration, login, profile management, and privacy compliance across digital properties.</td><td>Companies managing customer identities across web and mobile properties.</td></tr>
-        <tr><td><strong>SAP CPQ (Configure, Price, Quote)</strong></td><td>Product configuration, pricing rules, and quote generation for complex or customizable products.</td><td>Manufacturers and B2B sellers with configurable products.</td></tr>
-        <tr><td><strong>SAP FSM (Field Service Management)</strong></td><td>Dispatch, scheduling, and mobile execution for field technicians. Integrates with Service Cloud and S/4HANA service orders.</td><td>Companies with field service operations.</td></tr>
-      </tbody>
-    </table>
+    <p>This does not make those products interchangeable. <a href="/atlas/sap/sap-datasphere/">Datasphere</a> focuses on data modeling and integration with business semantics; <a href="/atlas/sap/sap-analytics-cloud/">Analytics Cloud</a> provides analytics and planning experiences; HANA Cloud is a database platform; MDG governs master data. Business Data Cloud provides the broader data foundation in which these capabilities are increasingly presented together.</p>
 
-    <h2>Supply chain management</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP IBP (Integrated Business Planning)</strong></td><td>Cloud-based supply chain planning. Demand planning, supply planning, S&amp;OP, inventory optimization, and response management on HANA.</td><td>Supply chain planners replacing APO or spreadsheet-based planning.</td></tr>
-        <tr><td><strong>SAP EWM (Extended Warehouse Management)</strong></td><td>Warehouse operations management. Bin-level inventory, wave picking, yard management, labor management, and automation integration (conveyors, robots).</td><td>Companies with complex warehouse operations or high-volume distribution centers.</td></tr>
-        <tr><td><strong>SAP TM (Transportation Management)</strong></td><td>Transportation planning and execution. Freight ordering, carrier selection, route optimization, freight settlement, and shipment tracking.</td><td>Shippers and logistics providers managing transportation networks.</td></tr>
-        <tr><td><strong>SAP Digital Manufacturing Cloud</strong></td><td>Cloud MES for production execution, quality management, and manufacturing analytics. Connects shop floor to S/4HANA planning.</td><td>Manufacturers digitalizing shop floor operations.</td></tr>
-        <tr><td><strong>SAP Asset Performance Management</strong></td><td>Asset health monitoring, predictive maintenance, and reliability analytics. Uses IoT sensor data and machine learning to predict equipment failures.</td><td>Asset-intensive industries (utilities, oil &amp; gas, manufacturing).</td></tr>
-        <tr><td><strong>SAP Yard Logistics</strong></td><td>Yard management for trucks, trailers, and containers. Check-in, dock assignment, and yard movement tracking.</td><td>Distribution centers and manufacturing plants with high trailer traffic.</td></tr>
-        <tr><td><strong>SAP GTS (Global Trade Services)</strong></td><td>Trade compliance, customs management, and import/export documentation. Handles sanctions screening, preference calculation, and export declarations.</td><td>Companies with significant international trade volumes.</td></tr>
-      </tbody>
-    </table>
+    <h2>BTP is the extension and integration foundation</h2>
+    <p><a href="/atlas/sap/sap-btp/">SAP Business Technology Platform</a> sits underneath many cross-product designs. <a href="/atlas/sap/sap-integration-suite/">SAP Integration Suite</a> handles integration capabilities, while <a href="/atlas/sap/sap-build/">SAP Build</a> covers application development, automation, and digital-workspace capabilities across low-code, pro-code, and AI-assisted development.</p>
 
-    <h2>Financial management</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP S/4HANA Finance</strong></td><td>Core financials — general ledger, accounts payable/receivable, asset accounting, and controlling on the Universal Journal (ACDOCA).</td><td>Every S/4HANA customer. This is the financial core.</td></tr>
-        <tr><td><strong>SAP Central Finance</strong></td><td>Consolidates financial postings from multiple source ERPs into a single S/4HANA system. Enables centralized reporting without full migration.</td><td>Groups running multiple ERP systems across subsidiaries.</td></tr>
-        <tr><td><strong>SAP Group Reporting</strong></td><td>Financial consolidation — intercompany elimination, currency translation, and consolidated financial statements.</td><td>Corporate finance teams preparing group financial reports.</td></tr>
-        <tr><td><strong>SAP Treasury and Risk Management</strong></td><td>Cash management, liquidity forecasting, debt and investment management, and financial risk hedging.</td><td>Treasury departments managing corporate cash and financial risk.</td></tr>
-        <tr><td><strong>SAP Document and Reporting Compliance</strong></td><td>Electronic invoicing, statutory reporting, and tax compliance across countries. Handles e-invoice mandates and SAF-T formats.</td><td>Finance teams dealing with multi-country compliance requirements.</td></tr>
-        <tr><td><strong>SAP GRC (Governance, Risk, and Compliance)</strong></td><td>Access control, process control, and risk management. Segregation-of-duties analysis, automated controls monitoring, and audit management.</td><td>Compliance officers, internal audit, and IT security teams.</td></tr>
-        <tr><td><strong>SAP Cash Management</strong></td><td>Real-time cash position visibility and liquidity forecasting. Bank statement integration and cash flow analysis.</td><td>Treasury and finance teams needing daily cash visibility.</td></tr>
-      </tbody>
-    </table>
+    <p>The useful distinction is between extending a business application and changing its core. BTP services can host side-by-side logic, integrations, applications, and automation without pretending that all business data and transactional authority move out of the source system. The exact boundary still depends on the chosen API, event, identity model, and persistence design.</p>
 
-    <h2>Business network</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP Business Network (for Procurement)</strong></td><td>B2B marketplace connecting buyers and suppliers. Suppliers publish catalogs; buyers punch out from Ariba into supplier systems. Order confirmations, ship notices, and invoices flow electronically.</td><td>Buyers and suppliers trading through the Ariba ecosystem.</td></tr>
-        <tr><td><strong>SAP Business Network (for Logistics)</strong></td><td>Logistics collaboration network. Freight tendering, shipment tracking, and dock scheduling across carriers and logistics partners.</td><td>Shippers and carriers coordinating transportation.</td></tr>
-        <tr><td><strong>SAP Business Network (for Asset Intelligence)</strong></td><td>Asset data sharing between manufacturers, operators, and service providers. Equipment manuals, maintenance history, and performance data in a shared registry.</td><td>Asset owners and equipment manufacturers sharing maintenance data.</td></tr>
-      </tbody>
-    </table>
+    <h2>Business Network begins where one company's system ends</h2>
+    <p><a href="/atlas/sap/sap-business-network/">SAP Business Network</a> provides collaboration across company boundaries. Current SAP documentation distinguishes solutions for procurement, supply-chain collaboration, logistics, trading partners, and asset collaboration. The buyer's ERP, the supplier's ERP, and the network remain separate systems even when documents flow between them.</p>
 
-    <h2>Business process transformation</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP Signavio Process Manager</strong></td><td>Process modeling and documentation (BPMN 2.0). Map, document, and share business processes across the organization.</td><td>Process owners and business analysts documenting as-is and to-be processes.</td></tr>
-        <tr><td><strong>SAP Signavio Process Insights</strong></td><td>Process mining for SAP systems. Extracts event logs from S/4HANA or ECC and shows how processes actually run — not how they were designed.</td><td>Teams preparing for S/4HANA migration or looking for process bottlenecks.</td></tr>
-        <tr><td><strong>SAP Signavio Process Intelligence</strong></td><td>Deeper process mining with KPI tracking, conformance checking, and root-cause analysis across SAP and non-SAP systems.</td><td>Process excellence teams measuring and improving operational performance.</td></tr>
-        <tr><td><strong>SAP Signavio Journey Modeler</strong></td><td>Customer journey mapping. Connects customer touchpoints to underlying business processes and identifies experience gaps.</td><td>CX teams linking customer experience to internal process changes.</td></tr>
-      </tbody>
-    </table>
+    <p>That separation is essential during support. A purchase order can be correct in ERP, transformed successfully by an integration layer, accepted by the network, and still fail a supplier-side business rule. “It is in Business Network” is therefore not the same as “the partner completed the process.”</p>
 
-    <h2>Sustainability management</h2>
-    <table>
-      <thead>
-        <tr><th>Product</th><th>What it does</th><th>Who it is for</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>SAP Sustainability Control Tower</strong></td><td>ESG data collection, reporting, and audit-ready sustainability metrics. Pulls data from S/4HANA and other sources for CSRD and other frameworks.</td><td>Sustainability officers preparing regulatory ESG reports.</td></tr>
-        <tr><td><strong>SAP Sustainability Footprint Management</strong></td><td>Product carbon footprint calculation. Uses actual production data (not industry averages) to compute emissions per product.</td><td>Manufacturers tracking and reducing product-level emissions.</td></tr>
-        <tr><td><strong>SAP EHS (Environment, Health, Safety)</strong></td><td>Incident management, risk assessment, chemical management, and regulatory compliance for workplace safety and environmental protection.</td><td>EHS departments in manufacturing, chemicals, and energy.</td></tr>
-        <tr><td><strong>SAP Green Ledger</strong></td><td>Carbon accounting integrated with financial accounting. Treats emissions as a measurable quantity alongside financial data.</td><td>Companies moving from estimated to actual carbon accounting.</td></tr>
-      </tbody>
-    </table>
+    <h2>Signavio describes and measures the process; it does not execute the ERP transaction</h2>
+    <p><a href="/atlas/sap/sap-signavio/">SAP Signavio</a> covers process modeling, collaboration, mining, analysis, and transformation. Its job is to help teams understand how processes are designed and how they actually run. The execution itself still happens in the relevant business applications.</p>
 
-    <h2>Notes</h2>
+    <p>This boundary also keeps the portfolio map honest. A process-mining result may reveal that invoice approval is slow, but the actual control change might belong in S/4HANA, Ariba, a workflow product, or another application. Signavio helps locate and understand the problem; it does not automatically become the system that owns the business transaction.</p>
 
-    <h3>Products that appear in multiple categories</h3>
-    <p>Some SAP products span categories. For example, SAP Fieldglass appears under both spend management and HCM because it manages external workforce. SAP Analytics Cloud sits under BTP but serves finance, supply chain, and HR analytics. SAP Joule is embedded across all cloud products rather than being a standalone purchase.</p>
+    <h2>Business AI is increasingly cross-cutting</h2>
+    <p>SAP's current AI portfolio centers on Joule, Joule Assistants, and Joule Agents. SAP describes agents as able to perform multi-step tasks using business context and tools across applications, while assistants coordinate work around a user's role and intent. Joule Work provides an engagement layer for interacting with these capabilities.</p>
 
-    <h3>On-premise vs cloud</h3>
-    <p>SAP's strategic direction is cloud-first. S/4HANA on-premise is still supported, but new features, AI capabilities, and integration content ship first (and sometimes only) in cloud editions. Products like SAP Business One and SAP Business ByDesign continue to serve the midmarket, but SAP GROW and S/4HANA Cloud are the preferred path for new midmarket customers.</p>
+    <p>For architecture, the important point is that AI does not replace the underlying authorization, data, and transaction models. An agent may call tools across systems, but the source applications still determine which objects exist, which data is authoritative, and which actions are permitted. The AI layer is therefore strongest when its scope is grounded in explicit business contracts rather than broad access to everything.</p>
 
-    <h3>What is not on this page</h3>
-    <p>This page covers SAP's primary product portfolio as listed on sap.com/products. It does not include:</p>
-    <ul>
-      <li>Legacy products in maintenance-only mode (SAP ECC, SAP CRM on-premise, SAP APO).</li>
-      <li>Industry-specific solutions (SAP for Retail, SAP for Utilities, etc.) which are pre-configured industry variants of the core products above.</li>
-      <li>Partner-built products on SAP BTP.</li>
-      <li>Acquisition-stage products not yet integrated into the SAP portfolio.</li>
-    </ul>
+    <h2>A simple way to place a product in an architecture</h2>
+    <p>When a product name appears in a design, four questions usually clarify its role:</p>
+    <ol>
+      <li><strong>Which business object does it own?</strong> For example, an employee record, a purchase order, a warehouse task, or a planning key figure.</li>
+      <li><strong>Is it planning, executing, collaborating, analyzing, or integrating?</strong> Products that touch the same process can still have very different responsibilities.</li>
+      <li><strong>What crosses the system boundary?</strong> Identify the API, event, message, replicated master data, or user action rather than saying only that two products are “integrated.”</li>
+      <li><strong>Where is the final business outcome proven?</strong> A successful message, workflow approval, or AI action is not automatically evidence that the target transaction posted correctly.</li>
+    </ol>
 
-    <h3>Verification status</h3>
-    <p>Product names, categories, and descriptions are sourced from sap.com/products as of <strong>2026-07-14</strong>. Product capabilities change with each release cycle. Specific feature availability, licensing terms, and deployment options must be verified against current SAP documentation before making purchasing or architecture decisions.</p>
-
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-product-landscape-map/">SAP Product Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/sap-business-ai/">SAP Business AI</a></li>
-      <li><a href="/atlas/sap/sap-ariba/">SAP Ariba</a></li>
-      <li><a href="/atlas/sap/sap-ibp/">SAP IBP</a></li>
-      <li><a href="/atlas/sap/sap-ewm/">SAP EWM</a></li>
-      <li><a href="/atlas/sap/sap-tm/">SAP TM</a></li>
-    </ul>
+    <p>This view is more durable than memorizing a catalog. Product names and packaging change; ownership, business objects, and system boundaries are what make the landscape understandable.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP Product Portfolio — <a href="https://www.sap.com/products.html">sap.com/products.html</a> (accessed 2026-07-14).</li>
-      <li>SAP Business Technology Platform — <a href="https://www.sap.com/products/business-technology-platform.html">sap.com/products/business-technology-platform.html</a> (accessed 2026-07-14).</li>
-      <li>SAP Spend Management — <a href="https://www.sap.com/products/spend-management.html">sap.com/products/spend-management.html</a> (accessed 2026-07-14).</li>
-      <li>SAP Human Capital Management — <a href="https://www.sap.com/products/hcm.html">sap.com/products/hcm.html</a> (accessed 2026-07-14).</li>
-      <li>SAP Customer Experience — <a href="https://www.sap.com/products/crm.html">sap.com/products/crm.html</a> (accessed 2026-07-14).</li>
-      <li>SAP Supply Chain Management — <a href="https://www.sap.com/products/scm.html">sap.com/products/scm.html</a> (accessed 2026-07-14).</li>
-      <li>SAP Financial Management — <a href="https://www.sap.com/products/financial-management.html">sap.com/products/financial-management.html</a> (accessed 2026-07-14).</li>
+      <li>SAP — <a href="https://www.sap.com/products.html">SAP Products</a> (portfolio categories and featured products, accessed 2026-09-23).</li>
+      <li>SAP — <a href="https://www.sap.com/products/business-suite.html">Autonomous Enterprise, SAP Autonomous Suite, and SAP Business AI Platform</a>.</li>
+      <li>SAP — <a href="https://www.sap.com/products/erp/s4hana-erp.html">SAP Cloud ERP / SAP S/4HANA Cloud Public Edition</a>.</li>
+      <li>SAP — <a href="https://www.sap.com/products/erp/s4hana-private-edition.html">SAP Cloud ERP Private</a>.</li>
+      <li>SAP — <a href="https://www.sap.com/products/erp/grow.html">SAP GROW</a>.</li>
+      <li>SAP — <a href="https://www.sap.com/products/data-cloud/what-is-sap-business-data-cloud.html">What is SAP Business Data Cloud?</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/business-network">SAP Business Network</a>.</li>
+      <li>SAP — <a href="https://www.sap.com/products/artificial-intelligence.html">Joule and SAP Business AI</a>.</li>
+      <li>SAP — <a href="https://www.sap.com/products/business-transformation-management/process-mining.html">SAP Signavio process mining</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a reference based on public SAP product pages. Product capabilities, packaging, and licensing terms change with each release. Verify against SAP's current product documentation before making architecture or purchasing decisions.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>This page is a landscape map, not a licensing catalog. SAP changes product names, packaging, commercial offers, and feature availability over time. Verify the exact product edition, release, region, license, and supported integration before using this page for a purchasing or implementation decision.</p>
   </div>
 
   <section class="atlas-related">

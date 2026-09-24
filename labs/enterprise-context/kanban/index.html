@@ -1,13 +1,16 @@
 ---
 layout: default
 title: "SAP Kanban — Pull Replenishment and Shop-Floor Control"
-description: "A practical SAP Kanban learning path covering pull control, control cycles, production supply areas, replenishment strategies, status logic, runtime flows, and diagnostics."
+description: "A practical SAP Kanban guide to control cycles, container status, replenishment strategies, MRP coexistence, stock postings, and shop-floor execution."
 permalink: /labs/enterprise-context/kanban/
 status: needs_verification
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-08
+last_modified_at: 2026-09-23
+last_reviewed: 2026-09-23
+review_method: "SAP S/4HANA 2025 FPS01 and SAP S/4HANA Cloud 2608 primary sources + nearby Kanban page review + full editorial rewrite"
+search_intent: "SAP Kanban control cycle replenishment strategy MRP status guide"
 hide_global_cta: true
 tags:
   - sap
@@ -18,6 +21,17 @@ tags:
   - production-supply-area
   - inventory-management
   - troubleshooting
+source_links:
+  - title: "Kanban Control"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/49d0972a760b4646918ce9fddb034d64/ea5fbd534f22b44ce10000000a174cb4.html"
+  - title: "Defining the Replenishment Strategy in the Control Cycle"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/49d0972a760b4646918ce9fddb034d64/625fbd534f22b44ce10000000a174cb4.html"
+  - title: "Kanban with MRP"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/49d0972a760b4646918ce9fddb034d64/a35fbd534f22b44ce10000000a174cb4.html"
+  - title: "Kanban without MRP"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/a05fbd534f22b44ce10000000a174cb4.html"
+  - title: "Kanban Supply to Production"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/87f9b54f9c4f4e75aff0061860a6589a/8ee8b12165a545cf8afc0b42fe5d6443.html"
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Kanban</li></ol></nav>
@@ -26,80 +40,121 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Logistics / Kanban</p>
-      <h1>Replenish because material was consumed.<br />Not because a plan says it might be consumed.</h1>
-      <p>Kanban is a short-cycle pull-control method. A container or signal represents usable material at the demand point. Consumption changes the signal, the signal starts replenishment, and the replenishment method decides whether SAP creates production, purchasing, or stock-transfer work.</p>
+      <h1>A Kanban container is a control signal, not a planning document.</h1>
+      <p>SAP Kanban controls short-cycle replenishment close to the point of use. When material is consumed, the container status changes. That signal can trigger production, external procurement, stock transfer, or warehouse replenishment according to the control cycle. The important idea is simple: demand is created by consumption, but the downstream document and stock posting depend on the chosen replenishment strategy.</p>
       <a class="research-canvas__button" href="#learning-path">Open the learning path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Kanban model">
-      <p>Core operating model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>Pull</strong><small>Consumption creates the signal</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Cycle</strong><small>Demand and supply are linked</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Status</strong><small>Execution becomes visible</small></div>
-      <em>Designed as an operating model, not a transaction-code catalogue.</em>
+    <div class="research-canvas__signal" aria-label="Kanban operating model">
+      <p>Operating model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Consume</strong><small>Material leaves the demand buffer</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Signal</strong><small>The container changes status</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Replenish</strong><small>The strategy creates the next supply step</small></div>
+      <em>The status controls the loop; it does not by itself describe every material posting behind it.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
-    <p><strong>Memory rule:</strong> separate four things that are often mixed together: the Kanban signal, the replenishment document, the physical stock movement, and the cost or accounting effect.</p>
-    <a href="#four-layers">Use the four-layer diagnostic <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    <p><strong>Keep four objects separate:</strong> the physical container, its Kanban status, the replenishment object created by SAP, and the inventory movement that records material flow. They are connected, but they are not the same thing.</p>
+    <a href="#four-layers">See the diagnostic model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">The pull loop</p><h2>One simple signal can drive several very different supply processes.</h2><p>The visible Kanban is only the front of the process. Behind it, SAP still needs a supply source, master data, document logic, stock postings, and exception handling.</p></header>
-    <div class="ecg-control-stack">
-      <article><span>01</span><h3>Consume</h3><p>Production takes material from the demand-side container or supply area.</p><strong>The physical need appears at the point of use.</strong></article>
-      <article><span>02</span><h3>Signal</h3><p>The container moves to EMPTY, or a quantity signal reaches its trigger.</p><strong>The demand side asks for replenishment.</strong></article>
-      <article><span>03</span><h3>Replenish</h3><p>SAP can create or trigger internal production, external procurement, or stock transfer.</p><strong>The strategy determines the execution object.</strong></article>
-      <article><span>04</span><h3>Return</h3><p>Material arrives, the required posting happens, and the container becomes available again.</p><strong>FULL means the next consumption cycle can start.</strong></article>
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">The control loop</p>
+      <h2>EMPTY requests supply; FULL makes the container available again.</h2>
+      <p>SAP documentation describes EMPTY and FULL as the basic Kanban statuses. Additional statuses such as WAIT or IN PROCESS can appear when the replenishment design needs a more detailed execution state.</p>
+    </header>
+    <p>A normal cycle starts with usable material at the demand point. Once the container is consumed, the demand side reports it EMPTY. SAP reads the control cycle and starts the configured replenishment process. When the material returns, the container becomes FULL again. Depending on the strategy and configuration, status changes can also trigger goods movements or other background processing.</p>
+    <p>This distinction matters because a status change is not a universal material document. In one process, setting a container to EMPTY can create a purchase order. In another, it can create a production order or a stock-transfer action. In warehouse-managed supply, it can create warehouse tasks. Likewise, the FULL signal may post a goods receipt in some processes while other designs separate the physical receipt from the status change.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Fit</p><h2>Kanban is powerful when the operating conditions support it.</h2><p>It is not a universal replacement for planning. It works best when the shop-floor replenishment loop is repetitive, fast, and stable enough to be controlled by consumption.</p></header>
-    <div class="ecg-input-grid">
-      <article><span>GOOD FIT</span><h3>Short, repeatable loops</h3><p>Demand is regular enough to size containers, replenishment lead time is predictable, and the source can react quickly in small lots.</p></article>
-      <article><span>GOOD FIT</span><h3>Material close to use</h3><p>A production supply area or similar demand point acts as a controlled buffer near the work center or line.</p></article>
-      <article><span>GOOD FIT</span><h3>Fast execution</h3><p>Setup times, source capacity, and component availability allow replenishment without building large protective stock.</p></article>
-      <article><span>POOR FIT</span><h3>Long or unstable supply</h3><p>Highly volatile demand, long lead times, rare components, large campaign production, or weak source capacity can make a fixed pull loop unreliable.</p></article>
-    </div>
-    <p class="ecg-caption"><strong>Lead signal:</strong> if the process needs large safety buffers to survive, first fix the replenishment design. Adding more Kanban cards only hides the problem.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Planning boundary</p><h2>MRP and Kanban solve different time horizons.</h2><p>MRP can still plan the wider material picture. Kanban can control the short-cycle movement between a demand point and its supply source.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Control cycle</p>
+      <h2>The control cycle connects a demand point to a supply method.</h2>
+      <p>The container does not decide where its replacement comes from. That logic sits in the control cycle.</p>
+    </header>
     <div class="ecg-decision-columns">
-      <div><h3>MRP</h3><ul><li>Plans from requirements, dates, lead times, BOMs, lot sizes, and planning parameters.</li><li>Creates or proposes supply elements before consumption reaches the shop floor.</li><li>Best for wider planning and dependency calculation.</li></ul></div>
-      <div><h3>Kanban</h3><ul><li>Starts from an actual consumption signal.</li><li>Uses container quantity and control-cycle rules.</li><li>Best for decentralized short-term replenishment close to production.</li></ul></div>
-      <div><h3>Together</h3><ul><li>Use planning to understand future demand and capacity.</li><li>Use the Kanban loop to execute repetitive local replenishment.</li><li>Decide explicitly whether the Kanban-managed storage-location segment participates in MRP.</li></ul></div>
+      <div><h3>Demand side</h3><p>Material, plant, production supply area, and storage-location context identify where the material is consumed and where the Kanban stock belongs.</p></div>
+      <div><h3>Circulation</h3><p>The number of containers and the quantity per container define how much material circulates in the loop. SAP can also calculate proposals for these values from requirements and calculation parameters.</p></div>
+      <div><h3>Supply side</h3><p>The replenishment strategy tells SAP whether the source is in-house production, external procurement, or stock transfer and which execution object should be used.</p></div>
     </div>
+    <p>That is why a Kanban problem often starts in master data rather than in the board itself. If the production supply area, storage location, source, strategy, or container sizing is wrong, SAP can process the status correctly and still create the wrong operational result.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Replenishment</p>
+      <h2>The same EMPTY signal can lead to different business documents.</h2>
+      <p>Kanban is a control method. The replenishment strategy defines how the signal becomes executable work.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>In-house production</h3><p>The signal can trigger production-based replenishment, for example through a production order or another supported in-house strategy. The production version or responsible production source can be part of the control-cycle definition.</p></div>
+      <div><h3>External procurement</h3><p>The control cycle can point to a supplier or supplying plant and use supported procurement objects such as a purchase order or scheduling agreement. With a standard purchase-order strategy, SAP can create the purchase order when the container becomes EMPTY.</p></div>
+      <div><h3>Stock transfer</h3><p>The source can be another storage location or plant. The exact execution can range from Inventory Management transfer logic to warehouse tasks when the source is warehouse-managed and the configured process supports it.</p></div>
+    </div>
+    <p>The useful troubleshooting question is therefore not “why is the Kanban empty?” but “which replenishment strategy owns this control cycle, and what object should that strategy have created?”</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Planning boundary</p>
+      <h2>Kanban can work with MRP or deliberately outside it.</h2>
+      <p>Pull execution and material planning are separate design choices. SAP supports both combinations.</p>
+    </header>
+    <p>With MRP integration, the storage-location segment used by the production supply area remains in planning. MRP can provide preview and future supply visibility, while the actual short-cycle material flow is still triggered by Kanban status changes.</p>
+    <p>Without MRP integration, the Kanban storage-location segment is excluded from planning, commonly through an MRP-area and MRP-type design. SAP then creates the replenishment element from the Kanban signal instead of from the regular planning run. This boundary must be explicit because it also affects dependent requirements and the way BOM components are planned.</p>
+    <p>So “this material uses Kanban” is not enough to explain its planning behavior. We need to know the plant, storage-location or MRP-area context, and whether that local segment participates in MRP.</p>
   </section>
 
   <section class="research-canvas__inventory" id="four-layers" data-reveal>
-    <header><p class="research-canvas__eyebrow">Lead diagnostic</p><h2>Debug Kanban in four layers.</h2><p>This model prevents a common mistake: treating a red container, a missing purchase order, a stock mismatch, and an accounting issue as the same failure.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">When the loop breaks</p>
+      <h2>Find the first layer where expected state and actual state diverge.</h2>
+      <p>A red Kanban, a missing purchase order, and wrong stock are different failures even when they appear in the same replenishment cycle.</p>
+    </header>
     <div class="ecg-control-stack">
-      <article><span>SIGNAL</span><h3>1. Kanban state</h3><p>What status changed? Was the transition allowed? Did a barcode, board action, or quantity signal fire?</p><strong>Proof: status history and control-cycle sequence.</strong></article>
-      <article><span>SUPPLY</span><h3>2. Replenishment object</h3><p>Was the expected production order, schedule line, purchase order, reservation, or transfer object created?</p><strong>Proof: object type, reference, quantity, and source.</strong></article>
-      <article><span>STOCK</span><h3>3. Physical movement</h3><p>Did goods issue, transfer posting, or goods receipt actually move book stock as intended?</p><strong>Proof: material document and before/after stock state.</strong></article>
-      <article><span>COST</span><h3>4. Value and consumption</h3><p>Did backflush, cost-center consumption, order settlement logic, or valuation follow the business event?</p><strong>Proof: consumption and accounting evidence.</strong></article>
+      <article><span>SIGNAL</span><h3>1. Container state</h3><p>Did the correct container change to the intended status, and was that transition allowed for this process?</p><strong>Evidence: container identity, status history, and control cycle.</strong></article>
+      <article><span>SUPPLY</span><h3>2. Replenishment object</h3><p>Did the configured strategy create the expected production, procurement, transfer, or warehouse object?</p><strong>Evidence: object type, reference, source, and quantity.</strong></article>
+      <article><span>STOCK</span><h3>3. Material movement</h3><p>Did the required goods issue, transfer, goods receipt, or warehouse confirmation occur, and did book stock move to the intended location?</p><strong>Evidence: material or warehouse document and before/after stock.</strong></article>
+      <article><span>PROCESS</span><h3>4. Business completion</h3><p>Is the material physically usable at the demand point, or is the system only showing an intermediate technical state?</p><strong>Evidence: container availability plus the relevant production or logistics result.</strong></article>
     </div>
+    <p>For example, an EMPTY container can successfully create a purchase order while the line still runs out because the supplier lead time exceeds the protection offered by the remaining containers. That is not a failed Kanban signal; it is a replenishment design problem.</p>
   </section>
 
   <section class="research-canvas__inventory" id="learning-path" data-reveal>
-    <header><p class="research-canvas__eyebrow">Learning path</p><h2>Go from principle to runtime diagnosis.</h2><p>The articles are ordered the same way a Lead should reason: fit first, then master data, strategy, signal logic, runtime evidence, and operations.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Kanban deep dives</p>
+      <h2>Use the detailed pages when the question moves beyond the core loop.</h2>
+      <p>The hub keeps the operating model compact. The pages below cover the design and runtime details without repeating them here.</p>
+    </header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/kanban/pull-control/"><span>01</span><strong>Pull Control — When Kanban Works</strong><small>Push versus pull, MRP coexistence, prerequisites, buffers, and design boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/kanban/control-cycle/"><span>02</span><strong>Control Cycle — The Master-Data Contract</strong><small>Production supply area, storage location, containers, quantities, calculation inputs, and source responsibility.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/kanban/replenishment-strategies/"><span>03</span><strong>Replenishment Strategies</strong><small>In-house production, purchase orders, scheduling agreements, stock transfer, contracts, and cost-center variants.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/kanban/statuses-signals/"><span>04</span><strong>Statuses and Signals</strong><small>EMPTY, FULL, WAIT, IN PROCESS, ERROR, mandatory sequences, quantity signals, and signal locks.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/kanban/runtime-flows/"><span>05</span><strong>Runtime Flows</strong><small>Trace procurement, production, and stock transfer from consumption signal to document and stock evidence.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/kanban/operations-diagnostics/"><span>06</span><strong>Operations and Diagnostics</strong><small>Board monitoring, delayed replenishment, alerts, error correction, reversal, analysis, and plant-level control.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/kanban/pull-control/"><span>01</span><strong>Pull Control — When Kanban Works</strong><small>Push versus pull, MRP coexistence, process fit, buffers, and design boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/kanban/control-cycle/"><span>02</span><strong>Control Cycle — The Master-Data Contract</strong><small>Production supply area, storage location, containers, sizing, and source responsibility.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/kanban/replenishment-strategies/"><span>03</span><strong>Replenishment Strategies</strong><small>In-house production, purchasing, scheduling agreements, stock transfer, and strategy-specific execution.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/kanban/statuses-signals/"><span>04</span><strong>Statuses and Signals</strong><small>EMPTY, FULL, WAIT, IN PROCESS, allowed sequences, quantity signals, and signal locks.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/kanban/runtime-flows/"><span>05</span><strong>Runtime Flows</strong><small>Trace production, procurement, and stock-transfer replenishment from signal to document and stock evidence.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/kanban/operations-diagnostics/"><span>06</span><strong>Operations and Diagnostics</strong><small>Board monitoring, delayed replenishment, correction, reversals, and plant-level control.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary evidence</p>
+      <h2>Use release-specific SAP documentation for the exact strategy and posting behavior.</h2>
+    </header>
+    <div class="research-route-list">
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/49d0972a760b4646918ce9fddb034d64/ea5fbd534f22b44ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Kanban Control</strong><small>Status signals, replenishment options, calculation, board monitoring, and correction in SAP S/4HANA 2025 FPS01.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/49d0972a760b4646918ce9fddb034d64/625fbd534f22b44ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Replenishment Strategy in the Control Cycle</strong><small>Current SAP definition of in-house, external-procurement, and stock-transfer sources.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/49d0972a760b4646918ce9fddb034d64/a35fbd534f22b44ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Kanban with MRP</strong><small>How planning can provide preview while the Kanban signal still controls short-cycle material flow.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/a05fbd534f22b44ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Kanban without MRP</strong><small>Storage-location/MRP-area exclusion and the consequences for replenishment and dependent requirements.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">info</span>
-    <p><strong>Release boundary:</strong> the operating concepts are more stable than the user interface. Classic SAP GUI transaction names appear in the deep dives only as implementation references. Validate the exact app, transaction, configuration path, and supported process in the target SAP S/4HANA edition and release.</p>
+    <p><strong>Release boundary:</strong> Kanban concepts are stable, but apps, transactions, strategy options, posting details, and warehouse integration vary by SAP S/4HANA edition, release, and configuration. Validate the target system before treating one runtime path as universal.</p>
     <a href="/labs/enterprise-context/deployment-models/">Review deployment boundaries <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 

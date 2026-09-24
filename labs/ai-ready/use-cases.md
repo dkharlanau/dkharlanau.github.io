@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-22
 hide_global_cta: true
 tags: [ai, use-cases, research, coding, rag, automation, agents]
 ---
@@ -18,166 +18,131 @@ tags: [ai, use-cases, research, coding, rag, automation, agents]
 
 # Practical AI Use Cases
 
-Do not start with “we need an agent”. Start with the work. Define what must be correct, what may be uncertain, which data is needed, and whether the system may act outside the chat.
+A useful AI design starts with the work, not with the technology label. “We need an agent” tells us almost nothing. We first need to understand what must be correct, what is uncertain, where the facts live, and whether the system is only explaining or may also act.
 
-This page maps common jobs to useful architecture shapes.
+Once those questions are clear, the architecture often becomes much simpler.
 
-## Research and synthesis {#research}
+## Research: find evidence before asking for synthesis {#research}
 
-**Goal:** collect evidence from several sources, compare it, and produce a useful answer with traceable references.
-
-Start with:
+Research work combines two different jobs: finding relevant material and making sense of it. The model is usually more reliable when those jobs remain visible in the architecture.
 
 ```text
-question -> search/retrieval -> selected evidence -> model synthesis -> citations
+question -> search / retrieval -> selected evidence -> synthesis -> references
 ```
 
-Use tools when the assistant must search the web, files, databases, or APIs. Use parallel workers only when several independent research threads can run at the same time and the merge rule is clear.
+The retrieval layer should bring back material we can identify and inspect. The model can then compare sources, explain disagreements, and produce a readable answer. If several research threads are independent, they may run in parallel, but parallelism is useful only when the outputs can be merged under a clear question.
 
-Measure source coverage, unsupported claims, citation quality, latency, and cost.
+A common weak design is to send a large document pile to the model and call the result “research”. Volume is not coverage. We still need to know which sources were relevant, which claims are supported, and what evidence is missing.
 
-Avoid: giving the model a giant pile of documents and calling that research.
+## Knowledge assistants: distinguish documents from current facts {#knowledge}
 
-## Knowledge assistant {#knowledge}
+A knowledge assistant often works with policies, product documentation, support notes, project records, or internal guidance. Retrieval helps when the answer depends on passages spread across changing documents.
 
-**Goal:** answer from private or changing documents such as policies, product docs, support notes, project records, or team knowledge.
+We normally want stable source identifiers, document versions, permission-aware retrieval, and an explicit way to say that the evidence is insufficient. Retrieval quality should be tested separately from writing quality: a fluent answer cannot compensate for missing the correct source.
 
-Start with lexical retrieval and metadata. Add vector search or reranking only when eval cases show a semantic-search gap.
+Not every “knowledge” question belongs in RAG. If the user asks for the current ticket status, inventory quantity, account balance, or deployment state, a direct read from the owning system is usually better. Structured facts should come from structured sources when possible.
 
-Useful controls:
+## Coding: let the model explore, let engineering tools judge {#coding}
 
-- stable source IDs;
-- document version and validity;
-- permission-aware retrieval;
-- citations;
-- explicit `insufficient_evidence` behavior;
-- retrieval evals separated from answer evals.
-
-Use a direct data/API tool instead of RAG when the answer is a current structured fact such as account balance, build status, inventory count, or ticket state.
-
-## Coding and engineering {#coding}
-
-**Goal:** understand code, change it, test it, review it, or operate developer workflows.
-
-A useful progression is:
+Coding work suits models because repositories are messy and the path from a task to the relevant files is often uncertain. A good coding loop may look like this:
 
 ```text
 read repository
- -> locate relevant files
- -> reason about change
- -> prepare patch
- -> run deterministic tests
+ -> find the relevant code
+ -> form a change hypothesis
+ -> prepare the patch
+ -> run tests and static checks
  -> inspect failures
- -> propose or publish change through controlled tools
+ -> revise or publish through controlled tools
 ```
 
-The model is good at navigating messy code and forming hypotheses. Compilers, linters, tests, type checkers, security scanners, and CI remain deterministic judges.
+The model helps navigate, explain, and propose. Compilers, tests, type checkers, linters, scanners, and CI remain stronger judges for conditions that software can verify exactly.
 
-Give write tools narrow scopes. A coding agent should not need unrestricted access to every repository, secret, and deployment environment because convenience had a good marketing meeting.
+Write access should also match the task. A coding assistant that edits one repository does not need every repository, deployment credential, and secret in the organization. Wider access is not a sign of a more capable agent; it is a wider failure boundary.
 
-For day-to-day use, open the [Coding Agents Playbook](/labs/ai-ready/coding-agents/). It turns this architecture into concrete rules, task templates, context tricks, Skills, subagents, permissions, and tool-specific notes for Codex, Claude Code, and Kimi Code.
+For a more detailed workflow, see the [Coding Agents Playbook](/labs/ai-ready/coding-agents/).
 
-## Data analysis {#data}
+## Data analysis: keep arithmetic executable {#data}
 
-**Goal:** turn a natural-language question into checked analysis.
-
-Useful pattern:
+Natural language is useful at the start and end of analysis. The middle should be as deterministic as the problem allows.
 
 ```text
 question
- -> clarify dimensions and metric
- -> inspect schema/data
- -> generate SQL/Python
- -> execute deterministically
- -> validate result
- -> explain and visualize
+ -> define metric and dimensions
+ -> inspect schema and data
+ -> generate SQL / Python
+ -> execute
+ -> validate the result
+ -> explain or visualize
 ```
 
-Keep calculations outside the model whenever they can be executed by SQL, Python, a calculator, or a business-rules service. The model should explain the result, not invent arithmetic from memory.
+The model can help translate an ambiguous business question into an analysis plan, but SQL, Python, a calculator, or a business-rules service should perform exact calculations. This also makes review easier: we can inspect the query, the data range, the joins, and the units instead of trusting arithmetic hidden inside prose.
 
-Test edge cases, missing values, joins, filters, date ranges, and unit definitions.
+Many analysis errors come from definitions rather than mathematics. “Revenue”, “active customer”, or “late delivery” can mean different things across systems. Clarifying the metric is part of the analysis, not a preliminary inconvenience.
 
-## Automation and integrations {#automation}
+## Automation: use the model inside a known process {#automation}
 
-**Goal:** connect AI to real applications.
-
-Use a workflow when the steps are known:
+A large class of useful AI work is still ordinary workflow automation with one or two uncertain steps.
 
 ```text
-trigger -> classify -> retrieve -> draft -> validate -> send
+trigger -> interpret -> retrieve -> draft -> validate -> send or prepare action
 ```
 
-Use typed tools for external reads and writes. Consider MCP when several AI clients need the same governed tools or resources.
+Examples include routing support tickets, extracting fields from documents, preparing CRM updates, drafting an issue from an incident report, or comparing an incoming request with a policy.
 
-Typical examples:
+The trigger, authorization, validation, and business rules can remain deterministic. The model handles the parts that are difficult to express as exact rules, such as interpreting free text or producing a useful draft.
 
-- summarize new support tickets and route them;
-- extract fields from documents and validate them;
-- prepare a CRM update for approval;
-- create a draft issue from an incident report;
-- compare an incoming request with policy and propose next steps;
-- watch a queue and prepare actions without executing risky writes automatically.
+Typed tools make external reads and writes explicit. MCP can become relevant when several AI clients need the same governed capabilities, but a single workflow does not need a protocol layer just to call one backend.
 
-The trigger and business rule should be deterministic when possible. The model handles interpretation.
+## Agents: use them when discovery changes the path {#agents}
 
-## Agents and operations {#agents}
+An agent becomes useful when the next sensible action depends on what the system finds.
 
-**Goal:** solve a task where the next useful action depends on evidence found during the run.
+Suppose the question is “Why did deployment X fail?”. The system may inspect deployment status first. A failed job may point to a dependency. Another case may point to a configuration change. We cannot always know the correct sequence before reading the first result.
 
-Example:
+That is a genuine agent problem:
 
 ```text
-"Why did deployment X fail?"
- -> inspect deployment status
- -> read failing job
- -> inspect changed files
- -> read relevant configuration
- -> stop with evidence or escalate
+question
+ -> choose an allowed read
+ -> inspect evidence
+ -> choose the next useful read
+ -> stop with a supported conclusion
+    or escalate when evidence is not enough
 ```
 
-This is a good bounded-agent problem because each observation changes the next useful read.
+The flexibility belongs inside clear boundaries: allowed tools, data scope, time and cost budgets, explicit stop reasons, traceability, and approval before high-impact actions.
 
-Add:
+If one fixed workflow already expresses the process, an agent usually adds complexity without adding useful freedom.
 
-- allowed tool set;
-- step/time/cost budget;
-- explicit stop reasons;
-- repeated-call detection;
-- trace IDs;
-- approval before high-impact actions.
+## Content work is often simpler than it looks
 
-Do not use an agent when one deterministic workflow already expresses the process.
+Drafting, rewriting, translation, classification, extraction, and summarization usually do not require an agent. A model call, a clear instruction, and structured output may be enough.
 
-## Content work
+Retrieval becomes useful when the content must reflect external or private facts. Tools become useful when the system must read or change another application. An agent becomes useful only when the path itself needs to adapt.
 
-AI is useful for drafting, rewriting, classification, translation, extraction, summarization, and structured transformation. This usually does **not** require RAG, MCP, or an agent.
+This progression matters because it keeps the design proportional to the problem.
 
-Use a schema when the output feeds software. Use examples and evals when style or consistency matters. Add retrieval only when the content must use external facts or a private corpus.
+## Choose the smallest useful shape
 
-## A compact chooser
-
-| Need | Start with |
+| Need | Good starting point |
 |---|---|
 | Rewrite, classify, extract | Prompt + structured output |
-| Current private knowledge | Retrieval |
+| Changing document knowledge | Retrieval |
 | Current structured fact | Read tool / API |
 | Repeatable sequence | Workflow |
 | Several known routes | Router |
-| Unknown next step | Bounded agent |
-| Shared tools across AI clients | MCP candidate |
+| Next step depends on evidence | Bounded agent |
+| Shared capabilities across AI clients | MCP candidate |
 | High-impact write | Prepared change + approval |
-| Behavior still weak after prompt/schema/retrieval | Evaluate fine-tuning |
 
-## Build order
+We can add complexity later when evaluation shows a real gap. It is much harder to understand a system that started with every mechanism at once.
 
-For a new idea, use this order:
+A practical build sequence is therefore simple: collect representative cases, build the smallest path that can solve them, validate what can be checked deterministically, and study the failures. Retrieval, tools, orchestration, and agent loops should answer observed needs rather than architecture fashion.
 
-1. Write 10–30 representative cases.
-2. Build the smallest working path.
-3. Add deterministic validation.
-4. Run the cases and record failures.
-5. Add retrieval, tools, or an agent only for observed gaps.
-6. Add security and permission boundaries before write access.
-7. Add traces, budgets, deployment metadata, and rollback before production.
+## Further reading
+
+- [OpenAI — A practical guide to building AI agents](https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/)
+- [Anthropic — Building Effective AI Agents](https://www.anthropic.com/engineering/building-effective-agents)
 
 Related: [System Boundaries](/labs/ai-ready/system-boundaries/) · [Deep Dives](/labs/ai-ready/deep-dives/) · [Hands-on Labs](/labs/ai-ready/#labs)

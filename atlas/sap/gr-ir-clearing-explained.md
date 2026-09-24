@@ -1,8 +1,7 @@
 ---
-
 title: SAP GR/IR Clearing Explained
 layout: default
-description: A conservative explanation of GR/IR clearing in procurement and invoice verification.
+description: A clear explanation of why the GR/IR clearing account exists, what an open balance means, and how procurement and finance reconcile it.
 permalink: /atlas/sap/gr-ir-clearing-explained/
 atlas_section: sap
 domain: SAP operations
@@ -12,13 +11,12 @@ sap_area: MM / FI / invoice verification
 business_process: Procure to pay
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-09
-
+last_reviewed: 2026-09-22
 tags:
   - procure-to-pay
   - sap-mm
   - procurement
-related: 
+related:
   - "/atlas/maps/procure-to-pay-map/"
   - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"
   - "/atlas/diagnostics/sap-three-way-match-diagnostics/"
@@ -26,128 +24,61 @@ related:
 robots: noindex,follow
 short_title: GR/IR Clearing Explained
 h1: SAP GR/IR clearing explained
-subtitle: GR/IR is the accounting bridge between received goods and supplier invoices. Mismatches are process evidence, not just finance noise.
+subtitle: GR/IR connects the physical receipt of goods with the supplier invoice when those events happen at different times.
 sitemap: false
 author: Dzmitryi Kharlanau
 ---
 
-<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/atlas/">Knowledge Atlas</a></li><li><a href="/atlas/sap/">Sap</a></li><li aria-current="page">GR/IR Clearing Explained</li></ol></nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/atlas/">Knowledge Atlas</a></li><li><a href="/atlas/sap/">SAP</a></li><li aria-current="page">GR/IR Clearing Explained</li></ol></nav>
 
 <article class="section note-detail atlas-page">
-
 <header class="note-header">
-
 <p class="eyebrow">Knowledge Atlas</p>
-
 <h1>SAP GR/IR clearing explained</h1>
-
-<p class="note-subtitle">GR/IR is the accounting bridge between received goods and supplier invoices. Mismatches are process evidence, not just finance noise.</p>
-
+<p class="note-subtitle">GR/IR connects the physical receipt of goods with the supplier invoice when those events happen at different times.</p>
 <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
-
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>SAP concept</dd></div><div><dt>Reviewed</dt><dd>2026-06-09</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>SAP concept</dd></div><div><dt>Reviewed</dt><dd>2026-09-22</dd></div></dl></aside>
 
 <div class="note-body">
+<h2>Why GR/IR exists</h2>
+<p>Procurement creates two independent facts. The first is operational: goods or services were received. The second is financial: the supplier sent an invoice that creates a payable. Those events rarely happen at exactly the same moment. SAP uses the goods receipt/invoice receipt clearing account, usually shortened to <strong>GR/IR</strong>, to bridge the gap.</p>
 
-<h2>Where this fits</h2>
+<p>For a typical valuated goods receipt, the receipt updates inventory or consumption and creates the corresponding GR/IR posting. When the supplier invoice is posted, the invoice creates the vendor liability and the matching posting against GR/IR. The exact accounting depends on the purchasing and valuation scenario, but the idea stays the same: GR/IR temporarily holds the difference between what the business says it received and what the supplier says it invoiced.</p>
 
-<p>GR/IR sits between goods receipt and invoice verification. It helps separate the physical receipt event from the supplier invoice event.</p>
+<h2>An open balance is a message about process state</h2>
+<p>If receipt and invoice quantities and values align, the related GR/IR items can be cleared. If they do not, the open balance tells us that the purchasing story is not complete yet. SAP documentation gives the cleanest examples: when the invoiced quantity is higher than the received quantity, the system expects further goods receipts; when the received quantity is higher, it expects further invoices.</p>
 
-<h2>How GR/IR works</h2>
+<p>This is why GR/IR is more useful when read by purchase-order item than as one large account balance. A total of zero can hide many old unmatched items, while a non-zero total can include perfectly legitimate timing differences. We need the document relationship, not just the account total.</p>
 
-<p>When a goods receipt (GR) is posted in MIGO, SAP creates an accounting entry that debits the stock or consumption account and credits the GR/IR clearing account. When the invoice is posted in MIRO, SAP debits the GR/IR clearing account and credits the vendor account. If quantities and prices match perfectly, the GR/IR line items net to zero and can be cleared. If they do not match, a balance remains on the GR/IR account until the difference is resolved or written off. The GR/IR account is therefore a temporary suspense account, not a permanent liability.</p>
+<h2>Most differences fall into a few patterns</h2>
+<p>The simplest case is timing: the warehouse posted the receipt today and the invoice will arrive next week. Quantity differences are similar but need more attention because they may represent partial deliveries, returns, over-invoicing, or an incomplete receipt. Price differences can remain when the invoice and purchasing documents do not value the same quantity in the same way. Delivery costs and corrections can add another layer.</p>
 
-<h2>Common issues</h2>
+<p>Before treating an old balance as a cleanup item, we ask whether another business document is still expected. If the purchase-order item is genuinely complete and no more goods or invoices will arrive, the remaining balance needs reconciliation. Current S/4HANA documentation provides the <strong>Clear GR/IR Clearing Account</strong> function (app ID <strong>MR11</strong>) for this purpose, and the <strong>Reconcile GR/IR Accounts</strong> app brings procurement and accounting information together for exception handling.</p>
 
+<h2>Reconciliation starts from the purchase-order history</h2>
+<p>A useful investigation follows one purchase-order item from order to receipt to invoice. We compare what was ordered, what was received, what was invoiced, and what was reversed or corrected. That sequence usually explains the balance more reliably than starting from a G/L line-item list and guessing backwards.</p>
+
+<p>The result should be a business explanation: “20 pieces were received but not yet invoiced,” “the invoice was posted for a higher quantity than the receipt,” or “no further documents are expected and the residual difference is ready for approved clearing.” Those statements are actionable because they describe what is missing.</p>
+
+<h2>GR/IR is part of period close, but it is not only a finance problem</h2>
+<p>Finance sees the open account, but the cause can sit in purchasing, receiving, invoice processing, or document reversal. Good GR/IR reconciliation therefore crosses team boundaries. The account is a financial representation of a logistics process, and cleaning it without understanding that process can hide the same error until the next period.</p>
+
+<h2>Sources</h2>
 <ul>
-
-<li>Goods are received but the invoice has not arrived or cannot be matched.</li>
-
-<li>Invoice quantity, price, tax, or purchase order reference differs from the receipt evidence.</li>
-
-<li>Old balances remain because reversals, returns, cancellations, or invoice corrections were not handled consistently.</li>
-
+  <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/72256b54f94c8f4ce10000000a4450e5.html">SAP Help: Clear GR/IR Clearing Account</a></li>
+  <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/651d8af3ea974ad1a4d74449122c620e/17f3a45189524e78b4a80bf51ff2b741.html">SAP Help: Reconcile GR/IR Accounts</a></li>
 </ul>
-
-<h2>Common mismatch patterns</h2>
-
-<ul>
-  <li><strong>Quantity differences</strong> — invoice quantity is higher or lower than the total GR quantity for the PO line. Common with partial deliveries, over-shipments, or returns not updated in SAP.</li>
-  <li><strong>Price differences</strong> — invoice price differs from the PO net price due to price changes, scales, or unplanned delivery costs added in MIRO.</li>
-  <li><strong>Tax differences</strong> — tax code or tax amount on the invoice does not match the PO or GR. Often caused by vendor invoice formatting or jurisdiction changes.</li>
-  <li><strong>Currency differences</strong> — foreign-currency POs create exchange rate variances between GR date and invoice date. The GR/IR account may show a residual in local currency even when foreign currency matches.</li>
-  <li><strong>Timing differences</strong> — GR posted in one period, invoice posted in another, or month-end closing prevents clearing until the next period.</li>
-  <li><strong>Returns and credit memos</strong> — a return delivery or credit memo was posted but did not correctly reference the original GR or invoice, leaving unmatched items.</li>
-</ul>
-
-<h2>Diagnostic questions</h2>
-
-<ul>
-
-<li>Which purchase order, goods receipt, and invoice documents are involved?</li>
-
-<li>Is the mismatch quantity-based, price-based, tax-related, timing-related, or reversal-related?</li>
-
-<li>Does the open item represent a real business mismatch or a cleanup item?</li>
-
-</ul>
-
-<h2>Where to check</h2>
-
-<ul>
-  <li><strong>FBL3N</strong> — line items on the GR/IR clearing account. Look for open debits and credits that do not net to zero.</li>
-  <li><strong>ME23N</strong> — PO history tab shows the full document flow: GRs, invoices, returns, and credit memos per PO line.</li>
-  <li><strong>MIGO</strong> — review GR documents, movement types, and whether returns were posted correctly.</li>
-  <li><strong>MIRO / MIR4</strong> — invoice documents, blocked reasons, and variance details. Check for unplanned delivery costs.</li>
-  <li><strong>MR11</strong> — GR/IR maintenance: lists open items and allows write-off of small, approved differences.</li>
-  <li><strong>F.13</strong> — automatic clearing program for GR/IR and other clearing accounts. Useful for mass clearing when document assignments match.</li>
-</ul>
-
-<h2>Tables and fields</h2>
-
-<ul>
-  <li><strong>BSEG</strong> — accounting document segment; contains GR/IR account postings with PO reference (EBELN, EBELP).</li>
-  <li><strong>BSIS</strong> — open items for the GR/IR account; key for FBL3N and reconciliation.</li>
-  <li><strong>EKBE</strong> — PO history; aggregates GR and invoice references per PO item.</li>
-  <li><strong>MKPF</strong> — GR document header.</li>
-  <li><strong>MSEG</strong> — GR document items; links to PO and accounting.</li>
-  <li><strong>RBKP</strong> — invoice document header.</li>
-  <li><strong>RSEG</strong> — invoice document items; links to PO and GR.</li>
-</ul>
-
-<h2>When to escalate</h2>
-
-<p>Escalate when the mismatch indicates a process problem rather than a data cleanup task. Examples: repeated quantity differences from the same vendor suggest a receiving or vendor communication issue; persistent price differences suggest procurement is not updating outline agreements or info records; large old open items with no supporting documents may indicate fraud, theft, or system bypass. Data cleanup (MR11, F.13, manual clearing) should only be done after the root cause is understood and approved by finance.</p>
-
-<h2>Retail-specific: month-end close issues</h2>
-<p>Retail month-end closing faces unique challenges due to high transaction volume, POS reconciliation, markdown accruals, and inventory adjustments.</p>
-<ul>
-  <li><strong>GR/IR open items:</strong> high-volume retail procurement creates large numbers of unmatched GR/IR lines. Check FBL3N for old items and MR11 for cleanup.</li>
-  <li><strong>POS posting status:</strong> missing or delayed POS data (WPUUMS IDocs) causes revenue and inventory postings to be incomplete at period end. Check WE02 for failed IDocs.</li>
-  <li><strong>Markdown accruals:</strong> end-of-season markdowns may require accrual postings that are not yet reflected in the general ledger.</li>
-  <li><strong>Inventory adjustment accounts:</strong> cycle counts, shrinkage postings, and damage write-offs accumulate in adjustment accounts that must be reviewed before close.</li>
-  <li><strong>Timing:</strong> retail often operates with tight close windows. GR/IR, POS, and inventory postings that span period boundaries can delay close.</li>
-</ul>
-<p>A useful month-end close ticket should include: the period being closed, the specific account or process that is blocked, the volume of open items, and whether the issue is recurring every month-end.</p>
-
 </div>
 
 <section class="atlas-related"><h2>Related pages</h2><ul>
-
 <li><a href="/atlas/maps/procure-to-pay-map/">Procure to Pay Map</a></li>
-
 <li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">Goods Receipt Diagnostics</a></li>
-
 <li><a href="/atlas/diagnostics/sap-three-way-match-diagnostics/">Three-Way Match Diagnostics</a></li>
-
 <li><a href="/atlas/sap/sap-mm-procurement-overview/">MM Procurement Overview</a></li>
-
 </ul></section>
 
 {% include atlas/author-block.html %}
-
 {% include atlas/disclaimer.html %}
-
 </article>

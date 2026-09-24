@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP IBP Integration Overview"
-description: "How SAP Integrated Business Planning connects to S/4HANA for procurement-relevant planning: demand, supply, replenishment, and common breakpoints."
+description: "How SAP Integrated Business Planning exchanges time-series and order-based planning data with SAP S/4HANA, including current integration paths and monitoring boundaries."
 permalink: /atlas/sap/sap-ibp-integration-overview/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: MM / IBP / supply chain planning
 business_process: Planning to procurement
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-09
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 tags:
   - sap-mm
@@ -20,8 +20,9 @@ tags:
   - planning
   - supply-chain
 related:
+  - /atlas/sap/sap-ibp/
   - /atlas/sap/sap-mm-procurement-overview/
-  - /atlas/concepts/order-to-cash/
+  - /atlas/sap/supply-chain-domain/
   - /atlas/data-quality/sap-master-data-quality/
 robots: noindex,follow
 sitemap: false
@@ -40,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas SAP Note</p>
     <h1>SAP IBP integration overview</h1>
-    <p class="note-subtitle">The planning-to-execution handoff: how IBP demand and supply signals reach S/4HANA procurement.</p>
+    <p class="note-subtitle">There is no single IBP-to-S/4 interface: the integration path depends on whether the planning process is time-series based or order based.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -53,73 +54,58 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>SAP Integrated Business Planning (IBP) generates demand signals, supply plans, and replenishment proposals that S/4HANA procurement executes. The integration is not a simple data push — it requires master data alignment, time granularity agreement, and a reliable write-back path. A support ticket that says "MRP is wrong after IBP" usually means the planning result never arrived, arrived in the wrong format, or overwrote local planning data unexpectedly.</p>
+    <p>The first question in an SAP IBP integration design is not “CPI or CIF?” It is <strong>what kind of planning data are we exchanging?</strong> SAP IBP supports several integration scenarios, and the right technical path depends on the planning model, source system, direction of transfer, and objects involved.</p>
 
-    <h2>What data flows</h2>
+    <p>For SAP S/4HANA landscapes, the most useful distinction is between <strong>time-series-based integration</strong> for tactical planning and <strong>order-based integration</strong> for more operational planning. Mixing these models leads to misleading architecture diagrams and poor diagnostics because they move different kinds of data and use different integration mechanisms.</p>
+
+    <h2>Time-series integration moves planning data by period and level</h2>
+    <p>Time-series planning works mainly with master data and key-figure values at configured planning levels and time buckets. Typical inbound data can include products, locations, historical demand, stock or other planning inputs. Outbound integration can return supported planning results for downstream use, but it should not be described as a universal conversion of every IBP result into a purchase requisition or another S/4HANA document.</p>
+
+    <p>For current SAP S/4HANA and SAP S/4HANA Cloud Private Edition integration, SAP documents the supply chain integration add-on together with SAP Cloud Integration for time-series-based planning areas. The integration uses Cloud Connector and SAP-delivered or reusable integration flows. SAP Cloud Integration for data services (CI-DS, historically also called CPI-DS) remains relevant for existing customers, but there is now an important licensing boundary: it is not available with SAP IBP licenses obtained after <strong>April 20, 2026</strong>. For licenses obtained after that date, SAP recommends SAP Cloud Integration, which is part of SAP Integration Suite and requires a separate license.</p>
+
+    <h2>Order-based planning works with transactional objects</h2>
+    <p>Order-based planning needs a more detailed picture. Individual sales orders, purchase orders, purchase requisitions, planned orders, production orders, deliveries, stocks, and related master data can participate in supported scenarios. Current SAP IBP real-time integration (RTI) connects SAP ECC or SAP S/4HANA with order-based planning areas and uses Core Interface (CIF) concepts for the transfer of supported objects.</p>
+
+    <p>This is why it is inaccurate to describe CIF only as an old APO integration mechanism. In current IBP RTI, the external system can use integration models to select data for initial transfer, and CIF is part of the documented transfer and reconciliation model. SAP also documents OpenAPI/SDI-based order integration for planning areas that use the older external-master-data model. The available path therefore depends on the planning-area model as well as the business requirement.</p>
+
+    <h2>Planning results and execution documents are not the same thing</h2>
+    <p>An IBP plan describes what the business intends to supply, move, or confirm. SAP S/4HANA remains the execution system for the transactional documents that purchasing, production, sales, and logistics process. Some supported outbound scenarios can create or update executable objects, but the exact object behavior is scenario-specific.</p>
+
+    <p>For example, SAP documents planned-order integration between IBP and the external system, and a planned order can later become a manufacturing order or purchase requisition depending on its procurement context. That is more precise than saying that “IBP sends replenishment proposals and S/4 creates POs.” We need to identify the actual planning object, the supported direction of transfer, and the conversion step before diagnosing the result.</p>
+
+    <h2>Master data is part of the integration contract</h2>
+    <p>A planning result is meaningful only if both systems agree on the objects behind it. Product, location, product-location combinations, sources of supply, resources, calendars, and other master data may be required depending on the planning scenario. Order-based RTI, for example, transfers supported master and transactional objects through explicitly configured integration models and mappings.</p>
+
+    <p>This makes sequencing important. If transactional data reaches IBP without the master data needed to interpret it, the message may fail or the planning model may be incomplete. A support investigation should therefore verify both the business object and the master-data context rather than looking only at the last failed message.</p>
+
+    <h2>Monitoring follows the integration path</h2>
+    <p>There is no single IBP integration monitor that explains every failure. For SAP Cloud Integration flows, the message-processing and integration-flow logs are part of the technical path. For RTI, queue state and the IBP reconciliation tools matter because CIF-based transfer can leave objects missing or inconsistent between systems.</p>
+
+    <p>SAP provides the <strong>Data Comparison and Reconciliation for RTI</strong> app and related application jobs to compare supported objects between IBP and SAP ECC or SAP S/4HANA and correct inconsistencies. That is a stronger diagnostic model than treating a successful interface run as proof that the two systems contain the same planning state.</p>
+
+    <h2>A practical way to trace an issue</h2>
+    <p>Start with the planning area and the missing or incorrect object. Is the process time-series based or order based? Which system is the source of truth for this object? Which integration technology is configured for this planning area? Then trace one concrete product, location, order, or key-figure value across that path.</p>
+
+    <p>If a forecast value is missing, the relevant evidence may be a time-series integration job and key-figure mapping. If a purchase requisition or planned order is inconsistent in order-based planning, the useful evidence may instead be the RTI integration model, queue state, object comparison, and reconciliation result. The symptom may be “planning is wrong” in both cases, but the technical investigation is different.</p>
+
+    <h2>Source references</h2>
     <ul>
-      <li><strong>Demand signal</strong> — statistical forecast, consensus demand plan, or customer-specific requirements sent from IBP to S/4HANA. This feeds into MRP or advanced planning runs.</li>
-      <li><strong>Supply planning</strong> — planned production, purchase, and transfer quantities calculated in IBP based on capacity and sourcing rules. Must match S/4HANA plant and MRP area definitions.</li>
-      <li><strong>Replenishment proposals</strong> — IBP-generated purchase requisitions or stock transfer proposals written back to S/4HANA. Failure here means planners see a gap between the IBP plan and executable documents.</li>
-      <li><strong>Inventory targets</strong> — safety stock and target inventory levels calculated in IBP and transferred to S/4HANA material master or MRP profiles. Mismatches lead to over-ordering or stock-outs.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_INTEGRATED_BUSINESS_PLANNING/feae3cea3cc549aaa9d9de7d363a83e6/40fc8154fcd0e530e10000000a44538d.html">Data Integration Scenarios</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S_4HANA_SUPPLYCHAIN_INTEGRATION_ADDON_FOR_SAP_INTEGRATED_BUSINESS_PLANNING/0aaced2f025644a69246bd7fe0979562/88f95d75e9b540518cb9191046581799.html">Configuration for Time-Series-Based Integration</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_INTEGRATED_BUSINESS_PLANNING/68fa1e86fe6f41d98421d1ce13a08a9f/1a934ddef89448f38aa78cfb71931b58.html">Initial Data Transfer for Real-Time Integration</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_INTEGRATED_BUSINESS_PLANNING/68fa1e86fe6f41d98421d1ce13a08a9f/2e9c632b870543829addaffd9fc09a4f.html">Comparison and Reconciliation of Transactional Data</a>.</li>
     </ul>
 
-    <h2>Common breakpoints</h2>
-    <h3>Master data alignment</h3>
-    <ul>
-      <li>Location in IBP does not map to a valid plant or MRP area in S/4HANA.</li>
-      <li>Product ID in IBP differs from material number in S/4HANA due to leading zeros, prefix rules, or external numbering.</li>
-      <li>Supplier master in IBP planning does not match the S/4HANA vendor master, causing sourcing errors in replenishment.</li>
-    </ul>
-
-    <h3>Time granularity mismatch</h3>
-    <ul>
-      <li>IBP plans in weekly buckets but S/4HANA MRP runs in daily buckets — the disaggregation logic determines whether the plan is usable.</li>
-      <li>Planning calendar or factory calendar differences shift requirements by non-working days.</li>
-    </ul>
-
-    <h3>Batch vs real-time data exchange</h3>
-    <ul>
-      <li>Batch jobs (CPI or Core Interface) run on a schedule. A delay in the job chain means S/4HANA operates on stale planning data.</li>
-      <li>Real-time integration via SAP Integration Suite reduces latency but increases failure surface — one bad message can block the queue.</li>
-    </ul>
-
-    <h3>Planning result write-back failures</h3>
-    <ul>
-      <li>IBP sends replenishment proposals but S/4HANA rejects them due to missing account assignment, blocked material, or invalid procurement type.</li>
-      <li>Write-back overwrites manually adjusted requisitions in S/4HANA if version control or planning scenario separation is not enforced.</li>
-    </ul>
-
-    <h2>Key integration points</h2>
-    <ul>
-      <li><strong>SAP Cloud Integration (CPI)</strong> — cloud-to-cloud data exchange for IBP and S/4HANA Cloud. Monitored via CPI message processing log.</li>
-      <li><strong>SAP Integration Suite</strong> — broader integration platform that may include API management and event mesh for planning data.</li>
-      <li><strong>Core Interface (CIF)</strong> — for on-premise APO/IBP-to-ECC/S/4HANA integration. CIF queues (CFM1/CFM2) must be monitored for stuck or failed entries.</li>
-    </ul>
-
-    <h2>First-pass diagnostic questions</h2>
-    <ul>
-      <li>Which planning result is missing or wrong — demand, supply, replenishment, or inventory target?</li>
-      <li>Is the integration batch or real-time, and when did the last successful exchange occur?</li>
-      <li>Do the IBP location, product, and supplier keys exactly match the corresponding S/4HANA master data?</li>
-      <li>What is the time bucket granularity in IBP versus S/4HANA, and how is disaggregation configured?</li>
-      <li>Does the S/4HANA application log or CPI message log show a specific rejection reason for the write-back?</li>
-    </ul>
-
-    <h2>Support takeaway</h2>
-    <p>An IBP integration ticket should state: planning area, version or scenario, data type (demand/supply/replenishment/target), S/4HANA document type affected, and the exact error from CPI/CIF or S/4HANA application log. "Planning is wrong" is not enough — the diagnostic path differs for master data mismatches, time granularity issues, and write-back failures.</p>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page covers the IBP–S/4HANA integration boundary for procurement-relevant planning. It does not cover IBP module configuration, statistical forecasting setup, or S&OP process design. It does not replace SAP IBP or S/4HANA implementation documentation.</p>
-
-    <p><em>This is not official SAP documentation and not a replacement for system-specific analysis.</em></p>
+    <h2>Verification limitations</h2>
+    <p>Supported objects, integration technologies, planning-area models, and licensing conditions change over time. The distinctions on this page were checked against current SAP IBP and SAP S/4HANA supply-chain integration documentation in September 2026; implementation details still need to be verified for the exact IBP release, S/4HANA release, planning area, and license.</p>
   </div>
 
   <section class="atlas-related">
     <h2>Related Atlas Pages</h2>
     <ul>
+      <li><a href="/atlas/sap/sap-ibp/">SAP IBP</a></li>
       <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP MM Procurement Overview</a></li>
-      <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
+      <li><a href="/atlas/sap/supply-chain-domain/">Supply Chain Domain</a></li>
       <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
     </ul>
   </section>

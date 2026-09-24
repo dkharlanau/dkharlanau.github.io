@@ -7,7 +7,8 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-05
+last_modified_at: 2026-09-22
+last_reviewed: 2026-09-22
 hide_global_cta: true
 hide_site_share: true
 career_impact: mapped
@@ -34,25 +35,26 @@ tags:
   <header class="incident-diagnostics__hero">
     <div>
       <p class="incident-diagnostics__eyebrow">Lab / SAP operations</p>
-      <h1>Turn incident evidence into a usable next step.</h1>
-      <p>Paste a small incident excerpt or load a text, XML, JSON, or CSV file. The browser checks which evidence signals are present, finds reviewed Atlas references, applies existing operational protocols, and builds four working artifacts. It does not diagnose a production root cause automatically.</p>
+      <h1>Turn scattered incident evidence into a useful handoff.</h1>
+      <p>A SAP incident often arrives as fragments: an error message, a status, a timestamp, a ticket comment, and several assumptions about what went wrong. This lab helps us turn a small sanitized excerpt into a structured incident brief, an evidence checklist, an RCA draft, and Jira-ready Markdown. The analysis stays deterministic and browser-local; it organizes evidence but does not claim a production root cause.</p>
     </div>
     <aside class="incident-diagnostics__privacy" aria-label="Privacy and safety boundary">
       <strong>Browser-local by design</strong>
-      <p>This page reads the selected file in your browser. It does not upload the input or store it in localStorage.</p>
-      <p>Still follow employer and client policy. Do not paste secrets, credentials, personal data, or proprietary material into an unapproved browser session.</p>
+      <p>Selected files are read in the browser. The page does not upload the input or write it to localStorage.</p>
+      <p>That does not make every input safe to use. Follow employer and client policy, and remove secrets, credentials, personal data, and proprietary details before working with an excerpt.</p>
       <span class="incident-diagnostics__status" data-source-status data-state="loading">Loading canonical public sources…</span>
     </aside>
   </header>
 
   <section class="incident-diagnostics__boundary" aria-label="Diagnostic boundary">
-    <strong>Evidence, not automation authority.</strong> The tool can structure a case, expose missing evidence, and suggest reviewed diagnostic references. It cannot prove the root cause, approve a retry, change SAP, reprocess an IDoc, clear a queue, or correct master data.
+    <strong>This is an evidence organizer, not an automation authority.</strong> It can show what is present, what is missing, and which reviewed references may help. A human still has to establish the cause and approve any retry, reprocessing, data correction, queue action, or production change.
   </section>
 
   <section class="incident-diagnostics__workspace" aria-label="Incident input and analysis">
     <div class="incident-diagnostics__panel">
       <p class="incident-diagnostics__label">01 / Scope</p>
-      <h2>Choose the problem shape.</h2>
+      <h2>Start with the kind of incident.</h2>
+      <p>The selected pack narrows the public cases, protocols, and Atlas references used by the draft. It does not add landscape-specific rules.</p>
 
       <div class="incident-diagnostics__field">
         <label for="incident-pack">Diagnostic pack</label>
@@ -61,7 +63,6 @@ tags:
           <option value="bp">Business Partner / MDG replication</option>
           <option value="recurring">Recurring AMS incident</option>
         </select>
-        <span class="incident-diagnostics__hint">Packs only select existing synthetic cases, Atlas topics, and operational protocols. They do not contain landscape-specific rules.</span>
       </div>
 
       <div class="incident-diagnostics__field">
@@ -77,12 +78,12 @@ tags:
 
     <div class="incident-diagnostics__panel">
       <p class="incident-diagnostics__label">02 / Evidence</p>
-      <h2>Add a small, safe excerpt.</h2>
+      <h2>Add a small, sanitized excerpt.</h2>
+      <p>Useful evidence can be simple: status history, an error, a timestamp, message type, affected scope, or the recent change that preceded the issue. The tool looks for evidence signals; it does not send the text to an LLM or copy the raw excerpt into the generated artifacts.</p>
 
       <div class="incident-diagnostics__field">
         <label for="incident-evidence">Paste evidence</label>
         <textarea id="incident-evidence" data-evidence placeholder="Status history, error text, timestamp, message type, affected scope, recent change, or a sanitized ticket excerpt."></textarea>
-        <span class="incident-diagnostics__hint">The deterministic check looks for evidence signals. It does not send the text to an LLM and does not copy the raw text into generated artifacts.</span>
       </div>
 
       <div class="incident-diagnostics__field incident-diagnostics__file">
@@ -101,14 +102,14 @@ tags:
   <section class="incident-diagnostics__workspace" aria-label="Diagnostic summary">
     <div class="incident-diagnostics__panel">
       <p class="incident-diagnostics__label">03 / Gaps</p>
-      <h2>What evidence is still missing?</h2>
+      <h2>See what still needs to be proved.</h2>
       <div class="incident-diagnostics__summary" data-analysis-summary>
         <p>Choose a diagnostic pack and add evidence to start.</p>
       </div>
     </div>
     <div class="incident-diagnostics__panel">
       <p class="incident-diagnostics__label">04 / Sources</p>
-      <h2>Reviewed references only.</h2>
+      <h2>Keep the draft tied to reviewed material.</h2>
       <div class="incident-diagnostics__reference-list" data-references>
         <p>Reviewed Atlas references will appear here.</p>
       </div>
@@ -117,7 +118,8 @@ tags:
 
   <section class="incident-diagnostics__results" aria-labelledby="incident-output-title">
     <p class="incident-diagnostics__label">05 / Artifact</p>
-    <h2 id="incident-output-title">Generate something the team can use.</h2>
+    <h2 id="incident-output-title">Create the artifact the next person actually needs.</h2>
+    <p>The four views use the same evidence but serve different moments in the incident: fast handoff, evidence collection, root-cause work, and ticket communication.</p>
     <div class="incident-diagnostics__tabs" role="tablist" aria-label="Generated artifact">
       <button class="incident-diagnostics__tab" type="button" role="tab" aria-selected="true" data-output-tab="incident">Incident brief</button>
       <button class="incident-diagnostics__tab" type="button" role="tab" aria-selected="false" tabindex="-1" data-output-tab="evidence">Evidence checklist</button>
@@ -133,13 +135,13 @@ tags:
 
   <section class="incident-diagnostics__sources" aria-labelledby="incident-source-model">
     <p class="incident-diagnostics__label">Source model</p>
-    <h2 id="incident-source-model">One public evidence chain, three inputs.</h2>
-    <p>The page deliberately reuses the existing sources instead of keeping a second incident knowledge base:</p>
+    <h2 id="incident-source-model">Reuse one public evidence chain instead of inventing another one.</h2>
+    <p>The lab combines three source types already maintained on the site: reviewed Atlas material, synthetic incident cases, and operational protocols. The MCP package exposes the same public diagnostic knowledge through a separate read-only interface.</p>
     <div class="research-route-list">
       <a href="/atlas/"><span>ATLAS</span><strong>Reviewed diagnostics</strong><small>Only records eligible for the public Atlas manifest are used as diagnostic references.</small><i class="material-symbols-outlined" aria-hidden="true">library_books</i></a>
-      <a href="/datasets/incident-lab/"><span>CASE</span><strong>Synthetic incident cases</strong><small>Public-safe cases provide evidence expectations, unsafe actions, ownership, and human-approval boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
-      <a href="/labs/templates/"><span>PROTO</span><strong>Operational protocols</strong><small>Incident triage, integration failure analysis, RCA, process deviation, and runbook structures shape the outputs.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
-      <a href="/mcp/sap-diagnostics-mcp/"><span>MCP</span><strong>SAP Diagnostics MCP</strong><small>The same public Atlas and Incident Lab sources are already available through the local read-only MCP package.</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
+      <a href="/datasets/incident-lab/"><span>CASE</span><strong>Synthetic incident cases</strong><small>Public-safe cases describe expected evidence, unsafe actions, ownership, and human-approval boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
+      <a href="/labs/templates/"><span>PROTO</span><strong>Operational protocols</strong><small>Incident triage, integration analysis, RCA, process deviation, and runbook structures shape the generated drafts.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/mcp/sap-diagnostics-mcp/"><span>MCP</span><strong>SAP Diagnostics MCP</strong><small>The local read-only MCP package exposes the same public Atlas and Incident Lab sources for tool-based use.</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
     </div>
   </section>
 </div>

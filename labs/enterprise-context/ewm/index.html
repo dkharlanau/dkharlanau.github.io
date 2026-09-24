@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "SAP EWM — Deployment & Warehouse Execution Map"
-description: "A Lead-level map of Embedded and Decentralized SAP EWM, warehouse domains, objects, determinations, processes, production, automation, mobility, handling units and integration boundaries."
+title: "SAP EWM — Warehouse Execution, Objects and Integration Boundaries"
+description: "A practical SAP S/4HANA EWM guide to embedded and decentralized deployment, warehouse requests, tasks and orders, execution controls, production, automation, and integration boundaries."
 permalink: /labs/enterprise-context/ewm/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
 enterprise_context_graph: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 tags:
   - sap
@@ -17,16 +17,18 @@ tags:
   - logistics
   - architecture
   - integration
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-01"
-review_method: "primary sources + factual review + page-level editorial review"
-search_intent: "SAP EWM embedded vs decentralized deployment and warehouse execution"
+review_method: "SAP S/4HANA 2025 FPS01 primary documentation + page-level factual review + editorial rewrite"
+search_intent: "SAP EWM embedded vs decentralized warehouse request task order execution"
 # ai-discovery-managed:start
 structured_data:
   type: TechArticle
 primary_topic: "sap-ewm"
 ai_sidecar: "/ai/pages/labs--enterprise-context--ewm.json"
 entity_mentions:
+  - "sap-s4hana"
+  - "sap-ewm"
   - "sap-integration"
 semantic_links:
   - type: "integrates_with"
@@ -48,34 +50,24 @@ semantic_links:
     title: "Which SAP Logistics Decisions Should AI Not Own? — Decision Card"
     url: "/labs/enterprise-context/decisions/ai-logistics-boundary/"
 source_links:
-  - title: "Defining the Scope of Embedded Extended Warehouse Management (EWM)"
-    url: "https://help.sap.com/docs/s4hana-best-practices/administration-guide-to-implementation-of-sap-s-4hana-cloud-private-edition-2023-with-sap-best-practices/defining-scope-of-embedded-extended-warehouse-management-ewm"
-  - title: "Prerequisites for Advanced Shipping and Receiving in Decentralized EWM"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/62e08b5e5ca348b1ae7426fbf731d0eb.html"
-  - title: "Warehouse Request - Type Inbound Delivery or Outbound Delivery Order"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/39cecb53ad377114e10000000a174cb4.html"
-  - title: "Warehouse Task"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/8fcccb53ad377114e10000000a174cb4.html"
-  - title: "Warehouse Order"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/65cccb53ad377114e10000000a174cb4.html"
-  - title: "Wave Management"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/6dc8cb53ad377114e10000000a174cb4.html"
-  - title: "Replenishment Control"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/95cecb53ad377114e10000000a174cb4.html"
-  - title: "Staging and Consumption for Production Supply"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/6617676e34684e059592590bf51a6e80.html"
-  - title: "Overview of Production Integration Types"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/f03b09b9c0214ad5a42921b0c25f5270.html"
-  - title: "Structure of the Material Flow System"
+  - title: "Warehouse Request"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/64c8cb53ad377114e10000000a174cb4.html"
+  - title: "Creation of Warehouse Tasks for Warehouse Request"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/7fcccb53ad377114e10000000a174cb4.html"
+  - title: "Processing of Waves"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/10c9cb53ad377114e10000000a174cb4.html"
+  - title: "Resource Management"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/13cdcb53ad377114e10000000a174cb4.html"
+  - title: "Communication from EWM to SAP S/4HANA"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/65cecb53ad377114e10000000a174cb4.html"
+  - title: "Integration of Production Supply (PP)"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/252245dc92d247eeb7054b9bd58fc026.html"
+  - title: "Structure of the MFS"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/39cbcb53ad377114e10000000a174cb4.html"
-  - title: "Quality Management for Embedded EWM"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/9fde6766a626412e9bdad4c2b0bec70d.html"
-  - title: "Quality Management for Decentralized EWM"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/2bc3ee8d1c83404e8cf62418640004f2/eabc69b276ce4a8cacd0b905a71b9e47.html"
+  - title: "Integration with Extended Warehouse Management"
+    url: "https://help.sap.com/docs/sap_s4hana_on-premise/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/bd1fbe54f20dc40ae10000000a441470.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.ewm %}
-{% assign evidence = site.data.labs.enterprise_context.sources.ewm %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">EWM</li></ol>
@@ -85,259 +77,155 @@ source_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Enterprise Context / Warehousing</p>
-      <h1>{{ graph.title }}</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#deep-maps">Open the architecture maps <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>SAP EWM turns logistics demand into executable warehouse work.</h1>
+      <p>The useful model is not a list of transactions. Start with the business demand, identify the EWM document that represents it, follow the warehouse tasks into executable work, and then reconcile the physical result with the process that owns the final goods movement.</p>
+      <a class="research-canvas__button" href="#objects">Follow the execution model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Research status">
-      <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.deployment_models | size }}</strong><small>Deployment models</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.process_families | size }}</strong><small>Core process families</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary references</small></div>
-      <em>Source checked {{ graph.verified_at }}</em>
+    <div class="research-canvas__signal" aria-label="EWM summary">
+      <p>Execution chain</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Request</strong><small>What must the warehouse do?</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Task</strong><small>What stock movement is required?</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Order</strong><small>How is work packaged and executed?</small></div>
+      <em>SAP S/4HANA 2025 FPS01 · primary-source review</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">warehouse</span>
-    <p><strong>Working thesis:</strong> {{ graph.thesis }}</p>
-    <p><strong>Boundary:</strong> EWM owns detailed warehouse position and execution. ERP Inventory Management remains the enterprise inventory and accounting context. The useful question is not “Which transaction?” but “Which system and object owns the next decision?”</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Execution ownership model</p><h2>Do not confuse the warehouse request with the work that executes it.</h2><p>This assessment frame separates business demand, warehouse tasks, work packages, execution confirmation, and the enterprise inventory handoff.</p></header>
-    <div class="ecg-decision-columns">
-      <div><h3>1. Demand and request</h3><ul><li>Which upstream process created the warehouse demand?</li><li>Which warehouse request represents that demand in EWM?</li><li>Is the demand itself correct before warehouse execution starts?</li></ul></div>
-      <div><h3>2. Task and work package</h3><ul><li>Which warehouse task expresses the stock movement or change?</li><li>How was the task grouped into a warehouse order?</li><li>Which determination rule created the unexpected bin, queue, or work package?</li></ul></div>
-      <div><h3>3. Confirm and reconcile</h3><ul><li>What physical work was confirmed and what stock state changed?</li><li>Did EWM and ERP/Inventory Management reach compatible end states?</li><li>Can the business process prove completion beyond the warehouse monitor?</li></ul></div>
-    </div>
-    <p class="ecg-caption"><strong>Lead signal:</strong> “no warehouse task”, “wrong bin”, and “ERP stock mismatch” are not one problem. They sit at different ownership layers.</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review confirms warehouse-task semantics, warehouse-order grouping, and wave-to-task/order behavior. Deployment, production, QM, automation, and cross-system boundaries were reviewed against the route source registry; the ownership model remains an authored diagnostic frame.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
+    <p><strong>Core boundary:</strong> EWM manages detailed warehouse stock, location and execution. The surrounding S/4HANA process still owns the commercial, production, inventory and accounting context that made the warehouse movement necessary. Embedded deployment can make some handoffs synchronous, but it does not collapse these business responsibilities into one object.</p>
+    <a href="/labs/enterprise-context/inventory-management/">Compare with Inventory Management <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="deep-maps" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Deep architecture maps</p>
-      <h2>Separate responsibilities, objects, decisions and integrations.</h2>
-      <p>The main page gives the execution logic. These maps go deeper without turning EWM into one endless feature catalogue.</p>
+      <p class="research-canvas__eyebrow">Scope</p>
+      <h2>The main page explains the execution model; the deeper maps keep the detail separate.</h2>
+      <p>EWM contains many capabilities, but putting every object, determination and interface on one page makes the architecture harder to understand. These maps carry the detailed catalogs while this page stays focused on how warehouse work fits together.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/ewm/domains/"><span>DOM</span><strong>EWM Domain & Capability Map</strong><small>Warehouse foundation, inbound, outbound, internal logistics, production, shipping, cross-docking, VAS, optimization, labor, inventory, automation and monitoring.</small><i class="material-symbols-outlined" aria-hidden="true">category</i></a>
-      <a href="/labs/enterprise-context/ewm/objects/"><span>OBJ</span><strong>EWM Object Catalog</strong><small>Demand objects, WT/WO/waves, stock and HUs, warehouse structure, shipping objects, quality, VAS, labor and automation objects.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
-      <a href="/labs/enterprise-context/ewm/controls/"><span>DET</span><strong>EWM Determination & Control Plane</strong><small>WPT, storage control, putaway, stock removal, wave, WOCR/queue, staging and door, packing, replenishment and PSA decisions.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/ewm/integrations/"><span>INT</span><strong>EWM Integration Architecture</strong><small>Embedded and decentralized S/4HANA, SD, MM, TM, PP, QM, MES/Digital Manufacturing, MFS/PLC, WCS/WCU and monitoring boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/enterprise-context/ewm/automation/"><span>AUTO</span><strong>EWM Automation & MFS</strong><small>MFS, WCS/WCU, PLC ownership, communication points, telegram controls, recovery and automation KPIs.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
-      <a href="/labs/enterprise-context/ewm/handling-units-packing/"><span>HU</span><strong>Handling Units, Packing & Labels</strong><small>HU identity and hierarchy, packaging specifications, work-center packing, reprint and physical/digital reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
-      <a href="/labs/enterprise-context/ewm/mobility/"><span>MOB</span><strong>Warehouse Mobility</strong><small>EWM RF, standard mobile, custom mobile, shared devices, connectivity, offline limits and fleet controls.</small><i class="material-symbols-outlined" aria-hidden="true">devices</i></a>
-      <a href="/labs/enterprise-context/ewm/scanners/"><span>SCAN</span><strong>Warehouse Scanners & Auto-ID</strong><small>Device choice, GS1 parsing, label lifecycle, scanner integration, UX, connectivity and operational KPIs.</small><i class="material-symbols-outlined" aria-hidden="true">barcode_scanner</i></a>
+      <a href="/labs/enterprise-context/ewm/domains/"><span>DOM</span><strong>EWM Domain & Capability Map</strong><small>Inbound, outbound, internal logistics, production supply, inventory, quality and other warehouse responsibilities.</small><i class="material-symbols-outlined" aria-hidden="true">category</i></a>
+      <a href="/labs/enterprise-context/ewm/objects/"><span>OBJ</span><strong>EWM Object Catalog</strong><small>Warehouse requests, tasks, orders, waves, stock, handling units, resources and related execution objects.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/enterprise-context/ewm/controls/"><span>DET</span><strong>EWM Determination & Control Plane</strong><small>Warehouse process type, putaway and stock-removal logic, storage control, queues and work packaging.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/ewm/integrations/"><span>INT</span><strong>EWM Integration Architecture</strong><small>S/4HANA, TM, PP, QM, MES and automation boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/ewm/automation/"><span>AUTO</span><strong>EWM Automation & MFS</strong><small>PLC, communication points, telegrams, MFS execution and external warehouse-control boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/ewm/handling-units-packing/"><span>HU</span><strong>Handling Units, Packing & Labels</strong><small>Packaging structure, HU identity, work-center packing and physical/digital reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="deployment" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Architecture decision</p>
-      <h2>Embedded or decentralized is a system-boundary decision.</h2>
-      <p>There are two S/4HANA EWM deployment models in this map. “Direct” describes integration behavior; it is not modeled as a third deployment option.</p>
+      <p class="research-canvas__eyebrow">Deployment</p>
+      <h2>Embedded and decentralized EWM use similar warehouse concepts, but the system boundary changes the process.</h2>
+      <p>The deployment choice matters because it changes how deliveries, master data, stock changes and statuses cross between enterprise management and warehouse execution.</p>
     </header>
-    <div class="research-route-list">
-      {% for deployment in graph.deployment_models %}
-      <article>
-        <span>DEP</span>
-        <strong>{{ deployment.title }}</strong>
-        <small>{{ deployment.documented_model }}</small>
-        <p><b>Remember:</b> {{ deployment.remember }}</p>
-        <p><b>Strengths:</b> {{ deployment.architecture_reading.strengths | join: " · " }}</p>
-        <p><b>Trade-offs:</b> {{ deployment.architecture_reading.tradeoffs | join: " · " }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <p><strong>Lead rule:</strong> {{ graph.deployment_decision_rule }}</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
-      <h2>{{ graph.memory_model.title }}</h2>
-      <p>Each question points to one layer: architecture, document, stock, determination, execution, integration or monitoring.</p>
-    </header>
-    <div class="research-route-list">
-      {% for item in graph.memory_model.questions %}
-      <article><span>{{ item.key }}</span><strong>{{ item.question }}</strong><small>{{ item.answer }}</small></article>
-      {% endfor %}
-    </div>
+    <p>With <strong>EWM embedded in SAP S/4HANA</strong>, warehouse management and the surrounding S/4HANA applications share the same system boundary. This enables local integration patterns that do not exist in decentralized deployment. Current SAP documentation, for example, supports synchronous goods-movement scenarios for embedded EWM that are explicitly not available in decentralized EWM.</p>
+    <p><strong>Decentralized EWM based on SAP S/4HANA</strong> runs as a separate EWM system integrated with an enterprise-management system. That separation can be useful when warehouse operations need a distinct technical lifecycle or failure domain, but it adds distribution, interface monitoring and reconciliation. SAP's standard decentralized model uses replicated request and notification documents for several delivery processes, although current releases also support scenarios that skip those request documents.</p>
+    <p>This is why “embedded versus decentralized” is not a sizing shortcut. The decision should reflect availability, automation criticality, network and integration design, lifecycle independence, recovery, and the operational cost of keeping two systems consistent.</p>
   </section>
 
   <section class="research-canvas__inventory" id="objects" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Execution objects</p>
-      <h2>Request, task and work package are different objects.</h2>
-      <p><strong>{{ graph.object_chain.path }}</strong></p>
-      <p>{{ graph.object_chain.note }}</p>
+      <h2>Warehouse request, warehouse task and warehouse order solve different problems.</h2>
+      <p>Confusing these objects makes both design and troubleshooting harder because each one describes a different level of intent.</p>
     </header>
-    <div class="research-route-list">
-      {% for object in graph.execution_object_model %}
-      <article><span>OBJ</span><strong>{{ object.title }}</strong><small>{{ object.purpose }}{% if object.examples %} Examples: {{ object.examples | join: ", " }}.{% endif %}</small></article>
-      {% endfor %}
+    <div class="ecg-rail" aria-label="EWM execution chain">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Business demand</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Warehouse request</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Wave, if used</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Warehouse task</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Warehouse order</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Execution and confirmation</span>
+      </div>
     </div>
-    <p><a href="/labs/enterprise-context/ewm/objects/">Open the full object catalog →</a></p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Warehouse structure</p>
-      <h2>Map the physical warehouse before tuning strategies.</h2>
-      <p>{{ graph.warehouse_structure.lead_lens }}</p>
-    </header>
-    <div class="research-route-list">
-      {% for level in graph.warehouse_structure.levels %}
-      <article><span>MD</span><strong>{{ level.object }}</strong><small>{{ level.role }}</small></article>
-      {% endfor %}
-    </div>
+    <p>A <strong>warehouse request</strong> represents warehouse-relevant demand such as putaway, picking, a posting change or an internal stock transfer. A <strong>warehouse task (WT)</strong> expresses executable movement or stock-change work: source, destination, product or handling-unit context and the movement to perform. A <strong>warehouse order (WO)</strong> packages warehouse tasks into work that a resource can execute.</p>
+    <p>Waves are optional orchestration. In outbound processing, releasing a wave can create warehouse tasks and warehouse orders for the relevant request items. That makes a wave useful for synchronizing work, but it is not a mandatory object in every EWM process.</p>
+    <p>The distinction becomes concrete in picking. One outbound delivery order can require several warehouse tasks because the required quantity is spread across several source bins. Those tasks can then be grouped into one or more warehouse orders according to warehouse-order creation rules and later offered to resources through queue and resource-management logic.</p>
   </section>
 
   <section class="research-canvas__inventory" id="processes" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Core processes</p>
-      <h2>Warehouse execution is several process families, not one giant chain.</h2>
-      <p>Inbound, outbound, internal movement, production supply and physical inventory start from different business needs but share the same execution language.</p>
+      <p class="research-canvas__eyebrow">Process families</p>
+      <h2>Inbound, outbound, internal movement and production supply share an execution language, not one fixed sequence.</h2>
+      <p>The same object model appears in different business processes, but the trigger and final business state are different.</p>
     </header>
-    {% for process in graph.process_families %}
-    <div class="research-canvas__boundary" data-reveal>
-      <span class="material-symbols-outlined" aria-hidden="true">route</span>
-      <p><strong>{{ process.title }}</strong> · {{ process.memory_path }}</p>
-      {% if process.steps %}<p>{{ process.steps | join: " → " }}</p>{% endif %}
-      {% if process.scenarios %}<p><strong>Scenarios:</strong> {{ process.scenarios | join: ", " }}</p>{% endif %}
-      {% if process.concepts %}<p><strong>Concepts:</strong> {{ process.concepts | join: ", " }}</p>{% endif %}
-      <p><strong>Failure signal:</strong> {{ process.failure_signal }}</p>
-    </div>
-    {% endfor %}
-    <p><a href="/labs/enterprise-context/ewm/domains/">Open all EWM subdomains →</a></p>
+    <p>In <strong>inbound</strong>, EWM receives or creates warehouse demand, posts or coordinates goods receipt according to the process, determines putaway, creates warehouse tasks and confirms the final warehouse position. In <strong>outbound</strong>, the warehouse demand usually leads to stock removal, picking, packing, staging, loading and goods issue. The familiar path “wave → pick → pack → stage → load” is common, not universal.</p>
+    <p><strong>Internal warehouse processes</strong> include replenishment, rearrangement, posting changes and ad hoc movements. They matter because a warehouse can have enough enterprise stock and still fail operationally if the required stock is not available in the right EWM area or stock type.</p>
+    <p><strong>Production supply</strong> adds another boundary. EWM can stage components to a production supply area (PSA), while the manufacturing process remains owned by production. SAP supports several integration patterns, including delivery-based staging and embedded scenarios with synchronous goods movements. That is another reason to establish deployment and process type before assuming one universal document chain.</p>
   </section>
 
   <section class="research-canvas__inventory" id="controls" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Control plane</p>
-      <h2>Most “wrong bin” or “no task” problems are determination problems with a document context.</h2>
-      <p>Reproduce the exact request, stock and warehouse context before changing a strategy globally.</p>
+      <p class="research-canvas__eyebrow">Determination</p>
+      <h2>A wrong bin is usually the result of several decisions, not one storage strategy.</h2>
+      <p>Warehouse execution is shaped by document context, stock attributes, warehouse structure and determination rules before a worker ever sees the task.</p>
     </header>
-    <div class="research-route-list">
-      {% for control in graph.control_model %}
-      <article><span>CTRL</span><strong>{{ control.title }}</strong><small>{{ control.question }} Consequence: {{ control.affects | join: ", " }}.</small></article>
-      {% endfor %}
-    </div>
-    <p><a href="/labs/enterprise-context/ewm/controls/">Open the full determination map →</a></p>
+    <p>For putaway and stock removal, EWM determines where work should start and end. The warehouse process type supplies important process control. Putaway or stock-removal strategies search the warehouse structure. Storage control can insert intermediate process or layout steps. Warehouse-order creation then decides how resulting tasks are grouped into executable work packages.</p>
+    <p>After work is packaged, resource management adds an execution layer. Queues distribute warehouse orders, and EWM can select suitable work for a resource using factors such as assigned queues, warehouse-order status, latest start date and resource qualifications. A correct source bin can therefore still lead to poor execution if work packaging or queue assignment is wrong.</p>
+    <p>This separation gives a better diagnostic order: first prove the request and stock context, then the warehouse task and its source/destination determination, then warehouse-order grouping, and only after that resource or queue assignment.</p>
+    <p><a href="/labs/enterprise-context/ewm/controls/">Open the detailed determination map →</a></p>
   </section>
 
   <section class="research-canvas__inventory" id="integration" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Integration boundaries</p>
-      <h2>EWM should be strong at warehouse execution without becoming owner of every logistics decision.</h2>
-      <p>Use ownership language: who owns the business demand, who owns detailed execution, and who confirms the final state.</p>
+      <h2>EWM owns warehouse execution; neighboring applications own different business decisions.</h2>
+      <p>The practical question is not whether systems are “integrated”, but which document or status each side owns and how the handoff is confirmed.</p>
     </header>
-    <div class="research-route-list">
-      {% for item in graph.integration_boundaries %}
-      <article>
-        <span>INT</span><strong>{{ item.system }}</strong>
-        <small><b>Other side:</b> {{ item.owns }} <b>EWM:</b> {{ item.ewm_owns }}</small>
-        <p><b>Diagnostic:</b> {{ item.diagnostic_question }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <p><a href="/labs/enterprise-context/ewm/integrations/">Open the full integration architecture →</a></p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Quality</p>
-      <h2>QM troubleshooting starts with the deployment model.</h2>
-      <p>{{ graph.quality_integration.lead_lens }}</p>
-    </header>
-    <div class="research-route-list">
-      <article><span>QM</span><strong>{{ graph.quality_integration.embedded.title }}</strong><small>{{ graph.quality_integration.embedded.model }}</small></article>
-      <article><span>QM</span><strong>{{ graph.quality_integration.decentralized.title }}</strong><small>{{ graph.quality_integration.decentralized.model }}</small></article>
-    </div>
+    <p>For decentralized EWM, delivery-relevant communication with the enterprise-management system is a real system boundary. SAP documents asynchronous qRFC-based communication for delivery data and confirmations. Embedded EWM can use tighter local integration, including synchronous posting patterns for selected goods movements, so qRFC should not be treated as a universal rule for every EWM scenario.</p>
+    <p><a href="/labs/enterprise-context/inventory-management/">Inventory Management</a> remains the enterprise goods-movement and accounting context around many warehouse processes. <a href="/labs/enterprise-context/transportation-management/">Transportation Management</a> owns transportation planning and execution; current S/4HANA integration can connect TM and EWM through delivery- or freight-order-based patterns, including Advanced Shipping and Receiving. Production owns the manufacturing requirement while EWM stages and moves components. Quality Management owns inspection decisions while EWM executes the warehouse consequences relevant to the deployment and process.</p>
+    <p>A useful handoff is therefore explicit about four things: source object, target object, status or quantity being transferred, and who is authoritative when the two sides disagree.</p>
+    <p><a href="/labs/enterprise-context/ewm/integrations/">Open the detailed integration architecture →</a></p>
   </section>
 
   <section class="research-canvas__inventory" id="automation" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Execution & automation</p>
-      <h2>Human RF and machine automation use the same warehouse intent at different control levels.</h2>
+      <p class="research-canvas__eyebrow">People and automation</p>
+      <h2>RF, resources and MFS execute the same warehouse intent at different control levels.</h2>
+      <p>EWM can guide a person through warehouse orders or control automated material flow, but the warehouse task remains the important bridge between planned warehouse work and physical movement.</p>
     </header>
-    <div class="research-route-list">
-      <article><span>RF</span><strong>{{ graph.rf_and_automation.rf.title }}</strong><small>{{ graph.rf_and_automation.rf.role }} {{ graph.rf_and_automation.rf.lead_lens }}</small></article>
-      <article><span>MFS</span><strong>{{ graph.rf_and_automation.mfs.title }}</strong><small>{{ graph.rf_and_automation.mfs.role }} Objects: {{ graph.rf_and_automation.mfs.objects | join: ", " }}. {{ graph.rf_and_automation.mfs.lead_lens }}</small></article>
-      <article><span>WCS</span><strong>{{ graph.rf_and_automation.external_wcs.title }}</strong><small>{{ graph.rf_and_automation.external_wcs.role }} {{ graph.rf_and_automation.external_wcs.lead_lens }}</small></article>
-    </div>
+    <p>For human execution, resources and queues help distribute warehouse orders; RF can present the selected work and guide confirmation. For automated areas, SAP's Material Flow System (MFS) maps PLCs, communication channels, communication points, conveyor segments and resources. EWM can split the movement into stages and exchange telegrams with the PLC while the PLC controls the equipment between communication points.</p>
+    <p>An external warehouse control system creates another ownership boundary. The design should make clear whether EWM or the external system chooses the next movement, how warehouse-task state is synchronized, and where recovery starts after a communication or equipment failure.</p>
     <p><a href="/labs/enterprise-context/ewm/automation/">Open Automation & MFS →</a> · <a href="/labs/enterprise-context/ewm/mobility/">Open Warehouse Mobility →</a></p>
   </section>
 
   <section class="research-canvas__inventory" id="failures" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Diagnostics</p>
-      <h2>Find the first broken state, not the loudest downstream symptom.</h2>
+      <p class="research-canvas__eyebrow">One concrete investigation</p>
+      <h2>“The delivery exists, but no warehouse work is available.”</h2>
+      <p>The fastest path is to find the first missing EWM state instead of changing warehouse strategies immediately.</p>
     </header>
-    <div class="research-route-list">
-      {% for failure in graph.failure_modes %}
-      <article><span>!</span><strong>{{ failure.symptom }}</strong><small><b>Check first:</b> {{ failure.check_first }}</small></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Architecture trade-offs</p>
-      <h2>Use the smallest boundary that still protects operations.</h2>
-    </header>
-    <div class="research-route-list">
-      {% for item in graph.architecture_tradeoffs %}
-      <article><span>DEC</span><strong>{{ item.decision }}</strong><small><b>Lighter boundary:</b> {{ item.lighter_choice }} <b>Stronger boundary:</b> {{ item.stronger_choice }}{% if item.caution %} {{ item.caution }}{% endif %}</small></article>
-      {% endfor %}
-    </div>
+    <p>First prove that EWM has the correct warehouse-relevant document and quantity. Then check whether warehouse tasks should already exist. If the process uses waves, establish whether the request item was assigned and whether the wave was released successfully. If task creation failed, inspect stock, determination and process-control context before looking at resource management.</p>
+    <p>If warehouse tasks exist but nobody receives work, the problem has moved downstream: warehouse-order creation, queue assignment, resource eligibility or work selection now matters. If work was executed but the business process is still incomplete, compare confirmation, delivery or goods-movement status and the integration handoff to the neighboring application.</p>
+    <p>This sequence is useful because “no work” can describe at least four different failures: no warehouse demand, no task, no executable warehouse order, or a completed warehouse movement whose status did not reach the next owner.</p>
   </section>
 
   <section class="research-canvas__inventory" id="assessment" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Assessment lens</p>
-      <h2>Answers that show ownership and reasoning, not transaction memory.</h2>
-      <p>A strong Lead answer explains the boundary, document chain, first diagnostic check and business consequence.</p>
+      <p class="research-canvas__eyebrow">Architecture judgment</p>
+      <h2>The strongest EWM design keeps ownership visible.</h2>
+      <p>Complex warehouses need detail, but detail should not hide the system and object boundaries that make operations recoverable.</p>
     </header>
-    <div class="research-route-list">
-      {% for item in graph.assessment_questions %}
-      <article><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.strong_answer }}</small></article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div><h3>Deployment</h3><p>Choose embedded or decentralized EWM from lifecycle, resilience, automation and integration needs—not from warehouse size alone.</p></div>
+      <div><h3>Execution</h3><p>Keep warehouse request, task, warehouse order, resource and confirmation as separate states so planning and physical work can be explained independently.</p></div>
+      <div><h3>Integration</h3><p>Define which application owns each business decision and how status is reconciled when a warehouse event crosses a system boundary.</p></div>
     </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Synthetic case</p>
-      <h2>{{ graph.synthetic_case.company }} / {{ graph.synthetic_case.warehouse }}</h2>
-      <p>{{ graph.synthetic_case.situation }}</p>
-    </header>
-    <div class="research-route-list">
-      {% for step in graph.synthetic_case.reasoning_path %}
-      <article><span>{{ forloop.index }}</span><strong>{{ step }}</strong></article>
-      {% endfor %}
-      <article><span>?</span><strong>{{ graph.synthetic_case.assessment_prompt }}</strong></article>
-    </div>
+    <p class="ecg-caption">The practical test is simple: for any blocked process, we should be able to name the current business object, the next expected object or status, the rule that creates it, and the system that owns the correction.</p>
   </section>
 
   <section class="research-canvas__inventory" id="sources" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Primary SAP references used for this vertical.</h2>
-      <p>The explanation is independently written; source links verify product behavior and release-sensitive boundaries.</p>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>Current SAP documentation behind this model.</h2>
+      <p>The explanation is independently written. Product behavior and release-sensitive boundaries were checked against SAP S/4HANA 2025 FPS01 documentation.</p>
     </header>
     <div class="research-route-list">
-      {% for source in evidence.sources %}
-      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% for source in page.source_links %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>Primary documentation</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
-    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Core graph JSON</a> · <a href="/labs/enterprise-context/data/ewm-domains.json">Domain map JSON</a> · <a href="/labs/enterprise-context/data/ewm-objects.json">Object catalog JSON</a> · <a href="/labs/enterprise-context/data/ewm-controls.json">Control plane JSON</a> · <a href="/labs/enterprise-context/data/ewm-integrations.json">Integration map JSON</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a> · <a href="/labs/enterprise-context/data/topics.json">Research topics JSON</a></p>
+    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Core graph JSON</a> · <a href="/labs/enterprise-context/data/ewm-domains.json">Domain map JSON</a> · <a href="/labs/enterprise-context/data/ewm-objects.json">Object catalog JSON</a> · <a href="/labs/enterprise-context/data/ewm-controls.json">Control plane JSON</a> · <a href="/labs/enterprise-context/data/ewm-integrations.json">Integration map JSON</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a></p>
   </section>
 </div>

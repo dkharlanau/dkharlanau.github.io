@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Inventory Management — Enterprise Context Lab"
-description: "A practical SAP S/4HANA Inventory Management map from business event and movement semantics through stock state, valuation, reservations, physical inventory, EWM handoff, and reconciliation."
+description: "A practical SAP S/4HANA Inventory Management guide to goods movements, stock state, movement types, reservations, physical inventory, valuation, and the EWM boundary."
 permalink: /labs/enterprise-context/inventory-management/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - physical-inventory
   - ewm
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-02"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP inventory management goods movements, stock types and ownership"
@@ -76,7 +76,6 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/8a532e4e6aaf4f4b97fd2f014f9837e0.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.inventory_management %}
 {% assign evidence = site.data.labs.enterprise_context.sources.inventory_management %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Inventory Management</li></ol></nav>
@@ -85,151 +84,108 @@ source_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Deep vertical / Inventory Management</p>
-      <h1>Start with the stock event.<br />Then read the movement type.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#runtime">Trace event to reconciliation <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="Inventory Management inventory">
-      <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · synthetic cases · no client data</em>
+      <h1>Inventory is a state,<br />not just a quantity.</h1>
+      <p>SAP S/4HANA Inventory Management records goods movements and the stock state they create. The useful question is not “Which movement type do I remember?” but “What business event happened, which stock state should change, and what document proves it?”</p>
+      <a class="research-canvas__button" href="#runtime">Follow a goods movement <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
-    <p><strong>Working rule:</strong> a material document is evidence of a stock event. Explain what changed in quantity, location, stock type, ownership, valuation, consumption, or transit state before discussing a movement-type number.</p>
-    <a href="/labs/enterprise-context/data/inventory-management-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+    <div>
+      <p><strong>Start with the business event.</strong> A receipt, issue, transfer, stock-status change, physical-inventory adjustment, or reversal changes a specific inventory state. The movement type controls how SAP represents that change; it is not the business explanation by itself.</p>
+      <p>A posted material document proves that a goods movement was recorded. To understand whether it was the right movement, read the reference object, the before-and-after stock state, the valuation effect, and any warehouse execution that sits around it.</p>
+    </div>
+    <a href="/labs/enterprise-context/data/inventory-management-graph.json">Open the structured inventory model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Completion model</p>
-      <h2>Prove the same event in four state views.</h2>
-      <p>A posting can be valid in Inventory Management and still leave a warehouse, accounting, or physical-count inconsistency. I compare the state views before creating a compensating movement.</p>
+      <p class="research-canvas__eyebrow">Stock state</p>
+      <h2>“We have 100 pieces” is rarely enough to describe inventory.</h2>
     </header>
-    <div class="ecg-control-stack">
-      <article><span>EVENT</span><h3>Business event</h3><p>What happened: receipt, issue, transfer, stock-type change, consumption, or inventory difference?</p><strong>Proof: the reference and movement semantics match the business event.</strong></article>
-      <article><span>STOCK</span><h3>Book stock</h3><p>Which quantity, plant, storage location, stock type, ownership, batch, or special-stock dimension changed?</p><strong>Proof: before/after stock state matches the intended event.</strong></article>
-      <article><span>WAREHOUSE</span><h3>Physical execution</h3><p>If EWM or another warehouse layer is involved, does its execution state represent the same physical movement?</p><strong>Proof: IM and warehouse states reconcile across the handoff.</strong></article>
-      <article><span>VALUE</span><h3>Financial effect</h3><p>Did valuation, consumption, account assignment, or accounting follow the intended movement semantics?</p><strong>Proof: material and accounting consequences tell the same business story.</strong></article>
-    </div>
-    <p class="ecg-caption"><strong>Lead signal:</strong> do not use a compensating posting until you know which state view is wrong. Otherwise the stock number may improve while the evidence chain gets worse.</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review confirms movement-type control behavior and the difference between counting stock and posting physical-inventory differences. Warehouse and finance handoffs were reviewed against the route source registry; the four-view completion model remains an authored diagnostic frame.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Memory model</p><h2>Seven questions from event to proof.</h2><p>This path separates process authority, inventory state, financial effect, and warehouse execution.</p></header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article class="ecg-memory-card"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item.key }}</strong><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>
-      {% endfor %}
-    </div>
-    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong> Use the movement type as control evidence inside this chain, not as the starting point.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Movement families</p><h2>Translate every posting into a business-state sentence.</h2><p>Receipt, issue, transfer posting, stock transfer, and inventory difference solve different problems even when they all create material documents.</p></header>
-    <div class="ecg-input-grid">
-      {% for item in graph.movement_families %}
-      <article><span>MOVE</span><h3>{{ item.title }}</h3><p>{{ item.business_reading }}</p><p><strong>Lead question:</strong> {{ item.lead_question }}</p></article>
-      {% endfor %}
+    <p>Stock is separated by organizational and business dimensions. At minimum, plant and storage location tell us where ERP manages the quantity. Stock type tells us whether the quantity is unrestricted-use, in quality inspection, blocked, or in another supported state. Batch, valuation type, and special-stock context can split the same material further.</p>
+    <p>This is why total plant stock can look healthy while the next process still cannot use the material. The required quantity may be in another storage location, a different stock type, a different batch, or a special-stock segment tied to another business context. ATP adds another layer because availability also depends on the relevant receipts, requirements, and checking rules, not only on the physical quantity visible in Inventory Management.</p>
+    <div class="ecg-decision-columns">
+      <div><h3>Where?</h3><p>Plant and storage location place the stock in the ERP inventory structure.</p></div>
+      <div><h3>Usable for what?</h3><p>Stock type and status determine whether the quantity can support the intended process.</p></div>
+      <div><h3>Whose or which context?</h3><p>Batch, valuation type, and special stock can separate identity, value, ownership, or assignment.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Stock model</p><h2>Quantity without stock context is a weak answer.</h2><p>{{ graph.stock_model.principle }}</p></header>
-    <div class="ecg-input-grid">
-      {% for item in graph.stock_model.dimensions %}
-      <article><span>STOCK</span><h3>{{ item.dimension }}</h3>{% if item.examples %}<p>{{ item.examples | join: " · " }}</p>{% endif %}<p><strong>Ask:</strong> {{ item.question }}</p></article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Movement semantics</p>
+      <h2>The movement type tells SAP what kind of change is being posted.</h2>
+    </header>
+    <p>SAP identifies a goods movement with a movement type. That control affects which stock is updated and can also influence valuation, consumption, field selection, account determination, and follow-on behavior. The movement type therefore matters greatly, but it should be read after the business event and reference are understood.</p>
+    <p>The broad families are easier to reason about than a memorized list of numbers. A <strong>goods receipt</strong> recognizes incoming stock or output. A <strong>goods issue</strong> reduces stock for delivery, production, a cost object, scrap, or another consumption purpose. A <strong>transfer posting</strong> changes stock identity or status and may be logical rather than physical. A <strong>stock transfer</strong> moves stock between storage locations or plants.</p>
+    <p>A useful concrete example is SAP's documented one-step storage-location transfer of unrestricted-use stock with movement type 311. The issuing storage location decreases and the receiving storage location increases, while total stock at plant level stays the same. SAP also documents that this example does not create an accounting document. The point is not to memorize 311; it is to see that location changed while plant quantity and value did not.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Reference and intent</p>
+      <h2>A goods movement usually belongs to a larger process.</h2>
+    </header>
+    <p>A purchase-order receipt, production component issue, outbound-delivery goods issue, and physical-inventory adjustment may all create material documents, but their authority comes from different business objects. The reference explains why the stock movement exists and often supplies quantity, account assignment, or process context.</p>
+    <p>Reservations are a good example of the difference between intent and execution. A reservation asks that material be available for a planned goods movement; it does not move stock by itself. SAP can also create reservations automatically from upstream objects. For example, a production order generates reservations for required material components, and the later withdrawal records the actual goods issue.</p>
+    <p>When an automatic reservation is wrong, the first useful question is often whether the owning order or component requirement is wrong. Editing the symptom downstream can leave planning and execution describing different needs.</p>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
-    <header><p class="research-canvas__eyebrow">Runtime</p><h2>One posting can cross logistics, warehouse, and accounting boundaries.</h2><p>Follow the reference and before/after state instead of reading only the final stock overview.</p></header>
-    <div class="ecg-determination-list">
-      {% for stage in graph.runtime_pipeline %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>inventory stage</small></div><h3>{{ stage.title }}</h3><p class="ecg-question">{{ stage.question }}</p></header>
-        <div class="ecg-decision-columns"><div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div></div>
-      </article>
-      {% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">From event to document</p>
+      <h2>Read the posting in the same order the business state changes.</h2>
+    </header>
+    <p>First identify the event and its reference: what physically or logically happened, and which process object authorized it? Then identify the source and destination stock states. For a simple receipt, that may be one receiving stock segment. For a transfer, both sides matter. For consumption, the receiving account assignment or cost object matters as much as the quantity leaving stock.</p>
+    <p>Next read the material document as the logistics record of the posting. Check material, quantity, unit, plant, storage location, stock type, batch or special-stock data where relevant, movement type, reference, reversal state, and posting date. Compare the result with the stock state that should now exist rather than with the previous total alone.</p>
+    <p>Finally separate quantity from value. Some goods movements are value-relevant and create an accounting consequence; others change location or stock state without creating the same financial effect. If quantity is right but value or G/L posting is wrong, the problem has crossed into valuation, account determination, or account assignment rather than remaining a pure stock problem. The <a href="/labs/enterprise-context/finance-logistics/">FI/CO for Logistics guide</a> covers that boundary in more detail.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Reservations</p><h2>A reservation is intent, not physical stock movement.</h2><p>{{ graph.reservation_model.principle }}</p></header>
-    <div class="ecg-input-grid">
-      {% for item in graph.reservation_model.types %}<article><span>RES</span><h3>{{ item.title }}</h3><p>{{ item.reading }}</p></article>{% endfor %}
-    </div>
-    <div class="ecg-lead-lens"><strong>Diagnostic questions:</strong><ul>{% for item in graph.reservation_model.diagnostic_questions %}<li>{{ item }}</li>{% endfor %}</ul></div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Physical inventory</p><h2>Posting the difference fixes the book. It does not explain the operation.</h2><p>{{ graph.physical_inventory_model.lead_lens }}</p></header>
-    <div class="research-route-list">
-      {% for item in graph.physical_inventory_model.stages %}<a href="#failures"><span>{{ forloop.index }}</span><strong>{{ item.title }}</strong><small>{{ item.reading }}</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>{% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Integration boundaries</p><h2>Inventory is the quantity/value junction of logistics.</h2><p>Procurement, production, quality, sales, EWM, and finance can all own different parts of one stock event.</p></header>
-    <div class="research-route-list">
-      {% for item in graph.integration_boundaries %}<a href="#failures"><span>INT</span><strong>{{ item.boundary }}</strong><small>{{ item.ownership }} {{ item.question }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>{% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Warehouse boundary</p>
+      <h2>Inventory Management and EWM can describe the same movement at different levels.</h2>
+    </header>
+    <p>Inventory Management is the ERP quantity-and-value layer. Where SAP EWM is deployed, EWM can own the detailed warehouse execution: bins, warehouse tasks, handling units, staging, and confirmation. The two states must eventually describe the same physical reality, but they are not the same object model.</p>
+    <p>The integration pattern matters. SAP documents EWM scenarios in which a goods movement initiated outside EWM creates a delivery for warehouse processing, and embedded EWM scenarios where certain receipts can be posted directly from Inventory Management and the warehouse without delivery documents. So “EWM-managed” does not imply one universal posting sequence. Before correcting stock directly, establish which system is supposed to lead that particular movement.</p>
+    <p>Continue with the <a href="/labs/enterprise-context/ewm/">EWM guide</a> when the issue is no longer the ERP stock event but the warehouse request, task, confirmation, or synchronization path.</p>
   </section>
 
   <section class="research-canvas__inventory" id="failures" data-reveal>
-    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>Do not repair stock before you know which state is wrong.</h2><p>Most expensive inventory incidents become confusing when a compensating posting hides the original reference, warehouse state, or accounting effect.</p></header>
-    <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}<article class="ecg-determination-detail"><header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header><div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div></div></article>{% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>Trace one stock event into planning, warehouse, or finance.</h2><p>This is where Inventory Management becomes an architecture topic instead of a posting screen.</p></header>
-    <div class="research-route-list">
-      {% for item in graph.impact_traces %}<a href="#lead-lens"><span>TRACE</span><strong>{{ item.title }}</strong><small>{{ item.path }} · {{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>{% endfor %}
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Physical inventory</p>
+      <h2>A count difference is evidence of a mismatch, not an explanation.</h2>
+    </header>
+    <p>Physical inventory compares observed stock with book stock. The physical-inventory document controls the count scope; the count records what is physically present; difference processing compares that observation with the book quantity. Posting the difference adjusts the system stock and, where relevant, its financial value.</p>
+    <p>That closes the accounting and inventory control step, but it does not explain why the difference appeared. The cause may be timing, an unposted or duplicate movement, the wrong storage location, a picking or staging error, a unit-of-measure issue, damage, or another process defect. If the cause is still active, posting the difference only resets the starting point for the next mismatch.</p>
   </section>
 
   <section class="research-canvas__inventory" id="lead-lens" data-reveal>
-    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>Explain the state transition and prove it.</h2><p>The strongest answer names the event, owner, stock dimensions, financial impact, warehouse boundary, and evidence chain.</p></header>
-    <div class="ecg-input-grid">
-      <article><span>ASK</span><h3>What I ask first</h3><p>{{ graph.lead_lens.what_i_ask_first }}</p></article>
-      <article><span>OWN</span><h3>Decision ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
-      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
-      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
-      <article><span>PROVE</span><h3>Proof of cause</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
-      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Synthetic cases</p><h2>Practice before/after state, not screen navigation.</h2><p>These examples are fictional and safe for assessment practice.</p></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.synthetic_cases %}<article class="ecg-determination-detail"><header><div><span>CASE</span><small>synthetic</small></div><h3>{{ item.title }}</h3><p>{{ item.scenario }}</p></header><div class="ecg-decision-columns"><div><h4>Lead path</h4><ol>{% for step in item.lead_path %}<li>{{ step }}</li>{% endfor %}</ol></div><div><h4>Lesson</h4><p>{{ item.lesson }}</p></div></div></article>{% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Short questions, state-based answers.</h2><p>Use the answer as a coverage check, not something to recite.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Reconciliation</p>
+      <h2>Correct the first wrong state, not the easiest visible number.</h2>
+    </header>
+    <p>When inventory is wrong, compare the business reference, material document, current stock segment, accounting document where relevant, and EWM state where warehouse execution is involved. If the original posting itself is wrong, use the supported reversal or correction path for that process instead of adding an unrelated compensating movement simply to make today's quantity look right.</p>
+    <p>This keeps the document chain understandable. Procurement history can still explain the receipt, production can still explain consumption and output, a delivery can still explain goods issue, and Finance can still reconcile the value. Inventory support becomes much easier when every layer tells the same story.</p>
     <div class="research-route-list">
-      {% for item in graph.assessment_drills %}<a href="/labs/assessment/"><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.strong_answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>{% endfor %}
+      <a href="/labs/enterprise-context/procurement/"><span>MM</span><strong>Procurement</strong><small>Follow purchase demand, order, receipt, invoice, and settlement context.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production</strong><small>Connect component reservations and issues with production output and order state.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP and aATP</strong><small>Separate book stock from the quantity the promise engine can actually confirm.</small><i class="material-symbols-outlined" aria-hidden="true">event_available</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Sources</p><h2>Primary documentation checks the behavior.</h2><p>The explanatory model remains independently written. Product behavior is source-tracked and review-dated.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>Primary SAP documentation behind the baseline.</h2>
+      <p>The article is independently written. Product behavior was rechecked against current SAP S/4HANA 2025 FPS01 and SAP S/4HANA Cloud documentation. Detailed movement-type configuration, Material Ledger design, batch/serial configuration, and full EWM execution remain outside this page.</p>
+    </header>
     <div class="research-route-list">
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/742e46e570984d9aa74e468838f6e1ff.html" target="_blank" rel="noopener"><span>SAP</span><strong>Goods Movement</strong><small>SAP S/4HANA 2025 FPS01 · checked 2026-09-23</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/a764bd534f22b44ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>One-Step Storage-Location Transfer Without Reservation</strong><small>SAP S/4HANA 2025 FPS01 · checked 2026-09-23</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/34de0103497c4b80a7c7fbf6952ff971/c803b753128eb44ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Withdrawing Material Components</strong><small>SAP S/4HANA 2025 FPS01 · checked 2026-09-23</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% for source in evidence.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}
     </div>
   </section>
