@@ -11,7 +11,9 @@ sap_area: SD item category
 business_process: Order to cash
 status: needs_verification
 verified: false
-last_reviewed: 2026-09-22
+last_modified_at: 2026-09-24
+last_reviewed: 2026-09-24
+sales_preparation: sales
 
 tags:
   - order-to-cash
@@ -72,7 +74,10 @@ author: Dzmitryi Kharlanau
 
     <p>Schedule lines deserve a separate mention. The item category does not replace schedule-line determination. Instead, it helps define whether schedule lines are allowed and participates in the logic that leads to the schedule-line category. The schedule line then carries important logistics behavior such as delivery relevance and movement-related control. Keeping item and schedule-line responsibilities separate makes the sales-order model much easier to understand.</p>
 
-    <h2>A simple example</h2>
+    <h2>Use a three-layer model in assessment answers</h2>
+<p>The sales document type sets the document context, the item category defines item behavior, and the schedule line category carries important logistics behavior below the item. Keeping these three layers separate prevents a common explanation error: attributing delivery or requirements behavior entirely to the item category when the schedule line is the immediate control.</p>
+
+<h2>A simple example</h2>
     <p>Imagine that the same material is entered in two different sales document types. The material still carries the same item category group, but the document context is different. SAP can therefore determine a different item category and process the item differently. The reverse is also possible: within the same document type, materials with different item category groups can lead to different item categories.</p>
 
     <p>This is why copying a material number from a working order does not prove that the new item should behave the same way. We also need the document type and the relevant item-category context.</p>
