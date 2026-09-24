@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-03
+last_modified_at: 2026-09-24
 last_reviewed: 2026-09-03
 publication_wave: "sap-delivery-review-2026-09"
 review_method: "current SAP primary sources + practitioner boundary review for PTF + page-level factual review"
@@ -65,6 +65,8 @@ source_links:
     url: "https://help.sap.com/docs/cloud-alm/applicationhelp/test-execution-concepts"
   - title: "SAP Cloud ALM — Manual Test Cases"
     url: "https://help.sap.com/docs/cloud-alm/applicationhelp/manual-test-cases"
+  - title: "SAP Cloud ALM — Test Plans"
+    url: "https://help.sap.com/docs/cloud-alm/applicationhelp/e0a5c3f2241f4972a91414b0fcf57547.html"
   - title: "SAP Cloud ALM — Integrating Test Automation Providers"
     url: "https://help.sap.com/docs/cloud-alm/setup-administration/integrating-test-automation-providers"
   - title: "Tricentis Test Automation for SAP Integrated with SAP Cloud ALM"
@@ -77,6 +79,8 @@ source_links:
     url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/c6663103e6ad47dcb8bb830d85137077/49708b9f81463e90e10000000a42189c.html"
   - title: "SAP Learning — Explaining the Test Strategy"
     url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition/explaining-the-test-strategy_d4b6f563-e5bb-41b5-b7e2-ec899edb756f"
+  - title: "SAP Learning — Explaining the Test Strategy for Private Edition"
+    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-private-edition/explaining-the-test-strategy_f9e28dee-5e09-49c3-b06c-4c40cfc1f49a"
   - title: "LeverX — SAP Process Test Framework (PTF): A Practical Guide to End-to-End Testing for ABAP Developers"
     url: "https://career.leverx.com/blog/sap-process-test-framework-ptf-a-practical-guide-to-end-to-end-testing-for-abap-developers"
 # ai-discovery-managed:start
@@ -131,6 +135,21 @@ semantic_links:
     <p><strong>Testing is not a phase after development.</strong> It starts when the change and its risks are understood. A pricing change, BAdI, interface mapping, authorization role and warehouse configuration need different test evidence.</p>
     <p><strong>Do not automate everything.</strong> Automate stable, repeatable and valuable checks. Keep human testing for new behavior, usability, business judgment and cases where the process changes faster than the script can be maintained.</p>
     <p><strong>Source boundary:</strong> ABAP Cloud, SAPUI5, SAP Cloud ALM, Tricentis, eCATT, and Public Edition Test Automation Tool statements are checked against SAP sources. The PTF section is deliberately practitioner-informed and release-dependent; it is not presented as a universal capability for every S/4HANA landscape.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="activate-test-phases" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP Activate / Test ownership</p>
+      <h2>Testing changes purpose as the project moves forward.</h2>
+      <p>For assessment answers, separate three things: who is testing, what they are trying to prove, and whether the result needs formal evidence.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="#design"><span>Realize</span><strong>Implementation testing</strong><small>Configuration experts test while they build. A unit test checks one component, a string test connects several components, and role testing checks access. Unit and string tests are usually informal; formal end-to-end, integration, and migration tests should run in the test system and be documented.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
+      <a href="#test-management"><span>Realize</span><strong>User acceptance testing</strong><small>Customer LoB experts validate that the configured process meets the business need. The strongest testers are often the people who joined Fit-to-Standard workshops because they know the original gaps and expected outcome. UAT is formal and its results belong in test management.</small><i class="material-symbols-outlined" aria-hidden="true">groups</i></a>
+      <a href="#automation"><span>Run</span><strong>Regression testing</strong><small>After go-live, regression normally checks whether an upgrade or later change broke existing behavior. The customer owns this ongoing responsibility. If an upgrade arrives before implementation is complete, the implementation team must retest the scope already built against the new software level.</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
+      <a href="#test-data"><span>Ready</span><strong>Use a realistic test system</strong><small>Formal process testing becomes meaningful when relevant integrations are connected and the required migrated or prepared data is available. Otherwise we may prove an isolated screen while missing the real end-to-end risk.</small><i class="material-symbols-outlined" aria-hidden="true">lan</i></a>
+    </div>
+    <p><strong>Memory model:</strong> implementation testing asks whether we built the configured solution correctly. UAT asks whether the business accepts it. Regression asks whether a later change or upgrade broke behavior that used to work.</p>
   </section>
 
   <section class="research-canvas__inventory" id="test-stack" data-reveal>
@@ -305,15 +324,18 @@ semantic_links:
 
   <section class="research-canvas__inventory" id="test-management" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Test management</p>
-      <h2>Cloud ALM manages the testing process; the automation provider executes the automated test.</h2>
-      <p>This distinction is useful in architecture discussions. SAP Cloud ALM can prepare test cases, connect them to requirements or solution processes, organize test plans, execute manual cases, trigger automated cases, monitor progress and support defect follow-up.</p>
+      <p class="research-canvas__eyebrow">SAP Cloud ALM test management</p>
+      <h2>Cloud ALM controls the test lifecycle; the automation provider runs the automated script.</h2>
+      <p>This distinction is useful in architecture and delivery discussions. SAP Cloud ALM gives us one place for preparation, cycles, execution context, traceability, evidence, defects, and automated-provider integration.</p>
     </header>
     <div class="research-route-list">
-      <a href="https://help.sap.com/docs/cloud-alm/applicationhelp/manual-test-cases" target="_blank" rel="noopener"><span>MAN</span><strong>Manual test cases</strong><small>Use structured activities and actions with instructions and expected results. Manual testing is appropriate for UAT, new behavior, usability and scenarios that are not worth automating.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/docs/cloud-alm/applicationhelp/test-execution-concepts" target="_blank" rel="noopener"><span>AUTO</span><strong>Automated test cases</strong><small>Cloud ALM starts the run, while the automation provider performs the test and stores detailed execution results. Keep provider ownership clear in support and architecture diagrams.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/docs/cloud-alm/setup-administration/integrating-test-automation-providers" target="_blank" rel="noopener"><span>API</span><strong>Automation providers</strong><small>Cloud ALM can integrate SAP and third-party providers through the supported test-automation integration model. This lets one release plan contain both manual and automated evidence.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="#release-gates"><span>Lead</span><strong>Traceability matters more than test count</strong><small>A Lead should be able to answer which requirements and risks are covered, which critical tests failed, who owns the defects and what blocks release.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="https://help.sap.com/docs/cloud-alm/applicationhelp/manual-test-cases" target="_blank" rel="noopener"><span>01</span><strong>Prepare the test case</strong><small>Manual test cases can be authored from scratch or based on predefined solution process content. Define activities and actions, instructions, expected results, and the evidence that matters. When the case is ready for execution, set it to Prepared.</small><i class="material-symbols-outlined" aria-hidden="true">edit_note</i></a>
+      <a href="https://help.sap.com/docs/cloud-alm/applicationhelp/uploading-manual-test-cases" target="_blank" rel="noopener"><span>02</span><strong>Use SAP Best Practices content carefully</strong><small>Solution-process-based cases can provide predefined activities. Detailed SAP Best Practices test scripts are available as process accelerators and can also be imported or adapted. A process title alone is not a complete executable test: check the actions, data, expected results, and project-specific changes.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="https://help.sap.com/docs/cloud-alm/applicationhelp/e0a5c3f2241f4972a91414b0fcf57547.html" target="_blank" rel="noopener"><span>03</span><strong>Build a test cycle with Test Plans</strong><small>A test plan groups one or more test cases into an execution cycle, can assign testers to the cases, and lets the same case be reused in different cycles. Cloud ALM also supports a leaner execution model without a test plan when that is enough.</small><i class="material-symbols-outlined" aria-hidden="true">event_note</i></a>
+      <a href="https://help.sap.com/docs/cloud-alm/applicationhelp/releasing-test-plans" target="_blank" rel="noopener"><span>04</span><strong>Release for execution</strong><small>Prepared cases assigned to a plan become available in Test Execution when the plan is moved to In Testing. If the same case is assigned to several plans, Cloud ALM creates a separate execution occurrence for each plan context.</small><i class="material-symbols-outlined" aria-hidden="true">play_circle</i></a>
+      <a href="#defects"><span>05</span><strong>Execute, record, and follow defects</strong><small>The tester records the outcome and evidence in Test Execution. A failure should create a reproducible defect with enough business and technical context for the implementation team to fix and retest it.</small><i class="material-symbols-outlined" aria-hidden="true">bug_report</i></a>
+      <a href="https://help.sap.com/docs/cloud-alm/setup-administration/integrating-test-automation-providers" target="_blank" rel="noopener"><span>06</span><strong>Connect automation providers</strong><small>SAP Cloud ALM can integrate SAP and third-party automation providers through its supported Test Automation API model. Cloud ALM orchestrates and reports the run; the connected provider performs the automated test.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="#release-gates"><span>Lead</span><strong>Traceability matters more than test count</strong><small>A Lead should be able to answer which requirements and business risks are covered, which critical tests failed, who owns the defects, which evidence exists, and what still blocks release.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
     </div>
   </section>
 
@@ -388,6 +410,22 @@ semantic_links:
       <a href="#anti-patterns"><span>04</span><strong>Reusing dirty data</strong><small>A test that depends on yesterday’s stock, open delivery, changed customer or expired role is not a reliable regression test.</small><i class="material-symbols-outlined" aria-hidden="true">data_alert</i></a>
       <a href="#anti-patterns"><span>05</span><strong>Checking everything</strong><small>Exact comparison of every field makes automation fragile. Assert the fields, statuses, postings and messages that represent the business contract.</small><i class="material-symbols-outlined" aria-hidden="true">select_check_box</i></a>
       <a href="#anti-patterns"><span>06</span><strong>Ignoring recovery</strong><small>If the production support team must reprocess messages, restart queues or reverse documents, that recovery path deserves a test before go-live.</small><i class="material-symbols-outlined" aria-hidden="true">build_circle</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="testing-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall / FAQ</p>
+      <h2>Questions worth answering without notes.</h2>
+      <p>These are short memory checks. The important part is the boundary between test purpose, ownership, and evidence.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Unit test vs string test?</h3><p>A unit test checks one piece of functionality. A string test connects several units to prove that a larger part of the process works together. Both normally happen while configuration or development is still being completed.</p></div>
+      <div><h3>Which tests are formal?</h3><p>End-to-end business-process tests, integration tests, data-migration tests, and UAT need managed evidence. Unit and string tests are usually informal, although important failures should still be traceable.</p></div>
+      <div><h3>Who should perform UAT?</h3><p>Customer business experts. Ideally, the same LoB experts who joined Fit-to-Standard workshops validate whether the delivered process meets the requirement they helped define.</p></div>
+      <div><h3>What does a Test Plan add?</h3><p>It creates an execution cycle around prepared test cases: cases can be grouped, testers assigned, and the same case reused in separate cycles. This is useful for UAT waves, rollouts, and repeated release testing.</p></div>
+      <div><h3>When does regression happen?</h3><p>Typically in Run after go-live, especially around upgrades and later changes. If an upgrade lands during implementation, the partner team must also retest the configured scope before continuing.</p></div>
+      <div><h3>Cloud ALM or Tricentis?</h3><p>They solve different parts of the problem. Cloud ALM manages the test lifecycle and orchestration. Tricentis Test Automation for SAP is one automation provider that can execute browser-based automated tests under that management layer.</p></div>
     </div>
   </section>
 
