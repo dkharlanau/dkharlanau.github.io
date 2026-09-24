@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-24
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,9 +19,9 @@ tags:
   - billing
   - extensibility
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-24
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 + SAP S/4HANA Cloud Public Edition 2608 primary-source recheck + full editorial pass"
+review_method: "SAP S/4HANA 2025 FPS01 + SAP Learning pricing course + SAP S/4HANA Cloud Public Edition 2608 primary-source recheck + full editorial pass"
 search_intent: "SAP SD pricing procedure, condition technique and pricing troubleshooting"
 # ai-discovery-managed:start
 structured_data:
@@ -62,6 +62,16 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/918dc95360267214e10000000a174cb4.html"
   - title: "Condition Exclusion"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/178dc95360267214e10000000a174cb4.html"
+  - title: "Introducing the Condition Technique"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/introducing-the-condition-technique_dce0f313-dee6-470e-8851-3f1773cb5d45"
+  - title: "Applying Special Pricing Functions"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/applying-special-pricing-functions_d3aff5cb-a5ef-4bba-9385-6c0e2ed90e9b"
+  - title: "Using Special Condition Types"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/using-special-condition-types_cc54a996-d2f1-419b-8694-f073e75d1c71"
+  - title: "Using Statistical Condition Types"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/using-statistical-condition-types_aaee0ff4-46d0-42e2-add2-2eee76272d17"
+  - title: "Analyzing the Determination of Taxes"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/analyzing-the-determination-of-taxes_bc2ea09a-670d-4fb5-8866-11c17e698e39"
   - title: "App Extensibility: Manage Prices - Sales"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/621e844403fe4dd5a076438d87156e14.html"
   - title: "Custom Fields: Sales Document"
@@ -142,6 +152,29 @@ source_links:
     <p>Condition records are pricing master data. They hold values such as prices, discounts, surcharges, freight, or tax-related amounts together with their key fields and validity. SAP's current Sales documentation also supports APIs for condition records, pricing procedures, condition types, access sequences, condition tables, and the pricing field catalog. That separation is useful: the master data and the determination design are related, but they are not the same object.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="procedure-controls" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Condition type and pricing procedure</p>
+      <h2>The condition type defines the commercial role. The pricing procedure defines how that role participates.</h2>
+      <p>We keep these two layers separate. A condition type describes what kind of pricing element we have and how it can calculate. The pricing procedure decides where that condition sits in the calculation, whether it is allowed to run, and how its result is used by later steps.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Condition type</h3><p>Controls the category of the condition, calculation type, scale basis, plus/minus behavior, manual-entry rules, header/item behavior, and other condition-level properties.</p></div>
+      <div><h3>Step and counter</h3><p>The step controls processing order. The counter lets several conditions sit at the same step, which is useful when manual conditions must keep their entry sequence.</p></div>
+      <div><h3>Requirement and formulas</h3><p>A requirement can stop a condition from participating. Alternative base or amount formulas can change how the condition is calculated after it is found.</p></div>
+      <div><h3>Subtotal and flags</h3><p>Subtotals preserve intermediate results. A procedure line can also be mandatory, manual-only, or statistical. Those flags change runtime behavior without changing the condition record itself.</p></div>
+    </div>
+
+    <p>A common assessment trap is to say that the pricing procedure is only a list of condition types. It is more than a list: it is the calculation sequence and control layer. That is where we see requirements, subtotals, alternative calculations, manual-only logic, statistical conditions, and other rules that explain why the same condition type can behave differently in another procedure.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>Lead answer:</strong> condition table defines the record key; access sequence defines where we search; condition type defines the pricing element; pricing procedure defines how the elements work together; procedure determination selects the procedure for the document.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Calculation</p>
@@ -158,6 +191,41 @@ source_links:
     </div>
   </section>
 
+
+  <section class="research-canvas__inventory" id="condition-record-operations" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Condition records in daily work</p>
+      <h2>Pricing design and condition maintenance are different jobs.</h2>
+      <p>Condition records hold the commercial data that automatic pricing reads: prices, discounts, surcharges, freight, tax-related values, validity periods, scales, currencies, and units. In S/4HANA, the <em>Manage Prices - Sales</em> app is the practical center for bulk work with those records.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Create and copy</h3><p>We can create records directly, copy existing records, or create new records with reference. This is useful when a new period or customer group starts from an existing commercial structure.</p></div>
+      <div><h3>Mass change</h3><p>Validity and condition amounts can be changed for many records together. Spreadsheet export and import support larger maintenance sets and controlled updates.</p></div>
+      <div><h3>Dynamic keys</h3><p>The condition type and key combination decide which fields are relevant. The app therefore changes its filters and columns according to the condition design.</p></div>
+      <div><h3>Validity overlap</h3><p>Overlapping validity is not just a visual warning. New or changed intervals can shorten or replace existing intervals, so mass maintenance needs a clear effective-date strategy.</p></div>
+    </div>
+
+    <p>For troubleshooting, we do not start from the maintenance app. We first prove the runtime key in the sales document. Only after we know the exact customer, material, hierarchy, currency, unit, date, and other access fields do we judge whether the maintained condition record is correct.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="special-pricing-functions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Special pricing functions</p>
+      <h2>Some pricing questions are about interaction between conditions, not about finding one record.</h2>
+      <p>Group conditions, exclusion, condition update, supplements, and hierarchy pricing all change how individual records combine into a commercial result.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Group conditions</h3><p>The system can accumulate quantities or values across several items before applying a condition. Standard group-condition routines can work across the full document, all condition types, or a material pricing group.</p></div>
+      <div><h3>Condition exclusion</h3><p>A condition or condition record can trigger exclusion logic. Requirements in the pricing procedure then deactivate later conditions. Exclusion groups can also compare alternatives and keep the configured best or worst result.</p></div>
+      <div><h3>Condition update</h3><p>Cumulative values can be written back and checked against limits such as maximum condition value, condition base value, or number of orders.</p></div>
+      <div><h3>Condition supplements</h3><p>A main condition can bring additional conditions with it. Supplements are maintained together with the main record rather than searched independently through their own access sequence.</p></div>
+    </div>
+
+    <p>Customer hierarchy pricing is another important pattern. A price or rebate agreement can be maintained at a hierarchy node and inherited by lower-level customers. The access sequence decides which hierarchy level is checked first, so the hierarchy path becomes part of the pricing search strategy.</p>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">A concrete example</p>
@@ -168,6 +236,54 @@ source_links:
     <p>First confirm which pricing procedure the document actually uses. Then check whether the expected condition type is in that procedure and whether its requirement allows it to run. If the condition type uses an access sequence, pricing analysis should show which accesses were attempted and the field values used for each key. Only then does the existence, validity, currency, unit, and scale of the condition record become decisive.</p>
 
     <p>If the record is found, continue into the calculation. A zero or unexpected value may come from the condition base, a scale, a formula, an exclusion rule, or another condition that changes the result. The diagnosis is complete when we can name the first pricing decision that differs from the expected design—not when we have merely found a table entry that looks plausible.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="manual-and-special-conditions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Manual, header and special conditions</p>
+      <h2>Not every price element comes from an access sequence.</h2>
+      <p>Manual pricing is part of the design. Header conditions, net-price conditions, minimum-price logic, rounding, and statistical conditions each solve a different business problem.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Header conditions</h3><p>Standard header conditions are entered manually and apply to all items. SAP can distribute the amount by net value, or the procedure can use another base such as gross weight, net weight, or volume.</p></div>
+      <div><h3>HM00 and PN00</h3><p><code>HM00</code> sets a manual order value at header level and distributes it to items. <code>PN00</code> sets a manual net price for one item and deactivates the original item pricing conditions.</p></div>
+      <div><h3>PMIN and DIFF</h3><p><code>PMIN</code> adds the difference when a material does not reach its minimum price. <code>DIFF</code> handles currency rounding differences and distributes the result as a group condition.</p></div>
+      <div><h3>New pricing</h3><p>Pricing types control what happens when pricing is updated. The same idea is used in sales documents and, through copy control, when billing decides whether to copy or redetermine pricing.</p></div>
+    </div>
+
+    <p>The important distinction is automatic versus manual, not “standard versus exception.” A manual condition can be a designed business control. The question is whether the procedure allows it, whether it replaces or supplements automatic pricing, and whether the same behavior is expected in billing.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="statistical-pricing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Statistical pricing</p>
+      <h2>A statistical condition can be commercially invisible and still be operationally important.</h2>
+      <p>Statistical conditions do not normally change the sales net value, but they can carry cost, comparison, cash-discount, or management-reporting information.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>VPRS</h3><p>Standard SAP uses <code>VPRS</code> to bring material cost into pricing. With condition category G, it reads standard or moving-average cost according to material valuation. Margin logic can then compare cost with net value.</p></div>
+      <div><h3>SKTO</h3><p><code>SKTO</code> reads the cash-discount rate from payment terms and shows the calculated amount statistically in the pricing procedure.</p></div>
+      <div><h3>EDI1 / EDI2</h3><p>Customer-expected price or value can be compared with the seller's calculated price. A material difference can make the order incomplete until the discrepancy is resolved.</p></div>
+      <div><h3>CO-PA relevance</h3><p>Some statistical price conditions can also be marked relevant for account determination so that their values are available for account-based profitability analysis without changing the Sales net value.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="tax-pricing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Tax in the pricing chain</p>
+      <h2>Tax uses condition technique, but tax ownership crosses into Finance and external tax services.</h2>
+      <p>In a standard sales scenario, the rate depends on the business transaction and the tax classifications of the customer side and the material. The destination country and partner used for tax determination also matter.</p>
+    </header>
+
+    <p>Condition type <code>MWST</code> is a standard example. It uses an access sequence to find the applicable tax condition. For the United States, SAP also documents different tax procedures such as <code>TAXUS</code>, <code>TAXUSJ</code>, and <code>TAXUSX</code>. The exact architecture determines whether Sales calculates the tax itself, uses tax jurisdiction logic, or integrates with a central or external tax engine.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+      <p><strong>Lead boundary:</strong> Sales owns the pricing integration point, but it does not mean Sales owns every tax rate. Finance or a tax service can own the tax logic and rates. We diagnose the interface and determination chain before changing SD condition records.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -208,6 +324,27 @@ source_links:
     </div>
 
     <p class="ecg-caption">If the commercial price is correct but the accounting result is wrong, the investigation has crossed out of Pricing. Continue with <a href="/labs/enterprise-context/finance-logistics/">FI/CO for Logistics</a> rather than changing condition records.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="pricing-assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment memory</p>
+      <h2>Explain pricing as a controlled search and calculation pipeline.</h2>
+      <p>For a Lead answer, we should show the order of reasoning. Transaction codes can come later.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In SAP Sales, pricing starts with pricing procedure determination from sales area, document pricing procedure, and customer pricing procedure. The procedure contains condition types in a controlled sequence. A condition type can use an access sequence, which searches condition tables until it finds a valid condition record for the runtime key. After that, SAP calculates the value using the rate, base, scale, formulas, subtotals, requirements, and exclusion logic. Manual and statistical conditions can participate as designed. When pricing is wrong, I first prove the procedure, then condition eligibility, access, runtime key, record, calculation, and finally billing repricing or custom logic.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Why does a record exist but pricing miss it?</h3><p>Wrong procedure, condition not eligible, different access key, validity mismatch, currency or unit mismatch, scale issue, or a custom field not present in pricing communication.</p></div>
+      <div><h3>Why is the rate correct but value wrong?</h3><p>Check the condition base, scale base, calculation type, subtotal, alternative base or amount formula, rounding, and group-condition accumulation.</p></div>
+      <div><h3>Why is order correct but invoice wrong?</h3><p>Compare pricing type in copy control, pricing date, runtime fields, manual-condition handling, tax context, and any custom field or formula used in both documents.</p></div>
+      <div><h3>Where does CCM fit?</h3><p>Ordinary SD pricing calculates the current document. Condition Contract Management handles agreements that are settled later against accumulated business volume.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
