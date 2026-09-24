@@ -8,7 +8,7 @@ domain: "Data Integration and Distribution"
 process_family: "Data Migration and Controlled Bulk Loading"
 status: researching
 created_at: "2026-08-15"
-updated_at: "2026-08-15"
+updated_at: "2026-09-24"
 verified_at: "2026-08-15"
 human_view: "/labs/enterprise-context/integrations/data-migration/"
 source_reviewed_at: "2026-08-15"
@@ -189,13 +189,69 @@ migration_approaches:
   - id: INT-S4-MIGRATION-DIRECT
     title: "Direct transfer"
     choose_when: "A supported SAP source system and migration object provide the required direct-transfer path."
+    flow: "Supported SAP source → source connection → migration object selection → mapping and simulation → SAP S/4HANA"
+    technical_note: >-
+      The connection model depends on the deployment. SAP S/4HANA and Private Edition direct transfer uses an RFC connection
+      to supported SAP source systems. SAP S/4HANA Cloud Public Edition uses the configured communication arrangement to the source system.
     strengths:
       - "Reduces custom extraction and file handling for supported source scenarios."
       - "Migration objects keep source-target structures, mappings, and conversion rules together."
     cautions:
       - "It is not a general real-time replication mechanism."
+      - "Source release, migration scenario, migration-object support, and connectivity prerequisites must be checked before design is fixed."
       - "Source selection, object scope, mappings, dependencies, and target reconciliation still need project ownership."
     source_refs: [SRC-SAP-MIGRATION-DIRECT-CLOUD-2608]
+
+staging_table_locations:
+  principle: >-
+    Choosing the staging-table approach is only the first decision. The project must also decide where the generated staging tables live
+    and how source data reaches them. After the tables are filled, the same Migration Cockpit lifecycle still applies: map, simulate, migrate, and reconcile.
+  memory_model: "Local = file-driven simplicity; Remote = ETL-driven scale"
+  lead_rule: >-
+    Use local staging when controlled template files are efficient enough. Use remote staging when the migration already needs an engineered
+    extraction and transformation pipeline, repeated high-volume test cycles, or consolidation from several legacy sources.
+    Remote staging adds setup and security work, so volume alone is not a reason to choose it.
+  options:
+    - id: LOC-S4-MIGRATION-STAGING-LOCAL
+      title: "Local SAP S/4HANA Database Schema"
+      flow: "Migration template → local staging tables → Migration Cockpit → SAP S/4HANA"
+      choose_when: >-
+        The migration team can prepare the SAP migration-object templates and file handling is acceptable for the data volume,
+        number of objects, and number of test cycles.
+      behavior: >-
+        The Migration Cockpit generates the staging tables in the target system database schema. The team fills them through the supported
+        template-file path and then continues with mapping, simulation, migration, and reconciliation.
+      strengths:
+        - "Lowest setup effort for a file-driven migration."
+        - "Good fit for controlled objects, moderate data volumes, and migration teams that own the templates."
+      cautions:
+        - "Manual preparation becomes expensive when many objects or repeated test cycles create large file-handling effort."
+        - "Local staging does not remove the need for cleansing, mapping ownership, dependency control, or reconciliation."
+      deployment_note: >-
+        For SAP S/4HANA and Private Edition, SAP documents the tables in the local ABAP schema.
+        In SAP S/4HANA Cloud Public Edition, the local option creates them in the internal schema of the cloud system.
+      source_refs: [SRC-SAP-MIGRATION-STAGING-S4-2025, SRC-SAP-MIGRATION-STAGING-CLOUD-2608]
+
+    - id: LOC-S4-MIGRATION-STAGING-REMOTE
+      title: "Remote SAP HANA Database Schema"
+      flow: "Legacy sources → ETL or SAP Data Services → remote HANA staging → Migration Cockpit → SAP S/4HANA"
+      choose_when: >-
+        Source data comes from several systems, transformations are substantial, or repeated high-volume migration cycles make manual template handling inefficient.
+      behavior: >-
+        The Migration Cockpit creates the staging tables in a connected remote SAP HANA schema. External ETL or preparation tools populate those tables,
+        while the Migration Cockpit still owns the migration-object mapping, simulation, execution, and monitoring steps.
+      strengths:
+        - "Fits automated extraction, transformation, and repeatable loading."
+        - "Separates source preparation from the target application while keeping the SAP migration object as the target contract."
+        - "Can reduce manual handling in large or frequently repeated migration cycles."
+      cautions:
+        - "Requires connection setup, security ownership, database capacity, and ETL design."
+        - "The remote schema is migration infrastructure, not a permanent operational integration hub."
+        - "External ETL success still does not prove that the SAP business objects were migrated correctly."
+      deployment_note: >-
+        In SAP S/4HANA Cloud Public Edition, SAP documents the remote schema on SAP HANA Cloud on SAP BTP and requires a migration-cockpit communication setup.
+        In SAP S/4HANA and Private Edition, the project connects to a remote SAP HANA database schema.
+      source_refs: [SRC-SAP-MIGRATION-STAGING-S4-2025, SRC-SAP-MIGRATION-STAGING-CLOUD-2608]
 
 migration_object_extensibility:
   principle: >-
@@ -376,6 +432,16 @@ assessment_cards:
     answer: >-
       Direct transfer fits supported SAP source scenarios. Staging fits files, non-SAP extracts, or externally prepared data.
       In both cases I still own cleansing, mapping, test cycles, and reconciliation.
+  - question: "Local or remote staging tables?"
+    answer: >-
+      Local staging fits a file-driven migration when SAP templates are manageable for the volume and number of test cycles.
+      Remote staging fits an engineered ETL pipeline, several legacy sources, or repeated high-volume loads.
+      Remote adds connection, security, database, and ETL ownership; both options still use Migration Cockpit for mapping, simulation, migration, and reconciliation.
+  - question: "How does direct transfer differ from staging?"
+    answer: >-
+      Direct transfer lets Migration Cockpit select data from a supported SAP source through the configured source connection and process it with migration objects.
+      Staging separates source preparation from SAP migration processing by first loading generated staging tables.
+      I still check source compatibility, object support, mapping, dependencies, test cycles, and reconciliation in both designs.
   - question: "Can Migration Cockpit be used as a permanent integration?"
     answer: >-
       I would not design it that way. SAP positions it for initial load. A recurring system exchange needs an operational interface with retry,
@@ -406,6 +472,11 @@ grounded_ai_evaluation:
     expected_points:
       - "No. Staging success only proves intermediate data movement."
       - "Migration processing, target creation, reconciliation, and downstream process proof are still required."
+  - prompt: "A project has several legacy sources and must repeat large migration cycles every week before cutover. Local or remote staging?"
+    expected_points:
+      - "Remote staging is a strong candidate when the team already needs automated ETL and repeatable high-volume preparation."
+      - "Local staging can still be valid if file preparation remains simple enough; volume should be measured, not assumed."
+      - "Compare setup, security, ETL ownership, cycle time, and reconciliation effort before choosing."
 
 relations:
   - subject: DOM-DATA-INTEGRATION
