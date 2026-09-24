@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-21
+last_modified_at: 2026-09-24
 hide_global_cta: true
 tags:
   - sap
@@ -46,6 +46,16 @@ semantic_links:
 source_links:
   - title: "What Is SAP Integration Suite?"
     url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/decide-on-integration-technology"
+  - title: "The Phases of the SAP Integration Solution Advisory Methodology"
+    url: "https://help.sap.com/docs/sap-btp-guidance-framework/sap-integration-solution-advisory-methodology/phases-of-sap-integration-solution-advisory-methodology"
+  - title: "What Is Integration Assessment"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/what-is-integration-assessment"
+  - title: "Identifying SAP Best Practices Integration Content"
+    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition/identifying-sap-best-practices-integration-content_bd1789c0-59f8-4c62-a388-8a6f14a1d83e"
+  - title: "Cloud Integration Automation Service"
+    url: "https://help.sap.com/docs/cloud-integration-automation"
+  - title: "Integration & Exception Monitoring"
+    url: "https://help.sap.com/docs/cloud-alm/applicationhelp/integration-exception-monitoring"
   - title: "Connectivity Options"
     url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/connectivity-options"
   - title: "Understanding the Basic Concepts"
@@ -119,6 +129,57 @@ source_links:
     </div>
     <p class="ecg-caption"><strong>Evidence boundary:</strong> reviewed product documentation supports the named platform and interface behavior. The architecture stack, selection sequence, and design heuristics were reviewed as authored reasoning and are intentionally kept separate from vendor product facts.</p>
     <a href="/labs/enterprise-context/integration-operations/">Continue into runtime recovery and reconciliation <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="isa-m" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration strategy / ISA-M</p>
+      <h2>{{ topic.integration_strategy.title }}</h2>
+      <p>{{ topic.integration_strategy.summary }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for phase in topic.integration_strategy.phases %}
+      <a href="#integration-lifecycle"><span>{{ phase.order }}</span><strong>{{ phase.title }}</strong><small>{{ phase.outcome }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      {% endfor %}
+    </div>
+    <div class="ecg-decision-columns">
+      {% for item in topic.integration_strategy.decision_levels %}
+      <div><h3>{{ item.level }}</h3><p><strong>Owner:</strong> {{ item.owner }}</p><p>{{ item.question }}</p></div>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>Lead rule:</strong> {{ topic.integration_strategy.lead_rule }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="requirements-to-strategy" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Implementation flow</p>
+      <h2>Do not freeze the interface list in Discover.</h2>
+      <p>The first list of integrations is only a baseline. Fit-to-Standard is where process experts can expose missing dependencies and clarify what each interface must actually achieve.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% for item in topic.integration_strategy.project_flow %}
+      <div><h3>{{ item.stage }}</h3><p>{{ item.action }}</p></div>
+      {% endfor %}
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>ISA-M</h3><p>{{ topic.integration_strategy.boundary.methodology }}</p></div>
+      <div><h3>Integration Assessment</h3><p>{{ topic.integration_strategy.boundary.capability }}</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="integration-lifecycle" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Delivery lifecycle</p>
+      <h2>{{ topic.integration_delivery_lifecycle.title }}</h2>
+      <p>{{ topic.integration_delivery_lifecycle.summary }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.integration_delivery_lifecycle.stages %}
+      <a href="#platform-map"><span>{{ item.order }}</span><strong>{{ item.title }}</strong><small><b>{{ item.tools }}</b> · {{ item.purpose }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>Operational boundary:</strong> a successful middleware message is not the same as a completed business process. Monitoring must lead to business reconciliation where the process risk requires it.</p>
   </section>
 
   <section class="research-canvas__inventory" id="architecture-stack" data-reveal>
@@ -221,6 +282,20 @@ source_links:
     <div class="research-route-list">
       {% for platform in topic.platforms %}
       <a href="/labs/enterprise-context/data/topics.json"><span>PLT</span><strong>{{ platform.title }}</strong><small><b>{{ platform.platform_type }}</b> · {{ platform.remember }} Best fit: {{ platform.best_fit[0] }} Trade-off: {{ platform.trade_offs[0] }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="suite-capabilities" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP Integration Suite</p>
+      <h2>Capabilities solve different parts of the integration problem.</h2>
+      <p>We do not select “Integration Suite” as one large box. We select the capabilities that match the interaction, contract, and operating model.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.sap_integration_suite_capabilities %}
+      <a href="#decision-guide"><span>CAP</span><strong>{{ item.title }}</strong><small><b>{{ item.role }}</b> · {{ item.remember }}</small><i class="material-symbols-outlined" aria-hidden="true">extension</i></a>
       {% endfor %}
     </div>
   </section>
