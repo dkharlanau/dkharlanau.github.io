@@ -6,8 +6,8 @@ domain: "Enterprise Integration"
 process_family: "Cross-enterprise logistics and data distribution"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
-verified_at: "2026-08-14"
+updated_at: "2026-09-24"
+verified_at: "2026-09-24"
 reviewed_together_at: "2026-08-14"
 review_note: "Reviewed against current primary documentation from SAP, Apache Kafka, TIBCO, IBM, and Boomi. Architecture preferences are independent synthesis."
 
@@ -39,6 +39,95 @@ maturity:
     expert_reasoning: done
     synthetic_example: planned
     ai_evaluation: planned
+
+integration_strategy:
+  title: "ISA-M: strategy before interface design"
+  summary: "SAP Integration Solution Advisory Methodology (ISA-M) gives us an organization-level method for deciding how integration should work before individual teams choose tools."
+  phases:
+    - order: "01"
+      title: "Assess your integration strategy"
+      outcome: "Scope integration domains, integration styles, and use-case patterns without choosing a technology first."
+    - order: "02"
+      title: "Design your hybrid integration platform"
+      outcome: "Map the scoped requirements to suitable technologies, define integration policies, and use them when assessing interfaces."
+    - order: "03"
+      title: "Define integration best practices"
+      outcome: "Turn architecture decisions into reusable blueprints, dos and don'ts, and development guidelines."
+    - order: "04"
+      title: "Enable a practice of empowerment"
+      outcome: "Define roles, governance, and quality controls so decentralized teams apply the same integration strategy."
+  decision_levels:
+    - level: "Enterprise strategy"
+      owner: "Enterprise and integration architects"
+      question: "Which integration technologies are approved for which domains, styles, and use-case patterns?"
+    - level: "Interface decision"
+      owner: "Integration architects and developers"
+      question: "Which approved technology, or combination of technologies, fits this concrete integration requirement?"
+  project_flow:
+    - stage: "Discover"
+      action: "Use the Digital Discovery Assessment as the first inventory of known integration needs. Treat it as a starting point, not the final interface catalogue."
+    - stage: "Explore / Fit-to-Standard"
+      action: "Validate known integrations against each business process and capture missing integrations while the process experts are in the room."
+    - stage: "After the workshops"
+      action: "Keep the confirmed integration requirements in SAP Cloud ALM Requirements and use them as input for the integration strategy and interface decisions."
+  boundary:
+    methodology: "ISA-M is the methodology: it defines the strategy, technology mapping, policies, best practices, and governance."
+    capability: "Integration Assessment is the SAP Integration Suite capability that applies ISA-M in a tool: it stores mappings and policies, guides interface requests, and records technology decisions."
+  lead_rule: "A Lead should separate the company-wide integration strategy from the decision for one interface. The strategy creates guardrails; the interface assessment applies them."
+  source_refs:
+    - SRC-SAP-ISA-M-PHASES
+    - SRC-SAP-INTEGRATION-ASSESSMENT
+    - SRC-SAP-IMPLEMENTATION-INTEGRATIONS
+
+integration_delivery_lifecycle:
+  title: "From requirement to stable operations"
+  summary: "The tools make more sense when we place them on one lifecycle instead of learning them as an SAP product list."
+  stages:
+    - order: "01"
+      title: "Find standard content first"
+      tools: "SAP Signavio Process Navigator, SAP Help Portal, SAP Business Accelerator Hub"
+      purpose: "Check whether SAP already provides a supported process integration, setup guide, API, event, or integration package before designing custom content."
+      source_refs: [SRC-SAP-BEST-PRACTICES-INTEGRATIONS]
+    - order: "02"
+      title: "Govern the technology choice"
+      tools: "ISA-M and Integration Assessment"
+      purpose: "Apply enterprise technology mappings and policies to the concrete interface requirement and document the decision."
+      source_refs: [SRC-SAP-ISA-M-PHASES, SRC-SAP-INTEGRATION-ASSESSMENT]
+    - order: "03"
+      title: "Build and run the integration"
+      tools: "SAP Integration Suite capabilities"
+      purpose: "Use the capabilities that match the design: process mediation, APIs, events, B2B, mappings, connectors, or other required integration functions."
+      source_refs: [SRC-SAP-INTEGRATION-SUITE]
+    - order: "04"
+      title: "Automate supported setup"
+      tools: "Cloud Integration Automation Service (CIAS)"
+      purpose: "For supported SAP scenarios, use the guided workflow and automated or manual tasks instead of reproducing every setup step by hand."
+      source_refs: [SRC-SAP-CIAS]
+    - order: "05"
+      title: "Monitor and prove completion"
+      tools: "SAP Cloud ALM Integration & Exception Monitoring plus business reconciliation"
+      purpose: "Monitor messages, exceptions, alerts, and affected components, then confirm the expected business object or status in the receiving application."
+      source_refs: [SRC-SAP-CLOUD-ALM-INTEGRATION-MONITORING]
+
+sap_integration_suite_capabilities:
+  - title: "Cloud Integration"
+    role: "Process and message integration"
+    remember: "Build integration flows for routing, mapping, transformation, protocol conversion, and end-to-end process integration."
+  - title: "API Management and API Composition"
+    role: "API exposure and lifecycle"
+    remember: "Expose and govern APIs when the contract is callable access, not event distribution."
+  - title: "Event Mesh and Advanced Event Mesh"
+    role: "Event distribution"
+    remember: "Decouple producers and consumers. Add mediation only when the event boundary needs transformation or protocol conversion."
+  - title: "Integration Advisor and Trading Partner Management"
+    role: "B2B design and partner operations"
+    remember: "Use Integration Advisor to accelerate interface and mapping design; use Trading Partner Management to operate partner-specific B2B relationships."
+  - title: "Open Connectors"
+    role: "Non-SAP SaaS connectivity"
+    remember: "Use prebuilt connectors where they fit; connector availability is not a substitute for contract and ownership design."
+  - title: "Integration Assessment and Migration Assessment"
+    role: "Architecture guidance and migration analysis"
+    remember: "Integration Assessment applies ISA-M. Migration Assessment estimates the technical effort for moving SAP Process Orchestration scenarios to SAP Integration Suite."
 
 architecture_principles:
   - "Integration is not a protocol choice. It is a coupling choice."
@@ -664,6 +753,18 @@ anti_patterns:
     better_move: "Monitor both technical delivery and business application status."
 
 assessment_cards:
+  - question: "What is ISA-M, and how is it different from Integration Assessment?"
+    answer: "ISA-M is the methodology for defining and governing the integration strategy. Integration Assessment is the capability in SAP Integration Suite that applies ISA-M through technology mappings, policies, questionnaires, interface requests, and documented decisions."
+
+  - question: "How would you handle a new integration requirement as a Lead?"
+    answer: "First check whether standard SAP integration content already exists. Then classify the business interaction and failure model, apply the ISA-M technology policy, choose the interface pattern and runtime, and define security, monitoring, recovery, and business reconciliation before implementation."
+
+  - question: "Where do Signavio Process Navigator, Business Accelerator Hub, CIAS, and Cloud ALM fit?"
+    answer: "Process Navigator and Business Accelerator Hub help us find standard content and interfaces. CIAS can accelerate setup for supported scenarios. SAP Cloud ALM monitors integration and exception behavior in operations. They solve different lifecycle problems."
+
+  - question: "Does Event Mesh require Cloud Integration and API Management?"
+    answer: "No. Event Mesh provides event distribution. Add Cloud Integration when mapping, transformation, routing, or protocol mediation is required. Add API Management when APIs need lifecycle, exposure, security, or policy control."
+
   - question: "API or event?"
     answer: "API when a caller asks for something and needs the result. Event when a fact already happened and consumers can react independently. Many good designs use both."
 
@@ -692,6 +793,12 @@ assessment_cards:
     answer: "What business dependency are we trying to create or remove? Protocol comes later."
 
 source_refs:
+  - SRC-SAP-ISA-M-PHASES
+  - SRC-SAP-INTEGRATION-ASSESSMENT
+  - SRC-SAP-IMPLEMENTATION-INTEGRATIONS
+  - SRC-SAP-BEST-PRACTICES-INTEGRATIONS
+  - SRC-SAP-CIAS
+  - SRC-SAP-CLOUD-ALM-INTEGRATION-MONITORING
   - SRC-SAP-INTEGRATION-SUITE
   - SRC-SAP-INTEGRATION-CONNECTIVITY
   - SRC-SAP-CLOUD-INTEGRATION-CONCEPTS
