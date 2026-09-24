@@ -62,7 +62,7 @@ The event is allowed onto an outbound channel or equivalent publication path. In
 ↓
 
 **4. Broker and routing**  
-An event broker accepts the message and routes it according to topics, queues, subscriptions, and access rules. [SAP Event Mesh](/atlas/sap/business-events/) is one SAP messaging option; SAP Integration Suite also provides event capabilities for broader EDA scenarios.
+An event broker accepts the message and routes it according to topics, queues, subscriptions, and access rules. [Business Events](/atlas/sap/business-events/) define the business notification on the SAP side; SAP Event Mesh is one SAP messaging option, and SAP Integration Suite provides additional event capabilities.
 
 ↓
 
