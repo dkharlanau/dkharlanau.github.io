@@ -24,7 +24,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
     <div class="research-canvas__signal" aria-label="Sales assessment route">
       <p>Oral preparation</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>9</strong><small>Core routes</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>10</strong><small>Core routes</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>3</strong><small>Answer depths</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>10</strong><small>Must-answer questions</small></div>
       <em>Retrieve the map first. Open the deep dive only when the question needs it.</em>
@@ -150,6 +150,187 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
       <p><strong>Primary learning references:</strong> <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/explaining-the-concept-and-structure-of-a-delivery-document">Delivery document concept and structure</a> · <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/processing-outbound-deliveries">Processing outbound deliveries</a> · <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/adjusting-delivery-and-transportation-scheduling">Delivery and transportation scheduling</a> · <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/using-special-functions-in-deliveries">Special delivery functions</a> · <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/controlling-delivery-documents">Controlling Delivery Documents</a>.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="billing-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales assessment / Billing recall</p>
+      <h2>REFERENCE → DUE → COPY → GROUP → VALUE → POST → CORRECT.</h2>
+      <p>Billing is the commercial and financial handoff of Order-to-Cash. We first identify what is being billed and from which reference. Then we prove how SAP copies quantity and value, whether several references may share one invoice, and whether the billing document reached Financial Accounting.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In SAP S/4HANA Sales, a billing document is normally created with reference to an existing business document. For physical goods this is often the outbound delivery; for services and other scenarios it can be the sales order. Copying control defines which source and target documents are allowed, which quantity is billed, how data is transferred, and whether pricing is copied or determined again. During collective billing, SAP combines compatible references and splits them when header-relevant data is different. When an accounting-relevant billing document is posted, it updates document flow and billing status and transfers the financial result to FI, where receivables, revenue, tax, and related accounts are posted. Corrections use controlled documents such as cancellation, credit memo, debit memo, or invoice correction rather than changing history.</p>
+      <a href="/labs/enterprise-context/billing/">Open the Billing deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+
+    <h3>What a billing document changes</h3>
+    <div class="ecg-input-grid">
+      <article><span>BILL</span><h3>Create the customer charge</h3><p>Billing can create invoices, credit memos, debit memos, returns-related credits, cancellations, pro forma documents, intercompany billing, and invoice lists depending on the process.</p></article>
+      <article><span>FLOW</span><h3>Update document flow</h3><p>The billing document becomes part of the document chain. The preceding order, delivery, request, or billing document keeps its relationship to the new billing document.</p></article>
+      <article><span>STAT</span><h3>Update billing status</h3><p>The source document or billing-plan date is updated according to the billing result. Pro forma billing is an important exception because it does not update the billing status of the reference document.</p></article>
+      <article><span>FI</span><h3>Create Financial Accounting documents</h3><p>Accounting-relevant billing transfers values to FI. The accounting result is a separate state: an SD billing document can exist while FI transfer is blocked or has failed.</p></article>
+      <article><span>DATA</span><h3>Update analytics and credit context</h3><p>Billing contributes to reporting and can change the customer credit exposure depending on the process and configuration.</p></article>
+      <article><span>CO</span><h3>Feed profitability analysis</h3><p>Billing values can be passed to profitability and controlling processes. The exact financial design belongs to the FI/CO boundary.</p></article>
+    </div>
+
+    <h3>Billing basis: start with the reference document</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Delivery-related billing</h3><p>Use the outbound delivery as the billing reference when the commercial rule is to invoice what was delivered. This is common for physical goods. A copying requirement can require goods issue before the invoice is created.</p></div>
+      <div><h3>Order-related billing</h3><p>Use the sales document as the billing reference when no delivery is required for the billing event. Services are a common example. Billing plans also create order-related billing dates.</p></div>
+      <div><h3>Mixed billing</h3><p>One invoice can contain order-related and delivery-related items when the normal combination criteria are compatible. The billing document is still one commercial result built from different references.</p></div>
+    </div>
+
+    <div class="ecg-input-grid">
+      <article><span>INV</span><h3>Invoice</h3><p>Reference: sales document or delivery.</p></article>
+      <article><span>CR</span><h3>Credit memo</h3><p>Reference: credit memo request or an existing billing document, depending on the complaint process.</p></article>
+      <article><span>DR</span><h3>Debit memo</h3><p>Reference: debit memo request or an existing billing document.</p></article>
+      <article><span>RET</span><h3>Returns credit</h3><p>Reference: returns document.</p></article>
+      <article><span>PRO</span><h3>Pro forma</h3><p>Reference: sales document or delivery. It does not create an FI posting.</p></article>
+      <article><span>CANC</span><h3>Cancellation</h3><p>Reference: the billing document that must be reversed.</p></article>
+      <article><span>LIST</span><h3>Invoice list</h3><p>Reference: billing documents that have already been created and posted.</p></article>
+      <article><span>ICO</span><h3>Intercompany billing</h3><p>Reference: delivery in the standard flow described in the training material.</p></article>
+    </div>
+
+    <h3>Billing types worth recognizing</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Customer billing</h3><p><strong>F2</strong> invoice · <strong>BV</strong> cash sale · <strong>RE</strong> returns billing.</p></div>
+      <div><h3>Adjustments and reversal</h3><p><strong>G2</strong> credit memo · <strong>L2</strong> debit memo · <strong>S1</strong> cancellation invoice · <strong>S2</strong> cancellation credit memo.</p></div>
+      <div><h3>Special billing</h3><p><strong>F8</strong> pro forma invoice · <strong>IV</strong> intercompany invoice · <strong>IG</strong> intercompany credit memo · <strong>LR</strong> invoice list · <strong>LG</strong> credit memo list.</p></div>
+    </div>
+    <p class="ecg-caption">The billing type controls the whole billing document. For an assessment, explain the business purpose first and use the type code as supporting detail, not as the answer.</p>
+
+    <h3>Copying control: where the source becomes the billing document</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Header control</h3><p>The source document type and target billing type define whether the reference is allowed and how header data is transferred. Header rules can also influence reference numbers, allocation numbers, foreign-trade data, and item numbering.</p></div>
+      <div><h3>Item control</h3><p>At item level, the source item category is part of the key. The important decisions are billing quantity, pricing behavior, exchange-rate handling, price source, and data-transfer routines.</p></div>
+      <div><h3>Copying requirements</h3><p>Requirements decide whether billing is allowed for the specific case. A requirement can, for example, check that goods issue has been posted. Customer-specific requirements can be implemented with VOFM in classic Customizing.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">functions</span>
+      <p><strong>Quantity memory:</strong> order-related billing normally starts from order quantity minus quantity already billed. Delivery-related billing starts from delivered quantity minus quantity already billed. In the standard pro forma examples, F5 uses order quantity and F8 uses delivery quantity.</p>
+    </div>
+
+    <h3>Pricing in billing: do not assume the invoice always copies the order price unchanged</h3>
+    <div class="ecg-input-grid">
+      <article><span>A</span><h3>Copy and update scales</h3><p>Pricing elements are copied from the reference and scale values are updated.</p></article>
+      <article><span>B</span><h3>New pricing</h3><p>Pricing is carried out again in the billing document.</p></article>
+      <article><span>C</span><h3>Keep manual, reprice the rest</h3><p>Manual pricing elements are copied; the other elements are determined again.</p></article>
+      <article><span>D</span><h3>Copy unchanged</h3><p>Pricing elements are copied from the reference document without redetermination.</p></article>
+      <article><span>G</span><h3>Copy, redetermine tax</h3><p>Pricing elements are copied unchanged and tax conditions are determined again.</p></article>
+      <article><span>H</span><h3>Copy, redetermine freight</h3><p>Pricing elements are copied unchanged and freight is determined again.</p></article>
+    </div>
+    <p class="ecg-caption">If the order value and invoice value differ, first identify the pricing type used in copying control. Do not start by changing condition records.</p>
+
+    <h3>Billing due list: selection and creation are different steps</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Individual billing</h3><p>Create one billing document for each selected source. There is no attempt to combine several selected references.</p></div>
+      <div><h3>Collective billing</h3><p>Process all selected due items and combine compatible references as far as possible. The system returns a processing result for successful and failed items.</p></div>
+      <div><h3>Collective billing online</h3><p>Move to billing creation while still using the normal combination rules. This gives the user more direct control during creation.</p></div>
+    </div>
+    <p>Use simulation before saving when you want to see the expected billing documents and errors. For regular high-volume processing, billing can run in background jobs at a planned time or schedule. The Fiori app <strong>Create Billing Documents — Billing Due List Items</strong> also supports billing settings such as a chosen billing date/type, separate billing per due-list item, automatic posting, and temporary billing documents for review before final creation.</p>
+
+    <h3>Invoice combination and split</h3>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">call_split</span>
+      <p><strong>Lead rule:</strong> SAP tries to combine compatible transactions. If one customer receives two invoices, prove which header-relevant field is different before adding custom logic. The cause is usually a difference that cannot live on one billing-document header.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>What can force a split?</h3><p>Examples include payer or bill-to context, billing date, sales organization, currency, payment terms, tax-related context, customer reference, or custom header-relevant fields.</p></div>
+      <div><h3>How do we prove it?</h3><p>Use split analysis and compare the resulting header fields. Do not infer the cause only from the two source documents.</p></div>
+      <div><h3>Can we force individual billing?</h3><p>Yes. Copying control can be configured so that each source creates its own billing document. In the standard training example, data transfer routine 3 uses the reference document number in <code>VBRK-ZUKRI</code> to create an intentional split.</p></div>
+    </div>
+
+    <h3>Complaint processing: reversal, adjustment, and correction are different</h3>
+    <div class="ecg-input-grid">
+      <article><span>CANCEL</span><h3>Cancellation</h3><p>Use when the original billing event itself must be reversed. SAP creates a cancellation billing document and preserves the document chain.</p></article>
+      <article><span>CREDIT</span><h3>Credit memo request</h3><p>A request can be blocked for billing until review. The responsible person can release it, reject items, or adjust the amount or quantity to be credited.</p></article>
+      <article><span>DEBIT</span><h3>Debit memo request</h3><p>Use the same controlled request-and-release idea when the customer must be charged more.</p></article>
+      <article><span>ICR</span><h3>Invoice correction request</h3><p>Use item pairs to correct quantity or price differences. The debit item carries the corrected quantity or pricing result.</p></article>
+      <article><span>WF</span><h3>Workflow</h3><p>Credit memo requests can use approval workflow with value thresholds, automatic release conditions, and approvers. The manager can approve, reject, or ask for rework.</p></article>
+      <article><span>PRO</span><h3>Pro forma invoice</h3><p>Use for information or export-related scenarios. It does not transfer data to FI, and the reference billing status is not updated, so several pro forma documents can be created.</p></article>
+    </div>
+
+    <h3>Billing plans: when one order has several billing dates</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Periodic billing</h3><p>Used for recurring charges such as rental or service agreements. The billing plan contains a sequence of billing dates, often based on a contract start/end date and a periodic rule.</p></div>
+      <div><h3>Milestone billing</h3><p>Distribute the total contract value across several dates, percentages, or fixed amounts. A billing-plan date can stay blocked until the related project milestone is confirmed.</p></div>
+      <div><h3>Billing rule</h3><p>The rule for a billing-plan date decides how its billing value is calculated, for example as a fixed amount or a percentage of the total value and whether it acts as a final invoice.</p></div>
+    </div>
+
+    <h3>Down payments: Sales request, FI money movement, final clearing</h3>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>agree</small></div><h3>Put the down-payment agreement into the billing plan</h3><p class="ecg-question">How much must the customer pay and when?</p></header><div class="ecg-decision-columns"><div><h4>Control</h4><p>The agreement can be a fixed amount or a percentage. Standard billing rules 4 and 5 cover percentage- and value-related milestone down-payment scenarios.</p></div><div><h4>Pricing detail</h4><p>Condition type <code>AZWR</code> is used for down-payment items in the described standard setup.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>request</small></div><h3>Create the down-payment request</h3><p class="ecg-question">What does Sales send to Finance?</p></header><div class="ecg-decision-columns"><div><h4>FI result</h4><p>The down-payment request is posted as a noted item with special G/L indicator <strong>F</strong>; it is statistical rather than a normal receivable posting.</p></div><div><h4>Business use</h4><p>The request can also control whether later delivery processing remains blocked until payment conditions are met.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>receive</small></div><h3>Post the customer down payment</h3><p class="ecg-question">Where is the real payment recorded?</p></header><div class="ecg-decision-columns"><div><h4>FI result</h4><p>The received down payment is assigned to the request and sales-order account. The training material uses special G/L indicator <strong>A</strong> for the payment.</p></div><div><h4>Status</h4><p>The sales process can distinguish not paid, partially paid, and fully paid states.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>clear</small></div><h3>Clear the down payment in partial or final billing</h3><p class="ecg-question">How does the customer avoid paying twice?</p></header><div class="ecg-decision-columns"><div><h4>Billing</h4><p>Down payments already received are transferred into the billing document as amounts to be cleared.</p></div><div><h4>Final invoice</h4><p>Remaining down payments are taken into account so that the final customer receivable reflects the agreed settlement.</p></div></div></article>
+    </div>
+
+    <h3>Special billing patterns</h3>
+    <div class="ecg-input-grid">
+      <article><span>EBDR</span><h3>External Billing Document Request</h3><p>An EBDR stores billing data received from an external source inside S/4HANA. It appears in the billing due list and can be billed alone or combined with internal billable SD items.</p><p><strong>Use case:</strong> one invoice can combine hardware delivery, a software order, consulting charges, and external usage-based data.</p></article>
+      <article><span>CONV</span><h3>Omnichannel convergent billing</h3><p>Convergent billing combines billable data from different internal and external channels into one customer invoice when the combination rules allow it.</p></article>
+      <article><span>PRE</span><h3>Preliminary billing document</h3><p>A preliminary billing document can be reviewed before final billing. Its statuses include In Progress, Rejected, Finalized, and Completed.</p><p><strong>Important:</strong> creating the preliminary document changes the preceding document billing status and removes it from the normal due list until the preliminary document is rejected or converted.</p></article>
+      <article><span>LIST</span><h3>Invoice list</h3><p>Several already-created billing documents can later be grouped in an invoice list. The billing documents must be posted to FI before they are combined.</p></article>
+    </div>
+
+    <h3>Billing to Financial Accounting</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Organizational bridge</h3><p>The Sales Organization is assigned to a Company Code. The Company Code owns the accounting context, including its chart of accounts. This is the organizational bridge from Sales Billing into FI.</p></div>
+      <div><h3>Account determination</h3><p>When billing is transferred to FI, the system determines G/L accounts for revenue, sales deductions, VAT, and other configured postings. Cash sales are a special case because posting goes to a cash settlement account instead of the customer account.</p></div>
+      <div><h3>Posting block</h3><p>A billing type can prevent automatic FI transfer. In that case, the billing document is created first and accounting documents are created only after release. If account determination has an error, the accounting documents are also not created until the error is corrected.</p></div>
+    </div>
+
+    <div class="ecg-input-grid">
+      <article><span>REF</span><h3>Reference and assignment numbers</h3><p>Copying control can define which business number is passed to FI, for example customer reference, sales order, delivery, or billing document. This is important for later payment matching and reconciliation.</p></article>
+      <article><span>DOC</span><h3>FI document type</h3><p>Billing type configuration can transfer a specific FI document type. If no special type is entered, the standard training material describes <code>RV</code> as the default for SD billing documents.</p></article>
+      <article><span>NEG</span><h3>Negative postings</h3><p>Credit memos and cancellations can be configured for negative posting so that the account-side presentation reflects the reversal logic. The Company Code must also permit negative postings.</p></article>
+      <article><span>BRANCH</span><h3>Head office and branch</h3><p>Billing type settings influence which customer partner is transferred to FI when head-office and branch relationships are used.</p></article>
+    </div>
+
+    <h3>Operations and technical recall</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Main billing transactions</h3><p><code>VF01/VF02/VF03</code> create/change/display billing documents · <code>VF04</code> billing due list · <code>VF11</code> cancellation · <code>VF06</code> background billing · <code>VFX3</code> blocked billing documents.</p></div>
+      <div><h3>Invoice-list transactions</h3><p><code>VF25</code> create/change/display invoice list · <code>VF24</code> invoice-list worklist.</p></div>
+      <div><h3>Core tables</h3><p><code>VBRK</code> billing header · <code>VBRP</code> billing items · <code>VBFA</code> document flow · <code>VBPA</code> partners · <code>PRCD_COND</code> pricing conditions.</p></div>
+    </div>
+    <p class="ecg-caption">Use transaction codes and tables as evidence after the process model is clear. For Public Cloud or Fiori-first environments, start from the relevant apps and business roles rather than assuming classic SAP GUI access.</p>
+
+    <h3>Likely follow-up traps</h3>
+    <ol>
+      <li><strong>“Billing means payment.”</strong> No. Billing creates the customer charge and usually the receivable; incoming payment and clearing belong to Accounts Receivable.</li>
+      <li><strong>“Every invoice must reference a delivery.”</strong> No. Order-related billing is standard for services and other processes; billing plans are also order-related.</li>
+      <li><strong>“If the invoice exists, FI must be complete.”</strong> No. Posting can be blocked or fail after the billing document has been created.</li>
+      <li><strong>“The billing due list is the invoice.”</strong> No. The due list is a worklist of references that are ready or expected to be billed.</li>
+      <li><strong>“One customer means one invoice.”</strong> No. Incompatible header values create an invoice split.</li>
+      <li><strong>“The invoice always copies the order price.”</strong> No. Pricing behavior is controlled by the pricing type in copying control.</li>
+      <li><strong>“A pro forma invoice is an accounting invoice.”</strong> No. It does not post to FI and does not update reference billing status.</li>
+      <li><strong>“A credit memo request and a credit memo are the same document.”</strong> No. The request is the controlled sales document; the credit memo is the billing result.</li>
+      <li><strong>“Cancellation and credit memo are interchangeable.”</strong> No. Cancellation reverses the original billing event; a credit memo is a commercial adjustment.</li>
+      <li><strong>“EBDR means the external system creates the final SAP invoice.”</strong> No. The EBDR persists external billing data so S/4HANA Billing can process it and, where possible, combine it with internal billable items.</li>
+    </ol>
+
+    <h3>Assessment questions</h3>
+    <ol>
+      <li><strong>Explain order-related versus delivery-related billing.</strong> Name the billing reference, the quantity basis, the typical business use, and the process evidence you would check.</li>
+      <li><strong>A delivery is complete but it does not appear in the billing due list. What do you check?</strong> Billing relevance, date, status, block, completion, goods-issue requirement, and copy-control requirement before changing configuration.</li>
+      <li><strong>Why did two deliveries create two invoices?</strong> Compare split-relevant billing-header data and prove the differing field with split analysis.</li>
+      <li><strong>The invoice price is different from the order price. Where do you start?</strong> Check the pricing type in copying control, then determine whether the difference is expected redetermination or a real pricing error.</li>
+      <li><strong>The billing document exists but there is no accounting document. Why?</strong> Check posting block, billing status, account determination, incompleteness, pricing/account-assignment errors, and the FI transfer log/status.</li>
+      <li><strong>What is the difference between cancellation, credit memo, and invoice correction?</strong> Explain reversal of the original event, commercial adjustment, and controlled quantity/price correction.</li>
+      <li><strong>How do periodic and milestone billing differ?</strong> Periodic billing follows recurring dates; milestone billing distributes contract value across planned dates or confirmed project milestones.</li>
+      <li><strong>How does a down payment move from Sales to FI and back into the final invoice?</strong> Billing-plan agreement → down-payment request → FI payment → clearing in partial/final billing.</li>
+      <li><strong>What problem does EBDR solve?</strong> It brings external billable data into S/4HANA Billing so it can enter the due list and be invoiced alone or with internal billing data.</li>
+      <li><strong>What is a preliminary billing document?</strong> A reviewable billing stage before the final billing document, with its own status and a direct effect on the preceding document's billing status.</li>
+    </ol>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Study boundary:</strong> the section follows the supplied SAP S/4HANA Sales billing training material. Standard billing types, transaction codes, table names, and Customizing examples are useful for assessment recall, but deployment and release still matter. In Public Cloud or Fiori-first scenarios, confirm the available apps and configuration activities before translating a classic SAP GUI example into implementation steps.</p>
+      <p><a href="https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/executing-the-billing-process-and-the-integration-to-sap-s-4hana-finance_e2dd5db3-73c3-4cda-8ad5-1e7f39f04fba">SAP Learning: Billing and Finance Integration</a> · <a href="/labs/enterprise-context/billing/">Billing deep dive</a> · <a href="/labs/enterprise-context/finance-logistics/">FI/CO for Logistics</a> · <a href="/labs/enterprise-context/pricing/">Sales Pricing</a>.</p>
     </div>
   </section>
 
