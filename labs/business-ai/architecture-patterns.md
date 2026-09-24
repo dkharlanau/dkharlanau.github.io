@@ -265,31 +265,31 @@ semantic_links:
   <section class="research-canvas__inventory" id="agentic-fit" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Orchestration fit</p>
-      <h2>Do not turn a pipeline into an agent because the label sounds more advanced.</h2>
-      <p>Start with the lowest level of coordination that reliably completes the work. A direct model call can solve bounded transformations. A single tool-assisted workflow can handle many enterprise tasks. Multi-step or multi-agent orchestration earns its place when the route itself must change at runtime.</p>
+      <h2>Use orchestration for coordination; use model-led routing only when the route is uncertain.</h2>
+      <p>A fixed multi-step pipeline is still orchestration, but its control flow can remain deterministic when the sequence is known. A single model with bounded tools can handle many enterprise tasks. Dynamic or multi-agent orchestration earns its place when the workflow must choose routes, specialists, or recovery paths at runtime.</p>
     </header>
 
     <div class="ecg-decision-columns">
       <div>
-        <h3>Orchestration is justified when</h3>
+        <h3>Coordination is justified when</h3>
         <ul>
           <li>Later steps depend on earlier tool results.</li>
-          <li>The next specialist or tool cannot be chosen in advance.</li>
+          <li>Parallel work or specialist handoffs must be coordinated.</li>
           <li>The workflow must recover from missing information or partial failure.</li>
-          <li>Different security or capability boundaries require real delegation.</li>
+          <li>State must be carried across several steps or participants.</li>
         </ul>
       </div>
       <div>
-        <h3>Keep it deterministic when</h3>
+        <h3>Keep routing deterministic when</h3>
         <ul>
-          <li>The sequence is known in advance.</li>
+          <li>The order of steps is known in advance.</li>
           <li>Rules, approvals, and calculations already have deterministic logic.</li>
-          <li>One model call plus one or two bounded tools completes the task.</li>
-          <li>The team cannot yet test or support dynamic routing safely.</li>
+          <li>A small, bounded tool set covers the workflow.</li>
+          <li>Dynamic routing adds no measurable business value.</li>
         </ul>
       </div>
     </div>
-    <p>Microsoft's current Azure Architecture Center guidance makes the same complexity trade-off explicit: direct model calls, single agents with tools, and multi-agent orchestration sit on a spectrum, with added coordination bringing added latency, cost, and failure modes.</p>
+    <p>Microsoft's current Azure Architecture Center guidance makes the same complexity trade-off explicit: direct model calls, single agents with tools, and multi-agent orchestration sit on a spectrum, and sequential orchestration can still use a fixed order. Added coordination should therefore solve a real workflow problem because it also adds latency, cost, and failure modes.</p>
   </section>
 
   <section class="research-canvas__inventory" id="pattern-risks" data-reveal>
