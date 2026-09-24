@@ -406,19 +406,19 @@ kpis:
     name: "Return Rate"
     kind: outcome
     category: returns
-    business_question: "What share of fulfilled business comes back as a physical return?"
-    formula: "Eligible returned quantity or value / matching fulfilled quantity or value * 100."
+    business_question: "What share of incoming sales-order value or quantity comes back as a customer return?"
+    formula: "Value-based: eligible customer-return net value / eligible incoming sales-order net value * 100. Quantity-based: eligible customer-return quantity / eligible incoming sales-order quantity * 100."
     unit: "%"
     direction: lower_is_better
-    grain: ["return reason", "customer", "product", "plant", "original process family"]
+    grain: ["return reason", "customer", "product", "sales organization", "original process family"]
     process_refs: ["SD.RET", "SD.RET.ARM", "SD.RET.VC", "SD.RET.KIT"]
     mechanism_refs: ["MEC.SD.COPY", "MEC.SD.ICAT"]
     diagnostic_case_refs: ["SDC.RETVC.04"]
-    data_signals: ["original sale", "returns order", "returned quantity/value", "reason"]
+    data_signals: ["incoming sales-order net value", "incoming sales-order quantity", "customer-return net value", "customer-return quantity", "return reason"]
     owner: "Customer Service / Quality / Sales"
-    cadence: "weekly / monthly"
-    target_policy: "Set by product and customer segment; analyze reasons before assigning ownership."
-    source_refs: ["SRC-SAP-SIGNAVIO-METRICS"]
+    cadence: "monthly rolling trend with drill-down as needed"
+    target_policy: "Analyze value- and quantity-based rates separately and drill down before assigning ownership."
+    source_refs: ["SRC-SAP-RETURNS-ANALYTICS"]
 
   - id: KPI.SD.RETURN_TO_REFUND
     name: "Return-to-Refund Cycle Time"

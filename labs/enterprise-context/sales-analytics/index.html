@@ -48,6 +48,32 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
     <a href="/labs/enterprise-context/data/sales-process-kpis.json">Open KPI JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
+  <section class="research-canvas__inventory" id="fundamentals-ai" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">C_S4CS / Fundamental Sales AI</p>
+      <h2>Search finds the object. Joule helps with the task. SAP state remains authoritative.</h2>
+      <p>The current Fundamental Sales course gives AI its own three-hour unit. The useful distinction is not “AI versus no AI”; it is what kind of help we are asking for and where the final business state lives.</p>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">01</div>
+        <div class="ecg-determination-card__copy">
+          <h3><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-fundamental-business-processes/using-ai-assisted-enterprise-search_baaa9566-d8a2-450c-982b-74e7c2ed1e38">AI-Assisted Enterprise Search</a></h3>
+          <p>Natural-language search turns a request such as “show me open sales orders” into search filters and returns matching business objects. It is a retrieval and navigation aid: we still open the object and read its current SAP status before acting.</p>
+        </div>
+      </article>
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">02</div>
+        <div class="ecg-determination-card__copy">
+          <h3><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-fundamental-business-processes">Joule in Fundamental Sales</a></h3>
+          <p>The same course then uses Joule for conversational Sales tasks including checking sales-order status, renewing expiring prices and handling billing posting issues. Joule can summarize, navigate and support permitted actions, but the owning SAP object, application rules and authorization still decide the business result.</p>
+        </div>
+      </article>
+    </div>
+    <p><strong>Worked boundary:</strong> if a user asks why an order is not complete, Search can locate the order and Joule can help interpret or navigate the issue. The learning evidence is not the AI answer itself. We finish by checking the authoritative order, billing or accounting status after the action.</p>
+    <p><strong>Explain back:</strong> when would you use Search rather than Joule, and what evidence would you inspect before saying that the business problem is resolved?</p>
+  </section>
+
   <section class="research-canvas__inventory" id="public-edition-course-map" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">C_S4CS / Public Edition</p>
@@ -193,6 +219,32 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
       <article><span>CHOOSE</span><h3>{{ rule.question }}</h3><p><strong>{{ rule.choose }}</strong><br />{{ rule.reason }}</p></article>
       {% endfor %}
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="returns-analytics" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Complaint Processing / Returns Analytics</p>
+      <h2>Operational status answers “what is happening?” Return Rate answers “how much is coming back?”</h2>
+      <p>Returns analytics is the final unit of the current Sales Complaint Processing course. Keep two jobs separate: monitoring individual return orders and analyzing aggregated return patterns.</p>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">01</div>
+        <div class="ecg-determination-card__copy">
+          <h3>Monitor the return process</h3>
+          <p>Operational views follow release, approval, logistics and refund progress and can use the process flow to navigate the connected documents. This tells us where a particular return is now.</p>
+        </div>
+      </article>
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">02</div>
+        <div class="ecg-determination-card__copy">
+          <h3>Analyze the return pattern</h3>
+          <p><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-complaint-processing/introducing-returns-analytics_af38b2c7-a12a-4130-98bd-5915c5fc23e3">Customer Returns - Flexible Analysis</a> aggregates return value, quantity and item count across dimensions. The Return Rate view compares customer returns with <strong>incoming sales orders</strong>: value-based rate uses net value, while quantity-based rate uses quantity.</p>
+        </div>
+      </article>
+    </div>
+    <p><strong>Worked example:</strong> assume incoming sales orders of EUR 10,000 and 1,000 units. Customer returns are EUR 400 and 30 units. The value-based Return Rate is <strong>4%</strong>; the quantity-based rate is <strong>3%</strong>. The difference is useful evidence: the returned items carry a different average value than the incoming mix, so a drill-down by product, customer or return reason is more useful than treating “3–4% returns” as one number.</p>
+    <p><strong>Boundary:</strong> a high Return Rate is a signal for analysis, not a diagnosis. The operational return order and its process flow still prove whether a specific case is released, received, inspected, refunded or otherwise complete.</p>
   </section>
 
   <section class="research-canvas__inventory" id="kpi-catalog" data-reveal>
