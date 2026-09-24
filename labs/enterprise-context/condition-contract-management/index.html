@@ -7,9 +7,9 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-23
-last_reviewed: 2026-09-23
-review_method: "SAP primary sources + factual review + editorial rewrite"
+last_modified_at: 2026-09-24
+last_reviewed: 2026-09-24
+review_method: "SAP Help + current SAP Learning CCM/pricing course + supplied training material + editorial rewrite"
 search_intent: "SAP Condition Contract Management business volume accruals settlement rebates"
 hide_global_cta: true
 enterprise_context_graph: true
@@ -29,6 +29,12 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2a560f6f15704c50a261627bb4691fbc/82048fb7aefd4ec1918a0c68f5216693.html"
   - title: "Settlement Date Types"
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/83bc764dd7874d349cc8150bdab246f6/503fb0a6c3f2431d8b12f9c049ca5bc2.html"
+  - title: "Working with Settlement Management"
+    url: "https://learning.sap.com/courses/functions-innovations-in-sap-s-4hana-sales/working-with-settlement-management_dc9ca6aa-ad79-4047-9dae-e51c9ddfc906"
+  - title: "Maintaining Condition Contracts"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/maintaining-condition-contracts_e34ae643-905f-4893-b53a-e32b3404d249"
+  - title: "Executing Condition Contract Settlement"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/executing-condition-contract-settlement_c02c09fe-c0fa-4e46-8abc-8a295544636a"
 ---
 
 {% assign evidence = site.data.labs.enterprise_context.sources.condition_contract_management %}
@@ -94,6 +100,23 @@ source_links:
     </div>
   </section>
 
+
+  <section class="research-canvas__inventory" id="ccm-configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration map</p>
+      <h2>CCM has three configuration layers: pricing, contract maintenance, and settlement.</h2>
+      <p>For design work, we separate the commercial conditions from the contract shell and from the process that creates settlement documents. This makes troubleshooting much faster.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>1. Pricing for settlement</h3><p>Define the condition types and pricing procedures used to calculate rebate, accrual, and settlement values. Settlement pricing is deliberately small because the business-volume base is determined before the pricing calculation.</p></div>
+      <div><h3>2. Condition contract maintenance</h3><p>Define contract types, partner side, validity, allowed fields, business-volume selection, settlement conditions, accrual conditions, and release behavior.</p></div>
+      <div><h3>3. Condition contract settlement</h3><p>Define settlement process parameters, settlement document behavior, calendar/date types, pricing, tax, accounting, and the link back to the condition contract type.</p></div>
+    </div>
+
+    <p>A useful memory path is <strong>TYPE → VOLUME → CONDITION → CALENDAR → SETTLEMENT → DOCUMENT → FI</strong>. If the business volume is wrong, we do not debug settlement pricing first. If the volume is correct but the amount is wrong, then we move into the condition and settlement pricing layer.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="ccm-runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lifecycle</p>
@@ -110,6 +133,24 @@ source_links:
       </div>
     </div>
     <p>That middle step is where many design errors hide. A contract can contain the right percentage and still produce the wrong amount if the wrong customer, material, date, invoice, goods receipt, or other selection criterion enters the business volume.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="ccm-business-volume" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business-volume base</p>
+      <h2>The rebate percentage is often easy. Selecting the correct population of transactions is harder.</h2>
+      <p>CCM can determine business volume from transactional data and aggregate it into the key figure used for settlement. The source and selection logic are configured independently from the condition record.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Source</h3><p>The source is configured for the scenario. Examples include billing documents, purchase orders, deliveries, point-of-sale data, supplier invoices, goods receipts, or an agreed fixed budget.</p></div>
+      <div><h3>Selection</h3><p>Field combinations can include or exclude partners, products, plants, organizations, dates, and other attributes. Inclusive and exclusive logic lets us define the eligible population precisely.</p></div>
+      <div><h3>Key figure</h3><p>The settlement base can be monetary sales, quantity, weight, volume, points, or another supported key figure. The selected key figure is the business-volume base for scale and settlement calculation.</p></div>
+      <div><h3>Granularity</h3><p>If volume is available at plant, material, cost-center, or other configured level, later settlement can distribute the rebate according to each eligible partner's contribution.</p></div>
+    </div>
+
+    <p>For support, <strong>Display Business Volume</strong> is often the decisive evidence. It tells us whether the contract sees the documents we expected. A settlement run can be technically successful and still be commercially wrong if this population is wrong.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -131,6 +172,34 @@ source_links:
         <h3>Final settlement</h3>
         <p>Permanently settle a defined period of the contract. A contract can contain more than one final-settlement period, so “final” does not always mean that the whole contract history is represented by one document.</p>
       </div>
+      <div>
+        <h3>Delta settlement</h3>
+        <p>Correct a period that was already finally settled when late postings or later corrections change its business-volume base. Delta settlements can be repeated and previous delta settlements are considered.</p>
+      </div>
+    </div>
+    <p>A partial settlement can also be cumulative. In that case, earlier periods are rolled up so a higher scale level can affect the provisional result earlier. Delta accruals are different: they update the expected accrual position and clear the previous accrual state without acting as the partner's commercial settlement.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="ccm-standard-sales-example" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Standard sales-rebate example</p>
+      <h2>RES1, REA1 and RED1 are useful memory anchors for how settlement pricing is separated.</h2>
+      <p>These are SAP-delivered examples for a sales rebate scenario. We use them to understand the model, not as a rule that every project must copy the standard configuration unchanged.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>RES1 — Rebate</h3><p>Maintained in the condition contract as the commercial rebate condition. In the standard sales example it uses access sequence <code>RE01</code> and participates in settlement pricing such as procedure <code>A10005</code>.</p></div>
+      <div><h3>REA1 — Rebate Accruals</h3><p>Maintained in the condition contract as the accrual condition. Its accrual indicator is active. The amount represents the expected accrual and is dissolved again during settlement.</p></div>
+      <div><h3>RED1 — Delta accrual calculation</h3><p>Used during delta accrual settlement, for example with pricing procedure <code>A10006</code>. It is not itself an accrual condition; it references the accrual logic so the net amount can be used for the accrual update.</p></div>
+    </div>
+
+    <p>Condition contract types are another memory anchor. The basic sales-rebate example is <code>0S01</code>. SAP also delivers variants for multiple customers and different tax treatment, including <code>0S02</code> and goods-related variants <code>0SG1</code> to <code>0SG4</code>. TPM integration uses dedicated standard variants such as <code>0ST1</code> to <code>0ST4</code>. We still verify the exact type and tax design in the target release.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+      <p><strong>Key distinction:</strong> ordinary SD pricing prices the current sales or billing document. CCM conditions define an agreement whose final amount is settled later from accumulated business volume.</p>
+      <a href="/labs/enterprise-context/pricing/">Open the Sales Pricing guide <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </section>
 
@@ -163,6 +232,27 @@ source_links:
       <p>SAP introduced Settlement Management as the successor architecture to classic SD rebate processing. Older SAP ERP knowledge about rebate agreements and the VBOX index is therefore useful mainly as migration context, not as the model to apply to a new S/4HANA rebate design.</p>
     </header>
     <p>That does not mean every rebate scenario is identical. Contract types, business-volume sources, settlement methods, tax behavior, application availability, and configuration options are release- and scenario-sensitive. Verify those details against the target S/4HANA edition and release instead of copying a transaction or condition-type list from another implementation.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="ccm-assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment memory</p>
+      <h2>Explain CCM from agreement to financial settlement.</h2>
+      <p>A Lead answer should make the separation between contract, business volume, accrual, and settlement explicit.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> Condition Contract Management is the S/4HANA Settlement Management model for commercial conditions that are agreed now but settled later. The condition contract defines the partner, validity, eligible scope, rebate or accrual conditions, and settlement calendar. SAP then determines the relevant business volume, for example customer billing data, and uses settlement pricing to calculate accruals or the amount due. Delta accruals update the expected liability, partial settlements provisionally pay against accumulated volume, final settlement closes a period, and delta settlement corrects a period after late changes. When the amount is wrong, I check contract and status, business volume, rate and scale, settlement pricing, then tax and FI posting.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Business volume is zero</h3><p>Check contract validity and release, source/profile, field combinations, partner/product scope, document dates, and whether the expected source event exists.</p></div>
+      <div><h3>Volume is correct, amount is wrong</h3><p>Move to rebate/accrual condition, scale, calculation base, sign, settlement pricing procedure, and previously settled amounts.</p></div>
+      <div><h3>Amount is correct, posting is wrong</h3><p>The problem has crossed into settlement-document control, tax, account determination, FI status, or authorization.</p></div>
+      <div><h3>Late posting after final settlement</h3><p>Do not reopen the whole model manually. Check whether delta settlement is the designed correction path for the already-finalized period.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
