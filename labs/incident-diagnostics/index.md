@@ -47,7 +47,7 @@ tags:
   </header>
 
   <section class="incident-diagnostics__boundary" aria-label="Diagnostic boundary">
-    <strong>This is an evidence organizer, not an automation authority.</strong> It can show what is present, what is missing, and which reviewed references may help. A human still has to establish the cause and approve any retry, reprocessing, data correction, queue action, or production change.
+    <strong>This is an evidence organizer, not an automation authority.</strong> It cannot prove the root cause. It can show what is present, what is missing, and which reviewed references may help. A human still has to establish the cause and approve any retry, reprocessing, data correction, queue action, or production change.
   </section>
 
   <section class="incident-diagnostics__workspace" aria-label="Incident input and analysis">
