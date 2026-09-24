@@ -6,9 +6,9 @@ domain: "SAP Technical Architecture"
 process_family: "Cross-enterprise / application development and extensibility"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
-reviewed_together_at: "2026-08-14"
-review_note: "Reviewed against current SAP Help, CAP documentation and SAP-owned Clean ABAP guidance. Architecture recommendations are deliberately more skeptical than product positioning."
+updated_at: "2026-09-24"
+reviewed_together_at: "2026-09-24"
+review_note: "Reviewed against current SAP Help, SAP Learning, CAP documentation and SAP-owned Clean ABAP guidance. Updated for the Clean Core Level concept that replaced the original 3-tier model."
 
 business_question: "If I need new SAP-related functionality, where should I build it, with which programming model, runtime, language and deployment model?"
 
@@ -29,6 +29,7 @@ architecture_thesis:
   - "Start from coupling and transaction boundaries. A tightly coupled ERP rule usually belongs close to ERP. A loosely coupled cross-system capability may belong outside it."
   - "For new in-stack S/4HANA code, prefer ABAP Cloud + CDS + RAP when the required released APIs exist, even in Private Edition or on-premise."
   - "Classic ABAP is still a valid tactical choice in Private Edition and on-premise when released APIs are missing, legacy reuse matters, or the logic must stay inside the SAP LUW. Isolate it instead of pretending it does not exist."
+  - "Use the current Clean Core Levels A-D to classify extension quality and upgrade risk. The older Tier 1/2/3 model is useful history, but it is no longer the current SAP qualification model."
   - "CAP is a strong default for side-by-side domain services and applications on BTP. It is not a universal replacement for ABAP."
   - "BTP is valuable when independence buys something real: separate lifecycle, multi-system access, external users, different scaling, SaaS, event-driven processing, or non-SAP technology."
   - "Do not create a remote BTP service just to move ten lines of deterministic logic away from S/4HANA. Distributed systems have a cost."
@@ -137,9 +138,10 @@ extension_models:
   - id: EXT-KEY-USER
     title: "Key-user extensibility"
     coupling: "very high / in-stack"
-    choose_when: "A small supported extension exists: custom field, UI adaptation, simple custom logic, form or analytical extension."
+    choose_when: "A small supported extension exists: custom field, UI adaptation, simple custom logic, form, email, custom business object or analytical extension."
     avoid_when: "The requirement is a real application with complex lifecycle, testing, integration and engineering needs."
-    lead_rule: "Use the smallest supported mechanism that solves the requirement."
+    lead_rule: "Use the smallest supported mechanism that solves the requirement, but first verify that the specific app and business context are extensible."
+    source_refs: [SRC-SAP-S4-KEY-USER-EXTENSIBILITY, SRC-SAP-CUSTOM-BUSINESS-OBJECTS]
 
   - id: EXT-DEVELOPER-ABAP-CLOUD
     title: "Developer extensibility with ABAP Cloud"
@@ -154,7 +156,7 @@ extension_models:
     coupling: "very high / in-stack"
     choose_when: "Private Edition or on-premise has a real API gap, legacy reuse requirement, deep transaction coupling or supported classic enhancement point that cannot yet be replaced reasonably."
     avoid_when: "A released ABAP Cloud contract already solves the need with similar effort."
-    lead_rule: "Treat classic ABAP as controlled technical debt, not forbidden magic. Keep unreleased dependencies behind explicit wrappers and test them."
+    lead_rule: "Do not classify all classic ABAP as equally bad. Use the current Clean Core Level model: recommended classic APIs can qualify better than internal-object access, while modifications and explicitly non-recommended techniques remain the highest-risk choices."
     source_refs: [SRC-SAP-ABAP-CLOUD-CLEAN-CORE, SRC-SAP-ABAP-CLOUD-LANGUAGE]
 
   - id: EXT-SIDE-BY-SIDE
@@ -164,6 +166,109 @@ extension_models:
     avoid_when: "The extension is just a remote proxy for local S/4HANA logic and gains no meaningful independence."
     lead_rule: "Decouple for a reason, not for a diagram."
     source_refs: [SRC-SAP-SIDE-BY-SIDE]
+
+
+extensibility_decision_flow:
+  principle: "Start with the business boundary, then choose the lightest extension model that keeps the correct transaction and lifecycle boundary."
+  questions:
+    - order: 1
+      question: "Can the requirement be solved by standard configuration or process adoption?"
+      yes: "Do not build an extension."
+      no: "Continue to the extension decision."
+    - order: 2
+      question: "Is this a small last-mile change inside an existing S/4HANA app or process?"
+      yes: "Check key-user extensibility first: UI adaptation, custom fields, supported custom logic, forms, email templates, analytics or a small custom business object."
+      no: "Continue."
+    - order: 3
+      question: "Does the capability need local transaction consistency, direct S/4HANA business context, or tightly coupled ERP behavior?"
+      yes: "Prefer on-stack developer extensibility with ABAP Cloud and released APIs or extension points."
+      no: "Continue."
+    - order: 4
+      question: "Does it serve external users, require a consumer-grade or native UI, span systems, behave as SaaS, or need independent scaling and lifecycle?"
+      yes: "Prefer side-by-side extensibility on SAP BTP."
+      no: "Keep challenging whether on-stack is simpler."
+    - order: 5
+      question: "Is a required API or extension point missing?"
+      yes: "For Private Edition or on-premise, assess the current Clean Core Level and use the safest supported classic API or controlled bridge available. Do not create a remote architecture only to hide a local API gap."
+      no: "Stay on the released contract."
+  source_refs: [SRC-SAP-EXTENSION-ARCHITECTURE-GUIDE, SRC-SAP-ABAP-CLOUD-EXTENSIBILITY, SRC-SAP-CLEAN-CORE-LEVEL-CONCEPT]
+
+key_user_toolbox:
+  rule: "Key-user extensibility is not a generic permission to customize every app. The application and the relevant business context must expose the required extension point."
+  capabilities:
+    - name: "Adapt UI"
+      use: "Change supported UI layout and expose fields without creating a new application."
+    - name: "Custom Fields"
+      use: "Add a field in a business context and enable it for supported UIs, reports, forms, email templates or APIs."
+    - name: "Custom Logic"
+      use: "Implement released key-user BAdIs or other supported logic points for small controlled behavior changes."
+    - name: "Custom Business Objects"
+      use: "Create small custom data models with generated persistence, services and optional UI when the use case fits the framework."
+    - name: "Custom CDS and analytics"
+      use: "Build supported read models and analytical queries on released data sources."
+    - name: "Forms and email templates"
+      use: "Copy or extend supported output content without changing application code."
+    - name: "Custom Tiles and catalog extensions"
+      use: "Expose an external or custom application in the launchpad and assign it through the correct catalog and role model."
+  app_support_check:
+    - "Find the exact app and App ID in the SAP Fiori apps reference library."
+    - "Open the documentation for the correct S/4HANA edition and release."
+    - "Check the App Extensibility section and identify supported business contexts, fields, BAdIs or other extension points."
+    - "Do not assume that because one app supports custom fields, every related app supports the same field or business context."
+  source_refs: [SRC-SAP-S4-KEY-USER-EXTENSIBILITY, SRC-SAP-CUSTOM-BUSINESS-OBJECTS]
+
+extension_governance:
+  inventory:
+    tool: "Extensibility Inventory"
+    purpose: "Track extension items, dependencies, last change information, import/export state and rework tasks."
+    lead_use: "Before changing or retiring an extension, inspect what it uses and what uses it."
+    source_refs: [SRC-SAP-EXTENSIBILITY-INVENTORY]
+  transport:
+    rule: "The transport mechanism is deployment-model and release specific."
+    public_cloud: "Current Public Edition key-user extensions use software collection export/import flows."
+    private_onprem: "In supported ABAP-based Private Edition or on-premise landscapes, ATO, software packages, transport requests and Register Extensions for Transport can be part of the lifecycle."
+    warning: "Do not memorize one transport path and apply it to every S/4HANA edition."
+    source_refs: [SRC-SAP-S4-KEY-USER-EXTENSIBILITY, SRC-SAP-ATO, SRC-SAP-REGISTER-EXTENSIONS-TRANSPORT]
+  discovery_resource:
+    title: "SAP Extensibility Explorer"
+    status: "sunset"
+    guidance: "Archived scenarios can still teach patterns, but SAP states that the explorer and its sample scenarios are deprecated and should not be used as productive implementation guidance."
+    source_refs: [SRC-SAP-EXTENSIBILITY-EXPLORER-STATUS]
+
+three_tier_history:
+  status: "historical / sunset"
+  why_remember: "Many Private Edition and on-premise landscapes, diagrams and older project standards still use Tier 1/2/3 language."
+  tiers:
+    - tier: "Tier 1"
+      meaning: "Cloud-ready extensions: key-user extensibility, on-stack ABAP Cloud and side-by-side cloud development."
+    - tier: "Tier 2"
+      meaning: "Cloud API enablement: a bridge around missing local released APIs so Tier 1 code can consume a controlled interface."
+    - tier: "Tier 3"
+      meaning: "Classical ABAP extensions and legacy code that cannot follow the Tier 1/2 rules."
+  current_position: "SAP has replaced this qualification model with Clean Core Levels A-D. Existing code created under the old model does not automatically need to be rewritten only because the terminology changed."
+  source_refs: [SRC-SAP-CLEAN-CORE-LEVEL-CONCEPT, SRC-SAP-CLEAN-CORE-EXTENSIBILITY-WHITEPAPER]
+
+clean_core_levels:
+  principle: "Aim for the highest clean-core level that can meet the business requirement."
+  levels:
+    - level: "A"
+      title: "Released and stable contracts"
+      meaning: "Uses publicly released and stable SAP interfaces and extension points. This includes ABAP Cloud on-stack and properly decoupled side-by-side extensions that stay on stable contracts."
+      lead_view: "Preferred target for new development."
+    - level: "B"
+      title: "Recommended classic APIs"
+      meaning: "Uses classic SAP APIs and technologies that SAP identifies as suitable and generally upgrade-stable even though they are not all released like Level A contracts."
+      lead_view: "A pragmatic option when Level A does not cover the requirement."
+    - level: "C"
+      title: "Internal SAP objects"
+      meaning: "Uses SAP internal objects. This creates more upgrade exposure and requires explicit change-impact checks and governance."
+      lead_view: "Conditionally clean, but the risk must be visible and managed."
+    - level: "D"
+      title: "Not recommended"
+      meaning: "Uses techniques such as modifications, direct write access to SAP tables, implicit enhancements or explicitly non-recommended objects."
+      lead_view: "Highest-risk category; avoid for new design and plan remediation where justified."
+  classification_rule: "An extension is constrained by its weakest dependency. A modern UI does not make the solution clean if the backend relies on Level D techniques."
+  source_refs: [SRC-SAP-CLEAN-CORE-LEVEL-CONCEPT, SRC-SAP-CLEAN-CORE-EXTENSIBILITY-WHITEPAPER]
 
 runtime_decisions:
   - id: RT-S4-ONSTACK
@@ -307,16 +412,17 @@ decision_matrix:
     why: "The lightest supported extension usually has the lowest lifecycle cost."
 
 clean_core_reality:
-  definition: "Clean core is mainly about lifecycle-stable extension contracts and reducing direct dependency on SAP internals. It does not mean zero custom code and it does not mean every extension belongs on BTP."
+  definition: "Clean core is about lifecycle-stable extension contracts, transparent upgrade risk and reducing unsafe dependency on SAP internals. It does not mean zero custom code and it does not mean every extension belongs on BTP."
   practical_rules:
+    - "Classify important extensions with the current Clean Core Levels A-D and aim for the highest level that meets the requirement."
     - "Prefer released APIs and extension points for new code."
     - "Use ABAP Cloud where released coverage is sufficient."
     - "Do not modify SAP standard unless there is an exceptional, governed reason."
     - "When classic access is unavoidable, isolate unreleased dependencies behind small adapters so the blast radius is visible."
     - "Run ATC and tests continuously; upgrade risk should be measured, not discussed as theology."
     - "Review whether the custom requirement should exist at all before choosing its technology."
-  sap_reality_check: "SAP itself documents that Private Edition and on-premise customers may not be able to move completely to pure ABAP Cloud immediately because existing classic code and released-API gaps remain."
-  source_refs: [SRC-SAP-ABAP-CLOUD-CLEAN-CORE]
+  sap_reality_check: "Current SAP guidance is more pragmatic than the old all-or-nothing view: classic ABAP is classified by risk and API quality through Levels B-D, while Level A remains the preferred target for new development."
+  source_refs: [SRC-SAP-ABAP-CLOUD-CLEAN-CORE, SRC-SAP-CLEAN-CORE-LEVEL-CONCEPT, SRC-SAP-CLEAN-CORE-EXTENSIBILITY-WHITEPAPER]
 
 clean_code_reality:
   definition: "Clean code is about understandable, maintainable, testable implementation. It is separate from clean core."
@@ -412,6 +518,12 @@ lead_assessment_answers:
     answer: "Cloud Foundry for a normal CAP business application. Kyma when I actually need Kubernetes capabilities, containers, custom platform control or workload characteristics that justify the extra operations."
   - question: "What does clean core mean in practice?"
     answer: "Keep custom code, but make dependencies stable: released APIs first, no casual modifications, isolate unavoidable classic access, use ATC and tests, and measure upgrade impact."
+  - question: "How do you choose between key user, developer and side-by-side extensibility?"
+    answer: "I start with the business boundary. For a small supported last-mile change, I check key-user extensibility. For tightly coupled ERP logic that needs local transaction context, I prefer on-stack ABAP Cloud developer extensibility. For external users, cross-system ownership, SaaS, independent scaling or a separate lifecycle, I prefer side-by-side on BTP."
+  - question: "What happened to the old Tier 1/2/3 model?"
+    answer: "It is useful historical knowledge, but SAP has sunset it as the main qualification model. Current clean-core guidance uses Levels A-D. I still recognize Tier 2 wrappers and Tier 3 legacy code in existing landscapes, but I classify current extension quality with the level model."
+  - question: "What is the Extensibility Inventory for?"
+    answer: "It is the control point for extension items and their dependencies. I use it to see what changed, what depends on what, transport or import/export status, and rework tasks before I change or retire an extension."
 
 source_refs:
   - SRC-SAP-ABAP-CLOUD-CLEAN-CORE
@@ -432,6 +544,15 @@ source_refs:
   - SRC-SAP-SIDE-BY-SIDE
   - SRC-SAP-INTEGRATION-SUITE
   - SRC-SAP-BAS-DEV-SPACES
+  - SRC-SAP-CLEAN-CORE-LEVEL-CONCEPT
+  - SRC-SAP-CLEAN-CORE-EXTENSIBILITY-WHITEPAPER
+  - SRC-SAP-S4-KEY-USER-EXTENSIBILITY
+  - SRC-SAP-EXTENSIBILITY-INVENTORY
+  - SRC-SAP-ATO
+  - SRC-SAP-REGISTER-EXTENSIONS-TRANSPORT
+  - SRC-SAP-CUSTOM-BUSINESS-OBJECTS
+  - SRC-SAP-EXTENSION-ARCHITECTURE-GUIDE
+  - SRC-SAP-EXTENSIBILITY-EXPLORER-STATUS
 
 tags:
   - sap
