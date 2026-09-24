@@ -35,7 +35,7 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
   </header>
 
   <nav aria-label="On this preparation page">
-    <p><a href="#target">Certification target</a> · <a href="#official-scope">Official courses</a> · <a href="#time">Time budget</a> · <a href="#method">How to study</a> · <a href="#roadmap">Ten-stage roadmap</a> · <a href="#capstone">Worked practice</a> · <a href="#consolidation">One topic, one primary page</a> · <a href="#library">Resource library</a> · <a href="#gaps">Coverage checks</a> · <a href="#readiness">Readiness</a></p>
+    <p><a href="#target">Certification target</a> · <a href="#official-scope">Official courses</a> · <a href="#our-units">Our units</a> · <a href="#time">Time budget</a> · <a href="#method">How to study</a> · <a href="#roadmap">Ten-stage roadmap</a> · <a href="#capstone">Worked practice</a> · <a href="#consolidation">One topic, one primary page</a> · <a href="#library">Resource library</a> · <a href="#gaps">Coverage checks</a> · <a href="#readiness">Readiness</a></p>
   </nav>
 
   <section class="research-canvas__inventory" id="target">
@@ -57,6 +57,31 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
       <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-automation-and-analytics"><span>05</span><strong>Sales Automation and Analytics — 6 hr 30 min</strong><small>Omnichannel Convergent Billing (1MC), fulfillment monitoring (BKK), AI-based order entry, planning (1O0), Fiori analytical apps (1BS), and predictive model training (2YJ). Use with stage 10.</small></a>
     </div>
     <p><strong>Implementation foundation:</strong> use <a href="https://learning.sap.com/learning-journeys/implementing-sap-s-4hana-cloud-public-edition">Implementing SAP S/4HANA Cloud Public Edition</a> for landscapes, authorizations, Fit-to-Standard, Central Business Configuration, Fiori, extensibility, integration, migration and testing. The Sales fundamentals course lists this implementation journey and Private Edition Sales learning as prerequisites. Use those links for foundation knowledge without confusing the certification targets.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="our-units">
+    {% assign sales_unit_program = site.data.labs.assessment.sales_certification_units %}
+    <header><p class="research-canvas__eyebrow">Our Sales units</p><h2>Use SAP for the syllabus. Use our units for mastery.</h2></header>
+    <p>The official SAP course title and duration define the learning boundary. Our unit adds the deeper standard we want: <strong>understand the mechanism, apply it to a changed example, explain it without notes, and keep evidence</strong>. Completing the SAP lesson is reading progress; reaching level 3 below is demonstrated competence.</p>
+    <p><strong>Mastery scale:</strong> 0 = unfamiliar · 1 = recognize while reading · 2 = explain with prompts · 3 = explain, apply and handle a changed example without the article open. This is our study convention, not an SAP score or pass threshold.</p>
+    {% for course in sales_unit_program.courses %}
+    <details{% if course.id == "advanced" %} open{% endif %}>
+      <summary><strong>{{ course.order }}. {{ course.title }}</strong> — {{ course.official_duration }} · {{ course.units | size }} units</summary>
+      <p><a href="{{ course.official_url }}">Official SAP course</a> sets the scope. The local links below are the primary study routes; companions are opened only when the unit exposes a specific gap.</p>
+      <div class="ecg-determination-list">
+        {% for unit in course.units %}
+        <article class="ecg-determination-detail" id="our-unit-{{ unit.id | downcase }}">
+          <header><div><span>{{ unit.sequence }}</span><small>{{ unit.official_duration }}{% if unit.scope_item %} · {{ unit.scope_item }}{% endif %}</small></div><h3>{{ unit.official_title }}</h3></header>
+          <p><strong>Primary:</strong> <a href="{{ unit.primary_url }}">{{ unit.primary_label }}</a>{% if unit.editorial_status == "needs_deepening" %} · <em>local depth still needs strengthening</em>{% endif %}</p>
+          <p><strong>Understand:</strong> {{ unit.understand }}</p>
+          <p><strong>Apply:</strong> {{ unit.apply }}</p>
+          <p><strong>Explain:</strong> {{ unit.explain }}</p>
+          <p><strong>Evidence:</strong> {{ unit.evidence }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </details>
+    {% endfor %}
   </section>
 
   <section class="research-canvas__inventory" id="time">
@@ -149,8 +174,8 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
       <article class="ecg-determination-detail" id="stage-7">
         <header><div><span>07</span><small>Core</small></div><h3>Advanced Sales variants and commercial settlement</h3></header>
         <p><strong>Understand:</strong> how the flow changes for third-party, domestic and advanced intercompany, rebate settlement, customer down payments, invoice lists/collective billing and digital payments. These topics have their own official course; they are not optional merely because our pricing library is larger.</p>
-        <p><strong>Read:</strong> <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-advanced-business-processes">the advanced-process course</a> together with <a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a>, <a href="/labs/enterprise-context/sales-processes/coverage/">process coverage</a>, <a href="/labs/enterprise-context/condition-contract-management/sales/">Sales Condition Contract Management</a>, and <a href="/labs/enterprise-context/condition-contract-management/">the wider settlement model</a>.</p>
-        <p><strong>Apply:</strong> make one small comparison sheet for each official variant: who sells, who delivers, who invoices, which reference documents connect the steps, and what settlement or payment event closes the variant. For rebates, distinguish the transaction price from the later commercial settlement in the selected process.</p>
+        <p><strong>Read:</strong> <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-advanced-business-processes">the official advanced-process course</a> first, then use our <a href="/labs/enterprise-context/sales-processes/#c-s4cs-advanced-units">seven C_S4CS Advanced units</a> as the primary local route. Open <a href="/labs/enterprise-context/condition-contract-management/sales/">Sales Condition Contract Management</a> only for the rebate-settlement gap and <a href="/labs/enterprise-context/sales-processes/coverage/">process coverage</a> only when you need the wider variant inventory.</p>
+        <p><strong>Apply:</strong> complete the evidence task in each of our seven Advanced units. Keep the official exercise result separate from our explain-back: for every variant, show who sells, who delivers, who invoices, which internal or external document closes the handoff, and which event proves completion. For rebates, distinguish invoice price from later settlement; for BKJ, distinguish a down-payment request from received cash; for BKZ, distinguish collective billing from an invoice list.</p>
         <p><strong>Explain:</strong> “Which part of Sell from Stock no longer applies here, and what replaces it?” <strong>Done:</strong> you can compare the variants rather than draw the standard flow with a new heading. Use the official lesson first wherever the local library has only a high-level map.</p>
       </article>
 
@@ -270,7 +295,7 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
     <ul>
       <li><strong>Fundamentals:</strong> can you work through BD9, BDG, BDA and I9I and explain their differences, rather than only describe a standard order?</li>
       <li><strong>Configuration:</strong> have you separately practiced incompleteness, copy control, pricing and output in the relevant Public Edition learning environment?</li>
-      <li><strong>Advanced variants:</strong> do 1HO, 5D2, BDK, 1B6, BKJ, BKZ and 1Z1 each have a completed official lesson and an independently explainable document flow?</li>
+      <li><strong>Advanced variants:</strong> do 1HO, 5D2, BDK, 1B6, BKJ, BKZ and 1Z1 each have a completed official lesson <em>and</em> level-3 evidence from our unit: mechanism understood, changed example applied, and document/payment/settlement boundary explained?</li>
       <li><strong>Complaints:</strong> can you compare financial-only corrections, customer returns and lean returns, including the roles and analytical view?</li>
       <li><strong>Automation and analytics:</strong> have you covered all six course topics, not just fulfillment monitoring or general AI?</li>
       <li><strong>Implementation:</strong> can you link a Sales requirement to data, authorization, configuration, integration and test evidence? Have you clearly labeled classic-SD details that are only background?</li>

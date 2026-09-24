@@ -7,8 +7,9 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-24
 hide_global_cta: true
+sales_preparation: sales
 sales_process_atlas: true
 tags:
   - sap
@@ -17,7 +18,7 @@ tags:
   - sd
   - order-to-cash
   - special-processes
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-24
 publication_wave: "logistics-search-wave-02"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP SD sales processes, order-to-cash and special sales scenarios"
@@ -78,6 +79,7 @@ source_links:
 {% assign atlas = atlas_groups.index %}
 {% assign group_keys = "01_baseline,02_fulfillment,03_intercompany,04_commercial,05_execution,06_overlays,07_after_sales,08_commercial_extensions,09_industry_variants,10_billing_lifecycle,11_cross_application_execution" | split: "," %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_process_registry %}
+{% assign sales_unit_program = site.data.labs.assessment.sales_certification_units %}
 {% assign process_count = 0 %}
 {% for group_key in group_keys %}
   {% assign count_group = atlas_groups[group_key] %}
@@ -172,6 +174,29 @@ source_links:
       <a href="/labs/enterprise-context/credit/"><span>CRD</span><strong>Credit Management</strong><small>Trigger, account, segment, exposure, check rule, block, release, and recheck.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Business partner, product, customer-material data, organization, defaults, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
+  </section>
+
+  {% assign advanced_courses = sales_unit_program.courses | where: "id", "advanced" %}
+  {% assign advanced_course = advanced_courses | first %}
+  <section class="research-canvas__inventory" id="c-s4cs-advanced-units" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">C_S4CS / our advanced units</p>
+      <h2>Seven official units. Seven deeper process explanations.</h2>
+      <p>The current SAP Advanced Business Processes course contains seven units and takes 5 hr 40 min. We keep the same syllabus boundary, but the local target is stronger: understand the changed rule, work a concrete case, explain the document boundary, and keep evidence. The cards below point to the canonical process records on this page instead of creating seven parallel longreads.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for unit in advanced_course.units %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{{ unit.sequence }}</span><small>{{ unit.official_duration }} · {{ unit.scope_item }}</small></div><h3>{{ unit.official_title }}</h3></header>
+        <p><strong>Understand:</strong> {{ unit.understand }}</p>
+        <p><strong>Apply:</strong> {{ unit.apply }}</p>
+        <p><strong>Explain:</strong> {{ unit.explain }}</p>
+        <p><strong>Evidence:</strong> {{ unit.evidence }}</p>
+        <p><a href="{{ unit.primary_url }}">Open the canonical process card</a>.</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption">The unit titles, sequence and official durations follow the current SAP Learning course. The explanations, exercises and mastery evidence above are our study design, not SAP exam questions.</p>
   </section>
 
   <section class="research-canvas__inventory" id="process-groups" data-reveal>
