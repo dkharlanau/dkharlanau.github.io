@@ -1,41 +1,148 @@
 ---
 layout: default
 title: "EWM Automation & MFS — Control Boundary Map"
-description: "A practical SAP EWM automation map for MFS, WCS/WCU, PLC control, material-flow messages, recovery and monitoring."
+description: "A practical SAP EWM guide to Material Flow System architecture, PLC communication, communication points, telegram sequencing, recovery, and the boundary to external warehouse control."
 permalink: /labs/enterprise-context/ewm/automation/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
 enterprise_context_graph: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-24
+last_reviewed: 2026-09-24
+review_method: "SAP S/4HANA 2025 FPS01 primary documentation + full editorial rewrite"
 hide_global_cta: true
 tags: [sap, ewm, mfs, wcs, plc, automation, warehouse]
+source_links:
+  - title: "Structure of the MFS"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/39cbcb53ad377114e10000000a174cb4.html"
+  - title: "Communication Channel"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/95cacb53ad377114e10000000a174cb4.html"
+  - title: "Setting Up the Material Flow System"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/48d04dbeace2581ce10000000a42189c.html"
+  - title: "MFS in the Warehouse Management Monitor"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/b02618545685024be10000000a44176d.html"
+  - title: "MFS for Case Conveyor Systems"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/67337124fac24594b43c3a74994abfc3.html"
 ---
-{% assign map = site.data.labs.enterprise_context.ewm.automation %}
 
-<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Automation & MFS</li></ol></nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Automation & MFS</li></ol>
+</nav>
 
 <div class="research-canvas context-graph">
-<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Enterprise Context / Automated Warehouse</p><h1>{{ map.title }}</h1><p>{{ map.summary }}</p><a class="research-canvas__button" href="#boundary">Open control boundary <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></div><div class="research-canvas__signal"><p>Architecture map</p><div class="research-canvas__signal-line"><span>01</span><strong>{{ map.layers | size }}</strong><small>Control layers</small></div><div class="research-canvas__signal-line"><span>02</span><strong>{{ map.mfs_objects | size }}</strong><small>MFS objects</small></div><div class="research-canvas__signal-line"><span>03</span><strong>{{ map.failure_modes | size }}</strong><small>Failure patterns</small></div><em>Source checked {{ map.verified_at }}</em></div></header>
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Enterprise Context / Automated warehouse</p>
+      <h1>EWM decides the warehouse move. MFS turns it into machine-facing flow.</h1>
+      <p>SAP EWM Material Flow System sits between warehouse execution and programmable logic controllers. The useful boundary is simple: EWM provides warehouse intent, MFS coordinates the material-flow stages and telegrams, and the PLC controls the physical movement between decision points.</p>
+      <a class="research-canvas__button" href="#boundary">Follow the control boundary <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Automation control boundary">
+      <p>Execution chain</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>EWM</strong><small>Warehouse task and business state</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>MFS</strong><small>Route, stages and telegrams</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>PLC</strong><small>Real-time equipment movement</small></div>
+      <em>SAP S/4HANA 2025 FPS01 · primary-source review</em>
+    </div>
+  </header>
 
-<section class="research-canvas__boundary" id="boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</span><p><strong>Lead rule:</strong> {{ map.lead_rule }}</p><p><strong>Memory path:</strong> {{ map.memory_path }}</p></section>
+  <section class="research-canvas__boundary" id="boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</span>
+    <div>
+      <p><strong>The control boundary matters more than the protocol.</strong> A warehouse task says what movement EWM needs. MFS can split that movement into material-flow stages, decide at communication points, and exchange telegrams with the responsible PLC. The PLC then performs the machine-level movement between those points.</p>
+      <p>If two layers are allowed to make the same routing or recovery decision, automation becomes difficult to reason about. Keep one owner for each decision and make every handoff observable.</p>
+    </div>
+  </section>
 
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Ownership</p><h2>Separate business intent, flow coordination and machine control.</h2><p>The design becomes much easier when every layer has one clear job.</p></header><div class="research-route-list">{% for item in map.layers %}<article><span>LAYER</span><strong>{{ item.title }}</strong><small><b>Owns:</b> {{ item.owns }}</small><p><b>Does not own:</b> {{ item.does_not_own }}</p></article>{% endfor %}</div></section>
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">The MFS topology</p>
+      <h2>Five objects explain most of the automation model.</h2>
+      <p>MFS is easier to understand when we stop treating it as a black box between EWM and a conveyor.</p>
+    </header>
+    <div class="research-route-list">
+      <article><span>MFS</span><strong>PLC</strong><small>The control system that receives or sends machine-facing messages and operates the connected equipment.</small></article>
+      <article><span>MFS</span><strong>Communication channel</strong><small>The message connection between MFS and a PLC. SAP defines it with network and telegram-processing properties.</small></article>
+      <article><span>MFS</span><strong>Communication point</strong><small>A point in the material flow where EWM needs to know the HU position or make the next decision.</small></article>
+      <article><span>MFS</span><strong>Conveyor segment</strong><small>The route between communication points. Segment status and capacity can participate in routing decisions.</small></article>
+      <article><span>MFS</span><strong>Resource</strong><small>A movable automation resource, such as a stacker crane, when its movement is represented and controlled in the MFS design.</small></article>
+    </div>
+    <p>SAP's model is deliberate: communication points exist where a higher-level decision is required. Between two communication points, the PLC regulates the physical steps itself. That prevents EWM from becoming a motor-control system while still keeping warehouse routing tied to warehouse state.</p>
+  </section>
 
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Architecture choice</p><h2>MFS, WCS/WCU, or PLC?</h2></header><div class="research-route-list">{% for item in map.decision_map %}<article><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choose }}</b></small><p>{{ item.why }}</p></article>{% endfor %}</div></section>
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">From warehouse task to movement</p>
+      <h2>A single warehouse task can become several material-flow stages.</h2>
+      <p>Consider a pallet moving from an identification point to a high-rack storage bin. EWM owns the warehouse task. MFS follows the HU through the automation topology and communicates with the PLC as the pallet reaches the points where another decision is needed.</p>
+    </header>
+    <div class="ecg-rail" aria-label="MFS execution flow">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Warehouse task</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Communication point</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">MFS route decision</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Telegram to PLC</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">PLC movement</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Next point / confirmation</span>
+      </div>
+    </div>
+    <p>The important fact is not that a telegram was sent. We need to know which HU and warehouse task it belongs to, which communication point was last trusted, what the PLC acknowledged, and whether EWM's current state still matches the physical pallet.</p>
+  </section>
 
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">MFS model</p><h2>Five objects explain most of the material-flow topology.</h2></header><div class="research-route-list">{% for item in map.mfs_objects %}<article><span>MFS</span><strong>{{ item.title }}</strong><small>{{ item.purpose }}</small></article>{% endfor %}</div></section>
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Communication</p>
+      <h2>Ordering is part of the automation contract.</h2>
+      <p>A communication channel is more than a socket. SAP documents sequential processing within a channel: the next message is not sent until the previous one has been acknowledged. This gives the channel an ordering role as well as a transport role.</p>
+    </header>
+    <p>Several channels can be configured for the same PLC, which can increase throughput. That does not mean messages should be parallelized freely. Once related telegrams use different channels, they may overtake each other. The design therefore needs an explicit answer to a simple question: which messages are allowed to arrive in a different order without creating an impossible warehouse state?</p>
+    <p>Current SAP documentation also describes more than one communication layer for connecting EWM MFS with external data sources, including direct communication using ABAP Push Channels and integration through SAP Plant Connectivity. The transport choice belongs after the control and ordering model are clear.</p>
+  </section>
 
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Runtime contract</p><h2>Automation needs a recovery contract, not only a happy-path telegram.</h2></header><div class="research-route-list">{% for item in map.runtime_contract %}<article><span>{{ item.key }}</span><strong>{{ item.rule }}</strong></article>{% endfor %}</div></section>
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">MFS or external WCS</p>
+      <h2>The architecture choice is about execution ownership.</h2>
+      <p>MFS is designed for cases where EWM can coordinate the automated material flow and communicate with the PLC layer. SAP also documents conveyor scenarios in which no additional warehouse control unit is required.</p>
+    </header>
+    <p>An external warehouse-control system can still be the right boundary when a separate automation platform owns detailed orchestration across equipment or subsystems. In that design, the key question is not which product has the richer screen. It is which system owns task decomposition, route decisions, cancellation, and recovery at each step.</p>
+    <p>Do not let EWM, a WCS, and a PLC independently decide the same movement. One system should own the warehouse intent, one layer should own the material-flow decision at that boundary, and the machine controller should execute the physical action it has been given.</p>
+  </section>
 
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Diagnostics</p><h2>Reconcile the physical HU before restarting the digital flow.</h2></header><div class="research-route-list">{% for item in map.failure_modes %}<article><span>!</span><strong>{{ item.symptom }}</strong><small><b>Check first:</b> {{ item.check_first }}</small></article>{% endfor %}</div></section>
+  <section class="research-canvas__inventory" id="recovery" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Recovery</p>
+      <h2>After an automation fault, establish physical truth before replaying messages.</h2>
+      <p>A timeout does not tell us whether a pallet moved. It only tells us that the expected communication did not complete as expected. Blindly resending a command can therefore make a digital problem physical.</p>
+    </header>
+    <p>Start with the HU and the last trusted communication point. Then compare the warehouse-task state, communication-channel state, inbound and outbound telegram buffers, and the PLC or equipment state. If the pallet was moved manually during the outage, that intervention must be reconciled before automatic processing resumes.</p>
+    <p>The Warehouse Management Monitor exposes the MFS objects needed for this work. SAP documents channel controls, communication-point and segment status, resources, telegram buffers, HUs, warehouse tasks, and telegram logs. The logs can be searched by identifiers such as HU, communication point, telegram run number, error code, warehouse task, and warehouse order.</p>
+  </section>
 
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Operations</p><h2>Measure whether automation can recover, not only whether it can move.</h2></header><div class="research-route-list">{% for item in map.kpis %}<article><span>KPI</span><strong>{{ item.title }}</strong><small>{{ item.meaning }}</small></article>{% endfor %}</div></section>
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>Current SAP documentation behind this model.</h2>
+    </header>
+    <div class="ecg-source-list">
+      <article><span>SAP Help Portal</span><h3>Structure of the MFS</h3><p>PLC, communication channel, communication point, conveyor segment, resources, and the division of control between MFS and PLC.</p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/39cbcb53ad377114e10000000a174cb4.html" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+      <article><span>SAP Help Portal</span><h3>Communication Channel</h3><p>Sequential telegram processing, acknowledgements, multiple channels, IP/port configuration, and ordering cautions.</p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/95cacb53ad377114e10000000a174cb4.html" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+      <article><span>SAP Help Portal</span><h3>Setting Up the Material Flow System</h3><p>Current setup model for PLCs, channels, communication points, conveyor segments, resources, telegram processing, and supported communication layers.</p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/48d04dbeace2581ce10000000a42189c.html" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+      <article><span>SAP Help Portal</span><h3>MFS in the Warehouse Management Monitor</h3><p>Operational visibility for communication channels, telegram buffers, warehouse tasks, HUs, resources, and recovery actions.</p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/b02618545685024be10000000a44176d.html" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+    </div>
+  </section>
 
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Patterns</p><h2>Common automated warehouse shapes.</h2></header><div class="research-route-list">{% for item in map.scenarios %}<article><span>SCN</span><strong>{{ item.title }}</strong><small>{{ item.flow }}</small></article>{% endfor %}</div></section>
-
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Assessment lens</p><h2>Short answers with a clear ownership boundary.</h2></header><div class="research-route-list">{% for item in map.assessment_cards %}<article><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.answer }}</small></article>{% endfor %}</div></section>
-
-<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Connected maps</p><h2>Automation sits between warehouse objects and the physical world.</h2></header><div class="research-route-list">{% for item in map.related %}<a href="{{ item.url }}"><span>→</span><strong>{{ item.title }}</strong></a>{% endfor %}</div><p><a href="/labs/enterprise-context/data/topics.json">Machine-readable topic graph →</a></p></section>
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Related context</p>
+      <h2>Keep automation connected to the warehouse object model.</h2>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/ewm/"><span>→</span><strong>SAP EWM execution model</strong><small>Warehouse requests, tasks, orders, deployment and integration boundaries.</small></a>
+      <a href="/labs/enterprise-context/ewm/interfaces/"><span>→</span><strong>EWM technical interfaces</strong><small>How automation fits beside qRFC, APIs, production integration and other interface families.</small></a>
+      <a href="/labs/enterprise-context/ewm/handling-units-packing/"><span>→</span><strong>Handling Units, Packing & Labels</strong><small>Physical and digital HU identity before automation starts moving the package.</small></a>
+      <a href="/labs/enterprise-context/ewm/objects/"><span>→</span><strong>EWM object catalog</strong><small>The warehouse objects that supply the business context behind machine-facing execution.</small></a>
+    </div>
+  </section>
 </div>
