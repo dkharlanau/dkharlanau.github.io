@@ -111,6 +111,30 @@ delivery_document_model:
     - SRC-SAP-LEARN-DELIVERY-CONCEPT
     - SRC-SAP-LEARN-OUTBOUND-PROCESSING
 
+delivery_item_category_memory:
+  title: "COPY WHEN POSSIBLE; DETERMINE WHEN NEEDED"
+  copied_case: >-
+    In an order-related outbound delivery, the delivery item category is normally copied
+    from the sales-order item.
+  determined_case: >-
+    If there is no sales-order item to copy from, the system determines the delivery item
+    category from the delivery type, material item-category group, item usage, and the
+    higher-level item category where relevant.
+  usage_examples:
+    - "PACK — packaging item"
+    - "CHSP — batch split"
+    - "PSEL — product selection"
+    - "V — inbound purchase-order and stock-transfer delivery contexts"
+  usage_boundary: >-
+    SAP sets these additional usages internally for the related functions. Do not look for
+    a normal Customizing rule that determines the usage itself.
+  material_group_boundary: >-
+    The general item-category group is material-level and is used for inbound-delivery
+    determination. The sales-area-dependent item-category group is used when the delivery
+    carries sales organization and distribution channel context.
+  source_refs:
+    - SRC-SAP-LEARN-DELIVERY-CONTROL
+
 collective_processing_model:
   title: "Delivery creation is both a document task and an operational worklist"
   single_delivery: >-
@@ -197,6 +221,16 @@ delivery_controls:
     diagnostic_question: "Is this charge owned by delivery pricing, transportation charge management, or billing?"
     source_refs:
       - SRC-SAP-LEARN-DELIVERY-SPECIAL
+  - id: SHP-CTRL-ITEM-CATEGORY
+    title: "Delivery item category"
+    principle: >-
+      With a sales-order reference, the delivery item category is normally copied from the
+      order item. Where there is no sales-order item to copy from, delivery item category
+      determination uses the delivery type, material item-category group, item usage, and
+      higher-level item category where relevant.
+    diagnostic_question: "Was the item category copied from the preceding item, or determined inside the delivery?"
+    source_refs:
+      - SRC-SAP-LEARN-DELIVERY-CONTROL
 
 memory_model:
   title: "Nine questions I use when shipping or dates are wrong"
