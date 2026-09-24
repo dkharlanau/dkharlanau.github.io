@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-03
+last_modified_at: 2026-09-24
 last_reviewed: 2026-09-03
 publication_wave: "sap-data-migration-review-2026-09"
 review_method: "SAP S/4HANA 2025 FPS01 + SAP S/4HANA Cloud Public Edition 2608 primary sources + source-registry review + page-level factual review"
@@ -48,8 +48,8 @@ semantic_links:
 source_links:
   - title: "Migrate Your Data - Migration Cockpit"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7340a09096454b7abf4379f926a21567/2f0dbe4111214bcf9b2d57eca26f0525.html?locale=en-US&state=PRODUCTION&version=2025.001"
-  - title: "Transferring Data to Staging Tables"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/29193bf0ebdd4583930b2176cb993268/5431e7b4bbfe4e00ab7aaa5b2f7a61d1.html?locale=en-US&q=Data+migration+staging+table"
+  - title: "Migrate Data Using Staging Tables"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/29193bf0ebdd4583930b2176cb993268/87ffdbfebd504116b497c02d51ce5b58.html?locale=en-US"
   - title: "SAP S/4HANA Migration Object Modeler"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/29193bf0ebdd4583930b2176cb993268/3732aa6c1acf4184812f0db7beb8e037.html"
   - title: "Creating Migration Projects"
@@ -62,8 +62,8 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/d5699934e7004d048c4801b552f3b013/170c8615c98342e591110ab86744f89f.html"
   - title: "Migration Object Modeler"
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/d5699934e7004d048c4801b552f3b013/15a578b94cd24ff9bcd4317f9d745061.html"
-  - title: "Using Staging Tables as Intermediate Storage"
-    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/d5699934e7004d048c4801b552f3b013/22428f73dc2742d9a637d263e7911b9f.html?locale=en-US"
+  - title: "Creating Migration Projects - Staging Tables"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/d5699934e7004d048c4801b552f3b013/ecf23f5cdf8d47d0b4014c26ea743ec6.html"
   - title: "Data Migration Status"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/29193bf0ebdd4583930b2176cb993268/30b5a3e91d0d469bb321360586003211.html"
   - title: "About SAP Data Services 2025"
@@ -189,7 +189,22 @@ source_links:
     </header>
     <div class="research-route-list">
       {% for approach in topic.migration_approaches %}
-      <a href="#extensibility"><span>PATH</span><strong>{{ approach.title }}</strong><small><b>Choose when:</b> {{ approach.choose_when }} <b>Strength:</b> {{ approach.strengths[0] }} <b>Watch:</b> {{ approach.cautions[0] }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="#staging-location"><span>PATH</span><strong>{{ approach.title }}</strong><small><b>Choose when:</b> {{ approach.choose_when }}{% if approach.flow %} <b>Flow:</b> {{ approach.flow }}{% endif %} <b>Strength:</b> {{ approach.strengths[0] }} <b>Watch:</b> {{ approach.cautions[0] }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="staging-location" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Staging location</p>
+      <h2>Local or remote is a second decision inside the staging approach.</h2>
+      <p>{{ topic.staging_table_locations.principle }}</p>
+      <p><strong>Remember:</strong> {{ topic.staging_table_locations.memory_model }}</p>
+      <p><strong>Lead rule:</strong> {{ topic.staging_table_locations.lead_rule }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for option in topic.staging_table_locations.options %}
+      <a href="#extensibility"><span>DB</span><strong>{{ option.title }}</strong><small><b>Flow:</b> {{ option.flow }} <b>Choose when:</b> {{ option.choose_when }} <b>Strength:</b> {{ option.strengths[0] }} <b>Watch:</b> {{ option.cautions[0] }} <b>Deployment:</b> {{ option.deployment_note }}</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
       {% endfor %}
     </div>
   </section>
