@@ -86,7 +86,7 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
       <li><a href="/labs/enterprise-context/atp/"><strong>ATP and aATP</strong></a> — availability, confirmation and prioritization.</li>
       <li><a href="/labs/enterprise-context/shipping/"><strong>Shipping & Delivery Scheduling</strong></a> — dates, shipping point, route, due processing and PGI handoff.</li>
       <li><a href="/labs/enterprise-context/billing/"><strong>Sales Billing</strong></a> — billing relevance, due list, split, cancellation and FI transfer.</li>
-      <li><a href="/labs/enterprise-context/sales-processes/"><strong>Sales Process Atlas</strong></a> — quotations, contracts, third-party, intercompany, down payments and other process variants.</li>
+      <li><a href="/labs/enterprise-context/sales-processes/"><strong>Sales Process Atlas</strong></a> — quotations, free-of-charge delivery, contracts, third-party, intercompany, down payments and other process variants.</li>
       <li><a href="/labs/enterprise-context/sales-processes/control-plane/returns-claims/"><strong>Returns and Claims Control Plane</strong></a> — complaint choice, physical and financial outcomes.</li>
       <li><a href="/labs/enterprise-context/sales-analytics/"><strong>Sales Automation & Analytics</strong></a> — BKK, 1MC, AI order entry, planning, analytical apps and prediction.</li>
     </ol>

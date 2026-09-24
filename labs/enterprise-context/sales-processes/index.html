@@ -79,7 +79,6 @@ source_links:
 {% assign atlas = atlas_groups.index %}
 {% assign group_keys = "01_baseline,02_fulfillment,03_intercompany,04_commercial,05_execution,06_overlays,07_after_sales,08_commercial_extensions,09_industry_variants,10_billing_lifecycle,11_cross_application_execution" | split: "," %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_process_registry %}
-{% assign sales_unit_program = site.data.labs.assessment.sales_certification_units %}
 {% assign process_count = 0 %}
 {% for group_key in group_keys %}
   {% assign count_group = atlas_groups[group_key] %}
@@ -160,43 +159,32 @@ source_links:
     <p class="ecg-caption"><strong>Evidence boundary:</strong> source-backed process references support selected SAP behavior and scope. Stable <code>SD.*</code> memory codes, comparisons, and the branch-first method are authored learning tools, not SAP terminology.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="c-s4cs-process-route" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Assessment path</p>
-      <h2>Use the atlas for the branch, then open the engine.</h2>
-      <p>A process answer is stronger when you can move from the business variant into the decision engine that controls price, promise, risk, shipping, or master data.</p>
+      <p class="research-canvas__eyebrow">C_S4CS / process branches</p>
+      <h2>Keep the process map here; keep the mastery plan in the certification hub.</h2>
+      <p>This page owns the process variants. The <a href="/labs/assessment/sales-certification/#our-units">certification hub</a> owns the repeated study tasks, evidence prompts, and course-by-course mastery plan. For final review, use the compact branches below and open the detailed process card only when the changed rule is not clear.</p>
     </header>
-    <div class="research-route-list">
-      <a href="/labs/enterprise-context/sales-order/"><span>SO</span><strong>Sales Order Decision Map</strong><small>WHO → WHAT → WHERE → WHEN → PRICE → PROMISE → RISK → FULFILL.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing</strong><small>Procedure, condition technique, calculation, diagnostics, and extension boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>Promise logic, scope, PAC, PAL, SUP, BOP, and alternative confirmation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping & Scheduling</strong><small>Plant, shipping point, route, dates, delivery due logic, EWM and TM boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/credit/"><span>CRD</span><strong>Credit Management</strong><small>Trigger, account, segment, exposure, check rule, block, release, and recheck.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Business partner, product, customer-material data, organization, defaults, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-    </div>
-  </section>
 
-  {% assign advanced_courses = sales_unit_program.courses | where: "id", "advanced" %}
-  {% assign advanced_course = advanced_courses | first %}
-  <section class="research-canvas__inventory" id="c-s4cs-advanced-units" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">C_S4CS / our advanced units</p>
-      <h2>Seven official units. Seven deeper process explanations.</h2>
-      <p>The current SAP Advanced Business Processes course contains seven units and takes 5 hr 40 min. We keep the same syllabus boundary, but the local target is stronger: understand the changed rule, work a concrete case, explain the document boundary, and keep evidence. The cards below point to the canonical process records on this page instead of creating seven parallel longreads.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for unit in advanced_course.units %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{{ unit.sequence }}</span><small>{{ unit.official_duration }} · {{ unit.scope_item }}</small></div><h3>{{ unit.official_title }}</h3></header>
-        <p><strong>Understand:</strong> {{ unit.understand }}</p>
-        <p><strong>Apply:</strong> {{ unit.apply }}</p>
-        <p><strong>Explain:</strong> {{ unit.explain }}</p>
-        <p><strong>Evidence:</strong> {{ unit.evidence }}</p>
-        <p><a href="{{ unit.primary_url }}">Open the canonical process card</a>.</p>
-      </article>
-      {% endfor %}
+    <h3>Fundamental branches on this page</h3>
+    <div class="research-route-list">
+      <a href="#sd-quo"><span>BDG</span><strong>Sales Quotation</strong><small>A quotation is a time-bound commercial offer. An accepted quotation becomes relevant to execution through a referenced sales order; partial reference can leave quantity still open.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-foc"><span>BDA</span><strong>Free of Charge Delivery</strong><small>The physical flow remains: confirmation, delivery, picking and PGI. Commercial value changes through free-of-charge item logic, and billing can be omitted or used for a zero-value or pro-forma outcome.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-ctr"><span>I9I</span><strong>Sales Contract Management</strong><small>The contract controls validity and a target value or quantity. Follow-on sales orders release value or quantity from that agreement and still execute their own fulfillment flow.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
     </div>
-    <p class="ecg-caption">The unit titles, sequence and official durations follow the current SAP Learning course. The explanations, exercises and mastery evidence above are our study design, not SAP exam questions.</p>
+
+    <h3>Advanced branches on this page</h3>
+    <div class="research-route-list">
+      <a href="#sd-ico"><span>1HO</span><strong>Domestic Intercompany</strong><small>One group company sells to the external customer while an affiliated company delivers, so customer and intercompany billing relationships coexist.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-aic"><span>5D2</span><strong>Advanced Intercompany Sales</strong><small>Use the detailed card to compare the advanced internal orchestration with the simpler domestic intercompany branch.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-tpo"><span>BDK</span><strong>Third-Party without Shipping Notification</strong><small>The supplier ships directly to the customer. In the standard course flow, supplier invoice receipt is the key billing boundary for the selling company.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-reb"><span>1B6</span><strong>Sales Rebate Processing</strong><small>Condition contracts collect eligible business volume and settle the agreed rebate later; this is not the same calculation as the original invoice price.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-dp-classic"><span>BKJ</span><strong>Customer Down Payment</strong><small>A billing-plan milestone can create a down-payment request, but the request, the actual incoming payment, and the final invoice settlement are different states.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-bill-coll"><span>BKZ</span><strong>Invoice List and Collective Billing</strong><small>Collective billing combines eligible billable references; an invoice list groups existing billing documents. Keep these object boundaries separate.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-plus-pay"><span>1Z1</span><strong>Digital Payments — Sales</strong><small>Follow the payment branch as a Sales overlay and keep payment authorization, credit management, billing, and final clearing as separate controls.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+    </div>
+
+    <p class="ecg-caption">Official scope: <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-fundamental-business-processes">Sales Fundamental Business Processes</a> and <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-advanced-business-processes">Sales Advanced Business Processes</a>. Sell from Stock remains on the <a href="/atlas/concepts/order-to-cash/">Order-to-Cash primary page</a>; the AI unit remains on <a href="/labs/enterprise-context/sales-analytics/">Sales Automation & Analytics</a>. This avoids turning the process atlas into a second certification hub.</p>
   </section>
 
   <section class="research-canvas__inventory" id="process-groups" data-reveal>
