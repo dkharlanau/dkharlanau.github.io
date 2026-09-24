@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Account Assignment Diagnostics"
-description: "Diagnose SAP purchasing account assignment by tracing business intent, cost object validity, document history, and accounting result."
+description: "Diagnose SAP purchasing account assignment by separating the purchasing object, receiving cost object, distribution logic, goods or invoice history, and G/L account determination."
 permalink: /atlas/diagnostics/sap-account-assignment-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -11,7 +11,8 @@ sap_area: "MM / CO procurement"
 business_process: Procure to pay
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-05
+last_reviewed: 2026-09-24
+last_modified_at: 2026-09-24
 author: Dzmitryi Kharlanau
 
 tags:
@@ -40,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP account assignment diagnostics</h1>
-    <p class="note-subtitle">The useful question is not only which field is wrong. It is which business object should carry the cost and why the document chain disagrees.</p>
+    <p class="note-subtitle">Trace the purchase from business purpose to cost object, then separate that assignment from G/L account determination and downstream posting.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -53,54 +54,77 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>Start with the business intent</h2>
-    <p>Account assignment connects a purchase to the object that should receive or explain the cost: for example a cost center, project/WBS element, internal order, asset, sales-related object, or another controlling context. The exact fields depend on the procurement scenario.</p>
-    <p>When posting fails or costs land in the wrong place, first state the intended accounting result. Without that, support can make a document technically valid while charging the wrong budget or cost object.</p>
+    <p>Account assignment answers a business question: <strong>which object should carry the cost of this purchase?</strong> A cost center, internal order, WBS element, asset, sales-related object, or another allowed receiver may be correct depending on the procurement scenario. The purchasing document then carries that intent into goods receipt, service entry, invoice verification, commitments, and accounting.</p>
 
-    <h2>Find the first document where intent and data separate</h2>
-    <div class="decision-table"><table><thead><tr><th>Symptom</th><th>First question</th><th>Evidence</th></tr></thead><tbody>
-      <tr><td>PR or PO cannot be saved</td><td>Does the account assignment category require data that is missing or invalid?</td><td>Category, required account-assignment fields, cost object status, organizational validity.</td></tr>
-      <tr><td>PO contains the wrong cost object</td><td>Was it copied from demand, defaulted, or entered manually?</td><td>PR/source document, PO account assignment, change history, user/process origin.</td></tr>
-      <tr><td>GR or invoice cannot post</td><td>Is the downstream document still consistent with the PO and current cost object?</td><td>PO history, account assignment, object status, posting date, invoice/GR error.</td></tr>
-      <tr><td>FI/CO result is unexpected</td><td>Is the problem the cost object, the G/L derivation, or both?</td><td>Accounting document, account assignment, material/valuation context, account determination.</td></tr>
-      <tr><td>Budget is hit incorrectly</td><td>Was the wrong object used, or did a valid object carry an unexpected commitment/actual?</td><td>Document chain plus controlling/project/asset evidence.</td></tr>
+    <p>When a requisition or purchase order fails, or when the accounting result is wrong, do not start by changing whichever field shows an error. First separate three things that are easy to mix together: the <strong>account assignment category</strong>, the <strong>receiving object and distribution</strong>, and the <strong>G/L account determination</strong>. They interact, but they are not the same decision.</p>
+
+    <aside class="callout">
+      <strong>Working rule:</strong> prove the intended cost receiver first. Then find the first document where the assignment, distribution, or accounting result diverges from that intent.
+    </aside>
+
+    <h2>The account assignment category defines the purchasing context</h2>
+    <p>In SAP purchasing, an account-assigned requisition or purchase-order item can be assigned to one account or to several accounts. SAP documents standard examples such as cost center, asset, order, project/WBS, sales-order-related, and network scenarios. The category tells the purchasing process what kind of account assignment is expected; the detailed receiver data identifies the actual business object.</p>
+
+    <p>This distinction is useful in support. A valid cost center entered under the wrong purchasing scenario does not make the document correct. Conversely, an account assignment category can be valid while the receiver is closed, outside its valid period, not available for the relevant organizational context, or simply not the object approved by the business.</p>
+
+    <p>Start with the purchase itself. Is it stock procurement, direct consumption, project work, an asset acquisition, maintenance or order-related work, a service, or another scenario? That answer should make the selected account assignment understandable before we inspect technical details.</p>
+
+    <h2>Follow the assignment through the document chain</h2>
+    <p>The most useful evidence is usually not one master-data screen. It is the chain from demand to posting. Read the requisition or source document, the purchase order, any goods receipt or service acceptance, the supplier invoice, and the resulting accounting document only as far as the incident requires.</p>
+
+    <div class="decision-table"><table><thead><tr><th>Where the issue first appears</th><th>Main question</th><th>Evidence to compare</th></tr></thead><tbody>
+      <tr><td>Purchase requisition</td><td>Does the request describe the intended receiver and purchasing scenario?</td><td>Account assignment category, receiver, G/L field where relevant, source/defaulting, approval context.</td></tr>
+      <tr><td>Purchase order</td><td>Was the assignment copied, changed, split, or newly determined?</td><td>Source document, PO item account assignment, distribution, change history, approval.</td></tr>
+      <tr><td>Goods receipt or service entry</td><td>Does the follow-on posting use the PO assignment and the expected valuation behavior?</td><td>PO history, receipt/service document, account assignment, posting error or accounting document.</td></tr>
+      <tr><td>Supplier invoice</td><td>Is the invoice still consistent with the PO assignment and its distribution?</td><td>PO history, invoice reference, account assignment, variance/block information, FI document.</td></tr>
+      <tr><td>FI/CO result</td><td>Is the wrong result a receiver problem, a G/L account problem, or both?</td><td>Accounting document, purchasing assignment, material/valuation context, account-determination evidence.</td></tr>
     </tbody></table></div>
 
-    <h2>A practical diagnostic sequence</h2>
+    <p>The first document where expected and actual data separate normally gives the shortest diagnostic path. If the requisition already carries the wrong WBS element, invoice verification is too late to start the analysis. If the PO receiver is correct but the final expense account is unexpected, changing the WBS element would attack the wrong problem.</p>
+
+    <h2>Multiple account assignment is part of the business rule</h2>
+    <p>One purchasing item can distribute its cost across several account assignments. Current SAP S/4HANA documentation describes distribution by quantity, percentage, or amount. For partial receipts and invoices, the purchasing setup can also determine whether values are distributed proportionally or on a progressive fill-up basis.</p>
+
+    <p>That means “the PO total is correct” is not enough. A EUR 10,000 service split 70/30 between two cost centers is a different accounting instruction from the same service split 50/50. Diagnose the individual account-assignment items and the distribution method, not only the item total.</p>
+
+    <p>Goods-receipt behavior also matters. SAP documents both valuated and non-valuated goods receipt for account-assigned purchasing, with restrictions for valuated goods receipt in multiple-account-assignment scenarios. Treat that as part of the purchasing design rather than assuming that every account-assigned PO posts cost at the same step.</p>
+
+    <h2>Posting history changes what can still be corrected</h2>
+    <p>Before changing an account assignment, check whether follow-on documents already exist. SAP documents that after a valuated goods receipt or an invoice has been entered for a purchase-order item with multiple account assignment, the account assignment category and the actual account assignments are no longer freely changeable in the same way as before posting. Distribution handling at invoice time has its own rules, but the original receivers are no longer just draft data.</p>
+
+    <p>This boundary matters operationally. A wrong receiver discovered before follow-on posting may be corrected in the purchasing document. The same error discovered after goods receipt, service acceptance, invoice, asset capitalization, project posting, or period-end processing can require reversal and reposting according to the affected process. Check the full downstream chain before treating reversal as a simple technical fix.</p>
+
+    <h2>Separate the cost receiver from the G/L account</h2>
+    <p>A cost center, WBS element, order, or asset answers <em>where the cost belongs</em>. The G/L account answers <em>what kind of accounting value is being posted</em>. A document can therefore have the correct receiver and the wrong G/L account, or the correct G/L account and the wrong receiver.</p>
+
+    <p>In procurement and invoice verification, the G/L result can depend on entered account data, material and valuation information, document history, and configured account determination. SAP's current invoice-verification documentation explicitly separates user-entered information, material-master valuation data, posted purchasing history, and system settings when explaining account determination.</p>
+
+    <p>That is why changing valuation class, account-determination configuration, or unrelated master data to repair one bad document is risky. First prove whether the disputed account came from the purchasing assignment, material valuation/account determination, invoice-specific data, or another configured derivation step. A broad master-data change can alter many later postings while leaving the original reasoning unclear.</p>
+
+    <h2>A compact diagnostic sequence</h2>
     <ol>
-      <li><strong>Describe the intended purchase.</strong> Is it stock, direct consumption, project work, asset acquisition, maintenance, production-related procurement, or another scenario?</li>
-      <li><strong>Locate the first affected document.</strong> Requisition, purchase order, goods receipt, service entry, invoice, or accounting document.</li>
-      <li><strong>Read the account assignment in that document.</strong> Capture category, cost object(s), distribution if multiple objects are used, and any entered G/L account where the process requires one.</li>
-      <li><strong>Validate the receiving object.</strong> Check that it exists, is valid for the posting date and organization, and has a status that permits the intended posting.</li>
-      <li><strong>Compare the document chain.</strong> Identify whether the account assignment changed between demand, PO, receipt/service, and invoice.</li>
-      <li><strong>Separate cost-object logic from account determination.</strong> A correct cost center with an unexpected G/L account is a different problem from a PO that points to the wrong project.</li>
-      <li><strong>Check the accounting result.</strong> If posting already happened, use the accounting document and controlling impact to prove what needs correction before reversing anything.</li>
+      <li><strong>State the intended accounting result.</strong> Name the purchase purpose, expected receiver, and—where known—the expected expense, asset, or stock treatment.</li>
+      <li><strong>Find the first affected document and item.</strong> Requisition, PO, goods receipt, service entry, invoice, or accounting document.</li>
+      <li><strong>Read the purchasing assignment.</strong> Capture the account assignment category, receiver(s), distribution, and relevant G/L field or determination context.</li>
+      <li><strong>Validate the receiver.</strong> Check that the business object exists, is valid for the intended posting, has an appropriate status, and is the object the business actually approved.</li>
+      <li><strong>Compare source and follow-on documents.</strong> Identify whether the assignment or split changed between demand, PO, receipt/service, invoice, and FI/CO result.</li>
+      <li><strong>Separate receiver logic from G/L derivation.</strong> Do not diagnose an account-determination issue as a cost-object issue, or vice versa.</li>
+      <li><strong>Check posting history before correction.</strong> Determine whether a safe purchasing-document change is still possible or whether the process now requires controlled reversal/reposting.</li>
+      <li><strong>Retest the same path.</strong> Use the same procurement scenario and compare the resulting document chain, not merely whether one error message disappeared.</li>
     </ol>
 
-    <h2>Multiple account assignment needs extra care</h2>
-    <p>When one purchase is split across several objects, percentage, quantity, or value distribution becomes part of the business rule. A total that looks correct can still be wrong by recipient. Compare the split in the purchasing document with what the business approved and with the downstream posting result.</p>
+    <h2>What belongs in the incident record</h2>
+    <p>Keep the evidence small enough to compare but complete enough to explain the result: document and item, purchase purpose, account assignment category, expected and actual receiver, distribution when multiple assignments are used, exact error or unexpected posting, follow-on document history, and the accounting document if one exists. Add a working comparison when it helps isolate one determination difference.</p>
 
-    <h2>Do not “fix” a G/L mismatch by changing unrelated master data</h2>
-    <p>The G/L result can depend on procurement type, material valuation, account assignment, transaction/event logic, and configuration. Changing a material valuation class or a controlling object because one document posted unexpectedly can affect many later transactions. First identify which derivation step produced the account.</p>
+    <h2>Boundaries</h2>
+    <p>This page does not define account-assignment-category configuration, automatic account determination, CO budgeting, Asset Accounting, Project System, Funds Management, or industry-specific procurement rules. Once the failed boundary is known, use the relevant process documentation or specialist owner rather than extending one purchasing diagnosis into every downstream component.</p>
 
-    <h2>Reversal is a correction path, not a first response</h2>
-    <p>If a wrong account assignment has already reached receipt, invoice, asset, project, or period-end reporting, the correction must respect the document flow and accounting controls. Check later documents and obtain the responsible finance/controlling approval before reversing or reposting.</p>
-
-    <h2>Useful SAP evidence</h2>
-    <p>Consultants often begin with the purchasing document and its account-assignment view, then follow the PO history and linked accounting document. Cost-center, project/WBS, order, asset, and other object views are used according to the scenario. Exact apps, transactions, and tables vary between releases, so keep the diagnostic anchored to the document chain and object identity.</p>
-
-    <h2>What belongs in the ticket</h2>
+    <h2>Source references</h2>
     <ul>
-      <li>Document and item where the problem first appears.</li>
-      <li>Business purpose of the purchase and expected cost object.</li>
-      <li>Actual account assignment category, object(s), and distribution.</li>
-      <li>Exact error or accounting result.</li>
-      <li>Comparison across PR, PO, receipt/service, invoice, and FI/CO result where relevant.</li>
-      <li>Whether the cost object is valid/open and whether the issue is isolated or systematic.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/b47db65334e6b54ce10000000a174cb4.html">Entering Account Assignments</a>.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/af9ef57f504840d2b81be8667206d485/ec7db65334e6b54ce10000000a174cb4.html">Specifying Multiple Account Assignments (ME21N, ME22N)</a>.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/2a70b6531de6b64ce10000000a174cb4.html">Account Determination in Invoice Verification</a>.</li>
     </ul>
-
-    <h2>Limitations and boundaries</h2>
-    <p>This page does not define account-assignment category configuration, automatic account determination, CO budgeting, Asset Accounting, Project System, or industry-specific procurement rules. Those areas should be reviewed by the relevant process owner once the failed step is identified.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
   </div>
