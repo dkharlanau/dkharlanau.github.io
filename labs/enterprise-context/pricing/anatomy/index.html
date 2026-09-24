@@ -1,13 +1,15 @@
 ---
 layout: default
 title: "SAP Sales Pricing Anatomy — Enterprise Context Lab"
-description: "A practical pricing anatomy for SAP Sales: condition types, bases, scales, free goods, formulas, exclusions, group logic, and extension patterns."
+description: "A practical explanation of how a SAP Sales pricing procedure row, condition type, condition record, calculation base, scale, group logic, and exclusion produce a condition result."
 permalink: /labs/enterprise-context/pricing/anatomy/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-24
+last_reviewed: 2026-09-24
+review_method: "Current SAP Help review + comparison with adjacent Pricing pages + full editorial rewrite"
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -21,7 +23,6 @@ tags:
   - extensibility
 ---
 
-{% assign graph = site.data.labs.enterprise_context.graphs.pricing_anatomy %}
 {% assign evidence = site.data.labs.enterprise_context.sources.pricing_anatomy %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -32,236 +33,174 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Deep vertical / Pricing Anatomy</p>
-      <h1>A rate is only one part<br />of a condition.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#pricing-anatomy-memory">Start with the anatomy <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>A condition is more<br />than a rate.</h1>
+      <p>In SAP Sales, a pricing result comes from several controls working together: the pricing procedure gives a condition its place, the condition type defines its behavior, master data can provide a rate, and the calculation base, scales, grouping, and interaction rules decide the final value.</p>
+      <a class="research-canvas__button" href="#pricing-anatomy-memory">Follow one condition <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Pricing anatomy inventory">
-      <p>Working model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.condition_families | size }}</strong><small>Condition families</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.extension_patterns | size }}</strong><small>Extension patterns</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.failure_drills | size }}</strong><small>Failure drills</small></div>
-      <em>Draft research · synthetic patterns · no client data</em>
+    <div class="research-canvas__signal" aria-label="Pricing anatomy summary">
+      <p>Read the result in this order</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Place</strong><small>Procedure row and requirement</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Value</strong><small>Rate, base, scale, conversion</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Interaction</strong><small>Group, exclusion, manual logic</small></div>
+      <em>Draft research · no client data</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">functions</span>
-    <p><strong>Working rule:</strong> {{ graph.mental_model.sentence }} A correct rate can still produce a wrong result when the base, scale, group, exclusion, manual policy, or formula is different.</p>
+    <p><strong>Boundary:</strong> this page explains the anatomy of one pricing result. Procedure determination and runtime troubleshooting belong on the <a href="/labs/enterprise-context/pricing/">Pricing Engine</a> page; build order and governance belong in <a href="/labs/enterprise-context/pricing/configuration/">Pricing Configuration</a>.</p>
     <a href="/labs/enterprise-context/data/pricing-anatomy.json">Open anatomy JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="pricing-anatomy-memory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Seven layers before the final amount.</h2>
-      <p>The useful question is not only “which condition record was found?” I want to know what owns eligibility, rate, base, scale, interaction, and any extension.</p>
-    </header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.mental_model.layers %}
-      <article class="ecg-memory-card">
-        <span>0{{ forloop.index }}</span>
-        <strong>{{ item.key }}</strong>
-        <h3>{{ item.question }}</h3>
-        <p>{{ item.answer }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Pricing procedure row</p>
-      <h2>One row carries more control than the condition name suggests.</h2>
-      <p>Step, requirement, subtotal, base formula and accounting flags are separate controls. Debug the row before blaming the condition record.</p>
+      <p class="research-canvas__eyebrow">The calculation path</p>
+      <h2>Follow the condition from permission to amount.</h2>
+      <p>A useful pricing analysis does not begin with the condition record. First establish whether the condition belongs in the active procedure and is allowed to participate. Then trace where its amount comes from and how SAP turns that amount into a condition value.</p>
     </header>
     <div class="ecg-control-stack">
-      {% for item in graph.procedure_row_anatomy %}
-      <article>
-        <span>{{ item.field }}</span>
-        <h3>{{ item.purpose }}</h3>
-        <p class="ecg-question">{{ item.lead_question }}</p>
-      </article>
-      {% endfor %}
+      <article><span>1 · PROCEDURE</span><h3>The pricing procedure gives the condition a place in the calculation.</h3><p>Its row establishes sequence and can add controls such as a requirement, subtotal, statistical treatment, calculation-base override, or amount-calculation override.</p></article>
+      <article><span>2 · TYPE</span><h3>The condition type defines reusable behavior.</h3><p>It describes what kind of pricing element this is and controls important behavior such as calculation type, conversions, scale handling, group treatment, and what users may change in the document.</p></article>
+      <article><span>3 · SOURCE</span><h3>The amount needs a source.</h3><p>For an automatically determined price, discount, or surcharge, pricing can search condition records through the configured access logic. Other condition types can receive their amount from a different supported source or from controlled manual entry.</p></article>
+      <article><span>4 · BASE</span><h3>The amount and the base are separate inputs.</h3><p>A percentage is meaningless until we know what value it is applied to. Quantity, monetary value, weight, volume, a previous subtotal, or another calculated basis can all change the result without changing the visible rate.</p></article>
+      <article><span>5 · INTERACTION</span><h3>Scales, grouping, and exclusion can change the active result.</h3><p>The selected rate can depend on a scale. A group condition can calculate with several related items. Condition exclusion can leave one valid condition inactive because another one wins.</p></article>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Condition families</p>
-      <h2>Price, discount, surcharge and free goods do not solve the same problem.</h2>
-      <p>The family tells me what the condition is trying to represent. The configuration then decides calculation, search, scale, manual policy and interaction with other elements.</p>
+      <p class="research-canvas__eyebrow">Pricing procedure</p>
+      <h2>The row tells SAP how this condition participates.</h2>
+      <p>The condition type alone does not explain the document result. The same type only becomes meaningful in the procedure that places it among earlier and later price elements.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for family in graph.condition_families %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>TYPE</span><small>pricing role</small></div>
-          <h3>{{ family.title }}</h3>
-          <p class="ecg-question">{{ family.role }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Common shapes</h4><ul>{% for value in family.common_shapes %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Configuration focus</h4><ul>{% for value in family.config_focus %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Diagnostic rule</h4><p>{{ family.diagnostic }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Sequence and eligibility</h3>
+        <p>Step order determines what has already been calculated. A requirement can prevent the condition from being considered even when valid master data exists.</p>
+      </div>
+      <div>
+        <h3>Intermediate values</h3>
+        <p>Subtotals and from/to references can make earlier pricing results available to later rows. This is why a wrong upstream value can surface much later in the procedure.</p>
+      </div>
+      <div>
+        <h3>Calculation controls</h3>
+        <p>The row can change the normal calculation base or amount calculation and can mark a price element as statistical or relevant for downstream processing.</p>
+      </div>
+    </div>
+    <p class="ecg-caption">A condition record answers “what data was found?” The procedure row answers “what is SAP supposed to do with it here?”</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Condition type and condition record</p>
+      <h2>Behavior is configuration; commercial values are master data.</h2>
+      <p>This distinction prevents a common design mistake: using condition records to compensate for a condition type whose calculation behavior is wrong.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Condition type</h3>
+        <p>Defines reusable pricing behavior: for example, whether a value is percentage- or amount-based, how units and currencies are handled, how scales are processed, whether items are evaluated together, and which document changes are allowed.</p>
+      </div>
+      <div>
+        <h3>Condition record</h3>
+        <p>Stores the commercial value for a particular key and validity period when the condition uses condition technique. The key may include attributes such as customer, product, sales area, or another configured field combination.</p>
+      </div>
+      <div>
+        <h3>Access logic</h3>
+        <p>Defines where pricing searches and in which order. A missing result can therefore mean that no matching record exists, that the key differs from what was expected, or that the relevant row never became eligible.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Calculation</p>
-      <h2>Separate rate from base.</h2>
-      <p>This one habit solves a surprising number of pricing investigations. A percentage can be correct while the subtotal, quantity, weight, group value, or formula base is wrong.</p>
+      <p class="research-canvas__eyebrow">Rate and base</p>
+      <h2>A correct percentage can still produce the wrong amount.</h2>
+      <p>Separate the visible rate from the value to which it applies. This is one of the fastest ways to understand a pricing difference.</p>
     </header>
-    <div class="ecg-heuristic-grid">
-      {% for item in graph.calculation_models %}
-      <article><span>CALC</span><h3>{{ item.title }}</h3><p>{{ item.formula }}</p><h4>Typical use</h4><p>{{ item.typical_use }}</p><h4>Main risk</h4><p>{{ item.main_risk }}</p></article>
-      {% endfor %}
+    <div class="ecg-case__body">
+      <p>Suppose a document shows a 10% discount. If the intended base is EUR 1,000, the discount is EUR 100. If the actual base is EUR 900 because an earlier price element or subtotal changed it, the same 10% produces EUR 90. Changing the condition record would hide the real problem.</p>
+      <p>For quantity-based prices, the same principle applies to pricing quantity and pricing unit. For freight or other physical measures, weight, volume, and unit conversion can become part of the calculation boundary.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Bases</p>
-      <h2>What exactly receives the rate?</h2>
-      <p>The base is often the hidden owner of the wrong amount. I prove it separately from the condition rate.</p>
+      <p class="research-canvas__eyebrow">Scales and grouping</p>
+      <h2>The decisive number may be larger than one item.</h2>
+      <p>Scales select a value according to a configured basis and threshold model. Group conditions extend that idea by taking related document items into account when the scale base or condition value is calculated.</p>
     </header>
-    <div class="ecg-control-stack">
-      {% for item in graph.base_models %}
-      <article><span>{{ item.title }}</span><h3>{{ item.use_when }}</h3><p class="ecg-question">Proof: {{ item.proof }}</p></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Scales</p>
-      <h2>The threshold model changes the commercial result.</h2>
-      <p>From, to, graduated and group scales are not interchangeable. The first diagnostic step is to calculate the scale basis exactly as SAP sees it.</p>
-    </header>
-    <div class="ecg-heuristic-grid">
-      {% for item in graph.scale_models %}
-      <article><span>SCALE</span><h3>{{ item.title }}</h3><p>{{ item.meaning }}</p><h4>Example</h4><p>{{ item.example }}</p></article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div><h3>From / to scales</h3><p>The agreement can define a value from a threshold upward or up to a threshold. The first check is therefore the scale basis SAP actually calculated, not only the ordered quantity a user remembers.</p></div>
+      <div><h3>Interval logic</h3><p>Where interval or graduated logic is configured, different parts of the quantity can be evaluated with different scale values instead of applying one value to the full quantity.</p></div>
+      <div><h3>Group conditions</h3><p>Related items can be cumulated for scale determination. A single item may appear too small for a discount while the combined group qualifies for it.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Interaction</p>
-      <h2>A valid condition can still lose.</h2>
-      <p>Exclusion, supplements, manual priority and group logic act after or around the condition search. “Record found” is not the end of the trace.</p>
+      <h2>“Found” does not always mean “active.”</h2>
+      <p>Several valid pricing elements can coexist. The final set depends on the rules that govern how they interact.</p>
     </header>
     <div class="ecg-control-stack">
-      {% for item in graph.interaction_models %}
-      <article><span>{{ item.title }}</span><h3>{{ item.purpose }}</h3><p class="ecg-question">{{ item.lead_question }}</p></article>
-      {% endfor %}
+      <article><span>EXCLUSION</span><h3>Competing conditions can be compared and one can be deactivated.</h3><p>This is different from a failed search. The condition can be visible in pricing analysis but intentionally excluded from the commercial result.</p></article>
+      <article><span>SUPPLEMENT</span><h3>A supplement travels with its main condition.</h3><p>When conditions share the same dependency and validity, SAP can store supplementary conditions with the main condition record and determine them together. The supplement is not an independent search problem.</p></article>
+      <article><span>MANUAL</span><h3>Manual entry is a separate source of document pricing data.</h3><p>Whether users may add or change a condition depends on the condition-type and procedure design. A manual value should not be mistaken for evidence that automatic determination worked.</p></article>
     </div>
   </section>
 
   <section class="ecg-case" data-reveal>
     <div class="ecg-case__intro">
       <p class="research-canvas__eyebrow">Free Goods</p>
-      <h2>{{ graph.free_goods_model.memory_hook }}</h2>
-      <p>Free Goods is related to condition technique, but its first business result is a quantity decision. Pricing of the resulting item is a second control.</p>
-      <strong>Keep quantity determination and zero-price behavior separate.</strong>
+      <h2>Free goods changes quantity before it becomes a pricing question.</h2>
+      <p>Free-goods determination creates a free-of-charge sales-order item. Inclusive and exclusive free goods differ in what happens to the main item quantity.</p>
+      <strong>First prove the quantity determination; then inspect how the resulting item is priced.</strong>
     </div>
     <div class="ecg-case__body">
-      <h3>Variants</h3>
-      <ul>{% for item in graph.free_goods_model.variants %}<li><strong>{{ item.title }}:</strong> {{ item.meaning }}</li>{% endfor %}</ul>
-      <h3>Quantity controls</h3><ul>{% for value in graph.free_goods_model.quantity_controls %}<li>{{ value }}</li>{% endfor %}</ul>
-      <h3>Configuration path</h3><ol>{% for value in graph.free_goods_model.configuration_path %}<li>{{ value }}</li>{% endfor %}</ol>
-      <h3>Failure trace</h3><ul>{% for item in graph.free_goods_model.failure_modes %}<li><strong>{{ item.symptom }}</strong> {{ item.proof }}</li>{% endfor %}</ul>
+      <h3>Inclusive</h3>
+      <p>The free quantity is taken from the ordered quantity, so the main item quantity is reduced and the free quantity is represented separately.</p>
+      <h3>Exclusive</h3>
+      <p>The ordered quantity remains unchanged and the customer receives an additional free quantity.</p>
+      <p>This boundary matters because treating free goods as a normal discount can send the investigation into pricing records when the real question is whether free-goods determination created the expected item and quantity.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Formula choice</p>
-      <h2>Use the smallest engine that owns the rule.</h2>
-      <p>A requirement, base formula, amount formula and group condition answer different questions. A rules engine is useful only when the rule actually needs one.</p>
+      <p class="research-canvas__eyebrow">Custom calculation</p>
+      <h2>Change only the part the standard model cannot express.</h2>
+      <p>Pricing already separates eligibility, condition amount, calculation base, and final condition value. Keep that separation when custom logic is necessary.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.formula_decision_table %}
-      <article class="ecg-determination-detail">
-        <header><div><span>RULE</span><small>owner</small></div><h3>{{ item.need }}</h3><p class="ecg-question">Best fit: {{ item.best_fit }}</p></header>
-        <div class="ecg-decision-columns"><div><h4>Use</h4><p>{{ item.best_fit }}</p></div><div><h4>Avoid</h4><p>{{ item.avoid }}</p></div><div><h4>Design test</h4><p>Can the rule be explained and tested without reading unrelated document code?</p></div></div>
-      </article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div><h3>Eligibility</h3><p>If the business rule decides whether a condition should participate, keep the logic at the eligibility boundary rather than hiding it inside amount calculation.</p></div>
+      <div><h3>Base</h3><p>If the standard rate is correct but the commercial agreement requires a different basis, change the base calculation rather than the master-data value.</p></div>
+      <div><h3>Amount</h3><p>If the arithmetic itself is different, use the supported formula or extension mechanism for the relevant deployment model. Do not assume that a classic routine and a cloud extension point are interchangeable.</p></div>
     </div>
+    <p class="ecg-caption">For implementation choices and deployment-specific extension patterns, continue with <a href="/labs/enterprise-context/pricing/configuration/">Pricing Configuration</a>.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Extension decision</p>
-      <h2>Configuration first. Logic only for the missing rule.</h2>
-      <p>These are reusable implementation patterns, not claims about a specific customer project. Each pattern starts with the standard option and keeps custom behavior narrow and testable.</p>
+      <p class="research-canvas__eyebrow">Reading a pricing result</p>
+      <h2>Explain the difference in one chain.</h2>
+      <p>When two documents price differently, compare the first point where the chain diverges instead of scanning every condition in the document.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.extension_patterns %}
-      <article class="ecg-determination-detail">
-        <header><div><span>EXT</span><small>pattern</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.problem }}</p></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Standard first</h4><p>{{ item.standard_first }}</p></div>
-          <div><h4>Classic / private shape</h4><p>{{ item.classic_shape }}</p></div>
-          <div><h4>Clean-core shape</h4><p>{{ item.clean_core_shape }}</p></div>
-        </div>
-        <p class="ecg-caption"><strong>Proof path:</strong> {{ item.proof }}</p>
-      </article>
-      {% endfor %}
+    <div class="ecg-control-stack">
+      <article><span>01</span><h3>Same active pricing procedure and same relevant row?</h3></article>
+      <article><span>02</span><h3>Same condition type behavior and same eligibility result?</h3></article>
+      <article><span>03</span><h3>Same source record or manual value, with the same key and validity?</h3></article>
+      <article><span>04</span><h3>Same calculation base, scale level, units, and currency context?</h3></article>
+      <article><span>05</span><h3>Same group, exclusion, supplement, and manual interaction?</h3></article>
     </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Practitioner patterns</p>
-      <h2>Patterns worth recognizing in real designs.</h2>
-      <p>These are synthetic patterns built from common pricing design problems. They show where I would put ownership and what I would avoid.</p>
-    </header>
-    <div class="ecg-heuristic-grid">
-      {% for item in graph.practitioner_patterns %}
-      <article><span>PATTERN</span><h3>{{ item.title }}</h3><p>{{ item.scenario }}</p><h4>Preferred shape</h4><p>{{ item.preferred_shape }}</p><h4>Trap</h4><p>{{ item.trap }}</p></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Failure drills</p>
-      <h2>Start from the symptom and prove the owner.</h2>
-      <p>The goal is not to remember one transaction. It is to find the first pricing layer that differs from the expected design.</p>
-    </header>
-    <div class="ecg-drill-list">
-      {% for item in graph.failure_drills %}
-      <details>
-        <summary><span>0{{ forloop.index }}</span><strong>{{ item.symptom }}</strong><small>{{ item.lead_conclusion }}</small></summary>
-        <div><p>Proof path</p><ol>{% for value in item.proof_path %}<li>{{ value }}</li>{% endfor %}</ol></div>
-      </details>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Assessment drills</p>
-      <h2>Explain owners, not only definitions.</h2>
-      <p>A Lead answer separates condition behavior, data, calculation and extension before proposing a fix.</p>
-    </header>
-    <div class="ecg-drill-list">
-      {% for item in graph.assessment_drills %}
-      <details><summary><span>0{{ forloop.index }}</span><strong>{{ item.prompt }}</strong><small>Open reasoning target</small></summary><div><p>{{ item.expected }}</p></div></details>
-      {% endfor %}
-    </div>
+    <p class="ecg-caption">This is a reading order, not a universal incident checklist. The <a href="/labs/enterprise-context/pricing/">Pricing Engine</a> page covers the wider runtime path and pricing analysis.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Standard behavior remains source-tracked.</h2>
-      <p>Primary SAP documentation verifies condition types, scales, group conditions, Free Goods, supplements, exclusion, configurable formulas and released pricing extension points. The practitioner patterns are independently authored.</p>
+      <h2>Product behavior remains source-tracked.</h2>
+      <p>The explanation above is independently written. The source registry links to SAP documentation for condition types, pricing controls, scales, group conditions, supplements, free goods, exclusion, formulas, and extension points.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
@@ -272,9 +211,9 @@ tags:
 
   <section class="ecg-machine" data-reveal>
     <div>
-      <p class="research-canvas__eyebrow">For tools and AI</p>
-      <h2>The anatomy is machine-readable.</h2>
-      <p>Condition families, bases, scales, Free Goods, formula choices, extension patterns and failure drills are exposed as structured data.</p>
+      <p class="research-canvas__eyebrow">Structured model</p>
+      <h2>The deeper research model remains machine-readable.</h2>
+      <p>The structured dataset retains condition families, calculation bases, scales, interaction models, formulas, examples, and research notes that do not all need to appear in the public narrative.</p>
     </div>
     <div class="ecg-machine__actions">
       <a class="research-canvas__button" href="/labs/enterprise-context/data/pricing-anatomy.json">Pricing anatomy JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
