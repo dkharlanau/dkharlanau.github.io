@@ -7,7 +7,7 @@ Keep the curated roadmap authoritative for reading order and edition applicabili
 {% assign study_documents = site.pages | concat: site.documents | sort: 'url' %}
 {% assign allowed_roots = 'atlas|labs|scenarios|blog|notes|skill-hub|reusable-data-procedures|glossary' | split: '|' %}
 {% assign sales_terms = 'sales|order-to-cash|order to cash|sap-sd|sap sd|/sd/|pricing|billing|shipping|/atp/|aatp|delivery|customer|credit-management|credit management|incompletion|incompleteness|copy-control|copy control|partner-determination|partner determination|text-determination|text determination|condition-contract|condition contract|returns|rebate|output-control|output control|output-management|output management|convergent|brim|cpq|commerce' | split: '|' %}
-{% assign support_terms = 'public-edition|public edition|fit-to-standard|fit to standard|sap-activate|sap activate|central-business-configuration|central business configuration|fiori|migration|extensibility|isa-m|testing|business-partner|business partner|master-data|master data|deployment-models|finance-logistics|material-behavior|release-readiness' | split: '|' %}
+{% assign support_terms = 'public-edition|public edition|fit-to-standard|fit to standard|sap-activate|sap activate|central-business-configuration|central business configuration|fiori|migration|extensibility|isa-m|testing|business-partner|business partner|master-data|master data|material-master|material master|product-master|product master|deployment-models|finance-logistics|material-behavior|release-readiness|authorization|business-role|business role|system-landscape|system landscape|rise-with-sap|rise with sap|rise-methodology|clean-core|clean core|sap-signavio|sap signavio|integration|transport|data-governance|/mdg/' | split: '|' %}
 {% assign practice_routes = '/labs/assessment/|/labs/assessment/sales/|/labs/assessment/core/|/labs/assessment/core-boundaries/|/labs/assessment/cross-process/|/labs/assessment/practice-engine/|/labs/assessment/mock/|/labs/assessment/progress/|/labs/assessment/start-here/' | split: '|' %}
 {% assign groups = 'sales|support|practice' | split: '|' %}
 {% for group in groups %}
@@ -22,13 +22,14 @@ Keep the curated roadmap authoritative for reading order and edition applicabili
     {% if route == nil or route == '' or resource.title == nil or route == page.url %}{% continue %}{% endif %}
     {% unless allowed_roots contains root %}{% continue %}{% endunless %}
     {% if resource.published == false or resource.private == true or resource.status == 'private' or resource.redirect_to %}{% continue %}{% endif %}
-    {% if resource.collection.output == false %}{% continue %}{% endif %}
+    {% assign source_collection = site.collections | where: 'label', resource.collection | first %}
+    {% if source_collection.output == false %}{% continue %}{% endif %}
     {% if route contains '/research-notes/' or route contains '/data/' or route contains '/assets/' %}{% continue %}{% endif %}
     {% if extension == 'json' or extension == 'jsonl' or extension == 'xml' or extension == 'txt' or extension == 'yml' %}{% continue %}{% endif %}
     {% if resource.sales_preparation == 'exclude' %}{% continue %}{% endif %}
     {% assign searchable = resource.title | append: ' ' | append: route | downcase %}
     {% assign tag_text = resource.tags | join: ' ' | downcase %}
-    {% assign searchable = searchable | append: ' ' | append: tag_text %}
+    {% assign searchable = searchable | append: ' ' | append: tag_text | append: ' ' | append: resource.primary_topic | downcase %}
     {% assign scope = '' %}
     {% for term in support_terms %}{% if searchable contains term %}{% assign scope = 'support' %}{% break %}{% endif %}{% endfor %}
     {% for term in sales_terms %}{% if searchable contains term %}{% assign scope = 'sales' %}{% break %}{% endif %}{% endfor %}
