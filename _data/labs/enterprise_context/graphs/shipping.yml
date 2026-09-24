@@ -11,7 +11,7 @@ process_family: "Order-to-Cash"
 process_step: "Plan and Execute Shipping"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-09-24"
 verified_at: null
 
 thesis: >-
@@ -49,6 +49,154 @@ boundary:
   note: >-
     Classic LE-SHP scheduling and TM/BPS-based sales-document scheduling are separate
     architecture options. They should not be presented as one interchangeable mechanism.
+
+delivery_document_model:
+  title: "The delivery document is the execution backbone"
+  core_role: >-
+    Shipping turns due demand into controlled physical execution. The delivery document is
+    the central execution object: it carries the logistics context, provides status for the
+    process steps, and is the reference for picking, packing, output, and goods issue.
+  activities:
+    - "monitor reference documents that are due for shipping"
+    - "create and process outbound deliveries"
+    - "monitor goods availability and warehouse capacity"
+    - "support picking and packing"
+    - "produce and distribute shipping documents"
+    - "post goods issue"
+    - "monitor progress, exceptions, and bottlenecks"
+  structure:
+    - level: "Header"
+      purpose: "Data that applies to the delivery as a whole."
+      examples:
+        - "ship-to party"
+        - "shipping point"
+        - "route"
+        - "partners and output context"
+    - level: "Item"
+      purpose: "Data for the material or service quantity being delivered."
+      examples:
+        - "material and quantity"
+        - "picking and packing status"
+        - "batch or warehouse-relevant data where applicable"
+    - level: "Status"
+      purpose: "Evidence of how far the execution has progressed."
+      examples:
+        - "picking / packing progress"
+        - "goods issue status"
+        - "overall processing state"
+  business_scenarios:
+    - source: "Sales order"
+      delivery: "Outbound delivery"
+      purpose: "Customer fulfillment"
+    - source: "Stock transport order"
+      delivery: "Replenishment / outbound delivery"
+      purpose: "Plant-to-plant stock movement"
+    - source: "Subcontracting requirement"
+      delivery: "Delivery of components to subcontractor"
+      purpose: "Provide material required for subcontracting"
+    - source: "Purchase order"
+      delivery: "Inbound delivery"
+      purpose: "Prepare receiving, warehouse processing, and goods receipt"
+    - source: "Supplier return process"
+      delivery: "Returns delivery"
+      purpose: "Send goods back to a supplier"
+    - source: "Project"
+      delivery: "Project-related delivery"
+      purpose: "Execute a project-driven goods movement"
+  pgi_handoff: >-
+    Goods issue is a commit point. It records the physical issue, changes inventory state,
+    creates the relevant accounting impact, and normally makes a delivery-related process
+    eligible for billing.
+  source_refs:
+    - SRC-SAP-LEARN-DELIVERY-CONCEPT
+    - SRC-SAP-LEARN-OUTBOUND-PROCESSING
+
+collective_processing_model:
+  title: "Delivery creation is both a document task and an operational worklist"
+  single_delivery: >-
+    A user can create an outbound delivery individually, with or without a sales-order
+    reference where the process supports it.
+  collective_processing: >-
+    Collective processing works from delivery-due operations and can create multiple
+    deliveries online or in background processing. It is also the relevant model for
+    processes such as stock transport orders that are not handled by the simple
+    sales-order single-delivery path.
+  due_list: >-
+    The delivery due list is a worklist of operations that require delivery creation.
+    Selection criteria define which due documents enter the run.
+  grouping_rule: >-
+    Compatible shipping criteria can allow items or orders to be combined. Different
+    execution context can require separate outbound deliveries.
+  split_rule: >-
+    A split is not a diagnosis by itself. First compare shipping point, route, ship-to,
+    other header-relevant grouping data, and later EWM or TM execution decisions.
+  delivery_scenarios: >-
+    Delivery scenarios and list profiles shape which business process is selected, which
+    objects are shown, and how the due list is processed.
+  monitor: >-
+    The outbound delivery monitor is used after creation to observe processing status and
+    execute follow-on activities such as goods issue when the process and authorization allow it.
+  source_refs:
+    - SRC-SAP-LEARN-OUTBOUND-PROCESSING
+    - SRC-SAP-SHP-DUE-LIST
+
+scheduling_modes:
+  - id: SHP-SCHED-PRECISE
+    title: "Precise scheduling"
+    principle: >-
+      Use working times of the shipping point and calculate/display results down to the minute.
+      Pick/pack and loading durations can be maintained in hours and minutes.
+    watch: >-
+      ATP checks material availability by date; precise time-of-day results are not used by
+      the ATP check for the material availability date.
+    source_refs:
+      - SRC-SAP-LEARN-SCHEDULING
+  - id: SHP-SCHED-DAILY
+    title: "Daily scheduling"
+    principle: >-
+      The system can calculate with days, hours, and minutes but displays the resulting date.
+      The shipping-point factory calendar controls working days.
+    watch: >-
+      A date shift can come from the calendar even when the stored duration itself is correct.
+    source_refs:
+      - SRC-SAP-LEARN-SCHEDULING
+
+delivery_controls:
+  - id: SHP-CTRL-INCOMPLETE
+    title: "Incompletion"
+    principle: >-
+      Delivery completeness can be checked at header and item level. Missing required data
+      can block later activities such as picking, packing, goods issue, or billing.
+    diagnostic_question: "Which missing field or required partner/text is blocking which follow-on step?"
+    source_refs:
+      - SRC-SAP-LEARN-DELIVERY-SPECIAL
+  - id: SHP-CTRL-OUTPUT
+    title: "Output"
+    principle: >-
+      Delivery output communicates execution information such as delivery notes, packing
+      lists, labels, or electronic messages. Determine the output model before debugging
+      the printer, mail, or EDI channel.
+    diagnostic_question: "Was the output correctly determined before the technical channel tried to send it?"
+    source_refs:
+      - SRC-SAP-LEARN-OUTBOUND-PROCESSING
+  - id: SHP-CTRL-INTERFACE
+    title: "Delivery interface"
+    principle: >-
+      Delivery data can be exchanged with partners and other systems through ALE/EDI and
+      delivery IDoc families. The exact message and basic type depend on the scenario and
+      product context, so confirm them instead of assuming one universal IDoc type.
+    diagnostic_question: "Which document, message type, basic type, and receiving system own this interface?"
+    source_refs:
+      - SRC-SAP-LEARN-DELIVERY-SPECIAL
+  - id: SHP-CTRL-PRICING
+    title: "Shipping-related pricing"
+    principle: >-
+      A delivery can hold shipping or freight conditions. They can be entered manually or
+      determined with pricing logic, printed on delivery output, and transferred to billing
+      according to the process design.
+    diagnostic_question: "Is this charge owned by delivery pricing, transportation charge management, or billing?"
+    source_refs:
+      - SRC-SAP-LEARN-DELIVERY-SPECIAL
 
 memory_model:
   title: "Nine questions I use when shipping or dates are wrong"
