@@ -84,6 +84,8 @@ source_links:
     url: "https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/adjusting-delivery-and-transportation-scheduling"
   - title: "Using Special Functions in Deliveries"
     url: "https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/using-special-functions-in-deliveries"
+  - title: "Controlling Delivery Documents"
+    url: "https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/controlling-delivery-documents"
 # ai-discovery-managed:end
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.shipping %}
@@ -450,6 +452,20 @@ source_links:
     </div>
 
     <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ graph.collective_processing_model.delivery_scenarios }}</p>
+
+    <section id="delivery-item-category-memory" aria-labelledby="delivery-item-category-heading">
+      <h3 id="delivery-item-category-heading">Delivery item category: copied first, determined when required</h3>
+      <div class="ecg-decision-columns">
+        <div><h3>Order-related delivery</h3><p>{{ graph.delivery_item_category_memory.copied_case }}</p></div>
+        <div><h3>No sales-order item to copy</h3><p>{{ graph.delivery_item_category_memory.determined_case }}</p></div>
+      </div>
+      <div class="ecg-input-grid">
+        {% for value in graph.delivery_item_category_memory.usage_examples %}
+        <article><span>USAGE</span><p>{{ value }}</p></article>
+        {% endfor %}
+      </div>
+      <p class="ecg-caption">{{ graph.delivery_item_category_memory.usage_boundary }} {{ graph.delivery_item_category_memory.material_group_boundary }}</p>
+    </section>
 
     <h3>Control surfaces around the delivery</h3>
     <div class="ecg-determination-list">
