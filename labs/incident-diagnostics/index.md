@@ -79,7 +79,7 @@ tags:
     <div class="incident-diagnostics__panel">
       <p class="incident-diagnostics__label">02 / Evidence</p>
       <h2>Add a small, sanitized excerpt.</h2>
-      <p>Useful evidence can be simple: status history, an error, a timestamp, message type, affected scope, or the recent change that preceded the issue. The tool looks for evidence signals; it does not send the text to an LLM or copy the raw excerpt into the generated artifacts.</p>
+      <p>Useful evidence can be simple: status history, an error, a timestamp, message type, affected scope, or the recent change that preceded the issue. The tool looks for evidence signals; it does not send the text to an LLM or copy raw text into generated artifacts.</p>
 
       <div class="incident-diagnostics__field">
         <label for="incident-evidence">Paste evidence</label>
