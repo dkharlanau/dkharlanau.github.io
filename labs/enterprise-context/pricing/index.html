@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-24
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -156,6 +156,42 @@ source_links:
       <div><h3>Base</h3><p>Which value or quantity did the condition use for its calculation?</p></div>
       <div><h3>Interaction</h3><p>Did a requirement, scale, formula, exclusion rule, subtotal, or group condition change the final effect?</p></div>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-anatomy" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">One condition, one reasoning chain</p>
+      <h2>Read a pricing result from permission to amount.</h2>
+      <p>A rate alone never explains a condition result. We need five questions in order. This replaces the separate mandatory Anatomy reading path.</p>
+    </header>
+    <ol>
+      <li><strong>Place:</strong> Is the expected condition type in the active pricing procedure, and does its requirement allow it to participate?</li>
+      <li><strong>Behavior:</strong> What reusable behavior does the condition type define: calculation type, manual behavior, scale basis, plus/minus effect, grouping, or another rule?</li>
+      <li><strong>Source:</strong> Where does the value come from: a valid condition record, manual entry, formula, or another supported source?</li>
+      <li><strong>Base:</strong> Which quantity or value is the rate applied to? A correct percentage on the wrong base is still a wrong price.</li>
+      <li><strong>Interaction:</strong> Do scales, group conditions, exclusion, supplements, statistical behavior, or another condition change whether the result is active and how it contributes?</li>
+    </ol>
+    <p><strong>Compact example:</strong> a 5% discount can be found correctly and still produce the wrong amount if the base is wrong, the scale level is different, or an exclusion rule deactivates it. Compare working and failing documents at these five layers before changing condition records.</p>
+    <p>The detailed research model remains available in <a href="/labs/enterprise-context/data/pricing-anatomy.json">pricing-anatomy.json</a>.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration path</p>
+      <h2>Configure the rule in layers, then test its lifecycle.</h2>
+      <p>Pricing configuration is easier to review when every layer has one job. This replaces the separate mandatory Configuration Playbook reading path.</p>
+    </header>
+    <ol>
+      <li><strong>Business rule:</strong> state who receives the price or discount, for which product and context, from which date, and under which quantity or value condition.</li>
+      <li><strong>Search key:</strong> choose the business fields that identify the commercial record. Do not add dimensions that the business cannot maintain reliably.</li>
+      <li><strong>Condition type:</strong> define the reusable behavior of the price, surcharge, discount, or statistical value.</li>
+      <li><strong>Access logic:</strong> define how SAP searches from more specific to more general records where condition technique is used.</li>
+      <li><strong>Procedure row:</strong> place the condition in the pricing procedure and define sequence, eligibility, subtotals, requirements, and calculation controls.</li>
+      <li><strong>Commercial data:</strong> maintain rates, validity periods, currencies, units, and scales separately from the configuration that interprets them.</li>
+      <li><strong>Lifecycle test:</strong> test creation, quantity/date changes, copying to follow-on documents, billing repricing where relevant, cancellation/correction, and one negative case.</li>
+    </ol>
+    <p><strong>Lead rule:</strong> do not solve a master-data problem with configuration, and do not solve a configuration problem with custom code. Use an extension only when the standard model cannot express the rule cleanly and the deployment model supports the extension point.</p>
+    <p>The detailed sequence and test matrix remain available in <a href="/labs/enterprise-context/data/pricing-configuration.json">pricing-configuration.json</a>.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
