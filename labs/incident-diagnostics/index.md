@@ -40,7 +40,7 @@ tags:
     </div>
     <aside class="incident-diagnostics__privacy" aria-label="Privacy and safety boundary">
       <strong>Browser-local by design</strong>
-      <p>Selected files are read in the browser. The page does not upload the input or write it to localStorage.</p>
+      <p>Selected files are read in the browser. The page does not upload the input or store it in localStorage.</p>
       <p>That does not make every input safe to use. Follow employer and client policy, and remove secrets, credentials, personal data, and proprietary details before working with an excerpt.</p>
       <span class="incident-diagnostics__status" data-source-status data-state="loading">Loading canonical public sources…</span>
     </aside>
