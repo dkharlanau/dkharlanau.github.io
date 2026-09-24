@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Bank Account Determination Diagnostics"
-description: "A conservative diagnostic frame for house bank, payment method, and bank account determination issues in SAP."
+description: "Diagnose SAP automatic-payment bank selection by separating payment-method eligibility, house-bank ranking, account selection, available amounts, and partner bank details."
 permalink: /atlas/diagnostics/sap-bank-account-determination-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -12,6 +12,8 @@ business_process: Payment processing
 status: needs_verification
 verified: false
 level: 1
+last_modified_at: 2026-09-24
+last_reviewed: 2026-09-24
 author: Dzmitryi Kharlanau
 tags:
   - diagnostics
@@ -37,7 +39,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP bank account determination diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for finding why SAP does not select the expected house bank, payment method, or bank account.</p>
+    <p class="note-subtitle">Trace an unexpected outgoing-payment bank from the payment method to the house bank, account ID, available amount, and posting account.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -50,84 +52,104 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>SAP selects a house bank and bank account for outgoing payments based on payment methods, amount groups, currencies, and ranking orders. For incoming payments, customer bank details drive automatic payment matching. A wrong selection can send a payment from the wrong account or fail to produce a payment medium. The diagnostic task is to trace the determination sequence from the payment method through the ranking order to the house bank account.</p>
-    <p>This guide covers bank account determination for payment transactions, not cash management or liquidity planning.</p>
+    <p>When an automatic payment uses the wrong bank account, it is tempting to start with the house bank master. That is often too late in the decision chain. SAP first has to decide that an item is payable and which payment method applies. Only then can it choose the company bank and the account from which the payment should be made.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>Payment proposal selects a house bank the user did not expect.</li>
-      <li>Payment method is not determined for a vendor or customer.</li>
-      <li>Bank account is missing in the payment medium even though the house bank exists.</li>
-      <li>Customer incoming payment does not match the open item because bank details differ.</li>
-      <li>Payment run fails with "No house bank/bank account could be determined."</li>
-      <li>Electronic bank statement posting fails due to missing house bank account.</li>
-    </ul>
+    <p>A useful working model is:</p>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Missing payment method:</strong> the vendor/customer master does not have a payment method for the company code.</li>
-      <li><strong>Ranking order issue:</strong> the ranking order for payment methods or house banks points to an inactive entry.</li>
-      <li><strong>Bank account not configured:</strong> the house bank account is missing in FBZP or FI12.</li>
-      <li><strong>Amount or currency mismatch:</strong> the payment amount or currency is outside the permitted range for the bank account.</li>
-      <li><strong>House bank inactive:</strong> the house bank is blocked for the payment program.</li>
-      <li><strong>Master data mismatch:</strong> vendor/customer bank details differ from the bank statement or payment file.</li>
-    </ul>
+    <p><strong>eligible open item → payment method → partner bank details, when required → house-bank ranking → house-bank account → available amount and value-date checks → payment posting and payment medium</strong></p>
 
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li><strong>FBZP</strong> — payment program configuration: company code, paying company code, payment methods, bank determination.</li>
-      <li><strong>FI12</strong> — house bank and bank account master data.</li>
-      <li><strong>FK03 / FD03</strong> — vendor/customer master bank details and payment methods.</li>
-      <li><strong>F110</strong> — payment run proposal and log.</li>
-      <li><strong>FLB2</strong> — electronic bank statement posting.</li>
-      <li><strong>SE16 / BNKA</strong> — bank master data.</li>
-      <li><strong>SE16 / T012 / T012K</strong> — house bank and house bank account tables.</li>
-    </ul>
+    <p>Each arrow is a different configuration or data boundary. If we identify the first wrong decision, the incident usually becomes much smaller.</p>
 
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>T012</strong> — house bank master.</li>
-      <li><strong>T012K</strong> — house bank accounts.</li>
-      <li><strong>BNKA</strong> — bank master data.</li>
-      <li><strong>LFBK / LFB1</strong> — vendor bank details and company code data.</li>
-      <li><strong>KNBK / KNB1</strong> — customer bank details and company code data.</li>
-      <li><strong>REGUH / REGUP</strong> — payment proposal and payment run header/items.</li>
-    </ul>
+    <aside class="callout">
+      <strong>Scope:</strong> this page focuses on bank selection for automatic outgoing payments. Electronic bank statement processing, cash management, payment-format development, and bank communication are later or separate processes.
+    </aside>
 
-    <h2>Diagnostic workflow</h2>
+    <h2>First decide whether bank determination has actually started</h2>
+    <p>A missing payment is not automatically a bank-selection problem. If the open item is excluded because it is not due, is blocked, or has no usable payment method, there is no house bank to diagnose yet. Start with the payment proposal and its exception evidence.</p>
+
+    <p>Current SAP S/4HANA provides proposal review through the automatic-payment process, including exception analysis. The useful evidence is the paying company code, business partner, open item, payment method, amount, currency, and the exact proposal result. If the item never reaches bank selection, keep the investigation in item, payment-method, or master-data determination.</p>
+
+    <h2>The payment method sets the bank-selection context</h2>
+    <p>The payment method describes how the payment is to be made, for example by transfer or check. SAP defines payment methods at country or region level and then for the company code. A method can come from business-partner master data or from the open item; when a payment method is specified on the open item, SAP documents that it takes precedence over the master-record proposal.</p>
+
+    <p>This distinction matters because bank determination is configured by payment method. If the program has selected a different method from the one the support team expected, changing house-bank ranking will not correct the real cause.</p>
+
+    <h2>Ranking order chooses the house-bank candidate</h2>
+    <p>For automatic outgoing payments, the bank-selection configuration is maintained for the paying company code. The ranking order associates a payment method, optionally a currency, with house banks in a defined sequence. SAP evaluates that sequence when choosing the bank from which the payment should be made.</p>
+
+    <p>Consider a company code with two EUR transfer banks:</p>
+
+    <table>
+      <thead>
+        <tr><th>Payment method</th><th>Currency</th><th>Rank</th><th>House bank</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Transfer</td><td>EUR</td><td>1</td><td>HB01</td></tr>
+        <tr><td>Transfer</td><td>EUR</td><td>2</td><td>HB02</td></tr>
+      </tbody>
+    </table>
+
+    <p>If the program uses HB02, “ranking order is wrong” is only one hypothesis. HB01 may be unavailable for that payment because the relevant account entry, amount, currency, or another bank-selection condition is not satisfied. Diagnose why the first candidate was rejected before changing the sequence.</p>
+
+    <h2>The house bank and the account ID are separate decisions</h2>
+    <p>A house bank represents a bank used by the company. In current SAP S/4HANA documentation it is identified together with the company code, and the company can maintain several house banks. The account ID identifies the account used under that house bank for payment processing.</p>
+
+    <p>Bank determination therefore does not stop when the correct house bank is found. The bank-account settings connect the house bank, payment method, currency, and account ID. In current S/4HANA configurations, the posting side can also use the bank-reconciliation-account model, where the bank subaccount or clearing account is derived for the payment method rather than maintained as an isolated hard-coded account.</p>
+
+    <p>Keep bank master maintenance separate from payment-program configuration. Current SAP S/4HANA supports house-bank maintenance through the Manage Banks app and <code>FI12_HBANK</code>; bank accounts can also be managed through Bank Account Management. Those objects must exist and be connected correctly, but their existence alone does not define the ranking used by the automatic payment program.</p>
+
+    <h2>Available amounts can move the payment to the next bank</h2>
+    <p>The payment program can check the available amount configured for a bank account. For outgoing payments, this setting limits how much can be paid from the account for the relevant value-date context. If one candidate cannot cover the payment, SAP can continue with another bank account.</p>
+
+    <p>This is an important diagnostic detail because SAP documents that the payment program does not split one payment across several accounts merely to satisfy the available-amount limit. If no candidate can cover the entire payment, the payment is not executed from a partially available account.</p>
+
+    <p>For an unexpected second-choice bank, compare the payment amount and currency with the available-amount settings before concluding that ranking order was ignored.</p>
+
+    <h2>Partner bank details belong to the other side of the payment</h2>
+    <p>The company’s house bank answers <em>where the money comes from</em>. The customer or supplier bank details answer <em>where the money goes</em>. They are related in the payment run but are not the same determination.</p>
+
+    <p>If a payment method requires business-partner bank details, SAP selects bank details that satisfy the method’s requirements. That can include restrictions such as permitted bank country or collection authorization. A wrong beneficiary account therefore points first to partner bank selection, not to house-bank ranking.</p>
+
+    <p>This separation also prevents a common support mistake: changing the company bank configuration to fix a problem that actually sits in the business partner’s bank data.</p>
+
+    <h2>Read the symptom against the decision boundary</h2>
+    <table>
+      <thead>
+        <tr><th>Symptom</th><th>First boundary to inspect</th><th>Useful evidence</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Item is missing from the proposal</td><td>Eligibility / payment method</td><td>Proposal exception, due date, payment block, payment method</td></tr>
+        <tr><td>Unexpected house bank</td><td>Ranking order and candidate validity</td><td>Paying company code, method, currency, ranking entries, available amounts</td></tr>
+        <tr><td>Correct house bank, wrong account</td><td>Bank-account determination</td><td>House bank, account ID, currency, payment method, posting account</td></tr>
+        <tr><td>Correct company bank, wrong beneficiary bank</td><td>Partner bank selection</td><td>Business-partner bank details and payment-method requirements</td></tr>
+        <tr><td>Payment posted but no usable bank file</td><td>Payment-medium processing</td><td>Payment result, medium status, format and downstream handoff</td></tr>
+        <tr><td>Bank statement does not post or clear</td><td>Bank-statement processing</td><td>Statement item, interpretation/processing rule, posting and clearing result</td></tr>
+      </tbody>
+    </table>
+
+    <h2>A compact diagnostic sequence</h2>
     <ol>
-      <li>Identify the company code, payment method, amount, currency, and vendor/customer from the payment proposal.</li>
-      <li>Check FBZP for payment method configuration by country and company code.</li>
-      <li>Review the bank determination ranking order in FBZP for the payment method and currency.</li>
-      <li>Open FI12 and confirm the house bank and bank account exist and are active.</li>
-      <li>Verify vendor/customer master payment method and bank details in FK03/FD03.</li>
-      <li>Run the payment proposal in F110 and read the detailed proposal log.</li>
-      <li>For bank statement issues, compare the external bank account with T012K entries.</li>
+      <li><strong>Open the exact payment proposal or payment run.</strong> Confirm that the item was selected and record the exception if it was not.</li>
+      <li><strong>Confirm the effective payment method.</strong> Do not assume the method from the business-partner master if the open item specifies another one.</li>
+      <li><strong>Record the bank-selection inputs.</strong> Paying company code, payment method, currency, amount, expected house bank, and expected account ID.</li>
+      <li><strong>Read the ranking order.</strong> Check which house bank should be tried first for that method and currency.</li>
+      <li><strong>Check the account entry for the candidate bank.</strong> Verify house bank, account ID, currency, payment method, and the relevant posting-account setup.</li>
+      <li><strong>Check available amounts when the program skipped a preferred bank.</strong> Compare the full payment amount with the configured capacity for the account and value date.</li>
+      <li><strong>Separate partner-bank problems.</strong> If the company account is correct but the recipient account is wrong or missing, inspect business-partner bank details instead.</li>
+      <li><strong>Retest through the proposal before executing money movement.</strong> A corrected proposal is safer evidence than changing several bank settings and immediately running the final payment.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
+    <p>The objective is not to make the payment program choose a particular bank at any cost. It is to prove why the configured decision chain produced its result, then change only the layer that is actually wrong.</p>
+
+    <h2>Source references</h2>
     <ul>
-      <li>Assign the correct payment method to the vendor or customer master.</li>
-      <li>Adjust the ranking order in FBZP so the intended house bank is selected.</li>
-      <li>Create or activate the missing house bank account in FI12.</li>
-      <li>Extend amount group or currency settings to include the payment amount.</li>
-      <li>Correct vendor/customer bank details to match the bank statement or payment file.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/0804c5536a51204be10000000a174cb4.html">Customizing of the Payment Program</a>.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/39ebd353ca9f4408e10000000a174cb4.html">Procedure for Controlling Bank Selection</a>.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/ebead353ca9f4408e10000000a174cb4.html">Available Amounts</a>.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ac319d8fa4ea4624b40a58d23e3c4627/4460d353c6244308e10000000a174cb4.html">Defining House Banks</a>.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/848f8ce21bcd4f67bce77494799e2257/1204c55368511d4be10000000a174cb4.html">Selecting the Bank Details of a Business Partner</a>.</li>
+      <li>SAP S/4HANA 2025 FPS01 — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3eb1567cf97543c08087efb0936964e6/45698054f87c033de10000000a441470.html">Manage Automatic Payments</a> and <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/de567c542889063de10000000a441470.html">Revise Payment Proposals</a>.</li>
     </ul>
-
-    <h2>What to capture first</h2>
-    <p>Capture the company code, payment method, house bank, bank account, currency, amount, vendor/customer number, exact error or selection result, and whether the issue occurs in payment proposal, payment run, or bank statement processing.</p>
-
-    <h2>Escalation signals</h2>
-    <ul>
-      <li>Payment proposals select the wrong house bank for many vendors.</li>
-      <li>Bank statement posting fails for an entire house bank account.</li>
-      <li>Payment method configuration is missing for a country or payment medium.</li>
-      <li>Bank account master changes are needed outside normal maintenance windows.</li>
-    </ul>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame for bank account determination in payment processing, not a guide to treasury, cash management, or payment medium format development. It does not cover SWIFT or multi-bank connectivity setup.</p>
   </div>
 
   {% include atlas/author-block.html %}
