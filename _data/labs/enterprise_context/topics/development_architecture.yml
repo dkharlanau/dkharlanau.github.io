@@ -8,7 +8,7 @@ status: researching
 created_at: "2026-08-14"
 updated_at: "2026-09-24"
 reviewed_together_at: "2026-09-24"
-review_note: "Reviewed against current SAP Help, SAP Learning, CAP documentation and SAP-owned Clean ABAP guidance. Updated for the Clean Core Level concept that replaced the original 3-tier model."
+review_note: "Reviewed against current SAP Help, SAP Learning, CAP documentation and SAP-owned Clean ABAP guidance. Updated for Clean Core Levels, side-by-side tooling and the SAP S/4HANA custom code migration/adaptation workstream."
 
 business_question: "If I need new SAP-related functionality, where should I build it, with which programming model, runtime, language and deployment model?"
 
@@ -411,6 +411,84 @@ decision_matrix:
     avoid: "Create a full custom application for one field"
     why: "The lightest supported extension usually has the lowest lifecycle cost."
 
+
+side_by_side_toolbox:
+  principle: "Side-by-side is a lifecycle and ownership decision, not simply a different place to put code."
+  choose_when:
+    - "The users are outside the S/4HANA user population or the experience must be consumer-grade, native mobile or highly custom."
+    - "The capability spans SAP and non-SAP systems or has its own business responsibility."
+    - "The extension needs independent deployment, scaling, downtime windows or infrastructure lifecycle."
+    - "The solution is SaaS-like, reusable across several core products or intended for multiple customers."
+    - "A loosely coupled workflow, automation or service can tolerate remote communication and explicit consistency boundaries."
+  sap_build:
+    role: "Low-code/no-code toolbox on SAP BTP."
+    components:
+      - name: "SAP Build Apps"
+        use: "Low-code application development for custom user experiences."
+      - name: "SAP Build Process Automation"
+        use: "Workflow, approvals, automation and task orchestration."
+      - name: "SAP Build Work Zone"
+        use: "Digital workplace and launchpad-style experience that can combine SAP and non-SAP content."
+  pro_code:
+    bas: "SAP Business Application Studio is a managed cloud development environment. It is tooling, not an application runtime."
+    cap: "For CAP services, use the CAP programming model with Node.js/TypeScript or Java and deploy to a suitable BTP runtime."
+    abap: "SAP BTP ABAP Environment is the side-by-side choice when the team wants ABAP Cloud, RAP and CDS with an independent lifecycle."
+    python_boundary: "Python can be used for other BTP workloads, but it is not one of the standard CAP runtimes."
+  integration_boundary: "The extension communicates with S/4HANA through released APIs, events and integration contracts. This lifecycle separation is the main clean-core benefit."
+  cost_warning: "The price of independence is distributed-systems complexity: authentication, latency, retries, idempotency, monitoring and data consistency."
+  source_refs: [SRC-SAP-ABAP-EXTENSION-GUIDE-2025, SRC-SAP-SIDE-BY-SIDE, SRC-SAP-BAS-DEV-SPACES, SRC-SAP-CAP-DEPLOY]
+
+custom_code_migration:
+  scope: "System conversion from SAP ERP / Business Suite to SAP S/4HANA."
+  boundary: "This is not the same decision as choosing a new extension model. First decide which legacy code is still needed; then make the retained code S/4HANA-compatible and improve its clean-core posture where practical."
+  lead_rule: "Retire before you adapt. Every unused custom object removed before conversion is one less object to analyze, fix, test and maintain."
+  why_adaptation_is_needed: "SAP S/4HANA simplifies data structures and application code. Custom code that depends on changed or removed SAP objects can produce syntax errors, wrong behavior or upgrade findings."
+  flow:
+    - order: 1
+      title: "Scope the custom code"
+      action: "Use usage information to identify actively used custom code and candidates for retirement."
+      output: "A smaller custom-code population that is worth carrying into SAP S/4HANA."
+    - order: 2
+      title: "Run S/4HANA custom code checks"
+      action: "Use the Custom Code Migration app and ATC-based SAP S/4HANA checks to find code affected by simplification items."
+      output: "Findings linked to changed SAP objects and remediation guidance."
+    - order: 3
+      title: "Handle technical conversion adjustments"
+      action: "Resolve ABAP Dictionary modifications with SPDD during the conversion process."
+      output: "Dictionary changes reconciled with the target SAP S/4HANA release."
+    - order: 4
+      title: "Reconcile repository changes"
+      action: "After the Software Update Manager conversion, process SPAU and SPAU_ENH for repository modifications and enhancements."
+      output: "Repository-level customer changes reconciled with SAP-delivered changes."
+    - order: 5
+      title: "Adapt the retained custom code"
+      action: "Run ATC in ADT, use available Quick Fixes where safe, and perform manual adaptation for findings that require design decisions."
+      output: "Code that is technically compatible with the target system."
+    - order: 6
+      title: "Retest the business behavior"
+      action: "Run functional, integration and regression testing. A clean syntax check does not prove that the business process still behaves correctly."
+      output: "Evidence that the adapted code works in the converted process."
+  simplification_database:
+    role: "Contains simplification items for SAP objects changed or removed in SAP S/4HANA and links the change to remediation information."
+    lead_view: "A simplification finding is evidence that a dependency changed; it is not automatically a command to rewrite the whole application."
+  tools:
+    - name: "Custom Code Migration app"
+      use: "Scope used code, identify unused custom code and run S/4HANA compatibility analysis."
+    - name: "ATC"
+      use: "Static checks for S/4HANA simplifications, quality and clean-core related findings."
+    - name: "ADT Quick Fixes"
+      use: "Semi-automated remediation for supported findings; still review the resulting business behavior."
+    - name: "SPDD"
+      use: "Reconcile ABAP Dictionary modifications during conversion."
+    - name: "SPAU / SPAU_ENH"
+      use: "Reconcile repository modifications and enhancements after the technical conversion."
+  ai_assistant:
+    tool: "Custom Code Migration AI Assistant in Joule"
+    value: "Can explain ATC findings and simplification notes and provide code proposals for selected migration issues."
+    lead_boundary: "Use it to accelerate analysis and remediation, but keep code review and regression testing human-owned."
+    source_refs: [SRC-SAP-CUSTOM-CODE-MIGRATION-AI]
+  source_refs: [SRC-SAP-PCE-CUSTOM-CODE-MIGRATION, SRC-SAP-CUSTOM-CODE-ADAPTATION, SRC-SAP-ABAP-EXTENSION-GUIDE-2025]
+
 clean_core_reality:
   definition: "Clean core is about lifecycle-stable extension contracts, transparent upgrade risk and reducing unsafe dependency on SAP internals. It does not mean zero custom code and it does not mean every extension belongs on BTP."
   practical_rules:
@@ -524,6 +602,12 @@ lead_assessment_answers:
     answer: "It is useful historical knowledge, but SAP has sunset it as the main qualification model. Current clean-core guidance uses Levels A-D. I still recognize Tier 2 wrappers and Tier 3 legacy code in existing landscapes, but I classify current extension quality with the level model."
   - question: "What is the Extensibility Inventory for?"
     answer: "It is the control point for extension items and their dependencies. I use it to see what changed, what depends on what, transport or import/export status, and rework tasks before I change or retire an extension."
+  - question: "When do you choose side-by-side extensibility?"
+    answer: "When independence has business value: external users, cross-system ownership, SaaS, independent scaling or deployment, or a separate user experience. I do not move tightly coupled transaction logic to BTP only to make the diagram look cleaner."
+  - question: "What is your approach to custom code during a system conversion?"
+    answer: "Retire before adapting. I scope used code, remove what is obsolete, run the S/4HANA custom code checks, reconcile SPDD and SPAU or SPAU_ENH changes, adapt ATC findings with Quick Fixes or manual changes, and then regression-test the business process."
+  - question: "What does the Simplification Database tell you?"
+    answer: "It tells me which SAP objects changed or disappeared in S/4HANA and links those changes to simplification items and remediation guidance. It helps locate impacted custom dependencies; it does not replace functional analysis."
 
 source_refs:
   - SRC-SAP-ABAP-CLOUD-CLEAN-CORE
@@ -553,6 +637,10 @@ source_refs:
   - SRC-SAP-CUSTOM-BUSINESS-OBJECTS
   - SRC-SAP-EXTENSION-ARCHITECTURE-GUIDE
   - SRC-SAP-EXTENSIBILITY-EXPLORER-STATUS
+  - SRC-SAP-ABAP-EXTENSION-GUIDE-2025
+  - SRC-SAP-PCE-CUSTOM-CODE-MIGRATION
+  - SRC-SAP-CUSTOM-CODE-ADAPTATION
+  - SRC-SAP-CUSTOM-CODE-MIGRATION-AI
 
 tags:
   - sap
