@@ -1,0 +1,54 @@
+{% comment %}
+Human-facing discovery only: this include does not change verification, sitemap or AI eligibility.
+Editors can set sales_preparation: sales | support | practice | exclude on a source page.
+A keyword match is a discovery candidate, not evidence of certification scope or completeness.
+Keep the curated roadmap authoritative for reading order and edition applicability.
+{% endcomment %}
+{% assign study_documents = site.pages | concat: site.documents | sort: 'url' %}
+{% assign allowed_roots = 'atlas|labs|scenarios|blog|notes|skill-hub|reusable-data-procedures|glossary' | split: '|' %}
+{% assign sales_terms = 'sales|order-to-cash|order to cash|sap-sd|sap sd|/sd/|pricing|billing|shipping|/atp/|aatp|delivery|customer|credit-management|credit management|incompletion|incompleteness|copy-control|copy control|partner-determination|partner determination|text-determination|text determination|condition-contract|condition contract|returns|rebate|output-control|output control|output-management|output management|convergent|brim|cpq|commerce' | split: '|' %}
+{% assign support_terms = 'public-edition|public edition|fit-to-standard|fit to standard|sap-activate|sap activate|central-business-configuration|central business configuration|fiori|migration|extensibility|isa-m|testing|business-partner|business partner|master-data|master data|deployment-models|finance-logistics|material-behavior|release-readiness' | split: '|' %}
+{% assign practice_routes = '/labs/assessment/|/labs/assessment/sales/|/labs/assessment/core/|/labs/assessment/core-boundaries/|/labs/assessment/cross-process/|/labs/assessment/practice-engine/|/labs/assessment/mock/|/labs/assessment/progress/|/labs/assessment/start-here/' | split: '|' %}
+{% assign groups = 'sales|support|practice' | split: '|' %}
+{% for group in groups %}
+  {% assign match_count = 0 %}
+  {% assign seen_urls = '|' %}
+  {% capture library_items %}
+  {% for resource in study_documents %}
+    {% assign route = resource.url %}
+    {% assign route_parts = route | split: '/' %}
+    {% assign root = route_parts[1] %}
+    {% assign extension = route | split: '.' | last %}
+    {% if route == nil or route == '' or resource.title == nil or route == page.url %}{% continue %}{% endif %}
+    {% unless allowed_roots contains root %}{% continue %}{% endunless %}
+    {% if resource.published == false or resource.private == true or resource.status == 'private' or resource.redirect_to %}{% continue %}{% endif %}
+    {% if resource.collection.output == false %}{% continue %}{% endif %}
+    {% if route contains '/research-notes/' or route contains '/data/' or route contains '/assets/' %}{% continue %}{% endif %}
+    {% if extension == 'json' or extension == 'jsonl' or extension == 'xml' or extension == 'txt' or extension == 'yml' %}{% continue %}{% endif %}
+    {% if resource.sales_preparation == 'exclude' %}{% continue %}{% endif %}
+    {% assign searchable = resource.title | append: ' ' | append: route | downcase %}
+    {% assign tag_text = resource.tags | join: ' ' | downcase %}
+    {% assign searchable = searchable | append: ' ' | append: tag_text %}
+    {% assign scope = '' %}
+    {% for term in support_terms %}{% if searchable contains term %}{% assign scope = 'support' %}{% break %}{% endif %}{% endfor %}
+    {% for term in sales_terms %}{% if searchable contains term %}{% assign scope = 'sales' %}{% break %}{% endif %}{% endfor %}
+    {% if resource.tags contains 'sd' %}{% assign scope = 'sales' %}{% endif %}
+    {% if practice_routes contains route %}{% assign scope = 'practice' %}{% endif %}
+    {% if resource.sales_preparation == 'sales' or resource.sales_preparation == 'support' or resource.sales_preparation == 'practice' %}{% assign scope = resource.sales_preparation %}{% endif %}
+    {% unless scope == group %}{% continue %}{% endunless %}
+    {% assign route_key = route | prepend: '|' | append: '|' %}
+    {% if seen_urls contains route_key %}{% continue %}{% endif %}
+    {% assign seen_urls = seen_urls | append: route | append: '|' %}
+    {% assign match_count = match_count | plus: 1 %}
+    <li>
+      <a href="{{ route | relative_url }}">{{ resource.title | escape }}</a>
+      {% if resource.description %}<p>{{ resource.description | strip_html | escape }}</p>{% endif %}
+      <small>{{ root | escape }} · {% if resource.verified == true and resource.status == 'reviewed' %}Marked reviewed on this site{% else %}Working study material; verify technical details{% endif %}{% if resource.last_modified_at %} · Updated {{ resource.last_modified_at | date: '%Y-%m-%d' }}{% endif %}</small>
+    </li>
+  {% endfor %}
+  {% endcapture %}
+  <details>
+    <summary>{% case group %}{% when 'sales' %}Sales and SD resources{% when 'support' %}Implementation and cross-process support{% when 'practice' %}Assessment and practice tools{% endcase %} — {{ match_count }} linked pages</summary>
+    {% if match_count > 0 %}<ul>{{ library_items }}</ul>{% else %}<p>No additional pages matched this group in the current build. Use the curated links above.</p>{% endif %}
+  </details>
+{% endfor %}
