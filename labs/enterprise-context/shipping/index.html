@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-24
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -76,6 +76,14 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/cfd1f56b7d9b43bea48f9bca7323380d.html"
   - title: "Routes — Route Determination Customizing Reference"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e08e0da88aa64d9095334cdb5fa3b25d/3a587ab2c38d4a0f9f72f94943a71c19.html"
+  - title: "Explaining the Concept and Structure of a Delivery Document"
+    url: "https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/explaining-the-concept-and-structure-of-a-delivery-document"
+  - title: "Processing Outbound Deliveries"
+    url: "https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/processing-outbound-deliveries"
+  - title: "Adjusting Delivery and Transportation Scheduling"
+    url: "https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/adjusting-delivery-and-transportation-scheduling"
+  - title: "Using Special Functions in Deliveries"
+    url: "https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/using-special-functions-in-deliveries"
 # ai-discovery-managed:end
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.shipping %}
@@ -129,6 +137,48 @@ source_links:
       </div>
     </div>
     <p class="ecg-caption"><strong>Boundary with ATP:</strong> Shipping builds important logistics dates and execution context. ATP evaluates the promise against its requirement date, supply-demand scope, and policy controls. Diagnose the first wrong owner before changing lead times or confirmations.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="delivery-document-role" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Shipping relevance</p>
+      <h2>The delivery document is the execution backbone.</h2>
+      <p>Shipping starts when demand becomes executable. We use the delivery document to coordinate the physical work, show its status, and connect Sales with Inventory Management, EWM, TM, output, and later billing.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>What shipping processing covers</h3>
+        <ul>{% for item in graph.delivery_document_model.activities %}<li>{{ item }}</li>{% endfor %}</ul>
+      </div>
+      <div>
+        <h3>Why the delivery matters</h3>
+        <p>{{ graph.delivery_document_model.core_role }}</p>
+        <p><strong>PGI boundary:</strong> {{ graph.delivery_document_model.pgi_handoff }}</p>
+      </div>
+    </div>
+
+    <h3>Header, item, status</h3>
+    <div class="ecg-input-grid">
+      {% for part in graph.delivery_document_model.structure %}
+      <article>
+        <span>{{ part.level }}</span>
+        <h3>{{ part.purpose }}</h3>
+        <ul>{% for value in part.examples %}<li>{{ value }}</li>{% endfor %}</ul>
+      </article>
+      {% endfor %}
+    </div>
+
+    <h3>Delivery documents are not only for customer sales orders</h3>
+    <div class="ecg-input-grid">
+      {% for scenario in graph.delivery_document_model.business_scenarios %}
+      <article>
+        <span>{{ scenario.source }}</span>
+        <h3>{{ scenario.delivery }}</h3>
+        <p>{{ scenario.purpose }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption">The delivery is the shared logistics pattern; the preceding document and process decide whether the business meaning is customer shipping, replenishment, subcontracting, supplier return, inbound receiving, or project fulfillment.</p>
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
@@ -329,6 +379,24 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="scheduling-modes" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Scheduling mode</p>
+      <h2>Precise and daily scheduling use the same logic at different time granularity.</h2>
+      <p>The distinction matters when a user sees a date that looks correct but expects a specific time of day.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% for mode in graph.scheduling_modes %}
+      <div>
+        <h3>{{ mode.title }}</h3>
+        <p>{{ mode.principle }}</p>
+        <p><strong>Watch:</strong> {{ mode.watch }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption">For assessment answers, keep the boundary clear: scheduling can be precise to the minute, but ATP still evaluates material availability by date rather than by the precise time of day.</p>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">ATP boundary</p>
@@ -363,6 +431,41 @@ source_links:
       </div>
     </div>
     <p class="ecg-lead-lens"><strong>Lead lens:</strong> “Not in VL10” is a symptom. I classify it as date, delivery relevance, block/status, organizational selection, or execution grouping before changing configuration.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="delivery-creation-control" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Delivery creation and control</p>
+      <h2>The due list creates work. The delivery controls whether that work can continue.</h2>
+      <p>These are different operational questions: what should be created now, what can be grouped, and what is still incomplete or blocked after the document exists.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Single creation</h3><p>{{ graph.collective_processing_model.single_delivery }}</p></div>
+      <div><h3>Collective processing</h3><p>{{ graph.collective_processing_model.collective_processing }}</p></div>
+      <div><h3>Delivery due list</h3><p>{{ graph.collective_processing_model.due_list }}</p></div>
+      <div><h3>Grouping</h3><p>{{ graph.collective_processing_model.grouping_rule }}</p></div>
+      <div><h3>Split</h3><p>{{ graph.collective_processing_model.split_rule }}</p></div>
+      <div><h3>Monitor</h3><p>{{ graph.collective_processing_model.monitor }}</p></div>
+    </div>
+
+    <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ graph.collective_processing_model.delivery_scenarios }}</p>
+
+    <h3>Control surfaces around the delivery</h3>
+    <div class="ecg-determination-list">
+      {% for control in graph.delivery_controls %}
+      <article class="ecg-determination-detail">
+        <header><div><span>CTRL</span><small>delivery</small></div><h3>{{ control.title }}</h3><p>{{ control.principle }}</p></header>
+        <div class="ecg-remember"><strong>Diagnostic question</strong><p>{{ control.diagnostic_question }}</p></div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warehouse</span>
+      <p><strong>EWM boundary:</strong> storage types, sections, bins, activity areas, quants, warehouse tasks, warehouse orders, and stock-removal strategies belong to warehouse execution. Shipping should hand over the correct delivery and warehouse context instead of duplicating EWM logic.</p>
+      <a href="/labs/enterprise-context/ewm/">Open the EWM execution map <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
