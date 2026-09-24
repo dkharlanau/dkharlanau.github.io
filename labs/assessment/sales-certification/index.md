@@ -28,14 +28,14 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
     <div class="research-canvas__signal" aria-label="Preparation target">
       <p>Preparation map</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>C_S4CS</strong><small>Public Edition Sales target</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>10</strong><small>Study stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>10</strong><small>Primary pages; deep dives on demand</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>3</strong><small>Checks: understand, apply, explain</small></div>
       <em>External scope checked on September 24, 2026. This is a working study guide, not an official SAP exam specification.</em>
     </div>
   </header>
 
   <nav aria-label="On this preparation page">
-    <p><a href="#target">Certification target</a> · <a href="#official-scope">Official courses</a> · <a href="#our-units">Our units</a> · <a href="#time">Time budget</a> · <a href="#method">How to study</a> · <a href="#roadmap">Ten-stage roadmap</a> · <a href="#capstone">Worked practice</a> · <a href="#consolidation">One topic, one primary page</a> · <a href="#library">Resource library</a> · <a href="#gaps">Coverage checks</a> · <a href="#readiness">Readiness</a></p>
+    <p><a href="#target">Certification target</a> · <a href="#official-scope">Official courses</a> · <a href="#last-day">Last-day review</a> · <a href="#our-units">Our units</a> · <a href="#time">Time budget</a> · <a href="#method">How to study</a> · <a href="#roadmap">Deep roadmap</a> · <a href="#capstone">Worked practice</a> · <a href="#consolidation">One topic, one primary page</a> · <a href="#library">Resource library</a> · <a href="#gaps">Coverage checks</a> · <a href="#readiness">Readiness</a></p>
   </nav>
 
   <section class="research-canvas__inventory" id="target">
@@ -57,6 +57,40 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
       <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-automation-and-analytics"><span>05</span><strong>Sales Automation and Analytics — 6 hr 30 min</strong><small>Omnichannel Convergent Billing (1MC), fulfillment monitoring (BKK), AI-based order entry, planning (1O0), Fiori analytical apps (1BS), and predictive model training (2YJ). Use with stage 10.</small></a>
     </div>
     <p><strong>Implementation foundation:</strong> use <a href="https://learning.sap.com/learning-journeys/implementing-sap-s-4hana-cloud-public-edition">Implementing SAP S/4HANA Cloud Public Edition</a> for landscapes, authorizations, Fit-to-Standard, Central Business Configuration, Fiori, extensibility, integration, migration and testing. The Sales fundamentals course lists this implementation journey and Private Edition Sales learning as prerequisites. Use those links for foundation knowledge without confusing the certification targets.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="last-day">
+    <header><p class="research-canvas__eyebrow">Last-day review</p><h2>Read this page first. Open a deep page only when an answer breaks.</h2></header>
+    <p>For the final review, do not reread the whole library. Use the compact model below. Try to explain each row without notes, give one example, and name one failure signal. If the answer is weak, open the linked primary page. If the answer is clear, move on.</p>
+    <table>
+      <thead><tr><th>Area</th><th>Compact model</th><th>What you must be able to explain</th></tr></thead>
+      <tbody>
+        <tr><td><strong>O2C + master data</strong></td><td>Demand → order → confirmation → delivery → PGI → billing → accounting → clearing. BP, product, sales area, plant and commercial records feed the flow before and during execution.</td><td>What the order commits to, what happens later, and which data layer owns a wrong value.</td></tr>
+        <tr><td><strong>Sales order control</strong></td><td>Document type sets the process frame; item category controls item behavior; schedule line controls delivery/planning behavior. Partners, copy control and incompleteness add separate decisions.</td><td>Why a valid header does not guarantee a deliverable or billable item, and which decision you inspect first.</td></tr>
+        <tr><td><strong>Pricing</strong></td><td>Procedure → condition place/requirement → access/search → value source → calculation base → scale/formula → interaction/exclusion → result.</td><td>Why an existing condition record can still produce no price or the wrong amount.</td></tr>
+        <tr><td><strong>ATP + shipping</strong></td><td>Requested date is not confirmation. Scheduling builds requirement dates; ATP checks the promise. Shipping point, route and due status then control delivery execution; picking/packing precede PGI where relevant.</td><td>Why stock can exist without confirmation, and why confirmation does not mean the order is ready to ship.</td></tr>
+        <tr><td><strong>Billing + FI</strong></td><td>Billing relevance/reference → due status → copy control → grouping/split → billing document → accounting transfer. Cancellation/correction preserves document history.</td><td>Why delivery complete does not always mean invoice ready, and why an invoice can exist before FI posting succeeds.</td></tr>
+        <tr><td><strong>Advanced Sales</strong></td><td>Third-party changes who ships; intercompany changes legal-entity relationships; advanced intercompany adds internal documents/orchestration; rebates settle later business volume; down payment separates request from cash; collective billing differs from invoice lists.</td><td>State the business rule that changes from standard Sell from Stock and the document consequence.</td></tr>
+        <tr><td><strong>Complaints + returns</strong></td><td>First classify the desired outcome: financial correction, physical return, replacement, inspection/disposition, or a combination. Credit/debit memo is not automatically a return; lean and full returns manage different control depth.</td><td>When goods move, when only value changes, and which evidence proves the final outcome.</td></tr>
+        <tr><td><strong>Public Edition + automation</strong></td><td>Fit-to-Standard defines scope before extension. Configuration, roles, integration, migration and testing support the Sales process. BKK monitors fulfillment exceptions; 1MC brings eligible billing sources together; AI proposes/extracts; 1O0 plans; 1BS analyzes; 2YJ predicts.</td><td>Separate observation, proposal, planning, prediction and authoritative ERP transaction state.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Ten primary pages</h3>
+    <p>This is the shortest local reading route. The rest of the library is reference material.</p>
+    <ol>
+      <li><a href="/atlas/concepts/order-to-cash/"><strong>Order-to-Cash Process</strong></a> — the end-to-end chain and evidence checkpoints.</li>
+      <li><a href="/labs/enterprise-context/master-data/"><strong>Sales Master Data Architecture</strong></a> — BP, product, organizational scope, commercial data and ownership.</li>
+      <li><a href="/labs/enterprise-context/sales-order/"><strong>Sales Order Decision Map</strong></a> — document type, item, schedule line and derived decisions.</li>
+      <li><a href="/labs/enterprise-context/pricing/"><strong>Sales Pricing Engine</strong></a> — now includes pricing anatomy and configuration in the same page.</li>
+      <li><a href="/labs/enterprise-context/atp/"><strong>ATP and aATP</strong></a> — availability, confirmation and prioritization.</li>
+      <li><a href="/labs/enterprise-context/shipping/"><strong>Shipping & Delivery Scheduling</strong></a> — dates, shipping point, route, due processing and PGI handoff.</li>
+      <li><a href="/labs/enterprise-context/billing/"><strong>Sales Billing</strong></a> — billing relevance, due list, split, cancellation and FI transfer.</li>
+      <li><a href="/labs/enterprise-context/sales-processes/"><strong>Sales Process Atlas</strong></a> — quotations, contracts, third-party, intercompany, down payments and other process variants.</li>
+      <li><a href="/labs/enterprise-context/sales-processes/control-plane/returns-claims/"><strong>Returns and Claims Control Plane</strong></a> — complaint choice, physical and financial outcomes.</li>
+      <li><a href="/labs/enterprise-context/sales-analytics/"><strong>Sales Automation & Analytics</strong></a> — BKK, 1MC, AI order entry, planning, analytical apps and prediction.</li>
+    </ol>
+    <p><strong>Open only on a weak answer:</strong> <a href="/atlas/diagnostics/sap-incompletion-procedure-diagnostics/">incompleteness</a>, <a href="/labs/enterprise-context/sales-processes/mechanisms/">copy/control mechanisms</a>, <a href="/atlas/sap/output-control/">output control</a>, <a href="/atlas/diagnostics/sap-invoice-split-analysis/">invoice split</a>, <a href="/atlas/diagnostics/sap-credit-management-diagnostics/">credit</a>, or the <a href="/labs/enterprise-context/sales-diagnostics/">diagnostic casebook</a>.</p>
   </section>
 
   <section class="research-canvas__inventory" id="our-units">
@@ -116,13 +150,13 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
   </section>
 
   <section class="research-canvas__inventory" id="roadmap">
-    <header><p class="research-canvas__eyebrow">Revision route</p><h2>Ten stages, from the business flow to a defensible explanation.</h2><p>Follow the order on a first pass. On revision, start with the lowest-scoring stage and return to its dependencies rather than rereading everything.</p></header>
+    <header><p class="research-canvas__eyebrow">Deep roadmap</p><h2>Use the ten stages after the compact review exposes a gap.</h2><p>The primary route above is the default for final revision. This deeper roadmap is for weak topics, changed scenarios and Lead-level explanation. Do not read every linked companion by default.</p></header>
     <div class="ecg-determination-list">
 
       <article class="ecg-determination-detail" id="stage-1">
         <header><div><span>01</span><small>Core + support</small></div><h3>Order-to-Cash, organization and master data</h3></header>
         <p><strong>Understand:</strong> the commercial purpose of each step, who owns it, which business documents it produces, and which organizational and master-data prerequisites the chosen scenario needs.</p>
-        <p><strong>Read:</strong> <a href="/atlas/sap/sales-domain/">Sales domain</a> → <a href="/atlas/concepts/order-to-cash/">Order-to-Cash explanation and process map</a> → <a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a>. Then connect <a href="/labs/enterprise-context/business-partner/">Business Partner</a> and the primary <a href="/labs/enterprise-context/master-data/">Sales Master Data Architecture</a>. Use the detailed <a href="/labs/enterprise-context/sales-processes/master-data/">Sales Master Data Graph</a> only when you need object-level scope, relationships or technical orientation.</p>
+        <p><strong>Read:</strong> <a href="/atlas/concepts/order-to-cash/">Order-to-Cash Process</a> → <a href="/labs/enterprise-context/master-data/">Sales Master Data Architecture</a>. Open the Sales domain, Process Atlas, Business Partner deep dive or object-level master-data graph only when one of these two primary pages leaves a specific gap.</p>
         <p><strong>Apply:</strong> draw one Sell from Stock flow. Annotate the sales organization, distribution channel, division, delivering plant, company code and shipping point where relevant. Identify the sold-to, ship-to, bill-to and payer roles, and the product and condition data you would check before testing.</p>
         <p><strong>Explain:</strong> “What must already be correct before I create the order, and which downstream step consumes each piece of data?” <strong>Done:</strong> you can draw the flow and explain the dependencies without mixing master data with transactional documents.</p>
       </article>
@@ -139,10 +173,10 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
       <article class="ecg-determination-detail" id="stage-3">
         <header><div><span>03</span><small>Core</small></div><h3>Pricing: follow the calculation, not just the final number</h3></header>
         <p><strong>Understand:</strong> pricing-procedure determination, condition types, access sequences and tables, records and validity, requirements, bases, calculation types, scales, exclusions, and the difference between a found condition and one that affects the result.</p>
-        <p><strong>Read:</strong> start with the canonical <a href="/labs/enterprise-context/pricing/">Sales Pricing Engine</a>, then the <a href="/labs/enterprise-context/pricing/configuration/">configuration playbook</a>. Open <a href="/labs/enterprise-context/pricing/anatomy/">pricing anatomy</a> when the condition row, base, scale or exclusion is the weak point. Do not reread the two Atlas pricing pages on the first pass if the engine explanation is already clear.</p>
+        <p><strong>Read:</strong> <a href="/labs/enterprise-context/pricing/">Sales Pricing Engine</a>. Pricing anatomy and the core configuration path are now consolidated into this page. Open casebook, scenarios, operations or Atlas diagnostics only for a specific weak point.</p>
         <p><strong>Apply:</strong> calculate a small example with an item price, percentage discount and quantity scale. State the units and calculation base. Then remove the expected discount and trace where the result first diverges: selected procedure, requirement, search key, valid record, scale or condition activity. Test condition maintenance separately from pricing execution.</p>
         <p><strong>Explain:</strong> “Why does this condition appear with this value for this customer, product, quantity and date?” <strong>Done:</strong> you can show the chain and explain both the correct result and one missing or inactive condition.</p>
-        <details><summary>Pricing depth when a gap remains</summary><p><a href="/labs/enterprise-context/pricing/casebook/">Pricing Casebook</a> for worked numbers · <a href="/labs/enterprise-context/pricing/scenarios/">advanced pricing scenarios</a> for process variants · <a href="/labs/enterprise-context/pricing/operations/">delivery and operations</a> for migration/support · <a href="/atlas/sap/sap-pricing-condition-technique/">condition technique</a> for a compact Atlas view · <a href="/atlas/sap/sap-pricing-procedure-debugging/">pricing-procedure analysis</a> for a failure trace. Pick the page that answers the current question; do not read all of them by default.</p></details>
+        <details><summary>Pricing depth when a gap remains</summary><p><a href="/labs/enterprise-context/pricing/casebook/">Casebook</a> = worked numbers · <a href="/labs/enterprise-context/pricing/scenarios/">Scenarios</a> = variants · <a href="/labs/enterprise-context/pricing/operations/">Operations</a> = migration/support · <a href="/atlas/sap/sap-pricing-procedure-debugging/">Pricing diagnostics</a> = failure trace. Choose one based on the gap.</p></details>
       </article>
 
       <article class="ecg-determination-detail" id="stage-4">
@@ -242,7 +276,7 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
         <tr><td>Sales overview</td><td><a href="/atlas/sap/sales-domain/">Sales domain</a> for orientation; then move into the roadmap.</td><td><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a> is for process variants, not another general introduction.</td></tr>
         <tr><td>Sales order behavior</td><td><a href="/labs/enterprise-context/sales-order/">Sales Order Decision Map</a></td><td>The <a href="/labs/enterprise-context/sales-processes/mechanisms/">mechanism library</a> explains reusable determination engines; the <a href="/labs/enterprise-context/sales-processes/control-plane/">control plane</a> is for deeper cross-process traces.</td></tr>
         <tr><td>Sales master data</td><td><a href="/labs/enterprise-context/master-data/">Sales Master Data Architecture</a></td><td><a href="/labs/enterprise-context/sales-processes/master-data/">Sales Master Data Graph</a> is the detailed object/reference layer; <a href="/labs/enterprise-context/business-partner/">Business Partner</a> is the BP/CVI-specific deep dive.</td></tr>
-        <tr><td>Pricing</td><td><a href="/labs/enterprise-context/pricing/">Sales Pricing Engine</a></td><td>Anatomy = condition calculation detail; configuration = build sequence; casebook = worked numbers; scenarios = variants; operations = migration/support. Atlas pricing pages are compact or diagnostic companions.</td></tr>
+        <tr><td>Pricing</td><td><a href="/labs/enterprise-context/pricing/">Sales Pricing Engine</a></td><td>Anatomy and core configuration are now inside the primary page. Their old URLs are stable pointers. Casebook = worked numbers; scenarios = variants; operations = migration/support; Atlas pages = diagnostics.</td></tr>
         <tr><td>Availability and shipping</td><td><a href="/labs/enterprise-context/atp/">ATP and aATP</a> + <a href="/labs/enterprise-context/shipping/">Shipping & Delivery Scheduling</a></td><td>Atlas pages are used for specific misconceptions or failure diagnosis, not repeated as mandatory reading.</td></tr>
         <tr><td>Billing</td><td><a href="/labs/enterprise-context/billing/">Sales Billing</a></td><td>Billing-block, invoice-split and account-determination pages are failure-specific diagnostics.</td></tr>
         <tr><td>Practice and diagnosis</td><td><a href="/labs/enterprise-context/sales-diagnostics/">Sales Diagnostic Casebook</a> for worked cases</td><td><a href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">SD O2C Diagnostics Hub</a> is a symptom-to-check router. They are different study modes.</td></tr>
