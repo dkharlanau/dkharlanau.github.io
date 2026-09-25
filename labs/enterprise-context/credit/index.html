@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - business-partner
   - integration
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-25
 publication_wave: "logistics-search-wave-02"
 review_method: "SAP primary sources + factual review + editorial rewrite"
 search_intent: "SAP credit management and sales order credit check"
@@ -93,6 +93,18 @@ source_links:
       <p>Changing one of them can alter the result, but they are not interchangeable. Raising a limit does not repair a wrong payer, a wrong credit segment, stale exposure, or a failed overdue-item check.</p>
     </div>
     <a href="/labs/enterprise-context/business-partner/">Review Business Partner structure <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="credit-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Credit is a policy evaluation over a changing exposure.</h2>
+      <p>The shortest useful answer names the checked account, the segment, the rule, the exposure, and the business decision that follows.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In SAP Credit Management, I first confirm which sales document event triggers the check and which credit account and segment are evaluated. The Business Partner credit profile provides policy data such as risk class and checking rule, while the segment carries values such as the credit limit and exposure for that scope. The checking rule can contain several steps, so available credit limit alone does not guarantee a pass. If a document is blocked, I distinguish a recheck from a release: a recheck proves whether changed data now satisfies policy; a release is an explicit business decision to continue despite the negative result. If exposure looks wrong, I trace the commitment through the document lifecycle before changing the limit.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="credit-memory" data-reveal>
@@ -177,6 +189,20 @@ source_links:
       <a href="/labs/enterprise-context/sales-order/"><span>SD</span><strong>Sales Order</strong><small>See how partner, document, pricing, availability, and follow-on controls are determined before credit becomes one of the execution gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/business-partner/"><span>BP</span><strong>Business Partner</strong><small>Review the difference between shared BP identity, roles, organizational data, and process-specific extensions.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/billing/"><span>FI</span><strong>Billing and Receivables</strong><small>Follow how fulfillment becomes billing and then financial exposure after the sales-side commitment changes.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="credit-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Five questions that separate policy from symptoms.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>check</small></div><h3>Why can an order be blocked when credit limit is still available?</h3></header><p>The checking rule can contain several steps. A document can fail because of overdue items, maximum document value, payment behavior, or another configured check even when the numerical limit has room.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>account</small></div><h3>Which customer should I inspect first?</h3></header><p>Start from the credit account resolved by the Sales process; in the standard integration the payer is central. Do not assume the sold-to party is automatically the checked credit account.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>decision</small></div><h3>Recheck or release?</h3></header><p>Recheck when the underlying state changed and you want policy to evaluate the document again. Release when an authorized credit decision accepts the risk and allows processing to continue.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>exposure</small></div><h3>Exposure looks too high. What should I change?</h3></header><p>Nothing yet. Reconcile the unexpected amount to its lifecycle stage: open sales order, delivery, billing transfer, or receivable. Repair the wrong commitment or state before changing the credit limit.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>billing</small></div><h3>Is the billing document itself credit-checked?</h3></header><p>No. Billing documents are not the credit-check event described here, but billing and Accounts Receivable change the exposure that later checks can evaluate.</p></article>
     </div>
   </section>
 
