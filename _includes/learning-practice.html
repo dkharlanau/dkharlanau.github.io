@@ -12,14 +12,37 @@
     {% if group %}
       {% assign study_count = study_count | plus: 1 %}
       <details class="study-skill" {% if study_count == 1 %}open{% endif %}>
-        <summary><span class="study-kicker">{{ skill.track | escape }} / Practice</span><h3 id="study-{{ skill.id }}">{{ skill.title | escape }}</h3></summary><p>{{ skill.interview_signal | escape }}</p>
+        <summary>
+          <span class="study-skill__heading">
+            <span class="study-kicker">{{ skill.track | escape }} / Practice</span>
+            <h3 id="study-{{ skill.id }}">{{ skill.title | escape }}</h3>
+          </span>
+          <span class="study-skill__count">{{ group.questions | size }} questions</span>
+        </summary>
+        <p class="study-skill__description">{{ skill.interview_signal | escape }}</p>
         <div class="study-questions">
         {% for question in group.questions %}
           {% assign question_type = site.data.career.question_bank.types[question.type] %}
           <article class="study-question">
-            <p class="study-kicker">0{{ forloop.index }} / {{ question_type.label | escape }}</p>
+            <div class="study-question__meta">
+              <span class="study-question__number">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+              <span>{{ question_type.label | escape }}</span>
+            </div>
             <h4>{{ question.prompt | escape }}</h4>
-            <details><summary>Compare your reasoning</summary><p><strong>Evidence to include.</strong> {{ question.evidence | default: question_type.evidence | escape }}</p><p><strong>Follow-up.</strong> {{ question.follow_up | default: question_type.pressure | escape }}</p><p><a href="{{ '/labs/interview-readiness/questions/' | relative_url }}">Practise another question</a></p></details>
+            <details class="study-answer">
+              <summary>Show answer guide</summary>
+              <div class="study-answer__body">
+                <div>
+                  <span class="study-answer__label">Evidence to include</span>
+                  <p>{{ question.evidence | default: question_type.evidence | escape }}</p>
+                </div>
+                <div>
+                  <span class="study-answer__label">Follow-up</span>
+                  <p>{{ question.follow_up | default: question_type.pressure | escape }}</p>
+                </div>
+                <a href="{{ '/labs/interview-readiness/questions/' | relative_url }}">Practise another question →</a>
+              </div>
+            </details>
           </article>
         {% endfor %}
         </div>
@@ -30,8 +53,22 @@
 {% endcapture %}
 {% if study_count > 0 %}
 <aside class="study-workbench" aria-labelledby="study-title">
-  <header class="study-workbench__intro"><p class="study-kicker">Read → Recall → Defend</p><h2 id="study-title">Turn this material into an answer.</h2><p>Close your notes. Pick one question, answer aloud, then open the evidence checklist. These prompts practise the skills linked to this page; the checklist guides self-review and does not grade your answer.</p></header>
-  {{ study_questions }}
-  <footer><a href="{{ '/labs/interview-readiness/practice/' | relative_url }}">Run a mixed interview →</a><a href="{{ '/labs/interview-readiness/stories/' | relative_url }}">Build your project evidence →</a></footer>
+  <header class="study-workbench__intro">
+    <p class="study-kicker">Read → Recall → Defend</p>
+    <h2 id="study-title">Turn this material into an answer.</h2>
+    <p class="study-workbench__lead">Close your notes. Choose one question, answer it aloud, then open the answer guide and check your evidence.</p>
+    <div class="study-workbench__flow" aria-label="Practice sequence">
+      <span><strong>1</strong> Read the question</span>
+      <span><strong>2</strong> Answer aloud</span>
+      <span><strong>3</strong> Check evidence</span>
+    </div>
+  </header>
+  <div class="study-workbench__body">
+    {{ study_questions }}
+  </div>
+  <footer class="study-workbench__footer">
+    <a href="{{ '/labs/interview-readiness/practice/' | relative_url }}">Run a mixed interview →</a>
+    <a href="{{ '/labs/interview-readiness/stories/' | relative_url }}">Build project evidence →</a>
+  </footer>
 </aside>
 {% endif %}
