@@ -87,11 +87,55 @@ tags:
           </div>
 
           {% for entity in group.entities %}
+          {% assign entity_detail_href = "/labs/enterprise-context/sales-processes/master-data/" %}
+          {% assign entity_detail_label = "Master-data reference graph" %}
+          {% case entity.code %}
+            {% when "MD.SD.BP" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/business-partner/" %}
+              {% assign entity_detail_label = "Business Partner" %}
+            {% when "MD.SD.ADDRESS" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/business-partner/" %}
+              {% assign entity_detail_label = "Business Partner" %}
+            {% when "MD.SD.PRODUCT" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
+              {% assign entity_detail_label = "Material behavior" %}
+            {% when "MD.SD.CMIR" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/sales-order/" %}
+              {% assign entity_detail_label = "Sales Order decisions" %}
+            {% when "MD.SD.PARTNERREL" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/sales-order/" %}
+              {% assign entity_detail_label = "Partner determination" %}
+            {% when "MD.SD.PRODHIER" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
+              {% assign entity_detail_label = "Material behavior" %}
+            {% when "MD.SD.PRICE" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/pricing/" %}
+              {% assign entity_detail_label = "Pricing" %}
+            {% when "MD.SD.CREDIT" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/credit/" %}
+              {% assign entity_detail_label = "Credit Management" %}
+            {% when "MD.SD.UOM" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
+              {% assign entity_detail_label = "Material behavior" %}
+            {% when "MD.SD.BATCH" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/logistics-capabilities/" %}
+              {% assign entity_detail_label = "Batch & logistics capabilities" %}
+            {% when "MD.SD.BOM" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
+              {% assign entity_detail_label = "Sales BOM & material behavior" %}
+            {% when "MD.SD.VC" %}
+              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
+              {% assign entity_detail_label = "Configurable products" %}
+          {% endcase %}
           <article class="ecg-master-catalog__row">
             <div class="ecg-master-catalog__object">
               <code>{{ entity.code }}</code>
               <h4>{{ entity.title }}</h4>
               <span class="ecg-master-catalog__type">{{ entity.entity_class | replace: "_", " " }}</span>
+              <a class="ecg-master-catalog__learn" href="{{ entity_detail_href }}">
+                Read: {{ entity_detail_label }}
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+              </a>
             </div>
             <div class="ecg-master-catalog__cell">
               <strong>Key / scope</strong>
