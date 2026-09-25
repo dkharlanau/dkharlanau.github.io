@@ -42,7 +42,7 @@ tags:
       <p class="research-canvas__eyebrow">Deep vertical / Sales Master Data</p>
       <h1>Master data is executable policy,<br />not background decoration.</h1>
       <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#master-data-memory">Start with ten questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#master-data-memory">Start with the diagnostic framework <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Master-data deep-dive inventory">
       <p>Working model</p>
@@ -73,21 +73,65 @@ tags:
 
   <section class="research-canvas__inventory" id="master-data-memory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
-      <h2>Ten questions before changing a master record.</h2>
-      <p>The point is not to memorize every field. The point is to identify which data layer owns the behavior that the document shows at runtime.</p>
+      <p class="research-canvas__eyebrow">Diagnostic framework</p>
+      <h2>Seven questions before changing master data.</h2>
+      <p>Start with the business behavior, then trace it to the data layer that controls it.</p>
     </header>
     <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
       <article class="ecg-memory-card">
-        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-        <strong>{{ item.key }}</strong>
-        <h3>{{ item.question }}</h3>
-        <p>{{ item.answer }}</p>
+        <span>01</span>
+        <strong>OBJECT</strong>
+        <h3>What business object are we changing?</h3>
+        <p>Identify the object and its key before opening a maintenance screen.</p>
       </article>
-      {% endfor %}
+      <article class="ecg-memory-card">
+        <span>02</span>
+        <strong>CONTEXT</strong>
+        <h3>Which business context uses this value?</h3>
+        <p>The same object can behave differently in sales, purchasing, finance, planning, warehouse, or other processes.</p>
+      </article>
+      <article class="ecg-memory-card">
+        <span>03</span>
+        <strong>SCOPE</strong>
+        <h3>Where is the value valid?</h3>
+        <p>Check the organizational level: global, company code, plant, sales area, purchasing organization, warehouse, segment, or another scope.</p>
+      </article>
+      <article class="ecg-memory-card">
+        <span>04</span>
+        <strong>OVERRIDE</strong>
+        <h3>Can more specific data replace the default?</h3>
+        <p>Relationship data, conditions, determination rules, or local records may take priority over a generic value.</p>
+      </article>
+      <article class="ecg-memory-card">
+        <span>05</span>
+        <strong>EFFECT</strong>
+        <h3>Which process decision does the value influence?</h3>
+        <p>Connect the field to runtime behavior such as price, source, availability, tax, account, delivery, payment, or output.</p>
+      </article>
+      <article class="ecg-memory-card">
+        <span>06</span>
+        <strong>FLOW</strong>
+        <h3>Which systems consume this value?</h3>
+        <p>A correct source record does not prove that every replica or consuming application has the same version.</p>
+      </article>
+      <article class="ecg-memory-card">
+        <span>07</span>
+        <strong>CONTROL</strong>
+        <h3>Who owns the lifecycle of this data?</h3>
+        <p>Know who can create, approve, change, distribute, block, and retire the value.</p>
+      </article>
     </div>
-    <p class="ecg-caption"><strong>WHO → ROLE → WHERE → WHAT → RELATE → COMMERCIAL → FULFILL → RISK → DISTRIBUTE → GOVERN.</strong> This is a diagnostic memory path, not one SAP technical call sequence.</p>
+    <p class="ecg-caption"><strong>OBJECT → CONTEXT → SCOPE → OVERRIDE → EFFECT → FLOW → CONTROL.</strong> Use the path to move from a business symptom to the master-data layer that may explain it.</p>
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Sales example</h4>
+        <p>A wrong delivery date in a sales order is the symptom. Do not immediately change the customer or product master.</p>
+      </div>
+      <div>
+        <h4>Apply the framework</h4>
+        <p>Identify the object, sales or planning context, organizational scope, possible overrides, the ATP or delivery decision affected, downstream replicas, and the owner of the correction.</p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
