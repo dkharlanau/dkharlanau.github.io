@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -100,6 +100,24 @@ source_links:
     <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
     <p><strong>Start with the confirmation, not the stock figure.</strong> SAP describes Product Availability Check (PAC) as determining the date and quantity in which a requirement can be fulfilled. The scope of check determines which stocks, receipts, issues and requirements participate in that calculation.</p>
     <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/86990a56d448792de10000000a44538d.html" target="_blank" rel="noopener">SAP: Product Availability Check <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="atp-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>ATP is a promise calculation. aATP adds policy around scarce supply.</h2>
+      <p>Keep the base confirmation separate from allocation, protection, substitution, and later reconfirmation.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I start from one requirement: product, plant, quantity, requested date, and the material-availability date created by scheduling. Product Availability Check evaluates that requirement against the supply-and-demand elements included by the scope of check and returns a confirmed quantity and date. Advanced ATP can then apply business policy: Product Allocation limits consumption by planned allocation, Supply Protection preserves quantities for selected demand groups, Alternative-Based Confirmation can use configured alternatives, and Backorder Processing can later redistribute confirmations by priority. If a confirmation looks wrong, I explain the basic PAC result first, then add only the advanced rule that was actually active.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>Stock exists, but no confirmation</h3><p>Check the requirement date, scope of check, competing demand, and policy. Physical stock is not the same as available-to-promise quantity.</p></div>
+      <div><h3>PAL or Supply Protection?</h3><p>PAL limits what a matching segment may consume. Supply Protection keeps quantity available for selected demand groups. They solve different scarcity problems.</p></div>
+      <div><h3>Why did confirmation change later?</h3><p>Separate the original confirmation from BOP or another later availability change. A later redistribution can be expected behavior.</p></div>
+      <div><h3>Sourcing or ATP?</h3><p>Sourcing decides how supply is obtained or which source may fulfill. ATP decides whether and when the current requirement can be confirmed.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="atp-memory" data-reveal>
