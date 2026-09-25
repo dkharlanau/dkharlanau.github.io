@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP TM"
-description: "Analytical overview of SAP TM: what it is, where it sits, and how it breaks."
+description: "SAP Transportation Management explained through transportation requirements, freight units, freight orders, execution, charges, and settlement."
 permalink: /atlas/sap/sap-tm/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "TM"
 business_process: "Transportation planning and execution"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Product</p>
     <h1>SAP TM</h1>
-    <p class="note-subtitle">Transportation Management for freight planning, execution, and costing.</p>
+    <p class="note-subtitle">Transportation Management turns demand for movement into planned, executable, and settleable freight.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,87 +54,60 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>SAP TM (Transportation Management) is a logistics execution system for planning, optimizing, and executing freight movements. It covers order management, planning, carrier selection, freight costing, and settlement.</p>
+    <p>SAP Transportation Management (TM) manages the transportation layer between a business demand and the physical movement of goods. It can take transportation-relevant orders or deliveries, derive transportation demand, consolidate that demand, plan capacity, execute with carriers or internal resources, calculate charges, and support freight settlement.</p>
 
-    <h2>Business purpose</h2>
-    <p>Plan and execute transportation efficiently. Consolidate freight, select carriers, calculate costs, track shipments, and settle freight invoices. Reduce transportation spend and improve delivery reliability.</p>
+    <p>The simplest way to understand TM is to separate <strong>what needs to be moved</strong> from <strong>how it will be moved</strong>. The first side is transportation demand. The second side is transportation capacity and execution.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>TM sits between order management (SD, LE) and physical execution (EWM, carriers). It receives delivery requirements, plans routes and loads, creates freight orders, and hands off to EWM or carriers for execution.</p>
+    <h2>Transportation demand becomes freight units</h2>
+    <p>Sales, purchasing, stock-transfer, delivery, and other supported logistics processes can create transportation requirements in TM. Depending on the scenario, planning can be <strong>order-based</strong> or <strong>delivery-based</strong>. That distinction matters because transportation planning does not always start after a delivery exists.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Freight order: planned or actual shipment with carrier and route.</li>
-      <li>Freight unit: demand for transportation (delivery, stock transfer).</li>
-      <li>Transportation requirement: order-based or delivery-based demand.</li>
-      <li>Carrier: profile, contract, rate, availability.</li>
-      <li>Route: stages, distances, durations, constraints.</li>
-      <li>Freight settlement: cost distribution, invoice matching.</li>
-    </ul>
+    <p>TM uses <strong>freight units</strong> to represent transportable demand for planning. A freight unit carries the quantity to move together with relevant locations, dates, and other planning attributes. Freight-unit building determines how source demand is split or grouped into those planning units.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: delivery, shipment, stock transport order.</li>
-      <li>EWM: warehouse task, goods issue, yard management.</li>
-      <li>Carrier: EDI, portal, track and trace.</li>
-      <li>Event management: status updates, delays, proof of delivery.</li>
-    </ul>
+    <p>This gives us an important boundary: a sales order, purchase order, stock transport order, or delivery expresses the business requirement; the freight unit expresses the transportation demand that TM can plan.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom planning algorithms and optimization rules.</li>
-      <li>Carrier integration adapters.</li>
-      <li>Side-by-side track and trace apps on BTP.</li>
-    </ul>
+    <h2>Freight orders describe execution capacity</h2>
+    <p>Planning assigns freight units to capacity documents such as <strong>freight orders</strong> or, for relevant modes and scenarios, freight bookings. A freight order describes the planned transportation execution: stops, stages, dates, resources, carrier, and the cargo assigned to the movement.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Planning completion: freight units planned vs. unplanned.</li>
-      <li>Carrier performance: on-time delivery, cost per km.</li>
-      <li>Freight settlement backlog: invoices pending, disputed.</li>
-      <li>Event tracking: missing status updates, delays.</li>
-    </ul>
+    <p>TM can plan manually or with optimization and can include carrier selection, tendering, routing, scheduling, and charge calculation where the scenario uses those capabilities. The resulting freight document is not merely a copied delivery. It is the transportation plan that can combine demand from several source documents.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Integrated planning with S/4HANA deliveries and EWM.</li>
-      <li>Multi-modal and cross-border transportation support.</li>
-      <li>Freight cost visibility and settlement automation.</li>
-    </ul>
+    <h2>Order-based and delivery-based planning solve different timing problems</h2>
+    <p>With order-based planning, TM can plan transportation before the logistics delivery is created. SAP even supports delivery proposals from TM for relevant SD and MM orders. This is useful when transportation capacity or routing decisions need to influence delivery creation.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Planning complexity increases with constraints and multi-modal.</li>
-      <li>Carrier integration is often custom.</li>
-      <li>Performance: large planning problems with many freight units.</li>
-      <li>Master data quality: locations, distances, carrier rates.</li>
-    </ul>
+    <p>With delivery-based planning, the delivery already exists and becomes the basis for the transportation requirement. Current SAP documentation also describes processes where a delivery-based transportation requirement consumes freight units that were previously created from an order-based requirement. In other words, the transport plan can evolve as the logistics document chain becomes more concrete.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Freight unit not planned — capacity, route, or carrier constraint.</li>
-      <li>Carrier assignment failed — contract expired or rate missing.</li>
-      <li>Freight settlement mismatch — cost distribution or invoice error.</li>
-      <li>Event not received — carrier EDI or portal issue.</li>
-      <li>Delivery delay — planning or execution bottleneck.</li>
-    </ul>
+    <h2>Warehouse execution is connected, not absorbed</h2>
+    <p>TM and EWM solve different parts of logistics. TM plans the movement between locations; EWM executes the work inside a warehouse. SAP S/4HANA supports several integration patterns between them, including freight-order-based Advanced Shipping and Receiving and delivery/EWM-transportation-unit-based integration.</p>
+
+    <p>That separation explains why “the freight order is planned” does not mean “the truck can leave.” Picking, packing, staging, loading, warehouse readiness, and transport execution may still have to synchronize across TM and EWM.</p>
+
+    <h2>Charges and settlement come after the transport plan</h2>
+    <p>Charge calculation determines expected transportation charges from the freight context and the relevant agreements, rates, and calculation rules. After execution, TM can create <strong>freight settlement documents</strong> for the shipper-side settlement process.</p>
+
+    <p>A freight settlement document should not be described as the carrier invoice itself. In current SAP S/4HANA documentation, an FSD can be posted to Materials Management for further financial processing and invoice verification. Carrier-submitted invoice data and the TM settlement expectation can then be compared in the relevant process.</p>
+
+    <h2>Three different failures can look like “transportation is broken”</h2>
+    <p>A missing freight unit is a demand-integration problem. An unplanned freight unit is a planning or capacity problem. A freight order with wrong charges is a calculation or commercial-master-data problem. A completed freight order whose settlement cannot continue is a settlement integration problem.</p>
+
+    <p>Keeping those states separate is more useful than memorizing one long list of TM transactions. Start with the source document, locate the transportation requirement and freight unit, then follow the assigned freight document through execution and settlement.</p>
 
     <h2>Related Atlas links</h2>
     <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
+      <li><a href="/atlas/sap/sap-tm-integration-overview/">SAP TM Integration Overview</a></li>
       <li><a href="/atlas/sap/supply-chain-domain/">Supply Chain Domain</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
       <li><a href="/atlas/sap/sap-ewm/">SAP EWM</a></li>
+      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
     </ul>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP Help Portal, <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/04474a8485384e3fbfcb346d943b3217.html">Internal TM Component Integration</a>, SAP S/4HANA 2025 FPS01.</li>
+      <li>SAP Help Portal, <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/36f56df518d34f95b56582784dc6b056.html">Creation of Delivery Proposals</a>, SAP S/4HANA 2025 FPS01.</li>
+      <li>SAP Help Portal, <a href="https://help.sap.com/docs/sap_s4hana_on-premise/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/bd1fbe54f20dc40ae10000000a441470.html">Integration with Extended Warehouse Management</a>, SAP S/4HANA 2025 FPS01.</li>
+      <li>SAP Help Portal, <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/15501287309340b0a189820da173943c.html">Collective Settlement</a>, SAP S/4HANA 2025 FPS01.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. TM deployment options, features, and integration mechanisms vary by release and must be verified against the customer's system.</p>
+    <p>TM document flow and available functions depend on the shipper or logistics-service-provider scenario, transportation mode, integration pattern, release, and activated scope. This page describes the durable conceptual model and current documented S/4HANA patterns, not a universal configuration recipe.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
   </div>
@@ -142,6 +115,7 @@ sitemap: false
   <section class="atlas-related">
     <h2>Related pages</h2>
     <ul>
+      <li><a href="/atlas/sap/sap-tm-integration-overview/">SAP TM Integration Overview</a></li>
       <li><a href="/atlas/sap/supply-chain-domain/">Supply Chain Domain</a></li>
       <li><a href="/atlas/sap/sap-ewm/">SAP EWM</a></li>
     </ul>

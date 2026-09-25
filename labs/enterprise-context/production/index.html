@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - production-order
   - plan-to-produce
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-02"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP S/4HANA production planning and execution process architecture"
@@ -51,26 +51,23 @@ semantic_links:
     url: "/labs/enterprise-context/billing/"
 source_links:
   - title: "Production Planning and Control"
-    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/705c38711795452fa717d434484b532e.html"
-  - title: "Planning"
-    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/33a24938acd34a48a1f37e0ccdca10bc.html"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/874f7e29202a4358b55947175dca20bf.html"
+  - title: "Planning Process"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/cead2bc43af14090b3f69b71364c5a5a.html"
   - title: "Production Version"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/29193bf0ebdd4583930b2176cb993268/7616dd5674514f31ad3b7e1db5bba0cd.html"
-  - title: "Integration of Planned Orders"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f899ce30af9044299d573ea30b533f1c/49d565caf54535f5e10000000a42189c.html"
-  - title: "Make-to-Order (MTO)"
-    url: "https://help.sap.com/docs/sap_s4hana_cloud/4032610758dc437089f0c28320eec93f/1427c273802f4052a64933db7d7bdf9a.html"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/21aead0c98bd4755abdacd91c99e3393/c234b8535c39b44ce10000000a174cb4-401.html"
+  - title: "Converting Planned Orders"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/21aead0c98bd4755abdacd91c99e3393/c407b753128eb44ce10000000a174cb4.html"
+  - title: "Confirmations"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/2d6b6b54cd410e4ee10000000a423f68.html"
   - title: "Integration of Production Supply (PP)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/252245dc92d247eeb7054b9bd58fc026.html"
-  - title: "Goods Receipt for the Manufacturing Order in SAP S/4HANA"
-    url: "https://help.sap.com/docs/sap_s4hana_on-premise/f899ce30af9044299d573ea30b533f1c/b739c95360267614e10000000a174cb4.html"
-  - title: "Order Settlement"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/34de0103497c4b80a7c7fbf6952ff971/4904b753128eb44ce10000000a174cb4.html"
-  - title: "Settlement Rule"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/34de0103497c4b80a7c7fbf6952ff971/5804b753128eb44ce10000000a174cb4.html"
+  - title: "Production Process with SAP S/4HANA and PP/DS"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f899ce30af9044299d573ea30b533f1c/8539c95360267614e10000000a174cb4.html"
+  - title: "Settlement in Product Cost by Order or Period"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/5e23dc8fe9be4fd496f8ab556667ea05/5c35d85275c8d142e10000000a4450e5.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.production %}
 {% assign evidence = site.data.labs.enterprise_context.sources.production %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -80,231 +77,119 @@ source_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Deep vertical / Production Planning & Execution</p>
-      <h1>A production order is execution.<br />The important decisions start earlier.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#runtime">Trace demand to settlement <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="Production deep-dive inventory">
-      <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · synthetic cases · no client data</em>
+      <p class="research-canvas__eyebrow">Manufacturing / Production Planning & Execution</p>
+      <h1>MRP proposes supply.<br />Production turns it into executable work.</h1>
+      <p>Plan-to-Produce is not one production-order transaction. Demand creates requirements, MRP proposes how to cover them, production master data defines a feasible method, and execution records what actually happened. The useful skill is seeing where one decision becomes the next object.</p>
+      <a class="research-canvas__button" href="#runtime">Follow the production flow <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</span>
-    <p><strong>Working rule:</strong> when a production result is wrong, move upstream until the first wrong decision is visible. A manual order correction can hide bad demand, MRP parameters, production method, master data, staging, or settlement design.</p>
-    <a href="/labs/enterprise-context/data/production-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Completion model</p>
-      <h2>One order can be complete in one layer and open in another.</h2>
-      <p>This is a diagnostic model, not a new SAP status model. I use four checkpoints to avoid calling production complete too early.</p>
-    </header>
-    <div class="ecg-control-stack">
-      <article><span>PLAN</span><h3>Planned correctly</h3><p>Demand, MRP result, dates, quantity, and production method represent the business need.</p><strong>Proof: the order starts from the intended requirement and master data.</strong></article>
-      <article><span>EXECUTE</span><h3>Executed correctly</h3><p>Components, operations, staging, confirmations, and exceptions represent what happened on the shop floor.</p><strong>Proof: execution evidence explains quantity, time, and consumption.</strong></article>
-      <article><span>STOCK</span><h3>Received correctly</h3><p>The finished quantity reaches the expected stock and warehouse state through the intended goods-receipt path.</p><strong>Proof: order, material document, stock state, and warehouse state agree.</strong></article>
-      <article><span>COST</span><h3>Financially closed</h3><p>Actual costs, WIP or variance, settlement rule, receiver, and settlement state agree with the process design.</p><strong>Proof: physical completion and financial completion reconcile.</strong></article>
-    </div>
-    <p class="ecg-caption"><strong>Lead signal:</strong> a technically confirmed order is not enough evidence for stock receipt or financial close. Name which completion layer is still open.</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review confirms production-version selection and the goods-receipt / settlement relationship. The wider MRP, execution, capacity, staging, and integration content was reviewed against the route source registry; the four-checkpoint completion model remains an authored diagnostic frame.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
-      <h2>Nine questions from demand to financial close.</h2>
-      <p>The sequence keeps planning, production master data, execution, warehouse activity, and cost control separate.</p>
-    </header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article class="ecg-memory-card">
-        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-        <strong>{{ item.key }}</strong>
-        <h3>{{ item.question }}</h3>
-        <p>{{ item.answer }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong> Use it as a diagnostic path, not as a claim that every implementation executes every technical step in one identical sequence.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Production master data</p>
-      <h2>The order should consume a production method, not become the master data.</h2>
-      <p>{{ graph.master_data_model.principle }}</p>
-    </header>
-    <div class="ecg-input-grid">
-      {% for item in graph.master_data_model.objects %}
-      <article><span>MASTER</span><h3>{{ item.object }}</h3><p>{{ item.role }}</p></article>
-      {% endfor %}
-    </div>
-    <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ graph.master_data_model.lead_lens }}</p>
+    <p><strong>Scope:</strong> this page uses discrete production orders as the main example. Process manufacturing, repetitive manufacturing, Kanban and PP/DS share parts of the planning model but have different execution objects and control details. Do not transfer one scenario's transactions or status behavior to another without checking the product documentation.</p>
+    <a href="/labs/enterprise-context/data/production-graph.json">Open the structured production model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Runtime</p>
-      <h2>Plan-to-Produce is a chain of ownership changes.</h2>
-      <p>Each stage has different inputs, a different output, and a different failure signal. The useful question is not only what document is wrong, but which decision first became wrong.</p>
+      <p class="research-canvas__eyebrow">From demand to executable supply</p>
+      <h2>The production order starts after several planning decisions have already been made.</h2>
     </header>
-    <div class="ecg-determination-list">
-      {% for stage in graph.runtime_pipeline %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>production stage</small></div>
-          <h3>{{ stage.title }}</h3>
-          <p class="ecg-question">{{ stage.question }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
+    <p>MRP begins with requirements and the supply that can cover them. The planning run performs net-requirements calculation against stock and relevant receipts. If the requirement is not covered, it creates a procurement proposal. For a material planned for in-house production, that proposal is commonly a planned order.</p>
+    <p>A planned order is still a planning object. It can be changed by planning logic, firmed, split or converted according to the scenario. When the decision becomes executable, an in-house planned order can be converted to a production order. A production order can also be created directly, so the existence of an order does not prove that it originated from MRP.</p>
+    <div class="ecg-decision-columns">
+      <div><h3>Requirement</h3><p>Sales demand, planned independent requirements, dependent requirements and other planning elements define what needs supply and when.</p></div>
+      <div><h3>Planning proposal</h3><p>MRP evaluates stock, receipts, procurement settings, lot sizing and dates, then proposes supply where a shortage remains.</p></div>
+      <div><h3>Execution order</h3><p>The production order carries the material, quantity, dates, operations, components, statuses and cost-collection context needed for shop-floor execution.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Control model</p>
-      <h2>Do not debug five control layers as one PP problem.</h2>
-      <p>Demand, MRP, production method, manufacturing-order control, and cost settlement can all create a bad final result for completely different reasons.</p>
+      <p class="research-canvas__eyebrow">Production method</p>
+      <h2>A material number is not enough to explain how the product will be made.</h2>
     </header>
-    <div class="ecg-input-grid">
-      {% for item in graph.control_layers %}
-      <article><span>CONTROL</span><h3>{{ item.title }}</h3><p>{{ item.purpose }}</p><p><strong>Ask:</strong> {{ item.diagnostic_question }}</p></article>
-      {% endfor %}
-    </div>
+    <p>The bill of material defines the component structure. The routing defines the operations and their sequence for discrete manufacturing, while work centers provide resource, scheduling, capacity and costing context. A production version binds a valid BOM alternative to a task list or recipe for a material and plant. It also carries validity and lot-size ranges, so the same material can have more than one legitimate production method.</p>
+    <p>This distinction becomes important when an order contains the wrong components or operations. Editing the order may fix one execution instance, but it does not explain why that structure was selected. First check the production version and its validity, the selected BOM and routing, and whether the master data changed between planning and order creation. SAP also provides consistency checks for production versions because a version can exist while its assigned BOM or task list is no longer consistent for the full validity or lot-size range.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Production models</p>
-      <h2>MTS, MTO and ETO change where the requirement and ownership start.</h2>
-      <p>They are not three labels for the same flow. The demand object, stock ownership, cost object, engineering boundary, and integration path can change.</p>
+      <p class="research-canvas__eyebrow">Execution</p>
+      <h2>Release, material availability and confirmation describe different parts of production.</h2>
     </header>
-    <div class="ecg-input-grid">
-      {% for item in graph.production_models %}
-      <article><span>MODEL</span><h3>{{ item.title }}</h3><p>{{ item.demand_reading }}</p><p><strong>Lead question:</strong> {{ item.lead_question }}</p></article>
-      {% endfor %}
-    </div>
+    <p>Once the order is ready, scheduling determines operation dates and capacity requirements. Release makes the order available for the configured execution steps. Components then need to be available where production can use them. A reservation or plant-level stock quantity is not the same as physical availability at the production supply area.</p>
+    <p>Goods issue records component withdrawal and assigns the material cost to the manufacturing order. Depending on the design, the issue can be posted explicitly or through backflush during confirmation. Confirmation records production progress such as yield, scrap, work and the work center used. It may also trigger configured goods movements, but confirmation itself should not be treated as proof that every related goods movement succeeded.</p>
+    <p>That separation matters in support. An order can be confirmed while a backflush or automatic goods receipt has failed or is still pending. The right reconciliation is between the confirmation, material documents, order quantities and the resulting stock state, not merely the order status.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Integration boundaries</p>
-      <h2>Production crosses systems before it crosses the shop floor.</h2>
-      <p>For every handoff, define who owns the requirement, physical state, quality state, and financial state.</p>
+      <p class="research-canvas__eyebrow">Warehouse boundary</p>
+      <h2>Production demand and warehouse execution meet at the supply point.</h2>
     </header>
-    <div class="research-route-list">
-      {% for item in graph.integration_boundaries %}
-      <a href="#failures"><span>INT</span><strong>{{ item.boundary }}</strong><small>{{ item.ownership }} {{ item.question }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      {% endfor %}
-    </div>
+    <p>If the components are managed in EWM, the warehouse can own the physical staging to a production supply area. SAP supports several integration patterns, including delivery-based production supply and embedded scenarios with tighter synchronous handling. The correct question is therefore not simply whether stock exists, but whether the required quantity has reached the production supply context through the intended warehouse process.</p>
+    <p>The same caution applies to the finished product. Receipt from production can involve Inventory Management only or an EWM inbound process, depending on deployment and configuration. A shop-floor completion signal is not enough evidence that the finished quantity is available in the expected warehouse or stock type.</p>
+    <p>For the inventory side of that handoff, continue with <a href="/labs/enterprise-context/inventory-management/">Inventory Management</a>. For physical warehouse execution, use the <a href="/labs/enterprise-context/ewm/">EWM model</a>.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Planning variants</p>
+      <h2>Make-to-stock and make-to-order change demand and ownership, not the meaning of every PP object.</h2>
+    </header>
+    <p>In make-to-stock, production usually replenishes general stock against forecast and demand consumption logic. In make-to-order, the customer requirement can drive order-specific planning, stock segmentation and cost behavior. The exact result depends on the planning strategy and account-assignment design, so “MTO” alone does not tell us how every stock or cost object will behave.</p>
+    <p>PP/DS adds another planning boundary. When a planned order is managed in PP/DS, SAP recommends conversion from PP/DS so detailed planning dates are preserved in the manufacturing order. Converting that same order in S/4HANA can lose PP/DS detailed scheduling information. This is a scenario-specific rule, not a reason to treat every S/4HANA planned-order conversion as a PP/DS process.</p>
   </section>
 
   <section class="research-canvas__inventory" id="failures" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Failure modes</p>
-      <h2>The loudest production symptom is often downstream of the cause.</h2>
-      <p>A shortage can be demand, supply, staging, or execution. A wrong order structure can be production-version selection or master data. A completed order can still be financially open.</p>
+      <p class="research-canvas__eyebrow">Where problems cross boundaries</p>
+      <h2>A production symptom often belongs to another object before it belongs to the order.</h2>
     </header>
-    <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}
-      <article class="ecg-determination-detail">
-        <header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header>
-        <div class="ecg-decision-columns">
-          <div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div>
-          <div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div><h3>Short component</h3><p>Separate the requirement from supply. MRP may have planned correctly while purchasing, another production order or warehouse staging is late. Conversely, material may exist in the plant but not at the production supply area.</p></div>
+      <div><h3>Wrong structure</h3><p>Trace production version, validity, lot size, BOM and routing before changing components or operations manually in the order.</p></div>
+      <div><h3>Late order</h3><p>Separate requirement date, basic scheduling, operation durations, work-center capacity and any PP/DS decision. A material-planning parameter cannot solve a real resource bottleneck.</p></div>
     </div>
+    <p>A useful investigation therefore starts from the first wrong state. If MRP created the wrong quantity, repair the demand or planning cause. If the order copied the wrong method, repair the relevant master data or selection rule. If execution diverged from the plan, preserve the production event and correct the execution or posting problem rather than rewriting history with unexplained compensating movements.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Impact traces</p>
-      <h2>Follow one small decision until it becomes a business consequence.</h2>
-      <p>This is the useful level for design reviews and assessment questions: show how one input changes planning, execution, inventory, or cost.</p>
+      <p class="research-canvas__eyebrow">Cost and close</p>
+      <h2>Physical completion and financial completion are related, but they are not the same state.</h2>
     </header>
-    <div class="research-route-list">
-      {% for item in graph.impact_traces %}
-      <a href="#lead-lens"><span>TRACE</span><strong>{{ item.title }}</strong><small>{{ item.path }} · {{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
-      {% endfor %}
-    </div>
+    <p>During execution, the manufacturing order can collect component, activity and other actual costs. Goods receipt credits the order according to the valuation design. What remains is handled through the applicable product-costing model: work in process, variance calculation and settlement can be period-based or order-based, and SAP S/4HANA Cloud also has event-based production cost posting scenarios.</p>
+    <p>The settlement rule defines which portions of a sender's costs go to which receivers. In traditional Product Cost by Order or Product Cost by Period scenarios, the settlement type and period-end design determine how WIP and variances are handled. This is why a technically completed order can still require financial processing, and why a remaining balance should be explained rather than cleared by assumption.</p>
   </section>
 
   <section class="research-canvas__inventory" id="lead-lens" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead lens</p>
-      <h2>Explain the decision, boundary, evidence, and trade-off.</h2>
-      <p>A Lead answer should survive the follow-up question “how do you know?”.</p>
+      <p class="research-canvas__eyebrow">A compact way to read a production issue</p>
+      <h2>Follow the object chain and prove the first divergence.</h2>
     </header>
-    <div class="ecg-input-grid">
-      <article><span>ASK</span><h3>What I ask first</h3><p>{{ graph.lead_lens.what_i_ask_first }}</p></article>
-      <article><span>OWN</span><h3>Decision ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
-      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
-      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
-      <article><span>PROVE</span><h3>Proof of cause</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
-      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
-    </div>
+    <p>Suppose a production order for 100 pieces contains the wrong component. The order itself tells us what will execute, but not why that structure was chosen. Start with the requirement and planned order, identify the production version used for the relevant date and lot size, compare its BOM and routing with the order, and check whether master data changed before conversion. Only then decide whether the order is an intentional exception or evidence of a master-data problem.</p>
+    <p>The same method works downstream. If 100 pieces were confirmed but only 95 appear in stock, compare confirmation quantities, goods-movement records, EWM receipt where relevant, and reversals. If logistics is complete but the order still carries cost, move to WIP, variance and settlement evidence. Each layer has its own proof.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Synthetic cases</p>
-      <h2>Practice the trace, not the transaction code.</h2>
-      <p>These cases are fictional and exist to test reasoning safely.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.synthetic_cases %}
-      <article class="ecg-determination-detail">
-        <header><div><span>CASE</span><small>synthetic</small></div><h3>{{ item.title }}</h3><p>{{ item.scenario }}</p></header>
-        <div class="ecg-decision-columns"><div><h4>Lead path</h4><ol>{% for step in item.lead_path %}<li>{{ step }}</li>{% endfor %}</ol></div><div><h4>Lesson</h4><p>{{ item.lesson }}</p></div></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Assessment drills</p>
-      <h2>Short questions, structured answers.</h2>
-      <p>Use the strong answer as a coverage check, not as a script to memorize.</p>
-    </header>
-    <div class="research-route-list">
-      {% for item in graph.assessment_drills %}
-      <a href="/labs/assessment/"><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.strong_answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Sources</p>
-      <h2>Primary documentation checks the facts. The model stays independently written.</h2>
-      <p>Release-sensitive details are dated. Product facts are source-tracked; the explanatory model remains independently written.</p>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>SAP documentation behind the product facts.</h2>
+      <p>The explanation above is independently written. Release-sensitive behavior was checked against current SAP S/4HANA 2025 FPS01 and SAP S/4HANA Cloud Public Edition 2608 documentation.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
-      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">route</span>
+    <p><strong>Continue the chain:</strong> procurement explains externally sourced shortages; Inventory Management and EWM explain material movement and physical staging; Quality Management explains inspection and usage decisions after or around production.</p>
+    <a href="/labs/enterprise-context/inventory-management/">Open Inventory Management <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <div class="research-canvas__support" data-reveal>

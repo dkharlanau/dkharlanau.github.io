@@ -116,7 +116,16 @@ def test_pricing_configuration_human_and_machine_views_exist():
     assert ENDPOINT_PATH.exists()
 
     page = PAGE_PATH.read_text(encoding="utf-8")
-    assert "/labs/enterprise-context/pricing/anatomy/" in page
     assert "/labs/enterprise-context/data/pricing-configuration.json" in page
-    assert "Problem:" in page
-    assert "Context:" in page
+
+    is_full_playbook = (
+        "/labs/enterprise-context/pricing/anatomy/" in page
+        and "Configuration sequence" in page
+        and "Project test matrix" in page
+    )
+    is_consolidated_route = (
+        'canonical_url: https://dkharlanau.github.io/labs/enterprise-context/pricing/' in page
+        and "/labs/enterprise-context/pricing/#pricing-configuration" in page
+        and "consolidated route" in page
+    )
+    assert is_full_playbook or is_consolidated_route

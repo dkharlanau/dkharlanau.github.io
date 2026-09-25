@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-25
 hide_global_cta: true
 sales_process_atlas: true
 tags:
@@ -104,7 +104,7 @@ source_links:
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ map.origins | size }}</strong><small>Order origins</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ map.handoffs | size }}</strong><small>Execution handoffs</small></div>
       <div class="research-canvas__signal-line"><span>04</span><strong>{{ interface_catalog.configuration_playbook | size }}</strong><small>Setup patterns</small></div>
-      <em>Interface technology is a consequence of the business contract. Starting with “we need Kafka” is how architecture diagrams become expensive mood boards.</em>
+      <em>Interface technology follows the business contract. Define the object, direction, response need, ownership, and failure model before choosing Kafka, Event Mesh, an API, or another transport.</em>
     </div>
   </header>
 
@@ -112,6 +112,35 @@ source_links:
     <span class="material-symbols-outlined" aria-hidden="true">schema</span>
     <p><strong>Memory rule.</strong> IDoc or B2B transfers a business document. API reads or changes an object. Event says that something happened. Use an event plus an API read when a consumer needs loose coupling and current object details.</p>
     <a href="/labs/enterprise-context/data/sales-order-integration-map.json">Open machine-readable map <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="integration-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Choose the business contract before the integration technology.</h2>
+      <p>A Lead answer should explain what moves, who waits, who owns the next decision, and how failure is recovered.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I first define the business contract: which object or business document moves, the direction, whether the caller needs an immediate answer, and which system owns the next state. A synchronous API is useful when the caller must read or change an object and wait for the result. IDoc or B2B messaging fits durable asynchronous document exchange. An event tells consumers that something happened and is useful for loose coupling; if a consumer needs the current object details, I prefer event notification plus an API read rather than putting the whole object into every event. I also design correlation, idempotency, retry, monitoring, and reconciliation from the start, because transport success is not the same as business completion.</p>
+      <a href="/labs/enterprise-context/integration-operations/">Open Integration Operations &amp; Recovery <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Caller waits</h3><p>Use synchronous interaction when the business step needs an immediate response, validation, calculation, or current object state before it can continue.</p></div>
+      <div><h3>Document moves asynchronously</h3><p>Use a durable message contract when sender and receiver should continue independently and the business document can be processed later.</p></div>
+      <div><h3>Something happened</h3><p>Use an event when consumers should react without holding the originating transaction open. Keep event payload and ownership intentionally small.</p></div>
+      <div><h3>Execution moves to another domain</h3><p>Keep the Sales order visible, but move diagnosis to the application that owns the next object: Procurement, PP, EWM, TM, Finance, Credit, Service, or another domain.</p></div>
+    </div>
+
+    <h3>Four traps</h3>
+    <ol>
+      <li><strong>“We need Kafka / Event Mesh / an API.”</strong> Technology is not the requirement. Define the business contract and failure model first.</li>
+      <li><strong>“HTTP 200 means integration completed.”</strong> It proves a transport response, not that the target committed the correct business state.</li>
+      <li><strong>“An event should carry the whole sales order.”</strong> Usually the event should signal the change; consumers that need current detail can retrieve the owned object through a suitable API.</li>
+      <li><strong>“The same interface setup applies everywhere.”</strong> On-premise/private and Public Edition can use different setup and security models even when the business contract sounds similar.</li>
+    </ol>
   </section>
 
   <section class="research-canvas__inventory" id="origin-core-handoff" data-reveal>
@@ -265,7 +294,7 @@ source_links:
     <header>
       <p class="research-canvas__eyebrow">Production and project contrasts</p>
       <h2>“Made for the customer” is not one process.</h2>
-      <p>The important distinction is which execution and cost object the customer demand creates. That is more useful than calling everything MTO and hoping nobody asks a second question.</p>
+      <p>The important distinction is which execution and cost object the customer demand creates. Do not group all customer-specific supply under one generic MTO label.</p>
     </header>
     <div class="spa-compare-grid">
       <article><span>SD.MTO</span><h3>Ordinary Make-to-Order</h3><p>Sales demand creates individual planning and customer-specific supply. MRP remains a central planning step.</p></article>
@@ -284,7 +313,7 @@ source_links:
     </header>
     <div class="scp-compare-grid">
       <article class="scp-compare"><span>{{ map.eventing.code }}</span><h3>{{ map.eventing.title }}</h3><p><strong>Events:</strong> {{ map.eventing.events | join: " · " }}</p><p><strong>Good for:</strong> {{ map.eventing.good_for | join: " · " }}</p></article>
-      <article class="scp-compare"><span>SYNC ↔ ASYNC</span><h3>The customer waiting is an architecture signal.</h3><p>Pricing, ATP or credit may need a synchronous answer before the promise is shown. Notifications, indexing and side-by-side reactions usually do not. Making everything synchronous is a strangely expensive way to discover network latency.</p></article>
+      <article class="scp-compare"><span>SYNC ↔ ASYNC</span><h3>The customer waiting is an architecture signal.</h3><p>Pricing, ATP, or credit may need a synchronous answer before the promise is shown. Notifications, indexing, and side-by-side reactions usually do not. Keep a call synchronous only when the business step must wait for the result.</p></article>
     </div>
   </section>
 

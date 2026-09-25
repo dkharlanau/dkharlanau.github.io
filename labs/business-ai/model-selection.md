@@ -7,11 +7,11 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-19
-last_reviewed: 2026-08-19
+last_modified_at: 2026-09-24
+last_reviewed: 2026-09-24
 hide_global_cta: true
 publication_wave: "business-ai-model-selection-01"
-review_method: "user-supplied model-selection framework + official OpenAI primary-source verification + editorial synthesis"
+review_method: "current OpenAI primary documentation + nearby Labs review + full editorial rewrite"
 evidence_review_mode: "selective_or_heuristic"
 search_intent: "AI model selection model classes reasoning latency cost context evals enterprise API"
 structured_data:
@@ -63,44 +63,44 @@ semantic_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Business AI / model selection</p>
-      <h1>Choose the fit.<br />Then prove it.</h1>
-      <p>API model selection becomes useful when intelligence must be embedded into software, operations, products, or customer experiences. The model is one component in a larger workflow, so the decision should be based on task shape, output requirements, risk, context, latency, cost, scale, and evidence.</p>
-      <a class="research-canvas__button" href="#selection-sequence">Open the selection sequence <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Choose the job first.<br />Then choose the model.</h1>
+      <p>A model is only one part of an AI workflow. The production choice also depends on the output contract, approved context, tools, reasoning settings, risk, latency, cost, and the evidence used to judge the result. Good model selection starts with the work and ends with a measured trade-off.</p>
+      <a class="research-canvas__button" href="#selection-sequence">Follow the decision <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Model selection sequence">
-      <p>Selection sequence</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>Fit</strong><small>Task and capability</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Test</strong><small>Representative examples</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Trade</strong><small>Quality, latency, cost</small></div>
-      <em>A more capable model is not automatically the better production choice.</em>
+    <div class="research-canvas__signal" aria-label="Model selection principle">
+      <p>Selection principle</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Define</strong><small>Task and output</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Compare</strong><small>Credible candidates</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Prove</strong><small>Representative cases</small></div>
+      <em>The strongest model is not automatically the best production choice.</em>
     </div>
   </header>
 
-  <section class="research-canvas__boundary" data-reveal aria-label="Model selection principle">
+  <section class="research-canvas__boundary" data-reveal aria-label="Model selection boundary">
     <span class="material-symbols-outlined" aria-hidden="true">tune</span>
-    <p><strong>Problem.</strong> Model selection often starts from a remembered model name, one impressive answer, or the assumption that the largest available model is always safest.</p>
-    <p><strong>Working rule.</strong> Start from the workflow and define what good enough means. Then compare model classes and architecture options on the same representative examples.</p>
-    <p><strong>Important distinction.</strong> The categories below are decision aids, not mutually exclusive vendor boxes. A model can be general-purpose, multimodal, tool-capable, and support configurable reasoning at the same time.</p>
+    <div>
+      <p><strong>Separate three decisions.</strong> Model capability answers what the model can do. Runtime configuration answers how much reasoning, context, or output it should use. Workflow controls answer what data and tools it may access, what format it must return, and what still needs deterministic validation or human approval.</p>
+      <p>If these are mixed together, teams often solve an architecture problem by buying a larger model. Sometimes that works. Often the real issue is missing context, a weak output contract, unsafe tool design, or poor evaluation.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="selection-sequence" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Selection sequence</p>
-      <h2>Move from task shape to evidence.</h2>
-      <p>Do not compare models before the workflow can explain what it needs from them.</p>
+      <h2>Move from a business task to a measurable choice.</h2>
+      <p>Do not start with a model name. Start with the result the workflow must produce and the cost of getting it wrong.</p>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Step</th><th scope="col">Decision</th><th scope="col">Question</th></tr></thead>
+        <thead><tr><th scope="col">Step</th><th scope="col">Decision</th><th scope="col">What must be clear</th></tr></thead>
         <tbody>
-          <tr><th scope="row">1. Task shape</th><td>Clarify the work the AI must perform.</td><td>Is this drafting, classification, retrieval, multi-step reasoning, extraction, voice interaction, planning, or another job?</td></tr>
-          <tr><th scope="row">2. Output contract</th><td>Define what the workflow needs back.</td><td>Does the result need prose, structured fields, a ranking, a tool decision, audio, or a bounded recommendation?</td></tr>
-          <tr><th scope="row">3. Risk and authority</th><td>Understand the consequence of error.</td><td>What happens if the result is wrong, and can the system only advise or also change business state?</td></tr>
-          <tr><th scope="row">4. Model class</th><td>Select the smallest credible capability class.</td><td>How much reasoning, modality support, speed, context, or specialization does the task require?</td></tr>
-          <tr><th scope="row">5. Architecture</th><td>Add retrieval, ranking, tools, safety, state, or deployment controls where needed.</td><td>Which requirements belong outside the model itself?</td></tr>
-          <tr><th scope="row">6. Success criteria</th><td>Choose two or three measures that can change the recommendation.</td><td>What would make one option clearly better or unacceptable?</td></tr>
-          <tr><th scope="row">7. Representative eval</th><td>Build a small seed set and run the same realistic examples across the options.</td><td>Which choice meets the required quality and control level at acceptable latency and cost?</td></tr>
+          <tr><th scope="row">1. Task</th><td>Define the unit of work.</td><td>Input, expected result, frequency, user, and where the result goes next.</td></tr>
+          <tr><th scope="row">2. Contract</th><td>Define what the system must return.</td><td>Free text, structured fields, ranking, tool request, audio, or another bounded output.</td></tr>
+          <tr><th scope="row">3. Risk</th><td>Set the authority and failure boundary.</td><td>What an error can change, what must stay deterministic, and where review or escalation is required.</td></tr>
+          <tr><th scope="row">4. Candidates</th><td>Choose a small set of credible model and configuration options.</td><td>Required reasoning, modalities, context, tools, speed, deployment constraints, and cost.</td></tr>
+          <tr><th scope="row">5. Evaluation</th><td>Run the same representative work through each option.</td><td>Quality, critical failures, format or tool reliability, latency, and operating cost.</td></tr>
+          <tr><th scope="row">6. Decision</th><td>Select the least complex option that meets the requirement.</td><td>Why it passed, which trade-off was accepted, and what would trigger a new evaluation later.</td></tr>
         </tbody>
       </table>
     </div>
@@ -108,225 +108,166 @@ semantic_links:
 
   <section class="research-canvas__inventory" id="model-classes" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Model classes</p>
-      <h2>Use stable capability categories, not model names from memory.</h2>
-      <p>A model class is a stable discussion category. Specific model names, snapshots, prices, and limits change faster than the business task.</p>
+      <p class="research-canvas__eyebrow">Model capability</p>
+      <h2>Use capability differences, not a permanent taxonomy of model names.</h2>
+      <p>Product names and limits change. The useful question is which capability is needed for this task and whether a cheaper or faster option still meets the acceptance criteria.</p>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Decision category</th><th scope="col">Practical use in a workflow</th><th scope="col">Selection signal</th></tr></thead>
+        <thead><tr><th scope="col">Capability choice</th><th scope="col">When it matters</th><th scope="col">What to test</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Reasoning-oriented models</th><td>Multi-step analysis, planning, ambiguity handling, policy interpretation, technical reasoning, and judgment-heavy work.</td><td>The task requires several dependent reasoning steps or careful trade-offs, not only fluent language generation.</td></tr>
-          <tr><th scope="row">General-purpose models</th><td>Drafting, summarization, rewriting, classification, extraction, and broad workflow support.</td><td>The task is language-heavy but does not require deep planning on every request.</td></tr>
-          <tr><th scope="row">Efficient models</th><td>Stable, simpler, high-volume tasks where speed, cost, and throughput matter.</td><td>The task can be well specified and quality remains acceptable with a smaller or faster model.</td></tr>
-          <tr><th scope="row">Multimodal models</th><td>Workflows involving images, documents, screenshots, diagrams, or mixed input types.</td><td>Important evidence is not available as plain text alone.</td></tr>
-          <tr><th scope="row">Audio or real-time models</th><td>Speech, transcription, streaming, voice interaction, and low-latency conversations.</td><td>The workflow is interactive and response timing or native audio matters.</td></tr>
-          <tr><th scope="row">Embedding models</th><td>Semantic search, similarity comparison, clustering, retrieval, and knowledge organization.</td><td>The system needs vector representations for matching or retrieval rather than a generated answer from the embedding model itself.</td></tr>
+          <tr><th scope="row">General-purpose generation</th><td>Drafting, summarization, extraction, classification, and broad knowledge work.</td><td>Task quality and whether extra reasoning changes the result enough to justify its cost.</td></tr>
+          <tr><th scope="row">Deeper reasoning</th><td>Ambiguous analysis, planning, multi-step technical work, or decisions with dependent constraints.</td><td>Whether a more capable model or higher reasoning effort reduces the failures that matter.</td></tr>
+          <tr><th scope="row">Efficient inference</th><td>Frequent, well-bounded work where throughput, latency, or cost is important.</td><td>Whether the smaller or faster option stays above the required quality threshold on difficult cases.</td></tr>
+          <tr><th scope="row">Modality support</th><td>The evidence includes images, documents, audio, or real-time interaction rather than text alone.</td><td>Quality on the actual modality, not a text-only proxy for it.</td></tr>
+          <tr><th scope="row">Specialized representation or safety models</th><td>The system needs embeddings, moderation, speech, or another specialized capability rather than a general generated answer.</td><td>The metric appropriate to that component, such as retrieval quality, classification quality, or transcription accuracy.</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
-      <p><strong>Reasoning depth</strong> describes how much planning, analysis, or multi-step problem solving the task requires.</p>
-      <p>Do not pay for deep reasoning by default. Some current model families allow reasoning effort to be adjusted, so reasoning depth can be part of the configuration decision as well as the model-class decision.</p>
+      <div>
+        <p><strong>Reasoning effort is a configuration choice as well as a model choice.</strong> Current APIs can expose several reasoning levels within the same model family. That means the comparison may be “same model, different effort” before it becomes “different model.”</p>
+        <p>Keep the experiment practical: if a lower-effort setting passes the same cases with materially better latency or cost, extra reasoning is not automatically useful.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="capabilities-and-architecture" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Capabilities and architecture</p>
-      <h2>Not every requirement is a model class.</h2>
-      <p>Moderation, tool use, retrieval, ranking, and deployment constraints often sit beside the main model. Keeping these layers separate makes architecture decisions easier to defend.</p>
+      <p class="research-canvas__eyebrow">Workflow contract</p>
+      <h2>Do not ask the model to solve controls that belong around it.</h2>
+      <p>A stronger model cannot replace a missing permission check, an unstable source of truth, or a transaction rule. Keep those responsibilities visible in the application design.</p>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Capability or option</th><th scope="col">Useful when</th><th scope="col">Lead boundary</th></tr></thead>
+        <thead><tr><th scope="col">Workflow concern</th><th scope="col">Where it belongs</th><th scope="col">Selection consequence</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Moderation and safety filtering</th><td>The workflow needs to identify unsafe, sensitive, disallowed, or escalation-worthy content.</td><td>Treat moderation as one safety layer. It does not replace business authorization, human review, or workflow-specific policy checks.</td></tr>
-          <tr><th scope="row">Tool use</th><td>The workflow needs functions, APIs, retrieval, calculations, or actions across systems.</td><td>Tool capability does not grant business authority. Scope and authorize every read or write capability outside the model.</td></tr>
-          <tr><th scope="row">Retrieval and ranking</th><td>The workflow needs current or enterprise-specific context from approved sources.</td><td>Retrieval returns candidates; ranking or reranking orders the candidates by relevance before downstream use.</td></tr>
-          <tr><th scope="row">Open-weight models</th><td>Hosting, customization, deployment environment, infrastructure, policy, latency, or cost structure require a different operating model.</td><td>This is a deployment and ownership decision as much as a model decision. Include infrastructure, evaluation, security, upgrades, and support.</td></tr>
+          <tr><th scope="row">Structured output</th><td>Schema and validation around the model response.</td><td>Test whether each candidate reliably produces the fields and allowed values the downstream system requires.</td></tr>
+          <tr><th scope="row">Current or private knowledge</th><td>Approved retrieval or scoped tool access.</td><td>Evaluate model and retrieval together when the answer depends on enterprise evidence.</td></tr>
+          <tr><th scope="row">Business action</th><td>Explicit tools, authorization, validation, and transaction controls.</td><td>Tool use is not business authority. Test tool choice and arguments separately from permission to execute.</td></tr>
+          <tr><th scope="row">Safety and policy</th><td>Workflow rules, specialized filters where useful, and human escalation for material risk.</td><td>Measure critical failures and escalation behavior, not only average answer quality.</td></tr>
+          <tr><th scope="row">Multi-step orchestration</th><td>Application or agent workflow with visible state and recovery boundaries.</td><td>Compare the whole path when model calls, retrieval, tools, and retries interact.</td></tr>
         </tbody>
       </table>
+      <p>For the broader choice between retrieval, extraction, agentic orchestration, human review, and integration patterns, use the <a href="/labs/business-ai/architecture-patterns/">Architecture Patterns</a> guide. This page stays focused on selecting and proving the model configuration inside that architecture.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="selection-factors" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Selection factors</p>
-      <h2>Quality is only one production constraint.</h2>
-      <p>Model fit depends on the whole operating requirement. The same task may justify a different option when volume, response time, context, or risk changes.</p>
+      <p class="research-canvas__eyebrow">Production constraints</p>
+      <h2>Context, latency, cost, and volume can change the winner.</h2>
+      <p>A candidate that looks best in a small demo may be the wrong choice once the workflow runs every minute, waits on several tools, or needs access-controlled operational data.</p>
     </header>
 
     <div class="ecg-decision-columns">
       <div>
+        <h3>Context</h3>
+        <p>Decide what the model needs in the request and what should be retrieved only when required. More context is not automatically better: stale, conflicting, or unauthorized material can reduce quality or create risk.</p>
+      </div>
+      <div>
         <h3>Latency</h3>
-        <p>Latency is the time the system takes to return a useful result. It matters most when a person or another system is waiting for the response inside an active workflow.</p>
-        <p>Streaming can improve perceived responsiveness, but it does not remove the need to measure end-to-end task completion time.</p>
+        <p>Measure end-to-end time for the job, not only model inference. Retrieval, sequential calls, tools, validation, retries, and human review can dominate the user experience.</p>
       </div>
       <div>
-        <h3>Cost</h3>
-        <p>Cost is the resource impact of running the workflow. Model tokens are only part of it. Retrieval, tools, retries, human review, infrastructure, and failed runs may also matter.</p>
-        <p>Compare cost per useful business outcome, not only cost per API request.</p>
-      </div>
-      <div>
-        <h3>Scale</h3>
-        <p>Scale is how often the workflow runs and how many users, documents, requests, or actions it must support.</p>
-        <p>A small quality difference can become expensive at high volume. A small latency difference can become painful in an interactive workflow.</p>
+        <h3>Cost and volume</h3>
+        <p>Estimate cost per accepted business result. Include model usage and, when material, retrieval, tools, retries, infrastructure, and review effort. A small per-run difference matters more when the workflow is frequent.</p>
       </div>
     </div>
 
-    <div class="research-canvas__table-wrap">
-      <h3>Context is an architecture input</h3>
-      <p>Context is the information the AI system can use to complete the task. In enterprise workflows, this may include company knowledge, documents, policies, records, system state, permissions, business rules, and operating context.</p>
-      <table>
-        <thead><tr><th scope="col">Context question</th><th scope="col">Why it changes model selection</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">How much context is needed?</th><td>Large inputs may affect latency, cost, retrieval design, and whether all information should be sent to the model at once.</td></tr>
-          <tr><th scope="row">How fresh must it be?</th><td>Current operational data usually belongs in retrieval or tool calls rather than static prompt text.</td></tr>
-          <tr><th scope="row">Who may see it?</th><td>Permission filtering can be more important than maximum context size.</td></tr>
-          <tr><th scope="row">How reliable is it?</th><td>Poor or conflicting source data can limit answer quality regardless of model capability.</td></tr>
-          <tr><th scope="row">What must remain deterministic?</th><td>Business rules, authorization, transaction state, and hard validation may belong in application logic rather than model context.</td></tr>
-        </tbody>
-      </table>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">speed</span>
+      <div>
+        <p><strong>Latency is an architecture property.</strong> Smaller models can help, but so can fewer sequential requests, shorter generated outputs, parallel work, caching, or removing an unnecessary model call entirely.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="success-criteria" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Success criteria</p>
-      <h2>Define two or three criteria that can change the recommendation.</h2>
-      <p>Success criteria describe what “good enough” means for the workflow. Choose only criteria that matter to the task shape, output requirements, risk level, and how the result will be used.</p>
+      <p class="research-canvas__eyebrow">Acceptance criteria</p>
+      <h2>Measure what can change the release decision.</h2>
+      <p>A useful comparison needs explicit acceptance criteria before the preferred model is known. Otherwise the team can keep adding metrics until the favorite option appears to win.</p>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Criterion</th><th scope="col">Useful when</th><th scope="col">Example evidence</th></tr></thead>
+        <thead><tr><th scope="col">Criterion</th><th scope="col">Example measure</th><th scope="col">Why it matters</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Task quality</th><td>The main concern is correctness, completeness, usefulness, or judgment quality.</td><td>Eval pass rate, human review result, field accuracy, ranking quality, or task-specific grader.</td></tr>
-          <tr><th scope="row">Control and safety</th><td>The output or action can create material business, security, legal, or policy risk.</td><td>Critical-error rate, correct refusal or escalation, authorization compliance, safe tool behavior.</td></tr>
-          <tr><th scope="row">Latency</th><td>The workflow is interactive or time-sensitive.</td><td>Time to first useful output and end-to-end completion time at expected load.</td></tr>
-          <tr><th scope="row">Cost</th><td>The workflow runs at significant volume or has a strict operating budget.</td><td>Cost per completed case or per acceptable result, including retries where relevant.</td></tr>
-          <tr><th scope="row">Format reliability</th><td>Another system consumes the result automatically.</td><td>Schema validity, required-field completeness, allowed-value compliance, business-rule validation.</td></tr>
-          <tr><th scope="row">Tool success</th><td>The workflow depends on function calls or external systems.</td><td>Correct tool choice, valid arguments, successful completion, safe failure and retry behavior.</td></tr>
+          <tr><th scope="row">Task quality</th><td>Correct classification, extraction accuracy, grounded answer quality, or human acceptance.</td><td>Shows whether the workflow solves the job rather than merely producing fluent text.</td></tr>
+          <tr><th scope="row">Critical failures</th><td>Unsupported action, invented fact, wrong escalation, permission breach, or another must-not-happen event.</td><td>A low average error rate can still be unacceptable when one class of error has high impact.</td></tr>
+          <tr><th scope="row">Contract reliability</th><td>Schema validity, required-field completeness, allowed-value compliance, or correct tool arguments.</td><td>Downstream automation depends on predictable interfaces.</td></tr>
+          <tr><th scope="row">Latency</th><td>Time to first useful result and end-to-end completion time at expected load.</td><td>Interactive and time-sensitive workflows have a real response budget.</td></tr>
+          <tr><th scope="row">Operating cost</th><td>Cost per accepted case or completed workflow.</td><td>It captures the useful outcome instead of optimizing one API call in isolation.</td></tr>
         </tbody>
       </table>
-      <p>A criterion without a release consequence is just an interesting metric. State what result is acceptable, what requires review, and what disqualifies an option.</p>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Good two-criterion example</h3>
-        <p>For high-volume ticket classification, the decision may depend mainly on <strong>classification quality</strong> and <strong>cost per completed case</strong>. A larger model that improves wording but not routing quality adds little value.</p>
-      </div>
-      <div>
-        <h3>Good three-criterion example</h3>
-        <p>For an interactive policy assistant, the decision may depend on <strong>grounded answer quality</strong>, <strong>safe escalation on unsupported cases</strong>, and <strong>response latency</strong>.</p>
-      </div>
+      <p>State the threshold as well as the metric. “We measure schema validity” is weaker than “an invalid payload blocks release.”</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="eval-seed-set" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Eval seed set</p>
-      <h2>Start small, but make the difficult cases visible.</h2>
-      <p>An eval seed set is a small group of test cases that represents the workflow well enough to compare options. It should be small enough for the team to inspect manually and broad enough to expose failure modes that could change the recommendation.</p>
+      <p class="research-canvas__eyebrow">Evaluation set</p>
+      <h2>Use representative cases, including the cases most likely to change the decision.</h2>
+      <p>Start with a small set that the team can inspect. Add production-like examples, difficult boundaries, and known failure modes. For tasks with an objective answer, keep a reference or human-labelled ground truth; for judgment-heavy work, define a review rubric before running the comparison.</p>
     </header>
 
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Normal cases show baseline fit</h3>
-        <p>Include realistic examples of the main workflow path. These cases show whether the model, prompt, context, retrieval, and output design can perform the work users will see most often.</p>
-      </div>
-      <div>
-        <h3>Difficult cases reveal the decision boundary</h3>
-        <p>Difficult cases show what happens when information is incomplete, the request is ambiguous, risk increases, the output format is strict, or the workflow depends on retrieval or tools.</p>
-      </div>
-    </div>
-
     <div class="research-canvas__table-wrap">
-      <h3>Seed-set coverage</h3>
       <table>
-        <thead><tr><th scope="col">Case type</th><th scope="col">What it tests</th><th scope="col">Expected behavior to define</th></tr></thead>
+        <thead><tr><th scope="col">Case type</th><th scope="col">Purpose</th><th scope="col">Expected behavior</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Typical case</th><td>The normal business path with representative inputs.</td><td>Produce the expected useful result with the required quality and format.</td></tr>
-          <tr><th scope="row">Edge case</th><td>A valid but unusual input, limit, combination, or exception.</td><td>Handle the case without losing important constraints or silently degrading the result.</td></tr>
-          <tr><th scope="row">Ambiguous input</th><td>More than one interpretation is plausible.</td><td>Ask for clarification, qualify the answer, or choose a safe bounded interpretation according to the workflow design.</td></tr>
-          <tr><th scope="row">Missing information</th><td>A required field, fact, source, or business condition is absent.</td><td>Identify the gap instead of inventing the missing information.</td></tr>
-          <tr><th scope="row">Sensitive or high-risk case</th><td>The consequence of an incorrect answer or action is materially higher.</td><td>Apply the required safeguard, review, refusal, or escalation path.</td></tr>
-          <tr><th scope="row">Format-constrained case</th><td>The result must follow a schema, field list, allowed values, or another machine-readable contract.</td><td>Return a valid result or fail clearly when the required structure cannot be produced.</td></tr>
-          <tr><th scope="row">Retrieval-dependent case</th><td>The answer depends on approved external or enterprise knowledge.</td><td>Use the right evidence, respect permissions, and show uncertainty when the required evidence is missing or conflicting.</td></tr>
-          <tr><th scope="row">Tool-use case</th><td>The workflow must select or call a function, API, calculation, or enterprise action.</td><td>Choose the right tool, produce valid arguments, stay inside authority limits, and handle tool failure safely.</td></tr>
+          <tr><th scope="row">Typical</th><td>Represents the normal workload.</td><td>Complete the task correctly and in the required format.</td></tr>
+          <tr><th scope="row">Difficult but valid</th><td>Tests ambiguity, long context, unusual combinations, or demanding reasoning.</td><td>Preserve the important constraints without inventing missing facts.</td></tr>
+          <tr><th scope="row">Missing evidence</th><td>Tests whether the system knows when it cannot support an answer.</td><td>Ask, qualify, retrieve, or escalate according to the workflow rule.</td></tr>
+          <tr><th scope="row">High-impact failure</th><td>Targets the error class that must be rare or impossible.</td><td>Apply the required refusal, review, authorization, or safe failure path.</td></tr>
+          <tr><th scope="row">Tool or schema boundary</th><td>Tests machine-facing behavior.</td><td>Return valid structured output or a valid tool request without crossing the defined authority.</td></tr>
         </tbody>
       </table>
-      <p>Not every workflow needs every category. Include the difficult cases that match the real task, risk, data, output, retrieval, and tool boundaries.</p>
-    </div>
-
-    <div class="research-canvas__table-wrap">
-      <h3>Define each case before running it</h3>
-      <table>
-        <thead><tr><th scope="col">Case field</th><th scope="col">Capture</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Input</th><td>The user request, document, event, record, or other work object being tested.</td></tr>
-          <tr><th scope="row">Approved context</th><td>The information, permissions, retrieval sources, state, and tools available for this case.</td></tr>
-          <tr><th scope="row">Expected behavior</th><td>What a good result should do, including any required clarification, escalation, tool call, or output structure.</td></tr>
-          <tr><th scope="row">Must not happen</th><td>A critical failure such as inventing a fact, crossing an access boundary, using the wrong tool, hiding uncertainty, or producing an invalid downstream payload.</td></tr>
-          <tr><th scope="row">Grading signal</th><td>The success criterion, rule, human review, or automated check used to judge the result.</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
-      <p><strong>Seed-set rule:</strong> do not make the first set large just to look rigorous. Make it representative enough to expose meaningful differences between options.</p>
-      <p>When a pilot, review, or production trace reveals a new failure mode, add that case to the eval set. The seed set should grow from evidence, not from imagination alone.</p>
+      <p>When a pilot or production trace reveals a new failure mode, turn it into a regression case. The evaluation set should become more realistic as the workflow learns where it actually breaks.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="representative-examples" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Representative comparison</p>
-      <h2>Compare options on the same work.</h2>
-      <p>Representative examples help teams compare model classes, prompting, retrieval, structured outputs, tool-use behavior, safety behavior, latency, and cost without changing the test every time the preferred model changes.</p>
+      <p class="research-canvas__eyebrow">Fair comparison</p>
+      <h2>Change one decision at a time where possible.</h2>
+      <p>Comparisons become hard to interpret when the model, prompt, retrieval, tool catalog, and grader all change together. Keep the important conditions equivalent unless that layer is the thing being tested.</p>
     </header>
 
     <div class="research-canvas__table-wrap">
-      <h3>What to hold constant</h3>
       <table>
-        <thead><tr><th scope="col">Comparison area</th><th scope="col">Keep visible</th></tr></thead>
+        <thead><tr><th scope="col">Hold visible</th><th scope="col">Reason</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Inputs</th><td>Use the same representative normal, edge, ambiguous, and higher-risk examples.</td></tr>
-          <tr><th scope="row">Output contract</th><td>Ask each option to produce the same business result or structured schema.</td></tr>
-          <tr><th scope="row">Context</th><td>Keep approved source material and permissions equivalent unless retrieval strategy itself is under test.</td></tr>
-          <tr><th scope="row">Tools</th><td>Compare the same tool catalog and authority boundary when tool behavior matters.</td></tr>
-          <tr><th scope="row">Success criteria</th><td>Grade each option against the same two or three decision criteria.</td></tr>
-          <tr><th scope="row">Operating signals</th><td>Record latency, token or resource use, retries, failures, and review burden where they affect the decision.</td></tr>
+          <tr><th scope="row">Inputs</th><td>Run the same representative cases across the candidates.</td></tr>
+          <tr><th scope="row">Output contract</th><td>Ask for the same business result and structure.</td></tr>
+          <tr><th scope="row">Approved context</th><td>Keep sources and permissions equivalent unless retrieval is under test.</td></tr>
+          <tr><th scope="row">Tools and authority</th><td>Use the same available functions and action boundary when tool behavior is compared.</td></tr>
+          <tr><th scope="row">Grading</th><td>Apply the same acceptance criteria and critical-failure rules.</td></tr>
+          <tr><th scope="row">Operating signals</th><td>Record latency, resource use, retries, and review burden beside quality.</td></tr>
         </tbody>
       </table>
-      <p>One impressive answer is weak evidence. A useful selection result explains where each option succeeds, where it fails, and which trade-off matters for the real workflow.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="workflow-examples" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Workflow examples</p>
-      <h2>Different jobs create different model decisions.</h2>
+      <p class="research-canvas__eyebrow">Examples</p>
+      <h2>The same model is not the right starting point for every job.</h2>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Workflow</th><th scope="col">Likely starting point</th><th scope="col">What to prove</th></tr></thead>
+        <thead><tr><th scope="col">Workflow</th><th scope="col">Reasonable starting point</th><th scope="col">What should decide the result</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Weekly project update drafting</th><td>General-purpose or efficient model with approved project context.</td><td>Useful summary quality, factual grounding, format consistency, and low review effort.</td></tr>
-          <tr><th scope="row">Complex policy interpretation</th><td>Reasoning-oriented model plus retrieval from approved policy sources.</td><td>Correct interpretation, grounded evidence, uncertainty handling, and escalation on unsupported cases.</td></tr>
-          <tr><th scope="row">Document and screenshot review</th><td>Multimodal model, possibly with structured output.</td><td>Extraction accuracy, missing-field handling, image understanding, and format reliability.</td></tr>
-          <tr><th scope="row">High-volume service routing</th><td>Efficient model or classification approach.</td><td>Routing quality, latency, cost per case, and safe handling of uncertain requests.</td></tr>
-          <tr><th scope="row">Voice service assistant</th><td>Audio or real-time model with scoped tools.</td><td>Conversation quality, latency, transcription or interpretation behavior, tool safety, and handoff quality.</td></tr>
-          <tr><th scope="row">Enterprise semantic search</th><td>Embedding model plus retrieval and ranking.</td><td>Relevant candidate recall, ranking quality, permission filtering, and downstream answer quality if generation follows.</td></tr>
-          <tr><th scope="row">ERP action assistant</th><td>General or reasoning-capable model plus tightly scoped tool use.</td><td>Correct tool selection, valid arguments, authorization, approval, transaction integrity, and safe recovery.</td></tr>
+          <tr><th scope="row">High-volume ticket routing</th><td>An efficient model with a strict label contract.</td><td>Routing quality, uncertain-case handling, latency, and cost per accepted case.</td></tr>
+          <tr><th scope="row">Policy question answering</th><td>A capable general or reasoning model with permission-aware retrieval.</td><td>Grounding, correct qualification or escalation, and response time.</td></tr>
+          <tr><th scope="row">Document-to-ERP extraction</th><td>A model with the required document or image capability plus structured output and deterministic validation.</td><td>Field accuracy, missing-data handling, schema reliability, and correction effort.</td></tr>
+          <tr><th scope="row">Complex incident analysis</th><td>A reasoning-capable model with reviewed evidence and no automatic production authority.</td><td>Quality of the evidence chain, uncertainty handling, critical factual errors, and analyst review effort.</td></tr>
+          <tr><th scope="row">Enterprise semantic search</th><td>Embedding and ranking components, with generation only when the use case needs an answer.</td><td>Relevant retrieval, permission filtering, ranking quality, and downstream answer quality if generation is added.</td></tr>
         </tbody>
       </table>
     </div>
@@ -334,67 +275,35 @@ semantic_links:
 
   <section class="research-canvas__inventory" id="lead-questions" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead lens</p>
-      <h2>Questions that make model selection defensible.</h2>
+      <p class="research-canvas__eyebrow">Decision record</p>
+      <h2>A model choice should be explainable after the demo is over.</h2>
+      <p>Record the decision in a few sentences: the workflow and output contract, the candidates compared, the representative cases, the acceptance thresholds, the selected configuration, and the trade-off accepted. Also record the trigger for retesting—for example a new model family, a material cost change, a new failure mode, or a change in workload.</p>
     </header>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Workflow fit</h3>
-        <ul>
-          <li>What task must the AI perform?</li>
-          <li>What must it produce?</li>
-          <li>How much reasoning depth is actually required?</li>
-          <li>Which modalities are involved?</li>
-          <li>What context must be available?</li>
-          <li>Does the workflow need tools, retrieval, ranking, or real-time interaction?</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Production fit</h3>
-        <ul>
-          <li>What happens if the result is wrong?</li>
-          <li>What latency is acceptable?</li>
-          <li>What volume and cost structure must the design support?</li>
-          <li>Which data, hosting, or deployment constraints matter?</li>
-          <li>Which two or three criteria decide whether the option is good enough?</li>
-          <li>Which representative eval cases will prove the choice?</li>
-        </ul>
-      </div>
-    </div>
-
     <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>Assessment answer.</strong> I would not select an API model from a remembered name or one demo result. I would define the task, output, risk, reasoning depth, context, latency, cost, and scale. Then I would choose the smallest credible model class and any required retrieval, tool, safety, or deployment layers. I would define two or three success criteria and compare the options on the same representative eval set. The selected model is the one that meets the workflow requirement with the best acceptable production trade-off, not necessarily the most capable model available.</p>
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <div>
+        <p><strong>Useful outcome:</strong> “Option B passed the required quality and critical-failure thresholds on the same case set, while reducing median end-to-end latency and cost per accepted case.”</p>
+        <p><strong>Weak outcome:</strong> “Option B felt better in the demo.”</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="primary-references" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Primary references</p>
-      <h2>Verify current API details before implementation.</h2>
-      <p>Model names, supported modalities, reasoning settings, pricing, limits, and regional availability can change. Use current vendor documentation when moving from model class to a concrete implementation choice.</p>
+      <p class="research-canvas__eyebrow">Current implementation references</p>
+      <h2>Recheck concrete model details when you implement.</h2>
+      <p>The framework above is deliberately stable. Model families, reasoning settings, supported tools, limits, pricing, and evaluation products change faster. The links below point to current OpenAI primary documentation as one concrete implementation reference; use equivalent primary documentation when another provider is under evaluation.</p>
     </header>
     <div class="research-route-list">
-      <a href="https://platform.openai.com/docs/models" target="_blank" rel="noopener"><span>01</span><strong>OpenAI model catalog</strong><small>Current model families, specialized models, embeddings, moderation, audio, real-time, and open-weight options.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://platform.openai.com/docs/api-reference/realtime" target="_blank" rel="noopener"><span>02</span><strong>Realtime API</strong><small>Low-latency multimodal and speech interaction.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://platform.openai.com/docs/api-reference/moderations" target="_blank" rel="noopener"><span>03</span><strong>Moderation API</strong><small>Classification of potentially harmful text and image inputs.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://platform.openai.com/docs/api-reference/vector-stores" target="_blank" rel="noopener"><span>04</span><strong>Vector stores and retrieval</strong><small>Semantic retrieval, ranking controls, and file-search infrastructure.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://platform.openai.com/docs/api-reference/evals" target="_blank" rel="noopener"><span>05</span><strong>Evals API</strong><small>Structured evaluation definitions, runs, graders, and comparison evidence.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://developers.openai.com/api/docs/guides/model-selection" target="_blank" rel="noopener"><span>01</span><strong>Model selection</strong><small>Current model and reasoning-effort guidance for choosing between quality, latency, and cost.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://developers.openai.com/api/docs/models" target="_blank" rel="noopener"><span>02</span><strong>Model catalog</strong><small>Current capabilities, tools, context, limits, and model-specific details.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://developers.openai.com/api/docs/guides/structured-outputs" target="_blank" rel="noopener"><span>03</span><strong>Structured Outputs</strong><small>Schema-constrained responses and the limits of supported JSON Schema features.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://developers.openai.com/api/docs/guides/function-calling" target="_blank" rel="noopener"><span>04</span><strong>Function calling</strong><small>The model-to-application tool-call loop and tool definition contract.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://developers.openai.com/api/docs/guides/evaluation-best-practices" target="_blank" rel="noopener"><span>05</span><strong>Evaluation best practices</strong><small>How to design tests around production behavior and model variability.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://developers.openai.com/api/docs/guides/evaluation-getting-started" target="_blank" rel="noopener"><span>06</span><strong>Datasets for evaluation</strong><small>The current starting point for building and comparing evaluation cases.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://developers.openai.com/api/docs/guides/latency-optimization" target="_blank" rel="noopener"><span>07</span><strong>Latency optimization</strong><small>End-to-end levers including fewer requests, shorter outputs, parallel work, and simpler models.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://developers.openai.com/api/docs/guides/cost-optimization" target="_blank" rel="noopener"><span>08</span><strong>Cost optimization</strong><small>Cost and latency trade-offs, batching, flex processing, and smaller-model options.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
-  </section>
-
-  <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Decision rule</p><h2>Keep the selection in seven moves.</h2></div>
-    <ol>
-      <li><span>01</span><strong>Task</strong><p>Define the business job and the output.</p></li>
-      <li><span>02</span><strong>Risk</strong><p>Understand the consequence of a wrong result or action.</p></li>
-      <li><span>03</span><strong>Capability</strong><p>Choose the smallest credible model class and supporting architecture.</p></li>
-      <li><span>04</span><strong>Context</strong><p>Define what information, permissions, tools, and state the workflow needs.</p></li>
-      <li><span>05</span><strong>Criteria</strong><p>Choose two or three measures that can change the recommendation.</p></li>
-      <li><span>06</span><strong>Eval</strong><p>Build a small representative seed set and compare options under equivalent conditions.</p></li>
-      <li><span>07</span><strong>Trade-off</strong><p>Select the option that meets quality and control needs at acceptable latency, cost, and scale.</p></li>
-    </ol>
   </section>
 
   <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>

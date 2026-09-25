@@ -7,7 +7,8 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-22
+last_reviewed: 2026-09-22
 hide_global_cta: true
 tags:
   - business-ai
@@ -26,9 +27,9 @@ tags:
 <div class="research-canvas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Business AI / lead assessment matrix</p>
-      <h1>Do not ask only<br />“Can AI do it?”</h1>
-      <p>Ask what the process is, what can go wrong, who owns the business truth, how much autonomy is acceptable, and which KPI proves value. This matrix turns those questions into a repeatable architecture method.</p>
+      <p class="research-canvas__eyebrow">Business AI / assessment matrix</p>
+      <h1>Capability is only<br />one part of the answer.</h1>
+      <p>An AI system may be able to summarize, classify, negotiate, recommend, or act. That still does not tell us whether it should have authority inside a business process. The matrix connects technical capability with the process, system ownership, business risk, controls, and result we expect to improve.</p>
       <a class="research-canvas__button" href="#profiles">Open the matrix <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
@@ -36,25 +37,25 @@ tags:
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ matrix.profiles | size }}</strong><small>Scenario profiles</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ matrix.autonomy_levels | size }}</strong><small>Autonomy levels</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ matrix.decision_rules | size }}</strong><small>Architecture rules</small></div>
-      <em>Model capability is not business authority.</em>
+      <em>Model capability is not the same thing as business authority.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Problem:</strong> AI discussions often jump from a possible capability to automation without stating the consequence of a wrong action, the business authority boundary, or the KPI that should improve.</p>
-    <p><strong>Context:</strong> the same model can be safe as an assistant in one process and unsafe as an autonomous actor in another. This matrix compares decisions by process, autonomy, risk, authority, controls, evidence, and business result.</p>
-    <p><strong>Working rule:</strong> {{ matrix.reading_rule }}</p>
-    <p><strong>Assessment use:</strong> start from a process step, choose the AI job, then explain autonomy, risk, KPI, system authority, controls, and evidence. A product name comes after that.</p>
-    <p><strong>Lead signal:</strong> a strong answer can explain why two technically similar AI solutions need different autonomy because the cost of a wrong action is different.</p>
+    <div>
+      <p><strong>The matrix is a comparison tool, not a scoring engine.</strong> It helps us make the hidden assumptions in an AI proposal visible: what process step is changing, what the model is expected to do, what can go wrong, which system remains authoritative, and how much autonomy is justified.</p>
+      <p>{{ matrix.reading_rule }}</p>
+      <p>Two solutions can use similar models and still need very different operating boundaries. Drafting a reply for an employee is not the same kind of action as changing a contract, posting an accounting document, or sending a supplier commitment.</p>
+    </div>
     <a href="/labs/business-ai/scenarios/">Compare with scenario evidence <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="autonomy" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Autonomy scale</p>
-      <h2>Separate assistance from authority.</h2>
-      <p>“Human in the loop” is too vague. Use a concrete autonomy level and name the control boundary.</p>
+      <h2>Autonomy describes where human or system authority enters the flow.</h2>
+      <p>Terms such as “human in the loop” can hide important differences. A system that drafts a proposal, one that executes after explicit approval, and one that acts within predefined limits are not equivalent even if a person can eventually intervene in all three.</p>
     </header>
     <div class="research-route-list">
       {% for level in matrix.autonomy_levels %}
@@ -64,7 +65,7 @@ tags:
   </section>
 
   <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Decision rules</p><h2>Eight rules before choosing autonomy.</h2></div>
+    <div><p class="research-canvas__eyebrow">What changes the answer</p><h2>The autonomy level depends on the business situation around the model.</h2></div>
     <ol>
       {% for item in matrix.decision_rules %}
       <li><span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><strong>{{ item.id | replace: 'dr-', '' | replace: '-', ' ' | capitalize }}</strong><p>{{ item.rule }}</p></li>
@@ -75,8 +76,8 @@ tags:
   <section class="research-canvas__inventory" id="profiles" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Scenario matrix</p>
-      <h2>{{ matrix.profiles | size }} decision profiles.</h2>
-      <p>Each profile is a compact assessment answer: process → AI job → autonomy → risk → KPI → authority → controls → failure pattern → evidence.</p>
+      <h2>{{ matrix.profiles | size }} examples of the same capability meeting different business conditions.</h2>
+      <p>Each profile keeps the process, AI job, autonomy, risk, KPI, authority, controls, likely failure patterns, and available evidence together. The point is to compare the whole operating context rather than judge the model in isolation.</p>
     </header>
     <div class="research-route-list">
       {% for item in matrix.profiles %}
@@ -106,7 +107,7 @@ tags:
   {% endfor %}
 
   <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Assessment answer pattern</p><h2>A seven-step answer that works across domains.</h2></div>
+    <div><p class="research-canvas__eyebrow">Using the matrix in discussion</p><h2>A good answer explains the business boundary before the product.</h2></div>
     <ol>
       {% for item in matrix.assessment_answer_pattern %}
       <li><span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><strong>Step {{ forloop.index }}</strong><p>{{ item }}</p></li>
@@ -116,8 +117,10 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
-    <p><strong>Example:</strong> “Can we automate supplier negotiation?” is not yet an architecture question. A stronger answer is: tail-spend negotiation, predefined commercial ranges, L4 guardrailed autonomy, procurement system as authority, supplier and out-of-policy KPIs, audit plus escalation, and Walmart/Pactum as directional evidence.</p>
-    <p><strong>Counter-example:</strong> the same L4 autonomy would be a poor default for employment decisions, safety rules, contract interpretation, or security actions with destructive side effects.</p>
+    <div>
+      <p>A question such as “Can we automate supplier negotiation?” is incomplete until the scope becomes concrete. Tail-spend negotiation inside predefined commercial ranges is a very different design problem from allowing a model to create unrestricted commercial commitments.</p>
+      <p>The same distinction matters elsewhere. Autonomy that is reasonable for a reversible recommendation may be inappropriate for employment decisions, safety controls, contract interpretation, or destructive security actions.</p>
+    </div>
     <a href="/labs/business-ai/data/matrix.json">Open machine-readable matrix <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 

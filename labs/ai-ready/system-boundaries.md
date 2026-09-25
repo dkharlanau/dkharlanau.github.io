@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-22
 hide_global_cta: true
 tags: [ai, architecture, workflow, structured-output, state]
 ---
@@ -18,13 +18,13 @@ tags: [ai, architecture, workflow, structured-output, state]
 
 # System Boundaries
 
-A useful AI architecture starts by deciding what the model is allowed to decide. The common mistake is to put rules, permissions, calculations, memory, and process control into one large prompt. It works in a demo because the happy path is polite. Production is less polite.
+A useful AI architecture begins with a simple question: **what should the model decide, and what should the application decide?**
 
-## Problem
+This boundary matters more than the size of the prompt. A model is good at interpreting language, comparing imperfect evidence, and choosing among uncertain options. Normal software is better at exact rules, permissions, calculations, transactions, and durable state. When we mix these responsibilities, a demo may still work, but the production system becomes difficult to test and control.
 
-AI applications become hard to control when model reasoning, deterministic rules, authorization, state, and side effects are mixed together.
+## Give uncertainty to the model, not authority
 
-## The split
+A practical split looks like this:
 
 ```text
 User / Event
@@ -38,8 +38,8 @@ Application boundary
 Model
     |-- interpret messy input
     |-- classify and extract
-    |-- synthesize evidence
-    |-- propose next action
+    |-- compare evidence
+    |-- propose the next useful step
     |
 Data / Tools
     |-- current facts
@@ -47,93 +47,80 @@ Data / Tools
     |-- durable records
 ```
 
-The model is strongest where the input is uncertain. Deterministic software is strongest where the rule is exact.
+The model can answer questions such as “What does this request mean?”, “Which known workflow fits?”, or “Which source should we read next?”. It should not decide whether a user is allowed to change an account, whether a financial limit has been exceeded, or whether a transaction has already been committed.
 
-## Put this in the model
+A prompt that says *never skip approval* is useful guidance. It is not an approval control. If approval is mandatory, the application should make the write impossible until an approved state exists.
 
-Use the model for tasks such as:
+## Where the model earns its place
 
-- understanding a free-text request;
-- mapping a question to a known workflow or tool;
-- extracting structured fields from messy text;
-- comparing several pieces of evidence;
-- explaining a result in useful language;
-- choosing the next read when the path is not known in advance.
+Models are most useful when the input is irregular but the intended outcome is still clear. A support request may describe the same incident in ten different ways. A document may contain the fields we need, but not in a fixed layout. Several sources may disagree and require a reasoned summary.
 
-## Keep this outside the model
+In those cases the model can interpret, extract, classify, compare, or explain. It can also choose the next **read** when an investigation cannot be planned completely in advance.
 
-Use normal application logic for:
+The surrounding application should keep the exact parts exact: authorization, thresholds, duplicate protection, secret handling, transaction state, mandatory process steps, and validation of tool inputs and outputs. This division is not about distrusting the model. It is about using each component for the kind of problem it handles best.
 
-- authorization and role checks;
-- exact calculations and thresholds;
-- transaction commits and locks;
-- durable application state;
-- duplicate protection;
-- mandatory process steps;
-- secret handling;
-- validation of tool input and output.
+## State is more than chat history
 
-A prompt saying “never skip the approval check” is not the same as code that makes approval impossible to skip.
+AI systems often call every stored value “memory”. That makes architecture discussions unnecessarily vague. Different kinds of state have different owners and different retention rules.
 
-## State is not one thing
-
-Do not call every stored value “memory”. Separate at least these layers:
-
-| Layer | Example | Typical lifetime |
+| State | Example | Typical lifetime |
 |---|---|---|
 | Request context | Current question and retrieved evidence | One request |
 | Conversation state | Previous turns and tool results | Session or thread |
 | User preference | Preferred language or output format | Long-lived |
-| Application record | Task, ticket, order, approval, incident | System of record |
-| Cache | Tool catalog or retrieval result | Short-lived |
-| Trace | Model/tool calls and timings | Operational retention period |
+| Application record | Task, order, approval, incident | System of record |
+| Cache | Tool catalog or recent read result | Short-lived |
+| Trace | Model and tool calls, timings, decisions | Operational retention period |
 
-Each layer needs its own owner, retention rule, and access model.
+Conversation state can help the model understand what happened earlier. It should not silently become the source of truth for an order, approval, ticket, or account state. Those facts belong in the system that owns them.
 
-## Structured output is a contract
+The same distinction helps with privacy. A value that is safe to use for one request may not be safe to retain in a long-lived trace. We should decide storage and access rules per state type rather than treating the whole model context as one bucket.
 
-If software consumes the result, return a schema rather than prose and hope. Validate required fields, enums, IDs, ranges, and null behavior outside the model.
+## Structured output connects reasoning to software
 
-Bad boundary:
+When another program consumes the model result, prose is usually the wrong contract. Ask for structured output and validate it outside the model.
+
+A weak boundary is:
 
 ```text
-Model: “It looks like this account should be suspended.”
+Model: "This account should probably be suspended."
 Application: suspends account.
 ```
 
-Better boundary:
+A stronger boundary separates recommendation from execution:
 
 ```text
-Model -> {"recommendation":"suspend","reason_code":"policy_violation","confidence":0.78}
-Application -> validates evidence, authorization, policy and approval requirement
-Application -> executes or rejects
+Model -> {
+  "recommendation": "suspend",
+  "reason_code": "policy_violation",
+  "confidence": 0.78
+}
+
+Application -> validate evidence
+            -> check authorization and policy
+            -> require approval if needed
+            -> execute or reject
 ```
 
-## Workflow or agent?
+The schema does not make the model correct. It makes the hand-off explicit. We can validate required fields, allowed values, identifiers, ranges, and missing data before anything downstream acts on the result.
 
-Use a workflow when the next steps are known. Use an agent loop when the next useful action depends on evidence found during the task.
+## Workflow and agent are different control shapes
 
-Example: converting an approved form into a structured record is mostly a workflow. Investigating why a deployment failed may need adaptive reads across build logs, configuration, recent commits, service health, and dependency status.
+If the next steps are known, a workflow is usually easier to understand and test. Converting an approved form into a structured record, validating it, and saving it is mainly a workflow even if a model extracts the fields.
 
-## Failure modes
+An agent loop becomes useful when the next sensible action depends on what we discover. Investigating a failed deployment is a good example: one log may point to configuration, a configuration check may point to a recent change, and the next read cannot be chosen reliably before the investigation starts.
 
-- Important rules exist only in prompts.
-- The model owns transaction state.
-- Tool results are trusted without schema validation.
-- Conversation history is treated as a source of truth.
-- The application sends every available document “just in case”.
-- One agent has read and write access to everything.
+The important boundary stays the same. The agent may choose among allowed reads, but permissions, budgets, write controls, and transaction state remain outside the model.
 
-## Architecture checklist
+## A useful design test
 
-Before adding another model call, answer:
+Before adding another model call, we ask what uncertainty it removes. If the answer is “none — the rule is already known”, ordinary code is probably the better component. If the model is needed, we should still know where the fact comes from, who can authorize an action, what state must survive the request, and what happens when a tool times out or the same request is retried.
 
-1. Is the input uncertain enough to need a model?
-2. Can deterministic code solve this more safely?
-3. Where does the current fact come from?
-4. Who authorizes the action?
-5. What state must survive this request?
-6. What happens on retry or timeout?
-7. How will we test the boundary?
+That is the practical meaning of an AI system boundary: the model handles ambiguity; the application preserves control.
+
+## Further reading
+
+- [OpenAI — A practical guide to building AI agents](https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/)
+- [Anthropic — Building Effective AI Agents](https://www.anthropic.com/engineering/building-effective-agents)
 
 Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [Data and RAG](/labs/ai-ready/data-rag/) · [Agent Architecture](/labs/ai-ready/agent-architecture/)

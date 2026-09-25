@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Identity and Access"
-description: "Analytical overview of Identity and Access in SAP: what it is, where it sits, and how it breaks."
+description: "How identity, authentication, provisioning, roles, and authorizations fit together across SAP ABAP and SAP BTP landscapes."
 permalink: /atlas/sap/identity-access/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "Identity and Access"
 business_process: "Operations and observability"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Technology</p>
     <h1>Identity and Access</h1>
-    <p class="note-subtitle">Managing user identities and access rights in SAP landscapes.</p>
+    <p class="note-subtitle">From a person's identity to authentication, provisioning, roles, and the authorization checks that protect business data.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,103 +54,57 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>Identity and access management in SAP covers user provisioning, authentication, authorization, and governance across on-premise and cloud systems. It includes SAP Cloud Identity, SAML, OAuth, role-based access control, and privilege escalation detection.</p>
+    <p>Identity and access is not one SAP feature. It is a chain of decisions that starts with <strong>who the person or technical client is</strong>, continues with <strong>how that identity is authenticated and provisioned</strong>, and ends with <strong>what the target application authorizes it to do</strong>. Mixing those layers is one reason access incidents become difficult to diagnose.</p>
 
-    <h2>Business purpose</h2>
-    <p>Ensure the right users have the right access at the right time. Prevent unauthorized access to sensitive business data. Support compliance with segregation of duties, periodic access reviews, and automated provisioning.</p>
+    <h2>Authentication proves identity; authorization decides access</h2>
+    <p>An identity provider authenticates a user and supplies identity information to a relying application or platform. Single sign-on can make that authentication experience consistent across applications, but successful login does not grant every business permission. The target still evaluates its own authorization model.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Identity and access spans S/4HANA authorizations (PFCG, SU01), BTP subaccount roles, and the Fiori launchpad. SAP Cloud Identity Services provides centralized identity and SSO. GRC and IAG add policy enforcement and access request workflows.</p>
+    <p>This distinction is especially visible in hybrid SAP landscapes. A corporate identity provider may authenticate the same employee for several SAP cloud applications, while an ABAP system checks PFCG-derived authorizations and a BTP application checks application roles delivered through role collections. One identity can therefore be authenticated successfully and still be blocked by a valid authorization check downstream.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>User master: SU01 — user ID, type, validity, and defaults.</li>
-      <li>Role: PFCG — composite and single roles with authorization profiles.</li>
-      <li>Authorization object: field-level permission check (e.g., S_TCODE).</li>
-      <li>Identity provider: SAP Cloud Identity, Microsoft Entra ID, Okta.</li>
-      <li>Trust configuration: SAML 2.0 or OAuth 2.0 between systems.</li>
-      <li>Access request: workflow-driven provisioning and recertification.</li>
-    </ul>
+    <h2>ABAP authorization is built around roles and authorization objects</h2>
+    <p>In the ABAP authorization concept, authorization objects define fields that an application can check. Authorizations contain allowed values for those fields, and roles collect the authorizations needed for a business activity. SAP recommends maintaining user authorization data through Role Maintenance (<code>PFCG</code>) rather than by manually maintaining profiles.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: Fiori launchpad access, backend authorizations, business roles.</li>
-      <li>BTP: subaccount roles, space roles, and service broker access.</li>
-      <li>Fiori: catalog and group assignment via business roles.</li>
-      <li>GRC/IAG: risk analysis, access request, and emergency access.</li>
-    </ul>
+    <p>The model is more precise than “user has transaction X.” A user may reach an application and then fail an authorization check for company code, plant, activity, document type, or another field. Good role design therefore starts from business responsibility and organizational scope, not from copying a large role until the error disappears.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom authorization objects and checks in ABAP.</li>
-      <li>BTP role collections mapped to identity provider groups.</li>
-      <li>Fiori business roles extended with custom catalogs and groups.</li>
-      <li>API-based provisioning from HR or identity governance tools.</li>
-    </ul>
+    <h2>Fiori navigation and backend authorization are related but not identical</h2>
+    <p>Fiori content controls what applications are presented and how users navigate to them. Business catalogs and spaces/pages can be assigned through roles, while groups are deprecated in current launchpad guidance. But making an app visible does not by itself satisfy every backend authorization required by that app.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>SU01 / SUIM — user and authorization reports.</li>
-      <li>ST01 — authorization trace for missing permissions.</li>
-      <li>SLG1 — identity provider and SSO error logs.</li>
-      <li>GRC risk analysis — SoD and critical permission conflicts.</li>
-      <li>Login audit: failed attempts, lockouts, and anomaly detection.</li>
-    </ul>
+    <p>This gives us a useful diagnostic split: <strong>Can the user see and launch the app?</strong> and <strong>Can the backend execute the requested business action?</strong> A missing catalog or target mapping produces a different class of problem from an ABAP authorization object rejecting a request.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Granular authorization model down to field and organizational level.</li>
-      <li>Centralized SSO via SAP Cloud Identity reduces password sprawl.</li>
-      <li>GRC integration automates risk analysis and recertification.</li>
-      <li>Fiori business roles align UX and authorization.</li>
-    </ul>
+    <h2>SAP Cloud Identity Services handles identity services, not every application permission</h2>
+    <p>SAP Cloud Identity Services includes capabilities such as Identity Authentication, Identity Provisioning, and an identity directory. Identity Authentication can participate in single sign-on and federation with a corporate identity provider. Identity Provisioning can synchronize users and groups to supported target systems through connectors and transformations.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Role design complexity leads to over-authorization or broken access.</li>
-      <li>SSO token issues can lock out entire user populations.</li>
-      <li>Privilege escalation via composite role or profile manipulation.</li>
-      <li>Cloud and on-premise identity models are not always synchronized.</li>
-    </ul>
+    <p>Provisioning should not be confused with the authorization decision itself. A provisioning process can create the user, send groups, or maintain assignments in a target. The target application or platform then interprets those assignments according to its authorization model. When access is wrong, we need to know whether the failure is in identity data, provisioning, trust, role mapping, or the final application check.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>User locked or expired — password policy, idle timeout, or admin error.</li>
-      <li>Authorization missing — new role not assigned or profile not generated.</li>
-      <li>SSO failure — SAML certificate expiry, IdP misconfiguration, or clock skew.</li>
-      <li>Fiori tile missing — catalog/group assignment or cache issue.</li>
-      <li>SoD violation — conflicting roles assigned via emergency access.</li>
-    </ul>
+    <h2>BTP adds its own trust and role-collection layer</h2>
+    <p>SAP BTP subaccounts establish trust with identity providers. Role collections group authorizations for business users on BTP and can be assigned directly or mapped from identity-provider groups depending on the trust setup. Platform users and business users also have different administrative purposes and should not be treated as one generic user type.</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/sap/audit-trails/">Audit Trails</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/fiori-ui5/">Fiori / UI5</a></li>
-      <li><a href="/atlas/sap/sap-business-ai/">SAP Business AI</a></li>
-    </ul>
+    <p>A typical access path might therefore be: corporate user → identity provider → BTP trust → group or user mapping → role collection → application role → backend API authorization. We diagnose the first broken contract in that chain rather than repeatedly changing roles at the final system.</p>
+
+    <h2>Lifecycle matters as much as initial access</h2>
+    <p>The security problem is not finished when onboarding works. Joiners, role changes, temporary access, and leavers all change what a person should be able to do. Central provisioning can help synchronize those changes, while governance processes such as segregation-of-duties analysis and access reviews address whether the assignments are appropriate.</p>
+
+    <p>The practical goal is not “centralize everything.” It is to keep identity ownership, authentication, provisioning, and authorization responsibilities explicit enough that access can be granted, reviewed, removed, and explained later.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP Cloud Identity Services — <a href="https://help.sap.com/docs/cloud-identity">SAP Help Portal</a>.</li>
-      <li>SAP BTP Role Collections — <a href="https://help.sap.com/docs/btp/sap-business-technology-platform/role-collections-and-roles-in-sap-btp">SAP Help Portal</a>.</li>
+      <li>SAP ABAP Platform — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/ad77b44570314f6d8c3a8a807273084c/4f4decf806b02892e10000000a42189b.html">ABAP Authorization Concept</a>.</li>
+      <li>SAP ABAP Platform — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/ad77b44570314f6d8c3a8a807273084c/ed3fd088062d4eb09d84f90b24e7bdd0.html">Maintaining Authorizations in Roles for Productive Use</a>.</li>
+      <li>SAP Cloud Identity Services — <a href="https://help.sap.com/docs/cloud-identity-services/cloud-identity-services/onboarding-and-provisioning">Onboarding and Provisioning</a>.</li>
+      <li>SAP BTP — <a href="https://help.sap.com/docs/btp/sap-business-technology-platform/security-administration-managing-authentication-and-authorization">Security Administration: Managing Authentication and Authorization</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Identity provider configuration, role design, and authorization behavior vary by customer and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Identity architecture and authorization behavior vary by SAP product, edition, authentication method, application, and customer role design. Verify the concrete trust configuration, provisioning path, role model, and target-system authorization checks before applying this model to an incident or security design.</p>
   </div>
 
   <section class="atlas-related">
     <h2>Related pages</h2>
     <ul>
       <li><a href="/atlas/sap/audit-trails/">Audit Trails</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
       <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
       <li><a href="/atlas/sap/fiori-ui5/">Fiori / UI5</a></li>
+      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
     </ul>
   </section>
 

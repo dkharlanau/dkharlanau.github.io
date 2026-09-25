@@ -12,8 +12,8 @@ business_process: "SAP AMS support"
 status: needs_verification
 verified: false
 level: 1
-last_reviewed: 2026-06-13
-last_modified_at: 2026-08-15
+last_reviewed: '2026-09-24'
+last_modified_at: 2026-09-24
 author: Dzmitryi Kharlanau
 tags:
   - sap-ams
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP alerting diagnostics</h1>
-    <p class="note-subtitle">An alert is useful only when it detects a meaningful condition early enough and reaches someone who can act on it.</p>
+    <p class="note-subtitle">Separate detection, alert creation, notification, and response before changing thresholds.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,51 +54,67 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>The problem is not “an alert failed”</h2>
-    <p>Alerting is a chain: measure the right state, decide when that state matters, create a signal, route it to an owner, and give that owner enough context to respond. A weakness at any point can make the monitoring dashboard look healthy while the business process is already failing.</p>
-    <p>The diagnostic question is therefore not only whether an alert fired. It is whether the monitoring design represented the business risk correctly.</p>
+    <h2>Alerting starts after the system has observed something</h2>
+    <p>When a team says, “the alert did not work,” several different failures may be hidden inside that sentence. The monitored condition may never have been collected. It may have been collected but not matched by the rule. The rule may have created an alert but no notification. The notification may have reached the wrong owner, or the owner may have received it without enough context to act.</p>
 
-    <h2>Classify the failure before tuning thresholds</h2>
-    <div class="decision-table"><table><thead><tr><th>Failure pattern</th><th>Question to ask</th><th>Evidence</th></tr></thead><tbody>
-      <tr><td>Missed failure</td><td>Was the failing object or state inside monitoring scope?</td><td>Actual system state, monitor selection, collection time, rule scope.</td></tr>
-      <tr><td>Late alert</td><td>Did the signal become critical before the configured threshold or collection cycle reacted?</td><td>First failure time, alert time, business deadline, collection interval.</td></tr>
-      <tr><td>Alert noise</td><td>Does the rule distinguish normal variation from actionable failure?</td><td>Alert history, volume baseline, repeated auto-recovery, business impact.</td></tr>
-      <tr><td>Wrong routing</td><td>Did the alert reach the team that owns recovery?</td><td>Recipient, component/process ownership, escalation path, acknowledgement.</td></tr>
-      <tr><td>No action after alert</td><td>Did the notification contain enough context and a usable runbook?</td><td>Business key, error context, owner, diagnostic link, recovery instruction.</td></tr>
+    <p>Those are different boundaries and they need different evidence. Current SAP Cloud ALM documentation makes the separation explicit: an event can have distinct follow-up actions such as <em>Create Alert</em>, <em>Send Email To</em>, <em>Start Operation Flow</em>, or <em>Create Ticket</em>. Detection, alert lifecycle, and notification should therefore not be treated as one technical step.</p>
+
+    <div class="decision-table"><table><thead><tr><th>Boundary</th><th>Question</th><th>Evidence</th></tr></thead><tbody>
+      <tr><td>Observation</td><td>Did the monitoring layer see the failing state at the right time?</td><td>Actual application state, metric/message data, collection timestamp, monitored scope.</td></tr>
+      <tr><td>Rule evaluation</td><td>Did the condition match the configured threshold, filter, grouping, or status rule?</td><td>Rule definition, evaluated value, threshold, time window, grouping key.</td></tr>
+      <tr><td>Alert creation</td><td>Was an alert or event situation created and kept in the expected state?</td><td>Alert/event record, first occurrence, updates, current status, action log.</td></tr>
+      <tr><td>Notification or reaction</td><td>Did the configured email, ticket, chat message, or automation run?</td><td>Action result, recipient, notification log, ticket/automation reference.</td></tr>
+      <tr><td>Operational response</td><td>Did the signal reach the team that owns recovery early enough?</td><td>Acknowledgement time, owner, business deadline, recovery action and outcome.</td></tr>
     </tbody></table></div>
 
-    <h2>Use the real incident as the test case</h2>
-    <ol>
-      <li><strong>Reconstruct the business failure.</strong> What stopped, when did it start, and when did users or downstream systems notice?</li>
-      <li><strong>Find the technical evidence.</strong> Use the relevant application, job, queue, interface, log, or platform monitor to establish the actual state.</li>
-      <li><strong>Compare that state with monitor scope.</strong> Confirm the affected system, interface, job, object, status, age, and collection interval were actually covered.</li>
-      <li><strong>Read the rule as a decision.</strong> Ask why this threshold represents business risk. A count of ten may be sensible for one flow and useless for another where a single missing message stops shipping.</li>
-      <li><strong>Trace the notification path.</strong> Who received the signal, how quickly, with what severity, and with what recovery context?</li>
-      <li><strong>Test the correction.</strong> Validate the new rule with a controlled or historical case and check that it improves detection without simply creating more noise.</li>
-    </ol>
+    <p>This sequence keeps a missed email from becoming a threshold investigation and keeps a missing metric from being blamed on routing.</p>
 
-    <h2>Thresholds need business context</h2>
-    <p>A good threshold is not automatically a low number. Volume, age, expected throughput, business calendar, criticality, and recovery time all matter. Backlog age may be more important than message count. A missed overnight batch can matter more than a temporary daytime spike. One high-value order can matter more than a hundred low-risk technical warnings.</p>
-    <p>This is why threshold tuning should use historical behavior and a named business consequence, not a generic preference for “more sensitive monitoring.”</p>
+    <h2>Reconstruct one incident as a timeline</h2>
+    <p>Use the real business failure as the test case. Record when the underlying condition first became true, when the monitoring layer first contained evidence of it, when an alert was created, when a notification or reaction ran, when a person responded, and when the business process recovered. The first unexplained gap tells us where to investigate.</p>
 
-    <h2>Noise is also a reliability problem</h2>
-    <p>False positives consume attention. If a team receives hundreds of alerts that need no action, the monitoring system trains people to ignore it. The answer is not broad suppression. Separate expected transient states from conditions that persist, repeat, grow, or threaten a business deadline.</p>
+    <p>If the monitor never saw the condition, the alert rule is not yet the problem. Follow the monitored object into the application, interface, job, queue, or platform evidence. The <a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">interface monitoring diagnostic</a> covers scope, backlog age, collection freshness, and end-to-end outcome for interface flows; the <a href="/atlas/diagnostics/sap-application-log-diagnostics/">application log diagnostic</a> helps choose the right evidence source when the failure is inside an ABAP-based process.</p>
 
-    <h2>Routing belongs to the design</h2>
-    <p>An alert sent to a shared mailbox with no object key, process context, or recovery owner is only a notification. Useful operational alerting should make the first action obvious: what failed, where, since when, what is affected, who owns recovery, and where the supporting evidence lives.</p>
+    <p>If the condition was visible but no alert appeared, compare the observed value with the rule that was actually active at that time. Check scope, thresholds, status mapping, grouping, validity dates, and any maintenance or suppression logic supported by that monitoring product. Do not tune the rule until you can explain why the old rule did or did not match.</p>
 
-    <h2>What to capture for improvement</h2>
+    <h2>An alert and a notification are different evidence</h2>
+    <p>A common diagnostic mistake is to treat “no email arrived” as proof that no alert existed. In SAP Cloud ALM, notification recipients are managed separately, and automatic notification depends on event-processing configuration. In SAP Solution Manager, SAP support documentation likewise describes cases where alerts are present in Alert Inbox while email notifications are not generated. The alert record and the notification path therefore need separate checks.</p>
+
+    <p>Start with the alert or event itself. If it exists, inspect its action history and then follow the configured reaction: recipient, ticket creation, operation flow, chat notification, or another integration. Only after that should mail infrastructure or downstream tooling become the main suspect.</p>
+
+    <h2>Thresholds are business rules expressed in technical terms</h2>
+    <p>A threshold is useful when crossing it means that somebody should act. The right rule may depend on age, runtime, delay, status, volume, rate, or a combination of conditions. SAP Cloud ALM Health Monitoring, for example, supports metric-specific threshold and status-mapping rules rather than one universal alert threshold.</p>
+
+    <p>The business consequence should decide the sensitivity. A single missing message can block a shipment, while a short queue of low-risk messages may recover by itself. An overnight job can be critical because of its completion deadline even when its runtime looks normal during the day. For this reason, “make the threshold lower” is not a diagnosis. First define what delay, count, state, or duration creates unacceptable business risk.</p>
+
+    <p>Grouping also changes what the alert means. If many technical records are combined into one event, the grouping key must still preserve enough context to identify the affected process, system, interface, or job. If every low-value occurrence creates a separate alert, the opposite problem appears: too much noise and too little attention.</p>
+
+    <h2>Repeated failures may belong to one alert lifecycle</h2>
+    <p>Do not assume that every repeated technical failure must create a new notification. Alerting products often track an ongoing condition as one stateful situation and notify on meaningful state changes. In current SAP Cloud ALM Job &amp; Automation Monitoring, for example, an event action is triggered when the event rating changes; consecutive failures at the same rating do not generate another notification.</p>
+
+    <p>This matters during incident review. “We received only one mail for five failed runs” may be correct product behavior rather than a broken mail channel. The useful question is whether the alert stayed visible, current, assigned, and actionable throughout the continuing failure. If repeated reminders are operationally required, verify what the selected SAP monitoring product and release can support instead of assuming each failed execution is a new alert.</p>
+
+    <h2>Noise and silence are both control failures</h2>
+    <p>Too many low-value alerts train teams to ignore the channel; too few leave failures invisible until users report them. The remedy is not broad suppression or maximum sensitivity. Separate transient states from conditions that persist, repeat, age, or threaten a business deadline, and make sure every actionable alert has a clear owner.</p>
+
+    <p>The alert should carry enough context for the first useful action: what changed, which managed object or process is affected, when the condition started, how severe it is, and where to inspect the underlying evidence. A message that only says “critical alert” transfers the diagnostic work to the recipient instead of helping them start it.</p>
+
+    <h2>Test the correction end to end</h2>
+    <p>After changing scope, a threshold, an event rule, or a notification path, retest the same control chain. Use a safe controlled case where possible, or replay the logic against a historical incident. Confirm that the monitored state is visible, the rule evaluates as expected, the alert is created or updated, the configured action runs, and the intended owner receives enough context to respond.</p>
+
+    <p>Then check the opposite case. A stronger alert is not automatically a better alert if normal operating variation now generates repeated false positives. The best correction catches the business-relevant condition early enough without making the alert channel harder to trust.</p>
+
+    <h2>Official references</h2>
     <ul>
-      <li>The failed business process and measurable impact.</li>
-      <li>First technical failure time, first alert time, and first human response time.</li>
-      <li>Actual system state versus the state the monitor observed.</li>
-      <li>Rule scope, threshold, age/volume logic, and collection frequency.</li>
-      <li>Alert recipient, owner, severity, context, and recovery path.</li>
-      <li>Whether the same pattern has been missed or over-alerted before.</li>
+      <li><a href="https://help.sap.com/docs/cloud-alm/applicationhelp/configuring-events">SAP Cloud ALM: configuring events and event actions</a></li>
+      <li><a href="https://help.sap.com/docs/cloud-alm/applicationhelp/event-processing-rules">SAP Cloud ALM: event processing rules</a></li>
+      <li><a href="https://help.sap.com/docs/cloud-alm/applicationhelp/notification-management">SAP Cloud ALM: Notification Management</a></li>
+      <li><a href="https://help.sap.com/docs/cloud-alm/applicationhelp/configure-metrics">SAP Cloud ALM: configuring Health Monitoring metrics and thresholds</a></li>
+      <li><a href="https://help.sap.com/docs/cloud-alm/applicationhelp/jm-alerting">SAP Cloud ALM: Job &amp; Automation Monitoring alerting</a></li>
+      <li><a href="https://userapps.support.sap.com/sap/support/knowledge/en/2569610">SAP KBA 2569610: troubleshooting notification issues in System Monitoring and Alert Inbox</a></li>
     </ul>
 
-    <h2>Limitations and boundaries</h2>
-    <p>This page describes the diagnostic logic, not the configuration of one monitoring product. SAP Cloud ALM, Solution Manager, Focused Run, middleware platforms, observability tools, and third-party alert managers have different collectors and capabilities. Verify product-specific setup before changing rules.</p>
+    <h2>Boundaries and non-goals</h2>
+    <p>This page explains how to separate observation, rule evaluation, alert lifecycle, notification, and operational response. Exact collectors, event models, suppression rules, notification channels, retry behavior, and lifecycle semantics differ across SAP Cloud ALM, SAP Solution Manager, SAP Focused Run, application-specific monitors, middleware products, and third-party tools. Verify the selected product and release before changing configuration.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
   </div>

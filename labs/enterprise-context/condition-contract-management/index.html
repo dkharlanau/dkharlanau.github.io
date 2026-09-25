@@ -1,13 +1,16 @@
 ---
 layout: default
-title: "Condition Contract Management — Enterprise Context Lab"
-description: "A practical SAP S/4HANA CCM guide for customer and supplier rebates: business volume, accruals, partial and final settlement, configuration, accounting, and diagnostics."
+title: "SAP Condition Contract Management — Business Volume, Accruals and Settlement"
+description: "A practical SAP S/4HANA Condition Contract Management guide to condition contracts, business volume, accruals, partial and final settlement, and the boundary between sales and purchasing rebates."
 permalink: /labs/enterprise-context/condition-contract-management/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-25
+last_modified_at: 2026-09-25
+last_reviewed: 2026-09-24
+review_method: "SAP Help + current SAP Learning CCM/pricing course + supplied training material + editorial rewrite"
+search_intent: "SAP Condition Contract Management business volume accruals settlement rebates"
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -17,9 +20,23 @@ tags:
   - rebates
   - sales
   - procurement
+source_links:
+  - title: "Maintain Contract - Condition Contracts"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/1f9d79fe780f4569a98575f3ef73ec8f/64d74958146d9244e10000000a4450e5.html"
+  - title: "Maintaining Condition Contracts - Sales Rebate Management"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/a41104a0081545a5bcbdd807ba60fcf0/feb25258fcce2060e10000000a44147b.html"
+  - title: "Maintaining Condition Contracts - Purchasing Rebate Management"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2a560f6f15704c50a261627bb4691fbc/82048fb7aefd4ec1918a0c68f5216693.html"
+  - title: "Settlement Date Types"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/83bc764dd7874d349cc8150bdab246f6/503fb0a6c3f2431d8b12f9c049ca5bc2.html"
+  - title: "Working with Settlement Management"
+    url: "https://learning.sap.com/courses/functions-innovations-in-sap-s-4hana-sales/working-with-settlement-management_dc9ca6aa-ad79-4047-9dae-e51c9ddfc906"
+  - title: "Maintaining Condition Contracts"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/maintaining-condition-contracts_e34ae643-905f-4893-b53a-e32b3404d249"
+  - title: "Executing Condition Contract Settlement"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/executing-condition-contract-settlement_c02c09fe-c0fa-4e46-8abc-8a295544636a"
 ---
 
-{% assign graph = site.data.labs.enterprise_context.graphs.condition_contract_management %}
 {% assign evidence = site.data.labs.enterprise_context.sources.condition_contract_management %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -29,297 +46,241 @@ tags:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Cross-domain component / Settlement Management</p>
-      <h1>CCM starts where one document is no longer enough.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#ccm-runtime">Follow the process <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="CCM model inventory">
-      <p>Working model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>2</strong><small>Business sides</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.lifecycle.steps | size }}</strong><small>Runtime steps</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>SAP sources</small></div>
-      <em>Draft research · source-tracked · no client data</em>
+      <p class="research-canvas__eyebrow">Enterprise Context Lab / Settlement Management</p>
+      <h1>A rebate is not one discount. It is an agreement settled against accumulated business volume.</h1>
+      <p>Condition Contract Management (CCM) is the Settlement Management model used for subsequent settlement scenarios such as customer and supplier rebates. The condition contract holds the commercial agreement; SAP then determines the eligible business volume, calculates accruals or settlement amounts, and creates settlement documents at defined points in the contract lifecycle.</p>
+      <a class="research-canvas__button" href="#ccm-runtime">Follow the lifecycle <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">contract</span>
-    <p><strong>Simple definition:</strong> {{ graph.learning_model.one_sentence }}</p>
-    <a href="/labs/enterprise-context/data/condition-contract-management-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Business boundary</p>
-      <h2>Use CCM for a result that depends on accumulated evidence.</h2>
-      <p>A normal invoice discount can be final immediately. A rebate often cannot: the final value may depend on months of sales or purchasing activity.</p>
-    </header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.learning_model.good_fit %}
-      <article class="ecg-memory-card">
-        <span>USE</span>
-        <strong>{{ item.title }}</strong>
-        <h3>{{ item.explanation }}</h3>
-      </article>
-      {% endfor %}
-      {% for item in graph.learning_model.not_the_main_tool %}
-      <article class="ecg-memory-card">
-        <span>BOUNDARY</span>
-        <strong>{{ item.title }}</strong>
-        <h3>{{ item.explanation }}</h3>
-      </article>
-      {% endfor %}
+    <div>
+      <p><strong>Keep the agreement separate from the transactions that earn it.</strong> A sales invoice, supplier invoice, or goods receipt can contribute business volume, but the rebate terms live in the condition contract and are evaluated later during settlement.</p>
+      <p>This is the key difference from an ordinary document condition. An invoice discount is normally calculated on that document. A condition contract can depend on activity accumulated across many documents and over a longer validity period.</p>
     </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="ccm-runtime" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">End-to-end runtime</p>
-      <h2>{{ graph.lifecycle.memory_path }}</h2>
-      <p>Keep this sequence in mind. It separates commercial agreement, transactional evidence, accounting estimate, and actual settlement.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for step in graph.lifecycle.steps %}
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">{% if step.order < 10 %}0{% endif %}{{ step.order }}</div>
-        <div class="ecg-determination-card__copy">
-          <h3>{{ step.name }}</h3>
-          <p>{{ step.explanation }}</p>
-          <p><strong>Check:</strong> {{ step.check }}</p>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Settlement logic</p>
-      <h2>{{ graph.settlement_logic.formula }}</h2>
-      <p>{{ graph.settlement_logic.note }}</p>
-    </header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.settlement_logic.types %}
-      <article class="ecg-memory-card">
-        <span>SETTLE</span>
-        <strong>{{ item.type }}</strong>
-        <h3>{{ item.purpose }}</h3>
-        <p>{{ item.contract_state }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">difference</span>
-      <p><strong>Delta accrual in one line:</strong> {{ graph.settlement_logic.delta_formula }}.</p>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Why S/4HANA changed the model</p>
-      <h2>Classic rebate processing and CCM are not the same architecture.</h2>
-      <p>The useful point is not the old transaction list. The useful point is that S/4HANA moved rebate processing away from the classic VBOX-based model into Settlement Management and condition contracts.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for row in graph.classic_comparison %}
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">{{ forloop.index }}</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">{{ row.dimension }}</p>
-          <h3>Classic: {{ row.classic }}</h3>
-          <p><strong>CCM:</strong> {{ row.ccm }}</p>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
+    <a href="/labs/enterprise-context/data/condition-contract-management-graph.json">Open the structured CCM model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="ccm-memory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Core objects</p>
-      <h2>{{ graph.positioning.common_flow }}</h2>
-      <p>{{ graph.positioning.boundary }}</p>
+      <p class="research-canvas__eyebrow">The core model</p>
+      <h2>Agreement, business volume, calculation, settlement.</h2>
+      <p>Most CCM questions become easier once these four layers are kept separate.</p>
     </header>
-    <div class="ecg-memory-grid">
-      {% for object in graph.shared_objects %}
-      <article class="ecg-memory-card">
-        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-        <strong>{{ object.object }}</strong>
-        <h3>{{ object.role }}</h3>
-        {% if object.warning %}<p>{{ object.warning }}</p>{% endif %}
-        {% if object["contains"] %}<p>{{ object["contains"] | join: " · " }}</p>{% endif %}
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">01</div>
+        <div class="ecg-determination-card__copy">
+          <h3>Condition contract</h3>
+          <p>The contract defines the business partner, validity, settlement rules, relevant conditions, settlement calendar, and the criteria used to determine business volume. It represents the agreement that will be settled later.</p>
+        </div>
       </article>
-      {% endfor %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">02</div>
+        <div class="ecg-determination-card__copy">
+          <h3>Business volume</h3>
+          <p>SAP selects the transactional evidence that belongs to the agreement. For sales rebates this is commonly customer billing data. For purchasing rebates, the business-volume basis can be supplier invoices or goods receipts, depending on the configured process and contract type.</p>
+        </div>
+      </article>
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">03</div>
+        <div class="ecg-determination-card__copy">
+          <h3>Calculation and accruals</h3>
+          <p>The condition records in the contract determine how the eligible volume is valued. Accruals estimate the expected obligation or claim before final settlement; they are not the final commercial settlement itself.</p>
+        </div>
+      </article>
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">04</div>
+        <div class="ecg-determination-card__copy">
+          <h3>Settlement</h3>
+          <p>A settlement run evaluates the contract for a settlement date, calculates the amount due, and creates settlement documents. Those documents connect the commercial agreement to the accounting result.</p>
+        </div>
+      </article>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Two business sides</p>
-      <h2>One engine, different transactional evidence.</h2>
-      <p>Sales and Procurement use the same CCM idea, but they do not use the same business-volume source or commercial direction.</p>
-    </header>
-    <div class="research-route-list">
-      <a href="/labs/enterprise-context/condition-contract-management/sales/"><span>SD</span><strong>{{ graph.sales.title }}</strong><small>{{ graph.sales.purpose }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/condition-contract-management/procurement/"><span>MM</span><strong>{{ graph.procurement.title }}</strong><small>{{ graph.procurement.purpose }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-    </div>
-  </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="ccm-configuration" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Configuration map</p>
-      <h2>{{ graph.shared_configuration.memory_path }}</h2>
-      <p>Each layer answers a different question. This is more useful than memorizing one long SPRO path.</p>
+      <h2>CCM has three configuration layers: pricing, contract maintenance, and settlement.</h2>
+      <p>For design work, we separate the commercial conditions from the contract shell and from the process that creates settlement documents. This makes troubleshooting much faster.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for step in graph.shared_configuration.steps %}
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">{% if step.order < 10 %}0{% endif %}{{ step.order }}</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">Configuration layer</p>
-          <h3>{{ step.area }}</h3>
-          <p>{{ step.purpose }}</p>
-          <p><strong>Diagnostic:</strong> {{ step.check }}</p>
-          {% if step.configuration_objects %}<p><strong>Objects:</strong> {{ step.configuration_objects | join: " · " }}</p>{% endif %}
-        </div>
-      </article>
-      {% endfor %}
+
+    <div class="ecg-decision-columns">
+      <div><h3>1. Pricing for settlement</h3><p>Define the condition types and pricing procedures used to calculate rebate, accrual, and settlement values. Settlement pricing is deliberately small because the business-volume base is determined before the pricing calculation.</p></div>
+      <div><h3>2. Condition contract maintenance</h3><p>Define contract types, partner side, validity, allowed fields, business-volume selection, settlement conditions, accrual conditions, and release behavior.</p></div>
+      <div><h3>3. Condition contract settlement</h3><p>Define settlement process parameters, settlement document behavior, calendar/date types, pricing, tax, accounting, and the link back to the condition contract type.</p></div>
     </div>
+
+    <p>A useful memory path is <strong>TYPE → VOLUME → CONDITION → CALENDAR → SETTLEMENT → DOCUMENT → FI</strong>. If the business volume is wrong, we do not debug settlement pricing first. If the volume is correct but the amount is wrong, then we move into the condition and settlement pricing layer.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="ccm-runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lifecycle</p>
+      <h2>The contract becomes meaningful only when business volume is interpreted correctly.</h2>
+      <p>A practical CCM flow is not “create contract, then run settlement.” The business-volume definition in the middle determines which transactions are counted, when they count, and therefore which amount is eventually settled.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Condition Contract Management lifecycle">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Agreement and validity</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Business-volume selection</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Rate, scale and accrual logic</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Settlement date type</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Settlement document and FI effect</span>
+      </div>
+    </div>
+    <p>That middle step is where many design errors hide. A contract can contain the right percentage and still produce the wrong amount if the wrong customer, material, date, invoice, goods receipt, or other selection criterion enters the business volume.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="ccm-business-volume" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business-volume base</p>
+      <h2>The rebate percentage is often easy. Selecting the correct population of transactions is harder.</h2>
+      <p>CCM can determine business volume from transactional data and aggregate it into the key figure used for settlement. The source and selection logic are configured independently from the condition record.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Source</h3><p>The source is configured for the scenario. Examples include billing documents, purchase orders, deliveries, point-of-sale data, supplier invoices, goods receipts, or an agreed fixed budget.</p></div>
+      <div><h3>Selection</h3><p>Field combinations can include or exclude partners, products, plants, organizations, dates, and other attributes. Inclusive and exclusive logic lets us define the eligible population precisely.</p></div>
+      <div><h3>Key figure</h3><p>The settlement base can be monetary sales, quantity, weight, volume, points, or another supported key figure. The selected key figure is the business-volume base for scale and settlement calculation.</p></div>
+      <div><h3>Granularity</h3><p>If volume is available at plant, material, cost-center, or other configured level, later settlement can distribute the rebate according to each eligible partner's contribution.</p></div>
+    </div>
+
+    <p>For support, <strong>Display Business Volume</strong> is often the decisive evidence. It tells us whether the contract sees the documents we expected. A settlement run can be technically successful and still be commercially wrong if this population is wrong.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Sales pricing memory anchors</p>
-      <h2>RES1, REA1, RED1: learn the role, not only the code.</h2>
-      <p>{{ graph.standard_sales_pricing_example.boundary }}</p>
+      <p class="research-canvas__eyebrow">Settlement timing</p>
+      <h2>Accrual, partial settlement, and final settlement answer different questions.</h2>
+      <p>The settlement calendar controls when the agreement is evaluated, but the settlement date type controls what that evaluation means.</p>
     </header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.standard_sales_pricing_example.conditions %}
-      <article class="ecg-memory-card">
-        <span>{{ item.id }}</span>
-        <strong>{{ item.role }}</strong>
-        <h3>{{ item.remember }}</h3>
-      </article>
-      {% endfor %}
-      {% for item in graph.standard_sales_pricing_example.procedures %}
-      <article class="ecg-memory-card">
-        <span>{{ item.id }}</span>
-        <strong>Pricing procedure</strong>
-        <h3>{{ item.role }}</h3>
-      </article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Delta accruals</h3>
+        <p>Recalculate accumulated accrual requirements from the relevant business volume and post the difference. This updates the estimate without closing the commercial agreement.</p>
+      </div>
+      <div>
+        <h3>Partial settlement</h3>
+        <p>Provisionally settle a period while the condition contract remains active. SAP can take previous settlements into account when later volume or scale levels change.</p>
+      </div>
+      <div>
+        <h3>Final settlement</h3>
+        <p>Permanently settle a defined period of the contract. A contract can contain more than one final-settlement period, so “final” does not always mean that the whole contract history is represented by one document.</p>
+      </div>
+      <div>
+        <h3>Delta settlement</h3>
+        <p>Correct a period that was already finally settled when late postings or later corrections change its business-volume base. Delta settlements can be repeated and previous delta settlements are considered.</p>
+      </div>
     </div>
+    <p>A partial settlement can also be cumulative. In that case, earlier periods are rolled up so a higher scale level can affect the provisional result earlier. Delta accruals are different: they update the expected accrual position and clear the previous accrual state without acting as the partner's commercial settlement.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Accounting model</p>
-      <h2>Accrual is the estimate. Settlement is the commercial execution.</h2>
-      <p>Keep FI direction, tax, and account determination separate from the business-volume question.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.accounting_model %}
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">{{ forloop.index }}</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">{{ item.stage }}</p>
-          <h3>{{ item.meaning }}</h3>
-          <p><strong>Lead check:</strong> {{ item.lead_check }}</p>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="ccm-standard-sales-example" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">{{ graph.synthetic_example.label }}</p>
-      <h2>{{ graph.synthetic_example.scenario }}</h2>
-      <p>This example is intentionally simple so the process logic is visible.</p>
+      <p class="research-canvas__eyebrow">Standard sales-rebate example</p>
+      <h2>RES1, REA1 and RED1 are useful memory anchors for how settlement pricing is separated.</h2>
+      <p>These are SAP-delivered examples for a sales rebate scenario. We use them to understand the model, not as a rule that every project must copy the standard configuration unchanged.</p>
     </header>
-    <div class="research-route-list">
-      {% for fact in graph.synthetic_example.facts %}
-      <a href="#"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ fact }}</strong><small>Simple arithmetic; real design depends on business-volume, scale, tax, settlement, and correction rules.</small><i class="material-symbols-outlined" aria-hidden="true">calculate</i></a>
-      {% endfor %}
+
+    <div class="ecg-decision-columns">
+      <div><h3>RES1 — Rebate</h3><p>Maintained in the condition contract as the commercial rebate condition. In the standard sales example it uses access sequence <code>RE01</code> and participates in settlement pricing such as procedure <code>A10005</code>.</p></div>
+      <div><h3>REA1 — Rebate Accruals</h3><p>Maintained in the condition contract as the accrual condition. Its accrual indicator is active. The amount represents the expected accrual and is dissolved again during settlement.</p></div>
+      <div><h3>RED1 — Delta accrual calculation</h3><p>Used during delta accrual settlement, for example with pricing procedure <code>A10006</code>. It is not itself an accrual condition; it references the accrual logic so the net amount can be used for the accrual update.</p></div>
     </div>
+
+    <p>Condition contract types are another memory anchor. The basic sales-rebate example is <code>0S01</code>. SAP also delivers variants for multiple customers and different tax treatment, including <code>0S02</code> and goods-related variants <code>0SG1</code> to <code>0SG4</code>. TPM integration uses dedicated standard variants such as <code>0ST1</code> to <code>0ST4</code>. We still verify the exact type and tax design in the target release.</p>
+
     <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">school</span>
-      <p><strong>Lesson:</strong> {{ graph.synthetic_example.lesson }}</p>
+      <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+      <p><strong>Key distinction:</strong> ordinary SD pricing prices the current sales or billing document. CCM conditions define an agreement whose final amount is settled later from accumulated business volume.</p>
+      <a href="/labs/enterprise-context/pricing/">Open the Sales Pricing guide <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">SAP GUI toolbox</p>
-      <h2>Use the transaction that answers the current question.</h2>
-      <p>The useful order is contract, business volume, settlement, then document and accounting trace.</p>
+      <p class="research-canvas__eyebrow">Sales and procurement</p>
+      <h2>The same CCM idea uses different transactional evidence.</h2>
+      <p>Do not memorize sales and purchasing rebates as two unrelated tools. The shared pattern is agreement plus accumulated business volume plus subsequent settlement. What changes is the commercial direction and the source of that volume.</p>
     </header>
     <div class="research-route-list">
-      {% for tx in graph.transactions %}
-      <a href="#"><span>{{ tx.id }}</span><strong>{{ tx.name }}</strong><small>{{ tx.use }}</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
-      {% endfor %}
+      <a href="/labs/enterprise-context/condition-contract-management/sales/"><span>SD</span><strong>Sales rebates</strong><small>Customer agreement, billing-based business volume, rebate calculation, accruals, and customer-side settlement.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/condition-contract-management/procurement/"><span>MM</span><strong>Purchasing rebates</strong><small>Supplier agreement with business volume based on the configured purchasing process, including supplier-invoice or goods-receipt scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
+    <p>SAP's current purchasing-rebate documentation explicitly supports both supplier-invoice-based and goods-receipt-based business volume. That distinction is not cosmetic: it changes when an entitlement becomes measurable and which operational documents explain the settlement result.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Sales vs Procurement</p>
-      <h2>The important difference is the economic event.</h2>
+      <p class="research-canvas__eyebrow">A concrete example</p>
+      <h2>Why a 3% rebate can still be a data-selection problem.</h2>
     </header>
-    <div class="ecg-determination-list">
-      {% for row in graph.sales_vs_procurement %}
-      <article class="ecg-determination-card">
-        <div class="ecg-determination-card__index">{{ forloop.index }}</div>
-        <div class="ecg-determination-card__copy">
-          <p class="research-canvas__eyebrow">{{ row.dimension }}</p>
-          <h3>Sales: {{ row.sales }}</h3>
-          <p><strong>Procurement:</strong> {{ row.procurement }}</p>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
+    <p>Assume a customer receives a year-end rebate once eligible sales pass a threshold. The contract contains the correct scale and rate, but one product family was accidentally excluded from the business-volume criteria. Billing documents are correct, pricing on those invoices is correct, and the settlement program runs successfully. The result is still too low because SAP evaluated the wrong population of transactions.</p>
+    <p>The useful diagnostic sequence is therefore: confirm the contract and validity, inspect the business volume that SAP selected, then inspect the condition calculation, and only after that trace the settlement document and accounting posting. Starting from the percentage often sends the investigation to the wrong layer.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead design questions</p>
-      <h2>Ask these before choosing configuration.</h2>
-      <p>They expose the real design boundary: evidence, calculation, timing, tax, correction, and ownership.</p>
+      <p class="research-canvas__eyebrow">S/4HANA boundary</p>
+      <h2>Condition contracts are the S/4HANA settlement model for new rebate processing.</h2>
+      <p>SAP introduced Settlement Management as the successor architecture to classic SD rebate processing. Older SAP ERP knowledge about rebate agreements and the VBOX index is therefore useful mainly as migration context, not as the model to apply to a new S/4HANA rebate design.</p>
     </header>
-    <div class="research-route-list">
-      {% for question in graph.lead_design_questions %}
-      <a href="#"><span>?</span><strong>{{ question }}</strong><small>Answer with business rules first, then map the rule to CCM configuration.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      {% endfor %}
-    </div>
+    <p>That does not mean every rebate scenario is identical. Contract types, business-volume sources, settlement methods, tax behavior, application availability, and configuration options are release- and scenario-sensitive. Verify those details against the target S/4HANA edition and release instead of copying a transaction or condition-type list from another implementation.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+
+  <section class="research-canvas__inventory" id="ccm-assessment" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Assessment answer</p>
-      <h2>Explain CCM as a flow, not as a transaction list.</h2>
+      <p class="research-canvas__eyebrow">Assessment memory</p>
+      <h2>Explain CCM from agreement to financial settlement.</h2>
+      <p>A Lead answer should make the separation between contract, business volume, accrual, and settlement explicit.</p>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>{{ graph.assessment_answer }}</p>
+      <p><strong>60-second answer:</strong> Condition Contract Management is the S/4HANA Settlement Management model for commercial conditions that are agreed now but settled later. The condition contract defines the partner, validity, eligible scope, rebate or accrual conditions, and settlement calendar. SAP then determines the relevant business volume, for example customer billing data, and uses settlement pricing to calculate accruals or the amount due. Delta accruals update the expected liability, partial settlements provisionally pay against accumulated volume, final settlement closes a period, and delta settlement corrects a period after late changes. When the amount is wrong, I check contract and status, business volume, rate and scale, settlement pricing, then tax and FI posting.</p>
     </div>
-    <div class="research-route-list">
-      {% for note in graph.lead_assessment_notes %}
-      <a href="#"><span>→</span><strong>{{ note }}</strong><small>Use this as an architecture statement, then support it with the Sales or Procurement runtime path.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      {% endfor %}
+
+    <div class="ecg-decision-columns">
+      <div><h3>Business volume is zero</h3><p>Check contract validity and release, source/profile, field combinations, partner/product scope, document dates, and whether the expected source event exists.</p></div>
+      <div><h3>Volume is correct, amount is wrong</h3><p>Move to rebate/accrual condition, scale, calculation base, sign, settlement pricing procedure, and previously settled amounts.</p></div>
+      <div><h3>Amount is correct, posting is wrong</h3><p>The problem has crossed into settlement-document control, tax, account determination, FI status, or authorization.</p></div>
+      <div><h3>Late posting after final settlement</h3><p>Do not reopen the whole model manually. Check whether delta settlement is the designed correction path for the already-finalized period.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ccm-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Five questions that separate the agreement from the settlement result.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>model</small></div><h3>Why is CCM different from a normal invoice discount?</h3></header><p>A normal document condition prices the current transaction. A condition contract represents a commercial agreement that can be settled later against business volume accumulated across many transactions.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>volume</small></div><h3>The rebate rate is correct, but the result is wrong. What first?</h3></header><p>Prove the eligible business volume before changing pricing. Check the contract validity, partner and product scope, source data, selection criteria, and whether the expected transactions are included.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>accrual</small></div><h3>Is a delta accrual the same as paying the rebate?</h3></header><p>No. A delta accrual updates the expected accrual position. The commercial settlement is a separate step.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>settlement</small></div><h3>Partial settlement or final settlement?</h3></header><p>Partial settlement settles achieved business volume while the agreement continues. Final settlement closes the defined settlement period; later corrections can require a designed delta-settlement path.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>diagnosis</small></div><h3>Business volume and amount are correct, but FI is wrong. Where next?</h3></header><p>Move past business-volume selection and settlement pricing. Check settlement-document control, tax, account determination, posting status, and the accounting document.</p></article>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Primary evidence</p>
-      <h2>Check release-sensitive behavior against SAP sources.</h2>
-      <p>The explanation above is independently written. Configuration names, standard examples, and app availability can differ by S/4HANA edition and release.</p>
+      <h2>Use SAP documentation for release-sensitive behavior.</h2>
+      <p>The model above is intentionally compact. These sources cover the current product concepts and the sales/purchasing variants in more detail.</p>
     </header>
     <div class="research-route-list">
-      {% for source in evidence.sources %}
-      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope | default: source.source_type }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      {% endfor %}
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/1f9d79fe780f4569a98575f3ef73ec8f/64d74958146d9244e10000000a4450e5.html" target="_blank" rel="noopener"><span>SAP</span><strong>Maintain Contract - Condition Contracts</strong><small>SAP S/4HANA 2025 FPS01 condition-contract scope and supported agreement types.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/a41104a0081545a5bcbdd807ba60fcf0/feb25258fcce2060e10000000a44147b.html" target="_blank" rel="noopener"><span>SAP</span><strong>Sales Rebate Management</strong><small>Customer billing business volume, accruals, partial settlement, and final settlement.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/2a560f6f15704c50a261627bb4691fbc/82048fb7aefd4ec1918a0c68f5216693.html" target="_blank" rel="noopener"><span>SAP</span><strong>Purchasing Rebate Management</strong><small>Supplier-invoice and goods-receipt business volume with purchasing rebate settlement.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/83bc764dd7874d349cc8150bdab246f6/503fb0a6c3f2431d8b12f9c049ca5bc2.html" target="_blank" rel="noopener"><span>SAP</span><strong>Settlement Date Types</strong><small>Current definitions of partial and final settlement behavior.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
+    <p class="ecg-caption">The Enterprise Context source registry contains the broader source set used for the CCM graph. Standard condition types, app IDs, and transaction codes are deliberately kept out of the main explanation because they are more release-sensitive than the conceptual model.</p>
   </section>
 </div>

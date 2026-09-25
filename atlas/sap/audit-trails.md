@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Audit Trails"
-description: "Analytical overview of Audit Trails in SAP: what they are, where they sit, and how they break."
+description: "SAP audit evidence explained: security audit logs, change documents, table logging, read access logging, and transport history."
 permalink: /atlas/sap/audit-trails/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "Audit Trails"
 business_process: "Operations and observability"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -40,7 +40,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Technology</p>
     <h1>Audit Trails</h1>
-    <p class="note-subtitle">Recording who did what, when, and why in SAP systems.</p>
+    <p class="note-subtitle">SAP does not have one universal audit log: different mechanisms record different kinds of evidence.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -53,93 +53,48 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>Audit trails are the mechanisms that record user and system activities in SAP. They capture change documents, table logging, security audit logs, read access logging, and application logs to provide an evidence trail for compliance, forensics, and troubleshooting.</p>
+    <p>When someone asks for “the SAP audit trail,” the first useful question is: <strong>audit trail for what?</strong> A changed business field, a security-relevant logon, a read of sensitive data, a customizing table update, and a transported repository object are different events. SAP records them through different mechanisms, with different configuration and retention rules.</p>
 
-    <h2>Business purpose</h2>
-    <p>Support regulatory compliance (SOX, GDPR, industry-specific mandates). Enable forensic analysis after security incidents or data inconsistencies. Detect unauthorized changes and support internal control audits.</p>
+    <p>This matters during an audit and during incident analysis. If the required mechanism was not active when an event occurred, the missing evidence cannot simply be reconstructed later by looking in another generic log. Auditability has to be designed before it is needed.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Audit trails are embedded in the SAP kernel and application layer. Security audit log and read access logging are configured in transaction RSAU. Change documents and table logging are application-specific. In cloud landscapes, SAP Cloud Identity and BTP subaccount audit logs extend coverage.</p>
+    <h2>Change documents explain business-object changes</h2>
+    <p>Many SAP applications use <strong>change documents</strong> to record changes to business objects. Depending on the object and application implementation, a change document can identify who changed an object, when it changed, and the old and new values of relevant fields. Product master data is a familiar example: SAP documents a change history with user, time, old value, new value, and the channel through which the change was made.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Change documents: before/after values for critical business objects.</li>
-      <li>Table logging: direct table updates logged via SCU3.</li>
-      <li>Security audit log: logon, transaction start, report execution.</li>
-      <li>Read access logging: sensitive data read by users.</li>
-      <li>Application log: program-specific events and errors (SLG1).</li>
-      <li>Audit log files: OS-level files managed by the kernel.</li>
-    </ul>
+    <p>Change documents are application-aware evidence. They are usually more meaningful for a business question than raw table history because the application has defined which object and fields belong to the change. But coverage is not universal: a change document object has to exist and the application has to use it for the relevant data.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: change documents for master data and transactional objects.</li>
-      <li>GRC: access control and risk analysis using audit data.</li>
-      <li>BTP: subaccount audit logs and Cloud Identity events.</li>
-      <li>External: SIEM, log aggregators, and compliance reporting tools.</li>
-    </ul>
+    <h2>Table logging records selected technical data changes</h2>
+    <p>ABAP table logging is a different mechanism. SAP documents that table-change logging requires both an appropriate table logging setting and the relevant <code>rec/client</code> profile configuration. Logged table changes can then be evaluated, for example with <code>SCU3</code>. Audit Trail configuration also provides tools for controlling table or data-element logging in supported scenarios.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom change document objects for bespoke applications.</li>
-      <li>Additional fields in read access logging for sensitive data.</li>
-      <li>Log export to external SIEM or long-term archive.</li>
-      <li>Alert rules for suspicious patterns in audit data.</li>
-    </ul>
+    <p>We do not enable table logging indiscriminately. It produces technical evidence and can add volume and operational cost. The decision should follow the audit requirement: which data needs evidence, which mechanism already covers it, how long the evidence must remain available, and who is allowed to administer or read it.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>RSAU — security audit log analysis and configuration.</li>
-      <li>SCU3 — table logging display and comparison.</li>
-      <li>SLG1 — application log for program-specific events.</li>
-      <li>Change document analysis — object class, key, and time range.</li>
-      <li>Log file health — size, rotation, and retention compliance.</li>
-    </ul>
+    <h2>The Security Audit Log records security-relevant events</h2>
+    <p>The <strong>Security Audit Log</strong> focuses on security-relevant activity in the ABAP platform. SAP lists examples such as successful and unsuccessful logon attempts, transaction starts, and security-related system changes. Which events are recorded and displayed depends on the audit configuration and filters.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Native mechanisms cover most compliance requirements without add-ons.</li>
-      <li>Change documents provide before/after evidence for audits.</li>
-      <li>Security audit log captures low-level system access.</li>
-      <li>Read access logging supports GDPR data protection accountability.</li>
-    </ul>
+    <p>This log answers a different question from a business change document. A successful transaction start can show that a user entered a transaction; it does not by itself explain every business field that the user changed. Conversely, a business change document is not a substitute for security-event logging.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Audit log volume can grow rapidly and impact performance.</li>
-      <li>Not all tables or fields are logged by default.</li>
-      <li>Log tampering is possible if OS-level access is not restricted.</li>
-      <li>Retention policies vary by system and are often misconfigured.</li>
-    </ul>
+    <h2>Read Access Logging covers selected reads of sensitive data</h2>
+    <p>Normal change logging is about modification. Privacy and compliance requirements may also ask who <em>read</em> sensitive information. SAP Read Access Logging (RAL) is designed for selected read-access scenarios and is configured around logging purposes, log domains, and channel-specific configurations.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Unauthorized change — change document reveals unexpected update.</li>
-      <li>Audit log full — disk space or performance issue from excessive logging.</li>
-      <li>Missing evidence — required log not enabled or already deleted.</li>
-      <li>Read access alert — sensitive data queried outside business need.</li>
-      <li>Compliance gap — auditor finds incomplete trail for critical process.</li>
-    </ul>
+    <p>RAL is therefore not “log every read in the system.” Its value comes from defining which sensitive access matters and under which conditions it should be recorded. SAP also records administrative access to RAL configuration and logs in the Security Audit Log, which helps protect the evidence mechanism itself.</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/sap/identity-access/">Identity and Access</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/sap-mdg/">SAP MDG</a></li>
-    </ul>
+    <h2>Transport and repository history provide another evidence layer</h2>
+    <p>Changes delivered through the Change and Transport System have their own history. SAP documents CTS/TMS logs and transport metadata as part of the evidence for productive-system changes, while ABAP version management records repository-object history. This is the trail we follow when the question is how a development or configuration change reached a system, rather than who changed a business master record.</p>
+
+    <h2>Audit evidence only works as a chain</h2>
+    <p>A useful audit trail connects an event to an identity, timestamp, object, action, and retained evidence. It also protects the logging configuration and the logs themselves. For a critical process, we therefore map the requirement to the specific SAP evidence source instead of assuming that one central log captures everything.</p>
+
+    <p>The same model helps troubleshooting. If a value changed unexpectedly, we first identify the business object and its change history. If the concern is unauthorized system access, we move to security audit evidence. If the issue is a transported change, we inspect transport and repository history. The investigation becomes much faster once the question and the log type match.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP Security Audit Log — <a href="https://help.sap.com/docs/sap-netweaver/sap-netweaver-750/security-audit-log">SAP Help Portal</a>.</li>
-      <li>SAP Read Access Logging — <a href="https://help.sap.com/docs/sap-btp/sap-btp/read-access-logging">SAP Help Portal</a>.</li>
+      <li>SAP ABAP Platform — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/025d1fb2f02c42c097f04f45df09106a/7eed4aba8bcb4d7091e289cf0dc00cf4.html">Display Security Audit Log</a>.</li>
+      <li>SAP ABAP Platform Security Guide — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/864321b9b3dd487d94c70f6a007b0397/c769bcd2f36611d3a6510000e835363f.html">Logging Changes to Table Data</a>.</li>
+      <li>SAP ABAP Platform — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/025d1fb2f02c42c097f04f45df09106a/7e0b7b1d831b495b8ea0141038bcab55.html">Configuring Read Access Logging</a>.</li>
+      <li>SAP ABAP Platform Security Guide — <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/864321b9b3dd487d94c70f6a007b0397/c769bcd5f36611d3a6510000e835363f.html">Logging Changes Made Using the Change & Transport System</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Audit log availability, retention, and performance impact vary by release and customer configuration and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Logging coverage, configuration tools, storage, retention, and application-specific change-document behavior depend on the SAP product and release. Verify the concrete mechanism in the target system and confirm that it was enabled for the relevant object and period before treating the absence of a record as evidence that an event did not occur.</p>
   </div>
 
   <section class="atlas-related">
@@ -148,6 +103,7 @@ sitemap: false
       <li><a href="/atlas/sap/identity-access/">Identity and Access</a></li>
       <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
       <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
+      <li><a href="/atlas/sap/sap-mdg/">SAP MDG</a></li>
     </ul>
   </section>
 

@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-23
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -18,7 +18,7 @@ tags:
   - usage-decision
   - logistics
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-02"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP QM quality management process, inspection lots and usage decision"
@@ -69,7 +69,6 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/2bc3ee8d1c83404e8cf62418640004f2/9235b8535c39b44ce10000000a174cb4.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.quality_management %}
 {% assign evidence = site.data.labs.enterprise_context.sources.quality_management %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -80,132 +79,142 @@ source_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Deep vertical / Quality Management</p>
-      <h1>Quality is a decision chain.<br />Blocked stock is only one possible symptom.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#runtime">Trace trigger to disposition <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="Quality Management inventory">
-      <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · synthetic cases · no client data</em>
+      <h1>Quality is a decision chain.<br />The inspection lot holds it together.</h1>
+      <p>SAP Quality Management connects a business event to an inspection, the inspection to recorded evidence, and that evidence to a usage decision. Stock can be part of the process, but it is not the process itself. The useful skill is knowing which quality object explains the business state you see.</p>
+      <a class="research-canvas__button" href="#runtime">Follow the inspection flow <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
-    <p><strong>Working rule:</strong> first identify the quality trigger and inspection context. Then separate evidence, business decision, stock consequence, corrective action, and customer proof. Moving stock manually can hide the real quality-control failure.</p>
-    <a href="/labs/enterprise-context/data/quality-management-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Decision authority model</p><h2>Quality decides disposition. Logistics consumes the decision.</h2><p>This is an authored reasoning frame. It keeps the inspection trigger, recorded evidence, usage decision, and downstream stock or process effect separate.</p></header>
-    <div class="ecg-control-stack">
-      <article><span>TRIGGER</span><h3>Inspection context</h3><p>Why does the inspection exist, and which business event or inspection setup created it?</p><strong>Proof: the inspection lot and context match the intended process.</strong></article>
-      <article><span>EVIDENCE</span><h3>Results and defects</h3><p>What was measured, recorded, accepted, rejected, or left incomplete?</p><strong>Proof: quality evidence supports the next decision.</strong></article>
-      <article><span>DECIDE</span><h3>Usage decision</h3><p>What quality disposition was made, by whom, and with which follow-up action?</p><strong>Proof: decision status and follow-up intent are explicit.</strong></article>
-      <article><span>CONSUME</span><h3>Logistics consequence</h3><p>What should happen to stock, procurement, production, warehouse, delivery, or customer evidence?</p><strong>Proof: downstream logistics state matches the quality decision.</strong></article>
+    <div>
+      <p><strong>Start with why the inspection exists.</strong> An inspection lot can be created automatically from a logistics or production event, or manually for a separate quality task. The inspection lot origin describes that context; the inspection type and inspection setup control how the material is inspected.</p>
+      <p><strong>Do not equate the usage decision with a stock movement.</strong> The usage decision records the quality disposition. A stock posting is a separate consequence and is available only for stock-relevant inspection lots.</p>
     </div>
-    <p class="ecg-caption"><strong>Lead signal:</strong> moving stock is not a substitute for a missing or wrong quality decision. First prove which authority layer is wrong.</p>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review confirms usage-decision behavior and stock posting for stock-relevant inspection lots. Wider trigger, specification, notification, and integration behavior was reviewed against the route source registry; the authority model remains an authored diagnostic frame.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Memory model</p><h2>Eight questions from event to proof.</h2><p>This sequence keeps inspection control separate from inventory and delivery symptoms.</p></header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article class="ecg-memory-card"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item.key }}</strong><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>
-      {% endfor %}
-    </div>
-    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong> The path is a reasoning model. Exact technical execution depends on the inspection scenario.</p>
+    <a href="/labs/enterprise-context/data/quality-management-graph.json">Open the structured quality model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
-    <header><p class="research-canvas__eyebrow">Runtime</p><h2>Inspection starts with a business event and ends with a consequence.</h2><p>An inspection lot alone does not tell the full story. The useful trace includes why it exists, what it checks, what evidence was recorded, what decision was made, and what changed afterward.</p></header>
-    <div class="ecg-determination-list">
-      {% for stage in graph.runtime_pipeline %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>quality stage</small></div><h3>{{ stage.title }}</h3><p class="ecg-question">{{ stage.question }}</p></header>
-        <div class="ecg-decision-columns"><div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div></div>
-      </article>
-      {% endfor %}
+    <header>
+      <p class="research-canvas__eyebrow">Core flow</p>
+      <h2>Five ideas explain most inspection processes.</h2>
+      <p>The screens differ across procurement, production, sales, and warehouse scenarios. The underlying chain is more stable.</p>
+    </header>
+    <div class="ecg-control-stack">
+      <article><span>01</span><h3>Trigger</h3><p>A goods receipt, production-order release, delivery, source inspection, or manual quality task creates the need to inspect.</p><strong>The business event explains why the inspection starts.</strong></article>
+      <article><span>02</span><h3>Inspection lot</h3><p>The lot is the control object for the inspection. Its origin and type place the inspection in a particular business context.</p><strong>The lot connects the event to quality processing.</strong></article>
+      <article><span>03</span><h3>Inspection specification</h3><p>Characteristics, procedures, sampling, and related master data define what must be checked and how the result is evaluated.</p><strong>The specification defines the work, not the lot number alone.</strong></article>
+      <article><span>04</span><h3>Results and defects</h3><p>Recorded results provide the evidence for valuation. Defects describe observed nonconformance when that level of detail is needed.</p><strong>Evidence must exist before a reliable disposition can be made.</strong></article>
+      <article><span>05</span><h3>Usage decision and consequence</h3><p>The usage decision accepts, rejects, or otherwise classifies the inspected quantity. Depending on the scenario, follow-up can affect stock, production, procurement, delivery, or customer quality evidence.</p><strong>The decision and its logistics consequence are related, but they are not the same object.</strong></article>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Control model</p><h2>Do not mix trigger, specification, evidence, decision, and stock.</h2><p>They can all be visible in one inspection process, but each has a different owner and a different root-cause path.</p></header>
-    <div class="ecg-input-grid">
-      {% for item in graph.control_layers %}
-      <article><span>CONTROL</span><h3>{{ item.title }}</h3><p>{{ item.purpose }}</p><p><strong>Ask:</strong> {{ item.diagnostic_question }}</p></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Integration boundaries</p><h2>Quality sits directly on logistics execution boundaries.</h2><p>A purchasing, production, warehouse, inventory, or sales symptom can actually be a quality state problem. Ownership must stay explicit.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Trigger and setup</p>
+      <h2>The same material can be inspected for different reasons.</h2>
+      <p>That is why starting from a transaction code is often misleading. First identify the event and the inspection context.</p>
+    </header>
+    <p>A purchased material may be inspected when it is received from a supplier. A manufactured material may be inspected during production and again when the finished quantity is received. A sales delivery can have its own inspection before goods leave the company. SAP also supports manually created lots for quality work that is not driven by a stock movement.</p>
+    <p>For automatic lot creation, the relevant inspection type must be active in the material's inspection setup and the business event must be connected to the appropriate inspection-lot origin. This distinction matters operationally: if a goods receipt was posted but no lot exists, the first question is whether the trigger and inspection setup matched. Results recording is not yet the problem.</p>
     <div class="research-route-list">
-      {% for item in graph.integration_boundaries %}
-      <a href="#failures"><span>INT</span><strong>{{ item.boundary }}</strong><small>{{ item.ownership }} {{ item.question }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      {% endfor %}
+      <a href="/labs/enterprise-context/procurement/"><span>P2P</span><strong>Procurement</strong><small>Supplier receipt can trigger the inspection; purchasing and inventory remain the owners of the underlying logistics document flow.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production</strong><small>Inspection can happen during execution as well as at goods receipt. Those are different inspection contexts even when they concern the same order and material.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/sales-order/"><span>SD</span><strong>Sales and delivery</strong><small>Delivery-related inspection uses SD and QM control together; the delivery remains a sales/logistics object while the inspection lot carries the quality decision.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Inspection specification</p>
+      <h2>The lot is the container. The specification defines what has to be proven.</h2>
+      <p>A lot without the right inspection specification can exist technically and still fail to support the intended quality process.</p>
+    </header>
+    <p>Inspection characteristics describe what is measured or assessed. Sampling logic determines how much of the lot is inspected. Valuation turns recorded results into accepted or rejected characteristic outcomes. Depending on the process, the specification can come from inspection planning or from production master data such as operations and inspection characteristics.</p>
+    <p>For example, receiving 100 pieces does not automatically mean inspecting all 100. The inspection setup and sampling procedure can determine a sample, while the inspection plan defines the characteristics to record. The quantity in the logistics document, the quantity represented by the inspection lot, and the quantity physically sampled answer different questions.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Three process shapes</p>
+      <h2>Procurement, production, and delivery reuse QM concepts in different ways.</h2>
+      <p>The inspection lot is common. The trigger and downstream consequence are not.</p>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header><div><span>GR</span><small>procurement</small></div><h3>Goods receipt inspection</h3><p class="ecg-question">A supplier receipt can create an inspection lot when QM is active for the material and the goods-movement context is configured for inspection.</p></header>
+        <div class="ecg-decision-columns"><div><h4>Quality side</h4><p>The lot receives its inspection specification, results are recorded, and a usage decision closes the quality assessment.</p></div><div><h4>Logistics side</h4><p>If the lot is stock-relevant, the inspected quantity can be posted to the appropriate stock category as part of completing the process.</p></div></div>
+      </article>
+      <article class="ecg-determination-detail">
+        <header><div><span>03</span><small>production</small></div><h3>Inspection during production</h3><p class="ecg-question">Releasing a production or process order can create an in-process inspection lot when the relevant inspection type is active.</p></header>
+        <div class="ecg-decision-columns"><div><h4>Quality side</h4><p>Operations and inspection characteristics from production master data can become the basis for recording quality results during execution.</p></div><div><h4>Important boundary</h4><p>An in-process inspection and a goods-receipt inspection are different controls. Closing the in-process lot does not automatically mean that finished-goods stock has been posted.</p></div></div>
+      </article>
+      <article class="ecg-determination-detail">
+        <header><div><span>SD</span><small>delivery</small></div><h3>Delivery inspection</h3><p class="ecg-question">QM can create an inspection lot for a delivery item when the SD/QM control settings and material inspection data require it.</p></header>
+        <div class="ecg-decision-columns"><div><h4>Quality side</h4><p>The inspection records whether the delivered material meets the required quality criteria and can use customer-specific quality data where configured.</p></div><div><h4>Sales side</h4><p>The delivery process consumes the quality outcome; it does not replace the inspection lot as the quality object.</p></div></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Usage decision and stock</p>
+      <h2>A quality decision can change stock, but only when the lot is stock-relevant.</h2>
+      <p>This boundary explains many cases where a user expects a material movement simply because a usage decision was made.</p>
+    </header>
+    <p>The usage decision records the final quality disposition of an inspection lot. SAP can also use the selected decision code for follow-up processing. For a stock-relevant lot, stock posting can be performed while the usage decision is being processed and, while open quantities remain, can also be completed before or after the decision. The resulting inventory posting is recorded in a material document.</p>
+    <p>Non-stock-relevant lots do not offer that QM stock-posting function. A manually created sample inspection is a simple example: the inspection can produce valid quality evidence and a usage decision without owning an inventory quantity. This is why “usage decision made” and “stock released” should never be treated as synonyms.</p>
+    <div class="research-canvas__boundary" data-reveal>
+      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      <p><strong>Useful split:</strong> QM decides whether the inspected material is acceptable for its intended use. <a href="/labs/enterprise-context/inventory-management/">Inventory Management</a> records the stock state created by a goods movement. In warehouse-managed scenarios, <a href="/labs/enterprise-context/ewm/">EWM</a> can add a separate physical-execution layer around that stock change.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="failures" data-reveal>
-    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>Find the quality state that is wrong before moving stock or changing documents.</h2><p>The same blocked material can come from a missing inspection, incomplete result, wrong specification, missing usage decision, failed stock posting, or warehouse execution gap.</p></header>
-    <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}
-      <article class="ecg-determination-detail"><header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header><div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div></div></article>
-      {% endfor %}
+    <header>
+      <p class="research-canvas__eyebrow">When the process stops</p>
+      <h2>Find the missing transition instead of forcing the stock.</h2>
+      <p>“QM blocked the material” is a symptom. The useful diagnosis is the first quality state that differs from the intended process.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="#runtime"><span>01</span><strong>No inspection lot where one was expected</strong><small>Start with the business event, lot origin, active inspection type, and material inspection setup. There is no value debugging results or usage decision before the lot exists.</small><i class="material-symbols-outlined" aria-hidden="true">search</i></a>
+      <a href="#runtime"><span>02</span><strong>The lot exists but cannot be completed</strong><small>Check whether the inspection specification is assigned and whether required results, samples, and valuations are complete enough for the intended usage decision.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
+      <a href="#runtime"><span>03</span><strong>The usage decision exists but the business state is still wrong</strong><small>Separate the quality decision from its consequence. For stock questions, confirm stock relevance, open posting quantity, material document, and any warehouse execution that follows.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
     </div>
+    <p>Manual stock movement can make the immediate symptom disappear while leaving the inspection lot, audit trail, or downstream process inconsistent. Correct the quality or logistics transition that actually failed.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>One quality decision can change inventory, production, or customer fulfillment.</h2><p>Use these traces to explain why QM is not an isolated specialist module.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Cross-process ownership</p>
+      <h2>QM controls the inspection; neighboring processes still own their documents.</h2>
+      <p>This division of responsibility is more useful than treating QM as an isolated module.</p>
+    </header>
     <div class="research-route-list">
-      {% for item in graph.impact_traces %}
-      <a href="#lead-lens"><span>TRACE</span><strong>{{ item.title }}</strong><small>{{ item.path }} · {{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
-      {% endfor %}
+      <a href="/labs/enterprise-context/procurement/"><span>MM</span><strong>Procurement owns the purchasing context</strong><small>Supplier, purchase order, goods receipt, and source relationship explain why the material arrived and which commercial process it belongs to.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory owns the recorded stock movement</strong><small>A material document proves that stock was posted. The inspection lot explains the quality context around that posting.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
+      <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production owns executable manufacturing work</strong><small>The production or process order provides the execution context; QM evaluates characteristics and quality outcomes attached to that process.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
+      <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Warehouse execution owns physical movement</strong><small>When EWM is involved, confirm where the inspection and warehouse stock transition are executed instead of assuming the S/4HANA inspection lot describes every warehouse step.</small><i class="material-symbols-outlined" aria-hidden="true">warehouse</i></a>
+      <a href="/labs/enterprise-context/sales-order/"><span>SD</span><strong>Sales and delivery own customer fulfillment</strong><small>QM can inspect a delivery and provide quality evidence, while the sales and shipping documents remain the fulfillment backbone.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="lead-lens" data-reveal>
-    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>Explain which state is wrong and who owns the next decision.</h2><p>A good answer separates quality authority from the logistics process that triggered or consumes it.</p></header>
-    <div class="ecg-input-grid">
-      <article><span>ASK</span><h3>What I ask first</h3><p>{{ graph.lead_lens.what_i_ask_first }}</p></article>
-      <article><span>OWN</span><h3>Decision ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
-      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
-      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
-      <article><span>PROVE</span><h3>Proof of cause</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
-      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
-    </div>
+    <header>
+      <p class="research-canvas__eyebrow">Reasoning across the chain</p>
+      <h2>Read the process from the business consequence back to the inspection.</h2>
+      <p>This is usually faster than starting from whichever QM screen a user happened to open.</p>
+    </header>
+    <p>If a supplier receipt is still unavailable for consumption, begin with the stock state and material document. Then find the related inspection lot and ask why it was created, which inspection type applies, whether the specification and results are complete, whether a usage decision exists, and whether a stock posting is still open. Each step has a different owner and a different correction.</p>
+    <p>The same logic works in production and delivery scenarios. Start with the business effect, identify the quality object that should authorize the next state, and verify the evidence behind that decision. This keeps quality control auditable and prevents a logistics workaround from becoming a hidden process defect.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Synthetic cases</p><h2>Practice the state transition, not the screen sequence.</h2><p>These cases are fictional and exist to test reasoning safely.</p></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.synthetic_cases %}
-      <article class="ecg-determination-detail"><header><div><span>CASE</span><small>synthetic</small></div><h3>{{ item.title }}</h3><p>{{ item.scenario }}</p></header><div class="ecg-decision-columns"><div><h4>Lead path</h4><ol>{% for step in item.lead_path %}<li>{{ step }}</li>{% endfor %}</ol></div><div><h4>Lesson</h4><p>{{ item.lesson }}</p></div></div></article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Short questions that expose ownership and evidence.</h2><p>The strong answer is a coverage check, not a script.</p></header>
-    <div class="research-route-list">
-      {% for item in graph.assessment_drills %}
-      <a href="/labs/assessment/"><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.strong_answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Sources</p><h2>Primary documentation checks the facts.</h2><p>The explanations and models remain independently written. Product behavior is source-tracked and review-dated.</p></header>
+    <header>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>Primary SAP documentation anchors the product behavior.</h2>
+      <p>The explanation above is independently written. Release-sensitive behavior should still be checked against the product and deployment model in use.</p>
+    </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
       <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>

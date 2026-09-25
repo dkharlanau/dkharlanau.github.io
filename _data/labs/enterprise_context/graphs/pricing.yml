@@ -10,7 +10,7 @@ process_family: "Order-to-Cash"
 process_step: "Price Sales Document"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-09-24"
 verified_at: null
 
 thesis: >-
@@ -600,3 +600,81 @@ source_refs:
   - SRC-SAP-PRICING-CLASSIC-USER-EXITS
   - SRC-SAP-PRICING-VOFM
   - SRC-SAP-PRICING-BILLING-TROUBLESHOOTING
+
+
+condition_record_operations:
+  manage_prices_sales:
+    purpose: "Create, copy, edit, import, export, and mass-maintain sales condition records."
+    lead_check: "Prove the document runtime key before changing master data."
+    controls:
+      - "condition type and key combination drive dynamic fields"
+      - "validity intervals"
+      - "condition amount or ratio"
+      - "spreadsheet import and export"
+      - "background processing for large changes"
+      - "overlapping validity can shorten or replace existing intervals"
+    source_refs:
+      - SRC-SAP-PRICING-MANAGE-PRICES-REFERENCE
+
+special_condition_examples:
+  boundary: >-
+    SAP-delivered condition types are memory anchors for standard behavior. They are not a recommendation
+    to copy a standard pricing procedure unchanged into every project.
+  examples:
+    - id: "HM00"
+      role: "Manual order value at header level"
+      behavior: "Distributes the manually entered order value proportionally to items and triggers tax redetermination."
+      source_refs: [SRC-SAP-PRICING-LEARNING-SPECIAL-TYPES]
+    - id: "PN00"
+      role: "Manual net price at item level"
+      behavior: "Sets the item net price and deactivates the original pricing conditions for that item."
+      source_refs: [SRC-SAP-PRICING-LEARNING-SPECIAL-TYPES]
+    - id: "PMIN"
+      role: "Minimum material price"
+      behavior: "Adds the difference when the calculated item value is below the configured minimum price."
+      source_refs: [SRC-SAP-PRICING-LEARNING-SPECIAL-TYPES]
+    - id: "DIFF"
+      role: "Rounding difference"
+      behavior: "Represents the currency rounding difference and distributes it across items as a group condition."
+      source_refs: [SRC-SAP-PRICING-LEARNING-SPECIAL-TYPES]
+    - id: "VPRS"
+      role: "Statistical material cost"
+      behavior: "Reads material valuation cost for margin analysis without changing the normal sales net value."
+      source_refs: [SRC-SAP-PRICING-LEARNING-STATISTICAL]
+    - id: "SKTO"
+      role: "Statistical cash discount"
+      behavior: "Reads the cash-discount percentage from payment terms and calculates the statistical amount."
+      source_refs: [SRC-SAP-PRICING-LEARNING-STATISTICAL]
+    - id: "EDI1 / EDI2"
+      role: "Customer expected price/value"
+      behavior: "Compares customer expectation with calculated pricing and can make the order incomplete when the difference exceeds the configured rule."
+      source_refs: [SRC-SAP-PRICING-LEARNING-STATISTICAL]
+
+special_pricing_controls:
+  - control: "Header conditions"
+    remember: "Manual by design in the standard examples; distribution can use net value or another alternative base such as weight or volume."
+    source_refs: [SRC-SAP-PRICING-LEARNING-CONDITION-TECHNIQUE]
+  - control: "Group conditions"
+    remember: "Accumulate quantity or value across related items before applying the condition."
+    source_refs: [SRC-SAP-PRICING-LEARNING-SPECIAL-FUNCTIONS]
+  - control: "Condition exclusion"
+    remember: "A valid condition can be found and then intentionally deactivated because another condition or exclusion group wins."
+    source_refs: [SRC-SAP-PRICING-LEARNING-SPECIAL-FUNCTIONS]
+  - control: "New pricing / pricing type"
+    remember: "Controls what is copied, redetermined, or updated when pricing is executed again in sales or billing."
+    source_refs: [SRC-SAP-PRICING-LEARNING-CONDITION-TECHNIQUE]
+
+tax_boundary:
+  standard_example: "MWST"
+  determination_inputs:
+    - "business transaction such as domestic/export/import"
+    - "destination context"
+    - "customer-side tax classification"
+    - "material tax classification"
+  us_examples:
+    - "TAXUS — tax calculated in Sales"
+    - "TAXUSJ — jurisdiction-based central tax procedure"
+    - "TAXUSX — central procedure with external/RFC tax calculation"
+  lead_check: "First prove who owns the rate: SD condition technique, FI tax procedure, or external tax service."
+  source_refs:
+    - SRC-SAP-PRICING-LEARNING-TAX

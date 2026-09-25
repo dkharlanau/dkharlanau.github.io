@@ -216,8 +216,8 @@
       "code": "MEC.SD.PRICE",
       "id": "MEC-SD-PRICE",
       "title": "Pricing",
-      "memory_hook": "First prove the procedure. Only then hunt the condition record.",
-      "question": "Which pricing procedure runs, and how does it find each price element?",
+      "memory_hook": "Procedure first. Record second. Calculation third.",
+      "question": "Which pricing procedure runs, which conditions are eligible, where do they search, and how does the result become a value?",
       "inputs": [
         {
           "name": "sales area",
@@ -236,18 +236,25 @@
           "origin": "condition records"
         }
       ],
-      "determination": "Sales area + customer pricing procedure + document pricing procedure determine the pricing procedure. The procedure then processes condition types and their access sequences to find condition records.",
+      "determination": "Sales area + customer pricing procedure + document pricing procedure determine the pricing procedure. The procedure processes condition types by step and counter. Requirements can stop a condition, access sequences search condition tables for valid records, and calculation rules such as scales, alternative bases, formulas, subtotals, group logic, exclusion and manual-entry controls shape the final result.",
       "outputs": [
-        "price elements",
+        "active and inactive price elements",
+        "subtotals and statistical values",
         "net value",
-        "tax/freight/discount results as configured"
+        "tax/freight/discount results as configured",
+        "pricing status and analysis trace"
       ],
       "controls": [
-        "commercial value",
-        "statistical/subtotal values",
-        "manual vs automatic conditions",
-        "requirements and formulas",
-        "accounting relevance of price elements"
+        "procedure determination",
+        "condition eligibility and sequence",
+        "automatic versus manual pricing",
+        "condition-record search and validity",
+        "scale, base and calculation type",
+        "group conditions and condition exclusion",
+        "subtotals and statistical conditions",
+        "billing copy or repricing behavior",
+        "tax integration boundary",
+        "accounting relevance of selected price elements"
       ],
       "downstream": [
         "MEC.SD.CREDIT",
@@ -256,36 +263,76 @@
         "MEC.SD.OUTPUT"
       ],
       "configuration_surfaces": [
-        "Pricing procedure determination",
-        "Pricing procedures",
-        "Condition types",
-        "Access sequences",
-        "Condition tables"
+        "OVKK pricing procedure determination",
+        "V/08 pricing procedures: step, counter, requirement, subtotal, alternative base/amount and flags",
+        "V/06 condition types: class/category, calculation type, scale base, plus/minus and manual controls",
+        "V/07 access sequences and access requirements",
+        "V/03 condition tables and pricing field catalog",
+        "VK11/VK12/VK13 classic condition-record maintenance where used",
+        "Manage Prices - Sales for current Fiori condition-record maintenance",
+        "Copy control pricing type for order/delivery to billing repricing"
       ],
       "classic_transactions": [
         "OVKK",
-        "V/08"
+        "V/08",
+        "V/06",
+        "V/07",
+        "V/03",
+        "VK11",
+        "VK12",
+        "VK13"
       ],
       "failure_modes": [
         {
           "symptom": "Condition record exists but price is missing",
-          "prove": "Prove pricing procedure → condition type → access sequence → access key → validity before editing the record."
+          "prove": "Prove pricing procedure → condition eligibility/requirement → access sequence → exact runtime key → validity → scale before changing the record."
         },
         {
-          "symptom": "Invoice price differs from order",
-          "prove": "Check copy-control pricing type and whether billing reprices or copies conditions."
+          "symptom": "Correct rate but wrong condition value",
+          "prove": "Separate rate, base and value. Check calculation type, scale base, subtotal, alternative base/amount formula, group accumulation and rounding."
+        },
+        {
+          "symptom": "Expected discount is found but inactive",
+          "prove": "Check condition exclusion, competing exclusion groups, requirement logic, manual conditions and whether an earlier condition intentionally suppresses it."
+        },
+        {
+          "symptom": "Header discount is distributed unexpectedly",
+          "prove": "Check whether it is a header condition and which Alternative Condition Base Value routine distributes it by net value, weight, volume or another basis."
+        },
+        {
+          "symptom": "Order price is correct but billing differs",
+          "prove": "Treat billing as a new pricing context. Check copy-control pricing type, pricing date, manual-condition handling, tax context and custom pricing fields in billing."
+        },
+        {
+          "symptom": "Tax looks like a pricing defect",
+          "prove": "Check destination/business transaction, customer and material tax classifications, then prove whether SD, FI tax procedure or an external tax service owns the rate."
         }
       ],
       "tests": [
         {
           "id": "TEST-MEC-PRICE-01",
           "setup": "Create two customers with different customer pricing procedure values and identical material/quantity.",
-          "assert": "The determined pricing procedure follows the configured key."
+          "assert": "The determined pricing procedure follows sales area + customer pricing procedure + document pricing procedure."
         },
         {
           "id": "TEST-MEC-PRICE-02",
           "setup": "Maintain a specific customer-material condition and a generic fallback.",
-          "assert": "The access sequence finds the more specific valid record first when configured that way."
+          "assert": "The access sequence finds the first valid record according to its configured order."
+        },
+        {
+          "id": "TEST-MEC-PRICE-03",
+          "setup": "Use a condition with a quantity scale and price an item below and above the scale break.",
+          "assert": "The rate changes from the scale while the same condition type and access remain active."
+        },
+        {
+          "id": "TEST-MEC-PRICE-04",
+          "setup": "Apply a group condition to several items and compare item-only versus accumulated document quantity.",
+          "assert": "The condition uses the configured group basis rather than treating every item independently."
+        },
+        {
+          "id": "TEST-MEC-PRICE-05",
+          "setup": "Create an order and invoice it with a copy-control pricing type that redetermines selected conditions.",
+          "assert": "Billing pricing changes only according to the configured pricing type and runtime context."
         }
       ],
       "extension_points": [
@@ -297,7 +344,64 @@
       "source_refs": [
         "SRC-MEC-PRICE",
         "SRC-MEC-COPY-PRICE"
-      ]
+      ],
+      "pricing_stack": [
+        {
+          "layer": "Procedure determination",
+          "remember": "Sales area + customer pricing procedure + document pricing procedure → pricing procedure."
+        },
+        {
+          "layer": "Pricing procedure",
+          "remember": "Step/counter + requirement + condition type + subtotal + formulas + manual/statistical controls."
+        },
+        {
+          "layer": "Condition type",
+          "remember": "Commercial role, calculation type, scale base, class/category, sign and manual behavior."
+        },
+        {
+          "layer": "Access sequence",
+          "remember": "Ordered search strategy across condition tables."
+        },
+        {
+          "layer": "Condition record",
+          "remember": "Rate/amount, validity, currency, unit and scales for an exact key."
+        },
+        {
+          "layer": "Calculation",
+          "remember": "Rate × base is only the simple case; scales, formulas, groups, exclusion and rounding can change the result."
+        }
+      ],
+      "special_examples": [
+        {
+          "id": "HM00",
+          "role": "manual order value at header level"
+        },
+        {
+          "id": "PN00",
+          "role": "manual net price at item level"
+        },
+        {
+          "id": "PMIN",
+          "role": "minimum material price difference"
+        },
+        {
+          "id": "DIFF",
+          "role": "rounding difference distributed as a group condition"
+        },
+        {
+          "id": "VPRS",
+          "role": "statistical material cost"
+        },
+        {
+          "id": "SKTO",
+          "role": "statistical cash discount from payment terms"
+        },
+        {
+          "id": "EDI1 / EDI2",
+          "role": "customer expected price/value comparison"
+        }
+      ],
+      "lead_answer": "I explain pricing as a controlled search and calculation pipeline. First I prove the pricing procedure from sales area, customer pricing procedure and document pricing procedure. Then I check the condition step and requirement, follow the access sequence with the exact runtime key, validate the condition record, and separate rate, base and final value. After that I check scales, formulas, group or exclusion logic, manual/statistical behavior, and finally billing repricing or custom logic. This avoids changing master data when the real defect is earlier in the chain."
     },
     {
       "code": "MEC.SD.COPY",

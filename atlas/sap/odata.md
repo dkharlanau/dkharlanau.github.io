@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "OData"
-description: "Analytical overview of OData in SAP: what it is, where it sits, and how it breaks."
+description: "OData in SAP explained: entities, metadata, query options, service bindings, SAPUI5 consumption, and the difference between V2 and V4."
 permalink: /atlas/sap/odata/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "OData"
 business_process: "System integration"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-22
 author: Dzmitryi Kharlanau
 
 tags:
@@ -49,7 +49,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Technology</p>
     <h1>OData</h1>
-    <p class="note-subtitle">RESTful API protocol for SAP data access, Fiori, and third-party integration.</p>
+    <p class="note-subtitle">An HTTP-based data protocol used widely in SAP APIs and SAP Fiori application services.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -62,93 +62,40 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>OData (Open Data Protocol) is SAP's standard RESTful API protocol for exposing and consuming business data. It provides a uniform way to query, create, update, and delete data via HTTP, with metadata-driven service definitions.</p>
+    <p>OData, the Open Data Protocol, is a standardized web protocol for exposing and working with structured data over HTTP. SAP uses it extensively, but OData is not an SAP-specific protocol and it is not the only API style in an SAP landscape.</p>
 
-    <h2>Business purpose</h2>
-    <p>Enable real-time data access for Fiori apps, third-party integrations, and mobile applications. Replace RFC and SOAP for modern, web-friendly integration patterns.</p>
+    <h2>The data model is part of the contract</h2>
+    <p>An OData service describes its data as entities, entity types, properties, relationships, and entity sets. A service also exposes metadata so that a client can understand that model rather than relying only on hand-written endpoint documentation.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>OData is the primary API layer for S/4HANA and BTP. It sits between the backend (CDS views, business objects) and consumers (Fiori, mobile apps, external systems). SAP Gateway or Cloud Integration handles the protocol translation.</p>
+    <p>That model shapes how a client reads and changes data. A client can address an entity or collection through a URL and use standard HTTP methods for supported operations. Query options such as <code>$filter</code>, <code>$select</code>, <code>$expand</code>, and <code>$orderby</code> let the client ask for a particular projection of the data.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Service metadata: entity types, properties, navigation, associations.</li>
-      <li>Entity set: collection of business objects (sales orders, materials).</li>
-      <li>Navigation property: linked entities (order → items → schedule lines).</li>
-      <li>Query options: $filter, $expand, $select, $orderby, $top, $skip.</li>
-      <li>Batch request: multiple operations in a single HTTP call.</li>
-    </ul>
+    <h2>OData is common in SAP Fiori, but the backend model still matters</h2>
+    <p>SAPUI5 provides OData models that bind application controls to OData services. SAP Fiori elements goes further: it can interpret OData metadata and annotations and generate common application patterns without requiring developers to hand-code every view and controller.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: CDS-based OData services, custom OData services.</li>
-      <li>BTP: CAP-generated OData, API management.</li>
-      <li>Fiori: UI5 apps consuming OData via data binding.</li>
-      <li>External: third-party ERP, CRM, mobile apps, Power BI.</li>
-    </ul>
+    <p>The protocol does not remove the backend application model. In modern ABAP development with RAP, a service definition selects what a business service exposes, and a service binding makes that service available through a chosen protocol such as OData V2 or OData V4. Authorization, transactional behavior, validations, and business semantics remain backend responsibilities.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom OData services from CDS or RFC.</li>
-      <li>Custom query options and filters.</li>
-      <li>Side-by-side apps on BTP consuming OData.</li>
-      <li>API policies via Integration Suite.</li>
-    </ul>
+    <h2>V2 and V4 are related, not interchangeable labels</h2>
+    <p>SAP landscapes contain both OData V2 and OData V4 services. They share the basic entity-and-metadata model, but capabilities and client behavior differ. A consumer therefore needs to know the version of the actual service rather than assuming that a V2 example can be copied unchanged into a V4 integration.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Service performance: response time, throughput, error rate.</li>
-      <li>Query complexity: expand depth, filter selectivity.</li>
-      <li>Authentication: token, SAML, OAuth failures.</li>
-      <li>Gateway health: SAP Gateway or Cloud Integration status.</li>
-    </ul>
+    <p>The same caution applies to service availability. Saying that an SAP product “supports OData” is less useful than identifying the released service, its version, the operations it exposes, and the release in which it is available.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Standard REST protocol with broad tool support.</li>
-      <li>Metadata-driven, self-describing services.</li>
-      <li>Deep navigation for complex business objects.</li>
-      <li>Native Fiori and UI5 integration.</li>
-    </ul>
+    <h2>Good OData usage starts with the shape of the request</h2>
+    <p>Because OData makes rich querying convenient, it is easy to ask for more data than a user or integration actually needs. Large collections, broad expansions, and unnecessary properties can turn a clean API into an expensive request. We usually get a better result when the client requests the smallest useful entity set, projection, and navigation path.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Deep $expand queries degrade performance.</li>
-      <li>Large result sets without pagination cause timeouts.</li>
-      <li>Complex filter expressions are hard to optimize.</li>
-      <li>Version compatibility between OData 2.0, 4.0, and SAP extensions.</li>
-    </ul>
+    <p>This also improves diagnosis. If an application fails, first separate protocol and transport concerns from the business service itself: can the service be reached, does its metadata describe the expected entity, is the requested operation supported, and does the backend accept the business request? An HTTP error alone does not tell us which layer failed.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>OData timeout — deep expand, large volume, or missing filter.</li>
-      <li>404 Not Found — entity set or navigation property mismatch.</li>
-      <li>401 Unauthorized — token expired, role missing, or SAML issue.</li>
-      <li>500 Internal Error — backend dump or metadata mismatch.</li>
-      <li>Batch request failed — partial success, rollback issue.</li>
-    </ul>
-
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-technology-landscape-map/">SAP Technology Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-integration-landscape-map/">SAP Integration Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/cds-views/">CDS Views</a></li>
-      <li><a href="/atlas/sap/fiori-ui5/">Fiori / UI5</a></li>
-    </ul>
+    <h2>OData complements other SAP integration styles</h2>
+    <p>OData is especially natural for resource-oriented APIs and user interfaces that need structured reads and updates. It does not make IDocs, SOAP services, events, or other interfaces obsolete. Those patterns solve different problems: asynchronous business messaging, contract-heavy service integration, event notification, and other forms of coupling. The right choice depends on the business interaction, not on which protocol looks newest.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_NETWEAVER_AS_ABAP_752/68bf513362174d54b58cddec28794093/79b1ea508f88bb7ee10000000a445394.html">SAP Gateway glossary: Open Data Protocol</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/sap_s4hana_on-premise/f2e545608079437ab165c105649b89db/81dc788fbda74883bd775a4036fa4b67.html">Using Service Binding Editor for OData V2 Service</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/abap-cloud/abap-development-tools-for-visual-studio-code/working-with-odata-v4-service-a449458b1816492eb972ae5728ca2a28">Working with OData V4 Service</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. OData service availability, version, and performance characteristics vary by S/4HANA release and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Service availability, OData version, supported query options, write behavior, authentication, and performance characteristics are specific to the released API and SAP product version. Verify the actual service contract before designing an integration.</p>
   </div>
 
   <section class="atlas-related">

@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "SAP Credit Management — Enterprise Context Lab"
-description: "A practical SAP Credit Management map for risk, exposure, blocks, release, FSCM integration, extensions, and diagnostics."
+title: "SAP Credit Management — Checks, Exposure and Release"
+description: "A practical SAP S/4HANA Credit Management guide to credit accounts, segments, check rules, exposure, document blocks, rechecks, and release decisions."
 permalink: /labs/enterprise-context/credit/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,9 +19,9 @@ tags:
   - business-partner
   - integration
   - troubleshooting
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-25
 publication_wave: "logistics-search-wave-02"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "SAP primary sources + factual review + editorial rewrite"
 search_intent: "SAP credit management and sales order credit check"
 # ai-discovery-managed:start
 structured_data:
@@ -62,23 +62,14 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/567d0684f1dc4b64ba4f658699eb9f67.html"
   - title: "Available Check Steps"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/56ebef06e051488b97fd0faddd3c8837.html"
-  - title: "Credit Limit"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/a3237928c70b49b9ac35e41a3a4743b2.html"
   - title: "Credit Exposure of Sales and Distribution Documents"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/655cc418447e49218afbca8700a442e5.html"
-  - title: "Liability Categories"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/c4cec0e941fb4163959cb7d9916c0256.html"
-  - title: "Events for Credit Exposure Update"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/3c191c54f807f47de10000000a174cb4.html"
   - title: "Checking and Releasing SD Documents"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/5cd16abf3d5245a492f6dfcfe250b5cb.html"
   - title: "Recheck Sales Documents"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/32c1f2329f114cfb8c3674a966d9b2ef.html"
-  - title: "Events for Credit Check"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/4d49cb392251391ee10000000a15822b.html"
 # ai-discovery-managed:end
 ---
-{% assign graph = site.data.labs.enterprise_context.graphs.credit %}
 {% assign evidence = site.data.labs.enterprise_context.sources.credit %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -88,304 +79,138 @@ source_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Deep vertical / Credit Management</p>
-      <h1>A credit block is a decision chain,<br />not one limit number.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#credit-memory">Start with nine questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="Credit Management deep-dive inventory">
-      <p>Reviewed model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.standard_check_steps | size }}</strong><small>Standard check steps</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · source-tracked · no client data</em>
+      <p class="research-canvas__eyebrow">Enterprise Context Lab / Credit Management</p>
+      <h1>A credit block is the result of a policy decision, not just a low free limit.</h1>
+      <p>SAP Credit Management connects the sales document to the payer's credit data, the relevant credit segment, current exposure, and a configured checking rule. The useful question is therefore not simply “does the customer have enough limit?” but “which account was checked, with which rule, against which exposure, at which document event?”</p>
+      <a class="research-canvas__button" href="#credit-memory">Follow the decision <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">credit_score</span>
-    <p><strong>My working rule:</strong> I read the failed check step before I discuss the credit limit. A free limit does not prove that the document should pass.</p>
-    <a href="/labs/enterprise-context/data/credit-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+    <div>
+      <p><strong>Keep three things separate:</strong> the commercial document that triggers the check, the credit master data that defines policy, and the exposure that represents current financial commitment.</p>
+      <p>Changing one of them can alter the result, but they are not interchangeable. Raising a limit does not repair a wrong payer, a wrong credit segment, stale exposure, or a failed overdue-item check.</p>
+    </div>
+    <a href="/labs/enterprise-context/business-partner/">Review Business Partner structure <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="credit-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Credit is a policy evaluation over a changing exposure.</h2>
+      <p>The shortest useful answer names the checked account, the segment, the rule, the exposure, and the business decision that follows.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I first confirm the Sales event that triggers the credit check and the credit account and segment being evaluated. The Business Partner credit profile provides policy such as risk class and checking rule; the segment carries values such as limit and exposure. A checking rule can contain several checks, so free limit alone does not guarantee a pass. If blocked, I distinguish recheck from release and trace wrong exposure through the document lifecycle before changing policy.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="credit-memory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
-      <h2>Nine questions before changing anything.</h2>
-      <p>I use this sequence to separate SD control, FSCM credit policy, exposure, and release. It is much faster than opening every credit transaction and hoping one number looks suspicious.</p>
+      <p class="research-canvas__eyebrow">The decision model</p>
+      <h2>From a sales document to a credit result.</h2>
+      <p>In SAP S/4HANA, the Sales side determines whether a credit check is relevant for the document and at which event it is executed. SAP Credit Management then evaluates the credit account using the business partner's credit profile, credit-segment data, exposure, and the configured check rule.</p>
     </header>
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article class="ecg-memory-card">
-        <span>0{{ forloop.index }}</span>
-        <strong>{{ item.key }}</strong>
-        <h3>{{ item.question }}</h3>
-        <p>{{ item.answer }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <p class="ecg-caption"><strong>TRIGGER → ACCOUNT → SEGMENT → PROFILE → RULE → EXPOSURE → LIMIT → DECISION → RELEASE.</strong> If I cannot explain this path for the actual document, I am not ready to change the credit policy.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Runtime path</p>
-      <h2>Follow the credit check in the order it can fail.</h2>
-      <p>The sales document starts the process, but the decision spans Sales, Business Partner, SAP Credit Management, exposure updates, and Accounts Receivable.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for stage in graph.runtime_pipeline %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>credit stage</small></div>
-          <h3>{{ stage.title }}</h3>
-          <p class="ecg-question">{{ stage.question }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Inputs / controls</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Two control layers</p>
-      <h2>SD decides when to ask. FSCM decides what risk rules to execute.</h2>
-      <p>This boundary matters in troubleshooting. A wrong SD trigger is not the same problem as a wrong check rule, and changing a BP limit will not fix a missing order-level credit check.</p>
-    </header>
-    <div class="ecg-control-stack">
-      {% for control in graph.sales_side_controls %}
-      <article>
-        <span>SD CONTROL</span>
-        <h3>{{ control.title }}</h3>
-        <p>{{ control.purpose }}</p>
-        <ul>{% for value in control.technical_notes %}<li>{{ value }}</li>{% endfor %}</ul>
-        <p class="ecg-question">{{ control.diagnostic_question }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <div class="ecg-rail" aria-label="Credit control dependency chain">
+    <div class="ecg-rail" aria-label="Credit decision flow">
       <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Order / Delivery / PGI</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Credit Group</span><span class="ecg-arrow" aria-hidden="true">+</span>
-        <span class="ecg-node ecg-node--input">Risk Class</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">OVA8 Context</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">FSCM Check Rule</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Credit Status</span>
+        <span class="ecg-node ecg-node--input">Sales order or delivery event</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Credit account and segment</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Risk class and check rule</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Exposure and check steps</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Pass, warning, or block</span>
       </div>
     </div>
+    <p>SAP's current S/4HANA 2025 FPS01 documentation describes credit checks for sales orders and deliveries, including the post-goods-issue level. Billing documents themselves are not credit-checked, although billing and Accounts Receivable affect the exposure that later checks can use.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Business Partner</p>
-      <h2>Credit profile and credit segment answer different questions.</h2>
-      <p>I separate global BP credit policy from segment-level limit and exposure. This avoids the common mistake of treating every field in UKM000 as if it had the same organizational scope.</p>
+      <p class="research-canvas__eyebrow">Credit master data</p>
+      <h2>The profile defines policy; the segment carries the business exposure.</h2>
+      <p>The Business Partner credit profile contains global credit-management information such as the risk class and checking rule. A credit segment narrows that policy to an organizational slice where SAP can maintain a credit limit and calculate exposure and utilization. This distinction matters because a customer may be acceptable in one segment and constrained in another.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.credit_master_data %}
-      <article class="ecg-determination-detail">
-        <header><div><span>BP</span><small>{{ item.scope }}</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.remember }}</p></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Important data</h4><ul>{% for value in item.fields %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Diagnostic lens</h4><p>Read the value on the account that is actually checked, not on the customer record you expected to be relevant.</p></div>
-          <div><h4>Lead lens</h4><p>Master-data governance is part of the credit architecture because risk class, check rule, limit, and validity directly control order execution.</p></div>
-        </div>
-      </article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div><h3>Credit account</h3><p>The SD document must resolve to the account whose creditworthiness is actually checked. In the standard Sales integration, the payer is central to this determination. A mismatch here can make a technically correct credit profile look irrelevant.</p></div>
+      <div><h3>Risk class and check rule</h3><p>The risk class describes the credit-risk classification. The check rule defines which checks SAP executes. The rule can contain several steps, so a customer can fail even when the numerical credit limit still has room.</p></div>
+      <div><h3>Credit segment</h3><p>The segment carries credit-relevant values such as the limit and exposure for that scope. Segment-level parameters can also influence individual checks.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Check rules</p>
-      <h2>Free limit is only one possible answer.</h2>
-      <p>Standard SAP Credit Management can check much more than total limit utilization. I first identify the exact failed step and the values it used.</p>
+      <p class="research-canvas__eyebrow">What the system can check</p>
+      <h2>A credit limit check is one step, not the whole policy.</h2>
+      <p>Checking rules can combine multiple standard steps. SAP documents checks such as static or dynamic credit-limit checks, maximum document value, overdue open items, and payment-behavior-related checks. Parameters can differ by check and, for some checks, by credit segment.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for step in graph.standard_check_steps %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>{{ step.code }}</span><small>standard check</small></div>
-          <h3>{{ step.title }}</h3>
-          <p class="ecg-question">{{ step.business_question }}</p>
-        </header>
-        <div class="ecg-remember"><strong>Check first</strong><p>{{ step.first_check }}</p></div>
-      </article>
-      {% endfor %}
-    </div>
+    <p>Consider a payer with a limit of EUR 100,000 and exposure of EUR 82,000. A new EUR 25,000 order can fail a limit check because the combined commitment exceeds the limit. But the reverse is equally important: a EUR 5,000 order can still fail if another configured step finds an unacceptable condition. “Free limit exists” is therefore evidence about one part of the decision, not proof that the document should pass.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Credit exposure</p>
-      <h2>Exposure moves through the document flow.</h2>
-      <p>I do not reconcile one total first. I follow the commitment from order to delivery, billing, FI open item, and clearing. That usually shows where an amount became duplicated, stale, or missing.</p>
+      <h2>Exposure is a moving commitment, not a static customer balance.</h2>
+      <p>SAP Credit Management combines credit-relevant commitments from the business process. For Sales and Distribution documents, SAP calculates credit values at item level and aggregates them into document exposure. As the document flow progresses, exposure shifts between stages and can later include receivables from Financial Accounting.</p>
     </header>
-    <div class="ecg-rail" aria-label="Credit exposure lifecycle">
-      <div class="ecg-rail__branch">
-        {% for item in graph.exposure_lifecycle.path %}
-        <span class="ecg-node {% if forloop.first %}ecg-node--input{% elsif forloop.last %}ecg-node--output{% else %}ecg-node--decision{% endif %}">{{ item.stage }} · {{ item.category }}</span>
-        {% unless forloop.last %}<span class="ecg-arrow" aria-hidden="true">→</span>{% endunless %}
-        {% endfor %}
-      </div>
-    </div>
-    <div class="ecg-determination-list">
-      {% for item in graph.exposure_lifecycle.path %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{{ item.category | slice: 0, 3 }}</span><small>exposure</small></div><h3>{{ item.stage }}</h3><p class="ecg-question">{{ item.category }}</p></header>
-        <p>{{ item.practical_note }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <p class="ecg-lead-lens"><strong>My rule:</strong> {{ graph.exposure_lifecycle.design_rule }}</p>
+    <p>This is why exposure problems are often document-flow problems. A completed SD document is no longer considered in SD credit exposure, while open commitments continue to matter. If the total looks wrong, the useful investigation is to identify which business stage owns the unexpected amount rather than adjusting the limit until the order passes.</p>
+    <div class="ecg-lead-lens"><strong>Practical consequence:</strong> reconcile the unexpected commitment back to sales orders, deliveries, billing/transfer state, and receivables. A duplicated or missing amount has a lifecycle; find that lifecycle before changing policy.</div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Blocks and release</p>
-      <h2>A release is a risk decision, not a technical repair.</h2>
-      <p>When a negative result creates a credit block, the next step belongs to the credit-control process. The analyst should understand the failed checks and then release, reject, or keep the block according to policy.</p>
+      <p class="research-canvas__eyebrow">Block, recheck, and release</p>
+      <h2>Rechecking and releasing solve different problems.</h2>
+      <p>When a configured credit check produces a blocking result, SAP can create a documented credit decision for the affected SD document. That decision gives the credit analyst a controlled place to inspect the credit situation and decide what should happen next.</p>
     </header>
-    <div class="ecg-rail" aria-label="Credit decision and release path">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Negative Check</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Credit Block</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Documented Credit Decision</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Release / Reject / Keep</span><span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Delivery / PGI Continues or Stops</span>
-      </div>
+    <div class="ecg-decision-columns">
+      <div><h3>Recheck</h3><p>Run the credit check again after the underlying state has changed—for example, after exposure falls or credit master data is corrected. If the document now passes, the block can be removed because the policy result changed.</p></div>
+      <div><h3>Release</h3><p>Remove the credit block as an explicit credit decision. This does not prove that the original check was wrong; it records that the business accepted the risk and allowed processing to continue.</p></div>
+      <div><h3>Reject or keep blocked</h3><p>If the risk remains unacceptable, the correct result may be to stop the document. Credit Management is a control process, not a mechanism for forcing every order through.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Extensions</p>
-      <h2>Credit extensions change controls, not just code.</h2>
-      <p>I treat these extension points as risk architecture. A small enhancement can change who is checked, what exposure exists, or why a document is allowed to continue.</p>
+      <p class="research-canvas__eyebrow">When a block looks wrong</p>
+      <h2>Find the first wrong input to the decision.</h2>
+      <p>A useful diagnosis follows the same order as the business decision. First confirm that the SD document should trigger a credit check at this event. Then confirm the credit account and credit segment. Read the Business Partner's risk class, checking rule, segment limit, and exposure. Finally, inspect the failed check step and the values it used.</p>
     </header>
-    <div class="ecg-determination-list">
-      {% for ext in graph.extension_layers %}
-      <article class="ecg-determination-detail">
-        <header><div><span>EXT</span><small>credit</small></div><h3>{{ ext.title }}</h3><p class="ecg-question">{{ ext.principle }}</p></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Typical trap</h4><p>{{ ext.trap }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="ecg-anatomy" data-reveal>
-    <div>
-      <p class="research-canvas__eyebrow">Technical failure</p>
-      <h2>{{ graph.technical_failure_mode.title }}</h2>
-      <p>{{ graph.technical_failure_mode.lead_lens }}</p>
-    </div>
-    <div class="ecg-anatomy__questions">
-      <article><span>DEFAULT</span><h3>{{ graph.technical_failure_mode.default_behavior }}</h3></article>
-      {% for value in graph.technical_failure_mode.controlled_fallback %}
-      <article><span>FALLBACK</span><h3>{{ value }}</h3></article>
-      {% endfor %}
-    </div>
+    <p>If those inputs are correct, the block may be legitimate even when the sales user did not expect it. If one input is wrong, repair that layer: master data for an incorrect account or policy value, configuration for a wrong trigger or rule, or exposure processing when the commitment itself is stale. A manual release should not become the permanent fix for a reproducible data or configuration defect.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead reasoning</p>
-      <h2>Six habits that keep credit fixes explainable.</h2>
-      <p>These are practitioner heuristics. They are deliberately separate from SAP-documented behavior.</p>
+      <p class="research-canvas__eyebrow">Related process boundaries</p>
+      <h2>Credit Management sits across Sales, Business Partner, and Finance.</h2>
+      <p>The sales order supplies the commercial event; Business Partner holds credit policy and segment data; SD and FI contribute exposure; the credit analyst owns the risk decision when a document is blocked. Keeping those boundaries visible makes both support and design conversations much clearer.</p>
     </header>
-    <div class="ecg-heuristic-grid">
-      {% for heuristic in graph.practitioner_heuristics %}
-      <article>
-        <span>HEURISTIC {{ forloop.index }}</span>
-        <h3>{{ heuristic.statement }}</h3>
-        <p>{{ heuristic.context }}</p>
-        {% if heuristic.checks %}<h4>Check</h4><ul>{% for value in heuristic.checks %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-        {% if heuristic.questions %}<h4>Ask</h4><ul>{% for value in heuristic.questions %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-        {% if heuristic.anti_patterns %}<h4>Avoid</h4><ul>{% for value in heuristic.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-      </article>
-      {% endfor %}
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/sales-order/"><span>SD</span><strong>Sales Order</strong><small>See how partner, document, pricing, availability, and follow-on controls are determined before credit becomes one of the execution gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/business-partner/"><span>BP</span><strong>Business Partner</strong><small>Review the difference between shared BP identity, roles, organizational data, and process-specific extensions.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/billing/"><span>FI</span><strong>Billing and Receivables</strong><small>Follow how fulfillment becomes billing and then financial exposure after the sales-side commitment changes.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="credit-faq" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Failure patterns</p>
-      <h2>Start from the symptom, then find the first wrong control.</h2>
-      <p>The goal is not to memorize every transaction. The goal is to classify the failure before touching master data, configuration, or exposure.</p>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Five questions that separate policy from symptoms.</h2>
     </header>
     <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}
-      <article class="ecg-determination-detail">
-        <header><div><span>SYMPTOM</span><small>triage</small></div><h3>{{ failure.symptom }}</h3><p class="ecg-question">{{ failure.likely_classes | join: " · " }}</p></header>
-        <div class="ecg-diagnostic"><div><h4>Check first</h4><ol>{% for value in failure.first_checks %}<li>{{ value }}</li>{% endfor %}</ol></div><div><h4>Do not start with</h4><p>Increasing the limit or releasing the order before the failed step is understood.</p></div></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Impact traces</p>
-      <h2>Credit changes propagate into execution.</h2>
-      <p>Forward tracing helps explain what a master-data, exposure, or policy change can affect. Backward tracing explains why the order stopped.</p>
-    </header>
-    <div class="ecg-traces">
-      {% for trace in graph.impact_traces %}
-      <article class="ecg-trace">
-        <div class="ecg-trace__head"><span>{{ trace.direction }}</span><h3>{{ trace.title }}</h3></div>
-        <div class="ecg-trace__path">{% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
-        <p><strong>Lesson:</strong> {{ trace.lesson }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  {% for scenario in graph.synthetic_cases %}
-  <section class="ecg-case" data-reveal>
-    <div class="ecg-case__intro">
-      <p class="research-canvas__eyebrow">Synthetic exercise {{ forloop.index }}</p>
-      <h2>{{ scenario.title }}</h2>
-      <p>{{ scenario.description }}</p>
-      <strong>Synthetic example · no customer data</strong>
-    </div>
-    <div class="ecg-case__body">
-      <h3>Facts</h3><ul>{% for value in scenario.facts %}<li>{{ value }}</li>{% endfor %}</ul>
-      <h3>Reasoning path</h3><ol>{% for value in scenario.reasoning_path %}<li>{{ value }}</li>{% endfor %}</ol>
-      <p><strong>Lesson:</strong> {{ scenario.lesson }}</p>
-    </div>
-  </section>
-  {% endfor %}
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Assessment drills</p>
-      <h2>Answer with control, evidence, and risk ownership.</h2>
-      <p>A Lead answer should explain which account is checked, which rule failed, what exposure is used, and whether the correct action is release, recheck, master-data repair, configuration, or an extension.</p>
-    </header>
-    <div class="ecg-drill-list">
-      {% for drill in graph.assessment_drills %}
-      <details>
-        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.title }}</strong><small>{{ drill.prompt }}</small></summary>
-        <div><p>Expected reasoning path</p><ol>{% for value in drill.expected_reasoning %}<li>{{ value }}</li>{% endfor %}</ol></div>
-      </details>
-      {% endfor %}
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>check</small></div><h3>Why can an order be blocked when credit limit is still available?</h3></header><p>The checking rule can contain several steps. A document can fail because of overdue items, maximum document value, payment behavior, or another configured check even when the numerical limit has room.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>account</small></div><h3>Which customer should I inspect first?</h3></header><p>Start from the credit account resolved by the Sales process; in the standard integration the payer is central. Do not assume the sold-to party is automatically the checked credit account.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>decision</small></div><h3>Recheck or release?</h3></header><p>Recheck when the underlying state changed and you want policy to evaluate the document again. Release when an authorized credit decision accepts the risk and allows processing to continue.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>exposure</small></div><h3>Exposure looks too high. What should I change?</h3></header><p>Nothing yet. Reconcile the unexpected amount to its lifecycle stage: open sales order, delivery, billing transfer, or receivable. Repair the wrong commitment or state before changing the credit limit.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>billing</small></div><h3>Is the billing document itself credit-checked?</h3></header><p>No. Billing documents are not the credit-check event described here, but billing and Accounts Receivable change the exposure that later checks can evaluate.</p></article>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Risk behavior and extension points stay source-tracked.</h2>
-      <p>Primary SAP documentation is used to verify credit-check control, BP credit data, check steps, exposure categories, document-flow updates, release/recheck, and documented enhancement boundaries. The diagnostic method remains independently written.</p>
+      <h2>Current behavior is checked against SAP documentation.</h2>
+      <p>The primary sources below cover the S/4HANA 2025 FPS01 credit-check process, Business Partner credit data, checking rules, exposure, document blocks, rechecks, and releases. The explanatory model on this page is independently written.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
@@ -396,9 +221,9 @@ source_links:
 
   <section class="ecg-machine" data-reveal>
     <div>
-      <p class="research-canvas__eyebrow">For tools and AI</p>
-      <h2>The credit decision path is machine-readable too.</h2>
-      <p>Runtime stages, check steps, exposure lifecycle, extensions, failures, traces, heuristics, and assessment drills are available as JSON.</p>
+      <p class="research-canvas__eyebrow">Structured companion data</p>
+      <h2>The detailed credit model remains machine-readable.</h2>
+      <p>The companion files keep the structured runtime stages, check steps, exposure lifecycle, source registry, and diagnostic material used by the wider Enterprise Context workspace.</p>
     </div>
     <div class="ecg-machine__actions">
       <a class="research-canvas__button" href="/labs/enterprise-context/data/credit-graph.json">Credit graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>

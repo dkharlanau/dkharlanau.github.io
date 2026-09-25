@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Concur"
-description: "SAP's travel and expense management suite — expense reporting, travel booking, and invoice processing."
+description: "SAP Concur explained: Expense, Travel, Invoice, how employee spend becomes an approved accounting document, and where ERP integration begins."
 permalink: /atlas/sap/sap-concur/
 atlas_section: sap
 domain: SAP operations
@@ -12,7 +12,7 @@ business_process: "Travel and expense"
 status: needs_verification
 verified: false
 last_synced: 2026-07-14
-last_reviewed: 2026-07-14
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -40,7 +40,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Product</p>
     <h1>SAP Concur</h1>
-    <p class="note-subtitle">SAP's travel and expense management suite — expense reporting, travel booking, and invoice processing.</p>
+    <p class="note-subtitle">Cloud applications for employee expenses, business travel, and accounts-payable invoice processing.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -53,90 +53,44 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>SAP Concur is SAP's cloud suite for travel, expense, and invoice management. Employees submit expenses from a mobile app; the system matches receipts, enforces policy, routes approvals, and feeds approved data into the ERP for posting and reimbursement. It also covers travel booking and supplier invoice capture.</p>
+    <p>SAP Concur is better understood as a family of cloud spend applications than as one workflow. <strong>Concur Expense</strong> manages employee expense reports, <strong>Concur Travel</strong> manages business-trip booking and itinerary information, and <strong>Concur Invoice</strong> supports accounts-payable invoice processing. They can share data and user experience, but their business objects and accounting paths are different.</p>
 
-    <h2>Business purpose</h2>
-    <p>Control employee spend before it hits the books. The value is automation and compliance — receipts matched to card transactions, policy checked at entry, and a clean audit trail — instead of manual expense spreadsheets reconciled after the fact.</p>
+    <h2>Expense turns evidence of spend into an approved report</h2>
+    <p>An expense process usually starts before there is an accounting document. Concur Expense can collect items that are ready to become expense entries, such as company-card transactions, e-receipts, travel segments, mobile entries, and ExpenseIt results. Employees can also add out-of-pocket expenses. Which sources are available depends on company configuration.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>Concur is a satellite product for employee spend. It integrates with S/4HANA for financial posting and reimbursement, pulling employee and cost object data from HR and pushing approved expense and invoice data into finance. It is a self-contained SaaS that talks to the ERP at defined points.</p>
+    <p>Those inputs are assembled into an expense report. Receipts may be attached at expense or report level, policy rules can require evidence or flag exceptions, and approval happens before the financial posting step. This distinction matters because a card transaction, a receipt image, an expense entry, and an approved report are related records, not four names for the same thing.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>Expense reports and individual expense entries.</li>
-      <li>Receipts and receipt images.</li>
-      <li>Travel itineraries and bookings.</li>
-      <li>Corporate card transactions.</li>
-      <li>Approval workflows and policy rules.</li>
-      <li>Cost allocation and attendee data.</li>
-    </ul>
+    <h2>A travel booking is not yet an expense</h2>
+    <p>Concur Travel can provide itinerary segments to Concur Expense, but a booked flight or hotel is still a plan for travel, not proof of the final amount charged. SAP's current Travel and Expense integration documentation shows itinerary items alongside card transactions and e-receipts in Available Expenses. The actual expense process reconciles those sources into the report that the employee submits.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA Finance — expense and invoice posting, reimbursement.</li>
-      <li>Corporate card providers — transaction feeds.</li>
-      <li>Travel booking tools and GDS — itinerary capture.</li>
-      <li>HR systems — employee and organizational data.</li>
-    </ul>
+    <p>This is why an itinerary total can differ from the amount that eventually reaches accounting. Taxes, fees, changed bookings, cancellations, card settlements, and personal out-of-pocket items can change the final expense picture. The useful question is not simply whether Travel and Expense are “integrated,” but which source supplied each amount and how it was matched.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Configuration — policy rules, expense types, workflows, and audit rules.</li>
-      <li>Concur APIs — extract and integrate expense and invoice data.</li>
-      <li>App Center partner integrations — prebuilt connectors to third parties.</li>
-      <li>Financial posting integration — mapping of expense data into ERP accounts.</li>
-    </ul>
+    <h2>Concur Invoice is an accounts-payable process</h2>
+    <p>Concur Invoice handles vendor invoices and credit memos rather than employee expense reports. Current SAP documentation describes both paper and electronic invoice intake, supporting documents, invoice processing, and approval. Invoice Capture can add OCR-based capture where that feature is licensed and configured.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>Expense-to-ERP posting jobs — posting success and failures.</li>
-      <li>Card transaction import status — feed interruptions and gaps.</li>
-      <li>Policy violation reports — exceptions and audit findings.</li>
-      <li>Approval queue aging — reports stuck waiting on approvers.</li>
-    </ul>
+    <p>Keeping this boundary visible prevents a common design mistake. An employee reimbursement and a supplier invoice may both end in Financial Accounting, but they start from different business evidence, follow different approvals, and should not be modelled as one generic “Concur document.”</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Strong mobile capture and receipt matching.</li>
-      <li>Deep policy and audit rule engine.</li>
-      <li>Large travel and card ecosystem.</li>
-      <li>Clean posting integration into S/4HANA Finance.</li>
-    </ul>
+    <h2>The ERP boundary begins with an explicit financial integration</h2>
+    <p>SAP provides standard integration between SAP Concur solutions and SAP S/4HANA for supported scenarios. In SAP S/4HANA 2025 FPS01, SAP documents bidirectional communication that can export master data such as cost objects and import Concur financial documents. For SAP S/4HANA Cloud, the current integration guide covers Concur Expense and Concur Invoice and returns posting feedback to the Concur workflow.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Policy misconfiguration silently changes approval and posting behavior.</li>
-      <li>Card feed interruptions create reconciliation backlogs.</li>
-      <li>Complex multi-entity and multi-country setups are hard to get right.</li>
-      <li>User adoption depends heavily on change management.</li>
-    </ul>
+    <p>That is more precise than saying that Concur simply “feeds the ERP.” The integration needs agreed company identifiers, cost objects, G/L mapping, tax and payment settings, employee or vendor context, and an error-handling path. In a configured Expense flow, an approved report enters a financial posting queue; a posting failure can then be returned to Concur for correction and resubmission.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>Expense posting failures to S/4HANA.</li>
-      <li>Card feed interruptions and missing transactions.</li>
-      <li>Policy rule misconfigurations causing false violations.</li>
-      <li>Approval routing errors — reports sent to wrong or inactive approvers.</li>
-      <li>Duplicate expense detection failures.</li>
-    </ul>
+    <h2>Trace a mismatch through the document states</h2>
+    <p>When a number is wrong, we follow the spend from its source rather than starting at the final journal entry. Was the amount imported from a card, created from a receipt, or entered manually? Was it attached to the correct report and allocation? Did policy or approval change the report state? Did the financial integration accept it, and did S/4HANA post the expected accounting document?</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/sap/sap-product-portfolio/">SAP Product Portfolio</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-integration-suite/">SAP Integration Suite</a></li>
-    </ul>
+    <p>This sequence separates user-entry problems from policy configuration, integration mapping, and ERP posting. It also avoids assuming that a report marked approved in Concur must already exist as a successful financial posting.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP Concur product documentation — SAP Help Portal (help.sap.com), public-safe topic discovery only.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/concur-expense/concur-expense-professional-edition-end-user-help/available-expenses-overview">Concur Expense: Available Expenses - Overview</a> (2026_07).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_CONCUR/a759a183cd9d49e3bd0edf8493d12578/d19deb4c6ddd1014b625a44135d32877.html">Concur Travel Integration Using Normal Expense Report Process</a> (2026_07).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/CONCUR_INVOICE/5d4d01ab28704a4fbfa543f20b66966c/1470d2befcc64d258d613c89ef413226.html">Concur Invoice Professional Edition: Overview</a> (2026_07).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/c682b0c107a5447fa2c0885134ad5f8c.html">SAP S/4HANA: Integration with SAP Concur</a> (2025 FPS01).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/SAP_CONCUR/20a0937ba80e46f4b7f15f6fd3114ef0/1884e43e6f091014a8d9dcf340b5a74a.html">SAP Integration with Concur Solutions for SAP S/4HANA Cloud Setup Guide</a> (2026_07).</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. Specific feature scope, country support, and posting integration details must be verified against SAP's current product documentation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>SAP Concur editions, optional services, country capabilities, card and travel integrations, and supported ERP scenarios change over time. Verify the exact Concur edition, S/4HANA deployment, integration package, and company configuration before using this page as an implementation design.</p>
   </div>
 
   <section class="atlas-related">

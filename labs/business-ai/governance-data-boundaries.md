@@ -1,18 +1,18 @@
 ---
 layout: default
 title: "AI Governance and Data Boundaries — Ownership, Access, Action Risk and Validation"
-description: "A practical enterprise AI governance framework for data sensitivity, source ownership, access control, action risk, approval gates, auditability, observability, validation needs, and escalation questions."
+description: "A practical enterprise AI governance framework for data ownership, access, action authority, approval, evidence, validation, and escalation."
 permalink: /labs/business-ai/governance-data-boundaries/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-19
-last_reviewed: 2026-08-19
+last_modified_at: 2026-09-24
+last_reviewed: 2026-09-24
 hide_global_cta: true
 publication_wave: "business-ai-governance-data-boundaries-01"
-review_method: "authored practical governance, data-boundary, action-risk, and escalation framework"
-evidence_review_mode: "authored_heuristic"
+review_method: "current NIST and SAP primary sources + adjacent Labs review + full editorial pass"
+evidence_review_mode: "selective_or_heuristic"
 search_intent: "AI governance data boundaries access control ownership action risk approval gates validation escalation questions auditability observability enterprise AI"
 structured_data:
   type: TechArticle
@@ -33,6 +33,15 @@ career_skills:
   - ai-evaluation
   - ai-data-governance
   - delivery-lifecycle
+source_links:
+  - title: "NIST AI Risk Management Framework"
+    url: "https://www.nist.gov/itl/ai-risk-management-framework"
+  - title: "NIST AI 600-1 — Generative AI Profile"
+    url: "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf"
+  - title: "SAP AI Core — Orchestration"
+    url: "https://help.sap.com/docs/ai-launchpad/sap-ai-launchpad-user-guide/orchestration-4953dc10c6dd48fe85f37b41109dffe2"
+  - title: "SAP AI Core — Data Masking"
+    url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/data-masking-d9a54d9ca54b40beacbd24e1663ec3b4"
 # ai-discovery-managed:start
 primary_topic: "business-ai"
 ai_sidecar: "/ai/pages/labs--business-ai--governance-data-boundaries.json"
@@ -65,244 +74,152 @@ semantic_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Business AI / governance and data boundaries</p>
-      <h1>Control the workflow.<br />Then expand it.</h1>
-      <p>Governance makes an AI-supported workflow operable. It connects data ownership, permissions, action authority, review, evidence, and escalation so the team can explain what the solution may use, what it may do, and who is accountable when something changes.</p>
-      <a class="research-canvas__button" href="#governance-model">Open the governance model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Govern the business decision,<br />not only the model.</h1>
+      <p>An enterprise AI workflow becomes risky when it can see data, recommend decisions, or change business state without a clear authority model. Good governance connects the user, approved sources, business rules, tools, approvals, and evidence so we can answer three questions: what may the workflow know, what may it do, and who remains accountable for the result?</p>
+      <a class="research-canvas__button" href="#governance-model">Follow the boundary model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Governance reasoning sequence">
-      <p>Governance sequence</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>Data</strong><small>Sensitivity and source</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Access</strong><small>Identity and permission</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Authority</strong><small>Read, draft, recommend, act</small></div>
-      <div class="research-canvas__signal-line"><span>04</span><strong>Evidence</strong><small>Review, logs, escalation</small></div>
-      <em>Technical access is not the same as approved use.</em>
+    <div class="research-canvas__signal" aria-label="Governance boundary sequence">
+      <p>Governance boundary</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Purpose</strong><small>Why the workflow exists</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Permission</strong><small>What it may know</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Authority</strong><small>What it may do</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>Evidence</strong><small>What can be reconstructed</small></div>
+      <em>Technical connectivity is not business permission.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">policy</span>
-    <p><strong>Governance.</strong> The way AI-supported work is controlled, reviewed, monitored, and improved before and after release.</p>
-    <p><strong>Lead boundary.</strong> Early solution work should identify ownership, data, access, authority, review, and validation needs. It should not pretend to replace the final security, privacy, legal, compliance, or platform design.</p>
-    <p><strong>Working rule.</strong> Treat every data source, permission, tool, and action as a readiness question until the right owner or specialist has validated it.</p>
+    <div>
+      <p><strong>The practical boundary:</strong> a model can propose an answer or action, but enterprise authority still comes from the business process, identity, source permissions, validation rules, and the system that owns the transaction.</p>
+      <p>Governance is therefore not a final compliance slide. It is part of the workflow design from the first source read to the final business outcome.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="governance-model" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Quick definitions</p>
-      <h2>Separate quality, control, reconstruction, and monitoring.</h2>
-      <p>These ideas are related, but they answer different operating questions. Using the words as if they mean the same thing usually produces a governance slide that looks busy and controls very little.</p>
+      <p class="research-canvas__eyebrow">The operating model</p>
+      <h2>Start from the business purpose and follow authority to the outcome.</h2>
+      <p>The easiest way to reason about governance is to follow one execution. Each boundary should answer a different question instead of repeating a generic list of risks.</p>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Concept</th><th scope="col">Practical meaning</th><th scope="col">Question it answers</th></tr></thead>
+        <thead><tr><th scope="col">Boundary</th><th scope="col">Decision</th><th scope="col">Typical evidence</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Evals</th><td>Tests that check whether the AI-supported workflow behaves as expected.</td><td>Is the workflow good enough on representative cases?</td></tr>
-          <tr><th scope="row">Guardrails</th><td>Controls that guide, restrict, or check behavior against workflow rules, risk, and escalation needs.</td><td>What is the workflow allowed to do, and when must it stop or escalate?</td></tr>
-          <tr><th scope="row">Auditability</th><td>The team can reconstruct what happened: request, context, output, review, and action.</td><td>Can we explain a specific decision or event after it happened?</td></tr>
-          <tr><th scope="row">Observability</th><td>The team can monitor activity, performance, quality, errors, escalations, and other signals over time.</td><td>Can we see whether the workflow is operating normally and detect change?</td></tr>
+          <tr><th scope="row">Business purpose</th><td>Which job is the workflow allowed to support, for which users and outcome?</td><td>Use-case scope, process owner, success and stop conditions.</td></tr>
+          <tr><th scope="row">Source permission</th><td>Which information may be used for this user and this purpose?</td><td>Source ownership, entitlement, data classification, approved purpose.</td></tr>
+          <tr><th scope="row">Model contribution</th><td>May the model summarize, extract, classify, draft, recommend, or propose an action?</td><td>Prompt or workflow contract, evaluation evidence, confidence or exception logic where useful.</td></tr>
+          <tr><th scope="row">Business validation</th><td>Which facts must be checked against current enterprise state before the proposal can be trusted?</td><td>Master data, document state, business rules, policy, deterministic checks.</td></tr>
+          <tr><th scope="row">Action authority</th><td>May the workflow only advise, or may it create side effects?</td><td>User or service identity, authorization, approval policy, tool scope.</td></tr>
+          <tr><th scope="row">Execution result</th><td>Did the intended business state change, not merely the API call succeed?</td><td>Returned document or object, status, error, reconciliation result.</td></tr>
+          <tr><th scope="row">Operational evidence</th><td>Can the team reconstruct and investigate the run later?</td><td>Relevant request, context, decision, approval, action, result, and incident signals.</td></tr>
         </tbody>
       </table>
     </div>
+    <p>This model deliberately separates governance from implementation readiness. Evaluation design, production monitoring, staged release, and rollback are covered in <a href="/labs/business-ai/implementation-readiness/">AI Implementation Readiness</a>.</p>
   </section>
 
   <section class="research-canvas__inventory" id="ownership" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Ownership</p>
-      <h2>Governance starts with named owners, not anonymous controls.</h2>
-      <p>Controls become operational only when somebody owns the workflow, data, access, output, changes, review, and support.</p>
+      <h2>One workflow can have several owners, but no important decision should be ownerless.</h2>
+      <p>The process owner does not automatically own source access, security policy, or production operations. Naming the decision owner is more useful than naming one person “the AI owner.”</p>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Ownership area</th><th scope="col">Questions to resolve</th></tr></thead>
+        <thead><tr><th scope="col">Decision</th><th scope="col">Typical accountable role</th><th scope="col">What the role decides</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Workflow owner</th><td>Who is accountable for the business process and the intended result?</td></tr>
-          <tr><th scope="row">Data owner</th><td>Who decides whether a source is correct, current, and approved for this use?</td></tr>
-          <tr><th scope="row">AI-supported output owner</th><td>Who is accountable for how the generated recommendation, draft, answer, or decision support is used?</td></tr>
-          <tr><th scope="row">Access owner</th><td>Who approves roles, permissions, and changes to system or data access?</td></tr>
-          <tr><th scope="row">Change approver</th><td>Who approves changes to prompts, tools, integrations, source scope, or operating rules?</td></tr>
-          <tr><th scope="row">High-risk reviewer</th><td>Who reviews sensitive outputs, exceptions, low-confidence results, or policy-sensitive cases?</td></tr>
-          <tr><th scope="row">Production owner</th><td>Who owns support, monitoring, incidents, improvement, and controlled release after launch?</td></tr>
-          <tr><th scope="row">Specialist validator</th><td>Which unresolved areas require security, privacy, legal, compliance, data, integration, or platform review?</td></tr>
+          <tr><th scope="row">Business scope</th><td>Process or product owner</td><td>Which outcome the workflow supports and which decisions remain human-owned.</td></tr>
+          <tr><th scope="row">Source use</th><td>Data or content owner</td><td>Whether the source is authoritative, current, and approved for this purpose.</td></tr>
+          <tr><th scope="row">Access</th><td>Security or application owner</td><td>Which identities and roles may read data or call capabilities.</td></tr>
+          <tr><th scope="row">Business action</th><td>Process owner and application owner</td><td>Which side effects are permitted and which require approval.</td></tr>
+          <tr><th scope="row">Production operation</th><td>Service owner</td><td>Monitoring, incidents, changes, recovery, and support.</td></tr>
+          <tr><th scope="row">Specialist risk</th><td>Relevant privacy, legal, compliance, security, or data specialist</td><td>Questions that cannot be resolved safely by the delivery team alone.</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="data-sensitivity" data-reveal>
+    <span id="source-ownership"></span>
     <header>
-      <p class="research-canvas__eyebrow">Data sensitivity</p>
-      <h2>Classify the information before choosing how freely it can move.</h2>
-      <p>A useful early review does not need a complete enterprise classification model. It does need to identify whether the workflow touches data that changes access, retention, review, or specialist-validation requirements.</p>
-    </header>
-
-    <div class="research-canvas__table-wrap">
-      <table>
-        <thead><tr><th scope="col">Practical category</th><th scope="col">Examples</th><th scope="col">Why it changes the route</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Public information</th><td>Published product, policy, documentation, or marketing information.</td><td>Usually lower sensitivity, but source quality and usage rights still matter.</td></tr>
-          <tr><th scope="row">Internal business information</th><td>Internal procedures, operational notes, process guidance, non-public metrics.</td><td>Requires an approved business purpose and appropriate internal access.</td></tr>
-          <tr><th scope="row">Confidential company information</th><td>Strategy, contracts, pricing, unreleased plans, sensitive technical information.</td><td>May require stricter access, retention, logging, and disclosure boundaries.</td></tr>
-          <tr><th scope="row">Customer or personal data</th><td>Customer records, contact information, employee data, identifiers, personal history.</td><td>Access, purpose, exposure, retention, and specialist review become more important.</td></tr>
-          <tr><th scope="row">Regulated or high-impact data</th><td>Financial, legal, health, employment, security-sensitive, or regulated records.</td><td>The solution may need stronger controls, review, evidence, and formal validation.</td></tr>
-          <tr><th scope="row">Credentials, secrets, and keys</th><td>Passwords, API keys, tokens, certificates, privileged credentials.</td><td>These should be treated as security-sensitive assets, not normal model context.</td></tr>
-          <tr><th scope="row">Source code or proprietary technical information</th><td>Repositories, architecture details, configuration, internal technical designs.</td><td>Repository access, intellectual property, secrets, and tool permissions may change the risk profile.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="source-ownership" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Source and ownership</p>
-      <h2>Data readiness is more than technical connectivity.</h2>
-      <p>The team needs to know where information comes from, who maintains it, who approves its use, how current it is, and whether the workflow may expose it in an output.</p>
+      <p class="research-canvas__eyebrow">Data and source boundaries</p>
+      <h2>A source can be technically available and still be wrong for the workflow.</h2>
+      <p>Before retrieval or model use, check four things together: sensitivity, authority, entitlement, and purpose. Data classification alone is not enough. A low-sensitivity source can still be obsolete or out of scope; a sensitive source can sometimes be valid when the user, purpose, and controls are appropriate.</p>
     </header>
 
     <div class="ecg-decision-columns">
       <div>
-        <h3>Source questions</h3>
-        <ul>
-          <li>Where does the data live?</li>
-          <li>Who owns it?</li>
-          <li>Who maintains it?</li>
-          <li>How current is it?</li>
-          <li>Which source is authoritative when sources disagree?</li>
-        </ul>
+        <h3>Authority</h3>
+        <p>Which source owns the fact? If a policy page and ERP transaction disagree, the workflow needs a rule for which source decides which kind of fact.</p>
       </div>
       <div>
-        <h3>Use questions</h3>
-        <ul>
-          <li>Who can access it?</li>
-          <li>Is it approved for this workflow?</li>
-          <li>Can it be used in AI-supported processing?</li>
-          <li>Can generated outputs include or expose it?</li>
-          <li>What should happen when approval or ownership is unclear?</li>
-        </ul>
+        <h3>Entitlement</h3>
+        <p>Could this user see the source outside the AI workflow? Retrieval should not turn a broad service credential into broader user access.</p>
+      </div>
+      <div>
+        <h3>Purpose</h3>
+        <p>Is this data approved for the stated task? “The API can read it” is not the same as “the workflow is allowed to use it.”</p>
       </div>
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Readiness rule:</strong> a system being technically reachable does not prove that its data is approved, appropriate, current, or safe for the AI-supported workflow.</p>
+      <div>
+        <p><strong>Useful classification is operational.</strong> Public, internal, confidential, personal, regulated, proprietary, and secret material may require different handling, but the category is only the start. The design still needs an owner, permitted purpose, user scope, movement path, and retention decision.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="access-control" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Access control</p>
-      <h2>Make information boundaries follow real permissions.</h2>
-      <p>Retrieval, tools, agents, and connected systems can move information across boundaries if identity and permission assumptions are vague. The early design should expose those assumptions before implementation hardens them into the wrong behavior.</p>
+      <p class="research-canvas__eyebrow">Identity and access</p>
+      <h2>Preserve the user’s business boundary even when the integration uses a service identity.</h2>
+      <p>Enterprise AI often sits between a user and several systems. That makes identity easy to blur. The runtime may authenticate with one technical identity while the business decision still depends on who the end user is, which company or organizational scope they belong to, and which objects they may access.</p>
     </header>
-
-    <div class="research-canvas__table-wrap">
-      <table>
-        <thead><tr><th scope="col">Question</th><th scope="col">Why it matters</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Which users need access?</th><td>Defines the intended audience and business purpose.</td></tr>
-          <tr><th scope="row">Which users should be excluded?</th><td>Prevents a broad default from becoming an unintended disclosure path.</td></tr>
-          <tr><th scope="row">Are permissions role-based?</th><td>Shows whether the workflow should inherit organizational roles or use another policy model.</td></tr>
-          <tr><th scope="row">Are permissions inherited from source systems?</th><td>Retrieval or tools should not silently weaken stronger source-system controls.</td></tr>
-          <tr><th scope="row">Does the workflow need user-specific context?</th><td>The same question may require different permitted sources or actions for different users.</td></tr>
-          <tr><th scope="row">Could outputs cross access boundaries?</th><td>Generated content can expose information even when the original source remains protected.</td></tr>
-          <tr><th scope="row">Who approves access changes?</th><td>Permission changes need an accountable owner and controlled process.</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <p>A safe design makes that translation explicit. It either propagates the user identity or enforces equivalent business authorization before data is returned or an action is executed. A service account with broad rights should not become a shortcut around source-system permissions.</p>
   </section>
 
   <section class="research-canvas__inventory" id="data-movement" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Data movement and retention</p>
-      <h2>Follow the data through the whole workflow.</h2>
-      <p>The risk profile can change when approved data leaves its original system, is combined with other sources, is sent to a model or API, appears in generated output, is stored elsewhere, or is retained in logs and traces.</p>
+      <p class="research-canvas__eyebrow">Data movement</p>
+      <h2>Follow information after it leaves the source system.</h2>
+      <p>Risk can change when data is copied into prompts, retrieval indexes, temporary state, generated output, traces, support logs, or another application. The original source permission does not automatically describe these new copies.</p>
     </header>
-
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Stage</th><th scope="col">Readiness questions</th></tr></thead>
+        <thead><tr><th scope="col">Movement</th><th scope="col">Question</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Collection</th><td>What enters the workflow, from where, and for what purpose?</td></tr>
-          <tr><th scope="row">Transfer</th><td>Where is data sent, through which service or integration, and under which approved boundary?</td></tr>
-          <tr><th scope="row">Combination</th><td>Does combining sources create a new sensitivity or access problem?</td></tr>
-          <tr><th scope="row">Generation</th><td>Can the output expose source data, derived sensitive information, or unsupported conclusions?</td></tr>
-          <tr><th scope="row">Storage</th><td>Where are prompts, outputs, state, attachments, traces, or intermediate results stored?</td></tr>
-          <tr><th scope="row">Retention</th><td>What is retained, for how long, for which operating need, and who can review it?</td></tr>
-          <tr><th scope="row">Deletion or expiry</th><td>How are stale, revoked, or no-longer-approved data and outputs removed?</td></tr>
+          <tr><th scope="row">Into model context</th><td>Which fields or passages are actually required for this task, and can unnecessary sensitive content be excluded or masked?</td></tr>
+          <tr><th scope="row">Across sources</th><td>Does combining two permitted sources create a new disclosure or inference problem?</td></tr>
+          <tr><th scope="row">Into output</th><td>Could the answer expose information that the requesting user was not entitled to see?</td></tr>
+          <tr><th scope="row">Into logs or traces</th><td>Which diagnostic evidence is necessary, who can see it, and how long should it remain available?</td></tr>
+          <tr><th scope="row">Into downstream systems</th><td>Which values become business records, messages, or transactions, and which validation is required first?</td></tr>
         </tbody>
       </table>
-    </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-      <p><strong>Data-to-validation transition:</strong> convert each uncertain data assumption into a validation item. Mark what can proceed, what needs evidence, and what requires review by the relevant customer owner or specialist.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="permissions-and-actions" data-reveal>
+    <span id="tool-boundaries"></span>
     <header>
-      <p class="research-canvas__eyebrow">Permissions and action risk</p>
-      <h2>Turn data boundaries into practical operating rules.</h2>
-      <p>Once data is mapped, define what each person or system may do with it. Viewing information and changing a business object are not the same risk, even if both happen through the same assistant interface.</p>
-    </header>
-
-    <div class="research-canvas__table-wrap">
-      <h3>Action-risk ladder</h3>
-      <table>
-        <thead><tr><th scope="col">Level</th><th scope="col">Authority</th><th scope="col">Typical control question</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Read-only</th><td>Retrieves, summarizes, or inspects information without changing another system.</td><td>Does the user have permission to see every source used in the answer?</td></tr>
-          <tr><th scope="row">Draft</th><td>Creates content or a proposed object for a person to review.</td><td>Who reviews it before it is sent, posted, or committed?</td></tr>
-          <tr><th scope="row">Recommend</th><td>Suggests a next step without taking the action.</td><td>Is the evidence visible enough for the user to make the decision?</td></tr>
-          <tr><th scope="row">Act with approval</th><td>Performs an action only after an explicit human approval gate.</td><td>What exactly is approved, by whom, and what happens if context changes before execution?</td></tr>
-          <tr><th scope="row">Restricted</th><td>The action should not be automated in the current design or requires specialist validation first.</td><td>Which risk, policy, or unresolved assumption prevents automation?</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Useful ownership notes</h3>
-        <ul>
-          <li>Who uses the workflow?</li>
-          <li>Who reviews outputs?</li>
-          <li>Who approves sensitive actions?</li>
-          <li>Who owns system access?</li>
-          <li>Who owns monitoring and improvement?</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Useful permission notes</h3>
-        <ul>
-          <li>Who may view or retrieve?</li>
-          <li>Who may edit or prepare?</li>
-          <li>Who may approve?</li>
-          <li>Who may trigger or execute?</li>
-          <li>Who may override or recover?</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="tool-boundaries" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Tool and agent boundaries</p>
-      <h2>Connected tools change the risk profile.</h2>
-      <p>A tool boundary is a clear limit on what an AI-supported workflow can access or do through connected systems. At early design stage, you do not need to configure the tool. You do need to identify its read, write, trigger, exposure, failure, and approval boundaries.</p>
+      <p class="research-canvas__eyebrow">Action authority</p>
+      <h2>Autonomy should grow only when the allowed side effect is clear.</h2>
+      <p>“The agent can use the tool” is not an authority model. A tool is an interface. The workflow still needs to define which objects may be read or changed, under which identity, with which validation, and what happens when execution fails or is retried.</p>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Boundary</th><th scope="col">Question</th></tr></thead>
+        <thead><tr><th scope="col">Level</th><th scope="col">What the workflow may do</th><th scope="col">Control focus</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Read scope</th><td>Which systems, objects, records, fields, or documents may the tool inspect?</td></tr>
-          <tr><th scope="row">Write scope</th><td>Which fields, objects, transactions, messages, or tasks may it change or create?</td></tr>
-          <tr><th scope="row">Trigger scope</th><td>Which downstream workflows, jobs, notifications, or transactions may it start?</td></tr>
-          <tr><th scope="row">Identity</th><td>Does the tool act as the user, a service identity, or another delegated identity?</td></tr>
-          <tr><th scope="row">Failure behavior</th><td>What happens on timeout, partial failure, duplicate action, conflicting state, or rejected transaction?</td></tr>
-          <tr><th scope="row">Evidence</th><td>What tool request, result, approval, and action should be logged or traceable?</td></tr>
-          <tr><th scope="row">Validation owner</th><td>Who confirms that the integration and authority model are acceptable?</td></tr>
+          <tr><th scope="row">Read</th><td>Retrieve and summarize permitted information.</td><td>Entitlement, source quality, evidence, disclosure boundary.</td></tr>
+          <tr><th scope="row">Draft</th><td>Prepare text or a business-object proposal without committing it.</td><td>Clear draft state, reviewer context, no hidden side effect.</td></tr>
+          <tr><th scope="row">Recommend</th><td>Suggest a decision or next action.</td><td>Evidence, uncertainty, decision ownership.</td></tr>
+          <tr><th scope="row">Execute with approval</th><td>Perform a bounded action after an explicit approval.</td><td>Exact proposal, valid approver, fresh state, transaction result.</td></tr>
+          <tr><th scope="row">Bounded autonomous action</th><td>Perform a narrow class of pre-approved actions without case-by-case approval.</td><td>Deterministic scope, authorization, validation, idempotency, monitoring, stop conditions, recovery.</td></tr>
+          <tr><th scope="row">No automation</th><td>Keep the decision or action outside the automated path.</td><td>Material unresolved risk, policy restriction, or missing evidence.</td></tr>
         </tbody>
       </table>
     </div>
@@ -311,153 +228,71 @@ semantic_links:
   <section class="research-canvas__inventory" id="approval-gates" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Approval gates</p>
-      <h2>Place human permission where it changes the outcome.</h2>
-      <p>An approval gate should be specific enough to operate in practice. A generic “human in the loop” box is not much of a control if nobody knows which human, which decision, or which evidence is involved.</p>
+      <h2>An approval is useful only when the approver can see what will change.</h2>
+      <p>A generic “human in the loop” box can hide weak design. The person should see the proposed side effect, the evidence that matters, the material exceptions, and the current target state. The workflow should also know whether that person is allowed to approve the action.</p>
     </header>
-
-    <div class="research-canvas__table-wrap">
-      <table>
-        <thead><tr><th scope="col">Gate may be needed for</th><th scope="col">What should be explicit</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Sensitive outputs</th><td>Which topics or data categories require review before the output is used?</td></tr>
-          <tr><th scope="row">External communication</th><td>Who approves a message before it reaches a customer, supplier, employee, or public audience?</td></tr>
-          <tr><th scope="row">System write-backs</th><td>What business object and exact proposed change is the approver accepting?</td></tr>
-          <tr><th scope="row">High-impact decisions</th><td>Which decisions remain human-owned even if AI provides analysis or recommendation?</td></tr>
-          <tr><th scope="row">Tool use with side effects</th><td>Which tool calls require confirmation before execution?</td></tr>
-          <tr><th scope="row">Production or security-sensitive changes</th><td>Which specialist or owner must validate before the change moves forward?</td></tr>
-          <tr><th scope="row">Exceptions or low confidence</th><td>What threshold, rule, or signal routes the case away from automation?</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <p>Approval should bind to the proposal that was reviewed. If the underlying business state changes before execution, the workflow may need to validate again rather than execute an old decision against new facts. After execution, record the actual system result so approval evidence and business outcome stay connected.</p>
   </section>
 
   <section class="research-canvas__inventory" id="validation-needs" data-reveal>
+    <span id="escalation-questions"></span>
     <header>
-      <p class="research-canvas__eyebrow">Validation needs</p>
-      <h2>Identify what must be checked. Do not invent assurance.</h2>
-      <p>Early technical judgment should expose proof gaps without making unsupported claims about legal, compliance, privacy, residency, security, product availability, or implementation readiness.</p>
+      <p class="research-canvas__eyebrow">Validation and escalation</p>
+      <h2>Turn uncertainty into a decision, not a paragraph of caveats.</h2>
+      <p>Not every question can be answered during discovery. The useful response is to say what is known, what remains uncertain, who can decide it, and how the answer changes the design.</p>
     </header>
 
     <div class="research-canvas__table-wrap">
       <table>
-        <thead><tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col">Lead response</th></tr></thead>
+        <thead><tr><th scope="col">State</th><th scope="col">How to handle it</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Known</th><td>The fact is supported by current source material, system evidence, or an accountable owner.</td><td>Use it as an explicit design input.</td></tr>
-          <tr><th scope="row">Assumption</th><td>The working path depends on something that has not yet been confirmed.</td><td>State the assumption and keep the recommendation conditional.</td></tr>
-          <tr><th scope="row">Validation need</th><td>The question requires evidence or review before the design can become stronger.</td><td>Name the evidence or owner required.</td></tr>
-          <tr><th scope="row">Specialist decision</th><td>The issue belongs to security, privacy, legal, compliance, data, integration, or another accountable specialist.</td><td>Escalate the decision rather than answering outside the available evidence.</td></tr>
+          <tr><th scope="row">Known</th><td>Use the fact as a design input and retain the evidence that supports it.</td></tr>
+          <tr><th scope="row">Working assumption</th><td>Keep the design conditional and name what would invalidate the assumption.</td></tr>
+          <tr><th scope="row">Validation need</th><td>Ask for a specific artifact, test, owner decision, or source-system rule.</td></tr>
+          <tr><th scope="row">Specialist decision</th><td>Route privacy, legal, security, compliance, or other specialist questions to the accountable role instead of inventing assurance.</td></tr>
         </tbody>
       </table>
     </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-      <p><strong>Boundary language:</strong> “This is a validation need, not an assurance. The current blueprint depends on this data, permission, or control assumption, so I would confirm it with the appropriate owner before treating the architecture as validated.”</p>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="escalation-questions" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Escalation questions</p>
-      <h2>Turn uncertainty into a question somebody can answer.</h2>
-      <p>A good escalation question gives the right person enough context to make a useful decision. It explains what assumption needs validation, why it matters, which risk area it affects, who should validate it, what evidence may be needed, and what should happen next.</p>
-    </header>
-
-    <div class="research-canvas__table-wrap">
-      <table>
-        <thead><tr><th scope="col">Question element</th><th scope="col">What to make explicit</th><th scope="col">Why it matters</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Assumption</th><td>State the unconfirmed fact the recommendation currently depends on.</td><td>The validator should know exactly what needs confirmation instead of reviewing the whole solution again.</td></tr>
-          <tr><th scope="row">Impact</th><td>Explain which architecture, scope, authority, release, or business decision changes if the assumption is wrong.</td><td>This shows why the question deserves attention now.</td></tr>
-          <tr><th scope="row">Risk area</th><td>Name the relevant area: data use, access, security, privacy, integration, product behavior, operations, or another accountable domain.</td><td>This helps route the question to the right owner or specialist.</td></tr>
-          <tr><th scope="row">Validator</th><td>Name the business owner, data owner, security owner, integration owner, platform specialist, or other accountable role.</td><td>Unowned questions tend to remain open while the project quietly assumes an answer.</td></tr>
-          <tr><th scope="row">Evidence</th><td>State what could answer the question: policy, source-system rule, role matrix, API contract, architecture record, approved product documentation, test evidence, or specialist decision.</td><td>A useful escalation asks for evidence or a decision, not general reassurance.</td></tr>
-          <tr><th scope="row">Next step</th><td>Say what should happen after the answer: proceed, narrow scope, keep read-only, run a validation test, change the pattern, or escalate further.</td><td>The response should move the design forward rather than create another meeting with no decision.</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">question_exchange</span>
-      <p><strong>Escalation template:</strong> “Can <em>[owner or specialist]</em> confirm whether <em>[assumption]</em> is valid for <em>[workflow]</em>? This matters because <em>[impact]</em> and affects <em>[risk area]</em>. We need <em>[evidence or source]</em> before <em>[decision]</em>. If the assumption is not valid, I recommend <em>[fallback or next step]</em>.”</p>
-    </div>
-
-    <div class="research-canvas__table-wrap">
-      <h3>Weak escalation versus decision-ready escalation</h3>
-      <table>
-        <thead><tr><th scope="col">Weak question</th><th scope="col">Decision-ready question</th></tr></thead>
-        <tbody>
-          <tr><td>“Is security okay with this?”</td><td>“Can the security owner confirm whether the proposed tool may access these supplier records under the current identity model? This affects whether the workflow can use live data or must stay with a narrower approved source set. We need the applicable access rule or security decision before validating the architecture.”</td></tr>
-          <tr><td>“Can we use this data?”</td><td>“Can the data owner confirm whether buyer notes are approved for this procurement assistant and whether generated outputs may expose them to the requesting user? This affects the context scope and access design. We need the approved data-use rule before including that source.”</td></tr>
-          <tr><td>“Does the integration support it?”</td><td>“Can the integration owner confirm whether the proposed SAP write-back path supports the required business object, authorization checks, error response, and transaction result? This determines whether the next version can act with approval or should remain recommendation-only.”</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Escalate when</h3>
-        <ul>
-          <li>The answer changes the architecture or confidence level.</li>
-          <li>The issue belongs to an accountable specialist or owner.</li>
-          <li>The required evidence is outside the current discovery material.</li>
-          <li>Proceeding without an answer would create material data, access, action, or release risk.</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Do not escalate as a substitute for thinking</h3>
-        <ul>
-          <li>First state what is already known.</li>
-          <li>Separate the open assumption from unrelated questions.</li>
-          <li>Explain how the answer changes the recommendation.</li>
-          <li>Offer a bounded fallback when the answer is not yet available.</li>
-        </ul>
-      </div>
-    </div>
+    <p>A decision-ready escalation is short: <em>Can the owner confirm X for this workflow? It changes Y. We need evidence Z before enabling action A; otherwise the workflow remains read-only or recommendation-only.</em> The point is not the template. The point is that the answer must change a real design or release decision.</p>
   </section>
 
   <section class="research-canvas__inventory" id="sap-example" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">SAP Lead example</p>
-      <h2>Govern a supplier exception workflow before allowing updates.</h2>
-      <p>A procurement assistant may begin as read-only support and later prepare or execute actions. Governance should become stronger as authority increases.</p>
+      <p class="research-canvas__eyebrow">SAP example</p>
+      <h2>A supplier exception assistant should inherit enterprise authority, not invent its own.</h2>
+      <p>Consider an assistant that helps a buyer understand a supplier exception. It may use purchase-order state, supplier master data, delivery history, contract or policy content, and buyer notes. Those sources do not all have the same owner, freshness, or access boundary.</p>
     </header>
-
-    <div class="research-canvas__table-wrap">
-      <table>
-        <thead><tr><th scope="col">Area</th><th scope="col">First-pass judgment</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Data</th><td>Purchase orders, supplier master data, delivery history, contract metadata, buyer notes, and policy content may carry different sensitivity and ownership.</td></tr>
-          <tr><th scope="row">Source ownership</th><td>SAP remains authoritative for transactional state; policy and contract sources need named owners and freshness rules.</td></tr>
-          <tr><th scope="row">Access</th><td>The assistant should not expose supplier, contract, company-code, or buyer information outside the user’s permitted business scope.</td></tr>
-          <tr><th scope="row">V1 authority</th><td>Read-only: summarize the exception and show supporting evidence.</td></tr>
-          <tr><th scope="row">V2 authority</th><td>Draft or recommend: prepare a follow-up, proposed field change, or next action for buyer review.</td></tr>
-          <tr><th scope="row">V3 authority</th><td>Act with approval only after transaction, role, duplicate, validation, and recovery behavior are confirmed.</td></tr>
-          <tr><th scope="row">Approval gate</th><td>The buyer sees the proposed action and supporting evidence before any business-system write-back.</td></tr>
-          <tr><th scope="row">Auditability</th><td>Record the request, relevant source evidence, recommendation, reviewer, approval, action, and system result where required.</td></tr>
-          <tr><th scope="row">Validation needs</th><td>Data-use approval, role mapping, integration authority, retention, logging scope, transaction behavior, and production ownership.</td></tr>
-          <tr><th scope="row">Escalation question</th><td>Can the SAP security and integration owners confirm whether the proposed write-back path preserves the required authorization boundary, records the approval and transaction result, and has defined failure handling? If not, keep the next version recommendation-only until those assumptions are resolved.</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <p>In a read-only version, the assistant can collect permitted evidence and explain the exception. In a drafting version, it can prepare a supplier message or a proposed follow-up. If a later version can change ERP state, the proposal should first be checked against current master and transactional data, business rules, and user authority. A material write should then follow the required approval policy and use a supported interface whose result can be reconciled with the intended business outcome.</p>
+    <p>This is the same separation used in the <a href="/labs/business-ai/document-to-erp-ai/">Document-to-ERP pilot</a>: model evidence and interpretation are useful, but they do not replace the controls around the business transaction.</p>
   </section>
 
-  <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Assessment shortcut</p><h2>Use one governance sequence under pressure.</h2></div>
-    <ol>
-      <li><span>01</span><strong>Data</strong><p>What information enters the workflow and how sensitive is it?</p></li>
-      <li><span>02</span><strong>Owner</strong><p>Who owns the workflow, sources, access, output, and changes?</p></li>
-      <li><span>03</span><strong>Access</strong><p>Who may see which information, and which permissions must be preserved?</p></li>
-      <li><span>04</span><strong>Movement</strong><p>Where does data travel, combine, appear, persist, or expire?</p></li>
-      <li><span>05</span><strong>Authority</strong><p>Is the workflow read-only, drafting, recommending, acting with approval, or restricted?</p></li>
-      <li><span>06</span><strong>Gate</strong><p>Where must a human or specialist approve before the workflow continues?</p></li>
-      <li><span>07</span><strong>Escalate</strong><p>Which uncertainty must become a decision-ready question for a named owner?</p></li>
-      <li><span>08</span><strong>Evidence</strong><p>What answer or proof would change the recommendation, confidence, or release path?</p></li>
-    </ol>
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Platform controls</p>
+      <h2>Use platform safeguards for the problem they actually solve.</h2>
+      <p>Current SAP AI Core orchestration documentation includes modules such as content filtering, data masking, grounding, and translation. The data-masking module can anonymize or pseudonymize selected personally identifiable information before model processing.</p>
+    </header>
+    <p>These controls are useful, but they do not replace business authorization. A masked prompt does not prove that a user may access the source. A content filter does not decide whether a supplier record may be changed. Governance still has to connect platform controls to identity, source ownership, business validation, action authority, and operating evidence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Governance needs lifecycle evidence, not a one-time approval.</h2>
+      <p>The NIST AI Risk Management Framework treats AI risk management as work across governance, mapping, measurement, and management rather than a single release event. Its Generative AI Profile adds guidance for generative-AI risks, including governance, data and information integrity, privacy, evaluation, and incident-related practices. The page uses those sources as a general risk-management reference and SAP Help for concrete platform examples.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener"><span>SRC</span><strong>NIST AI Risk Management Framework</strong><small>Voluntary framework for managing AI risk across the system lifecycle.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" target="_blank" rel="noopener"><span>SRC</span><strong>NIST AI 600-1 — Generative AI Profile</strong><small>Generative-AI-specific risk and governance guidance.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/ai-launchpad/sap-ai-launchpad-user-guide/orchestration-4953dc10c6dd48fe85f37b41109dffe2" target="_blank" rel="noopener"><span>SAP</span><strong>SAP AI Core — Orchestration</strong><small>Current orchestration modules and their technical roles.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/data-masking-d9a54d9ca54b40beacbd24e1663ec3b4" target="_blank" rel="noopener"><span>SAP</span><strong>SAP AI Core — Data Masking</strong><small>Current anonymization and pseudonymization behavior for selected PII.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">route</span>
-    <p><strong>Continue the reasoning:</strong> use <a href="/labs/business-ai/architecture-patterns/">Architecture Patterns & First-Pass Blueprints</a> to keep governance assumptions visible without over-designing the blueprint. Use <a href="/labs/business-ai/implementation-readiness/">AI Implementation Readiness</a> for deeper safeguards, evals, observability, release, rollback, and operating controls.</p>
+    <div>
+      <p><strong>Continue the reasoning:</strong> use <a href="/labs/business-ai/architecture-patterns/">Architecture Patterns</a> to place these boundaries in a lightweight solution blueprint. Use <a href="/labs/business-ai/implementation-readiness/">AI Implementation Readiness</a> for evals, safeguards, observability, staged release, and rollback.</p>
+    </div>
   </section>
 </div>

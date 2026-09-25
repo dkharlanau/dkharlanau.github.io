@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "EDI"
-description: "Analytical overview of EDI in SAP: what it is, where it sits, and how it breaks."
+description: "EDI in SAP explained: business-document standards, partner agreements, message implementation and mapping, transport, acknowledgments, and the relationship with IDoc and SAP Integration Suite."
 permalink: /atlas/sap/edi/
 atlas_section: sap
 domain: SAP operations
@@ -11,7 +11,7 @@ sap_area: "EDI"
 business_process: "System integration"
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-06
+last_reviewed: 2026-09-23
 author: Dzmitryi Kharlanau
 
 tags:
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Integration</p>
     <h1>EDI</h1>
-    <p class="note-subtitle">Electronic Data Interchange for structured trading partner communication in supply chain integration.</p>
+    <p class="note-subtitle">Structured business-document exchange between companies, with explicit rules for message shape, partner agreement, mapping, and transport.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,92 +54,44 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>What it is</h2>
-    <p>EDI (Electronic Data Interchange) is the structured exchange of business documents between trading partners using standardized formats. Common standards include EDIFACT (international), X12 (North America), and XML/EDI variants. It replaces paper-based transactions with machine-readable messages.</p>
+    <p>Electronic Data Interchange, or EDI, is the structured exchange of business documents between organizations. A purchase order, dispatch advice, invoice, or acknowledgment is represented in a machine-readable format agreed by the trading partners instead of being re-entered from paper or email.</p>
 
-    <h2>Business purpose</h2>
-    <p>Automate order-to-cash and procure-to-pay cycles with suppliers, customers, and logistics providers. Reduce manual data entry, accelerate transaction processing, and enforce contractual data quality.</p>
+    <p>EDI is not one SAP technology and it is not synonymous with IDoc. Standards such as UN/EDIFACT and ASC X12 define external message structures. SAP applications may use IDocs, APIs, XML, or other application interfaces on their side of the exchange. Middleware connects those worlds by validating, transforming, routing, securing, and monitoring the partner message.</p>
 
-    <h2>Where it sits in the landscape</h2>
-    <p>EDI operates at the boundary between SAP and external trading partners. SAP systems typically use IDoc as the internal format, with EDI standards applied at the exchange layer. SAP Integration Suite, PI/PO, or third-party translators handle format conversion and transmission.</p>
+    <h2>One exchange contains several contracts</h2>
+    <p>A reliable EDI interface has at least three layers. The <strong>business-message contract</strong> says which document is being exchanged and which standard/version is used. The <strong>partner agreement</strong> says which company identifiers, communication settings, acknowledgments, security rules, and scenario-specific parameters apply. The <strong>application mapping</strong> says how the partner message becomes data the sending or receiving business application understands.</p>
 
-    <h2>Main objects / data</h2>
-    <ul>
-      <li>EDIFACT message: ORDERS, INVOIC, DESADV, etc.</li>
-      <li>X12 transaction set: 850 (PO), 810 (invoice), 856 (ASN).</li>
-      <li>IDoc type: internal SAP representation (e.g., ORDERS05).</li>
-      <li>Partner agreement: message type, version, and communication protocol.</li>
-      <li>Mapping rules: EDI segment to IDoc segment conversion.</li>
-      <li>Communication protocol: AS2, SFTP, VAN, or HTTP.</li>
-    </ul>
+    <p>Keeping those layers separate explains many production problems. A technically valid EDIFACT message can still be unacceptable to one partner because a mandatory qualifier is missing. A correct mapping can still fail because the sender identity does not match the agreement. A successful AS2 or SFTP transfer can still carry a document that the target application rejects.</p>
 
-    <h2>Integrations</h2>
-    <ul>
-      <li>S/4HANA: IDoc-based EDI inbound and outbound.</li>
-      <li>SAP PI/PO: EDI-to-IDoc mapping and protocol adapters.</li>
-      <li>Integration Suite: cloud-based EDI processing and partner management.</li>
-      <li>External: trading partners, VANs, third-party EDI translators.</li>
-    </ul>
+    <h2>Standards are starting points, not complete partner specifications</h2>
+    <p>UN/EDIFACT and ASC X12 provide broad message standards, but real trading relationships normally use a narrower implementation of them. A partner may require specific segments, code values, qualifiers, repetitions, or conditional rules. The result is a partner-specific message contract built within the boundaries of the underlying standard.</p>
 
-    <h2>Extension points</h2>
-    <ul>
-      <li>Custom IDoc types for non-standard EDI messages.</li>
-      <li>Mapping extensions in PI/PO or Integration Suite.</li>
-      <li>Partner-specific segment and qualifier handling.</li>
-      <li>Side-by-side EDI monitoring apps on BTP.</li>
-    </ul>
+    <p>SAP Integration Advisor models this distinction explicitly. Its type-system library includes standards such as ASC X12 and UN/EDIFACT as well as SAP message families such as IDoc. A <strong>Message Implementation Guideline (MIG)</strong> narrows a message structure for a particular business purpose. A <strong>Mapping Guideline (MAG)</strong> then describes how a source MIG maps to a target MIG and can provide a runtime mapping artifact for integration processing.</p>
 
-    <h2>Monitoring / diagnostics</h2>
-    <ul>
-      <li>IDoc status monitor: WE02, WE05 for post-EDI processing.</li>
-      <li>EDI acknowledgments: CONTRL, 997 functional acknowledgment.</li>
-      <li>Mapping errors: segment mismatch, qualifier invalid.</li>
-      <li>Transmission logs: AS2 MDN, SFTP transfer status.</li>
-    </ul>
+    <h2>IDoc is often one endpoint of EDI, not the definition of EDI</h2>
+    <p>In a classic SAP scenario, an outbound application can create an IDoc that middleware maps to a partner's EDI format. On the inbound side, middleware can transform the partner message into an IDoc that SAP application processing understands. This pattern is common because IDocs provide a durable SAP message structure and processing status.</p>
 
-    <h2>Strong sides</h2>
-    <ul>
-      <li>Industry-standard formats ensure broad partner compatibility.</li>
-      <li>Automated end-to-end document exchange reduces latency.</li>
-      <li>Auditable trail with acknowledgments and status tracking.</li>
-      <li>Mature tooling for mapping, validation, and error recovery.</li>
-    </ul>
+    <p>But the architecture is not required to use IDoc. SAP Integration Advisor's current type systems also cover other structures, and an integration can use another released SAP interface when that fits the business process. The important design question is which interface contract the application owns, not whether every EDI project can be forced through one technical format.</p>
 
-    <h2>Weak sides / risks</h2>
-    <ul>
-      <li>Standard versions differ by region and partner.</li>
-      <li>Mapping maintenance is labor-intensive.</li>
-      <li>Error resolution often requires manual partner coordination.</li>
-      <li>Legacy VANs add cost and latency.</li>
-    </ul>
+    <h2>Trading Partner Management keeps partner variation out of copied flows</h2>
+    <p>Modern B2B integration becomes difficult when every partner gets a separately copied integration flow. SAP Integration Suite's Trading Partner Management addresses that problem with company and trading-partner profiles, agreement templates, trading partner agreements, and runtime partner configuration. Activated agreement information can be made available to Cloud Integration through the Partner Directory so the runtime can apply partner-specific parameters without hard-coding each variation into a separate flow.</p>
 
-    <h2>AMS incident patterns</h2>
-    <ul>
-      <li>EDI message rejected — mapping error, segment mismatch, or qualifier issue.</li>
-      <li>Missing acknowledgment — partner not responding or AS2 failure.</li>
-      <li>Duplicate EDI — resend without deduplication logic.</li>
-      <li>Partner profile mismatch — wrong GLN, DUNS, or test flag.</li>
-      <li>IDoc stuck after EDI — post-processing error in SAP.</li>
-    </ul>
+    <p>This does not remove partner-specific work. It gives that work a better home. Identifiers, agreements, security material, message choices, and operational rules remain explicit business-to-business configuration rather than becoming scattered constants in mappings and scripts.</p>
 
-    <h2>Related Atlas links</h2>
-    <ul>
-      <li><a href="/atlas/maps/sap-s4hana-landscape-map/">SAP S/4HANA Landscape Map</a></li>
-      <li><a href="/atlas/maps/sap-integration-landscape-map/">SAP Integration Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-integration-suite/">SAP Integration Suite</a></li>
-      <li><a href="/atlas/sap/idoc/">IDoc</a></li>
-    </ul>
+    <h2>Transport success and business acceptance are different events</h2>
+    <p>An EDI exchange can produce several kinds of confirmation. The transport protocol may confirm that bytes were delivered. The EDI standard may define a functional or syntax acknowledgment. The receiving application may later accept or reject the business document. Those signals answer different questions and should not be collapsed into one generic “success” status.</p>
+
+    <p>For support, we therefore trace the exchange in order: did the sender create the intended business message, did middleware select the correct partner agreement, did validation and mapping succeed, was the payload delivered, did the expected acknowledgment arrive, and did the receiving application post the document? This sequence usually localizes the failure faster than starting from an isolated IDoc or transport log.</p>
 
     <h2>Source references</h2>
     <ul>
-      <li>SAP S/4HANA 2025 Feature Scope Description — <a href="https://help.sap.com/doc/e2048712f0ab45e791e6d15ba5e20c68/2025/en-US/FSD_OP2025_latest.pdf">FSD_OP2025_latest.pdf</a> (public-safe topic discovery only).</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/overview-of-sap-integration-advisor">Overview of SAP Integration Advisor</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/creating-post-exit-integration-flow-12398d4ba2ec41728e7221a9f0d5e08c-790">SAP Integration Suite capabilities</a>.</li>
+      <li>SAP Help Portal — <a href="https://help.sap.com/docs/integration-suite/isuite-trading-partner-management/tasks-and-permissions-for-trading-partner-management">Trading Partner Management: tasks and permissions</a>.</li>
     </ul>
 
     <h2>Verification limitations</h2>
-    <p>This page is a skeleton based on public SAP documentation. EDI standards, partner configurations, and integration mechanisms vary by S/4HANA release and must be verified against the customer's system.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <p>Supported standards, transports, acknowledgments, type-system versions, partner-management features, and SAP application interfaces depend on the product and release. Verify the exact partner specification and runtime capabilities before implementing or migrating a B2B interface.</p>
   </div>
 
   <section class="atlas-related">

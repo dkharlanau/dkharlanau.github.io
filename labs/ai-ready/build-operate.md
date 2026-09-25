@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "AI Ready — Build and Operate"
-description: "A practical production guide for AI services: environments, versioning, deployment gates, observability, retries, budgets, capacity, and rollback."
+description: "A practical production guide for AI services: versioning, environments, deployment gates, observability, retries, budgets, capacity, and rollback."
 permalink: /labs/ai-ready/build-operate/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-22
 hide_global_cta: true
 tags: [ai, deployment, operations, observability, cicd, reliability]
 ---
@@ -18,169 +18,108 @@ tags: [ai, deployment, operations, observability, cicd, reliability]
 
 # Build and Operate
 
-A local AI demo proves that one path worked once. Production needs repeatable builds, controlled configuration, traces, limits, failure handling, and rollback. AI adds more moving versions, but the basic engineering discipline is pleasantly boring.
+A local AI demo proves that one path worked once. Production asks a harder question: **can we understand, reproduce, limit, and recover the behavior when the system changes?**
 
-## Problem
+AI services still need ordinary engineering discipline: controlled releases, separate environments, observability, retry rules, capacity limits, and rollback. The extra difficulty is that behavior can change even when application code does not.
 
-A demo can appear useful while lacking versioning, observability, budgets, rollback, and operational ownership.
+## Version the behavior, not only the application
 
-## Version the whole behavior
+In a conventional service, a code version often explains most changes in behavior. An AI service can also change because someone switched the model, edited instructions, changed a tool schema, rebuilt the retrieval index, replaced the embedding model, changed chunking or reranking, or modified a policy.
 
-The application version is not enough. A result may change because of:
+Those parts belong in deployment metadata and traces. If yesterday's answer and today's answer differ, we should be able to tell what changed.
 
-- model version;
-- system instructions;
-- prompt templates;
-- tool schema;
-- MCP server version;
-- retrieval index;
-- embedding model;
-- chunking rules;
-- reranker;
+A useful release identity may therefore include:
+
+- application version;
+- model and model configuration;
+- system instructions and prompt templates;
+- tool or MCP contract versions;
+- retrieval, embedding, chunking, and reranking configuration;
 - policy configuration;
-- eval dataset.
+- evaluation dataset and grader versions.
 
-Keep these versions in deployment metadata and traces. Otherwise a changed answer becomes a séance.
+This does not mean every setting needs a complex release process. It means important behavior should not change anonymously.
 
-## Environment model
+## Keep environments genuinely separate
 
-Use separate environments for at least development, test, and production. Keep credentials and external-system targets separate.
+Development, test, and production should differ by more than a label in the UI.
 
 ```text
-DEV  -> synthetic / local data, fast iteration
-TEST -> controlled integrations, regression evals
-PROD -> real identity, real policy, strict logging and budgets
+DEV  -> synthetic or local data, fast iteration
+TEST -> controlled integrations and regression evaluation
+PROD -> real identity, real policy, strict budgets and tracing
 ```
 
-Do not let a local experiment accidentally use a production write credential.
+Credentials, backend targets, and write permissions should follow the environment. A local experiment should not accidentally call a production write endpoint because the same token happened to be available.
 
-## Deployment gate
+The same rule applies to retrieval. Test results are difficult to trust when a test environment silently reads the production index while using a development prompt and a different model.
 
-A useful release pipeline can be:
+## Treat model and prompt changes as releases
+
+A production gate does not need to be complicated, but it should be explicit.
 
 ```text
-code + prompts + schemas
+code + prompts + schemas + configuration
         |
-unit/schema tests
+unit and schema checks
         |
-eval suite
+representative evals
         |
-security checks
+security / policy checks
         |
-build artifact
+build and release artifact
         |
-canary / limited traffic
+limited rollout
         |
 production
 ```
 
-Critical eval failures should block release. Define the rule before a release is under pressure.
+Some evaluation failures should block release rather than reduce an average score. A system that still answers most questions correctly but starts crossing an authorization boundary is not “slightly worse”.
 
-## Observe the request end to end
+We should decide those hard gates before a release is under pressure.
 
-Use one trace ID across:
+## Trace one request across the whole system
 
-- incoming request;
-- retrieval calls;
-- model calls;
-- tool or MCP calls;
-- authorization checks;
-- approval events;
-- retries;
-- final response.
+An AI answer may depend on retrieval, several model calls, one or more tools, authorization, approvals, and retries. If each component logs separately without a shared trace, diagnosing a failure becomes guesswork.
 
-Useful operational measures include:
+One trace or request ID should connect the important steps. From that trace we want to understand which model and instructions ran, what evidence was retrieved, which tools were called, how authorization was evaluated, whether a retry occurred, and how the final result was produced.
 
-- success/error rate;
-- p50/p95/p99 latency;
-- model and tool latency separately;
-- model usage and cost;
-- retrieval hit quality;
-- tool failure rate;
-- approval rate;
-- agent step count;
-- budget-exhausted rate.
+Operational measures then become easier to interpret. We can separate model latency from tool latency, distinguish application errors from dependency errors, and watch cost, step count, approval rate, or budget exhaustion alongside ordinary success and latency measures.
 
-## Retry at the right layer
+## Retries need business meaning
 
-Retry examples:
+Retries are useful for transient failures such as a network timeout or a rate-limit response. They are dangerous when the failure means “do not try again”.
 
-- transient network timeout;
-- rate-limit response with backoff;
-- temporary dependency error.
+A validation error, permission denial, failed business precondition, or unsafe request normally needs a different response. A write is especially sensitive: if the network fails after the backend commits, retrying the same request may repeat the business action.
 
-Do not blindly retry:
+That is why retry policy belongs in application logic. Writes should use idempotency keys, business keys, version checks, or another duplicate-protection mechanism where the backend supports it. The model should not decide whether an uncertain write is safe to repeat.
 
-- validation error;
-- permission denied;
-- failed business precondition;
-- unsafe request;
-- non-idempotent write without duplicate protection.
+## Budgets protect both cost and dependencies
 
-A retry policy belongs to the application, not to the model’s mood.
+One user request can expand into many model and tool calls. A tool-using agent may also create parallel work. Production limits should therefore cover more than token count.
 
-## Capacity and budgets
+We normally care about request timeout, maximum context, agent steps, parallel workers, model cost, tool-call count, queue depth, user or tenant rate limits, and concurrency against external systems.
 
-Set explicit limits before production:
+These limits are part of system behavior. When a budget is exhausted, the system should return a clear degraded result or escalation state rather than quietly continue until an upstream service becomes the bottleneck.
 
-- request timeout;
-- maximum context size;
-- maximum agent steps;
-- maximum parallel workers;
-- model cost/request;
-- tool-call budget;
-- queue depth;
-- rate limits by user or tenant;
-- external-system concurrency.
+## Cache only with a freshness rule
 
-A tool-using agent can fan out many backend calls from one user request. The model may still be cheerful while the dependency is becoming an accidental load test.
+Caching stable reference material, schemas, tool catalogs, or short-lived read results can reduce cost and latency. The important question is how stale the value is allowed to become.
 
-## Caching
+A cached handbook page and a cached deployment status have different risk. Account state, ticket status, availability, prices, permissions, and operational health may change faster than the cache is useful. If we cannot state the freshness rule, we do not yet understand what we are caching.
 
-Cache only when the freshness rule is clear. Good candidates can include stable reference content, tool catalogs, schemas, or repeated read results with a short TTL.
+## Rollback has several layers
 
-Do not cache changing facts without knowing how stale they may become. Account state, ticket status, deployment health, prices, availability, and permissions can change quickly.
+AI releases are not only code releases. We may need to roll back the application, prompt bundle, model selection, retrieval index, tool or MCP server, or policy configuration.
 
-## Rollback
+This is one reason to version the behavior explicitly. If a model switch causes a regression, restoring the previous model configuration should not require pretending that the application binary changed.
 
-Plan rollback for several layers:
+A good runbook also describes degraded behavior. If vector retrieval fails, perhaps lexical retrieval is still useful. If one read API fails, the system may return a partial answer and name the missing evidence. If the write service is unavailable, it can preserve a prepared change without claiming that execution succeeded.
 
-- application code;
-- prompt/instruction bundle;
-- model selection;
-- retrieval index/configuration;
-- MCP/tool server;
-- policy configuration.
+## Production readiness is the ability to explain failure
 
-A model change can be rolled back even when no application code changed. Treat model and prompt changes as releases.
+The production question is not whether the model is impressive. It is whether the service can be operated when something goes wrong.
 
-## Practical service example
-
-A research-and-operations assistant may depend on a model API, lexical/vector search, an MCP server, repository or ticket APIs, identity, and tracing. A production runbook should say what happens when each dependency is slow or unavailable.
-
-Example degraded behavior:
-
-- vector retrieval unavailable -> use lexical retrieval;
-- one read API unavailable -> return a partial answer with the missing evidence named;
-- model unavailable -> keep deterministic status lookup available;
-- write service unavailable -> keep prepared change, do not pretend execution succeeded.
-
-## Production checklist
-
-- immutable deployment artifact;
-- separate environments and credentials;
-- versioned prompts/tools/retrieval/evals;
-- CI eval gate;
-- secret store;
-- least-privilege runtime identity;
-- trace correlation;
-- latency and cost budgets;
-- retry/backoff policy;
-- idempotent writes;
-- rate and concurrency limits;
-- dashboards and alerts;
-- incident runbook;
-- rollback path;
-- post-incident eval case.
+We should know what changed, what the request touched, what limits applied, which dependency failed, what was retried, and how to return to a known state. Once those answers are available, AI becomes another production component rather than a special exception to engineering practice.
 
 Related: [Evals and Reliability](/labs/ai-ready/evals-reliability/) · [Security and Governance](/labs/ai-ready/security-governance/) · [Production Readiness Lab](/labs/ai-ready/labs/production-readiness/)
