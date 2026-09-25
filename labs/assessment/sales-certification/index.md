@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-24
+last_modified_at: 2026-09-25
 hide_global_cta: true
 career_impact: none
 career_reason: "Study navigation and self-assessment prompts assembling existing Sales capabilities; this hub is not a new career skill or standalone technical evidence source."
@@ -34,8 +34,22 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
     </div>
   </header>
 
-  <nav aria-label="On this preparation page">
-    <p><a href="#target">Certification target</a> · <a href="#official-scope">Official courses</a> · <a href="#last-day">Last-day review</a> · <a href="#our-units">Our units</a> · <a href="#time">Time budget</a> · <a href="#method">How to study</a> · <a href="#roadmap">Deep roadmap</a> · <a href="#capstone">Worked practice</a> · <a href="#consolidation">One topic, one primary page</a> · <a href="#library">Resource library</a> · <a href="#gaps">Coverage checks</a> · <a href="#readiness">Readiness</a></p>
+  <section class="research-canvas__inventory" id="today">
+  <header>
+    <p class="research-canvas__eyebrow">Use it today</p>
+    <h2>Choose a study mode before you open another page.</h2>
+  </header>
+  <p>The roadmap is large because it also works as a reference. For an assessment session, start with the shortest route that exposes a real gap.</p>
+  <div class="research-route-list">
+    <a href="#last-day"><span>90M</span><strong>Recall pass</strong><small>Explain the eight compact models without notes. Open a primary page only when the explanation breaks.</small></a>
+    <a href="#roadmap"><span>4H</span><strong>Active Sales pass</strong><small>Walk through O2C, order control, pricing, ATP and shipping, billing, variants, returns, and automation. For each area answer: rule, document effect, failure signal.</small></a>
+    <a href="#official-scope"><span>FULL</span><strong>Certification route</strong><small>Use the five official SAP course blocks, then local pages for mechanisms, practice, and explain-back. Budget 44–56 hours for active preparation.</small></a>
+  </div>
+  <p><strong>Assessment rule:</strong> If you can explain the standard flow, one changed business rule, the document consequence, and the first diagnostic check, move on. Do not reread a strong topic.</p>
+</section>
+
+<nav aria-label="On this preparation page">
+    <p><a href="#today">Start today</a> · <a href="#target">Certification target</a> · <a href="#official-scope">Official courses</a> · <a href="#last-day">Last-day review</a> · <a href="#our-units">Our units</a> · <a href="#time">Time budget</a> · <a href="#method">How to study</a> · <a href="#roadmap">Deep roadmap</a> · <a href="#capstone">Worked practice</a> · <a href="#consolidation">One topic, one primary page</a> · <a href="#library">Resource library</a> · <a href="#gaps">Coverage checks</a> · <a href="#readiness">Readiness</a></p>
   </nav>
 
   <section class="research-canvas__inventory" id="target">
