@@ -162,14 +162,21 @@ button.btn {
 
 /* Mobile: horizontal scroll instead of forcing dense columns to shrink. */
 @media (max-width: 767px) {
-  .note-body table:not(.table-scroll > table),
-  .atlas-page__body table:not(.table-scroll > table),
-  .page-content--knowledge table:not(.table-scroll > table) {
+  .note-body table,
+  .atlas-page__body table,
+  .page-content--knowledge table {
     display: block;
     max-width: 100%;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .table-scroll > table {
+    display: table;
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
   }
 
   .note-body table p,
@@ -335,6 +342,16 @@ a.external-link::after {
   margin-bottom: var(--space-4);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+.atlas-process-map--table {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.atlas-process-map--table .table-scroll {
+  margin: 0;
 }
 
 .atlas-process-map__steps {
