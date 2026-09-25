@@ -60,18 +60,18 @@ tags: [sap-s4hana, sap-mm, settlement-management, condition-contract-management,
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Business-volume source</p><h2>Receipt or invoice is an architecture decision.</h2><p>The same purchase order can lead to different rebate timing depending on which event the condition contract type uses as business volume.</p></header>
-    <div class="research-route-list">
+    <div class="ecg-input-grid">
       {% for source in model.business_volume_sources %}
-      <a href="#"><span>VOL</span><strong>{{ source }}</strong><small>Choose the source that represents when the commercial entitlement should become measurable.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <article><span>VOL</span><h3>{{ source }}</h3><p>Choose the source that represents when the commercial entitlement should become measurable.</p></article>
       {% endfor %}
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Standard examples</p><h2>Contract type tells you what the process considers.</h2><p>0PG* and 0PI* are useful standard examples. Projects can extend the design, so read the configuration instead of guessing from the number.</p></header>
-    <div class="research-route-list">
+    <div class="ecg-input-grid">
       {% for item in model.standard_contract_type_examples %}
-      <a href="#"><span>TYPE</span><strong>{{ item }}</strong><small>The important question is whether business volume is driven by goods receipt or supplier invoice and how settlement is posted.</small><i class="material-symbols-outlined" aria-hidden="true">contract_edit</i></a>
+      <article><span>TYPE</span><h3>{{ item }}</h3><p>Read the type together with its business-volume source and settlement behavior.</p></article>
       {% endfor %}
     </div>
   </section>
@@ -94,9 +94,9 @@ tags: [sap-s4hana, sap-mm, settlement-management, condition-contract-management,
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Configuration</p><h2>Make the business-volume source explicit.</h2><p>If receipt-based and invoice-based logic are mixed mentally, the settlement will look mysterious even when SAP is doing exactly what was configured.</p></header>
-    <div class="research-route-list">
+    <div class="ecg-input-grid">
       {% for item in model.configuration_focus %}
-      <a href="#"><span>CFG</span><strong>{{ item }}</strong><small>Validate this layer against the target S/4HANA release and the selected purchasing rebate process.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      <article><span>CFG</span><p>{{ item }}</p></article>
       {% endfor %}
     </div>
   </section>
@@ -105,23 +105,15 @@ tags: [sap-s4hana, sap-mm, settlement-management, condition-contract-management,
     <header><p class="research-canvas__eyebrow">Operational anchors</p><h2>Use tools as evidence, not as the answer.</h2></header>
     <details>
       <summary><strong>Transactions and Fiori apps</strong> <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
-      <div class="research-route-list">
-        {% for tx in graph.transactions %}
-        <a href="#"><span>{{ tx.id }}</span><strong>{{ tx.name }}</strong><small>{{ tx.use }}</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
-        {% endfor %}
-        {% for app in model.fiori_apps %}
-        <a href="#"><span>{{ app.id }}</span><strong>{{ app.name }}</strong><small>Fiori entry point for the Procurement CCM lifecycle.</small><i class="material-symbols-outlined" aria-hidden="true">apps</i></a>
-        {% endfor %}
+      <div class="ecg-decision-columns">
+        <div><h3>Transactions</h3><ul>{% for tx in graph.transactions %}<li><strong>{{ tx.id }}</strong> — {{ tx.name }}: {{ tx.use }}</li>{% endfor %}</ul></div>
+        <div><h3>Fiori apps</h3><ul>{% for app in model.fiori_apps %}<li><strong>{{ app.id }}</strong> — {{ app.name }}</li>{% endfor %}</ul></div>
       </div>
     </details>
   </section>
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Diagnostic sequence</p><h2>Ask which event created the entitlement.</h2><p>This is the key difference from the Sales side.</p></header>
-    <div class="research-route-list">
-      {% for item in model.diagnostic_sequence %}
-      <a href="#"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item }}</strong><small>Stop at the first layer that produces the wrong result.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
-      {% endfor %}
-    </div>
+    <ol>{% for item in model.diagnostic_sequence %}<li>{{ item }}</li>{% endfor %}</ol>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
