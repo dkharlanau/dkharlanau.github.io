@@ -1,32 +1,32 @@
 {
   "group": "07_after_sales",
   "title": "Claims, returns and customer recovery",
-  "updated_at": "2026-08-15",
+  "updated_at": "2026-09-25",
   "processes": [
     {
       "code": "SD.RET.LEAN",
       "id": "VAR-SD-RET-LEAN",
       "title": "Lean Customer Returns",
       "kind": "reverse_logistics",
-      "memory_hook": "Simple return: receive it, put it back, credit it.",
+      "memory_hook": "Simple return: authorize it, receive it to returns stock, release the credit.",
       "sap_scope_items": [{"id": "BDD", "label": "Lean Customer Returns"}],
       "business_intent": "Handle straightforward customer returns when you do not need inspection-driven disposition or advanced refund logic.",
-      "flow": ["Lean Returns Order", "Returns Delivery", "Goods Receipt", "Putaway to Valuated Stock", "Credit Memo"],
+      "flow": ["Lean Returns Order", "Returns Delivery", "Goods Receipt to Returns Stock", "Billing-Block Release", "Credit Memo / Free-of-Charge Subsequent Delivery"],
       "control_plane": [
         {"control": "lean returns order", "why": "keeps the reverse flow simple and reference-aware"},
-        {"control": "returns delivery and goods receipt", "why": "bring the product back into company stock"},
-        {"control": "billing block / release", "why": "controls when the credit can be created"}
+        {"control": "returns delivery and goods receipt", "why": "record the physical return, usually into separate returns stock rather than unrestricted-use stock"},
+        {"control": "billing block / release", "why": "controls financial authorization; the official BDD lesson states that credit creation can be released independently of goods receipt"}
       ],
       "data_hinges": [
         {"data": "reference order or invoice", "changes": "commercial history, quantity and pricing context"},
-        {"data": "receiving plant / storage location", "changes": "where returned stock becomes available"},
-        {"data": "returned quantity", "changes": "stock receipt and credit quantity"}
+        {"data": "receiving plant / storage location", "changes": "where the returned quantity is received and controlled as returns stock"},
+        {"data": "returned quantity", "changes": "physical receipt and compensation context, while billing-block release remains a separate control"}
       ],
-      "impact_summary": ["Returned goods go directly into valuated stock; no product inspection or logistical follow-up decision is required in the lean model."],
-      "constraints": ["Use the full customer returns process when inspection, multiple dispositions, direct supplier return, or refund determination is required.", "Immediate return to unrestricted stock can make the quantity available to MRP/ATP quickly, so stock-quality governance matters."],
-      "lead_questions": ["Do we trust the returned goods enough to make them available without inspection?", "Should refund wait for receipt or another approval event?", "Do we need a separate returns storage location to protect ATP?"],
+      "impact_summary": ["BDD keeps the core return flow simple but separates physical receipt from financial authorization: goods are usually received into returns stock, while the billing block can be released and the credit memo created independently of goods receipt."],
+      "constraints": ["Use Customer Returns Management (BKP) when inspection-driven disposition, richer follow-up activities, or inspection-based refund determination is required.", "Do not assume a BDD goods receipt makes the quantity unrestricted-use or immediately ATP-relevant; the official lesson says the material is usually posted to separate returns stock.", "Business policy may choose to wait for physical receipt before credit, but the standard lesson treats goods receipt and credit release as separable process states."],
+      "lead_questions": ["Has the material physically arrived, and into which returns stock was it posted?", "Has the billing block been released, and does business policy require that release to wait for receipt?", "Does this case need BKP inspection and follow-up decisions rather than the lean BDD path?"],
       "extension_points": ["EXT-FIELD", "EXT-API", "EXT-LOGIC"],
-      "source_refs": ["SRC-SAP-LEAN-RETURNS", "SRC-SAP-CUSTOMER-RETURNS-COMPARE"],
+      "source_refs": ["SRC-SAP-LEAN-RETURNS", "SRC-SAP-CUSTOMER-RETURNS-COMPARE", "SRC-SAP-BDD-LEARNING", "SRC-SAP-COMPLAINTS-LEARNING"],
       "tags": ["returns", "lean", "reverse-logistics"]
     },
     {

@@ -7,9 +7,14 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-24
 hide_global_cta: true
 sales_control_plane: true
+sales_preparation: sales
+career_impact: mapped
+career_skills:
+  - sales-o2c
+  - sales-diagnostics
 tags:
   - sap
   - s4hana
@@ -34,7 +39,7 @@ tags:
       <p class="research-canvas__eyebrow">Reverse logistics / control plane</p>
       <h1>Received is not owned.<br />Owned is not refunded.</h1>
       <p>{{ rc.memory_rule }} Customer Returns becomes much easier when physical receipt, ownership, inspection, disposition, and customer compensation are treated as separate decisions instead of one large “return” status.</p>
-      <a class="research-canvas__button" href="#arm-trace">Trace Customer Returns <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#public-edition-complaints">Start with the Public Edition complaint map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Returns and claims inventory">
       <p>Deep vertical</p>
@@ -51,22 +56,46 @@ tags:
     <a href="/labs/enterprise-context/data/sales-return-claims-control-plane.json">Open machine-readable model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
-  <section class="research-canvas__inventory" id="returns-assessment-recall" data-reveal>
+  <section class="research-canvas__inventory" id="public-edition-complaints" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Goods movement, ownership, inspection, disposition, and compensation are separate decisions.</h2>
-      <p>Start from the customer outcome. Do not choose a returns document before you know what must happen physically and financially.</p>
+      <p class="research-canvas__eyebrow">C_S4CS / Public Edition</p>
+      <h2>First decide whether the complaint is financial, physical, or both.</h2>
+      <p>The current <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-complaint-processing">SAP Sales Complaint Processing course</a> separates credit/debit adjustments, invoice correction, Customer Returns Management, Lean Customer Returns and returns analytics. That separation is more useful for preparation than memorizing return codes before the business case is clear.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> I first ask whether goods come back, when ownership changes, whether inspection is required, what should happen to the returned product, and what compensation the customer should receive. A simple return can be enough when goods come back and the business only needs stock receipt and credit. Advanced Returns Management is useful when inspection and follow-up activities control whether the product goes to stock, scrap, repair, another plant, or a supplier. The logistics decision and the refund decision are related but not identical. I therefore prove receipt and ownership state, inspection result, follow-up activity, and refund control separately before changing the document flow.</p>
+    <div class="spa-compare-grid">
+      <article>
+        <span>1EZ</span>
+        <h3><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-complaint-processing/using-solution-process-credit-memo-processing-1ez_f73786dd-a453-431c-9f4f-d864f9249d29">Credit Memo Processing</a></h3>
+        <p>Use a credit memo request when the customer should receive a commercial credit. The request is reviewed through its billing block and becomes billing relevant after release. A physical return is a separate question; do not invent reverse logistics when the complaint is only financial.</p>
+      </article>
+      <article>
+        <span>1F1</span>
+        <h3><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-complaint-processing/debit-memo-processing-1f1-_a60ce452-4a62-4a9e-b6d9-ace9cd192612">Debit Memo Processing</a></h3>
+        <p>Use a debit memo request when the business needs to charge the customer an additional amount. The request, review/release and billing logic is a financial correction path; it does not imply that goods move.</p>
+      </article>
+      <article>
+        <span>BKL</span>
+        <h3><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-complaint-processing/using-solution-process-invoice-correction-with-credit-memo-bkl_ce81944e-c63d-4196-af4a-a9fb25471a30">Invoice Correction with Credit Memo</a></h3>
+        <p>Use the invoice-correction pattern when an existing billing document must be corrected and the credited amount is based on the difference between original and corrected values. The important boundary is the reference to the existing invoice, not simply “credit memo exists”.</p>
+      </article>
+      <article>
+        <span>BKP</span>
+        <h3><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-complaint-processing/executing-and-running-customer-returns-management-bkp_d04943f8-3422-48ea-8368-c7742f3b09cb">Customer Returns Management</a></h3>
+        <p>Use the comprehensive returns process when goods come back and condition-based decisions matter. The return order can drive receipt, inspection, logistical follow-up and compensation such as refund or replacement. The deeper control-plane model below is most relevant to this branch.</p>
+      </article>
+      <article>
+        <span>BDD</span>
+        <h3><a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-complaint-processing/executing-lean-customer-returns-bdd_ac40972d-cd34-4b9e-a32f-69225bcc252c">Lean Customer Returns</a></h3>
+        <p>Use the lean process when the business needs a simpler return flow without the full inspection-driven disposition model. The official lesson separates the logistics path from the customer credit: the credit can be released independently of goods receipt, so “goods arrived” and “customer can be credited” are not the same status.</p>
+      </article>
+      <article>
+        <span>ANALYTICS</span>
+        <h3>Returns Analytics</h3>
+        <p>Use returns analytics after process execution to understand rates, values, reasons and segments. Analytics can show where returns concentrate; it does not choose the correct complaint process or prove the cause by itself.</p>
+      </article>
     </div>
-    <div class="ecg-decision-columns">
-      <div><h3>No goods movement</h3><p>Think first about a commercial claim such as credit or debit correction rather than reverse logistics.</p></div>
-      <div><h3>Goods return, simple outcome</h3><p>A lean return can fit when receipt and customer credit are sufficient and no inspection-driven disposition is needed.</p></div>
-      <div><h3>Goods return, controlled disposition</h3><p>Use the ARM decision model when inspection and logistical follow-up determine the next stock, plant, supplier, repair, or scrap state.</p></div>
-      <div><h3>Customer needs replacement</h3><p>Separate the recovery shipment from the financial correction. Replacement, refund, and return can be different branches.</p></div>
-    </div>
+    <p><strong>Preparation boundary:</strong> the sections below deliberately go deeper into return ownership, inspection splits, follow-up activities, integration and release-sensitive behavior. That depth is useful for a Sales Lead, but it must not be treated as a claim that every code or variant is required for C_S4CS. For certification scope, start from the current Public Edition course and use the deeper model to explain why the selected process behaves as it does.</p>
+    <p><strong>Quick comparison:</strong> an overcharge with no goods movement points first to a financial correction; damaged goods that must be inspected point to BKP; a simple accepted physical return can fit BDD; a blocked new sales order due to credit management is a different Sales control problem and does not belong to complaint processing merely because the word “credit” appears.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -258,8 +287,8 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Evidence boundary</p>
-      <h2>Current SAP behavior is verified. The learning model is ours.</h2>
-      <p>Source documents verify process boundaries, standard follow-up activities, refund controls, APIs and integration capabilities. The diagnostic grammar, memory hooks, failure traces and tests are independently written.</p>
+      <h2>Current SAP behavior is sourced. The learning model is ours.</h2>
+      <p>The source registry supports the deeper process boundaries, follow-up activities, refund controls, APIs and integration capabilities. The Public Edition preparation section above is anchored to the current SAP Learning complaint course. The diagnostic grammar, memory hooks, failure traces and tests are independently written and remain draft material until human verification.</p>
     </header>
     <ul class="scp-source-list">
       {% for source in registry.sources %}

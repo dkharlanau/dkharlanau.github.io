@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-24
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -21,7 +21,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-01"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "SAP primary sources + factual review + editorial rewrite"
 search_intent: "SAP sales order processing with item category and schedule line determination"
 # ai-discovery-managed:start
 structured_data:
@@ -91,527 +91,218 @@ source_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Deep vertical / Order-to-Cash</p>
-      <h1>A sales order is a chain of decisions.</h1>
-      <p>{{ graph.summary }} A process map says “Create Sales Order”. This page opens that box and asks what SAP has to decide inside it.</p>
-      <a class="research-canvas__button" href="#memory-model">Start with the memory model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">Enterprise Context Lab / Order-to-Cash</p>
+      <h1>A sales order is a layered business document, not one decision.</h1>
+      <p>When SAP creates a sales order, it combines document control, customer and product data, logistics context, commercial rules, and supply information. The useful question is not “where is the field stored?” but “which layer owns this behavior, which inputs produced it, and what depends on it next?”</p>
+      <a class="research-canvas__button" href="#memory-model">Read the document layers <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Decision map inventory">
       <p>Reviewed map</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.determinations | size }}</strong><small>Decision areas</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.impact_traces | size }}</strong><small>Impact traces</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Reviewed model · source-tracked · no client data</em>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Source-tracked · no client data</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
-    <p><strong>Working rule:</strong> when a value is wrong, do not begin with the table. Begin with the question: <em>what decided this value, which inputs were used, and who uses the result next?</em></p>
-    <a href="/labs/enterprise-context/data/sales-order-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" id="sales-order-assessment-recall" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A sales order is a stack of decisions at header, item, and schedule-line level.</h2>
-      <p>Use the document structure to explain why later pricing, promise, shipping, and billing behave the way they do.</p>
-    </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> I start with the sales document type because it sets the header-level commercial frame. The item category controls what the item can do, including important pricing, billing, and follow-on behavior. The schedule-line category controls quantity and logistics behavior such as availability, requirements transfer, procurement relevance, and goods movement settings. Around these controls SAP determines partners, plant, dates, pricing, ATP, credit, and shipping. If behavior is wrong, I identify the control level and trace the first wrong determination instead of forcing the final field.</p>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <div>
+      <p><strong>Keep control and outcome separate.</strong> A sales document type does not decide every item behavior, an item category does not promise stock, and an ATP confirmation does not make an item deliverable by itself.</p>
+      <p>The document works because several decisions meet in one place. Reading those boundaries correctly is more useful than memorizing a large list of transactions or tables.</p>
     </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead answer frame</p>
-      <h2>Explain the first wrong decision in sixty seconds.</h2>
-      <p>A Lead answer should not become a tour of configuration. Start with the business symptom, identify the control level, trace the decision, and finish with evidence that proves both the cause and the corrected business result.</p>
-    </header>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>1. Frame</h3>
-        <ul>
-          <li>State the expected business behavior.</li>
-          <li>Name the first wrong value, status, quantity, or date.</li>
-          <li>Place it at header, item, or schedule-line level.</li>
-        </ul>
-      </div>
-      <div>
-        <h3>2. Trace</h3>
-        <ul>
-          <li>Read the runtime inputs before opening configuration.</li>
-          <li>Follow input → determination → output → downstream consumer.</li>
-          <li>Stop at the first layer where expected and actual behavior diverge.</li>
-        </ul>
-      </div>
-      <div>
-        <h3>3. Prove</h3>
-        <ul>
-          <li>Separate root cause from downstream symptoms.</li>
-          <li>Explain the blast radius before changing shared configuration.</li>
-          <li>Define proof of cause and proof of business completion.</li>
-        </ul>
-      </div>
-    </div>
-
-    <p class="ecg-caption"><strong>Example:</strong> if a schedule line behaves incorrectly, do not start by forcing the final schedule-line category. Check the item category and material-planning input first, because they are part of the determination context.</p>
+    <a href="/labs/enterprise-context/data/sales-order-graph.json">Open the structured sales-order model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="memory-model" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Memory model</p>
-      <h2>Remember eight questions, not eighty tables.</h2>
-      <p>The labels are simple on purpose. They give you a stable path through a sales order during an assessment, workshop, or incident.</p>
-    </header>
-
-    <div class="ecg-memory-grid">
-      {% for item in graph.memory_model.questions %}
-      <article class="ecg-memory-card">
-        <span>0{{ forloop.index }}</span>
-        <strong>{{ item.key }}</strong>
-        <h3>{{ item.question }}</h3>
-        <p>{{ item.answer }}</p>
-      </article>
-      {% endfor %}
-    </div>
-
-    <p class="ecg-caption"><strong>WHO → WHAT → WHERE → WHEN → PRICE → PROMISE → RISK → FULFILL.</strong> This is a learning projection, not a claim about the exact SAP runtime sequence.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
       <p class="research-canvas__eyebrow">Document control</p>
-      <h2>First identify the control level.</h2>
-      <p>Before debugging a field, ask whether the behavior belongs mainly to the header, item, or schedule line. This removes a surprising amount of noise.</p>
+      <h2>Header, item, and schedule line answer different questions.</h2>
+      <p>SAP documents sales-order control on three levels. The sales document type sets important header-level behavior. The item category gives an item its business role. The schedule line category controls time- and quantity-related execution behavior such as requirements transfer and availability checking.</p>
     </header>
 
-    <div class="ecg-control-stack">
-      {% for level in graph.control_stack.levels %}
-      <article>
-        <span>{{ level.level | replace: "_", " " }}</span>
-        <h3>{{ level.title }}</h3>
-        <p class="ecg-question">{{ level.question }}</p>
-        <ul>
-          {% for control in level.controls %}<li>{{ control }}</li>{% endfor %}
-        </ul>
-        <strong>{{ level.remember }}</strong>
-      </article>
-      {% endfor %}
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Sales document type</h3>
+        <p>This is the transaction frame: standard order, quotation, return, credit memo request, and other document categories can follow different rules. Header controls can influence functions such as credit checking, blocking, number ranges, reference behavior, and default data.</p>
+      </div>
+      <div>
+        <h3>Item category</h3>
+        <p>The item category tells SAP what kind of item it is processing. In standard determination, SAP evaluates the sales document type, the material's item category group, item usage, and any higher-level item. The result can change delivery relevance, billing relevance, pricing behavior, and whether schedule lines are allowed.</p>
+      </div>
+      <div>
+        <h3>Schedule line category</h3>
+        <p>A schedule line connects the sales demand to dates, quantities, requirements, and fulfillment. Its category carries instructions for functions such as transfer of requirements and availability checking. That is why two visually similar items can behave very differently downstream.</p>
+      </div>
     </div>
+
+    <p>A useful reading order is therefore <strong>document type → item category → schedule line category</strong>. It is a control hierarchy, not a claim that every runtime calculation happens in that exact sequence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="partner-text-provenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Partner, text and field provenance</p>
+      <h2>A value in the order has a source. Find that source before changing it.</h2>
+      <p>Sales documents combine proposed master data, document partners, reference-document data, determination results, and user or interface input. When one value is wrong, ask which mechanism supplied it and at what document level.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Partners: role first, person second</h3>
+        <p>Sold-to, ship-to, bill-to and payer are transaction roles. Header partners normally provide shared document context, while an item can carry a partner that differs from the header when the process allows it. Current Public Edition Sales Order API documentation distinguishes inherited header partners from item-specific partners.</p>
+        <p><strong>Consequence:</strong> a wrong ship-to can alter downstream delivery data without changing the sold-to. Check the affected partner function and document level before changing Business Partner master data.</p>
+      </div>
+      <div>
+        <h3>Texts: determine, reference or duplicate</h3>
+        <p>Text determination is separate from partner determination. Public Edition configuration includes text determination procedures and access sequences for sales-document text; configuration can also distinguish reference from duplication.</p>
+        <p><strong>Consequence:</strong> if a source text changes, referenced and duplicated text do not have to behave the same way. Test the configured behavior instead of assuming every visible text was copied once.</p>
+      </div>
+      <div>
+        <h3>Field provenance: trace the first owner</h3>
+        <p>For a surprising payment term, plant, date, partner, or text, classify the value as explicit input, master/partner proposal, reference-document transfer, determination/default, or later manual/interface change. This is a diagnostic model, not one fixed SAP runtime sequence.</p>
+        <p><strong>Example:</strong> if the payer is correct in current master data but wrong in an existing order, prove how that order obtained its payer before repairing shared data.</p>
+      </div>
+    </div>
+    <p><strong>Public Edition boundary:</strong> partner and text concepts are useful Sales mechanisms, but they are not additional units in the current C_S4CS Sales Configuration course. That course currently focuses on incompleteness, copy control, pricing and output.</p>
+    <p>First-party references: <a href="https://help.sap.com/docs/r/03c04db2a7434731b7fe21dca77440da/2602.500/en-US/792ac9e2ce884f1bbed26be36097c8eb.html">Public Edition Sales Order item partners</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/33b132c0121c41f3b412258173d76b0d/6e0359940e3a4b61ab67c71cb32bf0fd.html">Public Edition text-determination configuration example</a> · <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration">Sales Configuration course</a>.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Inputs before rules</p>
-      <h2>Most determinations do not start from empty space.</h2>
-      <p>Master data, organizational context, and explicit values from users or interfaces feed the decision chain. A correct rule with a wrong input still produces a perfectly wrong result.</p>
+      <p class="research-canvas__eyebrow">Process behavior</p>
+      <h2>The item category is where the business process becomes concrete.</h2>
+      <p>A sales order can contain items that look similar to a user but belong to different process variants. The item category is one of the key reasons. It translates document context and material classification into a process role, and that role determines which later functions are even relevant.</p>
     </header>
 
-    <div class="ecg-input-grid">
-      {% for input in graph.input_domains %}
-      <article>
-        <span>INPUT</span>
-        <h3>{{ input.title }}</h3>
-        <p>{{ input.purpose }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
+    <p>For example, an item that is relevant for delivery needs schedule-line and logistics behavior that an informational or order-only item does not. This is why manually forcing a final category is a poor first diagnostic move. If the determined item category is unexpected, first check the sales document type, the material's item category group, item usage, and any higher-level item that participates in the determination.</p>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Three projections</p>
-      <h2>One order, three ways to read it.</h2>
-      <p>The process view tells you where you are. The object view tells you where data lives. The decision view explains why the data appeared.</p>
-    </header>
-
-    <div class="ecg-view-grid">
-      {% for view in graph.views %}
-      <article class="ecg-view-card">
-        <span>0{{ forloop.index }}</span>
-        <h3>{{ view.title }}</h3>
-        <p class="ecg-question">{{ view.question }}</p>
-        <p>{{ view.projection }}</p>
-      </article>
-      {% endfor %}
-    </div>
+    <p>The same principle applies one level lower. If a schedule line behaves incorrectly, check the item category and the planning input used for schedule-line determination before changing the schedule-line category itself. The visible category is often the result of an upstream decision.</p>
   </section>
 
   <section class="research-canvas__inventory" id="dependency-engine" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Dependency chain</p>
-      <h2>The item is where several worlds meet.</h2>
-      <p>Customer data, product data, sales configuration, logistics configuration, calendars, supply, and commercial rules meet inside one document.</p>
+      <p class="research-canvas__eyebrow">Logistics dependency</p>
+      <h2>A customer request becomes executable only after logistics context is resolved.</h2>
+      <p>The sales order brings together several decisions that are often discussed separately. They are related, but they do not belong to one universal “determination sequence”. Treat the rail below as a dependency model: changing an upstream result can change the context seen by later functions.</p>
     </header>
 
-    <div class="ecg-rail" aria-label="Simplified sales-order dependency chains">
+    <div class="ecg-rail" aria-label="Simplified sales-order logistics dependencies">
       <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Customer + Product</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Plant Proposal</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Plant</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Shipping Point</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Shipping Point</span>
-      </div>
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Departure + Destination + Shipping Policy</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Route</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Scheduling</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Material Availability Date</span>
-      </div>
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Plant + Date + Quantity + Supply/Demand</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Availability</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Confirmed Qty / Date</span>
-      </div>
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Pricing Context + Condition Data</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Pricing</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Order Value</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Credit Check</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Continue / Block</span>
+        <span class="ecg-node ecg-node--input">Customer + product + sales area</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Delivering plant</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Shipping context</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Scheduling + availability</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Confirmed quantity / dates</span>
       </div>
     </div>
 
-    <p class="ecg-caption">These rails show reasoning dependencies. They intentionally hide technical branches that are not needed to understand the core idea.</p>
-  </section>
+    <p>In classic standard plant proposal, SAP can derive the delivering plant from a customer-product info record, the ship-to party, or the material master, in that documented priority. Advanced scenarios can introduce additional substitution logic, so the plant should still be treated as a runtime result rather than a permanent property of the order.</p>
 
+    <p>Once the plant is known, Shipping can determine an execution point from the plant, shipping condition, and loading group. Route and scheduling then provide logistics dates and context. Availability checking answers a different question: under the configured ATP or aATP rules, what quantity can actually be confirmed and on which date? SAP's Product Availability Check returns a confirmation, not a physical delivery.</p>
 
-  <section class="research-canvas__inventory" id="text-determination" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Text control</p>
-      <h2>Automatic text transfer is a search strategy.</h2>
-      <p>Texts in Sales are not only free-form notes. SAP can propose them from master data, a reference document, a material, a customer-material record, or another permitted source. The useful model is: <strong>context → text procedure → text ID → access sequence → first valid source → text in the document</strong>.</p>
-    </header>
-
-    <div class="ecg-rail" aria-label="Automatic text determination flow">
-      <div class="ecg-rail__branch">
-        <span class="ecg-node ecg-node--input">Document Type / Item Category</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Text Procedure</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Text ID</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--decision">Access Sequence</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">First Valid Source</span>
-        <span class="ecg-arrow" aria-hidden="true">→</span>
-        <span class="ecg-node ecg-node--output">Document Text</span>
-      </div>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Text object</h3>
-        <p>A text object tells us where a text belongs. For sales documents, <strong>VBBK</strong> is the header text object and <strong>VBBP</strong> is the item text object.</p>
-        <p>Customer, material, customer-material, delivery, billing, and standard texts are other possible source objects.</p>
-      </div>
-      <div>
-        <h3>Text ID</h3>
-        <p>The text ID is the business meaning of a text inside an object: an internal note, packing instruction, form header, shipping note, or another controlled text.</p>
-        <p>The technical ID has four characters. Different IDs can have different transfer, output, display, and completeness behavior.</p>
-      </div>
-      <div>
-        <h3>Text procedure</h3>
-        <p>The procedure is the set of text IDs available in a context. Header procedures are assigned through the relevant document type. Sales-document item procedures are assigned through the item category.</p>
-        <p>So the same customer and material can show different text IDs in two document types or item categories.</p>
-      </div>
-    </div>
-
-    <div class="ecg-diagnostic">
-      <div>
-        <h3>How the access sequence works</h3>
-        <p>An access sequence is an ordered list of possible sources. Each access says which text object and source text ID to read. It can also use language, partner, reference-document, or other requirements.</p>
-        <p><strong>The accesses are exclusive.</strong> As soon as one access finds a valid text, SAP transfers it and does not execute the later accesses.</p>
-      </div>
-      <div>
-        <h3>A practical fallback example</h3>
-        <ol>
-          <li>Try the same text from the directly preceding document.</li>
-          <li>If nothing is found, try a customer sales-area text.</li>
-          <li>If that also fails, try a customer central text.</li>
-          <li>If no configured source returns a valid text, the target text stays empty until another rule or a user supplies it.</li>
-        </ol>
-      </div>
-    </div>
-
-    <p class="ecg-caption">Think of the access sequence as a controlled fallback chain, not as concatenation. If the requirement is to combine several sources into one text, that is a separate design problem.</p>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Duplicate</h3>
-        <p>The transferred text is stored as its own database record. Source and target are independent after transfer. Changing the source later does not change the existing document text, and changing the document text does not change the source.</p>
-        <p>Use duplication when the document needs a stable historical snapshot.</p>
-      </div>
-      <div>
-        <h3>Reference</h3>
-        <p>The document initially points to the source text. If the source changes, the referenced text changes too because there is still only one text instance.</p>
-        <p>If a user edits the referenced text in the document, SAP automatically creates a duplicate. From that moment, source and document are independent.</p>
-      </div>
-      <div>
-        <h3>Design question</h3>
-        <p>Ask what the text represents. A negotiated instruction that must remain exactly as agreed usually behaves differently from a centrally maintained operational note that should stay current until somebody intentionally changes it.</p>
-        <p>This is a business-history decision, not only a storage setting.</p>
-      </div>
-    </div>
-
-    <div class="ecg-diagnostic">
-      <div>
-        <h3>One field controls two behaviors</h3>
-        <p>The <strong>Text is mandatory or should be displayed</strong> setting has two different effects.</p>
-        <ol>
-          <li><strong>Display during transfer:</strong> SAP can show the transferred text in a dialog during sales-document processing so the user can review or edit it.</li>
-          <li><strong>Mandatory for completeness:</strong> if no text is transferred or entered, the document is incomplete.</li>
-        </ol>
-      </div>
-      <div>
-        <h3>Mandatory text and incompleteness</h3>
-        <p>For the classic/private configuration model, SAP documents hard-coded text incompleteness procedures <strong>50</strong> and <strong>51</strong>. Their field settings are maintained through view <strong>V_TVUVF</strong> with transaction <strong>SM31</strong>.</p>
-        <p>SAP Note <strong>385982 — Incompleteness of texts Customizing</strong> is the reference mentioned by SAP for this special area.</p>
-      </div>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Direct predecessor means direct</h3>
-        <p>For accesses to <strong>VBBK</strong> or <strong>VBBP</strong>, SAP normally reads the directly preceding document.</p>
-        <p>Inquiry → Quotation → Order means the order reads the quotation. It does not skip the quotation and read the inquiry directly. The text has to survive each step if it is required later.</p>
-      </div>
-      <div>
-        <h3>Billing can choose a different source</h3>
-        <p>In delivery-related billing, the direct predecessor is the delivery. Billing configuration can still choose whether VBBK/VBBP texts come from that delivery or from the underlying sales order.</p>
-        <p>The choice is made at billing-type level and applies to the relevant billing texts.</p>
-      </div>
-      <div>
-        <h3>Generate changed accesses</h3>
-        <p>In transaction <strong>VOTXN</strong>, after creating or changing an access sequence, generate the accesses after saving with <strong>Texts → Generate access</strong>.</p>
-        <p>If configuration looks correct but runtime behavior does not follow it, this is one of the first technical checks worth making.</p>
-      </div>
-    </div>
-
-    <div class="ecg-diagnostic">
-      <div>
-        <h3>When standard access logic is not enough</h3>
-        <p>In classic/private/on-premise-style configuration, transaction <strong>VOFM</strong> can be used to create a data transfer routine for texts. The routine is assigned to an access and can add ABAP logic that decides which text should be procured.</p>
-        <p>The customer namespace for these routines is <strong>50–99</strong>. SAP also provides sample routines <strong>1</strong> and <strong>2</strong> to show the available structures.</p>
-      </div>
-      <div>
-        <h3>Example: dynamic standard text by material</h3>
-        <p>A custom routine can build a standard-text name from the current material, then let the access read text object <strong>TEXT</strong>. SAP's training example uses a pattern such as <strong>ZMAT:&lt;material&gt;</strong> and standard texts maintained in <strong>SO10</strong>.</p>
-        <p>This is useful for a real dynamic rule, but normal text objects, partner/language rules, and standard access requirements should be preferred when they already express the requirement.</p>
-      </div>
-    </div>
-
-    <div class="ecg-priority">
-      <strong>Fast diagnostic path</strong>
-      <span>1. Open the header or item text and choose <strong>Display log</strong>.</span>
-      <span>2. Confirm the actual text procedure and target text ID.</span>
-      <span>3. Read the access sequence from top to bottom and identify the first access that should succeed.</span>
-      <span>4. Check source object, source text ID, language, partner role, and direct predecessor.</span>
-      <span>5. Only then check duplicate/reference, mandatory/display, generated accesses, or a VOFM routine.</span>
-    </div>
-
-    <p class="ecg-lead-lens"><strong>Lead lens:</strong> text determination is a small rule engine. When the wrong text appears, find the first successful access. When no text appears, find the first access that should have succeeded and prove why it did not. This is much faster than starting with Customizing tables.</p>
-
-    <div class="ecg-drill-list">
-      <details>
-        <summary><span>01</span><strong>Customer text exists, but the order is empty</strong><small>Where do we start?</small></summary>
-        <div><p>Use the determination log first. Then check the target text ID, procedure assignment, access sequence, source text ID, partner, and language. If the access sequence was changed in classic configuration, confirm that it was generated.</p></div>
-      </details>
-      <details>
-        <summary><span>02</span><strong>Reference or duplicate?</strong><small>What is the practical difference?</small></summary>
-        <div><p>Duplicate creates an independent document copy. Reference keeps the document linked to the source until the document text is edited; that edit creates a duplicate and breaks the live dependency.</p></div>
-      </details>
-      <details>
-        <summary><span>03</span><strong>Why did the order copy the quotation text, not the inquiry text?</strong><small>The inquiry had the original note.</small></summary>
-        <div><p>VBBK/VBBP access reads the direct predecessor. In an Inquiry → Quotation → Order chain, the order sees the quotation. The quotation must first receive the inquiry text if the information should continue to the order.</p></div>
-      </details>
-      <details>
-        <summary><span>04</span><strong>When should we use VOFM?</strong><small>Can every requirement become a routine?</small></summary>
-        <div><p>Use a routine when the standard source objects, sequence, partner/language rules, and access requirements cannot express the rule clearly. A routine adds code, ownership, testing, and upgrade risk, so it should solve a real gap rather than replace normal configuration.</p></div>
-      </details>
-    </div>
-
-    <p class="ecg-caption"><strong>Scope:</strong> the transaction-based examples VOTXN, VOFM, SM31, and SO10 follow the SAP S/4HANA Cloud Private Edition / classic configuration model used by the cited SAP learning content. Deployment-specific configuration surfaces can differ.</p>
-  </section>
-
-  <section class="ecg-anatomy" data-reveal>
-    <div>
-      <p class="research-canvas__eyebrow">Decision anatomy</p>
-      <h2>Use the same six questions every time.</h2>
-      <p>A repeated diagnostic shape makes the system easier to remember and makes comparisons between Pricing, ATP, Shipping, and other engines much easier.</p>
-    </div>
-    <ol>
-      <li><span>01</span><strong>Question</strong><p>What business decision is SAP making?</p></li>
-      <li><span>02</span><strong>Inputs</strong><p>Which document, master-data, organization, or runtime values are read?</p></li>
-      <li><span>03</span><strong>Mechanism</strong><p>Lookup, procedure, condition technique, calculation, check, or search.</p></li>
-      <li><span>04</span><strong>Output</strong><p>Which value or status is produced?</p></li>
-      <li><span>05</span><strong>Next</strong><p>Which later decision consumes the result?</p></li>
-      <li><span>06</span><strong>Failure</strong><p>What should a consultant check before changing design?</p></li>
-    </ol>
+    <p><a href="/labs/enterprise-context/shipping/">Open the Shipping & Delivery Scheduling guide →</a> · <a href="/labs/enterprise-context/atp/">Open the ATP and aATP promise model →</a></p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Decision catalogue</p>
-      <h2>Twelve decisions worth tracing.</h2>
-      <p>Open each card as a small diagnostic machine. The goal is not to remember every field. The goal is to remember the dependency shape.</p>
+      <p class="research-canvas__eyebrow">Commercial decisions</p>
+      <h2>Price, credit, and fulfillment share the order but keep different responsibilities.</h2>
+      <p>Commercial calculations are coupled to the sales document without becoming the same mechanism as logistics determination.</p>
     </header>
 
-    <div class="ecg-determination-list">
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Pricing</h3>
+        <p>Sales pricing uses the condition technique. Condition records provide master data such as prices, discounts, surcharges, taxes, or freight values; the pricing procedure defines which condition types are evaluated and how the net value is calculated. A correct item category and plant therefore do not prove that the commercial value is correct.</p>
+        <p><a href="/labs/enterprise-context/pricing/">See the pricing engine →</a></p>
+      </div>
+      <div>
+        <h3>Credit</h3>
+        <p>Credit management evaluates exposure and configured credit rules against the business partner and document context. A credit result can block further processing even when pricing and availability are otherwise valid.</p>
+        <p><a href="/labs/enterprise-context/credit/">See the credit decision model →</a></p>
+      </div>
+      <div>
+        <h3>Fulfillment</h3>
+        <p>Delivery relevance and schedule-line dates determine whether an order can become due for shipping, but delivery creation still performs its own checks. SAP documents schedule lines becoming due when the relevant material-availability or transportation-scheduling date is reached; blocks or incompleteness can still prevent the handoff.</p>
+        <p><a href="/labs/enterprise-context/billing/">Follow the later billing boundary →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration-controls" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration controls around the order</p>
+      <h2>A correct item can still stop, copy differently, or communicate incorrectly.</h2>
+      <p>Document type, item category, and schedule line explain the core order behavior. Three other controls answer different questions: is required data complete, what happens when a follow-on document is created with reference, and what output is produced after the business object exists?</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Incompleteness</h3>
+        <p>An incompleteness procedure checks whether required business data is present and can make a later function unavailable when a configured field is missing. For example, an order may exist but still be incomplete for a follow-on step because a required plant, partner, or commercial field is absent.</p>
+        <p><strong>Boundary:</strong> incompleteness proves that required data is missing; it does not prove why the value is missing. The root cause can still be master data, determination, reference-document transfer, or manual input.</p>
+      </div>
+      <div>
+        <h3>Copy control</h3>
+        <p>Copy control governs the transition from a source document to a target document. It defines allowed source/target combinations, checks requirements, transfers data, and can influence quantities, prices, status, and document flow. A quotation-to-order problem can therefore be a copy-control problem even when both documents are individually valid.</p>
+        <p><strong>Public Edition boundary:</strong> SAP provides standard copy-control table entries in Public Edition; do not assume the same freedom to add or remove document pairings that exists in Private Edition or classic customizing.</p>
+      </div>
+      <div>
+        <h3>Output</h3>
+        <p>Output is a communication decision after the business document exists. In Public Edition Sales, determination separates output type, receiver, channel, form template, and output relevance. A correct order can therefore have a wrong or missing confirmation without the order itself being wrong.</p>
+        <p><strong>Boundary:</strong> start Public Edition output questions with Output Parameter Determination, not with NAST or classic message control unless the scenario explicitly names that framework.</p>
+      </div>
+    </div>
+
+    <p><strong>Final-review memory rule:</strong> incompleteness controls whether required data is sufficient, copy control governs the document-to-document transition, and output governs what is communicated. They are separate from item-category and schedule-line behavior.</p>
+    <p>Official scope: <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration">Sales Configuration</a> · <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration/introducing-copy-control_aa545c09-ccd9-4734-92e5-d1fc42fdb056">Copy Control</a> · <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration/configuring-output-management_c8269e30-dda5-4096-962d-a7e81384bfed">Output Management</a>. Use the <a href="/atlas/diagnostics/sap-incompletion-procedure-diagnostics/">incompleteness diagnostic</a>, <a href="/labs/enterprise-context/sales-processes/mechanisms/">mechanism library</a>, and <a href="/atlas/diagnostics/sap-output-message-control-diagnostics/">output diagnostic</a> only when the compact model is not enough.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnosis</p>
+      <h2>Find the first wrong derived result.</h2>
+      <p>Many sales-order incidents look downstream. A wrong delivery date may be caused by scheduling, but it may also begin with the wrong plant. A missing delivery can be a shipping problem, but it can also be the intended consequence of the item or schedule-line category.</p>
+    </header>
+
+    <p>The fastest investigation usually starts from the business symptom and moves backward only until expected and actual behavior first diverge. Read the runtime values before changing shared configuration. If the shipping point is wrong, verify the delivering plant and its determination inputs before changing shipping-point rules. If ATP confirms the wrong date, verify the requirement date and plant entering the check before treating the availability engine as the root cause.</p>
+
+    <p>This also keeps ownership clear. Master data can be wrong while configuration is correct. Configuration can be correct while an interface supplies an explicit value that changes the result. A downstream delivery or billing problem can simply be consuming an incorrect decision made earlier in the sales order.</p>
+
+    <p><a href="/labs/enterprise-context/sales-diagnostics/">Open the Sales Diagnostic Casebook →</a></p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision index</p>
+      <h2>The structured graph keeps the detailed decision areas addressable.</h2>
+      <p>The main article explains the dependency model. The compact index below preserves the more detailed graph without turning every decision into the same troubleshooting template.</p>
+    </header>
+
+    <div class="ecg-view-grid">
       {% for determination in graph.determinations %}
-      <article class="ecg-determination-detail" id="{{ determination.id | downcase }}">
-        <header>
-          <div><span>{{ determination.memory_key }}</span><small>{{ determination.level | replace: "_", " " }}</small></div>
-          <h3>{{ determination.title }}</h3>
-          <p class="ecg-question">{{ determination.question }}</p>
-        </header>
-
-        <div class="ecg-decision-columns">
-          <div>
-            <h4>Inputs</h4>
-            <ul>{% for value in determination.inputs %}<li>{{ value }}</li>{% endfor %}</ul>
-          </div>
-          <div>
-            <h4>Output</h4>
-            <ul>{% for value in determination.output %}<li>{{ value | replace: "ATTR-SD-", "" | replace: "-", " " }}</li>{% endfor %}</ul>
-            <h4>Mechanism</h4>
-            <p>{{ determination.mechanism | replace: "_", " " }}</p>
-          </div>
-          <div>
-            <h4>Used next</h4>
-            <ul>{% for value in determination.downstream_effects %}<li>{{ value | replace: "DET-SD-", "" | replace: "-", " " }}</li>{% endfor %}</ul>
-          </div>
-        </div>
-
-        {% if determination.priority %}
-        <div class="ecg-priority">
-          <strong>Default priority</strong>
-          {% for value in determination.priority %}<span>{{ forloop.index }}. {{ value }}</span>{% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="ecg-diagnostic">
-          <div>
-            <h4>Common failure patterns</h4>
-            <ul>{% for value in determination.common_failures %}<li>{{ value }}</li>{% endfor %}</ul>
-          </div>
-          <div>
-            <h4>Check first</h4>
-            <ol>{% for value in determination.check_first %}<li>{{ value }}</li>{% endfor %}</ol>
-          </div>
-        </div>
-
-        <div class="ecg-remember"><strong>Remember</strong><p>{{ determination.remember }}</p></div>
-        <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ determination.lead_lens }}</p>
+      <article class="ecg-view-card" id="{{ determination.id | downcase }}">
+        <span>{{ determination.level | replace: "_", " " }}</span>
+        <h3>{{ determination.title }}</h3>
+        <p class="ecg-question">{{ determination.question }}</p>
+        <p>{{ determination.remember }}</p>
       </article>
       {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Impact tracing</p>
-      <h2>Forward for impact. Backward for explanation.</h2>
-      <p>A proposed change should be traced downstream. An unexpected value should be traced upstream. That simple direction switch is one of the most useful habits in SAP design work.</p>
-    </header>
-
-    <div class="ecg-traces">
-      {% for trace in graph.impact_traces %}
-      <article class="ecg-trace">
-        <div class="ecg-trace__head">
-          <span>{{ trace.direction }}</span>
-          <h3>{{ trace.title }}</h3>
-        </div>
-        <div class="ecg-trace__path">
-          {% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}
-        </div>
-        <p><strong>Lesson:</strong> {{ trace.lesson }}</p>
-        <p>{{ trace.caveat }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lead reasoning</p>
-      <h2>Documentation explains the feature. Diagnosis needs a method.</h2>
-      <p>The rules below are stored as expert heuristics, not SAP facts. Their job is to make investigation repeatable.</p>
-    </header>
-
-    <div class="ecg-heuristic-grid">
-      {% for heuristic in graph.expert_heuristics %}
-      <article>
-        <span>HEURISTIC {{ forloop.index }}</span>
-        <h3>{{ heuristic.statement }}</h3>
-        <p>{{ heuristic.context }}</p>
-        {% if heuristic.questions %}<h4>Ask</h4><ul>{% for value in heuristic.questions %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-        {% if heuristic.anti_patterns %}<h4>Avoid</h4><ul>{% for value in heuristic.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="ecg-case" data-reveal>
-    <div class="ecg-case__intro">
-      <p class="research-canvas__eyebrow">Synthetic exercise</p>
-      <h2>{{ graph.synthetic_case.title }}</h2>
-      <p>{{ graph.synthetic_case.description }}</p>
-      <strong>Synthetic example. No customer or project data.</strong>
-    </div>
-    <div class="ecg-case__body">
-      <h3>Facts</h3>
-      <ul>{% for fact in graph.synthetic_case.facts %}<li>{{ fact }}</li>{% endfor %}</ul>
-      <h3>Reasoning path</h3>
-      <ol>{% for step in graph.synthetic_case.reasoning_path %}<li>{{ step }}</li>{% endfor %}</ol>
-      <p><strong>Lesson:</strong> {{ graph.synthetic_case.lesson }}</p>
     </div>
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> the assessment factual-review layer confirms the load-bearing item-category and schedule-line controls on this route. The wider decision map was reviewed against its SAP source registry; authored diagnostic heuristics remain separated from documented product behavior.</p>
+    <div>
+      <p><strong>Evidence boundary:</strong> SAP documentation supports the product-control statements on this page. The dependency rails are explanatory models: they show which decisions feed other decisions without claiming one fixed technical runtime sequence for every sales-order scenario.</p>
+      <p>Special processes such as third-party, make-to-order, intercompany, returns, and service scenarios can intentionally use different categories, relevance settings, and follow-on documents.</p>
+    </div>
     <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Assessment drills</p>
-      <h2>Practice the path, not the definition.</h2>
-      <p>Each question is deliberately short. A strong answer should explain the diagnostic sequence, boundaries, and likely dependencies before proposing a fix.</p>
-    </header>
-
-    <div class="ecg-drill-list">
-      {% for drill in graph.assessment_drills %}
-      <details>
-        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.title }}</strong><small>{{ drill.prompt }}</small></summary>
-        <div><p>Expected reasoning path</p><ol>{% for value in drill.expected_reasoning %}<li>{{ value }}</li>{% endfor %}</ol></div>
-      </details>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Facts have a source. Heuristics have a label.</h2>
-      <p>The decision map uses primary SAP documentation as its factual baseline. Release scope stays visible because “SAP always works like this” tends to age badly.</p>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>Use product documentation for the load-bearing rules.</h2>
+      <p>The source registry keeps release scope visible. That matters because sales behavior can differ by deployment, release, configuration, and process variant.</p>
     </header>
 
     <div class="research-route-list">
@@ -623,9 +314,9 @@ source_links:
 
   <section class="ecg-machine" data-reveal>
     <div>
-      <p class="research-canvas__eyebrow">For tools and AI</p>
-      <h2>The page is a view. The graph is the asset.</h2>
-      <p>The same decision areas, failures, traces, heuristics, exercises, and evidence references are exposed as JSON. Later Lab iterations can use them for graph views, synthetic scenarios, or grounded AI evaluation.</p>
+      <p class="research-canvas__eyebrow">Structured model</p>
+      <h2>The article and the graph serve different jobs.</h2>
+      <p>The article is optimized for reading. The JSON keeps determinations, dependencies, evidence, and authored heuristics available for graph views and grounded tools without forcing that data model into the prose.</p>
     </div>
     <div class="ecg-machine__actions">
       <a class="research-canvas__button" href="/labs/enterprise-context/data/sales-order-graph.json">Graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
