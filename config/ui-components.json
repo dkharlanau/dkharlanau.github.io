@@ -437,6 +437,54 @@
       "documentation_anchor": "context-links"
     },
     {
+      "id": "site-share",
+      "title": "Site share panel",
+      "status": "stable",
+      "scope": "global",
+      "intent": "Offer page sharing and citation actions in a centered, self-contained utility panel that stays readable even when the page canvas is full width.",
+      "selectors": [
+        ".site-share",
+        ".site-share__actions",
+        ".site-share__action"
+      ],
+      "source_files": [
+        "assets/css/layout.css",
+        "_includes/site-share-widget.html"
+      ],
+      "content_signals": [
+        "share page",
+        "copy link",
+        "copy citation",
+        "send by email",
+        "helpful"
+      ],
+      "use_when": [
+        "The current page should expose standard share and citation actions.",
+        "The route uses the default layout and does not explicitly hide site sharing."
+      ],
+      "avoid_when": [
+        "A page is an application surface where sharing has no useful reader task.",
+        "The same actions are already provided by a more specific product workflow."
+      ],
+      "accessibility": [
+        "Keep visible text labels on actions instead of icon-only controls.",
+        "Maintain at least 44px action height and a live status region for feedback.",
+        "Preserve native button and link semantics."
+      ],
+      "responsive": [
+        "The panel owns its own centered width instead of inheriting route-canvas width.",
+        "Two columns collapse to one before the action group becomes cramped.",
+        "Action labels remain at metadata reading size or larger."
+      ],
+      "examples": [
+        {
+          "route": "/about/",
+          "source_file": "about.md"
+        }
+      ],
+      "documentation_anchor": "site-share"
+    },
+    {
       "id": "compact-sequence",
       "title": "Compact sequence",
       "status": "candidate",

@@ -66,3 +66,19 @@ def test_faq_uses_native_disclosure_and_readable_editorial_label():
     assert "<summary>" in include
     assert ".page-faq__eyebrow" in css
     assert "text-transform: none" in css
+
+
+def test_site_share_is_self_contained_and_centered():
+    include = (ROOT / "_includes" / "site-share-widget.html").read_text(encoding="utf-8")
+    css = (ROOT / "assets" / "css" / "layout.css").read_text(encoding="utf-8")
+    layout = (ROOT / "_layouts" / "default.html").read_text(encoding="utf-8")
+
+    assert 'class="site-share__content"' in include
+    assert "{% include site-share-widget.html %}" in layout
+
+    share_block = css.split(".site-share {", 1)[1].split("}", 1)[0]
+    assert "display: grid;" in share_block
+    assert "width: min(calc(100% - 2rem), var(--container-wide));" in share_block
+    assert "margin: var(--space-9) auto 0;" in share_block
+    assert "background: linear-gradient" in share_block
+    assert "@media (max-width: 860px)" in css

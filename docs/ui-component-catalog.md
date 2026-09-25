@@ -20,7 +20,7 @@ Choose from the reader task, not from visual similarity.
 | Compare two or three concepts | comparison-group |
 | Trace one SAP determination in depth | determination-detail |
 | Offer secondary deep-dive links | context-links |
-| Show a short ordered recall sequence | compact-sequence (candidate) |
+| Show a short ordered recall sequence | compact-sequence (candidate) |\n| Share or cite the current page | site-share |
 
 If the content does not fit, first change the information structure. Do not create
 a new component merely because a page-specific selector is easier.
@@ -163,9 +163,21 @@ for reusable cross-domain process visuals.
 Reference implementation:
 /labs/enterprise-context/master-data/#master-data-o2c
 
+## site-share
+
+Purpose: provide standard share, copy-link, citation, email, and lightweight
+feedback actions without depending on the width of the current route canvas.
+
+Use the shared include _includes/site-share-widget.html. The component owns its own
+centered width, yellow utility surface, action sizing, and mobile collapse. Route CSS
+must not stretch it to the viewport edge or create a second share treatment.
+
+Reference implementation:
+/about/
+
 ## Component ownership
 
-- Global editorial components: assets/css/components.css.
+- Global editorial components: assets/css/components.css.\n- Site share utility: assets/css/layout.css and _includes/site-share-widget.html.
 - FAQ: assets/page-faq.css and _includes/page-faq.html.
 - Research/Labs composition: assets/research-canvas.css.
 - Enterprise Context domain components: assets/enterprise-context-polish.css.
