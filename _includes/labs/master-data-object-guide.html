@@ -1,0 +1,190 @@
+{% assign master_data = site.data.labs.enterprise_context.master_data.sales_master_data %}
+{% assign source_registry = site.data.labs.enterprise_context.sources.sales_master_data_registry %}
+{% assign group_keys = "01_core,02_hierarchies_and_content,03_condition_and_relationship_records,04_adjacent_sales_consumed_master" | split: "," %}
+{% assign entity = nil %}
+
+{% for group_key in group_keys %}
+  {% assign group = master_data[group_key] %}
+  {% for candidate in group.entities %}
+    {% if candidate.code == page.master_data_code %}
+      {% assign entity = candidate %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  {% if entity %}{% break %}{% endif %}
+{% endfor %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">{{ entity.title }}</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  {% if entity %}
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Sales / Master Data Object</p>
+      <h1>{{ entity.title }}</h1>
+      <p>{{ entity.scope }}</p>
+      <a class="research-canvas__button" href="#master-object-memory">Build the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" id="master-object-memory" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">memory</span>
+    <div>
+      <p><strong>{{ entity.memory_hook }}</strong></p>
+      <p>{{ entity.business_question }}</p>
+    </div>
+    <a href="/labs/enterprise-context/master-data/">Back to the complete catalogue <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Object boundary</p>
+      <h2>Know the key before you debug the value.</h2>
+      <p>The same business term can exist at several organizational levels. Start by proving which record SAP is actually reading.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="{{ entity.title }} key and scope">
+      <table class="study-table__table">
+        <thead><tr><th>Dimension</th><th>What to verify</th></tr></thead>
+        <tbody>
+          {% for dimension in entity.key_dimensions %}
+          <tr><td><strong>{{ dimension }}</strong></td><td>Confirm that this dimension matches the sales document and the maintained master-data record.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">High-value attributes</p>
+      <h2>The fields that change runtime behaviour.</h2>
+      <p>Do not memorize the full master record. Learn the attributes that can change a commercial or logistics decision.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for attribute in entity.high_value_attributes %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>field</small></div>
+          <h3>{{ attribute.name }}</h3>
+        </header>
+        <p>{{ attribute.why }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime use</p>
+      <h2>Follow the object into the sales process.</h2>
+      <p>A master record matters because a runtime mechanism consumes it and writes or proposes something into the document flow.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Consumed by</h3><ul>{% for item in entity.consumed_by %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h3>Writes or influences</h3><ul>{% for item in entity.writes_or_influences %}<li>{{ item }}</li>{% endfor %}</ul></div>
+    </div>
+    {% if entity.precedence %}
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <div><p><strong>Precedence and boundaries</strong></p>{% for item in entity.precedence %}<p>{{ item }}</p>{% endfor %}</div>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Maintenance and technical orientation</p>
+      <h2>Know where the data lives, but keep the business meaning first.</h2>
+      <p>Transactions, tables, CDS views, and APIs help you navigate the system. They do not replace the object model or the supported integration contract.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% if entity.maintenance.modern %}<div><h3>Current maintenance</h3><ul>{% for item in entity.maintenance.modern %}<li>{{ item }}</li>{% endfor %}</ul></div>{% endif %}
+      {% if entity.maintenance.classic %}<div><h3>Classic orientation</h3><ul>{% for item in entity.maintenance.classic %}<li><code>{{ item }}</code></li>{% endfor %}</ul></div>{% endif %}
+    </div>
+    {% if entity.maintenance.note %}<p class="ecg-lead-lens"><strong>Boundary:</strong> {{ entity.maintenance.note }}</p>{% endif %}
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="{{ entity.title }} technical references">
+      <table class="study-table__table">
+        <thead><tr><th>Technical layer</th><th>Orientation</th></tr></thead>
+        <tbody>
+          {% if entity.technical_refs.tables %}<tr><td><strong>Tables</strong></td><td>{% for item in entity.technical_refs.tables %}<code>{{ item }}</code>{% unless forloop.last %} · {% endunless %}{% endfor %}</td></tr>{% endif %}
+          {% if entity.technical_refs.released_cds %}<tr><td><strong>Released CDS / views</strong></td><td>{% for item in entity.technical_refs.released_cds %}<code>{{ item }}</code>{% unless forloop.last %} · {% endunless %}{% endfor %}</td></tr>{% endif %}
+          {% if entity.technical_refs.apis %}<tr><td><strong>APIs</strong></td><td>{% for item in entity.technical_refs.apis %}<code>{{ item }}</code>{% unless forloop.last %} · {% endunless %}{% endfor %}</td></tr>{% endif %}
+          {% if entity.technical_refs.related %}<tr><td><strong>Related technical context</strong></td><td>{% for item in entity.technical_refs.related %}{{ item }}{% unless forloop.last %} · {% endunless %}{% endfor %}</td></tr>{% endif %}
+        </tbody>
+      </table>
+    </div>
+    {% if entity.technical_refs.notes %}{% for item in entity.technical_refs.notes %}<p>{{ item }}</p>{% endfor %}{% endif %}
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostic pattern</p>
+      <h2>Typical failure signals and the questions that narrow the cause.</h2>
+      <p>Start with the first wrong input. Only then move to configuration, enhancements, replication, or document overrides.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Failure signals</h3><ul>{% for item in entity.failure_signals %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h3>Lead questions</h3><ul>{% for item in entity.lead_questions %}<li>{{ item }}</li>{% endfor %}</ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Explain the object through scope, fields, consumer, and result.</h2>
+      <p>A strong answer is short because it follows the runtime chain instead of listing screens.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>Answer shape:</strong> “{{ entity.title }} is maintained for a defined business and organizational scope. I first identify the exact key, then the fields that influence Sales, then the mechanism that consumes them. If the document is wrong, I check the master record and its precedence before I change configuration or add an enhancement.”</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary sources for this object.</h2>
+      <p>The object model on this page is independently written. SAP documentation is used to verify product behaviour and release-sensitive boundaries.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in source_registry.sources %}
+        {% if entity.source_refs contains source.id %}
+        <a href="{{ source.url }}"{% if source.url contains "http" %} target="_blank" rel="noopener"{% endif %}>
+          <span>SRC</span><strong>{{ source.title }}</strong>
+          <small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.accessed_at }}</small>
+          <i class="material-symbols-outlined" aria-hidden="true">{% if source.url contains "http" %}open_in_new{% else %}arrow_forward{% endif %}</i>
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Continue</p>
+      <h2>Move from the object to the owning mechanism.</h2>
+      <p>The catalogue defines the data. The linked deep dive explains the wider process, determination, or execution context.</p>
+    </header>
+    <div class="research-route-list">
+      {% if page.owner_href %}<a href="{{ page.owner_href }}"><span>01</span><strong>{{ page.owner_label }}</strong><small>Read the wider process or mechanism that consumes this master data.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>{% endif %}
+      <a href="/labs/enterprise-context/master-data/"><span>02</span><strong>Sales Master Data Catalogue</strong><small>Return to all nineteen Sales master-data objects and their scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_back</i></a>
+      <a href="/labs/enterprise-context/sales-order/"><span>03</span><strong>Sales Order Decision Map</strong><small>See how master data becomes document behaviour at runtime.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+  {% else %}
+  <section class="research-canvas__inventory"><header><h1>Master-data object not found.</h1></header><p><a href="/labs/enterprise-context/master-data/">Return to the Sales master-data catalogue.</a></p></section>
+  {% endif %}
+</div>
