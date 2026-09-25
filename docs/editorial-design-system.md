@@ -89,7 +89,7 @@ Section separation is `--space-7`/`--space-8`; page top/bottom
 ### Radius
 
 `--radius-sm` 4px, `--radius-md` 8px, `--radius-lg` 12px. Pills (999px) only
-for real tags and status.
+for real tags and status. Compact section labels use `--radius-md` rather than pill geometry.
 
 ### Containers
 
@@ -118,8 +118,11 @@ diagrams).
   current page. Never uppercase micro-labels.
 - **TOC**: `reader-tools.js` injects `.reader-toc` from H2s (min 3, max 12).
   Desktop ≥1400px: sticky rail in the page margin. Mobile: disclosure.
-- **Eyebrows**: 14px, semibold, accent color, normal casing. One per view
-  where useful; they are not a substitute for headings.
+- **Eyebrows**: 14px, semibold, accent color, normal casing. Hero and page-category
+  eyebrows stay as plain accent text. In research-canvas section headers, an eyebrow may use
+  a compact `--color-accent-soft` plaque with `--radius-md`; keep it small and let the heading
+  remain the primary signal. Keep the section heading and its supporting paragraph together
+  as one readable block rather than splitting them into narrow columns.
 
 ## Page templates
 
