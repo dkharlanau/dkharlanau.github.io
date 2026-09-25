@@ -1,4 +1,52 @@
 (() => {
+  // Site-wide navigation contract: page-to-page HTTP(S) links open in a new
+  // browser tab. Same-page anchors and non-navigation actions keep their
+  // native behavior. Use data-open-same-tab="true" only for deliberate
+  // component-level exceptions.
+  const shouldOpenInNewTab = (link) => {
+    if (!(link instanceof HTMLAnchorElement)) return false;
+    if (link.dataset.openSameTab === "true" || link.hasAttribute("download")) return false;
+
+    const href = (link.getAttribute("href") || "").trim();
+    if (!href || href.startsWith("#")) return false;
+
+    try {
+      const url = new URL(href, window.location.href);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+      return false;
+    }
+  };
+
+  const applyLinkBehavior = (link) => {
+    if (!shouldOpenInNewTab(link)) return;
+    link.target = "_blank";
+    link.relList.add("noopener");
+  };
+
+  const applyWithin = (root) => {
+    if (root instanceof HTMLAnchorElement) applyLinkBehavior(root);
+    root.querySelectorAll?.("a[href]").forEach(applyLinkBehavior);
+  };
+
+  applyWithin(document);
+
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest?.("a[href]");
+    if (link) applyLinkBehavior(link);
+  }, true);
+
+  if ("MutationObserver" in window) {
+    const observer = new MutationObserver((records) => {
+      records.forEach((record) => record.addedNodes.forEach((node) => {
+        if (node instanceof Element) applyWithin(node);
+      }));
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  }
+})();
+
+(() => {
   const header = document.querySelector("[data-site-header]");
   const toggle = header?.querySelector(".site-nav__toggle");
   const toggleLabel = toggle?.querySelector(".site-nav__toggle-label");
