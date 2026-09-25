@@ -30,8 +30,11 @@ def test_home_routes_to_two_jobs_without_replacing_the_brand():
     assert 'role="search"' in home and "'/search/' | relative_url" in home and 'name="q"' in home
     header = read("_includes/header.html")
     assert "/assets/img/logo-d.svg" in header
-    assert "{% if page_locale == 'en' %}" in header
-    assert "portal_nav.work | default: 'Work'" in header
+    assert "page_locale" not in header
+    assert "portal_nav." not in header
+    assert "'/learn/' | relative_url" in header
+    assert "'/knowledge/' | relative_url" in header
+    assert 'href="/about/"' in header
     assert "data-site-header" in header and 'aria-controls="site-navigation"' in header
 
 
