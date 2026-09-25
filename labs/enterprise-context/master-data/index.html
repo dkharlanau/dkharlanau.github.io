@@ -87,45 +87,28 @@ tags:
           </div>
 
           {% for entity in group.entities %}
-          {% assign entity_detail_href = "/labs/enterprise-context/sales-processes/master-data/" %}
-          {% assign entity_detail_label = "Master-data reference graph" %}
+          {% assign entity_detail_href = "/labs/enterprise-context/master-data/" %}
+          {% assign entity_detail_label = entity.title %}
           {% case entity.code %}
-            {% when "MD.SD.BP" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/business-partner/" %}
-              {% assign entity_detail_label = "Business Partner" %}
-            {% when "MD.SD.ADDRESS" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/business-partner/" %}
-              {% assign entity_detail_label = "Business Partner" %}
-            {% when "MD.SD.PRODUCT" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
-              {% assign entity_detail_label = "Material behavior" %}
-            {% when "MD.SD.CMIR" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/sales-order/" %}
-              {% assign entity_detail_label = "Sales Order decisions" %}
-            {% when "MD.SD.PARTNERREL" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/sales-order/" %}
-              {% assign entity_detail_label = "Partner determination" %}
-            {% when "MD.SD.PRODHIER" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
-              {% assign entity_detail_label = "Material behavior" %}
-            {% when "MD.SD.PRICE" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/pricing/" %}
-              {% assign entity_detail_label = "Pricing" %}
-            {% when "MD.SD.CREDIT" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/credit/" %}
-              {% assign entity_detail_label = "Credit Management" %}
-            {% when "MD.SD.UOM" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
-              {% assign entity_detail_label = "Material behavior" %}
-            {% when "MD.SD.BATCH" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/logistics-capabilities/" %}
-              {% assign entity_detail_label = "Batch & logistics capabilities" %}
-            {% when "MD.SD.BOM" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
-              {% assign entity_detail_label = "Sales BOM & material behavior" %}
-            {% when "MD.SD.VC" %}
-              {% assign entity_detail_href = "/labs/enterprise-context/material-behavior/" %}
-              {% assign entity_detail_label = "Configurable products" %}
+            {% when "MD.SD.BP" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/business-partner/" %}
+            {% when "MD.SD.ADDRESS" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/bp-addresses/" %}
+            {% when "MD.SD.PRODUCT" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/product/" %}
+            {% when "MD.SD.CMIR" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/customer-material/" %}
+            {% when "MD.SD.PARTNERREL" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/partner-functions/" %}
+            {% when "MD.SD.CUSTHIER" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/customer-hierarchy/" %}
+            {% when "MD.SD.PRODHIER" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/product-hierarchy/" %}
+            {% when "MD.SD.TEXT" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/master-texts/" %}
+            {% when "MD.SD.ITEMPROPOSAL" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/item-proposal/" %}
+            {% when "MD.SD.PRICE" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/pricing-condition-record/" %}
+            {% when "MD.SD.MATDET" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/material-determination/" %}
+            {% when "MD.SD.LISTEXCL" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/listing-exclusion/" %}
+            {% when "MD.SD.FREEGOODS" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/free-goods/" %}
+            {% when "MD.SD.CROSS" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/cross-selling/" %}
+            {% when "MD.SD.CREDIT" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/credit-master-data/" %}
+            {% when "MD.SD.UOM" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/units-of-measure/" %}
+            {% when "MD.SD.BATCH" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/batch-master/" %}
+            {% when "MD.SD.BOM" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/sales-bom/" %}
+            {% when "MD.SD.VC" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/variant-configuration/" %}
           {% endcase %}
           <article class="ecg-master-catalog__row">
             <div class="ecg-master-catalog__object">
@@ -358,13 +341,15 @@ tags:
 
     <nav class="ecg-context-links" aria-label="Sales master-data deep dives">
       <span>Deep dives</span>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Full Sales master-data reference graph</a>
-      <a href="/labs/enterprise-context/business-partner/">Business Partner</a>
-      <a href="/labs/enterprise-context/material-behavior/">Product and material behavior</a>
-      <a href="/labs/enterprise-context/pricing/">Pricing</a>
-      <a href="/labs/enterprise-context/atp/">ATP / aATP</a>
-      <a href="/labs/enterprise-context/credit/">Credit Management</a>
-      <a href="/labs/enterprise-context/integrations/">Integration architecture</a>
+      <a href="/labs/enterprise-context/master-data/business-partner/">Business Partner</a>
+      <a href="/labs/enterprise-context/master-data/product/">Product</a>
+      <a href="/labs/enterprise-context/master-data/customer-hierarchy/">Customer Hierarchy</a>
+      <a href="/labs/enterprise-context/master-data/product-hierarchy/">Product Hierarchy</a>
+      <a href="/labs/enterprise-context/master-data/master-texts/">Master Texts</a>
+      <a href="/labs/enterprise-context/master-data/item-proposal/">Item Proposal</a>
+      <a href="/labs/enterprise-context/master-data/listing-exclusion/">Listing / Exclusion</a>
+      <a href="/labs/enterprise-context/master-data/cross-selling/">Cross-Selling</a>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Full source-backed reference graph</a>
     </nav>
 
     <div class="research-canvas__boundary">
