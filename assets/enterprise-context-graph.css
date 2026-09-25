@@ -585,3 +585,205 @@
     text-align:left;
   }
 }
+
+
+/* Visual Workbench v0.1.2 inline theme.
+   Semantic colors mirror the paper theme in dkharlanau/visual-workbench.
+   The site renderer stays HTML/CSS so Jekyll pages remain dependency-free. */
+.semantic-flow {
+  --vwb-canvas:#F7F8FA;
+  --vwb-card:#FFFFFF;
+  --vwb-text:#18212F;
+  --vwb-muted:#667085;
+  --vwb-faint:#98A2B3;
+  --vwb-border:#D9DEE7;
+  --vwb-edge:#98A2B3;
+  --vwb-step:#475467;
+  --vwb-system:#356AE6;
+  --vwb-data:#7A5AF8;
+  --vwb-role:#0E9384;
+  --vwb-decision:#DC6803;
+  --vwb-checkpoint:#0891B2;
+  --vwb-milestone:#7F56D9;
+  --vwb-outcome:#039855;
+  --vwb-risk:#D92D20;
+  --vwb-note:#667085;
+  --vwb-success:#039855;
+  --vwb-warning:#DC6803;
+  --vwb-danger:#D92D20;
+  --vwb-neutral:#98A2B3;
+  --vwb-muted-status:#D0D5DD;
+}
+
+.semantic-flow__sequence {
+  gap:.65rem;
+  align-items:stretch;
+  padding:1rem;
+  border:1px solid var(--vwb-border);
+  border-radius:16px;
+  background:var(--vwb-canvas);
+}
+
+.semantic-flow__sequence-node {
+  --vwb-node-accent:var(--vwb-step);
+  --vwb-status:var(--vwb-neutral);
+  position:relative;
+  min-width:11rem;
+  max-width:14.75rem;
+  min-height:6.1rem;
+  justify-content:flex-start;
+  gap:.28rem;
+  overflow:hidden;
+  border:1px solid var(--vwb-border);
+  border-radius:14px;
+  background:var(--vwb-card);
+  padding:.82rem 1rem .85rem 1.08rem;
+  box-shadow:0 1px 2px rgba(16,24,40,.04);
+}
+
+.semantic-flow__sequence-node::before {
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:4px;
+  border-radius:2px;
+  background:var(--vwb-node-accent);
+}
+
+.semantic-flow__sequence-node::after {
+  content:"";
+  position:absolute;
+  top:.82rem;
+  right:.82rem;
+  width:.45rem;
+  height:.45rem;
+  border-radius:999px;
+  background:var(--vwb-status);
+}
+
+.semantic-flow__sequence-node--step { --vwb-node-accent:var(--vwb-step); }
+.semantic-flow__sequence-node--system { --vwb-node-accent:var(--vwb-system); }
+.semantic-flow__sequence-node--data { --vwb-node-accent:var(--vwb-data); }
+.semantic-flow__sequence-node--role { --vwb-node-accent:var(--vwb-role); }
+.semantic-flow__sequence-node--decision { --vwb-node-accent:var(--vwb-decision); }
+.semantic-flow__sequence-node--checkpoint { --vwb-node-accent:var(--vwb-checkpoint); }
+.semantic-flow__sequence-node--milestone { --vwb-node-accent:var(--vwb-milestone); }
+.semantic-flow__sequence-node--outcome { --vwb-node-accent:var(--vwb-outcome); }
+.semantic-flow__sequence-node--risk { --vwb-node-accent:var(--vwb-risk); }
+.semantic-flow__sequence-node--note { --vwb-node-accent:var(--vwb-note); }
+
+.semantic-flow__sequence-node--neutral { --vwb-status:var(--vwb-neutral); }
+.semantic-flow__sequence-node--success { --vwb-status:var(--vwb-success); }
+.semantic-flow__sequence-node--warning { --vwb-status:var(--vwb-warning); }
+.semantic-flow__sequence-node--danger { --vwb-status:var(--vwb-danger); }
+.semantic-flow__sequence-node--muted { --vwb-status:var(--vwb-muted-status); }
+
+.semantic-flow__node-type {
+  max-width:calc(100% - 1.2rem);
+  color:var(--vwb-node-accent) !important;
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif !important;
+  font-size:.59rem !important;
+  font-weight:750;
+  letter-spacing:.1em;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+
+.semantic-flow__sequence-node strong {
+  margin-top:.38rem;
+  color:var(--vwb-text);
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+  font-size:.84rem;
+  font-weight:680;
+  line-height:1.35;
+}
+
+.semantic-flow__sequence-node small,
+.semantic-flow__sequence-node em {
+  color:var(--vwb-muted);
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+  font-size:.68rem;
+  font-style:normal;
+  line-height:1.4;
+}
+
+.semantic-flow__connector {
+  position:relative;
+  display:block !important;
+  flex:0 0 2.15rem !important;
+  align-self:center;
+  height:1px;
+  overflow:visible;
+  background:var(--vwb-edge);
+}
+
+.semantic-flow__connector::after {
+  content:"";
+  position:absolute;
+  top:-4px;
+  right:-1px;
+  width:0;
+  height:0;
+  border-top:4px solid transparent;
+  border-bottom:4px solid transparent;
+  border-left:6px solid var(--vwb-edge);
+}
+
+.semantic-flow--compact {
+  width:100%;
+  margin:1rem 0 .85rem;
+  border:0;
+  padding:0;
+}
+
+.semantic-flow--compact .semantic-flow__sequence {
+  margin:0;
+}
+
+.semantic-flow--compact .semantic-flow__sequence-node {
+  flex:1 0 11rem;
+}
+
+.semantic-flow__canvas {
+  margin-top:1rem;
+  border:1px solid var(--vwb-border);
+  border-radius:16px;
+  background:var(--vwb-canvas);
+}
+
+.semantic-flow__lane {
+  border-color:var(--vwb-border);
+}
+
+.semantic-flow__lane-label {
+  border-color:var(--vwb-border);
+  background:rgba(255,255,255,.62);
+  padding:1rem;
+}
+
+.semantic-flow__lane-label strong {
+  color:var(--vwb-text);
+}
+
+.semantic-flow__lane-label small {
+  color:var(--vwb-muted);
+}
+
+.semantic-flow__node {
+  border-color:var(--vwb-border);
+  border-radius:12px;
+  background:var(--vwb-card);
+  box-shadow:0 1px 2px rgba(16,24,40,.04);
+}
+
+@media (max-width:760px) {
+  .semantic-flow__sequence {
+    padding:.8rem;
+  }
+  .semantic-flow__sequence-node {
+    min-width:10.5rem;
+  }
+  .semantic-flow__connector {
+    flex-basis:1.5rem !important;
+  }
+}

@@ -1,6 +1,7 @@
 {% assign visual = include.model %}
-{% if visual and visual.nodes and visual.groups %}
-<section class="semantic-flow" aria-label="{{ visual.title }}">
+{% if visual and visual.nodes %}
+<section class="semantic-flow{% if include.compact %} semantic-flow--compact{% endif %}" aria-label="{{ visual.title }}" data-vwb-kind="{{ visual.kind }}" data-vwb-theme="{{ visual.theme | default: 'paper' }}">
+  {% unless include.compact %}
   <header class="semantic-flow__header">
     <div>
       <p class="research-canvas__eyebrow">Semantic process view</p>
@@ -9,18 +10,22 @@
     </div>
     <small>Visual Workbench grammar · semantic source · no manual coordinates</small>
   </header>
+  {% endunless %}
 
-  <div class="semantic-flow__sequence" aria-label="Main process sequence">
+  <div class="semantic-flow__sequence" aria-label="{{ visual.title }} sequence">
     {% for node in visual.nodes %}
-    <div class="semantic-flow__sequence-node">
-      <span>{{ forloop.index }}</span>
+    <div class="semantic-flow__sequence-node semantic-flow__sequence-node--{{ node.type }} semantic-flow__sequence-node--{{ node.status | default: 'neutral' }}">
+      <span class="semantic-flow__node-type">{{ node.type | replace: '-', ' ' }}</span>
       <strong>{{ node.label }}</strong>
       {% if node.subtitle %}<small>{{ node.subtitle }}</small>{% endif %}
+      {% if node.owner %}<em>{{ node.owner }}</em>{% endif %}
     </div>
-    {% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}
+    {% unless forloop.last %}<i class="semantic-flow__connector" aria-hidden="true"></i>{% endunless %}
     {% endfor %}
   </div>
 
+  {% if visual.groups %}
+  {% unless include.compact %}
   <div class="semantic-flow__canvas" style="--semantic-columns: {{ visual.nodes | size }};">
     {% for group in visual.groups %}
     <div class="semantic-flow__lane">
@@ -31,7 +36,7 @@
       <div class="semantic-flow__lane-grid" style="--semantic-columns: {{ visual.nodes | size }};">
         {% for node in visual.nodes %}
           {% if node.group == group.id %}
-          <article class="semantic-flow__node semantic-flow__node--{{ node.type }} semantic-flow__node--{{ node.status }}" style="grid-column: {{ forloop.index }};">
+          <article class="semantic-flow__node semantic-flow__node--{{ node.type }} semantic-flow__node--{{ node.status | default: 'neutral' }}" style="grid-column: {{ forloop.index }};">
             <span>{{ node.type }}</span>
             <strong>{{ node.label }}</strong>
             {% if node.subtitle %}<small>{{ node.subtitle }}</small>{% endif %}
@@ -43,11 +48,17 @@
     </div>
     {% endfor %}
   </div>
+  {% endunless %}
+  {% endif %}
 
+  {% if visual.edges %}
+  {% unless include.compact %}
   <div class="semantic-flow__edge-list" aria-label="Handoffs">
     {% for edge in visual.edges %}
-    <span><code>{{ edge.from }}</code> {{ edge.label }} <code>{{ edge.to }}</code></span>
+    <span><code>{{ edge.from }}</code>{% if edge.label %} {{ edge.label }} {% else %} → {% endif %}<code>{{ edge.to }}</code></span>
     {% endfor %}
   </div>
+  {% endunless %}
+  {% endif %}
 </section>
 {% endif %}

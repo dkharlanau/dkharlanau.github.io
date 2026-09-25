@@ -1,0 +1,220 @@
+{
+  "MD-PREC-PLANT": {
+    "visual": {
+      "version": 1,
+      "title": "Delivering plant",
+      "description": "Precedence sources used to propose the delivering plant.",
+      "kind": "dependency-map",
+      "direction": "right",
+      "theme": "paper",
+      "density": "balanced",
+      "nodes": [
+        {
+          "id": "cmir",
+          "label": "Customer-material information record",
+          "type": "data",
+          "subtitle": "Most specific source",
+          "status": "neutral"
+        },
+        {
+          "id": "ship-to",
+          "label": "Ship-to customer master",
+          "type": "data",
+          "subtitle": "Customer default",
+          "status": "neutral"
+        },
+        {
+          "id": "product",
+          "label": "Product / material master",
+          "type": "data",
+          "subtitle": "Product default",
+          "status": "muted"
+        }
+      ],
+      "edges": [
+        {
+          "from": "cmir",
+          "to": "ship-to",
+          "type": "dependency"
+        },
+        {
+          "from": "ship-to",
+          "to": "product",
+          "type": "dependency"
+        }
+      ]
+    }
+  },
+  "MD-PREC-CMIR": {
+    "visual": {
+      "version": 1,
+      "title": "Customer-specific item data",
+      "description": "Customer-material values take priority for the data domain they define.",
+      "kind": "dependency-map",
+      "direction": "right",
+      "theme": "paper",
+      "density": "balanced",
+      "nodes": [
+        {
+          "id": "cmir",
+          "label": "Customer-material information record when present",
+          "type": "data",
+          "subtitle": "Customer-specific value",
+          "status": "neutral"
+        },
+        {
+          "id": "defaults",
+          "label": "Customer and / or product defaults",
+          "type": "data",
+          "subtitle": "Fallback for the same data domain",
+          "status": "muted"
+        }
+      ],
+      "edges": [
+        {
+          "from": "cmir",
+          "to": "defaults",
+          "type": "dependency"
+        }
+      ]
+    }
+  },
+  "MD-PREC-SHIPCOND": {
+    "visual": {
+      "version": 1,
+      "title": "Shipping condition",
+      "description": "Configured document behavior can take priority over the master-data default.",
+      "kind": "dependency-map",
+      "direction": "right",
+      "theme": "paper",
+      "density": "balanced",
+      "nodes": [
+        {
+          "id": "document-type",
+          "label": "Sales document type value when configured",
+          "type": "decision",
+          "subtitle": "Configured document value",
+          "status": "neutral"
+        },
+        {
+          "id": "ship-to",
+          "label": "Ship-to customer master value otherwise",
+          "type": "data",
+          "subtitle": "Master-data default",
+          "status": "muted"
+        }
+      ],
+      "edges": [
+        {
+          "from": "document-type",
+          "to": "ship-to",
+          "type": "dependency"
+        }
+      ]
+    }
+  },
+  "MD-PREC-PARTNER": {
+    "visual": {
+      "version": 1,
+      "title": "Document partners",
+      "description": "Partner proposal is controlled by the procedure, relationship data, and permitted manual change.",
+      "kind": "dependency-map",
+      "direction": "right",
+      "theme": "paper",
+      "density": "balanced",
+      "nodes": [
+        {
+          "id": "procedure",
+          "label": "Partner determination procedure",
+          "type": "decision",
+          "subtitle": "Allowed functions + source control",
+          "status": "neutral"
+        },
+        {
+          "id": "relationship",
+          "label": "Customer master / Business Partner relationship",
+          "type": "data",
+          "subtitle": "Proposed partners",
+          "status": "neutral"
+        },
+        {
+          "id": "manual",
+          "label": "Manual change",
+          "type": "step",
+          "subtitle": "Only when the procedure permits",
+          "status": "muted"
+        }
+      ],
+      "edges": [
+        {
+          "from": "procedure",
+          "to": "relationship",
+          "type": "dependency"
+        },
+        {
+          "from": "relationship",
+          "to": "manual",
+          "type": "dependency"
+        }
+      ]
+    }
+  },
+  "MD-PREC-PRICING": {
+    "visual": {
+      "version": 1,
+      "title": "Pricing value",
+      "description": "Pricing resolves through condition technique rather than a universal customer-over-product rule.",
+      "kind": "dependency-map",
+      "direction": "right",
+      "theme": "paper",
+      "density": "balanced",
+      "nodes": [
+        {
+          "id": "procedure",
+          "label": "Pricing procedure + condition type",
+          "type": "decision",
+          "subtitle": "Pricing logic",
+          "status": "neutral"
+        },
+        {
+          "id": "access",
+          "label": "Access sequence",
+          "type": "decision",
+          "subtitle": "Search strategy",
+          "status": "neutral"
+        },
+        {
+          "id": "key",
+          "label": "Condition-table key",
+          "type": "data",
+          "subtitle": "Selection key",
+          "status": "neutral"
+        },
+        {
+          "id": "record",
+          "label": "Valid condition record",
+          "type": "data",
+          "subtitle": "Resolved commercial record",
+          "status": "neutral"
+        }
+      ],
+      "edges": [
+        {
+          "from": "procedure",
+          "to": "access",
+          "type": "dependency"
+        },
+        {
+          "from": "access",
+          "to": "key",
+          "type": "dependency"
+        },
+        {
+          "from": "key",
+          "to": "record",
+          "type": "dependency"
+        }
+      ]
+    }
+  }
+}

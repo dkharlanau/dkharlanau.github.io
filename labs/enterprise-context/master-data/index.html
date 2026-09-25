@@ -31,6 +31,7 @@ tags:
 {% assign address_det_source = sales_master_sources | where: "id", "SRC-SDMD-ADDRESS-DETERMINATION" | first %}
 {% assign bp_multi_bf_source = sales_master_sources | where: "id", "SRC-SDMD-MULTI-ADDRESS-BF-BP" | first %}
 {% assign sd_multi_bf_source = sales_master_sources | where: "id", "SRC-SDMD-MULTI-ADDRESS-BF-SD" | first %}
+{% assign precedence_visuals = site.data.labs.enterprise_context.visuals.master_data_precedence %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">Master Data</li></ol>
@@ -306,6 +307,10 @@ tags:
       {% for item in graph.precedence_examples %}
       <article class="ecg-determination-detail">
         <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>precedence</small></div><h3>{{ item.decision }}</h3></header>
+        {% assign precedence_entry = precedence_visuals[item.id] %}
+        {% if precedence_entry and precedence_entry.visual %}
+          {% include labs/semantic-lane-flow.html model=precedence_entry.visual compact=true %}
+        {% else %}
         <div class="ecg-rail" aria-label="{{ item.decision | escape }} precedence">
           <div class="ecg-rail__branch">
             {% for step in item.path %}
@@ -313,6 +318,7 @@ tags:
             {% endfor %}
           </div>
         </div>
+        {% endif %}
         <p>{{ item.note }}</p>
       </article>
       {% endfor %}
