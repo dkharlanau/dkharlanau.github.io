@@ -1,25 +1,21 @@
 {% if page.verified == true %}
 <aside class="atlas-author atlas-trust article-provenance" aria-label="Page provenance">
-  <div class="article-provenance__intro">
-    <p class="eyebrow">Page provenance</p>
-    <p>
-    <strong>Reviewed and verified.</strong>
-    This page has been human-reviewed for factual accuracy and public safety.
-    {% assign reviewed_date = page.last_reviewed | default: page.last_modified_at %}
+  {% assign reviewed_date = page.last_reviewed | default: page.last_modified_at %}
+  <div class="article-provenance__summary">
+    <span class="article-provenance__badge"><span class="material-symbols-outlined" aria-hidden="true">verified</span> Reviewed</span>
+    <div>
+      <p class="eyebrow">Page provenance</p>
+      <p><strong>Independent SAP learning material, checked against public vendor sources.</strong></p>
+    </div>
     {% if reviewed_date %}
-      Last reviewed: <time datetime="{{ reviewed_date | date: '%Y-%m-%d' }}">{{ reviewed_date | date: "%d %b %Y" }}</time>.
+    <time datetime="{{ reviewed_date | date: '%Y-%m-%d' }}">Reviewed {{ reviewed_date | date: "%d %b %Y" }}</time>
     {% endif %}
-    </p>
   </div>
-  <p class="article-provenance__boundary">
-    The content is based on practical SAP support experience and public documentation where cited.
-    It is <strong>not official SAP documentation</strong>.
-    Always validate system-specific behavior in your own SAP landscape and against official vendor documentation.
-  </p>
-  <ul class="atlas-trust__list">
-    <li>No client names, ticket numbers, or proprietary details.</li>
-    <li>Claims are conservative and include landscape-dependent caveats.</li>
-    <li>Related links are checked at the time of review.</li>
+  <ul class="atlas-trust__list" aria-label="Review controls">
+    <li><span class="material-symbols-outlined" aria-hidden="true">fact_check</span><span><strong>Human reviewed</strong><small>Claims and wording checked before publication.</small></span></li>
+    <li><span class="material-symbols-outlined" aria-hidden="true">library_books</span><span><strong>Public evidence</strong><small>Vendor documentation is used for load-bearing facts.</small></span></li>
+    <li><span class="material-symbols-outlined" aria-hidden="true">lock</span><span><strong>No client data</strong><small>No ticket numbers, client names, or proprietary details.</small></span></li>
   </ul>
+  <p class="article-provenance__note">This is not official SAP documentation. Validate landscape-specific behavior in your own system and against the relevant SAP release documentation.</p>
 </aside>
 {% endif %}
