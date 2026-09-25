@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting]
@@ -41,6 +41,24 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
     <span class="material-symbols-outlined" aria-hidden="true">monitoring</span>
     <p><strong>Boundary:</strong> SAP provides Sales monitoring, analytical apps and process analytics. The formulas and governance rules on this page are Lab definitions unless a source says otherwise. One formula can be shared; one target usually cannot.</p>
     <a href="/labs/enterprise-context/data/sales-process-kpis.json">Open KPI JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-analytics-assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Start with the business question, then choose the analytics layer.</h2>
+      <p>For a Lead answer, analytics is not a list of apps. It is a chain from business outcome to metric definition, operational evidence, root cause, and owner.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I separate operational monitoring from analytical reporting. If the question is “where is this order?”, I use order tracking and document flow. If the question is “which orders are blocked and need action?”, I use fulfillment issue monitoring. If the question is “why is delivery performance getting worse?”, I define the KPI and population first, segment the result, then trace the driver into ATP, shipping, delivery, billing, credit, or another process owner. In embedded analytics, I keep the semantic model separate from the presentation: the business meaning belongs in the data model and KPI definition, while the chart or app is only the consumption layer. A Lead should be able to explain the metric, its grain, owner, target policy, and the evidence path behind a change.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>Observe</h3><p>Use portfolio monitoring when the business needs fast status across many sales orders.</p></div>
+      <div><h3>Trace</h3><p>Use a single-order process view when the question is where one document flow changed or stopped.</p></div>
+      <div><h3>Resolve</h3><p>Use issue-oriented monitoring when the goal is to identify blockers, ownership, and the next operational action.</p></div>
+      <div><h3>Analyze</h3><p>Use KPI and analytical models when the question is trend, segment, driver, or management performance rather than one document.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -271,6 +289,20 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
       {% for item in model.meeting_language %}
       <article><span>ASK</span><h3>{{ item.question }}</h3><p>{{ item.answer_shape }}</p></article>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-analytics-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Five questions that keep analytics tied to the process.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>status</small></div><h3>Track Sales Orders or Analyze and Resolve Issues?</h3></header><p>Use Track Sales Orders for portfolio status and navigation into one order. Use Sales Order Fulfillment - Analyze and Resolve Issues when the main job is to find fulfillment blockers, prioritize them, and drive resolution.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>trace</small></div><h3>When is Track Sales Order Details useful?</h3></header><p>When the question has narrowed to one sales order and you need the process flow, subsequent documents, statuses, and the first missing or wrong state.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>KPI</small></div><h3>Why is “on-time delivery” not a complete KPI definition?</h3></header><p>You still need the measured event pair, population, grain, exclusions, time basis, aggregation, owner, and target policy. Different definitions can produce different numbers from the same process.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>cause</small></div><h3>A KPI became worse. What next?</h3></header><p>Slice the population first, compare driver metrics second, and only then move into the process mechanism. A bad KPI is a signal, not a root cause.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>model</small></div><h3>Where should business meaning live?</h3></header><p>Keep reusable business semantics in the analytical data model and KPI definition. Consumption tools should present and explore that meaning rather than redefine it independently in every dashboard.</p></article>
     </div>
   </section>
 
