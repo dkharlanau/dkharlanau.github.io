@@ -305,9 +305,25 @@ source_links:
       <p>The source registry keeps release scope visible. That matters because sales behavior can differ by deployment, release, configuration, and process variant.</p>
     </header>
 
-    <div class="research-route-list">
+    <div class="ecg-source-table" role="table" aria-label="Primary SAP sources">
+      <div class="ecg-source-table__head" role="row">
+        <span role="columnheader">Source</span>
+        <span role="columnheader">Product scope</span>
+        <span role="columnheader">Release</span>
+        <span role="columnheader">Checked</span>
+        <span aria-hidden="true"></span>
+      </div>
       {% for source in evidence.sources %}
-      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a class="ecg-source-table__row" href="{{ source.url }}" target="_blank" rel="noopener" role="row">
+        <span class="ecg-source-table__title" role="cell">
+          <small>{{ source.publisher }} · {{ source.source_type | replace: "_", " " }}</small>
+          <strong>{{ source.title }}</strong>
+        </span>
+        <span role="cell" data-label="Product scope">{{ source.product_scope }}</span>
+        <span role="cell" data-label="Release">{{ source.release_scope }}</span>
+        <span role="cell" data-label="Checked">{{ source.verified_at }}</span>
+        <i class="material-symbols-outlined" aria-hidden="true">open_in_new</i>
+      </a>
       {% endfor %}
     </div>
   </section>
