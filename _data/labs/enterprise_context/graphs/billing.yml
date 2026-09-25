@@ -362,6 +362,50 @@ failure_modes:
     first_checks: ["business reason", "original billing/FI state", "customer receipt state", "cancellation relation", "credit/debit memo reference", "eDocument/legal constraints"]
     avoid: "Do not use compensating documents without a clear correction model and reconciliation rule."
 
+technical_extension_map:
+  title: "Billing extension and tracing map"
+  principle: >-
+    Billing custom logic sits late in Order-to-Cash, so it can hide an earlier defect.
+    Before reading an exit, prove billing relevance, due state, copy control, pricing,
+    split reason, and the FI handoff.
+  inherited_system_recognition:
+    - hook: "RV60* / classic billing user exits"
+      purpose: "Recognize inherited logic around billing creation, data transfer, save processing, numbering, and document behavior."
+      boundary: "Use the exact target-system implementation as evidence; old include names are not a current extension recommendation."
+    - hook: "SAPLV60B accounting-interface exits"
+      purpose: "Recognize classic changes to accounting transfer structures such as header, customer, G/L, tax, accrual, or currency lines."
+      boundary: "A billing-to-FI customization can make a correct invoice post incorrectly; trace the accounting interface separately from pricing."
+    - hook: "Custom pricing communication fields and classic routines"
+      purpose: "Recognize historical logic that enriches pricing or account-determination inputs during billing."
+      boundary: "Check whether the requirement is still valid and whether current released fields or BAdIs replace the old structure extension."
+  current_s4_paths:
+    - hook: "SD_BIL_DATA_TRANSFER"
+      purpose: "Implement supported custom data transfer in billing process documents, including selected copy and split use cases."
+      boundary: "Use it only after standard copying control and split analysis prove that custom behavior is required."
+    - hook: "Custom Fields + business scenarios"
+      purpose: "Propagate supported extension fields from sales documents into billing documents across documented business scenarios."
+      boundary: "A field must be enabled for the relevant business context and process path; do not assume every custom field copies automatically."
+    - hook: "Billing Custom Logic and released APIs"
+      purpose: "Use released billing BAdIs and API extensibility for supported billing rules and external contracts."
+      boundary: "Keep billing logic, FI logic, output/eDocument logic, and integration logic as separate ownership decisions."
+  tracing_sequence:
+    - "Prove the billable reference, billing relevance, due date/status, and blocking reason before reading code."
+    - "Check copy control and the applied pricing type before changing price data."
+    - "Use split analysis before adding logic to force or prevent document combination."
+    - "If the invoice is correct but accounting is wrong, move to revenue account determination and the accounting interface."
+    - "For new work, translate the legacy exit into a narrow billing intent and choose the current released BAdI or API."
+  assessment_answer: >-
+    Billing is late in the process, so I do not start with RV60* exits. I first prove
+    why the reference is billable, how copy control and pricing behave, and why a split
+    occurs. In inherited systems I can read the classic billing and V60B accounting exits.
+    For new S/4HANA logic I prefer released billing BAdIs such as SD_BIL_DATA_TRANSFER,
+    supported custom-field propagation, and released APIs.
+  source_refs:
+    - SRC-STOOLKIT-ABAP-SALES
+    - SRC-SAP-BILLING-BADIS-2608
+    - SRC-SAP-BILLING-PROCESS-EXT-2608
+    - SRC-SAP-ABAP-CLOUD-EXTENSIBILITY
+
 impact_traces:
   - id: BIL-TRACE-SPLIT
     start: "Payment terms differ between billable references"
