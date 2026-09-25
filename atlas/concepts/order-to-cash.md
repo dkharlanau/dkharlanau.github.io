@@ -67,15 +67,22 @@ sitemap: true
     <p>The document chain is not merely technical history. Each transition represents a business control: what can be promised, what can be shipped, what can be invoiced, what can be posted, and what can be considered settled.</p>
 
     <h2>Process and evidence map</h2>
-    <figure class="atlas-process-map" aria-labelledby="o2c-flow-caption">
-      <figcaption id="o2c-flow-caption">Standard order-to-cash checkpoints. Each step names the business outcome and the evidence that should exist before the process moves forward.</figcaption>
-      <ol class="atlas-process-map__steps">
-        <li><strong>Demand</strong><span>Sales order</span><small>Customer, product, quantity, requested date, partners, and commercial terms are valid.</small></li>
-        <li><strong>Commit</strong><span>Confirmed schedule</span><small>Availability, credit, pricing, incompleteness, and delivery controls permit execution.</small></li>
-        <li><strong>Fulfil</strong><span>Delivery and goods issue</span><small>Picking and shipping evidence exists, and goods issue records the inventory event.</small></li>
-        <li><strong>Bill</strong><span>Billing and accounting</span><small>The billable reference produces the intended invoice and financial posting.</small></li>
-        <li><strong>Settle</strong><span>Receivable and clearing</span><small>Payment, deduction, dispute, or clearing evidence resolves the open customer item.</small></li>
-      </ol>
+    <figure class="atlas-process-map atlas-process-map--table" aria-labelledby="o2c-flow-caption">
+      <figcaption id="o2c-flow-caption">Standard order-to-cash checkpoints. Read each row as a gate: the process moves forward only when the expected evidence exists.</figcaption>
+      <div class="table-scroll" role="region" aria-labelledby="o2c-flow-caption" tabindex="0">
+        <table>
+          <thead>
+            <tr><th>Stage</th><th>Expected evidence</th><th>Ready when</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Demand</th><td>Sales order</td><td>Customer, product, quantity, requested date, partners, and commercial terms are valid.</td></tr>
+            <tr><th scope="row">Commit</th><td>Confirmed schedule</td><td>Availability, credit, pricing, incompleteness, and delivery controls permit execution.</td></tr>
+            <tr><th scope="row">Fulfil</th><td>Delivery and goods issue</td><td>Picking and shipping evidence exists, and goods issue records the inventory event.</td></tr>
+            <tr><th scope="row">Bill</th><td>Billing and accounting</td><td>The billable reference produces the intended invoice and financial posting.</td></tr>
+            <tr><th scope="row">Settle</th><td>Receivable and clearing</td><td>Payment, deduction, dispute, or clearing evidence resolves the open customer item.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </figure>
 
     <h2>Why it matters</h2>

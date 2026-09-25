@@ -82,18 +82,26 @@ button.btn {
 .page-content--knowledge table {
   width: 100%;
   margin: var(--space-5) 0;
-  border-collapse: collapse;
-  border-top: 2px solid var(--color-text);
-  border-bottom: 2px solid var(--color-text);
+  border: 1px solid var(--color-border);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg);
   font-size: var(--text-md);
-  line-height: var(--leading-tight);
+  line-height: 1.5;
 }
 
 .note-body thead th,
-.atlas-page__body thead th {
-  padding: var(--space-3) var(--space-3) var(--space-2);
-  border-bottom: 1px solid var(--color-text);
-  font-weight: 600;
+.atlas-page__body thead th,
+.page-content--knowledge thead th {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  letter-spacing: 0.01em;
   text-align: left;
   vertical-align: bottom;
 }
@@ -101,33 +109,81 @@ button.btn {
 .note-body tbody td,
 .note-body tbody th,
 .atlas-page__body tbody td,
-.atlas-page__body tbody th {
+.atlas-page__body tbody th,
+.page-content--knowledge tbody td,
+.page-content--knowledge tbody th {
   padding: var(--space-3);
   border-bottom: 1px solid var(--color-border);
   text-align: left;
   vertical-align: top;
 }
 
-.note-body tbody tr:last-child td,
-.note-body tbody tr:last-child th {
+.note-body :is(th, td) + :is(th, td),
+.atlas-page__body :is(th, td) + :is(th, td),
+.page-content--knowledge :is(th, td) + :is(th, td) {
+  border-left: 1px solid var(--color-border);
+}
+
+.note-body tbody tr:last-child > *,
+.atlas-page__body tbody tr:last-child > *,
+.page-content--knowledge tbody tr:last-child > * {
   border-bottom: 0;
 }
 
-/* Mobile: horizontal scroll instead of unreadable shrink.
-   The block-box trick keeps the native table layout intact. */
+.note-body tbody th,
+.atlas-page__body tbody th,
+.page-content--knowledge tbody th {
+  font-weight: 650;
+}
+
+/* Use this wrapper for wide comparison and study tables. It preserves normal
+   cell wrapping while giving small screens an explicit horizontal viewport. */
+.table-scroll {
+  width: 100%;
+  margin: var(--space-5) 0;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll > table {
+  min-width: 44rem;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.table-scroll:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Mobile: horizontal scroll instead of forcing dense columns to shrink. */
 @media (max-width: 767px) {
   .note-body table,
   .atlas-page__body table,
   .page-content--knowledge table {
     display: block;
+    max-width: 100%;
     overflow-x: auto;
     white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-scroll > table {
+    display: table;
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
   }
 
   .note-body table p,
   .note-body table ul,
   .note-body table ol,
-  .atlas-page__body table p {
+  .atlas-page__body table p,
+  .page-content--knowledge table p {
     white-space: normal;
   }
 }
@@ -286,6 +342,16 @@ a.external-link::after {
   margin-bottom: var(--space-4);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+.atlas-process-map--table {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.atlas-process-map--table .table-scroll {
+  margin: 0;
 }
 
 .atlas-process-map__steps {
