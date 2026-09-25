@@ -335,6 +335,60 @@ failure_modes:
     first_checks: ["document type and purchasing organization", "supplier/source reference", "item and account categories", "conditions/reference document", "workflow status", "output and extension fields"]
     avoid: "Do not call it an API defect until runtime payload and manual defaults are compared."
 
+technical_extension_map:
+  title: "Procurement extension and tracing map"
+  principle: >-
+    Procurement custom logic should be attached to the decision it owns. Source selection,
+    PO processing, pricing, account assignment, workflow, output, and integration are
+    different extension boundaries even when they meet in one purchase order.
+  inherited_system_recognition:
+    - hook: "ME_PROCESS_REQ_CUST"
+      purpose: "Recognize classic purchase-requisition processing enhancements."
+      boundary: "Read and govern existing implementations; do not assume the same BAdI is the current cloud extension contract."
+    - hook: "ME_PROCESS_PO_CUST"
+      purpose: "Recognize classic Enjoy purchase-order processing logic across the PO lifecycle."
+      boundary: "High-impact inherited hook: check header, item, schedule, account, validation, and save behavior before adding new logic."
+    - hook: "ME_PO_PRICING_CUST and related classic purchasing BAdIs"
+      purpose: "Recognize custom pricing or purchasing-document logic in older landscapes."
+      boundary: "Verify the exact BAdI and implementation in the target system; classic names are a reading map, not a design catalogue."
+    - hook: "BAPI-based PR/PO creation"
+      purpose: "Recognize explicit transaction, commit, message, and repeat-call behavior in inherited integrations."
+      boundary: "A successful call is not enough; prove the document was committed and is business-valid."
+  current_s4_paths:
+    - hook: "MM_PUR_S4_PO_MODIFY_HEADER / MM_PUR_S4_PO_MODIFY_ITEM"
+      purpose: "Change supported purchase-order header or item fields through released Custom Logic."
+      boundary: "Use only the business context and fields exposed by the current app."
+    - hook: "BD_MMPUR_FINAL_CHECK_PO"
+      purpose: "Add a supported final validation before purchase-order save."
+      boundary: "Keep validation separate from derivation so users can understand why the document is blocked."
+    - hook: "MM_PUR_S4_PO_MODIFY_ACCOUNT"
+      purpose: "Change supported account-assignment fields and raise messages."
+      boundary: "Do not use it to hide a broken account-assignment or FI/CO design."
+    - hook: "MM_PUR_S4_PO_DEFINE_CNDNCTRL"
+      purpose: "Influence supported purchase-order pricing-type behavior."
+      boundary: "First prove the standard purchasing-condition and reference-document behavior."
+    - hook: "Flexible-workflow Custom Logic"
+      purpose: "Extend agent, condition, or restart behavior when the standard workflow model needs a supported custom rule."
+      boundary: "Approval policy belongs to workflow; do not bury it inside generic PO processing code."
+  tracing_sequence:
+    - "Start with the original demand and reproduce item category, account assignment, source, supplier, and commercial context."
+    - "Compare manual PR/PO creation with API or automated creation and list explicit inbound values."
+    - "Read workflow and output status separately from the purchasing document's business validity."
+    - "If custom logic is involved, identify the exact lifecycle stage: initialize, derive, validate, price, approve, save, or communicate."
+    - "For new work, select the released BAdI or API for that stage instead of extending a broad classic hook."
+  assessment_answer: >-
+    I recognize ME_PROCESS_REQ_CUST and ME_PROCESS_PO_CUST because inherited systems often
+    contain important business logic there. For a new S/4HANA design I separate the business
+    intent first. I use the released PO or workflow BAdI for the narrow decision, or a released
+    API for integration, and keep commit, retry, and monitoring behavior explicit.
+  source_refs:
+    - SRC-STOOLKIT-ABAP-PROCUREMENT
+    - SRC-SAP-PURCHASING-CLASSIC-BADIS
+    - SRC-SAP-PO-EXTENSIBILITY-2608
+    - SRC-SAP-ABAP-CLOUD-EXTENSIBILITY
+    - SRC-SAP-PUR-PR-FLEX-WF
+    - SRC-SAP-PUR-PO-FLEX-WF
+
 impact_traces:
   - title: "Demand date → supplier"
     path: "Requirement Date → Quota/Source List Validity → Source Determination → Supplier/Contract → PO"
