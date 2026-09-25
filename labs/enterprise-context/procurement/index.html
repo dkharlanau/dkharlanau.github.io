@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -225,6 +225,34 @@ source_links:
       <div><h3>Subcontracting</h3><p>The supplier performs work using components provided by the customer. Receipt of the subcontracted material is connected to consumption of those provided components.</p></div>
     </div>
     <p>These are examples, not a complete catalogue. The item category, account assignment, stock ownership, acceptance model, and invoice design define which downstream events make sense for the actual process.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="technical-extension-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Technical extension map</p>
+      <h2>PR and PO custom logic should follow the decision boundary.</h2>
+      <p>{{ graph.technical_extension_map.principle }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Inherited ERP / classic ABAP</h3>
+        {% for item in graph.technical_extension_map.inherited_system_recognition %}
+        <p><strong><code>{{ item.hook }}</code></strong><br />{{ item.purpose }} <em>{{ item.boundary }}</em></p>
+        {% endfor %}
+      </div>
+      <div>
+        <h3>Current S/4HANA path</h3>
+        {% for item in graph.technical_extension_map.current_s4_paths %}
+        <p><strong><code>{{ item.hook }}</code></strong><br />{{ item.purpose }} <em>{{ item.boundary }}</em></p>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="research-route-list">
+      {% for step in graph.technical_extension_map.tracing_sequence %}
+      <a href="/labs/enterprise-context/development/#functional-consultant-map"><span>{{ forloop.index }}</span><strong>Trace before code</strong><small>{{ step }}</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>Lead answer:</strong> {{ graph.technical_extension_map.assessment_answer }}</p>
   </section>
 
   <section class="research-canvas__inventory" id="sources" data-reveal>
