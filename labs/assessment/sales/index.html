@@ -116,6 +116,42 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="core-decision-engines" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales order / three core engines</p>
+      <h2>PRICE → PROMISE → RISK.</h2>
+      <p>Do not mix these decisions. Pricing answers what we charge. ATP answers what we can promise. Credit answers whether we accept the financial risk.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>PRICE — Pricing</h3>
+        <p><strong>60-second shape:</strong> SAP first determines the pricing procedure. The procedure contains condition types in a controlled sequence. For a condition, the access sequence searches condition records using the runtime key. The result can still change through base formulas, scales, group logic, exclusion, manual conditions, or other calculation controls. In billing, copying control and the pricing type decide whether pricing is copied or determined again.</p>
+        <p><strong>When wrong:</strong> procedure → condition row → requirement → access/key → record/validity → base/rate/scale → interaction.</p>
+        <p><a href="/labs/enterprise-context/pricing/">Open Pricing Engine →</a></p>
+      </div>
+      <div>
+        <h3>PROMISE — ATP / aATP</h3>
+        <p><strong>60-second shape:</strong> scheduling gives ATP the material-availability date. ATP then evaluates the requirement against the relevant supply and demand under the configured check and confirmation policy. Advanced ATP can add capabilities such as alternative-based confirmation or product allocation depending on scope. A stock number alone does not prove what ATP can confirm.</p>
+        <p><strong>When wrong:</strong> plant and requirement → scheduling date → scope/check → supply-demand picture → confirmation strategy → resulting quantity/date.</p>
+        <p><a href="/labs/enterprise-context/atp/">Open ATP / aATP →</a></p>
+      </div>
+      <div>
+        <h3>RISK — Credit</h3>
+        <p><strong>60-second shape:</strong> the Sales document triggers a credit check for the relevant credit account and segment. The Business Partner credit profile supplies risk policy such as risk class and checking rule; the segment carries values such as credit limit and exposure. The rule can contain several checks, so free credit limit alone does not guarantee a pass.</p>
+        <p><strong>When wrong:</strong> trigger → checked account → segment → risk/check rule → exposure → failed check → recheck or authorized release.</p>
+        <p><a href="/labs/enterprise-context/credit/">Open Credit Management →</a></p>
+      </div>
+    </div>
+
+    <h3>Three traps to avoid</h3>
+    <ol>
+      <li><strong>Sourcing is not ATP.</strong> Sourcing asks how supply is obtained. ATP asks whether and when the requirement can be confirmed.</li>
+      <li><strong>Condition record found is not the same as final price.</strong> Calculation and interaction can still change whether the condition is active and what value it contributes.</li>
+      <li><strong>Available credit limit is not the whole credit policy.</strong> Another configured check can still block the document.</li>
+    </ol>
+  </section>
+
   <section class="research-canvas__inventory" id="shipping-recall" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Sales assessment / Shipping recall</p>
