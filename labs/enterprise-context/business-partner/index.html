@@ -7,14 +7,13 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
-last_reviewed: 2026-09-23
+last_modified_at: 2026-09-25
+last_reviewed: 2026-09-25
 publication_wave: "sap-master-data-review-2026-09"
 review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + source-registry review + full editorial pass"
 search_intent: "SAP Business Partner CVI configuration roles grouping account groups number ranges field control customer supplier S4HANA"
 structured_data:
   type: TechArticle
-primary_topic: "sap-mdg"
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -115,6 +114,23 @@ source_links:
       <p>A saved BP is only the beginning. The party becomes usable in Sales, Procurement, or Finance when the corresponding role and organizational data are complete and CVI has synchronized the required customer or supplier object.</p>
     </div>
     <a href="#evidence">See the source boundary <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Explain Business Partner as five layers, not as one master record.</h2>
+      <p>For a Lead answer, keep the model compact: identity → role → organizational data → CVI → process use. This is enough to explain most design questions and to locate the first missing layer in an incident.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In SAP S/4HANA, Business Partner is the leading object for customer and supplier master data. I separate the BP category, the business roles, and the organizational extensions because they answer different questions. The grouping controls the BP number-range strategy, while customer or supplier account groups belong to the synchronized customer or supplier object. CVI maps these objects and their numbering. A BP can therefore exist but still be unusable in Sales if the required FLCU01 sales-area data is missing. I also keep BP relationships separate from Sales partner functions: a relationship connects identities, while partner functions define who acts as sold-to, ship-to, bill-to, payer, or another process partner.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>What is global?</h3><p>The core identity: category, name, addresses, communication data, and other shared BP attributes.</p></div>
+      <div><h3>What is contextual?</h3><p>Company-code, sales-area, and purchasing-organization data. Process readiness can differ by organizational unit.</p></div>
+      <div><h3>What is synchronized?</h3><p>CVI connects Business Partner with the customer and supplier objects used by application processes.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="bp-role-model" data-reveal>
@@ -253,6 +269,21 @@ source_links:
       <h2>Keep the data model stable; verify the configuration surface for the target system.</h2>
       <p>This article uses SAP S/4HANA 2025 FPS01 on-premise / private-edition documentation for concrete BP and CVI behavior. The underlying distinctions — identity, role, organizational data, customer/supplier synchronization, and process readiness — are durable. Exact configuration activities, apps, transactions, and extensibility options depend on the deployment model and release, so implementation steps should always be checked against the target system's current documentation.</p>
     </header>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Six questions that expose the model quickly.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>numbering</small></div><h3>BP grouping or customer account group?</h3></header><p>Grouping belongs to the Business Partner layer and controls BP numbering. The customer or supplier account group belongs to the synchronized customer or supplier object and controls its classification, numbering, and field behavior.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>roles</small></div><h3>FLCU00 or FLCU01?</h3></header><p>FLCU00 is the customer company-code role for accounting data. FLCU01 is the customer Sales role and carries sales-area data.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>numbers</small></div><h3>Must BP and customer numbers be identical?</h3></header><p>No. Same-number assignment is supported, but it is a configuration choice with number-range prerequisites. Different numbers are also supported.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>partners</small></div><h3>BP relationship or Sales partner function?</h3></header><p>A BP relationship describes how two identities are related. A Sales partner function describes which party acts as sold-to, ship-to, bill-to, payer, or another role in the document process.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>diagnosis</small></div><h3>The BP exists, but the sales order cannot use it. What first?</h3></header><p>Check the required customer role and FLCU01 extension for the exact sales area, then the required sales data, partner setup, field completeness, and CVI synchronization state.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>06</span><small>design</small></div><h3>Can one organization be both customer and supplier?</h3></header><p>Yes. When it is the same governed identity, one Organization BP can carry both customer and supplier roles while keeping Sales, Purchasing, and accounting data in their own organizational contexts.</p></article>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="evidence" data-reveal>
