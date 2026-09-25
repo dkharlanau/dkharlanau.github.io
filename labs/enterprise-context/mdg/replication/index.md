@@ -7,10 +7,10 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-12
-last_reviewed: 2026-09-03
+last_modified_at: 2026-09-25
+last_reviewed: 2026-09-25
 publication_wave: "sap-mdg-review-2026-09"
-review_method: "SAP S/4HANA 2025 FPS01 primary sources + DRF/key-mapping review + page-level factual review"
+review_method: "SAP S/4HANA 2025 FPS01 primary sources + DRF/key-mapping review + BP relationship replication KBAs + page-level factual review"
 search_intent: "SAP MDG DRF replication model outbound implementation business system key mapping active data troubleshooting"
 structured_data:
   type: TechArticle
@@ -29,6 +29,10 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/8f3d0f8274e642b5aed793f4f4f8e5a4.html"
   - title: "Configuring Data Replication"
     url: "https://help.sap.com/docs/SAP_ERP/d6bbe43b03894e4f817c8b939d532744/22d76454004f2357e10000000a44176d.html"
+  - title: "SAP KBA 3383495 — Deletion of relationships are not transferred via DRFOUT"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3383495"
+  - title: "SAP KBA 3568681 — Relationships deleted in the target system after BP WS replication"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3568681"
 # ai-discovery-managed:start
 primary_topic: "sap-mdg"
 ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--replication.json"
@@ -156,6 +160,16 @@ Before repairing a mapping, check:
 - local repair hides a central mapping defect;
 - baseline and ongoing changes use different population assumptions;
 - monitoring checks transport but not target acceptance or business use.
+
+## Business Partner relationship replication is state-sensitive
+
+For BP relationships, a resend can change data even when transport is technically successful.
+
+The important distinction is between a **delta message** and a **complete-state message**. In manual `DRFOUT` processing, the relationship web service can use complete-transmission semantics. In that case, a relationship that is missing from the payload can be interpreted as no longer valid in the target. By contrast, change-triggered relationship messages normally use delta semantics; SAP also documents that actual relationship deletion has a specific direct-replication limitation.
+
+Do not treat `PACK_SIZE_BULK` as the deletion rule. It controls how many objects are grouped into a bulk message and therefore affects payload size, throughput and failure radius. If deletion behavior appears to change with package size, compare the XML, the complete-transmission indicator, action codes and trigger mode before changing configuration.
+
+The full troubleshooting and solution matrix is in [DRF Operations & Replay — BP relationship deletion](/labs/enterprise-context/mdg/replication/operations/#bp-relationship-deletion-do-not-mix-delta-complete-state-and-package-size-behavior).
 
 ## Operations deep dive
 
