@@ -352,6 +352,71 @@ body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-column
   text-transform: none;
 }
 
+
+/* Card drill-down links: keep navigation visible without adding another line of
+   copy. A sole paragraph link becomes a compact bottom-right action icon. The
+   original link text stays in the accessibility tree as the link name. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div {
+  position: relative;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div:has(> p > a:only-child) {
+  padding-bottom: 4rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div > p:has(> a:only-child) {
+  height: 0;
+  margin: 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div > p > a:only-child {
+  position: absolute;
+  right: 0.95rem;
+  bottom: 0.9rem;
+  display: inline-grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #c9d8f3;
+  border-radius: 999px;
+  background: #f7faff;
+  color: transparent;
+  font-size: 0;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    transform 140ms ease;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div > p > a:only-child::before {
+  color: var(--ec-blue);
+  content: "arrow_forward";
+  font-family: "Material Symbols Outlined";
+  font-size: 1.2rem;
+  font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+  line-height: 1;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div > p > a:only-child:hover {
+  border-color: var(--ec-blue);
+  background: var(--ec-blue);
+  transform: translateX(2px);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div > p > a:only-child:hover::before {
+  color: #fff;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div > p > a:only-child:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ec-blue) 28%, transparent);
+  outline-offset: 3px;
+}
+
 body[data-page^="/labs/enterprise-context/"] .context-graph :is(.ecg-remember,.ecg-lead-lens) {
   max-width: none;
   margin-top: var(--space-4);
