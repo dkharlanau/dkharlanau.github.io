@@ -110,6 +110,11 @@ diagrams).
   `.callout--warning` (red). Left rule + quiet fill; nothing brighter.
 - **Cards**: `.card` only for genuine collections (pathways, offers, related
   topics). Most pages should show almost no card chrome.
+- **Structured technical rows**: `.ecg-determination-detail` uses one divider per
+  record, a narrow number/meta rail, and a compact title/context stack. Detail
+  groups align under the title and use vertical separators rather than repeated
+  horizontal rules. Do not repeat the same question in the header and body.
+  Keep body text in normal sentence case and at a readable size.
 - **Atlas process maps**: `.atlas-process-map` renders a semantic ordered
   list of process steps as a five-tile grid (one column on mobile) with
   numbered step tiles, arrow connectors, and a caption. Used on Atlas

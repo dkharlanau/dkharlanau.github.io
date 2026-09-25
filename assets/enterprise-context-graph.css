@@ -5,7 +5,7 @@
   --ecg-surface:#f2f1ed;
   --ecg-line: #e3e6ea;
   --ecg-soft:#53606d;
-  --ecg-accent:#ef5637;
+  --ecg-accent:var(--color-accent,#1254f5);
 }
 
 .context-graph .ecg-memory-grid {
@@ -160,25 +160,101 @@
 .context-graph .ecg-anatomy li strong { display:block; margin-top:1rem; font-size:.94rem; }
 .context-graph .ecg-anatomy li p { margin:.5rem 0 0; color:var(--ecg-soft); font-size:.8125rem; line-height:1.5; }
 
-.context-graph .ecg-determination-list { border-top:1px solid var(--ecg-dark); }
-.context-graph .ecg-determination-detail { border-bottom:1px solid var(--ecg-line); padding:2rem 0 2.3rem; }
-.context-graph .ecg-determination-detail > header { display:grid; grid-template-columns:8rem minmax(12rem,.7fr) minmax(18rem,1.3fr); gap:1rem; align-items:start; }
-.context-graph .ecg-determination-detail header div { display:flex; flex-direction:column; gap:.35rem; }
-.context-graph .ecg-determination-detail header small { color:var(--ecg-soft); font-family:var(--font-mono); font-size:.58rem; text-transform:none; }
-.context-graph .ecg-determination-detail h3 { font-family:"Source Serif 4",Georgia,serif; font-size:1.65rem !important; }
-.context-graph .ecg-determination-detail header p { margin:0; font-size:.86rem; line-height:1.5; }
+.context-graph .ecg-determination-list {
+  display:grid;
+  gap:0;
+  border-top:0;
+}
+.context-graph .ecg-determination-detail {
+  border-top:1px solid var(--ecg-line);
+  border-bottom:0;
+  padding:1.45rem 0 1.6rem;
+}
+.context-graph .ecg-determination-detail:first-child { border-top-color:var(--ecg-dark); }
+.context-graph .ecg-determination-detail > header {
+  display:grid;
+  grid-template-columns:4.5rem minmax(0,1fr);
+  column-gap:1.25rem;
+  row-gap:.28rem;
+  align-items:start;
+}
+.context-graph .ecg-determination-detail header div {
+  grid-column:1;
+  grid-row:1 / span 2;
+  display:flex;
+  flex-direction:column;
+  gap:.2rem;
+  padding-top:.05rem;
+}
+.context-graph .ecg-determination-detail header small {
+  color:var(--ecg-soft);
+  font-family:inherit;
+  font-size:.72rem;
+  line-height:1.25;
+  text-transform:none;
+}
+.context-graph .ecg-determination-detail h3 {
+  grid-column:2;
+  grid-row:1;
+  margin:0;
+  font-family:inherit;
+  font-size:clamp(1.12rem,1.35vw,1.32rem) !important;
+  font-weight:700;
+  line-height:1.28;
+}
+.context-graph .ecg-determination-detail header p {
+  grid-column:2;
+  grid-row:2;
+  max-width:68ch;
+  margin:.12rem 0 0;
+  color:var(--ecg-soft);
+  font-size:.91rem;
+  font-weight:500;
+  line-height:1.48;
+}
+.context-graph .ecg-determination-detail > p {
+  max-width:68ch;
+  margin:.72rem 0 0 5.75rem;
+  color:var(--ecg-soft);
+  font-size:.91rem;
+  line-height:1.58;
+}
+.context-graph .ecg-question {
+  color:var(--ecg-soft) !important;
+  font-weight:500;
+}
 
 .context-graph .ecg-decision-columns {
   display:grid;
-  grid-template-columns:1.35fr .8fr 1fr;
-  gap:1rem;
-  margin-top:1.5rem;
-  border-top:1px solid var(--ecg-line);
-  border-bottom:1px solid var(--ecg-line);
+  grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));
+  gap:0;
+  margin:.95rem 0 0 5.75rem;
+  border:0;
 }
-.context-graph .ecg-decision-columns > div { padding:1rem 1rem 1rem 0; }
-.context-graph .ecg-decision-columns > div + div { border-inline-start:1px solid var(--ecg-line); padding-inline-start:1rem; }
-.context-graph .ecg-decision-columns h4,
+.context-graph .ecg-decision-columns > div {
+  min-width:0;
+  padding:.15rem 1.25rem .1rem 0;
+}
+.context-graph .ecg-decision-columns > div + div {
+  border-inline-start:1px solid var(--ecg-line);
+  padding-inline:1.25rem 0;
+}
+.context-graph .ecg-decision-columns h4 {
+  display:inline-flex;
+  align-items:center;
+  min-height:1.65rem;
+  margin:0 0 .65rem;
+  border-radius:var(--radius-md,8px);
+  background:color-mix(in srgb,var(--ecg-accent) 8%,var(--ecg-paper));
+  padding:.24rem .48rem;
+  color:var(--ecg-accent);
+  font-family:inherit;
+  font-size:.76rem !important;
+  font-weight:700;
+  letter-spacing:0;
+  line-height:1.2;
+  text-transform:none;
+}
 .context-graph .ecg-diagnostic h4,
 .context-graph .ecg-heuristic-grid h4,
 .context-graph .ecg-case h3 {
@@ -189,7 +265,20 @@
   letter-spacing:.06em;
   text-transform:none;
 }
-.context-graph .ecg-decision-columns p { margin:.55rem 0 0; color:var(--ecg-soft); font-size:.8125rem; text-transform:capitalize; }
+.context-graph .ecg-decision-columns ul { margin:.15rem 0 0; }
+.context-graph .ecg-decision-columns li {
+  margin:.34rem 0;
+  font-size:.9rem;
+  line-height:1.48;
+}
+.context-graph .ecg-decision-columns p {
+  max-width:52ch;
+  margin:.1rem 0 0;
+  color:var(--ecg-soft);
+  font-size:.9rem;
+  line-height:1.52;
+  text-transform:none;
+}
 
 .context-graph .ecg-priority { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin-top:1rem; }
 .context-graph .ecg-priority strong { margin-right:.4rem; font-size:.8125rem; }
@@ -294,11 +383,22 @@
   .context-graph .ecg-anatomy li,
   .context-graph .ecg-anatomy li:nth-child(3n+1),
   .context-graph .ecg-anatomy li:nth-child(n+4) { border-inline-start:0; border-bottom:1px solid var(--ecg-line); padding:1rem 0; }
-  .context-graph .ecg-determination-detail > header { grid-template-columns:1fr; }
-  .context-graph .ecg-decision-columns { grid-template-columns:1fr; }
+  .context-graph .ecg-determination-detail { padding:1.2rem 0 1.35rem; }
+  .context-graph .ecg-determination-detail > header {
+    grid-template-columns:3.5rem minmax(0,1fr);
+    column-gap:.85rem;
+  }
+  .context-graph .ecg-determination-detail > p { margin-left:4.35rem; }
+  .context-graph .ecg-decision-columns {
+    grid-template-columns:1fr;
+    gap:.85rem;
+    margin-left:4.35rem;
+  }
   .context-graph .ecg-decision-columns > div,
-  .context-graph .ecg-decision-columns > div + div { border-inline-start:0; border-top:1px solid var(--ecg-line); padding:1rem 0; }
-  .context-graph .ecg-decision-columns > div:first-child { border-top:0; }
+  .context-graph .ecg-decision-columns > div + div {
+    border:0;
+    padding:.05rem 0;
+  }
   .context-graph .ecg-diagnostic { grid-template-columns:1fr; gap:1rem; }
   .context-graph .ecg-diagnostic > div:last-child { border-inline-start:0; border-top:1px solid var(--ecg-line); padding:1rem 0 0; }
   .context-graph .ecg-remember { grid-template-columns:1fr; gap:.35rem; }
