@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -49,6 +49,23 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
     <p><strong>Working rule:</strong> first prove where the tax decision becomes wrong. Rate, tax code, jurisdiction, invoice check, and G/L posting are different layers.</p>
     <a href="/labs/enterprise-context/data/tax-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="tax-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Separate tax determination, calculation, and accounting.</h2>
+      <p>A Lead answer should show where the tax result is built and where the responsibility changes. Do not reduce the topic to one tax condition or one tax code.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In Sales, I treat tax as a chain of inputs and decisions. Customer and product tax classifications, geography, organizational context, and country-specific rules build the tax determination context. Pricing then calculates the tax condition for the sales or billing document. The tax code and accounting logic carry the result into FI, where tax is posted to the relevant tax accounts. If the percentage is wrong, I first compare the actual determination inputs and condition result. If the commercial tax is correct but FI is wrong, I move to tax code and accounting. For country-specific jurisdiction, exemption, reporting, or external tax-engine behavior, I keep the localization boundary explicit instead of assuming one global rule.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>Wrong rate</h3><p>Start with geography, customer and product classification, tax condition access, validity, and country-specific determination.</p></div>
+      <div><h3>Right rate, wrong posting</h3><p>Move from Sales pricing to tax code, account determination, posting status, and FI configuration.</p></div>
+      <div><h3>One country works, another fails</h3><p>Treat localization as a first-class hypothesis. Do not copy one country's tax model into another without verifying the target rules.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="tax-memory" data-reveal>
