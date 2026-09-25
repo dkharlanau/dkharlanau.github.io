@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Sales Master Data Architecture — Enterprise Context Lab"
-description: "A practical SAP S/4HANA Sales master-data map connecting Business Partner, customer, product, customer-material, pricing, credit, replication, governance, and runtime diagnostics."
+title: "SAP Sales Master Data — Core Catalogue and Runtime Use"
+description: "A practical SAP S/4HANA Sales master-data catalogue covering Business Partner, product, customer-material, partner relationships, hierarchies, texts, pricing conditions, material determination, listing and exclusion, free goods, cross-selling, credit, units, batches, BOMs, and variant configuration."
 permalink: /labs/enterprise-context/master-data/
 status: draft
 verified: false
@@ -19,470 +19,334 @@ tags:
   - pricing
   - credit-management
   - integration
-  - mdg
   - troubleshooting
 ---
 
 {% assign graph = site.data.labs.enterprise_context.graphs.master_data %}
 {% assign evidence = site.data.labs.enterprise_context.sources.master_data %}
-{% assign sales_master_core = site.data.labs.enterprise_context.master_data.sales_master_data["01_core"] %}
-{% assign bp_address = sales_master_core.entities | where: "code", "MD.SD.ADDRESS" | first %}
-{% assign sales_master_sources = site.data.labs.enterprise_context.sources.sales_master_data_registry.sources %}
-{% assign address_det_source = sales_master_sources | where: "id", "SRC-SDMD-ADDRESS-DETERMINATION" | first %}
-{% assign bp_multi_bf_source = sales_master_sources | where: "id", "SRC-SDMD-MULTI-ADDRESS-BF-BP" | first %}
-{% assign sd_multi_bf_source = sales_master_sources | where: "id", "SRC-SDMD-MULTI-ADDRESS-BF-SD" | first %}
-{% assign precedence_visuals = site.data.labs.enterprise_context.visuals.master_data_precedence %}
+{% assign sales_master_data = site.data.labs.enterprise_context.master_data.sales_master_data %}
+{% assign catalog_group_keys = "01_core,02_hierarchies_and_content,03_condition_and_relationship_records,04_adjacent_sales_consumed_master" | split: "," %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
-  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">Master Data</li></ol>
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/sales-processes/">Sales</a></li>
+    <li aria-current="page">Master Data</li>
+  </ol>
 </nav>
 
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Deep vertical / Sales Master Data</p>
-      <h1>Master data is executable policy,<br />not background decoration.</h1>
-      <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#master-data-memory">Start with the diagnostic framework <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">SAP Sales / Master Data</p>
+      <h1>SAP Sales master data:<br />what exists and what it controls.</h1>
+      <p>Start with the catalogue. Learn the object, its key or organizational scope, and where Sales uses it. Only after that move to precedence, diagnostics, governance, or replication.</p>
+      <a class="research-canvas__button" href="#sales-master-data-catalog">Open the master-data catalogue <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Master-data deep-dive inventory">
-      <p>Working model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.data_families | size }}</strong><small>Data families</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Draft research · practical reasoning · no client data</em>
+    <div class="research-canvas__signal" aria-label="Sales master-data catalogue inventory">
+      <p>Study inventory</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ sales_master_data.index.summary.entity_count }}</strong><small>Master-data objects</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ catalog_group_keys | size }}</strong><small>Object groups</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>6</strong><small>O2C touchpoints</small></div>
+      <em>Core Sales first · adjacent logistics second · configuration stays separate</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
-    <p><strong>My working rule:</strong> name the wrong runtime value first. Then trace it back to the source object, organizational level, precedence rule, and replica. I do not start with a random BP or product screen.</p>
-    <a href="/labs/enterprise-context/data/master-data-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+    <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+    <p><strong>Use one boundary:</strong> master data is reusable maintained data that survives beyond one sales document. Business Partner and Product are business masters. Customer-material and partner assignments are relationship data. Pricing, material determination, listing/exclusion, and free-goods records are validity-based condition data. Sales Organization, pricing procedure, and a Sales Order belong to different layers.</p>
+    <a href="/labs/enterprise-context/sales-processes/master-data/">Open the full reference graph <span class="material-symbols-outlined" aria-hidden="true">account_tree</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-master-data-catalog" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Complete study catalogue</p>
+      <h2>Know these objects before you debug a Sales document.</h2>
+      <p>This catalogue covers the standard Sales core plus the adjacent logistics and risk master data that Sales regularly consumes. The last group is adjacent by ownership, but it is still important in Order-to-Cash.</p>
+    </header>
+
+    {% for group_key in catalog_group_keys %}
+      {% assign group = sales_master_data[group_key] %}
+      <div class="ecg-master-catalog__group">
+        <div class="ecg-master-catalog__group-head">
+          <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+          <div>
+            <h3>{{ group.title }}</h3>
+            <p>{{ group.summary }}</p>
+          </div>
+        </div>
+
+        <div class="ecg-master-catalog">
+          <div class="ecg-master-catalog__head" aria-hidden="true">
+            <span>Object</span>
+            <span>Key / scope</span>
+            <span>Used by</span>
+            <span>Business question</span>
+          </div>
+
+          {% for entity in group.entities %}
+          <article class="ecg-master-catalog__row">
+            <div class="ecg-master-catalog__object">
+              <code>{{ entity.code }}</code>
+              <h4>{{ entity.title }}</h4>
+              <span class="ecg-master-catalog__type">{{ entity.entity_class | replace: "_", " " }}</span>
+            </div>
+            <div class="ecg-master-catalog__cell">
+              <strong>Key / scope</strong>
+              <p>{{ entity.key_dimensions | join: " · " }}</p>
+            </div>
+            <div class="ecg-master-catalog__cell">
+              <strong>Used by</strong>
+              <p>{{ entity.consumed_by | join: " · " }}</p>
+            </div>
+            <div class="ecg-master-catalog__cell ecg-master-catalog__cell--purpose">
+              <strong>Business question</strong>
+              <p>{{ entity.business_question }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+    <p class="ecg-master-summary"><strong>What this makes visible:</strong> Listing / Exclusion, Material Determination, Free Goods, Cross-Selling, Sales Item Proposals, hierarchies, and reusable texts are part of the Sales data landscape. They should not disappear behind the broad labels “customer master” and “material master”.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="high-leverage-fields" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">High-leverage fields</p>
+      <h2>Many important Sales controls are fields inside a master object, not separate master-data objects.</h2>
+      <p>For assessment questions, name both the object and the field. Saying only “customer master” or “material master” is too broad.</p>
+    </header>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Object / view</th>
+            <th>Fields worth knowing</th>
+            <th>Typical effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Customer / Sales Area</strong></td>
+            <td>Customer pricing procedure, price list/group, shipping condition, payment terms, Incoterms, tax classification, delivery priority, complete/partial delivery, account assignment group, sales office/group</td>
+            <td>Pricing key, shipping defaults, billing/payment context, tax/account determination, delivery behavior</td>
+          </tr>
+          <tr>
+            <td><strong>Business Partner Address</strong></td>
+            <td>Address usage, validity, address UUID, address-dependent customer data</td>
+            <td>Which physical location is used for delivery, billing, and supported location-specific defaults</td>
+          </tr>
+          <tr>
+            <td><strong>Product / Sales</strong></td>
+            <td>Item category group, delivering plant, product pricing group, account assignment product group, product hierarchy, sales status, sales unit</td>
+            <td>Item behavior, plant proposal, pricing, revenue-account input, commercial availability</td>
+          </tr>
+          <tr>
+            <td><strong>Product / Plant</strong></td>
+            <td>Availability checking group, loading group, planning/MRP fields, batch relevance, logistics controls</td>
+            <td>ATP, requirements, shipping-point determination, planning and fulfillment</td>
+          </tr>
+          <tr>
+            <td><strong>Customer Material</strong></td>
+            <td>Customer material number, customer description, delivery data, tolerances, text, customer-specific plant where supported</td>
+            <td>Customer-specific order-entry and delivery defaults</td>
+          </tr>
+          <tr>
+            <td><strong>Credit Master Data</strong></td>
+            <td>Credit segment, credit limit and validity, risk class, check rule</td>
+            <td>Credit evaluation and block/release behavior</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="master-data-boundaries" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Keep the layers separate</p>
+      <h2>These things matter to Sales, but they are not another Sales master-data object.</h2>
+      <p>This boundary prevents a common assessment mistake: mixing reusable data, enterprise structure, configuration, and runtime documents into one list.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Enterprise structure</h3>
+        <ul>
+          <li>Company Code</li>
+          <li>Sales Organization</li>
+          <li>Distribution Channel</li>
+          <li>Division and Sales Area</li>
+          <li>Plant and Shipping Point</li>
+        </ul>
+        <p>These objects define organizational and execution context. They scope master data and process responsibility.</p>
+      </div>
+      <div>
+        <h3>Configuration / mechanisms</h3>
+        <ul>
+          <li>Pricing procedure, condition type, access sequence</li>
+          <li>Partner determination procedure</li>
+          <li>Item category and schedule-line determination</li>
+          <li>Copy control and output rules</li>
+          <li>ATP, shipping-point, route, and account-determination rules</li>
+        </ul>
+        <p>Configuration decides how SAP reads and combines master data. The rule is not the same thing as the maintained record.</p>
+      </div>
+      <div>
+        <h3>Runtime documents</h3>
+        <ul>
+          <li>Inquiry and quotation</li>
+          <li>Sales Order</li>
+          <li>Outbound Delivery</li>
+          <li>Billing Document</li>
+          <li>Manual document overrides</li>
+        </ul>
+        <p>Master data proposes or determines values. After a value is copied into a document, the document has its own lifecycle.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="master-data-o2c" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Order-to-Cash use</p>
+      <h2>Map the catalogue to the process.</h2>
+      <p>You do not need to memorize nineteen isolated definitions. Remember which objects become important at each O2C step.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div>
+        <span>01</span>
+        <h4>Order entry</h4>
+        <p>Business Partner, partner functions, addresses, Product, Customer Material, Item Proposal, Listing / Exclusion, Material Determination, Cross-Selling, Sales BOM, and Variant Configuration.</p>
+      </div>
+      <div>
+        <span>02</span>
+        <h4>Pricing and commercial terms</h4>
+        <p>Customer sales data, Customer Hierarchy, Product hierarchy/grouping, Pricing Condition Records, Free Goods, customer/product attributes, and configuration values where pricing-relevant.</p>
+      </div>
+      <div>
+        <span>03</span>
+        <h4>ATP and shipping</h4>
+        <p>Product sales/plant data, Customer Material, ship-to/address data, units of measure, availability and loading fields, plus Batch data where relevant.</p>
+      </div>
+      <div>
+        <span>04</span>
+        <h4>Credit</h4>
+        <p>Payer/credit-account context plus Credit Master Data: credit segment, limit, risk class, check rule, and validity.</p>
+      </div>
+      <div>
+        <span>05</span>
+        <h4>Delivery</h4>
+        <p>Ship-to and address, Product/UoM data, loading and logistics fields, Batch master/classification, and document partners carried into execution.</p>
+      </div>
+      <div>
+        <span>06</span>
+        <h4>Billing and output</h4>
+        <p>Bill-to and payer, company-code customer context, payment/tax/account attributes, pricing conditions, reusable texts, and output recipient context.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="master-data-precedence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Precedence to remember</p>
+      <h2>Priority is specific to a determination.</h2>
+      <p>There is no universal rule that “customer data overrides product data”. Learn the priority for the field you are tracing.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div>
+        <span>01</span>
+        <h4>Delivering plant</h4>
+        <p>Standard proposal path: Customer Material → ship-to customer → Product/Material. A document value or specialized scenario can change the final result.</p>
+      </div>
+      <div>
+        <span>02</span>
+        <h4>Customer-specific item data</h4>
+        <p>Where Customer Material maintains the relevant value, it can specialize the generic customer or product default.</p>
+      </div>
+      <div>
+        <span>03</span>
+        <h4>Pricing</h4>
+        <p>Pricing procedure and access sequence are configuration. They search condition tables and find a valid Pricing Condition Record. The record is data; the search logic is configuration.</p>
+      </div>
+      <div>
+        <span>04</span>
+        <h4>Partners and addresses</h4>
+        <p>Partner determination defines the roles. Customer/BP relationships supply partner candidates. Address determination then selects the relevant physical address for the partner and context.</p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="master-data-assessment-recall" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Master data is useful only when its level, precedence, and consumers are clear.</h2>
-      <p>Do not answer “customer master” or “material master” as one flat object. Explain the organizational slice that owns the behavior.</p>
+      <h2>A 60-second answer should start with the object map.</h2>
+      <p>Use architecture language only after you show that you know the actual master-data landscape.</p>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> I separate shared identity from organizational data. Business Partner holds the party identity; customer roles add company-code and sales-area data. Product data also has global, sales, and plant-dependent views. Customer-material and condition records add relationship or commercial context. When a document value is wrong, I trace it to the source object, exact organizational level, precedence rule, and replica used by the process. For governance, I also separate ownership of meaning, maintenance, approval, and distribution.</p>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="master-data-memory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Diagnostic framework</p>
-      <h2>Seven questions before changing master data.</h2>
-      <p>Start with the business behavior, then trace it to the data layer that controls it.</p>
-    </header>
-    <div class="ecg-memory-grid">
-      <article class="ecg-memory-card">
-        <span>01</span>
-        <strong>OBJECT</strong>
-        <h3>What business object are we changing?</h3>
-        <p>Identify the object and its key before opening a maintenance screen.</p>
-      </article>
-      <article class="ecg-memory-card">
-        <span>02</span>
-        <strong>CONTEXT</strong>
-        <h3>Which business context uses this value?</h3>
-        <p>The same object can behave differently in sales, purchasing, finance, planning, warehouse, or other processes.</p>
-      </article>
-      <article class="ecg-memory-card">
-        <span>03</span>
-        <strong>SCOPE</strong>
-        <h3>Where is the value valid?</h3>
-        <p>Check the organizational level: global, company code, plant, sales area, purchasing organization, warehouse, segment, or another scope.</p>
-      </article>
-      <article class="ecg-memory-card">
-        <span>04</span>
-        <strong>OVERRIDE</strong>
-        <h3>Can more specific data replace the default?</h3>
-        <p>Relationship data, conditions, determination rules, or local records may take priority over a generic value.</p>
-      </article>
-      <article class="ecg-memory-card">
-        <span>05</span>
-        <strong>EFFECT</strong>
-        <h3>Which process decision does the value influence?</h3>
-        <p>Connect the field to runtime behavior such as price, source, availability, tax, account, delivery, payment, or output.</p>
-      </article>
-      <article class="ecg-memory-card">
-        <span>06</span>
-        <strong>FLOW</strong>
-        <h3>Which systems consume this value?</h3>
-        <p>A correct source record does not prove that every replica or consuming application has the same version.</p>
-      </article>
-      <article class="ecg-memory-card">
-        <span>07</span>
-        <strong>CONTROL</strong>
-        <h3>Who owns the lifecycle of this data?</h3>
-        <p>Know who can create, approve, change, distribute, block, and retire the value.</p>
-      </article>
-    </div>
-    <p class="ecg-caption"><strong>OBJECT → CONTEXT → SCOPE → OVERRIDE → EFFECT → FLOW → CONTROL.</strong> Use the path to move from a business symptom to the master-data layer that may explain it.</p>
-    <div class="ecg-diagnostic">
-      <div>
-        <h4>Sales example</h4>
-        <p>A wrong delivery date in a sales order is the symptom. Do not immediately change the customer or product master.</p>
-      </div>
-      <div>
-        <h4>Apply the framework</h4>
-        <p>Identify the object, sales or planning context, organizational scope, possible overrides, the ATP or delivery decision affected, downstream replicas, and the owner of the correction.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Data families</p>
-      <h2>Master data becomes useful when its level and consumers are visible.</h2>
-      <p>For every family I want to know the organizational level, what it controls, who should own the meaning, and what kind of failure it creates.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for family in graph.data_families %}
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>data family</small></div>
-          <h3>{{ family.title }}</h3>
-          <p class="ecg-question">Level: {{ family.level }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          <div><h4>Typical data</h4><ul>{% for value in family.examples %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Runtime consumers</h4><ul>{% for value in family.consumers %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Ownership / signal</h4><p><strong>Typical owner:</strong> {{ family.typical_owner }}</p><p>{{ family.diagnostic_signal }}</p></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Business Partner</p>
-      <h2>One identity, several business contexts.</h2>
-      <p>I separate general BP data, customer sales-area data, company-code accounting data, partner roles, and credit data. A customer can be valid in one context and incomplete in another.</p>
-    </header>
-    <div class="ecg-rail" aria-label="Business Partner master-data levels">
-      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Business Partner</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">General identity / address</span></div>
-      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">BP + FLCU01</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--decision">Sales Area</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Sales / Shipping / Billing defaults</span></div>
-      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">BP + FLCU00</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--decision">Company Code</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">FI customer context</span></div>
-      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">BP + Credit Management</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--decision">Credit Segment</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Risk policy / limit</span></div>
-    </div>
-    <p class="ecg-lead-lens"><strong>Lead lens:</strong> When order creation works but billing or credit does not, I do not call the customer master “correct”. I ask: correct for which role and organizational level?</p>
-    <nav class="ecg-context-links" aria-label="Read more about Business Partner context">
-      <span>Read more</span>
-      <a href="/labs/enterprise-context/business-partner/">Business Partner model</a>
-      <a href="/labs/enterprise-context/sales-order/">Partner determination in Sales Order</a>
-      <a href="/labs/enterprise-context/credit/">SAP Credit Management</a>
-    </nav>
-  </section>
-
-  <section class="research-canvas__inventory" id="multiple-address-handling" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Multiple addresses</p>
-      <h2>Partner determination answers who. Address determination answers where.</h2>
-      <p>{{ bp_address.scope }}</p>
-    </header>
-
-    <div class="ecg-determination-list">
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>01</span><small>activation</small></div>
-          <h3>Enable master data first, SD consumption second.</h3>
-          <p class="ecg-question">The two capabilities are related, but they are not the same switch.</p>
-        </header>
-        <div class="ecg-decision-columns">
-          {% for step in bp_address.activation.sequence %}
-          <div>
-            <h4>{{ step.order }}. {{ step.business_function }}</h4>
-            <p>{{ step.purpose }}</p>
-            <p><strong>Client-specific variant:</strong> {{ step.client_specific_variant }}</p>
-          </div>
-          {% endfor %}
-        </div>
-        <ul>{% for item in bp_address.activation.guardrails %}<li>{{ item }}</li>{% endfor %}</ul>
-      </article>
-
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>02</span><small>configuration</small></div>
-          <h3>Address rules live inside partner determination.</h3>
-          <p class="ecg-question">{{ bp_address.address_determination.trigger }}</p>
-        </header>
-        <div class="ecg-decision-columns">
-          {% for item in bp_address.address_determination.configuration %}
-          <div>
-            <h4>{{ item.level }}</h4>
-            <ul>{% for control in item.controls %}<li>{{ control }}</li>{% endfor %}</ul>
-            <p>{{ item.impact }}</p>
-          </div>
-          {% endfor %}
-          <div>
-            <h4>Partner scope</h4>
-            <ul>{% for item in bp_address.address_determination.partner_scope %}<li>{{ item }}</li>{% endfor %}</ul>
-          </div>
-        </div>
-        <p>{{ bp_address.address_determination.example_mapping }}</p>
-      </article>
-
-      <article class="ecg-determination-detail">
-        <header>
-          <div><span>03</span><small>runtime</small></div>
-          <h3>Usage narrows the address set; validity decides whether it can be used.</h3>
-        </header>
-        <div class="ecg-rail" aria-label="Multiple address determination flow">
-          <div class="ecg-rail__branch">
-            <span class="ecg-node ecg-node--input">Partner function</span>
-            <span class="ecg-arrow" aria-hidden="true">→</span>
-            <span class="ecg-node ecg-node--decision">Address rule</span>
-            <span class="ecg-arrow" aria-hidden="true">→</span>
-            <span class="ecg-node ecg-node--decision">Address usage</span>
-            <span class="ecg-arrow" aria-hidden="true">→</span>
-            <span class="ecg-node ecg-node--decision">Validity</span>
-            <span class="ecg-arrow" aria-hidden="true">→</span>
-            <span class="ecg-node ecg-node--output">SD document address</span>
-          </div>
-        </div>
-        <ol>{% for item in bp_address.address_determination.sequence %}<li>{{ item }}</li>{% endfor %}</ol>
-        <p><strong>Sales-area boundary:</strong> {{ bp_address.address_determination.sales_area_note }}</p>
-        <p><strong>Document override:</strong> {{ bp_address.address_determination.document_override }}</p>
-      </article>
+      <p><strong>Answer shape:</strong> “In Sales I separate business masters such as Business Partner and Product; relationship and content data such as Customer Material, partner functions, hierarchies, texts, and item proposals; condition-style data such as pricing, material determination, listing/exclusion, and free goods; and adjacent data such as credit, units, batches, BOMs, and variant configuration. Then I state the exact organizational/key level, the fields that drive the process, and the runtime consumer.”</p>
     </div>
 
     <div class="ecg-diagnostic">
       <div>
-        <h4>Assessment scenario</h4>
-        <p>A customer is one legal entity but has several receiving locations. Do not create several customer identities automatically. First decide whether one BP with multiple addresses and address-dependent data represents the business correctly.</p>
+        <h4>When a value is wrong</h4>
+        <p>Identify the object and exact key first. Then check the relevant field and any more specific relationship or condition record.</p>
       </div>
       <div>
-        <h4>Lead check</h4>
-        <p>Separate the questions: who is the ship-to party, which physical address is valid, which address-dependent defaults change, and whether APIs or downstream systems preserve the BP address UUID.</p>
+        <h4>Only then diagnose deeper</h4>
+        <p>Trace precedence, the document value, replication state, and ownership. These are diagnostic layers, not the definition of Sales master data itself.</p>
       </div>
     </div>
-
-    <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ bp_address.memory_hook }} A correct partner number can still carry the wrong physical location.</p>
-    <nav class="ecg-context-links" aria-label="Read more about Business Partner addresses">
-      <span>Read more</span>
-      <a href="/labs/enterprise-context/integrations/business-partner-api/">Business Partner API and address structure</a>
-      <a href="/labs/enterprise-context/business-partner/">BP roles and relationships</a>
-    </nav>
-
-    <div class="ecg-source-list">
-      <article><span>SAP</span><h3>{{ address_det_source.title }}</h3><p>{{ address_det_source.release_scope }} · {{ address_det_source.product_scope }}</p><a href="{{ address_det_source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
-      <article><span>SAP</span><h3>{{ bp_multi_bf_source.title }}</h3><p>{{ bp_multi_bf_source.release_scope }} · {{ bp_multi_bf_source.product_scope }}</p><a href="{{ bp_multi_bf_source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
-      <article><span>SAP</span><h3>{{ sd_multi_bf_source.title }}</h3><p>{{ sd_multi_bf_source.release_scope }} · {{ sd_multi_bf_source.product_scope }}</p><a href="{{ sd_multi_bf_source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
-    </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="master-data-deep-dives" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Product</p>
-      <h2>A product is also a set of organizational views.</h2>
-      <p>Product behavior changes by sales organization/distribution channel and by plant. That is why “the material is correct” is not enough evidence.</p>
+      <p class="research-canvas__eyebrow">Go deeper only when needed</p>
+      <h2>Use the catalogue as the map; use the deep dives for mechanism detail.</h2>
     </header>
-    <div class="ecg-rail" aria-label="Product master-data levels">
-      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Product</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Basic / cross-distribution data</span></div>
-      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Product</span><span class="ecg-arrow" aria-hidden="true">+</span><span class="ecg-node ecg-node--input">Sales Org + DC</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Sales data / plant proposal / pricing attributes</span></div>
-      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Product</span><span class="ecg-arrow" aria-hidden="true">+</span><span class="ecg-node ecg-node--input">Plant</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">ATP / MRP / loading / logistics controls</span></div>
-    </div>
-    <p class="ecg-lead-lens"><strong>Lead lens:</strong> Compare failing and working records at the same organizational level. Comparing DE01 plant data with a global product view is a very efficient way to learn nothing.</p>
-    <nav class="ecg-context-links" aria-label="Read more about product behavior">
-      <span>Read more</span>
-      <a href="/labs/enterprise-context/material-behavior/">Material and product behavior</a>
-      <a href="/labs/enterprise-context/atp/">ATP and availability</a>
-      <a href="/labs/enterprise-context/shipping/">Shipping and delivery controls</a>
-    </nav>
-  </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Precedence</p>
-      <h2>There is no universal “master-data priority”.</h2>
-      <p>Precedence belongs to a specific determination. Plant, shipping condition, partners, and pricing use different rules.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.precedence_examples %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>precedence</small></div><h3>{{ item.decision }}</h3></header>
-        {% assign precedence_entry = precedence_visuals[item.id] %}
-        {% if precedence_entry and precedence_entry.visual %}
-          {% include labs/semantic-lane-flow.html model=precedence_entry.visual compact=true %}
-        {% else %}
-        <div class="ecg-rail" aria-label="{{ item.decision | escape }} precedence">
-          <div class="ecg-rail__branch">
-            {% for step in item.path %}
-            <span class="ecg-node {% if forloop.last %}ecg-node--output{% else %}ecg-node--input{% endif %}">{{ step }}</span>{% unless forloop.last %}<span class="ecg-arrow" aria-hidden="true">→</span>{% endunless %}
-            {% endfor %}
-          </div>
-        </div>
-        {% endif %}
-        <p>{{ item.note }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Decision engines</p>
-      <h2>The same master record can feed several different engines.</h2>
-      <p>This is why a master-data change needs regression thinking. One field may repair shipping and quietly change pricing, ATP, credit, or billing.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.engine_dependency_matrix %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>engine</small></div><h3>{{ item.engine }}</h3></header>
-        <div class="ecg-decision-columns"><div><h4>Architecture question</h4><p>{{ item.lead_question }}</p></div><div><h4>Master-data inputs</h4><ul>{% for value in item.master_data_inputs %}<li>{{ value }}</li>{% endfor %}</ul></div></div>
-      </article>
-      {% endfor %}
-    </div>
-    <nav class="ecg-context-links" aria-label="Read more about decision engines">
-      <span>Read more</span>
+    <nav class="ecg-context-links" aria-label="Sales master-data deep dives">
+      <span>Deep dives</span>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Full Sales master-data reference graph</a>
+      <a href="/labs/enterprise-context/business-partner/">Business Partner</a>
+      <a href="/labs/enterprise-context/material-behavior/">Product and material behavior</a>
       <a href="/labs/enterprise-context/pricing/">Pricing</a>
-      <a href="/labs/enterprise-context/atp/">ATP</a>
-      <a href="/labs/enterprise-context/credit/">Credit</a>
-      <a href="/labs/enterprise-context/billing/">Billing</a>
-    </nav>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Distribution</p>
-      <h2>A correct source record is only half of the design.</h2>
-      <p>{{ graph.replication_architecture.principle }}</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for item in graph.replication_architecture.patterns %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>replication</small></div><h3>{{ item.title }}</h3></header>
-        <div class="ecg-decision-columns">
-          <div><h4>Mechanisms</h4><ul>{% for value in item.mechanisms %}<li>{{ value }}</li>{% endfor %}</ul></div>
-          <div><h4>Controls</h4><ul>{% for value in item.controls %}<li>{{ value }}</li>{% endfor %}</ul></div>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-    <p class="ecg-lead-lens"><strong>Lead lens:</strong> Interface success means bytes moved. Master-data success means the right semantic object, key, organizational views, relationships, and custom fields arrived and can be reconciled.</p>
-    <nav class="ecg-context-links" aria-label="Read more about master-data distribution">
-      <span>Read more</span>
-      <a href="/labs/enterprise-context/integrations/drf/">Data Replication Framework</a>
-      <a href="/labs/enterprise-context/integrations/business-partner-api/">Business Partner API</a>
+      <a href="/labs/enterprise-context/atp/">ATP / aATP</a>
+      <a href="/labs/enterprise-context/credit/">Credit Management</a>
       <a href="/labs/enterprise-context/integrations/">Integration architecture</a>
     </nav>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">extension</span>
+      <p><strong>Specialized layers outside this standard core:</strong> promotions and sales deals, condition contracts and settlement management, dynamic recommendation services, compliance-specific data, and industry master data such as Retail assortments. Keep them as extensions instead of hiding them inside the universal Sales list.</p>
+    </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="master-data-sources" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Governance</p>
-      <h2>Separate meaning, maintenance, approval, distribution, and process ownership.</h2>
-      <p>A governance tool helps only after these responsibilities are explicit.</p>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Product behavior is checked against SAP sources.</h2>
+      <p>The catalogue structure and learning model are independently written. The detailed reference graph keeps object-level source links and technical references.</p>
     </header>
-    <div class="ecg-input-grid">
-      {% for item in graph.governance_model.responsibilities %}
-      <article><span>ROLE</span><h3>{{ item.role }}</h3><p>{{ item.question }}</p><ul>{% for value in item.examples %}<li>{{ value }}</li>{% endfor %}</ul></article>
-      {% endfor %}
-    </div>
-    <div class="ecg-diagnostic"><div><h4>MDG boundary</h4><p>{{ graph.governance_model.mdg_boundary.statement }}</p></div><div><h4>Architecture test</h4><p>If the workflow is removed tomorrow, do we still know who owns the field, who validates it, where it is replicated, and which process depends on it? If not, the workflow was hiding the governance model.</p></div></div>
-    <nav class="ecg-context-links" aria-label="Read more about governance">
-      <span>Read more</span>
-      <a href="/labs/enterprise-context/mdg/">SAP MDG</a>
-      <a href="/labs/enterprise-context/data-governance/">Data governance</a>
-    </nav>
-  </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Diagnostic method</p>
-      <h2>Trace value → source → level → precedence → distribution.</h2>
-      <p>This is the shortest path from a document symptom to a durable master-data fix.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for step in graph.diagnostic_method.steps %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if step.order < 10 %}0{% endif %}{{ step.order }}</span><small>diagnostic step</small></div><h3>{{ step.name }}</h3></header>
-        <p>{{ step.example }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Failure modes</p>
-      <h2>Most master-data incidents look like another module at first.</h2>
-      <p>Pricing, ATP, shipping, credit, billing, and interfaces can all be technically healthy while they consume the wrong data.</p>
-    </header>
-    <div class="ecg-determination-list">
-      {% for failure in graph.failure_modes %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>failure</small></div><h3>{{ failure.title }}</h3><p class="ecg-question">{{ failure.signal }}</p></header>
-        <div class="ecg-decision-columns"><div><h4>Trace</h4><ul>{% for value in failure.trace %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Lead lens</h4><p>{{ failure.lead_lens }}</p></div></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>Follow one master-data change into the process.</h2></header>
-    <div class="ecg-input-grid">
-      {% for item in graph.impact_traces %}<article><span>TRACE</span><h3>{{ item.title }}</h3><p>{{ item.path }}</p></article>{% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Synthetic cases</p><h2>Practice the architecture, not the definition.</h2><p>These cases are fictional and exist only for learning and assessment practice.</p></header>
-    <div class="ecg-determination-list">
-      {% for item in graph.synthetic_cases %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>synthetic case</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.task }}</p></header>
-        <div class="ecg-decision-columns"><div><h4>Setup</h4><ul>{% for value in item.setup %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Lead answer</h4><ul>{% for value in item.lead_answer %}<li>{{ value }}</li>{% endfor %}</ul></div></div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory ecg-assessment-drills" data-reveal>
-    <header class="ecg-assessment-drills__intro">
-      <p class="research-canvas__eyebrow">Assessment drills</p>
-      <h2>Build the answer around level, precedence, ownership, and runtime impact.</h2>
-      <p>Read the case first. Then use the points as a compact checklist for a Lead-level answer.</p>
-    </header>
-    <div class="ecg-assessment-list">
-      {% for item in graph.assessment_drills %}
-      <article class="ecg-assessment-card">
-        <div class="ecg-assessment-card__question">
-          <div class="ecg-assessment-card__index">
-            <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-            <small>Lead drill</small>
-          </div>
-          <h3>{{ item.question }}</h3>
-        </div>
-        <div class="ecg-assessment-card__answer">
-          <h4>Strong answer</h4>
-          <ul>{% for value in item.expected %}<li>{{ value }}</li>{% endfor %}</ul>
-        </div>
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Practitioner rules</p><h2>Small rules that prevent large master-data investigations.</h2></header>
     <div class="ecg-decision-columns">
-      <div><h3>I prefer</h3><ul>{% for value in graph.practitioner_heuristics %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h3>I avoid</h3><ul>{% for value in graph.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul></div>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references behind the documented facts.</h2><p>The reasoning and synthetic cases above are independently written. Vendor sources are used to verify product behavior and boundaries.</p></header>
-    <div class="ecg-source-list">
-      {% for source in evidence.sources %}
-      <article><span>{{ source.publisher }}</span><h3>{{ source.title }}</h3><p>{{ source.product_scope }}</p><a href="{{ source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
-      {% endfor %}
+      <div>
+        <h3>Study page</h3>
+        <p>Use this page to remember what master data exists and where it enters Order-to-Cash.</p>
+        <a href="/labs/enterprise-context/sales-processes/master-data/">Open the source-backed reference graph</a>
+      </div>
+      <div>
+        <h3>Primary references</h3>
+        <p>{{ evidence.sources | size }} SAP source records support the architecture page, with additional object-specific references in the Sales master-data registry.</p>
+        <a href="/labs/enterprise-context/data/master-data-sources.json">Open source registry</a>
+      </div>
     </div>
   </section>
 </div>
