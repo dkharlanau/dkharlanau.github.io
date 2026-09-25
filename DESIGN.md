@@ -38,6 +38,7 @@ Non-negotiables:
 ## Navigation and homepage
 
 - Primary navigation stays product-level and short (EN: Learn, Library, About, Search; locale variants keep their labels). Labs, frameworks, career material, and machine-readable work are reached from hubs, not from every screen.
+- Page-to-page HTTP(S) links open in a new browser tab by default. Same-page anchors, downloads, and non-navigation protocols keep native behavior; use `data-open-same-tab="true"` only for a deliberate component exception.
 - The homepage answers within seconds: what this is, who it is for, what to do next. Two entry routes (learn / AMS improvement), search, and a start-from-a-topic list. No competing cards, no metric strips.
 
 ## Content states and trust
