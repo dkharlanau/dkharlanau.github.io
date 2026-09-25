@@ -1,0 +1,106 @@
+---
+layout: default
+title: "SAP Sales Master Data — Sales Item Proposal"
+description: "A practical deep dive into Sales Item Proposal in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+permalink: /labs/enterprise-context/master-data/item-proposal/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-25
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Sales Item Proposal</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.ITEMPROPOSAL</p>
+      <h1>Sales Item Proposal</h1>
+      <p>An item proposal is a reusable shopping list for sales order entry. It is useful when a customer repeatedly orders the same set of products. Instead of entering each line manually, the user can call a proposal and copy selected items and quantities into the document.</p>
+      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Object profile</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.ITEMPROPOSAL</strong><small>Catalogue ID</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>relationship record</strong><small>Data class</small></div>
+      <em>Proposal, sales area, products, proposed quantities and customer assignment where used.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Know what the object owns before tracing a document.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">database</span>
+      <p><strong>Scope:</strong> Proposal, sales area, products, proposed quantities and customer assignment where used.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Important data</h3>
+        <p>Proposal identifier, products/materials, proposed quantities, units, sales area and customer assignment or usage context.</p>
+      </div>
+      <div>
+        <h3>Configuration boundary</h3>
+        <p>Item proposal data is not cross-selling and not a material determination rule. It is an explicit reusable list, whereas cross-selling recommends additional products and material determination substitutes a requested product.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime use</p>
+      <h2>How the data enters Order-to-Cash.</h2>
+      <p>The proposal supports faster order and quotation entry. It does not create a sales order by itself; it supplies reusable item suggestions that become normal document items after selection.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
+      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
+      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
+      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Troubleshooting</p>
+      <h2>Start with the most specific evidence.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p>If expected proposal items are missing, confirm the proposal assignment and sales area, then inspect the products and quantities stored in the proposal. After copying, troubleshoot the resulting item as a normal sales document item.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>A concise answer that still shows depth.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p>Item Proposal is reusable entry assistance: a predefined set of products and quantities that can be copied into a sales document. It is different from substitution or recommendation logic.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Related master-data pages">
+      <span>Continue</span>
+      <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+    </nav>
+  </section>
+</div>
