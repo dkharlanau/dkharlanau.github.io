@@ -1,0 +1,493 @@
+/* Enterprise Context — final visual layer.
+   Loaded after the legacy graph stylesheet and the editorial system. */
+
+body[data-page^="/labs/enterprise-context/"] {
+  --ec-blue: #155eef;
+  --ec-blue-strong: #004eeb;
+  --ec-blue-soft: #eef4ff;
+  --ec-blue-softer: #f7faff;
+  --ec-ink: #172033;
+  --ec-soft: #526079;
+  --ec-border: #d9e2f0;
+  --ec-border-soft: #e8edf5;
+  --ec-card: #ffffff;
+  --ec-shadow: 0 18px 46px -36px rgba(16, 40, 90, 0.42);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph {
+  --ecg-dark: var(--ec-ink);
+  --ecg-paper: var(--ec-card);
+  --ecg-surface: var(--ec-blue-softer);
+  --ecg-line: var(--ec-border);
+  --ecg-soft: var(--ec-soft);
+  --ecg-accent: var(--ec-blue);
+  --rc-signal: var(--ec-blue);
+  --rc-width: min(calc(100% - 2 * var(--space-5)), 74rem);
+  background: transparent;
+}
+
+/* Hero: one deliberate surface instead of several unrelated hairlines. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__hero {
+  position: relative;
+  box-sizing: border-box;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  margin-top: var(--space-3);
+  padding: clamp(2.35rem, 5vw, 4rem);
+  overflow: hidden;
+  border: 1px solid var(--ec-border);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(21, 94, 239, 0.10), transparent 28%),
+    radial-gradient(circle at 72% 120%, rgba(21, 94, 239, 0.06), transparent 32%),
+    linear-gradient(135deg, #ffffff 0%, #f8faff 58%, #eef5ff 100%);
+  box-shadow: var(--ec-shadow);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__hero h1 {
+  max-width: 23ch;
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__hero .research-canvas__eyebrow {
+  color: var(--ec-blue) !important;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__signal {
+  padding: 0.35rem 1.2rem;
+  border: 1px solid rgba(201, 215, 235, 0.94);
+  border-radius: 18px;
+  background: rgba(255,255,255,0.76);
+  box-shadow: 0 14px 36px -30px rgba(16,40,90,0.5);
+  backdrop-filter: blur(8px);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__signal > p {
+  color: var(--ec-soft);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__signal-line span {
+  color: var(--ec-blue);
+}
+
+/* Section headings: centered, wider, with a visible label chip. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header {
+  max-width: 62rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header > h2 {
+  max-width: 32ch;
+  color: var(--ec-ink);
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header > p:last-child {
+  max-width: 52rem;
+  margin-top: var(--space-4);
+  color: var(--ec-soft);
+  font-size: clamp(1rem, 0.96rem + 0.25vw, 1.12rem);
+  line-height: 1.65;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header .research-canvas__eyebrow,
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-panel > header .research-canvas__eyebrow {
+  display: inline-flex;
+  width: max-content;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 var(--space-4);
+  padding: 0.48rem 0.82rem;
+  border: 1px solid #d6e3fb;
+  border-radius: 999px;
+  background: var(--ec-blue-soft);
+  color: var(--ec-blue) !important;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: none;
+  box-shadow: 0 10px 24px -22px rgba(21,94,239,0.8);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header .research-canvas__eyebrow::before,
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-panel > header .research-canvas__eyebrow::before {
+  width: 0.42rem;
+  height: 0.42rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+/* Working-rule strips become real supporting cards. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__boundary {
+  box-sizing: border-box;
+  margin-top: var(--space-5);
+  border: 1px solid var(--ec-border);
+  border-radius: 16px;
+  background: #fbfcff;
+  padding: 1rem 1.15rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__boundary > .material-symbols-outlined {
+  color: var(--ec-blue);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__boundary p {
+  max-width: 58rem;
+  color: var(--ec-soft);
+  font-size: 0.96rem;
+}
+
+/* Memory model: readable two-column cards instead of a dense four-column grid. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  border: 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card:nth-child(2n+1),
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card:nth-child(4n+1) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.35rem 0.75rem;
+  min-height: 0;
+  padding: 1.2rem 1.25rem 1.3rem;
+  border: 1px solid var(--ec-border);
+  border-radius: 16px;
+  background: var(--ec-card);
+  box-shadow: var(--ec-shadow);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card > span {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--ec-blue-soft);
+  color: var(--ec-blue);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card > strong {
+  align-self: center;
+  margin: 0;
+  color: var(--ec-blue-strong);
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card h3 {
+  grid-column: 1 / -1;
+  margin: 0.75rem 0 0;
+  color: var(--ec-ink);
+  font-family: var(--font-body);
+  font-size: clamp(1.08rem, 1rem + 0.25vw, 1.2rem) !important;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  line-height: 1.35;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card p {
+  grid-column: 1 / -1;
+  margin: 0.3rem 0 0;
+  color: var(--ec-soft);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-caption {
+  max-width: none;
+  margin-top: var(--space-4);
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--ec-blue);
+  border-radius: 0 10px 10px 0;
+  background: var(--ec-blue-softer);
+  color: var(--ec-soft);
+  font-size: 0.86rem;
+}
+
+/* Repeated data/decision grids use the same card language. */
+body[data-page^="/labs/enterprise-context/"] .context-graph :is(.ecg-control-stack,.ecg-input-grid,.ecg-view-grid,.ecg-heuristic-grid) {
+  gap: 1rem;
+  border: 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-control-stack article,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-control-stack article:first-child,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-input-grid article,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-input-grid article:first-child,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-view-card,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-view-card:first-child,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-heuristic-grid article,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-heuristic-grid article:nth-child(even) {
+  min-height: 0;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid var(--ec-border);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--ec-shadow);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph :is(.ecg-control-stack,.ecg-input-grid,.ecg-view-grid,.ecg-heuristic-grid) h3 {
+  margin-top: 0.8rem;
+  color: var(--ec-ink);
+  font-family: var(--font-body);
+  font-size: 1.05rem !important;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph :is(.ecg-control-stack,.ecg-input-grid,.ecg-view-grid,.ecg-heuristic-grid) p,
+body[data-page^="/labs/enterprise-context/"] .context-graph :is(.ecg-control-stack,.ecg-input-grid,.ecg-view-grid,.ecg-heuristic-grid) li {
+  color: var(--ec-soft);
+  font-size: 0.91rem;
+  line-height: 1.55;
+}
+
+/* Determination sections: one card per mechanism, then structured inner columns. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-determination-list {
+  display: grid;
+  gap: 1rem;
+  border: 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-determination-detail {
+  padding: 1.35rem 1.4rem 1.45rem;
+  border: 1px solid var(--ec-border);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--ec-shadow);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-determination-detail > header {
+  grid-template-columns: 5rem minmax(14rem, 0.8fr) minmax(18rem, 1.2fr);
+  gap: 1rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-determination-detail h3 {
+  color: var(--ec-ink);
+  font-family: var(--font-body);
+  font-size: clamp(1.15rem, 1.05rem + 0.3vw, 1.35rem) !important;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  line-height: 1.35;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-determination-detail header span {
+  color: var(--ec-blue);
+  font-family: var(--font-body);
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-determination-detail header small {
+  color: var(--ec-soft);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns {
+  gap: 0;
+  margin-top: 1.2rem;
+  overflow: hidden;
+  border: 1px solid var(--ec-border-soft);
+  border-radius: 14px;
+  background: #fbfcfe;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div + div {
+  padding: 1rem 1.05rem;
+  border: 0;
+  border-inline-start: 1px solid var(--ec-border-soft);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div:first-child {
+  border-inline-start: 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns h4 {
+  color: #263652;
+  font-family: var(--font-body);
+  font-size: 0.78rem !important;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns p,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns li {
+  color: var(--ec-soft);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  text-transform: none;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph :is(.ecg-remember,.ecg-lead-lens) {
+  max-width: none;
+  margin-top: var(--space-4);
+  padding: 0.85rem 1rem;
+  border: 0;
+  border-left: 3px solid var(--ec-blue);
+  border-radius: 0 12px 12px 0;
+  background: var(--ec-blue-softer);
+  color: var(--ec-ink);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+/* Runtime rails: contained and scan-friendly. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-rail {
+  padding: 0.45rem 1.05rem;
+  border: 1px solid var(--ec-border);
+  border-radius: 16px;
+  background: #fff;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-rail__branch {
+  gap: 0.65rem;
+  padding: 0.85rem 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-node {
+  border-color: var(--ec-border);
+  border-radius: 10px;
+  background: #fbfcfe;
+  color: var(--ec-ink);
+  font-size: 0.84rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-node--decision {
+  border-color: var(--ec-blue);
+  background: var(--ec-blue);
+  color: #fff;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-node--output {
+  border-color: #c9dafb;
+  background: var(--ec-blue-soft);
+  color: #20365f;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-arrow {
+  color: var(--ec-blue);
+}
+
+/* All ordinary tables in Enterprise Context follow the same readable treatment. */
+body[data-page^="/labs/enterprise-context/"] .context-graph table {
+  width: 100%;
+  margin: var(--space-5) 0;
+  overflow: hidden;
+  border: 1px solid var(--ec-border);
+  border-radius: 16px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  box-shadow: var(--ec-shadow);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph table thead th {
+  padding: 0.85rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--ec-border);
+  background: linear-gradient(180deg,#f2f6fd 0%,#edf3fb 100%);
+  color: #263652;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph table tbody :is(td,th) {
+  padding: 0.9rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--ec-border-soft);
+  color: var(--ec-soft);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph table :is(th,td) + :is(th,td) {
+  border-inline-start: 1px solid var(--ec-border-soft);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph table tbody tr:nth-child(even) :is(td,th) {
+  background: #fbfcfe;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph table tbody tr:last-child :is(td,th) {
+  border-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-determination-detail > header {
+    grid-template-columns: 4rem 1fr;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-determination-detail > header > p {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 760px) {
+  body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__hero {
+    padding: var(--space-5);
+    border-radius: 18px;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header > h2 {
+    max-width: none;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card {
+    padding: 1rem;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div,
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div + div {
+    border-inline-start: 0;
+    border-top: 1px solid var(--ec-border-soft);
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div:first-child {
+    border-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page^="/labs/enterprise-context/"] .context-graph * {
+    transition: none !important;
+  }
+}
