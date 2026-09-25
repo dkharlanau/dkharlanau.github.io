@@ -205,9 +205,10 @@ body.site .semantic-related__count {
 body.site .semantic-related__grid {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
   margin: 0 !important;
-  padding: 0 !important;
-  border-top: 1px solid var(--color-border, #d9e2f0);
+  padding: 1px 0 0 !important;
+  background: var(--color-border, #e8edf5);
   list-style: none !important;
 }
 
@@ -215,17 +216,8 @@ body.site .semantic-related__grid > li {
   min-width: 0;
   margin: 0 !important;
   padding: 0;
-  border-right: 1px solid var(--color-border, #e8edf5);
-  border-bottom: 1px solid var(--color-border, #e8edf5);
+  background: var(--color-bg, #fff);
   list-style: none !important;
-}
-
-body.site .semantic-related__grid > li:nth-child(3n) {
-  border-right: 0;
-}
-
-body.site .semantic-related__grid > li:nth-last-child(-n + 3) {
-  border-bottom: 0;
 }
 
 body.site .semantic-related__grid > li > a {
@@ -303,19 +295,6 @@ body.site .semantic-related__grid > li > a:hover .semantic-related__arrow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  body.site .semantic-related__grid > li,
-  body.site .semantic-related__grid > li:nth-child(3n) {
-    border-right: 1px solid var(--color-border, #e8edf5);
-    border-bottom: 1px solid var(--color-border, #e8edf5);
-  }
-
-  body.site .semantic-related__grid > li:nth-child(2n) {
-    border-right: 0;
-  }
-
-  body.site .semantic-related__grid > li:nth-last-child(-n + 2) {
-    border-bottom: 0;
-  }
 }
 
 @media (max-width: 640px) {
@@ -339,19 +318,6 @@ body.site .semantic-related__grid > li > a:hover .semantic-related__arrow {
 
   body.site .semantic-related__grid {
     grid-template-columns: 1fr;
-  }
-
-  body.site .semantic-related__grid > li,
-  body.site .semantic-related__grid > li:nth-child(2n),
-  body.site .semantic-related__grid > li:nth-child(3n),
-  body.site .semantic-related__grid > li:nth-last-child(-n + 2),
-  body.site .semantic-related__grid > li:nth-last-child(-n + 3) {
-    border-right: 0;
-    border-bottom: 1px solid var(--color-border, #e8edf5);
-  }
-
-  body.site .semantic-related__grid > li:last-child {
-    border-bottom: 0;
   }
 
   body.site .semantic-related__grid > li > a {
