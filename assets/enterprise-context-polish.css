@@ -85,9 +85,9 @@ body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__si
   color: var(--ec-blue);
 }
 
-/* Section headings: centered, wider, with a visible label chip. */
+/* Section headings: keep the headline wide, but return supporting prose to editorial reading measure. */
 body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header {
-  max-width: 62rem;
+  max-width: 52rem;
   margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
@@ -100,11 +100,12 @@ body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__in
 }
 
 body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header > p:last-child {
-  max-width: 52rem;
+  max-width: 68ch;
   margin-top: var(--space-4);
   color: var(--ec-soft);
-  font-size: clamp(1rem, 0.96rem + 0.25vw, 1.12rem);
-  line-height: 1.65;
+  font-size: var(--text-lg, 1.1875rem);
+  line-height: 1.7;
+  text-wrap: pretty;
 }
 
 body[data-page^="/labs/enterprise-context/"] .context-graph .research-canvas__inventory > header .research-canvas__eyebrow,
@@ -954,20 +955,29 @@ body[data-page="/labs/enterprise-context/master-data/"] .ecg-master-summary stro
   color: var(--ec-ink);
 }
 
+/*
+  O2C sequence is linear reading content, not a dense data table.
+  Keep a narrow step rail and give the explanation a Medium-like reading measure.
+*/
 body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence {
   display: grid;
+  width: min(100%, 52rem);
   gap: 0;
-  margin-top: 1.25rem;
+  margin: 1.75rem auto 0;
   border-top: 2px solid var(--ec-ink);
   border-bottom: 2px solid var(--ec-ink);
 }
 
 body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence > div {
   display: grid;
-  grid-template-columns: 2.4rem minmax(10rem, 0.55fr) minmax(0, 1.45fr);
-  gap: 1rem;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  grid-template-areas:
+    "step title"
+    "step copy";
+  column-gap: 1.15rem;
+  row-gap: 0.35rem;
   align-items: start;
-  padding: 0.9rem 0;
+  padding: 1.25rem 0;
   border-bottom: 1px solid var(--ec-border);
 }
 
@@ -976,9 +986,12 @@ body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence > 
 }
 
 body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence span {
+  grid-area: step;
+  padding-top: 0.18rem;
   color: var(--ec-blue-strong);
-  font-size: 0.78rem;
+  font-size: var(--text-sm, 0.875rem);
   font-weight: 800;
+  line-height: 1.35;
 }
 
 body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence h4,
@@ -987,14 +1000,21 @@ body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence p 
 }
 
 body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence h4 {
-  font-size: 0.98rem !important;
-  line-height: 1.4;
+  grid-area: title;
+  color: var(--ec-ink);
+  font-size: var(--text-lg, 1.1875rem) !important;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
 }
 
 body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence p {
+  grid-area: copy;
+  max-width: 68ch;
   color: var(--ec-soft);
-  font-size: 0.91rem;
-  line-height: 1.55;
+  font-size: var(--text-lg, 1.1875rem);
+  line-height: 1.7;
+  text-wrap: pretty;
 }
 
 @media (max-width: 980px) {
