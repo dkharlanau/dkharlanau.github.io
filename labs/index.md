@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-10
+last_modified_at: 2026-09-25
 hide_global_cta: true
 tags:
   - sap
@@ -65,6 +65,7 @@ tags:
       <a href="/labs/tool-roadmap/"><span>TOOLS</span><strong>Tool Roadmap</strong><small>Canonical backlog for practical SAP, data, mapping, migration, integration, and operations utilities.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
       <a href="/labs/interview-readiness/"><span>INTERVIEW</span><strong>SAP Lead Interview Readiness</strong><small>Track what you refreshed, what you can explain, what you can defend, which interview questions expose gaps, and which project stories are ready.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
       <a href="/labs/assessment/start-here/"><span>START</span><strong>SAP Lead Assessment — Start Here</strong><small>Use a practical study → case → pressure → review loop instead of reading the site as a long syllabus.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/assessment/leadership-toolkit/"><span>PEOPLE</span><strong>SAP Lead Leadership Toolkit</strong><small>Working methods for decisions, conflict, feedback, delegation, motivation, planning, reporting, meetings, negotiation, and self-management.</small><i class="material-symbols-outlined" aria-hidden="true">groups</i></a>
       <a href="/labs/assessment/"><span>LEAD</span><strong>SAP Lead Assessment</strong><small>Practice Sales, Procurement and Logistics, Integration and Architecture, AI and Data at explain, trace, diagnose, design, and challenge levels.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
     </div>
   </section>
