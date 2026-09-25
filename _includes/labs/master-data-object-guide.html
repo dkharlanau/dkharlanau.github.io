@@ -99,6 +99,92 @@
     {% endif %}
   </section>
 
+  {% if entity.relations %}
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Connections</p>
+      <h2>See what this object feeds or specializes.</h2>
+      <p>The object is easier to remember when you connect it to the next runtime decision instead of treating it as an isolated master record.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="{{ entity.title }} relationships">
+      <table class="study-table__table">
+        <thead><tr><th>Relationship</th><th>Target</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          {% for relation in entity.relations %}
+          <tr>
+            <td><strong>{{ relation.type | replace: "_", " " }}</strong></td>
+            <td><code>{{ relation.target }}</code></td>
+            <td>{{ relation.why }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if page.master_data_code == "MD.SD.ADDRESS" and entity.address_determination %}
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Address determination</p>
+      <h2>Partner determination answers who; address determination answers where.</h2>
+      <p>{{ entity.address_determination.trigger }}</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Partner scope</h3>
+        <ul>{% for item in entity.address_determination.partner_scope %}<li>{{ item }}</li>{% endfor %}</ul>
+      </div>
+      <div>
+        <h3>Configuration levels</h3>
+        {% for config in entity.address_determination.configuration %}
+        <p><strong>{{ config.level }}:</strong> {{ config.controls | join: " · " }}. {{ config.impact }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="ecg-determination-list">
+      {% for step in entity.address_determination.sequence %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>step</small></div><h3>Address search step</h3></header>
+        <p>{{ step }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
+      <div>
+        <p><strong>Sales-area boundary:</strong> {{ entity.address_determination.sales_area_note }}</p>
+        <p><strong>Document override:</strong> {{ entity.address_determination.document_override }}</p>
+      </div>
+    </div>
+
+    {% if entity.activation %}
+    <header>
+      <p class="research-canvas__eyebrow">Activation boundary</p>
+      <h2>Multiple-address handling is deployment-sensitive.</h2>
+      <p>{{ entity.activation.applies_to }}</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Multiple address activation sequence">
+      <table class="study-table__table">
+        <thead><tr><th>Order</th><th>Business function</th><th>Client-specific variant</th><th>Purpose</th></tr></thead>
+        <tbody>
+          {% for step in entity.activation.sequence %}
+          <tr><td>{{ step.order }}</td><td><code>{{ step.business_function }}</code></td><td><code>{{ step.client_specific_variant }}</code></td><td>{{ step.purpose }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout--important">
+      <strong>Guardrails</strong>
+      <ul>{% for item in entity.activation.guardrails %}<li>{{ item }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Maintenance and technical orientation</p>
