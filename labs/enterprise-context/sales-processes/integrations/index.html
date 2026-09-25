@@ -104,7 +104,7 @@ source_links:
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ map.origins | size }}</strong><small>Order origins</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ map.handoffs | size }}</strong><small>Execution handoffs</small></div>
       <div class="research-canvas__signal-line"><span>04</span><strong>{{ interface_catalog.configuration_playbook | size }}</strong><small>Setup patterns</small></div>
-      <em>Interface technology is a consequence of the business contract. Starting with “we need Kafka” is how architecture diagrams become expensive mood boards.</em>
+      <em>Interface technology follows the business contract. Define the object, direction, response need, ownership, and failure model before choosing Kafka, Event Mesh, an API, or another transport.</em>
     </div>
   </header>
 
@@ -294,7 +294,7 @@ source_links:
     <header>
       <p class="research-canvas__eyebrow">Production and project contrasts</p>
       <h2>“Made for the customer” is not one process.</h2>
-      <p>The important distinction is which execution and cost object the customer demand creates. That is more useful than calling everything MTO and hoping nobody asks a second question.</p>
+      <p>The important distinction is which execution and cost object the customer demand creates. Do not group all customer-specific supply under one generic MTO label.</p>
     </header>
     <div class="spa-compare-grid">
       <article><span>SD.MTO</span><h3>Ordinary Make-to-Order</h3><p>Sales demand creates individual planning and customer-specific supply. MRP remains a central planning step.</p></article>
@@ -313,7 +313,7 @@ source_links:
     </header>
     <div class="scp-compare-grid">
       <article class="scp-compare"><span>{{ map.eventing.code }}</span><h3>{{ map.eventing.title }}</h3><p><strong>Events:</strong> {{ map.eventing.events | join: " · " }}</p><p><strong>Good for:</strong> {{ map.eventing.good_for | join: " · " }}</p></article>
-      <article class="scp-compare"><span>SYNC ↔ ASYNC</span><h3>The customer waiting is an architecture signal.</h3><p>Pricing, ATP or credit may need a synchronous answer before the promise is shown. Notifications, indexing and side-by-side reactions usually do not. Making everything synchronous is a strangely expensive way to discover network latency.</p></article>
+      <article class="scp-compare"><span>SYNC ↔ ASYNC</span><h3>The customer waiting is an architecture signal.</h3><p>Pricing, ATP, or credit may need a synchronous answer before the promise is shown. Notifications, indexing, and side-by-side reactions usually do not. Keep a call synchronous only when the business step must wait for the result.</p></article>
     </div>
   </section>
 
