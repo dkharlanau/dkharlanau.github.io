@@ -12,7 +12,7 @@ concept_type: process map
 sap_area: SD / FI / logistics integration
 business_process: Order to cash
 status: reviewed
-verified: true
+verified: false
 level: 2
 last_reviewed: 2026-05-06
 sales_preparation: exclude
