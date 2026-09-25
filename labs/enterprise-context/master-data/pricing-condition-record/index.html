@@ -1,0 +1,106 @@
+---
+layout: default
+title: "SAP Sales Master Data — Pricing Condition Record"
+description: "A practical deep dive into Pricing Condition Record in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+permalink: /labs/enterprise-context/master-data/pricing-condition-record/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-25
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Pricing Condition Record</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.PRICE</p>
+      <h1>Pricing Condition Record</h1>
+      <p>A pricing condition record is the maintained commercial value that pricing searches for. Price, discount, surcharge, freight or another condition can be stored against a specific key combination such as customer/material or price list/product hierarchy.</p>
+      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Object profile</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.PRICE</strong><small>Catalogue ID</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>condition record</strong><small>Data class</small></div>
+      <em>Condition type, condition table/key combination, validity, currency/unit and scales.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Know what the object owns before tracing a document.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">database</span>
+      <p><strong>Scope:</strong> Condition type, condition table/key combination, validity, currency/unit and scales.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Important data</h3>
+        <p>Condition type, key fields, amount or percentage, currency, pricing unit, valid-from/to dates, scales and condition-specific control data.</p>
+      </div>
+      <div>
+        <h3>Configuration boundary</h3>
+        <p>Condition type, access sequence and pricing procedure are configuration. The condition record is master data. This distinction is central when troubleshooting pricing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime use</p>
+      <h2>How the data enters Order-to-Cash.</h2>
+      <p>The pricing procedure calls condition types. Their access sequences search condition tables in order. When a valid record is found, the record supplies the value that appears as a pricing condition in the sales document.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
+      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
+      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
+      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Troubleshooting</p>
+      <h2>Start with the most specific evidence.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p>Start from the condition line in pricing analysis. Identify the condition type and access attempted, then check the exact key combination and validity of the record. Also verify currency, unit and scale basis.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>A concise answer that still shows depth.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p>Pricing configuration defines how SAP searches; the condition record contains the commercial value. I use pricing analysis to see which access was attempted and why a record was or was not found.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Related master-data pages">
+      <span>Continue</span>
+      <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+    </nav>
+  </section>
+</div>
