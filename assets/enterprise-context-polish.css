@@ -491,3 +491,170 @@ body[data-page^="/labs/enterprise-context/"] .context-graph table tbody tr:last-
     transition: none !important;
   }
 }
+
+
+/* Compact source register and contextual reading links. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--ec-border);
+  border-bottom: 1px solid var(--ec-border);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "provider action"
+    "title action"
+    "meta action";
+  align-content: start;
+  gap: 0.18rem 0.8rem;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0.95rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--ec-border-soft);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list article > span {
+  grid-area: provider;
+  display: inline-flex;
+  width: max-content;
+  align-items: center;
+  margin: 0;
+  color: var(--ec-blue);
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.055em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list h3 {
+  grid-area: title;
+  min-width: 0;
+  margin: 0.16rem 0 0;
+  color: var(--ec-ink);
+  font-family: var(--font-body);
+  font-size: 0.92rem !important;
+  font-weight: 680;
+  letter-spacing: -0.012em;
+  line-height: 1.38;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list p {
+  grid-area: meta;
+  margin: 0.18rem 0 0;
+  color: var(--ec-soft);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list a {
+  grid-area: action;
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 0.25rem;
+  min-height: 36px;
+  margin: 0;
+  padding: 0.35rem 0.2rem 0.35rem 0.55rem;
+  color: var(--ec-blue);
+  font-size: 0.76rem;
+  font-weight: 650;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list a:hover {
+  color: var(--ec-blue-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list a .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-context-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1rem;
+  margin-top: 1.2rem;
+  padding: 0.78rem 0;
+  border-top: 1px solid var(--ec-border-soft);
+  border-bottom: 1px solid var(--ec-border-soft);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-context-links > span {
+  flex: 0 0 100%;
+  color: var(--ec-soft);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-context-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--ec-blue);
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-context-links a::after {
+  content: "↗";
+  font-size: 0.78em;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-context-links a:hover {
+  color: var(--ec-blue-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (max-width: 980px) {
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list article {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "provider"
+      "title"
+      "meta"
+      "action";
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-source-list a {
+    min-height: 40px;
+    padding-left: 0;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-context-links {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+}
