@@ -34,8 +34,23 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
     </div>
   </header>
 
+  <section class="research-canvas__inventory" id="today">
+    <header>
+      <p class="research-canvas__eyebrow">Use it today</p>
+      <h2>Choose a study mode before you open another page.</h2>
+    </header>
+    <p>The roadmap is large because it also works as a reference. For an assessment session, start with the shortest route that exposes a real gap.</p>
+    <div class="research-route-list">
+      <a href="#last-day"><span>90M</span><strong>Recall pass</strong><small>Explain the eight compact models without notes. Open a primary page only when the explanation breaks.</small></a>
+      <a href="#roadmap"><span>4H</span><strong>Active Sales pass</strong><small>Walk through O2C, order control, pricing, ATP and shipping, billing, variants, returns, and automation. For each area answer: rule, document effect, failure signal.</small></a>
+      <a href="#official-scope"><span>FULL</span><strong>Certification route</strong><small>Use the five official SAP course blocks, then local pages for mechanisms, practice, and explain-back. Budget 44–56 hours for active preparation.</small></a>
+    </div>
+    <p><strong>Assessment rule:</strong> If you can explain the standard flow, one changed business rule, the document consequence, and the first diagnostic check, move on. Do not reread a strong topic.</p>
+  </section>
+
   <nav class="sales-certification-nav" aria-label="On this preparation page">
-    <a class="is-primary" href="#target">Certification target</a>
+    <a class="is-primary" href="#today">Start today</a>
+    <a href="#target">Certification target</a>
     <a href="#official-scope">Official courses</a>
     <a href="#last-day">Last-day review</a>
     <a href="#our-units">Our units</a>
