@@ -11,20 +11,40 @@ used by JSON-LD and page sidecars and is never rendered on the homepage.
 {% assign trust_reviewed = page.last_reviewed_at | default: page.last_reviewed %}
 {% assign trust_evidence = page.evidence_review_mode | default: page.review_method %}
 {% if show_trust_strip %}
-<div class="knowledge-trust-strip" role="note" aria-label="Content review and evidence">
-  <span><strong>Written by:</strong> Dzmitryi Kharlanau</span>
-  {% if trust_reviewed %}<span><strong>Last reviewed:</strong> {{ trust_reviewed | date: '%d %b %Y' }}</span>{% endif %}
-  {% if trust_evidence %}<span><strong>Evidence:</strong> {{ trust_evidence | replace: '_', ' ' }}</span>{% endif %}
-  <a href="{{ page.ai_sidecar | relative_url }}">Machine-readable data</a>
+<aside class="knowledge-trust-strip" role="note" aria-label="Content review and evidence">
+  <div class="knowledge-trust-strip__item">
+    <span class="knowledge-trust-strip__label">Written by</span>
+    <strong>Dzmitryi Kharlanau</strong>
+  </div>
+  {% if trust_reviewed %}
+  <div class="knowledge-trust-strip__item">
+    <span class="knowledge-trust-strip__label">Last reviewed</span>
+    <strong>{{ trust_reviewed | date: '%d %b %Y' }}</strong>
+  </div>
+  {% endif %}
+  {% if trust_evidence %}
+  <div class="knowledge-trust-strip__item knowledge-trust-strip__item--wide">
+    <span class="knowledge-trust-strip__label">Evidence</span>
+    <strong>{{ trust_evidence | replace: '_', ' ' }}</strong>
+  </div>
+  {% endif %}
+  <a class="knowledge-trust-strip__machine" href="{{ page.ai_sidecar | relative_url }}">
+    <span class="material-symbols-outlined" aria-hidden="true">data_object</span>
+    <span>Machine-readable data</span>
+  </a>
+
   {% if page.source_links and page.source_links.size > 0 %}
   <details class="knowledge-trust-sources">
-    <summary>Sources ({{ page.source_links | size }})</summary>
-    <ul>
+    <summary>Source list <span>{{ page.source_links | size }}</span></summary>
+    <div class="knowledge-trust-sources__table" role="table" aria-label="Source list">
       {% for source in page.source_links %}
-      <li><a href="{{ source.url }}" rel="external noopener">{{ source.title | default: source.url }}</a></li>
+      <a class="knowledge-trust-sources__row" href="{{ source.url }}" rel="external noopener" target="_blank" role="row">
+        <span role="cell">{{ source.title | default: source.url }}</span>
+        <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+      </a>
       {% endfor %}
-    </ul>
+    </div>
   </details>
   {% endif %}
-</div>
+</aside>
 {% endif %}
