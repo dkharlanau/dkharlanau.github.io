@@ -60,7 +60,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
         <ol>
           <li>Complete the 20-minute route.</li>
           <li><a href="#enterprise-structure-memory">Enterprise structure</a></li>
-          <li><a href="#copy-control-memory">Copy control</a> and <a href="#output-control-memory">Output Control</a></li>
+          <li><a href="#incompletion-memory">Incompletion</a>, <a href="#copy-control-memory">Copy control</a>, and <a href="#output-control-memory">Output Control</a></li>
           <li><a href="#monitoring-apps-memory">Monitoring apps</a></li>
           <li><a href="#multiple-address-memory">Multiple Address Handling</a></li>
         </ol>
@@ -466,6 +466,27 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
       <p><strong>60-second answer:</strong> I first confirm whether the Sales document uses S/4HANA Output Management or classic SD output determination. In S/4HANA Output Management, BRFplus decision tables use document attributes to determine output type, receiver, channel, channel settings, form template, and relevance. Rule order matters, and receiver or channel results can be exclusive. I troubleshoot in the same order: determination first, then relevance and form, and only then the technical mail or print channel.</p>
       <a href="/atlas/sap/output-control/">Open Output Control deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="incompletion-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales document control / Incompletion</p>
+      <h2>FIELD → LOG → STATUS → FOLLOW-ON CONTROL.</h2>
+      <p>Incompletion is not only a warning about missing data. It is a control that can decide whether a document is ready for later processing.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>1. What is checked?</h3><p>An incompletion procedure groups the fields that must be checked for a document context. Missing required information makes the document incomplete.</p></div>
+      <div><h3>2. Where is the evidence?</h3><p>The incompletion log lists the missing data. Use it before guessing which field or screen the user forgot.</p></div>
+      <div><h3>3. What is the consequence?</h3><p>Depending on configuration and document type, incompleteness can stop a follow-on activity. The important question is not only “what is missing?” but “which business step is blocked?”</p></div>
+      <div><h3>4. What is the diagnostic path?</h3><p>Wrong symptom → incompletion status → missing field → owning master/configuration/user input → complete data → repeat the follow-on step.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> An incompletion procedure defines which data SAP checks for completeness. If required data is missing, the incompletion log shows the missing fields and the document receives an incomplete state. Depending on the configured status and document context, that state can stop later processing. I therefore do not treat incompletion as a generic error. I identify the missing field, its owner, and the follow-on activity that is blocked, complete the data, then prove that the process can continue.</p>
+      <p><strong>Current SAP references:</strong> <a href="https://learning.sap.com/courses/configuring-incompletion-procedures-in-sap-s-4hana-sales">Configuring Incompletion Procedures</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/e166b65334e6b54ce10000000a174cb4.html">Calling Up the Incompletion Log</a>.</p>
     </div>
   </section>
 
