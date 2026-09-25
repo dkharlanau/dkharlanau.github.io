@@ -3,12 +3,25 @@ Semantic relationship block generated from page.semantic_links.
 Machine relation types stay stable in front matter/sidecars; presentation makes them readable.
 {% endcomment %}
 {% if page.url != '/' and page.semantic_links and page.semantic_links.size > 0 %}
-<nav class="semantic-related" aria-label="Knowledge relationships">
-  <p class="semantic-related__label">Knowledge relationships</p>
-  <ul>
+<nav class="semantic-related" aria-labelledby="semantic-related-title">
+  <div class="semantic-related__header">
+    <div>
+      <p class="semantic-related__eyebrow">Connected reading</p>
+      <h2 id="semantic-related-title">Knowledge relationships</h2>
+      <p>Follow the process, diagnostic, and integration topics connected to this page.</p>
+    </div>
+    <span class="semantic-related__count">{{ page.semantic_links | size }} links</span>
+  </div>
+  <ul class="semantic-related__grid">
     {% for relation in page.semantic_links %}
       {% assign relation_label = relation.type | default: 'related_topic' | replace: '_', ' ' | capitalize %}
-      <li><span>{{ relation_label }}</span><a href="{{ relation.url | relative_url }}">{{ relation.title }}</a></li>
+      <li>
+        <a href="{{ relation.url | relative_url }}">
+          <span class="semantic-related__type">{{ relation_label }}</span>
+          <strong>{{ relation.title }}</strong>
+          <span class="material-symbols-outlined semantic-related__arrow" aria-hidden="true">arrow_forward</span>
+        </a>
+      </li>
     {% endfor %}
   </ul>
 </nav>
