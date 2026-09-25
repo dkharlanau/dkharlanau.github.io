@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags: [sap-s4hana, sap-sd, settlement-management, condition-contract-management, sales-rebates]
@@ -39,8 +39,23 @@ tags: [sap-s4hana, sap-sd, settlement-management, condition-contract-management,
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">sell</span>
+    <p><strong>Study route:</strong> learn the <a href="/labs/enterprise-context/condition-contract-management/">CCM core model</a> first. Use this page only for the Sales-specific differences: customer side, billing-based business volume, customer settlement, and Sales diagnostics.</p>
     <p><strong>Boundary:</strong> SD pricing calculates document conditions. Sales CCM manages a customer agreement whose final value depends on accumulated eligible billing business volume and later settlement.</p>
     <a href="/labs/enterprise-context/condition-contract-management/">Back to the CCM core model <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-ccm-delta" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">What changes on the Sales side</p>
+      <h2>Customer → billing volume → customer settlement.</h2>
+      <p>The shared CCM engine does not change. The Sales-specific part is where the business volume comes from and which commercial relationship is settled.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Partner side</h3><p>The condition contract represents an agreement with a customer or customer group.</p></div>
+      <div><h3>Business volume</h3><p>Customer billing data is the common evidence base for a standard sales-rebate scenario. Prove the eligible billed population before debugging the percentage.</p></div>
+      <div><h3>Commercial result</h3><p>Settlement produces the customer-side rebate result and connects it to tax and Financial Accounting according to the configured process.</p></div>
+      <div><h3>First diagnostic question</h3><p>Does the contract see the billing items that the business believes are eligible? If not, stay in volume selection before moving to settlement pricing.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -78,17 +93,19 @@ tags: [sap-s4hana, sap-sd, settlement-management, condition-contract-management,
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Operational toolbox</p><h2>Contract → volume → settlement → accounting.</h2></header>
-    <div class="research-route-list">
-      {% for tx in graph.transactions %}
-      <a href="#"><span>{{ tx.id }}</span><strong>{{ tx.name }}</strong><small>{{ tx.use }}</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
-      {% endfor %}
-      {% for app in model.fiori_apps %}
-      <a href="#"><span>{{ app.id }}</span><strong>{{ app.name }}</strong><small>Fiori entry point for the Sales CCM lifecycle.</small><i class="material-symbols-outlined" aria-hidden="true">apps</i></a>
-      {% endfor %}
-    </div>
+    <header><p class="research-canvas__eyebrow">Operational anchors</p><h2>Use tools as evidence, not as the answer.</h2></header>
+    <details>
+      <summary><strong>Transactions and Fiori apps</strong> <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+      <div class="research-route-list">
+        {% for tx in graph.transactions %}
+        <a href="#"><span>{{ tx.id }}</span><strong>{{ tx.name }}</strong><small>{{ tx.use }}</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
+        {% endfor %}
+        {% for app in model.fiori_apps %}
+        <a href="#"><span>{{ app.id }}</span><strong>{{ app.name }}</strong><small>Fiori entry point for the Sales CCM lifecycle.</small><i class="material-symbols-outlined" aria-hidden="true">apps</i></a>
+        {% endfor %}
+      </div>
+    </details>
   </section>
-
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Diagnostic sequence</p><h2>Do not debug the rebate percentage first.</h2><p>The correct order prevents pricing, master data, and accounting issues from being mixed together.</p></header>
     <div class="research-route-list">
