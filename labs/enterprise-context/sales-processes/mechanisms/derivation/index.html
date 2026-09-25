@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-25
 hide_global_cta: true
 tags:
   - sap
@@ -34,7 +34,7 @@ tags:
 <div class="research-canvas sales-mechanisms">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Sales mechanism library / derivation layer</p>
+      <p class="research-canvas__eyebrow">Sales mechanism library / field reference</p>
       <h1>How did this value<br />get into the order?</h1>
       <p>A field can come from master data, a predecessor, a procedure, a runtime determination, or a manual change. The useful question is not only where the field is configured. The useful question is who owns the current value, when SAP recalculates it, and what consumes it next.</p>
       <div class="sm-hero-actions">
@@ -55,15 +55,16 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
-    <p><strong>Lead debugging rule.</strong> Before changing Customizing, prove whether the wrong value was copied, determined, inherited, substituted, or manually overwritten. A correct rule can still produce an old result when the document intentionally keeps predecessor data.</p>
+    <p><strong>Study route:</strong> this is a reference page, not a separate assessment topic. Start with the <a href="/labs/enterprise-context/sales-order/">Sales Order Decision Map</a>. Open this page when the question becomes: “Where did this field come from, and when is it recalculated?”</p>
+    <p><strong>Lead debugging rule:</strong> before changing Customizing, prove whether the wrong value was copied, determined, inherited, substituted, or manually overwritten. A correct rule can still produce an old result when the document intentionally keeps predecessor data.</p>
     <a href="/labs/enterprise-context/data/sales-mechanisms.json">Open JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Diagnostic layers</p>
-      <h2>Use layers, not a fake linear process.</h2>
-      <p>Several SD mechanisms can run beside each other and can run again after a change. These layers are a debugging order: establish context, prove the value source, identify the rule engine, follow runtime consequences, and then inspect the redetermination boundary.</p>
+      <h2>Use layers, not one forced linear process.</h2>
+      <p>Several SD mechanisms can run beside each other and can run again after a change. Use these layers only as a debugging order: establish context, prove the value source, identify the rule engine, follow runtime consequences, then inspect the redetermination boundary.</p>
     </header>
     <div class="sm-dependency-map">
       {% for layer in playbook.layers %}
