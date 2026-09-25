@@ -127,6 +127,24 @@ li > ol {
   margin-top: var(--space-1);
 }
 
+/* Long-form study lists need enough rhythm to scan. Strong lead terms are
+   visually separated from the explanation even when source markup has no
+   literal whitespace between inline elements. */
+.note-body > ol:not([class]) > li + li,
+.note-body > ul:not([class]) > li + li,
+.atlas-page__body > ol:not([class]) > li + li,
+.atlas-page__body > ul:not([class]) > li + li,
+.page-content--knowledge article > ol:not([class]) > li + li,
+.page-content--knowledge article > ul:not([class]) > li + li {
+  margin-top: var(--space-2);
+}
+
+.note-body li > strong:first-child:not(:last-child),
+.atlas-page__body li > strong:first-child:not(:last-child),
+.page-content--knowledge article li > strong:first-child:not(:last-child) {
+  margin-inline-end: 0.35em;
+}
+
 /* Horizontal rule: one quiet hairline */
 hr {
   margin: var(--space-7) 0;
