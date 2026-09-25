@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -91,6 +91,24 @@ source_links:
     <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
     <p><strong>Core idea:</strong> a delivery, an entry in the billing due list, a saved billing document, and a posted journal entry are different states. Treating them as one event is the source of many confusing billing investigations.</p>
     <a href="/labs/enterprise-context/data/billing-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="billing-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Billable reference → due state → copy → billing document → FI.</h2>
+      <p>Use this chain before discussing billing types or transactions.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> Billing starts in the source process, where the item becomes relevant and due for billing. Depending on the scenario, the reference can be the sales order, delivery, billing-plan date, or another billable object. Copying control governs whether the source may create the target billing document and how quantity, data, and pricing are transferred. Compatible references can be combined; incompatible header data creates a split. After the billing document is saved, I still prove the FI transfer, because the Sales invoice and the accounting posting are separate states. If the original billing event is wrong, cancellation reverses it; credit or debit processes adjust the commercial result.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>Missing from due list</h3><p>Check billing relevance, due date, block, status, and process prerequisites before changing copy control.</p></div>
+      <div><h3>Two invoices instead of one</h3><p>Use split analysis to prove the differing header-relevant field. Do not start with custom convergence logic.</p></div>
+      <div><h3>Invoice value differs from order</h3><p>Check billing copying control and pricing behavior before changing condition records.</p></div>
+      <div><h3>Billing exists, FI does not</h3><p>The process crossed into accounting. Check posting block, accounting errors, account determination, and transfer status.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
