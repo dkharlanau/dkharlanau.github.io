@@ -1,0 +1,106 @@
+---
+layout: default
+title: "SAP Sales Master Data — Master Text Sources"
+description: "A practical deep dive into Master Text Sources in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+permalink: /labs/enterprise-context/master-data/master-texts/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-25
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Master Text Sources</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.TEXT</p>
+      <h1>Master Text Sources</h1>
+      <p>Texts in sales documents are often copied from reusable sources rather than typed manually. Customer, product and other master records can hold language-dependent texts that are selected and copied according to text-determination rules.</p>
+      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Object profile</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.TEXT</strong><small>Catalogue ID</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>content master</strong><small>Data class</small></div>
+      <em>Text object, text ID, language, master object and sales-area context where relevant.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Know what the object owns before tracing a document.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">database</span>
+      <p><strong>Scope:</strong> Text object, text ID, language, master object and sales-area context where relevant.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Important data</h3>
+        <p>Text object, text ID, language, source master key, sales-area context and text content.</p>
+      </div>
+      <div>
+        <h3>Configuration boundary</h3>
+        <p>The text itself is maintained data. The text determination procedure, access sequence and copy behavior are configuration.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime use</p>
+      <h2>How the data enters Order-to-Cash.</h2>
+      <p>At order creation, delivery or billing, text determination can search configured sources and copy the relevant text into the document. Later copy control and text procedures determine whether that text is inherited by follow-on documents or output.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
+      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
+      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
+      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Troubleshooting</p>
+      <h2>Start with the most specific evidence.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p>Identify the missing or wrong document text ID. Check the document language and source master text first, then trace the text determination access and any copy rules to follow-on documents.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>A concise answer that still shows depth.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p>For texts I separate content from determination. The master record stores the reusable text; text determination decides which source is read and whether the text is copied into the document.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Related master-data pages">
+      <span>Continue</span>
+      <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+    </nav>
+  </section>
+</div>
