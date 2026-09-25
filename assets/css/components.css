@@ -34,6 +34,24 @@ button.btn {
   color: #fff;
 }
 
+/* Legacy `.button` markup predates the `.btn` classes but renders as a
+   primary action. Without its own hover state, the global `a:hover` link
+   color turns the label dark on the accent fill. Give it the same hover
+   treatment as `.btn--primary`, keeping the secondary variant neutral. */
+.button:not(.button--secondary):hover,
+.button:not(.button--secondary):focus-visible {
+  background: var(--color-accent-hover);
+  color: #fff;
+  text-decoration: none;
+}
+
+.button--secondary:hover,
+.button--secondary:focus-visible {
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
 .btn--secondary,
 .btn-secondary {
   border-color: var(--color-border);
@@ -251,4 +269,106 @@ a.external-link::after {
   font-size: 0.8em;
   text-decoration: none;
   display: inline-block;
+}
+
+/* ---------- Atlas process maps ---------- */
+
+.atlas-process-map {
+  margin: var(--space-5) 0 var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.atlas-process-map figcaption {
+  max-width: 68ch;
+  margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.atlas-process-map__steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  counter-reset: atlas-process-step;
+  list-style: none;
+}
+
+.atlas-process-map__steps > li {
+  position: relative;
+  min-width: 0;
+  padding: var(--space-3) var(--space-3) var(--space-4);
+  border-top: 3px solid var(--color-accent);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background: var(--color-bg);
+  counter-increment: atlas-process-step;
+}
+
+.atlas-process-map__steps > li::before {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-accent);
+  content: counter(atlas-process-step, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.atlas-process-map__steps > li:not(:last-child)::after {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: calc(-1 * var(--space-3) - 0.05rem);
+  width: var(--space-3);
+  background: var(--color-surface);
+  color: var(--color-accent);
+  content: "→";
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.atlas-process-map__steps strong,
+.atlas-process-map__steps span,
+.atlas-process-map__steps small { display: block; }
+
+.atlas-process-map__steps strong {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+}
+
+.atlas-process-map__steps span {
+  margin-top: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+}
+
+.atlas-process-map__steps small {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+}
+
+@media (max-width: 760px) {
+  .atlas-process-map__steps { grid-template-columns: 1fr; }
+
+  .atlas-process-map__steps > li:not(:last-child)::after {
+    top: auto;
+    right: 50%;
+    bottom: calc(-1 * var(--space-3) - 0.15rem);
+    width: 1.2rem;
+    content: "↓";
+    transform: translateX(50%);
+  }
 }

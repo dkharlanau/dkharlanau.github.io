@@ -29,7 +29,7 @@ change this document in the same commit.
 | Tokens | `assets/css/tokens.css` | All custom properties |
 | Base | `assets/css/base.css` | Reset, typography, links, focus, quotes, media, print, reduced motion |
 | Layout | `assets/css/layout.css` | Containers, header, nav, footer, breadcrumbs, article shell, TOC, page furniture |
-| Components | `assets/css/components.css` | Buttons, tables, code, callouts, cards, disclosures, forms, utilities |
+| Components | `assets/css/components.css` | Buttons, tables, code, callouts, cards, disclosures, forms, utilities, atlas process maps |
 | Focus pages | `assets/site-focus.css` | Homepage, `/learn/`, service landing pattern (`focus-page`) |
 | Hubs / labs | `assets/research-canvas.css` | Research-canvas pattern: hubs, labs, enterprise-context, interview-readiness |
 | Services | `assets/services-canvas.css` | Services index and service-canvas pages |
@@ -110,6 +110,10 @@ diagrams).
   `.callout--warning` (red). Left rule + quiet fill; nothing brighter.
 - **Cards**: `.card` only for genuine collections (pathways, offers, related
   topics). Most pages should show almost no card chrome.
+- **Atlas process maps**: `.atlas-process-map` renders a semantic ordered
+  list of process steps as a five-tile grid (one column on mobile) with
+  numbered step tiles, arrow connectors, and a caption. Used on Atlas
+  process/evidence maps.
 - **Breadcrumbs**: 14px, normal casing, `/` separators, muted with a darker
   current page. Never uppercase micro-labels.
 - **TOC**: `reader-tools.js` injects `.reader-toc` from H2s (min 3, max 12).
