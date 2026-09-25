@@ -255,6 +255,54 @@ failure_modes:
     avoid: "Do not treat technical completion as proof of financial completion."
     source_refs: [SRC-SAP-PP-SETTLEMENT, SRC-SAP-PP-SETTLEMENT-RULE]
 
+technical_extension_map:
+  title: "MRP and production extension map"
+  principle: >-
+    MRP custom logic can change the planning result for many materials, so the extension
+    boundary must be narrower than the symptom. First identify the planning engine, the
+    standard input that is wrong, and whether the requirement belongs to planning, master
+    data, production-order processing, or only the user interface.
+  inherited_system_recognition:
+    - hook: "MD_CHANGE_MRP_DATA and related classic MRP BAdIs"
+      purpose: "Recognize inherited logic that can change or suppress MRP elements."
+      boundary: "High-impact legacy behavior; do not copy it into a new design without proving the planning-engine and release contract."
+    - hook: "MD_ADD_ELEMENTS"
+      purpose: "Recognize legacy or on-premise logic that adds or changes planning elements in HANA-optimized MRP scenarios."
+      boundary: "S/Toolkit itself flags this class of enhancement as high risk because it can affect later net-requirements calculation."
+    - hook: "MD_ADD_COL_EZPS / MD04 display enhancements"
+      purpose: "Recognize custom planner UI columns separately from changes to planning logic."
+      boundary: "A display requirement should not become a planning-engine modification."
+    - hook: "MD_MODIFY_PRODVERS / MD_PLDORD_* and similar hooks"
+      purpose: "Recognize custom production-version, planned-order, scheduling, source, or follow-up logic."
+      boundary: "Trace the exact BAdI implementation and its lifecycle stage before changing PP master data."
+  current_s4_paths:
+    - hook: "Production Planning and Control Custom Logic BAdIs"
+      purpose: "Use the current released BAdI catalogue for the exact production-planning business context."
+      boundary: "The available BAdIs vary by process and release; verify the target system instead of using a historical MD* list as a template."
+    - hook: "Manage Production Orders key-user extensibility"
+      purpose: "Add supported custom fields and UI extensions to production-order business contexts."
+      boundary: "Keep informational/UI extensions separate from logic that changes planning or execution."
+    - hook: "Released APIs or side-by-side services"
+      purpose: "Use released integration contracts when an external capability owns data or processing outside the S/4HANA transaction."
+      boundary: "Do not move tightly coupled MRP logic remote only to satisfy an architecture slogan."
+  tracing_sequence:
+    - "Identify classic MRP, MRP Live, PP/DS, or another planning context before interpreting an old enhancement."
+    - "Reconstruct demand, stock/receipts, procurement type, lot sizing, dates, production version, and scheduling inputs."
+    - "Separate display-only enhancement, planning-element change, proposal change, and post-processing side effects."
+    - "Check whether the custom logic acts before, during, or after the planning proposal is created."
+    - "For new work, choose the narrow current released business context and regression-test the planning result across more than one material."
+  assessment_answer: >-
+    I treat MRP BAdIs as high-blast-radius logic. In a legacy system I can recognize names
+    such as MD_CHANGE_MRP_DATA or MD_ADD_ELEMENTS, but first I identify which planning engine
+    is running and what business input is wrong. For new S/4HANA work I use the current
+    production-planning extensibility catalogue or an app-specific field extension, and I
+    keep UI changes separate from logic that changes net requirements or proposals.
+  source_refs:
+    - SRC-STOOLKIT-ABAP-MRP
+    - SRC-SAP-PP-CUSTOM-LOGIC-2608
+    - SRC-SAP-PP-MANAGE-ORDERS-2608
+    - SRC-SAP-ABAP-CLOUD-EXTENSIBILITY
+
 impact_traces:
   - title: "Demand date → production date"
     path: "Requirement Date → MRP → Planned Order Dates → Scheduling → Production Order"
