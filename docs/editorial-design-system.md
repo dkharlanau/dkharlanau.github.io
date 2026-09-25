@@ -120,6 +120,7 @@ diagrams).
   groups align under the title and use vertical separators rather than repeated
   horizontal rules. Do not repeat the same question in the header and body.
   Keep body text in normal sentence case and at a readable size.
+- **Enterprise Context diagrams**: dependency rails and similar inline schemes need a small separation from the prose that follows. Keep about 16px of bottom space so the diagram reads as one visual unit instead of running directly into the next paragraph.
 - **Enterprise Context comparison groups**: paragraph-heavy concepts must not be
   compressed into three or more narrow reading columns. `.ecg-decision-columns`
   wraps responsively, keeps body text at normal reading size, and removes legacy
