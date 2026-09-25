@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-18
+last_modified_at: 2026-09-25
 hide_global_cta: true
 tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
 ---
@@ -42,6 +42,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
     <header><p class="research-canvas__eyebrow">Practice modes</p><h2>Use a different mode for a different job.</h2><p>Single-case practice builds weak dimensions. Mock sessions test range. Review Queue turns low scores into focused reading and repeat practice.</p></header>
     <div class="research-route-list">
       <a href="/labs/assessment/start-here/"><span>START</span><strong>Start Here</strong><small>Use the site as a Lead preparation system: map, read, practice, add pressure, and review.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/assessment/leadership-toolkit/"><span>LEAD OS</span><strong>Leadership Toolkit</strong><small>Practical methods for decisions, conflict, feedback, delegation, motivation, planning, reporting, meetings, negotiation, and self-management.</small><i class="material-symbols-outlined" aria-hidden="true">groups</i></a>
       <a href="/labs/assessment/practice-engine/"><span>ADAPT</span><strong>Adaptive Practice Engine</strong><small>Select one case using weak dimensions, weak tracks, reasoning-level gaps, and recent history.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
       <a href="/labs/assessment/mock/"><span>MOCK</span><strong>Mock Assessment</strong><small>Run a balanced multi-case session across Sales, Procurement & Logistics, Integration & Architecture, and AI & Data.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
       <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Review Queue</strong><small>Turn local weak signals into focused review routes, then repeat a related case.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
