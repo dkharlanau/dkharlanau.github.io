@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-24
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,9 +19,9 @@ tags:
   - billing
   - extensibility
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-25
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 + SAP S/4HANA Cloud Public Edition 2608 primary-source recheck + full editorial pass"
+review_method: "SAP S/4HANA 2025 FPS01 + SAP S/4HANA Cloud Public Edition 2608 + legacy pricing enhancement cross-check + full editorial pass"
 search_intent: "SAP SD pricing procedure, condition technique and pricing troubleshooting"
 # ai-discovery-managed:start
 structured_data:
@@ -76,6 +76,12 @@ source_links:
     url: "https://help.sap.com/docs/S4_INTELLCLINICSUPPLYMGMT/ce56d2f8efac473d8e4fc7d71d38f0ba/16795b71c74947d192aef2751c076a9c.html"
   - title: "Supported Standard Pricing Exits"
     url: "https://help.sap.com/docs/variant-configuration-and-pricing/supported-standard-pricing-exits/supported-standard-pricing-exits"
+  - title: "Pricing management [REV] — Toolkit for SAP consultants"
+    url: "https://stoolkit.blogspot.com/2020/03/pricing-explained.html"
+  - title: "Extensibility: Condition Record for Pricing in Sales"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/03c04db2a7434731b7fe21dca77440da/af4a34071e484fb28bd3008febfa0c5e.html"
+  - title: "Developer Extensibility — SAP S/4HANA Cloud Public Edition"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/6aa39f1ac05441e5a23f484f31e477e7/d8cec788fc104ff9ad9c3757b4dd13d4.html"
 # ai-discovery-managed:end
 ---
 {% assign evidence = site.data.labs.enterprise_context.sources.pricing %}
@@ -218,16 +224,74 @@ source_links:
     <p>This boundary becomes especially important when a billing document has a different pricing date, tax context, custom field, manual condition, or repricing rule. Compare the order and billing document as two pricing contexts and identify the first difference. The <a href="/labs/enterprise-context/billing/">Billing guide</a> covers the broader copying-control and invoice lifecycle.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="pricing-extensibility" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Extensibility</p>
-      <h2>Extend the pricing model at a defined point, not wherever code is convenient.</h2>
-      <p>Pricing extensions are deployment- and scenario-specific. The important design question is which input or calculation the standard model cannot express, and which supported extension point owns that gap.</p>
+      <h2>Legacy and cloud pricing use different extension contracts.</h2>
+      <p>The business question is the same in every edition: which pricing input or calculation cannot be expressed by standard configuration? The technical answer is different. Classic SAP ERP and many private-edition systems can contain VOFM routines, communication-structure appends, and SD user exits. SAP S/4HANA Cloud Public Edition uses released custom fields, Custom Logic BAdIs, configuration activities, and released developer objects.</p>
     </header>
 
-    <p>In SAP S/4HANA Cloud, released key-user extensibility supports custom fields for Sales and Billing pricing communication and custom logic for selected pricing functions such as requirements, condition base values, and condition amounts. Classic and private-edition landscapes can also contain established pricing routines and enhancement patterns. Those mechanisms should not be described as interchangeable across editions.</p>
+    <div class="ecg-decision-columns">
+      <div><h3>Classic / Private Edition</h3><p>Expect VOFM routines, <code>KOMK</code>/<code>KOMP</code> extensions, and document-specific user exits. These are powerful, but they create upgrade and clean-core responsibilities.</p></div>
+      <div><h3>Public Cloud — key user</h3><p>Use <strong>Custom Fields</strong>, <strong>Custom Logic</strong>, and released pricing configuration. A BAdI implementation is mapped to a routine number instead of editing a generated VOFM routine.</p></div>
+      <div><h3>Public Cloud — developer</h3><p>ABAP Cloud development can use only released APIs, released objects, and predefined extension points. Classic includes such as <code>MV45AFZZ</code> or <code>RV60AFZZ</code> are not a Public Cloud extension model.</p></div>
+    </div>
 
-    <p>A custom pricing field also needs an end-to-end path. The business value must exist in the document context, be available to pricing communication, be exposed through the pricing field catalog where required, participate in the condition-table or calculation design, and be populated in every runtime context that depends on it. Creating the field alone does not make it a pricing input.</p>
+    <p class="ecg-caption"><strong>Migration rule:</strong> do not translate old custom code line by line. First classify the intent: add a pricing field, control whether a condition runs, change the base, change the condition amount, change document data, or integrate an external pricing service. Then select the released extension point for that intent.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-legacy-extensions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Legacy technical map</p>
+      <h2>In classic pricing, the communication structures are the main hand-off point.</h2>
+      <p>The pricing engine does not read every sales or billing table directly for every decision. The calling application prepares pricing communication data. Header data is carried in <code>KOMK</code>/<code>TKOMK</code>; item data is carried in <code>KOMP</code>/<code>TKOMP</code>. Requirements, accesses, and formulas work with this pricing context.</p>
+    </header>
+
+    <ol>
+      <li><strong>Add a field:</strong> the classic pattern is to add header fields through <code>KOMKAZ</code> or item fields through <code>KOMPAZ</code>, activate the structures, and add the field to the pricing field catalog.</li>
+      <li><strong>Populate it at runtime:</strong> for sales-order processing, the well-known preparation exits are <code>USEREXIT_PRICING_PREPARE_TKOMK</code> and <code>USEREXIT_PRICING_PREPARE_TKOMP</code> in <code>MV45AFZZ</code>. For billing, the corresponding exits are in <code>RV60AFZZ</code>.</li>
+      <li><strong>Use it in condition technique:</strong> create or extend the condition table, place it in an access sequence, assign that access sequence to a condition type, and use the condition type in the pricing procedure.</li>
+      <li><strong>Change calculation logic:</strong> VOFM provides classic routines for requirements, alternative condition-base calculation, alternative condition-value calculation, and related pricing formulas. Keep customer routines in the customer namespace and document where each routine is assigned.</li>
+      <li><strong>Transport carefully:</strong> classic VOFM changes may require generation in the target system. A common transport pattern includes the XPRA <code>RV80HGEN</code>; follow the release-specific transport procedure used by the landscape.</li>
+    </ol>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Preparation exits</h3><p><code>USEREXIT_PRICING_PREPARE_TKOMK</code> and <code>...TKOMP</code> enrich the pricing context before access and calculation. In billing, SAP support guidance recommends using the runtime buffers such as <code>XVBRK</code>/<code>XVBRP</code> where the standard flow requires them.</p></div>
+      <div><h3>Pricing-result exits</h3><p>Classic pricing also exposes exits around <code>XKOMV</code>, including patterns such as <code>USEREXIT_XKOMV_FUELLEN</code> and evaluation exits. Treat these as high-impact code: they can change or suppress results after condition access.</p></div>
+      <div><h3>Repricing and copying</h3><p>Legacy code can influence pricing types and repricing during document changes or copying. Before changing such code, inspect copying control and the configured pricing type, because the standard layer may already own the behavior.</p></div>
+    </div>
+
+    <p><strong>Runtime objects worth knowing:</strong> <code>PRICING</code> performs item pricing and <code>PRICING_COMPLETE</code> completes document-level pricing work. Classic debugging often follows the pricing communication structures, the condition list in <code>XKOMV</code>, and the condition-access path. A requirement that fails early can prevent database access completely, so checking the requirement is often faster than debugging the condition table first.</p>
+
+    <p><strong>Legacy persistence:</strong> in SAP ERP, condition access uses generated A-tables for the search key and the condition record number <code>KNUMH</code> to reach condition data such as <code>KONH</code>, <code>KONP</code>, and scale tables. For business-document pricing results, SAP S/4HANA replaced <code>KONV</code> as the persistence table with <code>PRCD_ELEMENTS</code>. New integrations should use released APIs or CDS views instead of building new direct-table dependencies on the old model.</p>
+
+    <p class="ecg-caption">The legacy patterns above are useful for reading inherited systems and for assessment discussions. They are not a recommendation to introduce new classic exits when a released clean-core extension can solve the same requirement.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-cloud-extensions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Public Cloud extension path</p>
+      <h2>Cloud pricing keeps the condition technique, but replaces the old code-entry points.</h2>
+      <p>SAP S/4HANA Cloud Public Edition supports custom pricing keys and custom pricing calculations through released extensibility. The important design step is to make the field available to pricing communication and then connect custom logic to the pricing procedure through supported configuration.</p>
+    </header>
+
+    <ol>
+      <li><strong>Create the business field:</strong> if the value belongs to a sales document, create it in <em>Sales: Sales Document</em> or <em>Sales: Sales Document Item</em> and enable the business scenario that transfers the field to pricing communication. Pricing-specific fields can also use the released pricing communication business contexts where supported.</li>
+      <li><strong>Publish and expose it:</strong> add the custom field to <em>Change Field Catalog for Pricing in Sales</em>. A field that exists in the UI but is missing from the pricing field catalog cannot become a condition-table key.</li>
+      <li><strong>Build the condition path:</strong> create the condition table, add it to an access sequence, assign the access sequence to the condition type, and place the condition type in the custom pricing procedure.</li>
+      <li><strong>Use Custom Logic for calculations:</strong> implement the released pricing BAdI, assign a unique filter value, register a routine number in the relevant configuration activity, and map that routine number to the requirement, alternative base, or alternative amount field in the pricing procedure.</li>
+      <li><strong>Expose the same key to integrations when needed:</strong> the Condition Record for Pricing in Sales OData API can be extended with supported custom key fields. Enable the custom field for the API and keep the API field, field catalog, condition table, and condition records aligned.</li>
+    </ol>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Requirement</h3><p>Cloud provides released BAdIs <code>PRICING_DOCUMENT_REQUIREMENT</code> for document-level checks and <code>PRCG_DOCUMENT_ITEM_REQUIREMENT</code> for item-level checks. The result controls whether the assigned condition or access participates.</p></div>
+      <div><h3>Condition base</h3><p>Use the released <em>Condition Base Value</em> custom logic when the standard base is not the required quantity or value. The implementation is connected to the pricing procedure by a configured routine number.</p></div>
+      <div><h3>Condition amount</h3><p>Use the released <em>Condition Amount</em> custom logic for an alternative condition amount. Item and group-condition scenarios have separate BAdI handling, and SAP requires the related implementations to be mapped consistently when group conditions are used.</p></div>
+    </div>
+
+    <p><strong>Developer extensibility boundary:</strong> Public Cloud developer extensibility is available in a three-system landscape and uses the ABAP Cloud model. Custom ABAP can reference only released SAP APIs and objects and can extend SAP behavior only at released extension points. This is the key clean-core difference from classic direct includes and unrestricted table access.</p>
+
+    <p><strong>Side-by-side option:</strong> if the pricing rule belongs outside the S/4 core—for example, a shared pricing service used by commerce, CPQ, and sales channels—evaluate SAP Variant Configuration and Pricing or another released integration pattern instead of duplicating pricing logic in several document exits.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
