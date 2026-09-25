@@ -46,6 +46,9 @@ jobs:
       - name: Check source heading hierarchy
         run: python3 scripts/normalize_heading_hierarchy.py --check
 
+      - name: Validate UI component contract
+        run: python3 scripts/validate_ui_components.py
+
       - name: Materialize deterministic repository state for validation
         run: python3 scripts/sync_repository_state.py
 

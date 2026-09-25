@@ -1,0 +1,479 @@
+{
+  "schema": "dkharlanau.ui-components",
+  "version": 1,
+  "reviewed": "2026-09-25",
+  "purpose": "Canonical machine-readable registry for reusable website UI patterns and AI-agent component selection.",
+  "source_of_truth": {
+    "visual_principles": "docs/editorial-design-system.md",
+    "component_catalog": "docs/ui-component-catalog.md",
+    "agent_workflow": "docs/ui-agent-workflow.md",
+    "content_design_contract": "docs/site-content-design-contract.md"
+  },
+  "foundations": {
+    "body_text_min_px": 17,
+    "metadata_text_min_px": 14,
+    "touch_target_min_px": 44,
+    "reading_measure_ch": 68,
+    "mobile_table_behavior": "horizontal-scroll",
+    "visual_language": "editorial"
+  },
+  "statuses": {
+    "stable": "Approved default inside its declared scope. Reuse before inventing another treatment.",
+    "domain": "Approved inside one product/domain family. Do not copy outside that scope without promoting it.",
+    "candidate": "Useful pattern under evaluation. Inspect before reuse and do not treat it as a default.",
+    "legacy": "Existing compatibility pattern. Do not add new usages.",
+    "deprecated": "Do not use. Migrate existing usages when they are touched."
+  },
+  "selection_order": [
+    "Identify the reader task: read, compare, navigate, verify, answer, trace, or remember.",
+    "Choose an existing stable component that matches the task.",
+    "If none matches, choose a domain component inside the same scope.",
+    "Prefer restructuring content or adjusting shared tokens before creating a new component.",
+    "Create a candidate component only when the information structure is genuinely different.",
+    "Promote a candidate only after a real route, responsive behavior, accessibility behavior, documentation, and validation exist."
+  ],
+  "anti_patterns": [
+    "Route-local table styling when study-table already fits.",
+    "Paragraph-heavy text compressed into three or more narrow columns.",
+    "Meaningful body or metadata text below the documented readability floor.",
+    "Uppercase micro-labels used as decoration.",
+    "Cards used for ordinary linear prose.",
+    "Repeated horizontal dividers that fragment one explanation.",
+    "New page-specific CSS that duplicates an existing component with different spacing or typography.",
+    "Competing shared and route-specific selectors that both own the same component."
+  ],
+  "components": [
+    {
+      "id": "study-table",
+      "title": "Study table",
+      "status": "stable",
+      "scope": "global",
+      "intent": "Compare structured facts, fields, objects, rules, or assessment knowledge without shrinking text.",
+      "selectors": [
+        ".table-scroll.study-table",
+        ".study-table__table"
+      ],
+      "source_files": [
+        "assets/css/components.css"
+      ],
+      "content_signals": [
+        "comparison",
+        "matrix",
+        "fields",
+        "object and effect",
+        "reference table",
+        "assessment table"
+      ],
+      "use_when": [
+        "Rows and columns are the clearest representation.",
+        "The reader needs side-by-side comparison or scanning.",
+        "The content must remain readable on mobile."
+      ],
+      "avoid_when": [
+        "The content is an ordered process.",
+        "Each row is mainly a navigation destination.",
+        "The content is paragraph-heavy and reads better as one or two columns."
+      ],
+      "accessibility": [
+        "Wrap wide tables in a focusable table-scroll region with an aria-label.",
+        "Use semantic th elements for real headers.",
+        "Do not encode meaning only with background color."
+      ],
+      "responsive": [
+        "Keep normal text size.",
+        "Use horizontal scrolling instead of compressed columns.",
+        "Preserve normal wrapping inside cells."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/master-data/#high-leverage-fields",
+          "source_file": "labs/enterprise-context/master-data/index.html"
+        }
+      ],
+      "documentation_anchor": "study-table"
+    },
+    {
+      "id": "page-faq",
+      "title": "Page FAQ",
+      "status": "stable",
+      "scope": "global",
+      "intent": "Present repeated question-and-answer material as a readable native disclosure list.",
+      "selectors": [
+        ".page-faq",
+        ".page-faq__item"
+      ],
+      "source_files": [
+        "assets/page-faq.css",
+        "_includes/page-faq.html",
+        "_data/page_faqs.yml"
+      ],
+      "content_signals": [
+        "FAQ",
+        "question and answer",
+        "common questions",
+        "assessment recall"
+      ],
+      "use_when": [
+        "The content is naturally phrased as independent questions.",
+        "Answers are short enough to scan without a separate article structure."
+      ],
+      "avoid_when": [
+        "The answers form one continuous explanation.",
+        "The reader must compare all answers simultaneously."
+      ],
+      "accessibility": [
+        "Use native details and summary.",
+        "Keep a visible focus state through the site focus contract.",
+        "Question text remains visible when collapsed."
+      ],
+      "responsive": [
+        "Question text stays at readable size.",
+        "Answer padding collapses on small screens without narrowing the copy."
+      ],
+      "examples": [
+        {
+          "route": "/services/sap-o2c-process-audit/",
+          "source_file": "_data/page_faqs.yml"
+        }
+      ],
+      "documentation_anchor": "page-faq"
+    },
+    {
+      "id": "research-section-intro",
+      "title": "Research section intro",
+      "status": "domain",
+      "scope": "research-canvas",
+      "intent": "Introduce one substantial section with eyebrow, heading, and supporting copy as one readable unit.",
+      "selectors": [
+        ".research-canvas__inventory > header"
+      ],
+      "source_files": [
+        "assets/research-canvas.css"
+      ],
+      "content_signals": [
+        "section heading",
+        "section intro",
+        "topic label",
+        "supporting paragraph"
+      ],
+      "use_when": [
+        "A Labs or research section needs a strong reading entry point.",
+        "Heading and explanation should be perceived as one unit."
+      ],
+      "avoid_when": [
+        "The heading is inside a compact card or table.",
+        "The section is only a short continuation of the previous paragraph."
+      ],
+      "accessibility": [
+        "Preserve semantic heading order.",
+        "Do not use the eyebrow as the only section label."
+      ],
+      "responsive": [
+        "Desktop may center the intro.",
+        "Enterprise Context switches to left alignment on narrow screens."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/master-data/#sales-master-data-catalog",
+          "source_file": "labs/enterprise-context/master-data/index.html"
+        }
+      ],
+      "documentation_anchor": "research-section-intro"
+    },
+    {
+      "id": "boundary-note",
+      "title": "Boundary note",
+      "status": "domain",
+      "scope": "research-canvas",
+      "intent": "State an important scope, ownership, or interpretation boundary without turning it into a large card.",
+      "selectors": [
+        ".research-canvas__boundary"
+      ],
+      "source_files": [
+        "assets/research-canvas.css"
+      ],
+      "content_signals": [
+        "boundary",
+        "scope",
+        "important distinction",
+        "ownership rule",
+        "keep separate"
+      ],
+      "use_when": [
+        "One sentence or short paragraph prevents a likely misunderstanding.",
+        "The message is contextual rather than a warning state."
+      ],
+      "avoid_when": [
+        "The content is a warning, error, or semantic status.",
+        "The content needs multiple independent subsections."
+      ],
+      "accessibility": [
+        "Icons are decorative unless they add unique meaning.",
+        "The text must stand on its own without color."
+      ],
+      "responsive": [
+        "The icon and text collapse without reducing reading width."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/master-data/",
+          "source_file": "labs/enterprise-context/master-data/index.html"
+        }
+      ],
+      "documentation_anchor": "boundary-note"
+    },
+    {
+      "id": "route-list",
+      "title": "Route list",
+      "status": "domain",
+      "scope": "research-canvas",
+      "intent": "Help the reader choose among peer destinations using one clear linked row per route.",
+      "selectors": [
+        ".research-route-list"
+      ],
+      "source_files": [
+        "assets/research-canvas.css"
+      ],
+      "content_signals": [
+        "choose topic",
+        "open deep dive",
+        "navigation inventory",
+        "study route"
+      ],
+      "use_when": [
+        "Every entry is primarily a destination.",
+        "Entries have comparable information weight."
+      ],
+      "avoid_when": [
+        "Rows are facts rather than links.",
+        "The content needs sorting, filtering, or dense numeric comparison."
+      ],
+      "accessibility": [
+        "Use one primary link target per row.",
+        "Keep directional icons decorative."
+      ],
+      "responsive": [
+        "Fields stack in source order.",
+        "The full row remains a usable target."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/pricing/",
+          "source_file": "labs/enterprise-context/pricing/index.html"
+        }
+      ],
+      "documentation_anchor": "route-list"
+    },
+    {
+      "id": "source-register",
+      "title": "Source register",
+      "status": "domain",
+      "scope": "enterprise-context",
+      "intent": "Show source provenance compactly while keeping provider, title, metadata, and action readable.",
+      "selectors": [
+        ".ecg-source-list"
+      ],
+      "source_files": [
+        "assets/enterprise-context-polish.css"
+      ],
+      "content_signals": [
+        "sources",
+        "evidence",
+        "references",
+        "provider",
+        "verification"
+      ],
+      "use_when": [
+        "The page needs several source records with provenance.",
+        "The sources support the content but should not dominate the page."
+      ],
+      "avoid_when": [
+        "There is only one ordinary inline citation.",
+        "The reader needs a long annotated bibliography."
+      ],
+      "accessibility": [
+        "Source title and action remain text, not icon-only.",
+        "Metadata must stay above the readability floor."
+      ],
+      "responsive": [
+        "Three columns may reduce to two and then one.",
+        "Do not reduce font size to preserve the grid."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/shipping/",
+          "source_file": "labs/enterprise-context/shipping/index.html"
+        }
+      ],
+      "documentation_anchor": "source-register"
+    },
+    {
+      "id": "comparison-group",
+      "title": "Comparison group",
+      "status": "domain",
+      "scope": "enterprise-context",
+      "intent": "Compare a small number of conceptual alternatives without forcing long SAP explanations into narrow columns.",
+      "selectors": [
+        ".ecg-decision-columns"
+      ],
+      "source_files": [
+        "assets/enterprise-context-polish.css"
+      ],
+      "content_signals": [
+        "compare concepts",
+        "ownership options",
+        "layers",
+        "alternatives",
+        "keep separate"
+      ],
+      "use_when": [
+        "There are two or three related concepts with short-to-medium explanations.",
+        "The reader benefits from side-by-side conceptual contrast."
+      ],
+      "avoid_when": [
+        "The content is dense enough to require a table.",
+        "Each item contains several long paragraphs.",
+        "There are more than three peer concepts."
+      ],
+      "accessibility": [
+        "Use real headings inside each comparison block.",
+        "Do not encode the difference only through color."
+      ],
+      "responsive": [
+        "Blocks wrap to two or one column based on available width.",
+        "Body copy remains at normal reading size."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/pricing/",
+          "source_file": "labs/enterprise-context/pricing/index.html"
+        }
+      ],
+      "documentation_anchor": "comparison-group"
+    },
+    {
+      "id": "determination-detail",
+      "title": "Determination detail",
+      "status": "domain",
+      "scope": "enterprise-context",
+      "intent": "Explain one technical determination as a structured record with a small meta rail and readable detail groups.",
+      "selectors": [
+        ".ecg-determination-detail"
+      ],
+      "source_files": [
+        "assets/enterprise-context-polish.css"
+      ],
+      "content_signals": [
+        "determination",
+        "rule trace",
+        "inputs and result",
+        "decision mechanism",
+        "runtime logic"
+      ],
+      "use_when": [
+        "One SAP determination needs inputs, rule, output, evidence, and diagnostics together.",
+        "The block is a technical record, not ordinary prose."
+      ],
+      "avoid_when": [
+        "The content is a simple list.",
+        "Several determinations only need one-line comparison."
+      ],
+      "accessibility": [
+        "Keep the record heading semantic.",
+        "Labels supplement rather than replace explanatory text."
+      ],
+      "responsive": [
+        "Header rails collapse before text becomes narrow.",
+        "Detail copy stays at readable size."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/credit/",
+          "source_file": "labs/enterprise-context/credit/index.html"
+        }
+      ],
+      "documentation_anchor": "determination-detail"
+    },
+    {
+      "id": "context-links",
+      "title": "Context links",
+      "status": "domain",
+      "scope": "enterprise-context",
+      "intent": "Offer a small group of related deep dives without creating another card or navigation section.",
+      "selectors": [
+        ".ecg-context-links"
+      ],
+      "source_files": [
+        "assets/enterprise-context-polish.css"
+      ],
+      "content_signals": [
+        "go deeper",
+        "related deep dives",
+        "further reading",
+        "context links"
+      ],
+      "use_when": [
+        "The page needs a compact set of related internal routes.",
+        "The links are secondary to the current explanation."
+      ],
+      "avoid_when": [
+        "The routes are the main choice on the page.",
+        "Each destination needs a description."
+      ],
+      "accessibility": [
+        "Keep descriptive link text.",
+        "External-style arrows are decorative."
+      ],
+      "responsive": [
+        "The row may become a vertical list on small screens.",
+        "Do not shrink link text to keep one line."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/master-data/#master-data-deep-dives",
+          "source_file": "labs/enterprise-context/master-data/index.html"
+        }
+      ],
+      "documentation_anchor": "context-links"
+    },
+    {
+      "id": "compact-sequence",
+      "title": "Compact sequence",
+      "status": "candidate",
+      "scope": "enterprise-context-master-data",
+      "intent": "Present a short ordered learning sequence with a narrow step rail and full reading-width explanation.",
+      "selectors": [
+        ".ecg-compact-sequence"
+      ],
+      "source_files": [
+        "assets/enterprise-context-polish.css"
+      ],
+      "content_signals": [
+        "ordered recall",
+        "short sequence",
+        "process summary"
+      ],
+      "use_when": [
+        "Order matters and each step needs a short explanation."
+      ],
+      "avoid_when": [
+        "The sequence is cross-domain enough to need a semantic process map.",
+        "The same information is better represented as a table."
+      ],
+      "accessibility": [
+        "Step numbers supplement headings.",
+        "The reading order follows DOM order."
+      ],
+      "responsive": [
+        "Keep the narrow number rail and full-width text column."
+      ],
+      "examples": [
+        {
+          "route": "/labs/enterprise-context/master-data/#master-data-o2c",
+          "source_file": "labs/enterprise-context/master-data/index.html"
+        }
+      ],
+      "documentation_anchor": "compact-sequence"
+    }
+  ]
+}

@@ -166,6 +166,28 @@ For Order-to-Cash runtime views, the first reference implementation is:
 
 Do not import or copy the full Visual Workbench rendering engine into the site merely to draw one diagram. Reuse its semantic grammar and keep the website renderer deliberately lightweight unless a later requirement justifies a formal adapter.
 
+## Study UI component selection
+
+Labs are learning material, so readability wins over density. Before introducing or
+restyling tables, Q&A blocks, source lists, comparison columns, route lists, or section
+intros, use the shared registry in config/ui-components.json and the catalog in
+docs/ui-component-catalog.md.
+
+Default mappings for Labs:
+
+- structured comparison or reference data -> study-table;
+- independent question and answer recall -> page-faq;
+- substantial section entry -> research-section-intro;
+- scope or ownership distinction -> boundary-note;
+- peer navigation destinations -> route-list;
+- evidence provenance -> source-register on Enterprise Context routes;
+- two or three conceptual alternatives -> comparison-group;
+- one SAP rule or determination in depth -> determination-detail.
+
+Do not compress study text to make a multi-column layout fit. Reflow the layout or
+switch components. A repeated local UI fix should be promoted to the component owner
+rather than copied to another page.
+
 ## Rendered markup safety
 
 Lab pages frequently mix Markdown, Liquid, and hand-written HTML. A Jekyll build can succeed even when Markdown inside an HTML wrapper is left as literal browser text.

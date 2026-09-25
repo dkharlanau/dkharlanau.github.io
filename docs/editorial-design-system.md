@@ -22,6 +22,18 @@ change this document in the same commit.
 5. **Honest UI.** No fake metrics, no gamification, no dashboard theater.
    Browser-local state is labeled as such.
 
+## Component contract
+
+The visual system has four coordinated sources of truth:
+
+- this file defines tokens, visual principles, and component-level design rules;
+- config/ui-components.json is the machine-readable registry used by coding agents and validators;
+- docs/ui-component-catalog.md documents component intent, selection, markup, examples, and lifecycle;
+- docs/ui-agent-workflow.md defines the AI editing loop and change-scope rules.
+
+When a reusable component changes, update the registry and catalog in the same commit.
+Do not create a route-local duplicate of a registered component.
+
 ## Files
 
 | Layer | File | Owns |
@@ -119,6 +131,9 @@ diagrams).
   `.callout--warning` (red). Left rule + quiet fill; nothing brighter.
 - **Cards**: `.card` only for genuine collections (pathways, offers, related
   topics). Most pages should show almost no card chrome.
+- **Page FAQ**: use the shared .page-faq include-driven component for independent question/answer material. Keep native details/summary, readable question/answer type, and a compact editorial eyebrow. Do not create route-local accordion JavaScript or tiny FAQ text.
+- **Source register**: Enterprise Context source lists use .ecg-source-list. Provider, title, metadata, and action must remain readable; reduce columns before reducing type size.
+- **Route list / boundary note**: research-canvas navigation uses .research-route-list; short scope or ownership distinctions use .research-canvas__boundary. These are information structures, not decorative card variants.
 - **Structured technical rows**: `.ecg-determination-detail` uses one divider per
   record, a narrow number/meta rail, and a compact title/context stack. Detail
   groups align under the title and use vertical separators rather than repeated

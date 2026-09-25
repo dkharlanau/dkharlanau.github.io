@@ -203,6 +203,26 @@ The repository uses a three-level content verification system:
 
 Read `docs/ai/CONTENT_VERIFICATION_POLICY.md` for the full policy.
 
+## UI Component Maintenance
+
+For any request that changes layout, typography, tables, cards, FAQ, sources, diagrams,
+navigation rows, spacing, borders, or reusable visual patterns, read
+docs/ui-agent-workflow.md, docs/ui-component-catalog.md, and
+config/ui-components.json before editing CSS.
+
+Use this loop:
+
+1. Name the reader task: read, compare, navigate, verify, answer, trace, or remember.
+2. Select a registered stable or domain component by intent. Inspect its reference route and owner files.
+3. Diagnose whether the failure is typography, density, layout, affordance, boundary, cascade, or wrong content shape.
+4. Change the smallest correct owner layer. Do not fix a shared-component problem with a route-local override.
+5. If the reusable contract changes, update CSS/include + registry + catalog in the same commit.
+6. Run python3 scripts/validate_ui_components.py, build the site, and let visual smoke and accessibility checks verify the rendered output.
+
+New components begin as candidate. They need a semantic name, owner layer, real route,
+responsive behavior, accessibility behavior, registry entry, and catalog entry before
+they can be promoted. Repeated page-specific variants are treated as design-system debt.
+
 ## Visual Detail Checks
 
 - The visual system is defined in `docs/editorial-design-system.md` (tokens, typography, spacing, components, page templates). Read it before changing shared CSS; update it in the same commit when the system changes.
