@@ -797,13 +797,20 @@ REVIEWED: 2026-05-06
 
     Process and evidence map
 
-      Standard order-to-cash checkpoints. Each step names the business outcome and the evidence that should exist before the process moves forward.
+      Standard order-to-cash checkpoints. Read each row as a gate: the process moves forward only when the expected evidence exists.
 
-        DemandSales orderCustomer, product, quantity, requested date, partners, and commercial terms are valid.
-        CommitConfirmed scheduleAvailability, credit, pricing, incompleteness, and delivery controls permit execution.
-        FulfilDelivery and goods issuePicking and shipping evidence exists, and goods issue records the inventory event.
-        BillBilling and accountingThe billable reference produces the intended invoice and financial posting.
-        SettleReceivable and clearingPayment, deduction, dispute, or clearing evidence resolves the open customer item.
+
+
+            StageExpected evidenceReady when
+
+
+            DemandSales orderCustomer, product, quantity, requested date, partners, and commercial terms are valid.
+            CommitConfirmed scheduleAvailability, credit, pricing, incompleteness, and delivery controls permit execution.
+            FulfilDelivery and goods issuePicking and shipping evidence exists, and goods issue records the inventory event.
+            BillBilling and accountingThe billable reference produces the intended invoice and financial posting.
+            SettleReceivable and clearingPayment, deduction, dispute, or clearing evidence resolves the open customer item.
+
+
 
 
 
