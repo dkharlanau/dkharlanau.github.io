@@ -658,3 +658,169 @@ body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-context-links a
     gap: 0.65rem;
   }
 }
+
+/* Assessment drills: compact question/answer cards without divider-heavy legacy layout. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-drills > .ecg-assessment-drills__intro {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  max-width: 54rem;
+  margin: 0 auto clamp(1.75rem, 4vw, 2.6rem);
+  text-align: center;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-drills > .ecg-assessment-drills__intro .research-canvas__eyebrow {
+  margin-bottom: 1rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-drills > .ecg-assessment-drills__intro > h2 {
+  max-width: 30ch;
+  margin: 0;
+  font-size: clamp(1.8rem, 2.7vw, 2.4rem) !important;
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-drills > .ecg-assessment-drills__intro > p:last-child {
+  max-width: 44rem;
+  margin: 0.9rem 0 0;
+  color: var(--ec-soft);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-list {
+  display: grid;
+  gap: 1rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.88fr) minmax(22rem, 1.32fr);
+  overflow: hidden;
+  border: 1px solid var(--ec-border);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--ec-shadow);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__question {
+  min-width: 0;
+  padding: 1.35rem 1.45rem 1.45rem;
+  border-inline-end: 1px solid var(--ec-border-soft);
+  background: linear-gradient(145deg, #f8faff 0%, #f1f6ff 100%);
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__index {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.95rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__index > span {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--ec-blue);
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__index > small {
+  color: var(--ec-soft);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__question > h3 {
+  max-width: 34ch;
+  margin: 0;
+  color: var(--ec-ink);
+  font-family: var(--font-body);
+  font-size: clamp(1.08rem, 1rem + 0.22vw, 1.25rem) !important;
+  font-weight: 720;
+  letter-spacing: -0.015em;
+  line-height: 1.38;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__answer {
+  min-width: 0;
+  padding: 1.35rem 1.5rem 1.45rem;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__answer > h4 {
+  display: inline-flex;
+  margin: 0 0 0.85rem;
+  padding: 0.34rem 0.58rem;
+  border-radius: 999px;
+  background: var(--ec-blue-soft);
+  color: var(--ec-blue-strong);
+  font-family: var(--font-body);
+  font-size: 0.75rem !important;
+  font-weight: 760;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__answer > ul {
+  display: grid;
+  gap: 0.62rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__answer li {
+  display: grid;
+  grid-template-columns: 0.5rem minmax(0, 1fr);
+  gap: 0.68rem;
+  margin: 0;
+  color: var(--ec-soft);
+  font-size: 0.94rem;
+  line-height: 1.52;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__answer li::before {
+  width: 0.38rem;
+  height: 0.38rem;
+  margin-top: 0.55em;
+  border-radius: 50%;
+  background: var(--ec-blue);
+  content: "";
+}
+
+@media (max-width: 760px) {
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-drills > .ecg-assessment-drills__intro {
+    justify-items: start;
+    margin-inline: 0;
+    text-align: left;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-drills > .ecg-assessment-drills__intro > h2 {
+    max-width: none;
+    font-size: clamp(1.65rem, 8vw, 2.05rem) !important;
+    text-wrap: pretty;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__question {
+    border-inline-end: 0;
+    border-bottom: 1px solid var(--ec-border-soft);
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__question,
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-assessment-card__answer {
+    padding: 1.15rem 1.2rem 1.25rem;
+  }
+}
+

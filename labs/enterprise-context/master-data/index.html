@@ -444,13 +444,26 @@ tags:
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Answers should contain level, precedence, ownership, and runtime impact.</h2></header>
-    <div class="ecg-determination-list">
+  <section class="research-canvas__inventory ecg-assessment-drills" data-reveal>
+    <header class="ecg-assessment-drills__intro">
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Build the answer around level, precedence, ownership, and runtime impact.</h2>
+      <p>Read the case first. Then use the points as a compact checklist for a Lead-level answer.</p>
+    </header>
+    <div class="ecg-assessment-list">
       {% for item in graph.assessment_drills %}
-      <article class="ecg-determination-detail">
-        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>Lead drill</small></div><h3>{{ item.question }}</h3></header>
-        <div><h4>Strong answer should mention</h4><ul>{% for value in item.expected %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <article class="ecg-assessment-card">
+        <div class="ecg-assessment-card__question">
+          <div class="ecg-assessment-card__index">
+            <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+            <small>Lead drill</small>
+          </div>
+          <h3>{{ item.question }}</h3>
+        </div>
+        <div class="ecg-assessment-card__answer">
+          <h4>Strong answer</h4>
+          <ul>{% for value in item.expected %}<li>{{ value }}</li>{% endfor %}</ul>
+        </div>
       </article>
       {% endfor %}
     </div>
