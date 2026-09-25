@@ -1,0 +1,106 @@
+---
+layout: default
+title: "SAP Sales Master Data — Sales BOM / Product Structure"
+description: "A practical deep dive into Sales BOM / Product Structure in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+permalink: /labs/enterprise-context/master-data/sales-bom/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-25
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Sales BOM / Product Structure</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.BOM</p>
+      <h1>Sales BOM / Product Structure</h1>
+      <p>A Sales BOM allows a sellable header product to explode into components in the sales document. The commercial behavior depends heavily on whether pricing and logistics are controlled at header or component level.</p>
+      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Object profile</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.BOM</strong><small>Catalogue ID</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>logistics adjacent master</strong><small>Data class</small></div>
+      <em>Header product, BOM usage, plant/validity, components and quantities.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Know what the object owns before tracing a document.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">database</span>
+      <p><strong>Scope:</strong> Header product, BOM usage, plant/validity, components and quantities.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Important data</h3>
+        <p>BOM usage, header material, components, component quantities, alternative BOM, validity and plant context where relevant.</p>
+      </div>
+      <div>
+        <h3>Configuration boundary</h3>
+        <p>The BOM defines product structure. Item-category determination and pricing relevance are configuration, so the same structure can produce different sales behavior under different item-category settings.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime use</p>
+      <h2>How the data enters Order-to-Cash.</h2>
+      <p>When the header is entered, BOM explosion creates subitems. Item category determination then controls whether the header or components are pricing- or delivery-relevant. Classic ERLA and LUMF-style designs represent different control patterns.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
+      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
+      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
+      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Troubleshooting</p>
+      <h2>Start with the most specific evidence.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p>Verify the BOM usage, validity and plant first. Then inspect the exploded item categories and their pricing/delivery relevance. If the structure is correct but pricing is wrong, troubleshoot item-category configuration rather than the BOM itself.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>A concise answer that still shows depth.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p>A Sales BOM is product-structure master data. It tells SAP which components belong to the header; item categories decide where pricing and delivery control live.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Related master-data pages">
+      <span>Continue</span>
+      <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+    </nav>
+  </section>
+</div>
