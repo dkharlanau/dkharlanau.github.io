@@ -1,6 +1,3 @@
-{% assign portal_locale = site.data.home_portal[page_locale] | default: site.data.home_portal.en %}
-{% assign portal_nav = portal_locale.navigation %}
-{% assign portal_footer = portal_locale.footer %}
 <div class="wrapper portal-footer portal-footer--consulting">
   <div class="portal-footer__primary">
     <a class="portal-footer__brand footer-brand" href="/about/">
@@ -8,21 +5,21 @@
         <source srcset="{{ '/assets/img/DzmitryiKharlanau.avif' | relative_url }}" type="image/avif" />
         <img class="portal-footer__avatar" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="" width="56" height="56" loading="lazy" />
       </picture>
-      <span><strong>Dzmitryi Kharlanau</strong><span>{{ portal_footer.descriptor | default: 'SAP operations · transformation · practical AI' }}</span></span>
+      <span><strong>Dzmitryi Kharlanau</strong><span>SAP operations · transformation · practical AI</span></span>
     </a>
-    <nav class="portal-footer__social" aria-label="{{ portal_footer.social_profiles | default: 'Social profiles' }}">
+    <nav class="portal-footer__social" aria-label="Social profiles">
       <a href="{{ site.data.identity.profiles.linkedin }}" target="_blank" rel="me noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
       <a href="{{ site.data.identity.profiles.github }}" target="_blank" rel="me noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
   </div>
-  <nav class="portal-footer__nav" aria-label="{{ portal_footer.label | default: 'Footer navigation' }}">
-    <a href="/services/">{{ portal_nav.business | default: portal_footer.work | default: 'Business' }}</a>
-    <a href="/labs/">{{ portal_nav.prepare | default: portal_nav.labs | default: 'Learn & prepare' }}</a>
-    <a href="/knowledge/">{{ portal_nav.library | default: portal_footer.knowledge | default: 'Library' }}</a>
-    <a href="/about/">{{ portal_footer.about | default: portal_nav.about | default: 'About' }}</a>
+  <nav class="portal-footer__nav" aria-label="Footer navigation">
+    <a href="/services/">Business</a>
+    <a href="/labs/">Learn &amp; prepare</a>
+    <a href="/knowledge/">Library</a>
+    <a href="/about/">About</a>
   </nav>
   <div class="portal-footer__meta">
-    <p>&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau. {{ portal_footer.personal_site | default: 'Personal site.' }}</p>
-    <p><a href="/legal/privacy/">{{ portal_footer.privacy | default: 'Privacy' }}</a><a href="/legal/accessibility/">{{ portal_footer.accessibility | default: 'Accessibility' }}</a><a href="/legal/terms-of-engagement/">Terms</a><a href="/legal/code-of-conduct/">Conduct</a><a href="/legal/ai-crawler-policy/">AI crawlers</a><a href="/entities/">Entities</a><a href="/CITATION/">Citation</a></p>
+    <p>&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau. Personal site.</p>
+    <p><a href="/legal/privacy/">Privacy</a><a href="/legal/accessibility/">Accessibility</a><a href="/legal/terms-of-engagement/">Terms</a><a href="/legal/code-of-conduct/">Conduct</a><a href="/legal/ai-crawler-policy/">AI crawlers</a><a href="/entities/">Entities</a><a href="/CITATION/">Citation</a></p>
   </div>
 </div>

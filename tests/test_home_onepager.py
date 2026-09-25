@@ -32,18 +32,25 @@ def home_data() -> dict:
     return yaml.safe_load((REPO_ROOT / "_data/home.yml").read_text(encoding="utf-8"))
 
 
-def test_home_rollout_changes_english_and_preserves_translated_pages():
-    """The two-focus rollout is explicitly English-only until locale review."""
-    home_paths = [
-        "index.md", "ar/index.md", "de/index.md", "es/index.md", "fr/index.md",
-        "it/index.md", "nl/index.md", "pl/index.md", "pt-br/index.md", "zh-cn/index.md",
-    ]
-    for home_path in home_paths:
-        fm = parse_frontmatter(REPO_ROOT / home_path)
-        expected = ["home-focus"] if home_path == "index.md" else ["home-product"]
-        assert fm.get("sections") == expected, home_path
-        assert fm.get("home_locale") is True, home_path
-    assert parse_frontmatter(REPO_ROOT / "index.md")["locale"] == "en"
+def test_home_is_english_only():
+    """The public site intentionally ships one English home page."""
+    fm = parse_frontmatter(REPO_ROOT / "index.md")
+    assert fm.get("sections") == ["home-focus"]
+    assert fm.get("home_locale") is True
+    assert fm.get("locale") == "en"
+
+    for locale in ("ar", "de", "es", "fr", "it", "nl", "pl", "pt-br", "zh-cn"):
+        assert not (REPO_ROOT / locale).exists(), locale
+
+
+def test_language_switcher_is_removed():
+    header = (REPO_ROOT / "_includes/header.html").read_text(encoding="utf-8")
+    head = (REPO_ROOT / "_includes/head.html").read_text(encoding="utf-8")
+    assert "home-language-switcher" not in header
+    assert "home_languages" not in head
+    assert "hreflang" not in head
+    assert not (REPO_ROOT / "_includes/home-language-switcher.html").exists()
+    assert not (REPO_ROOT / "_data/home_languages.yml").exists()
 
 
 def test_index_uses_global_header():

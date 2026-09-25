@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-{% assign page_locale = page.locale | default: site.lang | default: 'en' %}
-{% assign locale_data = site.data.home_i18n[page_locale] %}
-{% assign page_direction = locale_data.meta.dir | default: 'ltr' %}
+{% assign page_locale = 'en' %}
+{% assign page_direction = 'ltr' %}
 {% assign page_faq = site.data.page_faqs[page.url] %}
-<html lang="{{ page_locale }}" dir="{{ page_direction }}">
+<html lang="en" dir="ltr">
 
 <head>
   {% include head.html %}
@@ -100,6 +99,9 @@
   <link rel="stylesheet" href="{{ '/assets/css/base.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   <link rel="stylesheet" href="{{ '/assets/css/layout.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   <link rel="stylesheet" href="{{ '/assets/css/components.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  {% if page.url == '/labs/assessment/sales-certification/' %}
+  <link rel="stylesheet" href="{{ '/assets/sales-certification.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  {% endif %}
 </head>
 
 {% assign is_home = false %}
@@ -131,7 +133,7 @@
 {% endif %}
 
 <body class="site {{ page_context }} design-track--{{ design_track }}" data-page="{{ page.url | escape }}">
-  <a class="skip-link" href="#content">{{ locale_data.ui.skip_to_content | default: 'Skip to main content' }}</a>
+  <a class="skip-link" href="#content">Skip to main content</a>
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {% assign entry_route = page.permalink | default: page.url %}

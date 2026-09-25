@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-24
+last_modified_at: 2026-09-25
 hide_global_cta: true
 career_impact: none
 career_reason: "Study navigation and self-assessment prompts assembling existing Sales capabilities; this hub is not a new career skill or standalone technical evidence source."
@@ -34,12 +34,23 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
     </div>
   </header>
 
-  <nav aria-label="On this preparation page">
-    <p><a href="#target">Certification target</a> · <a href="#official-scope">Official courses</a> · <a href="#last-day">Last-day review</a> · <a href="#our-units">Our units</a> · <a href="#time">Time budget</a> · <a href="#method">How to study</a> · <a href="#roadmap">Deep roadmap</a> · <a href="#capstone">Worked practice</a> · <a href="#consolidation">One topic, one primary page</a> · <a href="#library">Resource library</a> · <a href="#gaps">Coverage checks</a> · <a href="#readiness">Readiness</a></p>
+  <nav class="sales-certification-nav" aria-label="On this preparation page">
+    <a class="is-primary" href="#target">Certification target</a>
+    <a href="#official-scope">Official courses</a>
+    <a href="#last-day">Last-day review</a>
+    <a href="#our-units">Our units</a>
+    <a href="#time">Time budget</a>
+    <a href="#method">How to study</a>
+    <a href="#roadmap">Deep roadmap</a>
+    <a href="#capstone">Worked practice</a>
+    <a href="#consolidation">Primary pages</a>
+    <a href="#library">Resource library</a>
+    <a href="#gaps">Coverage checks</a>
+    <a href="#readiness">Readiness</a>
   </nav>
 
-  <section class="research-canvas__inventory" id="target">
-    <header><p class="research-canvas__eyebrow">Choose the right target</p><h2>C_S4CS is the target; not every SD page is its syllabus.</h2></header>
+  <section class="research-canvas__inventory sales-certification-target" id="target">
+    <header><p class="research-canvas__eyebrow"><span class="material-symbols-outlined" aria-hidden="true">adjust</span>Choose the right target</p><h2>C_S4CS is the target; not every SD page is its syllabus.</h2></header>
     <p>The <a href="https://www.credly.com/org/sap/badge/sap-certified-implementation-consultant-sap-s-4hana.4">SAP-issued certification badge</a> identifies the exam as <strong>C_S4CS</strong>. The <a href="https://learning.sap.com/learning-journeys/implementing-sap-s4hana-cloud-public-edition-sales">official Sales Learning Journey</a> is the starting point for preparation. Open the current certification offering through SAP Learning before booking to confirm its exact title, assessment format, language, version and requirements. This page does not invent a release suffix, question count, pass mark or guaranteed exam format.</p>
     <p><strong>Keep the editions separate.</strong> SAP identifies <strong>C_TS462</strong> in its <a href="https://learning.sap.com/courses/sap-s-4hana-cloud-private-edition-sales">Private Edition Sales certification-maintenance course</a>. That is a different target. Our classic SD material is useful for understanding mechanisms, but a transaction, configuration path or process variant described there must not automatically be treated as available in Public Edition.</p>
     <p><strong>Preparation is not renewal.</strong> The <a href="https://learning.sap.com/courses/sap-s-4hana-cloud-public-edition-sales">Public Edition Sales Stay Certified course</a> is for maintaining an existing certification; it is not a replacement for first-time preparation. Likewise, a collection number in the <a href="https://learning.sap.com/helpcenter/learninghub-subscription/practice-systems">practice-system maintenance schedule</a> identifies a learning environment, not by itself an exam version.</p>
@@ -60,9 +71,10 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
   </section>
 
   <section class="research-canvas__inventory" id="last-day">
-    <header><p class="research-canvas__eyebrow">Last-day review</p><h2>Read this page first. Open a deep page only when an answer breaks.</h2></header>
-    <p>For the final review, do not reread the whole library. Use the compact model below. Try to explain each row without notes, give one example, and name one failure signal. If the answer is weak, open the linked primary page. If the answer is clear, move on.</p>
-    <div class="sales-cert-table">
+    <div class="sales-certification-review-card">
+      <header class="sales-certification-review-card__header"><p class="research-canvas__eyebrow">Last-day review</p><h2>Read this page first. Open a deep page only when an answer breaks.</h2></header>
+      <p>For the final review, do not reread the whole library. Use the compact model below. Try to explain each row without notes, give one example, and name one failure signal. If the answer is weak, open the linked primary page. If the answer is clear, move on.</p>
+      <div class="sales-cert-table">
       <table>
       <thead><tr><th>Area</th><th>Compact model</th><th>What you must be able to explain</th></tr></thead>
       <tbody>
@@ -75,7 +87,8 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
         <tr><td><strong>Complaints + returns</strong></td><td>First classify the desired outcome: financial correction, physical return, replacement, inspection/disposition, or a combination. Credit/debit memo is not automatically a return; lean and full returns manage different control depth.</td><td>When goods move, when only value changes, and which evidence proves the final outcome.</td></tr>
         <tr><td><strong>Public Edition + automation</strong></td><td>Fit-to-Standard defines scope before extension. Configuration, roles, integration, migration and testing support the Sales process. BKK monitors fulfillment exceptions; 1MC brings eligible billing sources together; AI proposes/extracts; 1O0 plans; 1BS analyzes; 2YJ predicts.</td><td>Separate observation, proposal, planning, prediction and authoritative ERP transaction state.</td></tr>
       </tbody>
-    </table>
+      </table>
+      </div>
     </div>
 
     <h3>Ten primary pages</h3>

@@ -6,13 +6,8 @@
 {% assign og_image = page.og_image | default: '/assets/og/diagnostic-signal-default.jpg' | absolute_url %}
 {% assign site_name = 'Dzmitryi Kharlanau' %}
 {% assign asset_version = site.time | date: '%s' %}
-{% assign locale_data = site.data.home_i18n[page_locale] %}
-{% assign locale_meta = locale_data.meta %}
-
 {% assign computed_title = page.seo_title | default: page.title | default: site.title %}
-{% if page.home_locale %}
-{% assign computed_title = locale_meta.title | default: computed_title %}
-{% elsif page.url == '/' or page.permalink == '/' %}
+{% if page.url == '/' or page.permalink == '/' %}
 {% assign computed_title = page.title | default: 'SAP Learning & AMS Optimization | Dzmitryi Kharlanau' %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
 {% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP AMS, Integration & Process Optimization' %}
@@ -21,9 +16,7 @@
 {% endif %}
 
 {% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
-{% if page.home_locale %}
-{% assign default_description = locale_meta.description | default: page.description | default: default_description %}
-{% elsif page.url == '/' or page.permalink == '/' %}
+{% if page.url == '/' or page.permalink == '/' %}
 {% assign default_description = page.description | default: default_description %}
 {% elsif page.collection == 'notes' and page.description %}
 {% assign default_description = page.description %}
@@ -37,11 +30,6 @@
 {% assign meta_description = page.description | default: content_fallback | default: default_description | strip_html |
 normalize_whitespace %}
 {% assign social_title = computed_title %}
-{% if page.home_locale %}
-{% assign social_title = locale_meta.social_title | default: computed_title %}
-{% elsif page.url == '/' or page.permalink == '/' %}
-{% assign social_title = computed_title %}
-{% endif %}
 {% assign meta_description_short = meta_description | truncatewords: 24, '…' %}
 {% assign social_description = meta_description | truncatewords: 32, '…' %}
 {% assign social_type = 'website' %}
@@ -69,12 +57,6 @@ normalize_whitespace %}
 <meta name="robots" content="{{ page.robots | default: 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1' }}" />
 
 <link rel="canonical" href="{{ canonical_url }}" />
-{% if page.home_locale %}
-  {% for language in site.data.home_languages %}
-<link rel="alternate" hreflang="{{ language.hreflang }}" href="{{ language.path | absolute_url }}" />
-  {% endfor %}
-<link rel="alternate" hreflang="x-default" href="{{ '/' | absolute_url }}" />
-{% endif %}
 <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}" />
 <link rel="alternate" type="application/atom+xml" title="{{ site.title }} blog" href="{{ '/blog/feed.xml' | absolute_url }}" />
 <!-- GitHub Pages cannot set HTTP Link response headers, so these HTML links are the static-site fallback for agent discovery. -->
@@ -114,7 +96,7 @@ normalize_whitespace %}
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400..700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Source+Serif+4:opsz,wght@8..60,400..700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&display=swap" rel="stylesheet" />
 {% if page.url == '/about/' or page.url == '/cv/' %}
 <link rel="preload" as="image" href="{{ '/assets/img/DzmitryiKharlanau.webp' | absolute_url }}"
@@ -123,7 +105,7 @@ normalize_whitespace %}
 <link rel="me" href="https://www.linkedin.com/in/dkharlanau/" />
 
 <meta property="og:type" content="{{ social_type }}" />
-<meta property="og:locale" content="{{ locale_meta.og_locale | default: 'en_US' }}" />
+<meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="{{ site_name }}" />
 <meta property="og:title" content="{{ social_title | strip_html | normalize_whitespace }}" />
 <meta property="og:description" content="{{ social_description }}" />
@@ -212,7 +194,7 @@ normalize_whitespace %}
 <script src="{{ '/assets/reader-tools.js' | relative_url }}?v={{ asset_version }}" defer></script>
 <script src="{{ '/assets/product-system.js' | relative_url }}?v={{ asset_version }}" defer></script>
 
-{% if page.home_locale and page.locale == 'en' %}
+{% if page.home_locale %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -222,7 +204,7 @@ normalize_whitespace %}
   "name": "Dzmitryi Kharlanau",
   "alternateName": ["dkharlanau.github.io"],
   "description": {{ page.description | default: default_description | jsonify }},
-  "inLanguage": "{{ page.locale | default: 'en' }}",
+  "inLanguage": "en",
   "publisher": {
     "@id": "https://dkharlanau.github.io/#dkharlanau"
   },

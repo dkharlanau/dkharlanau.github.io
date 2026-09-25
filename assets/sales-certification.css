@@ -1,0 +1,407 @@
+/* Sales certification preparation — route-specific study UI. */
+
+body[data-page="/labs/assessment/sales-certification/"] {
+  --sales-blue: #155eef;
+  --sales-blue-strong: #004eeb;
+  --sales-blue-soft: #eef4ff;
+  --sales-blue-softer: #f7faff;
+  --sales-border: #d9e2f0;
+  --sales-border-strong: #c9d7eb;
+  --sales-ink: #172033;
+  --sales-soft: #526079;
+  --sales-shadow: 0 18px 48px -34px rgba(16, 40, 90, 0.34);
+}
+
+.sales-certification-map {
+  background: transparent;
+}
+
+.sales-certification-map .research-canvas__hero {
+  position: relative;
+  width: min(calc(100% - 2 * var(--space-5)), 74rem);
+  box-sizing: border-box;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  margin-top: var(--space-3);
+  padding: clamp(2.4rem, 5vw, 4rem);
+  overflow: hidden;
+  border: 1px solid var(--sales-border);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 91% 8%, rgba(21, 94, 239, 0.10), transparent 28%),
+    radial-gradient(circle at 76% 110%, rgba(21, 94, 239, 0.06), transparent 34%),
+    linear-gradient(135deg, #ffffff 0%, #f7faff 58%, #eef5ff 100%);
+  box-shadow: var(--sales-shadow);
+}
+
+.sales-certification-map .research-canvas__hero-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.sales-certification-map .research-canvas__hero h1 {
+  max-width: 22ch;
+  font-family: var(--font-body);
+  font-size: clamp(2rem, 1.5rem + 2vw, 2.9rem) !important;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.sales-certification-map .research-canvas__hero-copy > p:not(.research-canvas__eyebrow) {
+  max-width: 42rem;
+}
+
+.sales-certification-map .research-canvas__hero .research-canvas__eyebrow {
+  color: var(--sales-blue) !important;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sales-certification-map .research-canvas__button {
+  border-radius: 10px;
+  border-color: var(--sales-blue);
+  background: var(--sales-blue);
+  box-shadow: 0 8px 20px -14px rgba(21, 94, 239, 0.9);
+}
+
+.sales-certification-map .research-canvas__button:hover {
+  border-color: var(--sales-blue-strong);
+  background: var(--sales-blue-strong);
+}
+
+.sales-certification-map .research-canvas__signal {
+  position: relative;
+  z-index: 1;
+  padding: 0.35rem 1.2rem;
+  border: 1px solid rgba(201, 215, 235, 0.92);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 14px 36px -30px rgba(16, 40, 90, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.sales-certification-map .research-canvas__signal > p {
+  color: var(--sales-soft);
+  font-size: 0.75rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.sales-certification-map .research-canvas__signal-line span {
+  color: var(--sales-blue);
+}
+
+.sales-certification-nav {
+  display: flex;
+  width: min(calc(100% - 2 * var(--space-5)), 74rem);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: var(--space-5) auto 0;
+  padding: var(--space-4) 0 var(--space-3);
+  border-bottom: 1px solid var(--sales-border);
+}
+
+.sales-certification-nav a {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  padding: 0.45rem 0.78rem;
+  border: 1px solid var(--sales-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--sales-soft);
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-decoration: none;
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease, transform 120ms ease;
+}
+
+.sales-certification-nav a:hover,
+.sales-certification-nav a:focus-visible {
+  border-color: #b9c9e3;
+  background: var(--sales-blue-softer);
+  color: var(--sales-blue-strong);
+  text-decoration: none;
+}
+
+.sales-certification-nav a.is-primary {
+  border-color: #d8e4fb;
+  background: var(--sales-blue-soft);
+  color: var(--sales-blue);
+}
+
+.sales-certification-map .research-canvas__inventory {
+  width: min(calc(100% - 2 * var(--space-5)), 74rem);
+}
+
+/* Keep ordinary section labels quiet. The target label is the one framed as a badge. */
+.sales-certification-map .research-canvas__inventory > header .research-canvas__eyebrow {
+  display: block;
+  width: auto;
+  margin: 0 0 0.55rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--sales-blue) !important;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.sales-certification-map .research-canvas__inventory > header .research-canvas__eyebrow::before {
+  content: none;
+}
+
+.sales-certification-map .sales-certification-target {
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+.sales-certification-map .sales-certification-target > header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+  text-align: center;
+}
+
+.sales-certification-map .sales-certification-target > header h2 {
+  max-width: 25ch;
+  color: var(--sales-ink);
+  font-size: clamp(2rem, 1.55rem + 1.8vw, 2.8rem) !important;
+  letter-spacing: -0.035em;
+}
+
+.sales-certification-map .sales-certification-target > header .research-canvas__eyebrow {
+  display: inline-flex;
+  width: max-content;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.48rem 0.82rem;
+  border: 1px solid #d6e3fb;
+  border-radius: 999px;
+  background: var(--sales-blue-soft);
+  color: var(--sales-blue) !important;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: 0 10px 24px -22px rgba(21, 94, 239, 0.9);
+}
+
+.sales-certification-map .sales-certification-target > header .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+/* Last-day review becomes a focused review surface; the rest of the section stays plain. */
+.sales-certification-review-card {
+  box-sizing: border-box;
+  margin-bottom: var(--space-7);
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  border: 1px solid var(--sales-border);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: var(--sales-shadow);
+}
+
+.sales-certification-review-card__header {
+  margin-bottom: var(--space-4);
+}
+
+.sales-certification-review-card__header .research-canvas__eyebrow {
+  margin: 0 0 0.55rem;
+  color: var(--sales-blue) !important;
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.sales-certification-review-card__header h2 {
+  max-width: 27ch;
+  color: var(--sales-ink);
+  font-size: clamp(1.75rem, 1.45rem + 1.2vw, 2.35rem) !important;
+  letter-spacing: -0.025em;
+}
+
+.sales-certification-review-card > p {
+  max-width: 58rem;
+  margin: 0;
+  color: var(--sales-soft);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* Tables: readable comparison surfaces rather than raw document grids. */
+.sales-certification-map .sales-cert-table {
+  margin: var(--space-5) 0 0;
+  overflow: auto;
+  border: 1px solid var(--sales-border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.sales-certification-map .sales-cert-table table {
+  width: 100%;
+  min-width: 58rem;
+  margin: 0;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  font-size: 0.96rem;
+  line-height: 1.5;
+}
+
+.sales-certification-map .sales-cert-table th,
+.sales-certification-map .sales-cert-table td {
+  box-sizing: border-box;
+  padding: 0.9rem 1.05rem;
+  border: 0;
+  border-bottom: 1px solid #e4eaf3;
+  text-align: left;
+  vertical-align: top;
+}
+
+.sales-certification-map .sales-cert-table th + th,
+.sales-certification-map .sales-cert-table td + td {
+  border-inline-start: 1px solid #e4eaf3;
+}
+
+.sales-certification-map .sales-cert-table thead th {
+  background: linear-gradient(180deg, #f2f6fd 0%, #edf3fb 100%);
+  color: #263652;
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.sales-certification-map .sales-cert-table th:first-child,
+.sales-certification-map .sales-cert-table td:first-child {
+  width: 20%;
+}
+
+.sales-certification-map .sales-cert-table th:nth-child(2),
+.sales-certification-map .sales-cert-table td:nth-child(2) {
+  width: 47%;
+}
+
+.sales-certification-map .sales-cert-table th:nth-child(3),
+.sales-certification-map .sales-cert-table td:nth-child(3) {
+  width: 33%;
+}
+
+.sales-certification-map .sales-cert-table tbody td {
+  background: #fff;
+  color: #44516a;
+}
+
+.sales-certification-map .sales-cert-table tbody tr:nth-child(even) td {
+  background: #fbfcfe;
+}
+
+.sales-certification-map .sales-cert-table tbody td:first-child {
+  background: #f8faff;
+  color: #1d2c48;
+  font-weight: 700;
+}
+
+.sales-certification-map .sales-cert-table tbody tr:nth-child(even) td:first-child {
+  background: #f4f7fc;
+}
+
+.sales-certification-map .sales-cert-table tbody tr:hover td {
+  background: #f6f9ff;
+}
+
+.sales-certification-map .sales-cert-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.sales-certification-map .sales-cert-table strong {
+  color: #1d2c48;
+}
+
+/* Standalone tables, such as the study-budget table, keep breathing room. */
+.sales-certification-map .research-canvas__inventory > .sales-cert-table {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+@media (max-width: 800px) {
+  .sales-certification-map .research-canvas__hero,
+  .sales-certification-nav,
+  .sales-certification-map .research-canvas__inventory {
+    width: min(calc(100% - 2 * var(--space-4)), 42rem);
+  }
+
+  .sales-certification-map .research-canvas__hero {
+    padding: var(--space-6);
+  }
+
+  .sales-certification-nav {
+    gap: 0.4rem;
+  }
+
+  .sales-certification-nav a {
+    min-height: 36px;
+    padding-inline: 0.68rem;
+    font-size: 0.8rem;
+  }
+
+  .sales-certification-review-card {
+    padding: var(--space-5);
+  }
+
+  .sales-certification-map .sales-cert-table {
+    margin-inline: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .sales-certification-map .research-canvas__hero {
+    padding: var(--space-5);
+    border-radius: 18px;
+  }
+
+  .sales-certification-nav {
+    padding-top: var(--space-3);
+  }
+
+  .sales-certification-nav a {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .sales-certification-map .sales-certification-target > header {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .sales-certification-map .sales-certification-target > header h2 {
+    max-width: none;
+  }
+
+  .sales-certification-review-card {
+    padding: var(--space-4);
+    border-radius: 18px;
+  }
+
+  .sales-certification-map .sales-cert-table table {
+    min-width: 48rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sales-certification-nav a {
+    transition: none;
+  }
+}
