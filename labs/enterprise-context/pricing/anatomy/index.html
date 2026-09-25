@@ -1,230 +1,29 @@
 ---
 layout: default
-title: "SAP Sales Pricing Anatomy — Enterprise Context Lab"
-description: "A practical explanation of how an SAP Sales pricing procedure row, condition type, condition record, calculation base, scale, group logic, and exclusion produce a condition result."
+title: "SAP Sales Pricing Anatomy — Consolidated"
+description: "Pricing anatomy is now part of the canonical SAP Sales Pricing Engine guide."
 permalink: /labs/enterprise-context/pricing/anatomy/
+canonical_url: https://dkharlanau.github.io/labs/enterprise-context/pricing/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-09-24
-last_reviewed: 2026-09-24
-review_method: "Current SAP Help review + comparison with adjacent Pricing pages + full editorial rewrite"
 hide_global_cta: true
-enterprise_context_graph: true
-tags:
-  - sap-s4hana
-  - sap-sd
-  - pricing
-  - condition-types
-  - free-goods
-  - condition-technique
-  - formulas
-  - extensibility
+sales_preparation: exclude
+tags: [sap-s4hana, sap-sd, pricing, condition-technique]
 ---
 
-{% assign evidence = site.data.labs.enterprise_context.sources.pricing_anatomy %}
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/pricing/">Pricing</a></li><li aria-current="page">Anatomy</li></ol></nav>
 
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/pricing/">Pricing</a></li><li aria-current="page">Anatomy</li></ol>
-</nav>
-
-<div class="research-canvas context-graph">
-  <header class="research-canvas__hero" data-reveal>
-    <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Deep vertical / Pricing Anatomy</p>
-      <h1>A condition is more<br />than a rate.</h1>
-      <p>In SAP Sales, a pricing result comes from several controls working together: the pricing procedure gives a condition its place, the condition type defines its behavior, master data can provide a rate, and the calculation base, scales, grouping, and interaction rules decide the final value.</p>
-      <a class="research-canvas__button" href="#pricing-anatomy-memory">Follow one condition <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="Pricing anatomy summary">
-      <p>Read the result in this order</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>Place</strong><small>Procedure row and requirement</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Value</strong><small>Rate, base, scale, conversion</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Interaction</strong><small>Group, exclusion, manual logic</small></div>
-      <em>Draft research · no client data</em>
-    </div>
+<article class="section note-detail">
+  <header class="note-header">
+    <p class="eyebrow">Pricing / consolidated route</p>
+    <h1>Pricing anatomy is now part of the main Pricing Engine guide.</h1>
+    <p class="note-subtitle">Procedure row, condition behavior, value source, calculation base, scales, and interaction rules are easier to learn as one pricing chain.</p>
   </header>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">functions</span>
-    <p><strong>Boundary:</strong> this page explains the anatomy of one pricing result. Procedure determination and runtime troubleshooting belong on the <a href="/labs/enterprise-context/pricing/">Pricing Engine</a> page; build order and governance belong in <a href="/labs/enterprise-context/pricing/configuration/">Pricing Configuration</a>.</p>
-    <a href="/labs/enterprise-context/data/pricing-anatomy.json">Open anatomy JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-  </section>
-
-  <section class="research-canvas__inventory" id="pricing-anatomy-memory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">The calculation path</p>
-      <h2>Follow the condition from permission to amount.</h2>
-      <p>A useful pricing analysis does not begin with the condition record. First establish whether the condition belongs in the active procedure and is allowed to participate. Then trace where its amount comes from and how SAP turns that amount into a condition value.</p>
-    </header>
-    <div class="ecg-control-stack">
-      <article><span>1 · PROCEDURE</span><h3>The pricing procedure gives the condition a place in the calculation.</h3><p>Its row establishes sequence and can add controls such as a requirement, subtotal, statistical treatment, calculation-base override, or amount-calculation override.</p></article>
-      <article><span>2 · TYPE</span><h3>The condition type defines reusable behavior.</h3><p>It describes what kind of pricing element this is and controls important behavior such as calculation type, conversions, scale handling, group treatment, and what users may change in the document.</p></article>
-      <article><span>3 · SOURCE</span><h3>The amount needs a source.</h3><p>For an automatically determined price, discount, or surcharge, pricing can search condition records through the configured access logic. Other condition types can receive their amount from a different supported source or from controlled manual entry.</p></article>
-      <article><span>4 · BASE</span><h3>The amount and the base are separate inputs.</h3><p>A percentage is meaningless until we know what value it is applied to. Quantity, monetary value, weight, volume, a previous subtotal, or another calculated basis can all change the result without changing the visible rate.</p></article>
-      <article><span>5 · INTERACTION</span><h3>Scales, grouping, and exclusion can change the active result.</h3><p>The selected rate can depend on a scale. A group condition can calculate with several related items. Condition exclusion can leave one valid condition inactive because another one wins.</p></article>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Pricing procedure</p>
-      <h2>The row tells SAP how this condition participates.</h2>
-      <p>The condition type alone does not explain the document result. The same type only becomes meaningful in the procedure that places it among earlier and later price elements.</p>
-    </header>
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Sequence and eligibility</h3>
-        <p>Step order determines what has already been calculated. A requirement can prevent the condition from being considered even when valid master data exists.</p>
-      </div>
-      <div>
-        <h3>Intermediate values</h3>
-        <p>Subtotals and from/to references can make earlier pricing results available to later rows. This is why a wrong upstream value can surface much later in the procedure.</p>
-      </div>
-      <div>
-        <h3>Calculation controls</h3>
-        <p>The row can change the normal calculation base or amount calculation and can mark a price element as statistical or relevant for downstream processing.</p>
-      </div>
-    </div>
-    <p class="ecg-caption">A condition record answers “what data was found?” The procedure row answers “what is SAP supposed to do with it here?”</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Condition type and condition record</p>
-      <h2>Behavior is configuration; commercial values are master data.</h2>
-      <p>This distinction prevents a common design mistake: using condition records to compensate for a condition type whose calculation behavior is wrong.</p>
-    </header>
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Condition type</h3>
-        <p>Defines reusable pricing behavior: for example, whether a value is percentage- or amount-based, how units and currencies are handled, how scales are processed, whether items are evaluated together, and which document changes are allowed.</p>
-      </div>
-      <div>
-        <h3>Condition record</h3>
-        <p>Stores the commercial value for a particular key and validity period when the condition uses condition technique. The key may include attributes such as customer, product, sales area, or another configured field combination.</p>
-      </div>
-      <div>
-        <h3>Access logic</h3>
-        <p>Defines where pricing searches and in which order. A missing result can therefore mean that no matching record exists, that the key differs from what was expected, or that the relevant row never became eligible.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Rate and base</p>
-      <h2>A correct percentage can still produce the wrong amount.</h2>
-      <p>Separate the visible rate from the value to which it applies. This is one of the fastest ways to understand a pricing difference.</p>
-    </header>
-    <div class="ecg-case__body">
-      <p><strong>Synthetic patterns:</strong> the numbers below are illustrative. Use the actual pricing document and analysis data when diagnosing a real case.</p>
-      <p>Suppose a document shows a 10% discount. If the intended base is EUR 1,000, the discount is EUR 100. If the actual base is EUR 900 because an earlier price element or subtotal changed it, the same 10% produces EUR 90. Changing the condition record would hide the real problem.</p>
-      <p>For quantity-based prices, the same principle applies to pricing quantity and pricing unit. For freight or other physical measures, weight, volume, and unit conversion can become part of the calculation boundary.</p>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Scales and grouping</p>
-      <h2>The decisive number may be larger than one item.</h2>
-      <p>Scales select a value according to a configured basis and threshold model. Group conditions extend that idea by taking related document items into account when the scale base or condition value is calculated.</p>
-    </header>
-    <div class="ecg-decision-columns">
-      <div><h3>From / to scales</h3><p>The agreement can define a value from a threshold upward or up to a threshold. The first check is therefore the scale basis SAP actually calculated, not only the ordered quantity a user remembers.</p></div>
-      <div><h3>Interval logic</h3><p>Where interval or graduated logic is configured, different parts of the quantity can be evaluated with different scale values instead of applying one value to the full quantity.</p></div>
-      <div><h3>Group conditions</h3><p>Related items can be cumulated for scale determination. A single item may appear too small for a discount while the combined group qualifies for it.</p></div>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Interaction</p>
-      <h2>“Found” does not always mean “active.”</h2>
-      <p>Several valid pricing elements can coexist. The final set depends on the rules that govern how they interact.</p>
-    </header>
-    <div class="ecg-control-stack">
-      <article><span>EXCLUSION</span><h3>Competing conditions can be compared and one can be deactivated.</h3><p>This is different from a failed search. The condition can be visible in pricing analysis but intentionally excluded from the commercial result.</p></article>
-      <article><span>SUPPLEMENT</span><h3>A supplement travels with its main condition.</h3><p>When conditions share the same dependency and validity, SAP can store supplementary conditions with the main condition record and determine them together. The supplement is not an independent search problem.</p></article>
-      <article><span>MANUAL</span><h3>Manual entry is a separate source of document pricing data.</h3><p>Whether users may add or change a condition depends on the condition-type and procedure design. A manual value should not be mistaken for evidence that automatic determination worked.</p></article>
-    </div>
-  </section>
-
-  <section class="ecg-case" data-reveal>
-    <div class="ecg-case__intro">
-      <p class="research-canvas__eyebrow">Free Goods</p>
-      <h2>Free-goods determination changes quantity before it becomes a pricing question.</h2>
-      <p>Free-goods determination creates a free-of-charge sales-order item. Inclusive and exclusive free goods differ in what happens to the main item quantity.</p>
-      <strong>First prove the quantity determination; then inspect how the resulting item is priced.</strong>
-    </div>
-    <div class="ecg-case__body">
-      <h3>Inclusive</h3>
-      <p>The free quantity is taken from the ordered quantity, so the main item quantity is reduced and the free quantity is represented separately.</p>
-      <h3>Exclusive</h3>
-      <p>The ordered quantity remains unchanged and the customer receives an additional free quantity.</p>
-      <p>This boundary matters because treating free goods as a normal discount can send the investigation into pricing records when the real question is whether free-goods determination created the expected item and quantity.</p>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Custom calculation</p>
-      <h2>Change only the part the standard model cannot express.</h2>
-      <p>Pricing already separates eligibility, condition amount, calculation base, and final condition value. Keep that separation when custom logic is necessary.</p>
-    </header>
-    <div class="ecg-decision-columns">
-      <div><h3>Eligibility</h3><p>If the business rule decides whether a condition should participate, keep the logic at the eligibility boundary rather than hiding it inside amount calculation.</p></div>
-      <div><h3>Base</h3><p>If the standard rate is correct but the commercial agreement requires a different basis, change the base calculation rather than the master-data value.</p></div>
-      <div><h3>Amount</h3><p>If the arithmetic itself is different, use the supported formula or extension mechanism for the relevant deployment model. Do not assume that a classic routine and a cloud extension point are interchangeable.</p></div>
-    </div>
-    <p class="ecg-caption">For implementation choices and deployment-specific extension patterns, continue with <a href="/labs/enterprise-context/pricing/configuration/">Pricing Configuration</a>.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Reading a pricing result</p>
-      <h2>Explain the difference in one chain.</h2>
-      <p>When two documents price differently, compare the first point where the chain diverges instead of scanning every condition in the document.</p>
-    </header>
-    <div class="ecg-control-stack">
-      <article><span>01</span><h3>Same active pricing procedure and same relevant row?</h3></article>
-      <article><span>02</span><h3>Same condition type behavior and same eligibility result?</h3></article>
-      <article><span>03</span><h3>Same source record or manual value, with the same key and validity?</h3></article>
-      <article><span>04</span><h3>Same calculation base, scale level, units, and currency context?</h3></article>
-      <article><span>05</span><h3>Same group, exclusion, supplement, and manual interaction?</h3></article>
-    </div>
-    <p class="ecg-caption">This is a reading order, not a universal incident checklist. The <a href="/labs/enterprise-context/pricing/">Pricing Engine</a> page covers the wider runtime path and pricing analysis.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Product behavior remains source-tracked.</h2>
-      <p>The explanation above is independently written. The source registry links to SAP documentation for condition types, pricing controls, scales, group conditions, supplements, free goods, exclusion, formulas, and extension points.</p>
-    </header>
-    <div class="research-route-list">
-      {% for source in evidence.sources %}
-      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="ecg-machine" data-reveal>
-    <div>
-      <p class="research-canvas__eyebrow">Structured model</p>
-      <h2>The deeper research model remains machine-readable.</h2>
-      <p>The structured dataset retains condition families, calculation bases, scales, interaction models, formulas, examples, and research notes that do not all need to appear in the public narrative.</p>
-    </div>
-    <div class="ecg-machine__actions">
-      <a class="research-canvas__button" href="/labs/enterprise-context/data/pricing-anatomy.json">Pricing anatomy JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
-      <a href="/labs/enterprise-context/data/pricing-anatomy-sources.json">Pricing anatomy sources</a>
-      <a href="/labs/enterprise-context/pricing/">Back to Pricing Engine</a>
-    </div>
-  </section>
-
-  <div class="research-canvas__support" data-reveal>
-    {% include atlas/author-block.html %}
-    {% include atlas/disclaimer.html %}
+  <div class="note-body">
+    <p>Continue with <a href="/labs/enterprise-context/pricing/#pricing-anatomy"><strong>SAP Sales Pricing Engine — Pricing anatomy</strong></a>. This route remains so older links do not break.</p>
+    <p>The deeper structured model remains available in <a href="/labs/enterprise-context/data/pricing-anatomy.json">pricing-anatomy.json</a>. Synthetic patterns and the source registry remain available in <a href="/labs/enterprise-context/data/pricing-anatomy-sources.json">pricing-anatomy-sources.json</a>.</p>
   </div>
-</div>
+</article>

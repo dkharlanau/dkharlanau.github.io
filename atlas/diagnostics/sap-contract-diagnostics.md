@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "SAP Contract Diagnostics"
-description: "Conservative diagnostic frame for SAP purchasing contract release orders, target quantities, and condition adoption failures."
+title: "SAP Purchasing Contract Diagnostics"
+description: "Procurement diagnostic guide for purchasing contracts, release orders, validity, target consumption, and condition adoption."
 permalink: /atlas/diagnostics/sap-contract-diagnostics/
-last_modified_at: 2026-06-13
+last_modified_at: 2026-09-24
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Procurement and logistics
@@ -13,13 +13,15 @@ business_process: "Procure to pay"
 status: needs_verification
 verified: false
 level: 1
-last_reviewed: 2026-06-13
+last_reviewed: 2026-09-24
 author: Dzmitryi Kharlanau
 tags:
   - diagnostics
   - sap-ams
-  - contract
+  - purchasing-contract
   - outline-agreement
+  - procurement
+sales_preparation: exclude
 related:
   - /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
   - /atlas/diagnostics/sap-source-determination-diagnostics/
@@ -42,15 +44,15 @@ sitemap: false
     <li><a href="/">Home</a></li>
     <li><a href="/atlas/">Knowledge Atlas</a></li>
     <li><a href="/atlas/diagnostics/">Diagnostics</a></li>
-    <li aria-current="page">SAP Contract Diagnostics</li>
+    <li aria-current="page">SAP Purchasing Contract Diagnostics</li>
   </ol>
 </nav>
 
 <article class="section note-detail atlas-page">
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
-    <h1>SAP contract diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for finding why a purchasing contract release order cannot be created or does not adopt the agreed terms.</p>
+    <h1>SAP purchasing contract diagnostics</h1>
+    <p class="note-subtitle">Find why a supplier contract cannot be used as expected without confusing a purchasing outline agreement with a Sales contract.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -63,6 +65,10 @@ sitemap: false
   </aside>
 
   <div class="note-body">
+    <h2>Reader boundary: this is Procurement, not Sales Contract Management</h2>
+    <p>This page covers supplier-side purchasing contracts. In the current C_S4CS Public Edition Sales route, SAP teaches customer-side Sales Contract Management under solution process I9I. A Sales contract is consumed by release sales orders; the purchasing release logic below is not an I9I procedure.</p>
+    <p>For C_S4CS study, use the <a href="/labs/enterprise-context/sales-processes/#sd-ctr">Sales Process Atlas contract card</a> and the official I9I lesson. This page is excluded from the automatic Sales preparation library so similarly named procurement content does not displace the Sales unit.</p>
+
     <h2>Core idea</h2>
     <p>Purchasing contracts — quantity contracts, value contracts, and central contracts — fix commercial terms such as price, target quantity, or target value over a period. A failure usually appears when a release order is created: the order cannot reference the contract, the price is wrong, the target quantity is exhausted, or the release is blocked. The diagnostic goal is to separate contract-level problems from release-order problems.</p>
 
@@ -127,6 +133,12 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Contract failures are usually quantity, validity, or sourcing problems rather than system errors. Collect the contract number, target and cumulative quantities/values, validity dates, and the exact release error before escalating.</p>
+
+    <h2>Sources</h2>
+    <ul>
+      <li>SAP Learning — <a href="https://learning.sap.com/courses/sap-s-4hana-contract-management/introducing-contracts-in-sap-s-4hana">Introducing Contracts in SAP S/4HANA</a>.</li>
+      <li>SAP Learning — <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-fundamental-business-processes/executing-solution-process-sales-contract-management-i9i-_cfe682c7-61d0-41a7-b730-e62c7d63dc55">Sales Contract Management (I9I)</a> — separate Sales-side process.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a configuration guide for contract types, release strategies, or condition techniques. It does not cover scheduling agreements in detail (see the dedicated scheduling agreement diagnostic) or Ariba/SRM contract integration.</p>

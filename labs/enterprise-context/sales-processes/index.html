@@ -7,8 +7,9 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-24
 hide_global_cta: true
+sales_preparation: sales
 sales_process_atlas: true
 tags:
   - sap
@@ -17,7 +18,7 @@ tags:
   - sd
   - order-to-cash
   - special-processes
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-24
 publication_wave: "logistics-search-wave-02"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP SD sales processes, order-to-cash and special sales scenarios"
@@ -158,20 +159,32 @@ source_links:
     <p class="ecg-caption"><strong>Evidence boundary:</strong> source-backed process references support selected SAP behavior and scope. Stable <code>SD.*</code> memory codes, comparisons, and the branch-first method are authored learning tools, not SAP terminology.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="c-s4cs-process-route" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Assessment path</p>
-      <h2>Use the atlas for the branch, then open the engine.</h2>
-      <p>A process answer is stronger when you can move from the business variant into the decision engine that controls price, promise, risk, shipping, or master data.</p>
+      <p class="research-canvas__eyebrow">C_S4CS / process branches</p>
+      <h2>Keep the process map here; keep the mastery plan in the certification hub.</h2>
+      <p>This page owns the process variants. The <a href="/labs/assessment/sales-certification/#our-units">certification hub</a> owns the repeated study tasks, evidence prompts, and course-by-course mastery plan. For final review, use the compact branches below and open the detailed process card only when the changed rule is not clear.</p>
     </header>
+
+    <h3>Fundamental branches on this page</h3>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/sales-order/"><span>SO</span><strong>Sales Order Decision Map</strong><small>WHO → WHAT → WHERE → WHEN → PRICE → PROMISE → RISK → FULFILL.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing</strong><small>Procedure, condition technique, calculation, diagnostics, and extension boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>Promise logic, scope, PAC, PAL, SUP, BOP, and alternative confirmation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping & Scheduling</strong><small>Plant, shipping point, route, dates, delivery due logic, EWM and TM boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/credit/"><span>CRD</span><strong>Credit Management</strong><small>Trigger, account, segment, exposure, check rule, block, release, and recheck.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Business partner, product, customer-material data, organization, defaults, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="#sd-quo"><span>BDG</span><strong>Sales Quotation</strong><small>A quotation is a time-bound commercial offer. An accepted quotation becomes relevant to execution through a referenced sales order; partial reference can leave quantity still open.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-foc"><span>BDA</span><strong>Free of Charge Delivery</strong><small>The physical flow remains: confirmation, delivery, picking and PGI. Commercial value changes through free-of-charge item logic, and billing can be omitted or used for a zero-value or pro-forma outcome.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-ctr"><span>I9I</span><strong>Sales Contract Management</strong><small>The contract controls validity and a target value or quantity. Follow-on sales orders release value or quantity from that agreement and still execute their own fulfillment flow.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
     </div>
+
+    <h3>Advanced branches on this page</h3>
+    <div class="research-route-list">
+      <a href="#sd-ico"><span>1HO</span><strong>Domestic Intercompany</strong><small>One group company sells to the external customer while an affiliated company delivers, so customer and intercompany billing relationships coexist.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-aic"><span>5D2</span><strong>Advanced Intercompany Sales</strong><small>Use the detailed card to compare the advanced internal orchestration with the simpler domestic intercompany branch.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-tpo"><span>BDK</span><strong>Third-Party without Shipping Notification</strong><small>The supplier ships directly to the customer. In the standard course flow, supplier invoice receipt is the key billing boundary for the selling company.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-reb"><span>1B6</span><strong>Sales Rebate Processing</strong><small>Condition contracts collect eligible business volume and settle the agreed rebate later; this is not the same calculation as the original invoice price.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-dp-classic"><span>BKJ</span><strong>Customer Down Payment</strong><small>A billing-plan milestone can create a down-payment request, but the request, the actual incoming payment, and the final invoice settlement are different states.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-bill-coll"><span>BKZ</span><strong>Invoice List and Collective Billing</strong><small>Collective billing combines eligible billable references; an invoice list groups existing billing documents. Keep these object boundaries separate.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      <a href="#sd-plus-pay"><span>1Z1</span><strong>Digital Payments — Sales</strong><small>Follow the payment branch as a Sales overlay and keep payment authorization, credit management, billing, and final clearing as separate controls.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+    </div>
+
+    <p class="ecg-caption">Official scope: <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-fundamental-business-processes">Sales Fundamental Business Processes</a> and <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-advanced-business-processes">Sales Advanced Business Processes</a>. Sell from Stock remains on the <a href="/atlas/concepts/order-to-cash/">Order-to-Cash primary page</a>; the AI unit remains on <a href="/labs/enterprise-context/sales-analytics/">Sales Automation & Analytics</a>. This avoids turning the process atlas into a second certification hub.</p>
   </section>
 
   <section class="research-canvas__inventory" id="process-groups" data-reveal>
@@ -275,251 +288,6 @@ source_links:
       </div>
     </section>
     {% endfor %}
-  </section>
-
-  <section class="research-canvas__inventory" id="long-term-sales-agreements" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Long-term sales agreements / Contract logic</p>
-      <h2>We separate the commercial commitment from the execution signal.</h2>
-      <p>When we design a long-term customer agreement, we first ask where the real delivery quantity and date live. That question separates quantity contracts, value contracts, and sales scheduling agreements much faster than memorizing document types.</p>
-    </header>
-
-    <div class="spa-compare-grid">
-      <article>
-        <span>SD.CTR.QTY</span>
-        <h3>Quantity contract</h3>
-        <p>We agree a target quantity for a validity period. We do not normally keep the detailed delivery schedule in the contract. When the customer wants goods, we create a release order and consume the open contract quantity.</p>
-      </article>
-      <article>
-        <span>SD.CTR.VAL</span>
-        <h3>Value contract</h3>
-        <p>We agree a target monetary value. Release orders consume the open value, and we can allow a defined material scope, product hierarchy, or other agreed selection. We monitor value in the contract currency.</p>
-      </article>
-      <article>
-        <span>SD.SA</span>
-        <h3>Sales scheduling agreement</h3>
-        <p>We keep recurring delivery requirements in delivery schedules and schedule lines. We therefore do not need a separate call-off sales order for the normal execution path: the schedule lines themselves become delivery relevant.</p>
-      </article>
-    </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">route</span>
-      <p><strong>Our memory rule:</strong> if we only know the total quantity or value, we usually need a release order to create executable demand. If we already receive exact quantities and dates over time, we are closer to a sales scheduling agreement.</p>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Quantity contract flow</h3>
-        <p>We use <strong>Contract → Release Order → ATP / Schedule Lines → Delivery → PGI → Billing</strong>. The contract holds the commercial quantity ceiling; the release order introduces the operational quantity and requested date.</p>
-      </div>
-      <div>
-        <h3>Value contract flow</h3>
-        <p>We use the same release-order pattern when fulfillment happens through sales orders, but we consume <strong>value</strong> instead of quantity. SAP can also bill the value contract directly when we use a billing plan.</p>
-      </div>
-      <div>
-        <h3>Scheduling agreement flow</h3>
-        <p>We use <strong>Scheduling Agreement → Delivery Schedule → Schedule Lines → Delivery → PGI → Billing</strong>. We focus on forecast, JIT, planning, cumulative quantities, and delivery-due processing.</p>
-      </div>
-    </div>
-
-    <header>
-      <p class="research-canvas__eyebrow">Release order / What we actually configure</p>
-      <h2>We treat the call-off as a referenced sales order, not as a special warehouse document.</h2>
-      <p>When we create a release order, SAP checks the contract context and updates its consumption. We therefore design the reference chain as carefully as the order itself.</p>
-    </header>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>1. We prove the source and target</h3>
-        <p>We define which order type may follow the contract. In copy control, we verify the source contract type, target order type, and the relevant header and item relationships.</p>
-      </div>
-      <div>
-        <h3>2. We check eligibility</h3>
-        <p>We expect the release to respect validity, allowed products, authorized partners, and remaining quantity or value. We do not bypass these controls just because the customer order can technically be entered.</p>
-      </div>
-      <div>
-        <h3>3. We decide what is copied</h3>
-        <p>We use copying requirements and data-transfer logic to control whether the reference is allowed and which data moves into the order. We also decide where pricing is copied and where we want redetermination.</p>
-      </div>
-      <div>
-        <h3>4. We protect document flow</h3>
-        <p>We keep the reference visible so the contract can show its release orders and update released quantity or value correctly. When consumption is wrong, we inspect the reference chain before changing the final order.</p>
-      </div>
-    </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">difference</span>
-      <p><strong>We keep two controls separate:</strong> <code>Outline Agrmt Mess.</code> helps us find an open contract while we create an order. Copy control defines whether the contract can become that order and how the reference behaves. Automatic contract search does not replace copy control.</p>
-      <a href="/labs/enterprise-context/sales-processes/mechanisms/#mec-sd-copy">Open our Copy Control deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-    </div>
-
-    <header>
-      <p class="research-canvas__eyebrow">Automatic contract search / Outline Agrmt Mess.</p>
-      <h2>We can let SAP look for an open agreement instead of forcing users to know the contract number.</h2>
-      <p>We configure this behavior in the sales document type. The header-level options focus on the customer context; the item-level options also use the material context. We choose the behavior according to how much automation we want.</p>
-    </header>
-
-    <div class="ecg-input-grid">
-      <article><span>Blank</span><h3>We do not search</h3><p>We create the order without an automatic open-outline-agreement check.</p></article>
-      <article><span>A / B</span><h3>We check and let the user decide</h3><p>We search at header or item level. When SAP finds open agreements, we let the user review the available references and decide whether to use one.</p></article>
-      <article><span>C / D</span><h3>We copy automatically when the result is unique</h3><p>We search at header or item level. If exactly one suitable open agreement exists, we let SAP use it automatically; otherwise we keep the selection problem visible.</p></article>
-      <article><span>E / F</span><h3>We go straight to the selection list</h3><p>We search at header or item level and move directly to the list of suitable agreements instead of showing an intermediate dialog.</p></article>
-    </div>
-
-    <header>
-      <p class="research-canvas__eyebrow">Value contract / Billing decision</p>
-      <h2>We decide whether the contract is only a commercial ceiling or also a billing object.</h2>
-      <p>A value contract gives us two different billing designs. We should state the chosen design explicitly because they produce different document chains and different operational expectations.</p>
-    </header>
-
-    <div class="spa-compare-grid">
-      <article>
-        <span>Path 1</span>
-        <h3>We bill the release order</h3>
-        <p>We create the call-off order, fulfill it, and bill the resulting order or delivery according to the normal sales process. The value contract remains the long-term commercial control and tracks released value.</p>
-      </article>
-      <article>
-        <span>Path 2</span>
-        <h3>We bill the value contract directly</h3>
-        <p>We use a billing plan in the value contract and bill planned dates or partial values from the contract itself. We then treat billing-plan design, corrections, and target-value changes as part of the contract design.</p>
-      </article>
-      <article>
-        <span>Currency</span>
-        <h3>We keep one consumption currency</h3>
-        <p>We can create a release order in another currency, but SAP converts the released value into the contract currency. We therefore distinguish order currency from the currency that controls the contract ceiling.</p>
-      </article>
-    </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
-      <p><strong>Billing detail:</strong> a release order follows its own billing relevance, for example order-related or delivery-related. If the value contract itself is billed, the billing plan makes the contract billable. Standard document-type examples are useful implementation anchors, but the assessment answer should focus on the billing basis rather than memorizing codes.</p>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>We adjust open billing dates</h3>
-        <p>If we change the target value of a value-contract item, SAP can recalculate the still-open billing-plan dates so that the remaining contract value is distributed across the open dates.</p>
-      </div>
-      <div>
-        <h3>We do not assume unreleased value will bill itself</h3>
-        <p>A value contract that has not been completely released is not automatically billed. We therefore separate “billing plan exists” from “the contract is ready for automatic billing.”</p>
-      </div>
-      <div>
-        <h3>We control target reductions after billing</h3>
-        <p>If billed billing-plan dates already exist and we later reduce the target value, SAP does not automatically check whether the contract is now overbilled. We review the difference and, where required, create a credit memo.</p>
-      </div>
-    </div>
-
-    <header>
-      <p class="research-canvas__eyebrow">Value contract / Release authorization</p>
-      <h2>We control who may call off the agreement and who may receive the goods.</h2>
-      <p>Partner authorization is not the same as normal partner determination. We use it to decide whether another sold-to party may release against the contract and which additional ship-to parties are valid for the resulting release order.</p>
-    </header>
-
-    <div class="spa-compare-grid">
-      <article>
-        <span>AA</span>
-        <h3>We authorize additional releasing sold-to parties</h3>
-        <p>Partner function <code>AA</code> represents an additional sold-to party authorized to place release orders against the sales contract. We can maintain several AA partners.</p>
-      </article>
-      <article>
-        <span>AW</span>
-        <h3>We authorize additional receiving ship-to parties</h3>
-        <p>Partner function <code>AW</code> represents an additional ship-to party for the release order. If several valid ship-to parties exist, SAP can present the choices when we create the release.</p>
-      </article>
-      <article>
-        <span>KAB</span>
-        <h3>We keep the release-partner procedure explicit</h3>
-        <p>In the standard release-order partner setup, procedure <code>KAB</code> contains the AA and AW functions. We still verify the assigned partner procedure in the target system instead of assuming the standard template was kept unchanged.</p>
-      </article>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Rule blank — we do not check</h3>
-        <p>Any releasing partner can be accepted. We use this only when the business deliberately does not want partner authorization control.</p>
-      </div>
-      <div>
-        <h3>Rule A — we check contract partners</h3>
-        <p>We accept the contract sold-to party and the additional authorized releasing partners stored with partner function AA in the sales contract.</p>
-      </div>
-      <div>
-        <h3>Rule B — we check the hierarchy</h3>
-        <p>We can authorize partners below the contract sold-to party in the customer hierarchy. This is useful when a central agreement is consumed by subordinate customers.</p>
-      </div>
-      <div>
-        <h3>Rule C — we combine both models</h3>
-        <p>We accept a partner when it passes the contract-partner rule or the customer-hierarchy rule. We use this when a commercial agreement needs both explicit authorized partners and hierarchy-based releases.</p>
-      </div>
-    </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">group</span>
-      <p><strong>Our distinction:</strong> <code>AA</code> answers “who else may order against this contract?” <code>AW</code> answers “where else may we ship the released goods?” We treat this as a header-level authorization model, not as an item-level material permission.</p>
-    </div>
-
-    <header>
-      <p class="research-canvas__eyebrow">Contract lifecycle / Dates and defaults</p>
-      <h2>We design the validity period as a rule, not just two manually entered dates.</h2>
-      <p>For contracts that use the relevant contract-profile functionality, we can default lifecycle behavior instead of asking users to calculate every start date, end date, cancellation rule, or follow-up manually.</p>
-    </header>
-
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>We determine the start date</h3>
-        <p>We can base contract dates on a rule such as the current date or another business event. The exact baseline dates depend on the contract model and deployment.</p>
-      </div>
-      <div>
-        <h3>We derive the end date</h3>
-        <p>We can combine a baseline date with a duration or date rule. This is useful when the commercial term is “one year from start” rather than a manually maintained calendar date.</p>
-      </div>
-      <div>
-        <h3>We control cancellation and follow-up</h3>
-        <p>A contract profile can provide default date-determination rules, cancellation behavior, and follow-up actions for the relevant contract type. We verify the exact profile fields for the S/4HANA edition we implement.</p>
-      </div>
-      <div>
-        <h3>We keep validity operational</h3>
-        <p>The validity period is not descriptive master data. It is part of release-order eligibility, so a wrong start or end date changes whether we can consume the agreement.</p>
-      </div>
-    </div>
-
-    <header>
-      <p class="research-canvas__eyebrow">Quantity contract / Down payment</p>
-      <h2>We can collect money before we allow the release order to move into delivery.</h2>
-      <p>For sales quantity contracts, we can use a milestone billing plan for down-payment processing. We create the down-payment request from the contract and create the release order with reference to the same contract. With the relevant configuration, we keep the release-order schedule lines blocked for delivery until the required down payment is received.</p>
-    </header>
-
-    <div class="spa-flow" aria-label="Quantity contract down-payment flow">
-      <span>Quantity Contract</span><i aria-hidden="true">→</i>
-      <span>Milestone Billing Plan</span><i aria-hidden="true">→</i>
-      <span>Down-Payment Request</span><i aria-hidden="true">→</i>
-      <span>Release Order with Delivery Block</span><i aria-hidden="true">→</i>
-      <span>Incoming Down Payment</span><i aria-hidden="true">→</i>
-      <span>Delivery</span><i aria-hidden="true">→</i>
-      <span>Final Invoice with Down-Payment Clearing</span>
-    </div>
-
-    <div class="ecg-decision-columns">
-      <div><h3>We request</h3><p>We generate the down-payment request from the contract billing plan.</p></div>
-      <div><h3>We protect fulfillment</h3><p>We can block the release-order schedule lines from delivery while the required down payment is still open.</p></div>
-      <div><h3>We release</h3><p>After the customer payment is posted and the configured requirement is satisfied, SAP can remove the delivery block and we continue fulfillment.</p></div>
-      <div><h3>We settle</h3><p>In final billing, we clear the down payment against the amount due instead of charging the customer twice.</p></div>
-    </div>
-
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>Our 60-second assessment answer:</strong> A quantity or value contract sets a long-term commercial ceiling while release orders turn the agreement into executable sales orders. Quantity contracts control released quantity; value contracts control released value. Copy control manages the contract-to-order reference. A value contract can be billed through its release-order flow or, when designed for it, directly through a billing plan. Partner authorization can restrict who may release or receive. If the customer already sends concrete recurring quantities and dates, a scheduling agreement is usually the better model.</p>
-    </div>
-
-    <p class="ecg-caption">
-      <strong>Primary references:</strong>
-      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/7b24a64d9d0941bda1afa753263d9e39/5c65b65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener">SAP Help — Release Orders</a> ·
-      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/5065b65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener">SAP Help — Value Contract</a> ·
-      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/7b24a64d9d0941bda1afa753263d9e39/005c5595d1a54258ba3d782030f99c7e.html" target="_blank" rel="noopener">SAP Help — Down Payment Processing for Sales Contracts</a> ·
-      <a href="https://help.sap.com/docs/PRODUCT_ID/a376cd9ea00d476b96f18dea1247e6a5/5f65b65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener">SAP Help — Partner Authorization for Release Orders</a> ·
-      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/3422bf53d25ab64ce10000000a174cb4.html" target="_blank" rel="noopener">SAP Help — Contract Profile</a> ·
-      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/e5c284520bd741968fb9c4768e91cc21.html" target="_blank" rel="noopener">SAP Help — Sales Scheduling Agreement Integration</a>.
-    </p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
