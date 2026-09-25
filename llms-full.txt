@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-09-25T00:00:00Z
+Generated: 2026-09-24T00:00:00Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -764,7 +764,7 @@ REVIEWED: 2026-05-06
 **Sources:** [SAP sales document flow](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6aa7c6535e601e4be10000000a174cb4.html), [SAP outbound delivery creation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/c81fbf53f106b44ce10000000a174cb4.html), and [SAP sales billing](https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/4c74c957b7018809e10000000a4450e5.html).
 **Date checked:** 2026-08-11
 **Confidence:** high for the standard document chain; medium for variations introduced by industry processes, extensions, and external systems.
-**Related page/topic:** /atlas/maps/order-to-cash-map/
+**Related page/topic:** /atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/
 **Practical implication:** Diagnose an O2C delay as a failed transition between business documents and controls, not as a generic module or team problem.
 **Tags:** order-to-cash, sap-sd, fulfillment, billing, receivables
 
@@ -795,6 +795,18 @@ REVIEWED: 2026-05-06
     Order to cash is the end-to-end operating chain from customer demand to financial settlement. In a standard sell-from-stock path, the evidence normally progresses through a sales order, availability confirmation, outbound delivery, goods issue, billing document, accounting entry, receivable, and clearing result.
     The document chain is not merely technical history. Each transition represents a business control: what can be promised, what can be shipped, what can be invoiced, what can be posted, and what can be considered settled.
 
+    Process and evidence map
+
+      Standard order-to-cash checkpoints. Each step names the business outcome and the evidence that should exist before the process moves forward.
+
+        DemandSales orderCustomer, product, quantity, requested date, partners, and commercial terms are valid.
+        CommitConfirmed scheduleAvailability, credit, pricing, incompleteness, and delivery controls permit execution.
+        FulfilDelivery and goods issuePicking and shipping evidence exists, and goods issue records the inventory event.
+        BillBilling and accountingThe billable reference produces the intended invoice and financial posting.
+        SettleReceivable and clearingPayment, deduction, dispute, or clearing evidence resolves the open customer item.
+
+
+
     Why it matters
     O2C is where customer promise, inventory reality, logistics execution, pricing, tax, credit, accounting, and receivables meet. A failure in one control often appears in another team's queue: an availability problem looks like an order issue, a warehouse status looks like a billing delay, or a payment reference problem looks like an open-credit problem.
 
@@ -813,10 +825,19 @@ REVIEWED: 2026-05-06
     How to diagnose across teams
 
       Start with the customer's expected outcome and the exact sales-document item.
-      Use document flow and item statuses to find the last correct evidence and the first missing or blocked transition.
+      Use document flow and item statuses to find the last correct evidence and the first missing or blocked transition. A missing document is different from an existing document in error.
+      Name the failed transition: order-to-delivery, delivery-to-goods-issue, reference-to-billing, billing-to-accounting, or receivable-to-clearing.
       Separate the cause into master data, configuration, application status, integration, timing, or approval ownership.
       Route the incident with the evidence needed by the owning team, not only the symptom reported by the user.
       Close the incident only after the expected downstream document or settlement evidence exists.
+
+
+    Evidence to capture before routing
+
+      Sales document and item, document type, customer, product, plant, requested date, and confirmed date.
+      Current header and item statuses, active block or incompleteness reason, and the relevant document flow.
+      Last successful document, missing next document, exact error text, and time of the last processing attempt.
+      Expected business outcome and the control or team that owns the failed transition.
 
 
     Useful measures
@@ -826,7 +847,7 @@ REVIEWED: 2026-05-06
     Follow the document flow and business-event sequence. Ask which document exists, which result should follow, which control owns that transition, and what proof will show recovery. This prevents “SAP issue” from becoming a vague label for a cross-functional operating problem.
 
     Boundaries and process variants
-    Third-party, intercompany, make-to-order, returns, services, billing plans, subscriptions, external commerce, EWM, and transportation scenarios add or replace documents. Do not force them into a sell-from-stock sequence. Use the SAP order-to-cash process map as a tracing method, then adapt the checkpoints to the approved process design.
+    Third-party, intercompany, make-to-order, returns, services, billing plans, subscriptions, external commerce, EWM, and transportation scenarios add or replace documents. Do not force them into a sell-from-stock sequence. Keep the tracing method—last correct evidence, missing transition, owning control—but adapt the checkpoints to the approved process design.
 
     Official references
 
@@ -841,7 +862,7 @@ REVIEWED: 2026-05-06
     Related Atlas Pages
 
       SAP ATP Is Not Inventory
-      Order to Cash Map
+      SAP SD Order-to-Cash Diagnostics Hub
       SAP Stock Exists but Is Not Promisable
       SAP Sales Order Block Diagnosis
       SAP Delivery Processing Diagnostics
@@ -857,10 +878,10 @@ Dzmitryi Kharlanau provides focused architecture reviews, incident diagnostics, 
 Related service: https://dkharlanau.github.io/services/sap-integration-reliability-assessment/
 Related evidence:
 - https://dkharlanau.github.io/atlas/concepts/sap-atp-is-not-inventory/
-- https://dkharlanau.github.io/atlas/maps/order-to-cash-map/
 - https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/
 - https://dkharlanau.github.io/atlas/concepts/sap-transformation-recovery-framework/
 - https://dkharlanau.github.io/atlas/diagnostics/sap-ale-distribution-model-diagnostics/
+- https://dkharlanau.github.io/atlas/diagnostics/sap-idoc-diagnostics/
 
 ==================================================
 
@@ -1112,9 +1133,9 @@ Related service: https://dkharlanau.github.io/services/sap-integration-reliabili
 Related evidence:
 - https://dkharlanau.github.io/atlas/concepts/order-to-cash/
 - https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/
-- https://dkharlanau.github.io/atlas/maps/order-to-cash-map/
 - https://dkharlanau.github.io/atlas/concepts/sap-transformation-recovery-framework/
 - https://dkharlanau.github.io/atlas/diagnostics/sap-ale-distribution-model-diagnostics/
+- https://dkharlanau.github.io/atlas/diagnostics/sap-idoc-diagnostics/
 
 ==================================================
 
@@ -1510,10 +1531,10 @@ Dzmitryi Kharlanau provides focused process diagnostics, document-flow reviews, 
 Related service: https://dkharlanau.github.io/services/sap-o2c-process-audit/
 Related evidence:
 - https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/
-- https://dkharlanau.github.io/atlas/maps/order-to-cash-map/
 - https://dkharlanau.github.io/atlas/data-quality/sap-master-data-quality/
 - https://dkharlanau.github.io/atlas/diagnostics/sap-goods-receipt-diagnostics/
 - https://dkharlanau.github.io/atlas/diagnostics/sap-invoice-verification-diagnostics/
+- https://dkharlanau.github.io/atlas/diagnostics/sap-material-document-diagnostics/
 
 ==================================================
 
@@ -5196,111 +5217,6 @@ Related evidence:
 
 ==================================================
 
-PAGE: SAP Order-to-Cash Process Map
-URL: https://dkharlanau.github.io/atlas/maps/order-to-cash-map/
-SECTION: maps
-DOMAIN: Business operations
-TYPE: process map
-SAP AREA: SD / FI / logistics integration
-BUSINESS PROCESS: Order to cash
-TAGS: order-to-cash, sap-sd, sap-mm
-REVIEWED: 2026-05-06
-----------------------------------------
-**Sources:** [SAP sales document flow](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6aa7c6535e601e4be10000000a174cb4.html), [SAP outbound delivery creation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/c81fbf53f106b44ce10000000a174cb4.html), and [SAP sales billing](https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/4c74c957b7018809e10000000a4450e5.html).
-**Date checked:** 2026-08-11
-**Confidence:** high for the standard document-chain checkpoints; medium for landscape-specific controls, interfaces, and ownership.
-**Related page/topic:** /atlas/concepts/order-to-cash/
-**Practical implication:** Start with the last correct business document and its item-level status, then investigate the control responsible for the missing transition.
-**Tags:** order-to-cash, sap-sd, document-flow, fulfillment, billing
-
-HomeKnowledge AtlasMapsOrder to Cash Map
-
-Knowledge Atlas
-
-SAP order-to-cash process map
-
-A map for tracing where an O2C process stopped and which evidence should exist at each stage.
-
-DomainBusiness operationsTypeprocess mapReviewed2026-05-06
-
-Where this fits
-
-Use this map when a customer demand exists but the expected delivery, goods issue, invoice, accounting entry, or clearing result does not. The fastest starting point is the last correct business document—not the team that first received the ticket.
-
-Process and evidence flow
-
-  Standard order-to-cash checkpoints. Each step names the business outcome and the evidence that should exist before the process moves forward.
-
-    DemandSales orderCustomer, material, quantity, requested date, partners, and commercial terms are valid.
-    CommitConfirmed scheduleAvailability, credit, pricing, incompletion, and delivery controls permit execution.
-    FulfilDelivery and goods issuePicking and shipping evidence exists, and goods issue records the inventory event.
-    BillBilling and accountingThe billable reference produces the intended invoice and financial posting.
-    SettleReceivable and clearingPayment, deduction, dispute, or clearing evidence resolves the open customer item.
-
-
-Checkpoint-to-evidence map
-
-  TransitionEvidence that should existTypical reason it stopsNext route
-
-    Demand → commitmentComplete sales order item, confirmed quantity/date, pricing and credit status.Incompletion, master data, pricing, credit, availability, or manual block.Sales order block diagnosis
-    Commitment → fulfilmentDelivery-due schedule line and outbound delivery with executable status.Delivery block, shipping-point or route data, due-date selection, stock, warehouse, or interface issue.Delivery processing diagnostics
-    Fulfilment → billingGoods issue or another valid billable reference, billing status, and complete billing data.Billing block, copy control, split criteria, incomplete reference, or posting error.Billing block analysis
-    Billing → accountingBilling document plus the expected accounting transfer and customer open item.Account determination, tax, posting period, partner, or interface failure.Invoice split analysis
-    Receivable → settlementPayment, clearing document, deduction, dispute, or dunning status.Reference mismatch, underpayment, bank allocation, dispute, or payment-processing issue.Payment and dunning diagnostics
-
-
-How to trace a stopped O2C process
-
-  Capture the customer, sales document and item, material, requested date, expected outcome, and business impact.
-  Open the sales document flow and inspect item-level status. SAP document flow lists existing preceding and subsequent documents; absence of a document is different from an existing document in error.
-  Name the failed transition: order-to-delivery, delivery-to-goods-issue, reference-to-billing, billing-to-accounting, or receivable-to-clearing.
-  Check the control that owns that transition. Separate master data, configuration, application status, integration, timing, and approval before proposing a fix.
-  Confirm the next business proof after correction. A green technical status is not enough if the delivery, invoice, accounting entry, or clearing result is still absent.
-
-Evidence to capture before routing
-
-  Sales document and item, document type, customer, material, plant, requested and confirmed dates.
-  Current header and item statuses, active block or incompletion reason, and document-flow screenshot or export.
-  Last successful document, missing next document, exact error text, and time of the last processing attempt.
-  Expected business outcome and owning team for the failed control.
-
-Boundaries and non-goals
-
-This is a standard diagnostic map, not a claim that every SAP sales process follows one document chain. Returns, third-party processing, intercompany sales, services, billing plans, EWM, transportation, tax engines, and external commerce platforms introduce additional documents and controls. Preserve the same method: identify the last correct evidence and the missing transition.
-
-Official references
-
-  SAP: displaying a sales document flow
-  SAP: outbound delivery creation
-  SAP: sales billing
-  SAP: order-to-cash performance checkpoints
-
-Related pages
-
-Order to Cash
-SAP ATP Is Not Inventory
-SAP Stock Exists but Is Not Promisable
-SAP Delivery Processing Diagnostics
-SAP Invoice Split Analysis
-
-EXPERT CONTEXT:
-This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
-Professional website: https://dkharlanau.github.io/
-Profile and experience: https://dkharlanau.github.io/about/
-LinkedIn: https://www.linkedin.com/in/dkharlanau/
-
-WORKING ON A RELATED SAP INTEGRATION PROBLEM?
-Dzmitryi Kharlanau provides focused architecture reviews, incident diagnostics, monitoring design, and improvement planning for SAP integration landscapes.
-Related service: https://dkharlanau.github.io/services/sap-integration-reliability-assessment/
-Related evidence:
-- https://dkharlanau.github.io/atlas/concepts/order-to-cash/
-- https://dkharlanau.github.io/atlas/concepts/sap-atp-is-not-inventory/
-- https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/
-- https://dkharlanau.github.io/atlas/concepts/sap-transformation-recovery-framework/
-- https://dkharlanau.github.io/atlas/diagnostics/sap-ale-distribution-model-diagnostics/
-
-==================================================
-
 PAGE: SAP Procure-to-Pay Process Map
 URL: https://dkharlanau.github.io/atlas/maps/procure-to-pay-map/
 SECTION: maps
@@ -5407,4 +5323,4 @@ Related evidence:
 
 ==================================================
 
-END OF MANIFEST — 45 verified pages included
+END OF MANIFEST — 44 verified pages included
