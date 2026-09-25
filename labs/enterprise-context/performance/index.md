@@ -106,7 +106,7 @@ semantic_links:
     title: "SAP S/4HANA 2025 Release Readiness Playbook"
     url: "/labs/enterprise-context/release-readiness/"
   - type: "related_topic"
-    title: "SAP AIF — Configuration, Monitoring and Safe Reprocessing"
+    title: "SAP AIF — Monitoring, Error Handling and Reprocessing"
     url: "/labs/enterprise-context/aif/"
   - type: "same_domain"
     title: "SAP S/4HANA Deployment Models — Enterprise Context Lab"

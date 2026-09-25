@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-09-24T00:00:00Z
+Generated: 2026-09-25T00:00:00Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -1700,61 +1700,76 @@ TYPE: diagnostic guide
 SAP AREA: ALE / master data distribution
 BUSINESS PROCESS: Integration
 TAGS: integration, sap-ale, diagnostics, master-data
-REVIEWED: 2026-06-13
+REVIEWED: 2026-09-24
 ----------------------------------------
 HomeKnowledge AtlasDiagnosticsSAP ALE Distribution Model Diagnostics
 
   Atlas Diagnostic
   SAP ALE distribution model diagnostics
-  Do not treat ALE as one switch. Trace whether the object was in distribution scope, detected as changed, converted into a message, routed, and accepted by the target.
+  BD64 answers who may receive a message. Change pointers, IDoc generation, partner profiles, transport, and target posting answer different questions.
 
 
 ProcessIntegrationSAP areaALE / master data distributionIndexingIndex, reviewed
 
-  The problem is a broken distribution decision
-  When master data is missing in a target system, several different controls can be responsible. The object may be outside the intended distribution scope, the source change may not have produced a distribution trigger, no outbound message may have been created, routing may point elsewhere, or the target may have rejected a valid message.
-  This distinction matters because changing the distribution model will not fix a target-side posting error, and reprocessing messages will not help if the source object was never selected.
+  BD64 is only one decision point
+  When master data is missing in a receiving system, it is tempting to open the ALE distribution model and look for a missing entry. Sometimes that is the right place. Often it is not.
+  The distribution model describes ALE message flows between logical systems. It can define a sender, receiver, message type or BAPI, and filters that restrict distribution. It does not prove that a source change was captured, that an IDoc was created, that the partner profile dispatched it successfully, or that the receiving application accepted it.
+  A useful diagnosis therefore follows one business object through several separate decisions instead of treating “ALE” as one switch.
 
-  Read the chain from left to right
-  StageQuestionUseful evidence
-    Business scopeShould this object be distributed to this receiver at all?Object type, message type, sender, receiver, filters, organizational data.
-    Change detectionDid the relevant change create the trigger expected by this scenario?Change timestamp, changed fields, change-pointer or application trigger where used.
-    Message creationWas an outbound message created for the object?Message/IDoc number, creation time, sender, receiver, message type.
-    RoutingDid the technical route match the intended target?Partner/port or equivalent route, receiver system, filters, model assignment.
-    Target processingDid the target receive and apply the object?Inbound status, application log, target key, validation error, duplicate check.
-
-
-  A practical diagnostic workflow
-
-    Choose one object and one receiver. Capture the source key, object/message type, source system, expected target, and business change that should have triggered replication.
-    Confirm distribution scope. Check that the sender-receiver relationship and any filters include this exact case. Do not assume that an active model means every object is eligible.
-    Check change detection. Establish whether the scenario is change-pointer driven, application-event driven, manually triggered, or based on another mechanism.
-    Find the outbound message. If none exists, remain on the source side. If it exists, continue with its exact receiver, timestamp, and status.
-    Trace routing. Confirm that the message used the expected logical receiver and technical route rather than simply proving that “an IDoc was sent.”
-    Read the target result. Separate transport success from application success. A message can arrive and still fail validation, key resolution, or update logic.
-    Compare with a working object. Differences in organizational data, filters, changed fields, key mapping, or target state often expose the relevant control quickly.
+  Separate scope, trigger, and transport
+  ControlWhat it decidesTypical evidence
+    Distribution modelWhich logical receiver is eligible for a message flow, including configured filters.Sender, receiver, message type or BAPI, filter values, model view.
+    Change detectionWhether a relevant source change creates outbound work when the scenario uses change pointers.General and message-type activation, relevant changed fields, unprocessed change pointers.
+    IDoc generationWhether the application or change-pointer processor turns the business change into an outbound IDoc.RBDMIDOC/BD21 result where applicable, IDoc number, creation time, message type.
+    Partner and technical dispatchHow the logical message is sent and processed for the partner.Partner profile, port or RFC context, output/processing mode, outbound status.
+    Receiving applicationWhether the target can identify and apply the business object.Inbound IDoc status, application message, target object, key or validation error.
 
 
-  Where classic ALE tools help
-  In classic ALE/IDoc landscapes, consultants often inspect the distribution model, change-pointer processing, partner profiles, and IDoc status using the standard ALE and IDoc administration tools available in that release. Those tools are evidence sources, not the diagnostic method itself. The important result is to identify the first stage where the expected chain stops.
+  The distribution model decides receivers, not whether a field changed
+  SAP defines the distribution model as the description of ALE message flow between logical systems. The model can contain message types, BAPIs, and filters. Those filters help the ALE layer decide whether a receiver should receive a message for the current business data.
+  This is different from change detection. A model can correctly contain the receiver while no outbound work is created because the source change was not relevant to the active message type, change pointers were not enabled for that scenario, or the application uses another trigger altogether. Conversely, a change pointer can exist while the distribution model yields no eligible receiver.
+  This distinction is especially useful when one object replicates and another apparently similar object does not: compare the values that participate in receiver filtering before changing the model globally.
 
-  Duplicates need a separate diagnosis
-  If the target creates a second object instead of updating an existing one, do not immediately label it a distribution-model problem. Check how the target identifies the business object, whether source and target keys are expected to differ, whether mapping exists, and whether the earlier object was created outside the governed replication path.
+  Change pointers are a worklist, not proof of delivery
+  For ALE master-data scenarios that use change pointers, the source application records relevant changes and a later process evaluates them. SAP documents RBDMIDOC (also available through BD21) as the standard report that creates IDocs for a specified message type from change pointers. The report determines recipient systems from the distribution model and marks processed pointers accordingly.
+  That gives us an important diagnostic boundary. If a relevant change pointer never appears, stay with change detection. If a pointer exists but the expected IDoc is not created, inspect the message-type processing and receiver determination. Once an outbound IDoc exists, the change pointer is no longer the best evidence for what happened downstream; follow the IDoc and its technical route instead.
+  Do not assume every ALE scenario uses change pointers. SAP also supports direct master-data sending and application-specific triggers. First identify the actual trigger used by the object and message type.
 
-  Safe next actions
+  Partner profiles turn the logical flow into runtime processing
+  The distribution model and partner profiles are related but not interchangeable. SAP can generate partner profiles from the model, and its ALE consistency checks compare model flows with maintained partner profiles. At runtime, the partner profile contains processing parameters for the partner and message type, while the distribution model expresses the intended cross-system flow.
+  This explains a common pattern: BD64 can look correct while the message still fails later because the partner profile, port, RFC destination, background-processing setup, or receiver-side parameters do not match the intended route. Once an IDoc has been created, use its actual control record and status history rather than inferring the route from configuration alone.
 
-    Correct scope or filters only after proving that the object should have been selected.
-    Repair change detection or scheduling when eligible changes are not converted into outbound work.
-    Correct routing or partner configuration when the generated message points to the wrong technical receiver.
-    Fix target-side validation, master data, or key mapping when transport succeeds but application posting fails.
-    Before mass reprocessing, verify that messages are safe to repeat and that the target has not already applied part of the change.
+  Trace one object until the first missing fact
+
+    Name the exact case. Record the source object key, logical source system, expected receiver, message type, and the business change that should have been distributed.
+    Prove receiver scope. Check the relevant model view and filters for this object. An active model view does not mean every object is eligible for every receiver.
+    Prove the trigger. Establish whether this flow uses change pointers, a direct send, an application event, or another mechanism. For change-pointer flows, verify both activation and the relevant changed data.
+    Find the outbound IDoc. If none exists, stay on the source side. If it exists, capture its real receiver, message type, creation time, and status.
+    Follow the actual dispatch. Check the partner profile and technical path used by that IDoc. Do not diagnose from the intended architecture when runtime evidence says otherwise.
+    Finish at the business object. A technically transferred IDoc is not the same as a successfully applied master-data change. Confirm the inbound result and the target object.
 
 
-  What to capture first
-  Record the object type and key, sender, expected receiver, business change and timestamp, expected message type, distribution/filter context, outbound message if present, target status, and whether a comparable object works. That evidence makes ownership visible: source application, ALE configuration, routing, integration operations, or target application.
+  Four symptoms that point to different layers
+  The object changed, but there is no change pointer. Check whether this scenario uses change pointers at all. If it does, verify general activation, message-type activation, and whether the changed fields are relevant for that message type. Do not change BD64 first.
+  A change pointer exists, but no outbound IDoc appears. Check whether the change-pointer processor ran for the correct message type and whether receiver determination produced an eligible target. A processed worklist and a distribution model are separate pieces of evidence.
+  An outbound IDoc exists for the wrong receiver. Now the distribution model, filters, logical-system assignment, and partner configuration become central. Compare the IDoc control record with the intended sender/receiver relationship.
+  The correct receiver got the IDoc, but the master data is still missing. Move away from BD64. Read the inbound status and application error, then check identity/key mapping and target-side validation. The IDoc status diagnostic covers that boundary in more detail.
 
-  Limitations and boundaries
-  This page covers the diagnostic logic of ALE-style distribution. Exact transactions, tables, change-pointer behavior, message types, and target processing differ by object, release, and landscape. Modern replication scenarios may use DRF, APIs, events, middleware, or application-specific frameworks instead of classic ALE change-pointer flows, so verify the actual mechanism before applying an ALE-specific fix.
+  A working object is often the fastest control
+  When one object works and another does not, compare them at the first uncertain layer: filter-relevant organizational data, changed fields, message type, receiver, partner profile, and target identity. This is more informative than comparing every ALE setting in the landscape.
+  The comparison also prevents a risky fix. If the working object follows a different message type or receiver rule, copying its configuration may widen distribution rather than repair the failing case.
+
+  Official references
+
+    SAP Help Portal — Distribution Model.
+    SAP Help Portal — Distributing the Model View (SAP S/4HANA 2025 FPS01).
+    SAP Help Portal — Analyze Change Pointers.
+    SAP Help Portal — Changing Partner Profiles with Active Background Processing (SAP S/4HANA 2025 FPS01).
+    SAP Help Portal — Check Distribution Model.
+
+
+  Boundary
+  This page covers classic ALE/IDoc distribution logic. Exact message types, filters, change-pointer relevance, transactions, processing modes, and target behavior depend on the object and release. Modern master-data replication can use DRF, SOA services, APIs, events, or application-specific frameworks instead. For example, SAP currently recommends SOA-based Business Partner replication to SAP S/4HANA because ALE does not cover all BP-related attributes. Confirm the active replication mechanism before applying an ALE-specific correction.
 
 Related Atlas Pages
   IDoc and AIF Integration Diagnostics
@@ -1787,7 +1802,7 @@ TYPE: diagnostic guide
 SAP AREA: Application logs / SLG1 / SM21
 BUSINESS PROCESS: SAP AMS support
 TAGS: sap-ams, application-logs, slg1, sm21, diagnostics
-REVIEWED: 2026-06-13
+REVIEWED: 2026-09-24
 ----------------------------------------
 Home
     Knowledge Atlas
@@ -1798,7 +1813,7 @@ Home
 
     Atlas Diagnostic
     SAP application log diagnostics
-    The right log is the one closest to the failed business step. Searching every technical monitor usually creates more noise than evidence.
+    Start from the failed processing step, then choose the evidence source that can actually explain it.
 
 
 
@@ -1811,51 +1826,63 @@ Home
 
 
 
-    Start from the failure, then choose the evidence source
-    SAP has many logs because different layers fail in different ways. A background job, an application validation, an ABAP dump, an RFC problem, and a system-level event should not begin in the same monitor.
-    Before opening a log transaction, capture the exact time window, user or technical user, business object, program or interface if known, and what the user expected to happen. These details are the search key. Without them, “check the logs” becomes an expensive form of scrolling.
+    There is no single SAP log for an incident
+    An SAP incident can cross several technical layers before the business symptom becomes visible. The application may reject a document, an ABAP program may terminate, a background job may cancel, an interface may stop in its own monitor, or the ABAP system itself may report a technical event. Those failures do not belong in one universal log.
 
-    Which evidence is closest to the symptom?
-    SymptomUseful starting evidenceWhy
-      Application step reports a business or processing errorApplication log where the application writes one, often visible through SLG1.It can contain object-specific messages and processing context that the UI does not show.
-      ABAP runtime terminatesST22 short dump for the matching user, program, and time.The dump gives exception, program context, and call information for the termination.
-      Background processing failsJob status and job log first; spool or application log next when relevant.The job itself tells you which step/program failed and under which user.
-      Broad technical or system event is suspectedSM21 system log and Basis monitoring appropriate to the time window.The problem may sit below one business application.
-      Interface message failsThe message-specific monitor first: IDoc, AIF, RFC, queue, middleware, or API evidence used by that interface.A generic system log rarely explains a business-message failure as well as the message trace itself.
-      Issue is reproducible but normal evidence is not enoughA controlled trace such as authorization, SQL, or runtime trace chosen for the hypothesis.Traces can be expensive and noisy, so they should answer a specific question.
+    The useful starting point is therefore not “check SLG1” or “check SM21.” First identify the processing step that should have produced the missing result. Capture the narrowest useful time window, user or technical user, system and client, business object, program or interface if known, and the expected outcome. Those facts tell us which evidence source is closest to the failure.
 
-
-    Using the application log well
-    SLG1 is valuable when the application uses the SAP Application Log. Search with the narrowest useful combination of object, subobject, external ID, user, and time. The exact object names are application-specific, so a known working case or technical documentation is often useful.
-    An empty SLG1 result does not prove that “SAP has no error.” The application may log elsewhere, the selection may be wrong, or the failure may happen before the logging point. Move to another evidence source only when the process path justifies it.
-
-    A diagnostic sequence
-
-      Pin down the event. Exact timestamp or narrow window, user, system/client, business object, and failed action.
-      Choose the nearest log. Application log for application processing, job log for jobs, dump for runtime termination, message monitor for interfaces.
-      Find the first useful error. Later messages often describe consequences. The earlier message may show the rejected value, missing object, failed call, or exception.
-      Correlate across layers only when needed. If an application error calls an RFC, then follow the RFC. If a job step dumps, then open the dump. Build a chain instead of a pile of screenshots.
-      Compare with a working case. Same program, object type, user group, or interface in a nearby time window can show what normal evidence looks like.
-      Record the finding in business terms. State which processing step failed and what the log proves.
+    Observed symptomStart hereWhat this evidence can prove
+      An application step reports a business or processing errorThe application-specific log, often the SAP Application Log displayed with SLG1 when that application writes there.Which application object was processed, which message was raised, and often the processing context around it.
+      An ABAP program terminatesST22 / ABAP Runtime Error analysis for the matching user, program, client, and time.The runtime error, termination context, source position, call information, and other dump details available for that failure.
+      A background job cancels or finishes with the wrong resultThe exact job run and job log first; then follow the failing program into its own application log, dump, spool, or interface evidence.Which job step ran, under which user and parameters, and where the background process stopped or diverged.
+      A broad ABAP system event is suspectedSM21 system log for the relevant time and application server scope.System messages, warnings, and errors written by the ABAP instances.
+      An interface message failsThe message-specific monitor: IDoc, AIF, RFC/qRFC, middleware, API, or application monitor used by that flow.The state of the message or hand-off itself, which a generic system log often cannot explain.
 
 
-    Traces are not the first reflex
-    Tools such as ST05, SAT, authorization traces, and other low-level diagnostics can be extremely useful, but they should have a question behind them. “Maybe the database is slow” is not enough. Define the transaction, user, time, reproduction step, and expected signal before tracing, and follow local rules for production use.
+    SLG1 shows application-owned evidence
+    The SAP Application Log is structured by the application that writes it. Logs are commonly classified with an object and subobject; applications can also use an external ID to make one processing instance easier to find. SAP documentation for current S/4HANA scenarios still uses SLG1 in this way, for example to inspect Business Partner and SAP Gateway processing logs.
 
-    A few common mistakes
+    That structure is the reason SLG1 works best when we already know something about the process. Search by the known object or subobject, external ID when available, user, and a narrow time window. A broad search usually produces unrelated messages and makes the real sequence harder to see.
 
-      Searching a whole day when the failure time is known to the minute.
-      Looking only at the latest error instead of the first meaningful failure in the chain.
-      Using a generic system log for a message-specific integration problem.
-      Changing log configuration during an incident without understanding retention, volume, or production impact.
-      Collecting technical screenshots without linking them to the failed business object or process step.
+    An empty SLG1 result does not prove that no error occurred. It proves only that the current selection found no matching application-log entry. The application may use a dedicated monitor, the selection may be wrong, the log may already have been removed according to its retention rules, or the failure may have occurred before that application wrote an entry. The next step should follow the process path, not assume that every application writes the same evidence.
+
+    ST22 and SM21 answer different questions
+    ST22 is for ABAP runtime errors. SAP documents a short dump as the record created when an ABAP program terminates because of a runtime error. The dump can include the error description, likely cause, source position, call information, and runtime context. If a user says that a transaction “just stopped,” matching the exact time, user, program, and client in ST22 can quickly separate an ABAP termination from an application-level rejection.
+
+    SM21 is different. The ABAP system log records system messages, warnings, and errors for the SAP system; each instance writes a local log, and SM21 can read the relevant instance logs. This is useful when the evidence points below one business application—for example, when a dump or repeated application failures coincide with a wider system event. It is not a substitute for an application log or message-specific monitor.
+
+    Build one evidence chain
+    The investigation becomes much faster when each piece of evidence leads to the next layer. Suppose a nightly job cancels while posting business documents. The job log identifies the failing step. That step produces an ABAP dump. The dump points to a call that was processing one business object. If that application also writes an application log, the corresponding entry can explain which value or business rule caused the failure. Four monitors are useful here because they form one chain, not because we searched all four at random.
+
+    Read the sequence from the first meaningful deviation, not only from the final red status. A later message often describes a consequence: “document not created,” “step cancelled,” or “processing terminated.” The earlier application message, dump, failed call, or missing dependency usually tells us why.
+
+    Comparison with a nearby successful case is often more useful than collecting more logs. The same program, application object, interface, or job under a similar selection can show which messages are normal and which state transition is missing in the failed run.
+
+    Use traces only when ordinary evidence leaves a specific question
+    SQL traces, ABAP runtime traces, authorization traces, and other low-level tools can add detail that normal logs do not capture. They also add volume and can affect production operation if used carelessly. Before tracing, define the exact user or process, reproduction step, time window, and the signal you expect to confirm or reject. “Maybe the database is slow” is not a useful trace question; “which SQL statement dominates this reproducible step?” is.
+
+    A good escalation explains the boundary of the failure
+    An escalation should let the next owner continue the investigation instead of reconstructing it. Include the system and client, time window, user or technical user, business object, program/job/interface, expected result, the first meaningful error, and the evidence chain already checked. State what the evidence proves and what remains uncertain.
+
+    The end product of log analysis is not a screenshot collection. It is a narrow statement such as: “The background job started correctly, step 2 terminated with an ABAP runtime error while processing document X, and the application log shows the rejected value immediately before the dump.” That statement gives the next team a component, a point in time, and a testable cause.
+
+    Official references
+
+      SAP S/4HANA 2025 FPS01: application logging example with SLG1
+      SAP ABAP Platform: SAP Gateway logs and SLG1 selection fields
+      SAP ABAP Platform 2025 FPS01: runtime error long text and ST22
+      SAP ABAP Platform 2025 FPS01: system logging with SM21
 
 
-    What belongs in the escalation
-    Include system/client, time window, user or technical user, transaction/program/interface, business object, exact symptom, the relevant log or dump identifier, and the first useful error message. Add the path you already checked. This saves the next team from repeating the same search with the same incomplete information.
+    Boundaries and non-goals
+    This page explains how to choose and correlate evidence in ABAP-based SAP systems. Exact application-log objects, dedicated monitors, retention settings, authorizations, cloud tooling, and trace procedures vary by product, release, and landscape. Use the relevant SAP product documentation and local production rules before changing log settings or enabling traces.
 
-    The useful outcome
-    Log analysis is complete when the evidence narrows the failure to a component or process step and gives the next owner a testable question. A 30-line copy of SLG1 is not a diagnosis. It is a souvenir.
+
+
+    Related Atlas Pages
+
+      SAP Interface Monitoring Diagnostics
+      SAP Background Job Failure Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with recurring incidents, operational ownership, support improvement, and reusable support knowledge. This guide frames AMS decisions around the operating conditions that create repeated effort.
@@ -1883,7 +1910,7 @@ TYPE: diagnostic guide
 SAP AREA: Authorization / roles / security
 BUSINESS PROCESS: SAP AMS support
 TAGS: sap-ams, authorization, roles, security, su53
-REVIEWED: 2026-06-13
+REVIEWED: 2026-09-23
 ----------------------------------------
 Home
     Knowledge Atlas
@@ -1894,7 +1921,7 @@ Home
 
     Atlas Diagnostic
     SAP authorization and role diagnostics
-    First prove which authorization check failed. Then decide whether access is missing, the role is wrong, or the process should not grant that access at all.
+    Start from the authorization check that actually failed, then prove which identity, field value, and role state caused it.
 
 
 
@@ -1907,56 +1934,70 @@ Home
 
 
 
-    Not every disabled action is an authorization issue
-    A user who cannot perform an action may be missing an authorization, but the same symptom can come from document status, customizing, workflow, field control, or application logic. Security work starts with evidence of a failed authorization check, not with a request to copy another user's roles.
-    The business question matters too. Even when a technical authorization is missing, the correct answer may be “request approved access” rather than “add the object.” Roles exist to express a control model, not to make error messages disappear.
+    An authorization incident becomes much easier once we stop asking, “Which role is missing?” and ask a narrower question: which authorization check failed, for which user, with which field values, while doing which business action?
 
-    Choose the evidence for the type of failure
-    SituationUseful evidenceImportant caution
-      Dialog user gets a clear authorization errorReproduce the action and inspect the failed check immediately, for example with SU53 where appropriate.SU53 shows recent failed checks in that user context. It is not a complete explanation of the role design.
-      The failure is indirect or hard to reproduceUse an authorization trace approved for the environment and narrow it to the user/action.Trace data can be noisy and sensitive. Collect only what is needed.
-      Background job failsJob log, execution user, failed authorization evidence, and the job's business function.The interactive user's SU53 does not describe the background user's checks.
-      RFC, interface, or service call failsTechnical user, called function/service, error trace, and target-side authorization evidence.Do not solve a technical-user issue by broadening a human role.
-      Access differs by company code, plant, or sales organizationAuthorization object fields and organizational values in the assigned role.The object may exist in the role but with the wrong value scope.
+    That distinction matters because SAP evaluates access at runtime. A user can have the expected role name and still fail because one activity or organizational value is missing. The same visible error can also come from a check executed under an RFC, workflow, or background user rather than the person in the browser.
 
 
-    A clean diagnostic sequence
-
-      Capture the exact action. User, transaction or app, business object, activity, organizational context, timestamp, and message.
-      Confirm that an authorization check actually failed. If there is no failed check, return to functional diagnosis instead of forcing the issue into security.
-      Identify the object, field, and value. The useful evidence is more specific than “no access.”
-      Check the intended role. Does the user's business role normally include this activity and organizational scope?
-      Check role and user state. If the role should contain the authorization, verify role maintenance, generated profiles, assignment/user comparison, and current user context as relevant to the landscape.
-      Check governance before changing access. Confirm the business reason, role owner, approval path, and segregation-of-duties impact.
-      Retest the original action. A role change is not proven until the required task works with the intended scope and no unnecessary access was added.
+      Working rule: capture the failed check first. Change the role only after the authorization object, checked values, execution identity, and business need agree.
 
 
-    Useful SAP tools
+    SU53 is the fastest snapshot after a real denial
+    For a fresh ABAP authorization error, SU53 is usually the quickest place to start. SAP documents it as authorization error analysis for an access-denied error that has just occurred. It shows the failed authorization check and lets us compare that check with the user’s authorization data.
 
-      SU53 for recent failed authorization checks in the current user's context.
-      PFCG for role content, organizational levels, profiles, and role maintenance.
-      SU01 for user assignments and user-master context.
-      SU56 for the user's authorization buffer.
-      ST01 or the approved authorization trace tooling in the landscape for cases that need deeper evidence.
+    Timing matters. Reproduce the exact action, then run SU53 immediately. Capture the authorization object, every checked field and value, the user, the business action, and the approximate timestamp together. If the user performs other actions first, a later failed check can replace the evidence we wanted.
 
-    The tool is chosen after the failure is understood. Running every security transaction is not a diagnostic method; it is sightseeing with production access.
+    A failed check is evidence, not automatically the root cause. Applications can test an authorization and continue down another code path when the check fails. The useful question is whether the failed object and values correspond to the action the user could not complete. If that link is unclear, move to a trace rather than granting access from one screenshot.
 
-    What not to use as a fix
+    Use an authorization trace when one snapshot is not enough
+    STAUTHTRACE records authorization checks during a controlled test. SAP describes it as the authorization-focused form of the system trace: it can be restricted to a user, records the authorization object with the checked field values, and can show the ABAP call point where a check occurred.
 
-      Do not copy a powerful colleague's roles as a shortcut.
-      Do not add broad wildcard values to make one check pass.
-      Do not assume a missing object should always be added. The application or process may be intentionally restricted.
-      Do not treat logout/login or buffer refresh as a root-cause correction when the role itself is wrong.
+    This is more useful when one process performs several checks, the failure occurs in another session, or a technical user is involved. Keep the trace narrow: choose the correct user, start it, reproduce one representative path, stop it, and evaluate the sequence. A long unrestricted trace creates noise and makes a simple incident harder to read.
+
+    The trace answers a question that a role list cannot: what did the application actually check at runtime? PFCG content tells us what a role can grant. Runtime evidence tells us what this execution requested.
+
+    Read the authorization object field by field
+    Suppose the trace shows an object with ACTVT = 02 and a sales organization value that the user does not hold. “The object is missing” is then too coarse. The role may already contain the object for display activity, for another sales organization, or through a different authorization instance.
+
+    Interpret each field in the business context. Activity, organizational level, document type, authorization group, and other object-specific fields answer different questions. A correction should grant the approved action for the approved scope, not merely make the failed line disappear.
+
+    This is why copying a broad role is a poor diagnostic technique. It changes many variables at once. The incident may disappear, but we no longer know whether the missing element was one activity value, one plant, one service authorization, or unrelated access that arrived with the copied role.
+
+    Separate role design from what the user has at runtime
+    A PFCG role, its generated authorization profile, the user assignment, and the user’s current authorization buffer are related states, but they are not the same state.
+
+    SAP documents that after authorization data in a role changes, its authorization profile must be regenerated. User assignments then have to be reflected in the user master through user comparison or the configured automatic/background process. SU56 shows the authorizations available in the user buffer and is useful when the role definition looks correct but runtime behavior still disagrees.
 
 
-    What a useful access request contains
-    Include the user, exact business task, application or transaction, authorization object/field/value when known, organizational scope, evidence of the failed check, expected role, and business approval. This gives the security team enough information to make a controlled decision instead of reverse-engineering the incident from “please give same access as John.”
+      Prove the failed runtime check. Record the object and checked values.
+      Inspect what the user currently has. Compare the failed values with the user buffer and effective assignments.
+      Locate the intended role. Identify which role is supposed to grant that business responsibility.
+      Check generation and assignment state. Confirm the role authorization data, generated profile, assignment validity, and user comparison are current.
+      Retest the same business action. Do not substitute a different transaction or a broader emergency role for the original test.
 
-    The practical end state
-    A good authorization diagnosis explains both sides: which check stopped the user and why the requested access is legitimate for that role. Technical evidence without business ownership creates over-access; business urgency without technical evidence creates guesswork.
 
-    Boundaries
-    This page is a support diagnostic. It does not replace role architecture, privileged-access controls, segregation-of-duties analysis, or the security team's approval process.
+    The order matters. Otherwise a correct role design can be blamed for an assignment problem, or a missing authorization value can be misdiagnosed as a buffer problem.
+
+    Trace the identity that actually executes the step
+    The person reporting the error is not always the user evaluated by the failing check. A dialog action can trigger an RFC call, workflow step, background job, OData request, or middleware process under another identity.
+
+    For a dialog failure, trace the dialog user. For a background step, identify the job user. For an integration, determine whether the backend sees a technical user, a propagated business user, or another configured identity. A trace attached to the wrong user can be perfectly accurate and still answer the wrong question.
+
+    Fiori adds another useful boundary. A user can authenticate, open the launchpad, and see an app while the backend later rejects an OData service or business authorization. Current SAP S/4HANA documentation distinguishes launchpad and general OData authorizations from app-specific backend authorizations. In landscapes with separate front-end and back-end layers, both sides can therefore matter to one visible symptom.
+
+    Make the smallest justified change
+    Once the missing check is understood, change the role that owns that business responsibility. Prefer explicit values over wildcards and keep organizational scope aligned with the user’s job. If the proposed fix grants materially more access than the failed action requires, the diagnosis is not finished.
+
+    After the change, regenerate the profile when required, complete the relevant user comparison or assignment update, and retest the exact step that originally failed. Then check adjacent actions that should remain restricted. A successful retest proves the required path works; it does not by itself prove that the resulting role is least-privilege.
+
+    For sensitive access, keep the original evidence and the approved change through the local security process. That gives the incident a useful chain: symptom → failed check → business justification → role change → successful retest.
+
+    Source references
+
+      SAP ABAP Platform 2025 FPS01 — Analyzing Authorization Checks.
+      SAP ABAP Platform — Using the System Trace to Record Authorization Checks (Transaction STAUTHTRACE).
+      SAP ABAP Platform 2025 FPS01 — Regenerate the Authorization Profile Following Changes.
+      SAP S/4HANA 2025 FPS01 — General Authorizations Required for SAP Fiori.
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with recurring incidents, operational ownership, support improvement, and reusable support knowledge. This guide frames AMS decisions around the operating conditions that create repeated effort.
@@ -1984,14 +2025,12 @@ TYPE: diagnostic guide
 SAP AREA: BP / MDG / replication
 BUSINESS PROCESS: Master data governance
 TAGS: master-data, sap-mdg, diagnostics, replication
-REVIEWED: 2026-06-13
+REVIEWED: 2026-09-24
 ----------------------------------------
-**Sources:** [SAP Data Replication Framework](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/d9750bd3d7834e068edee1153e444f4c.html), [SAP Business Partner replication guidance](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/97d8ed5024226766e10000000a445394.html?version=2023.latest), and [SAP guidance for BP replication using ALE](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/6fe343fea9b943f4875eb4425f19ed43.html).
-**Date checked:** 2026-08-11
-**Confidence:** high for the DRF diagnostic sequence; medium for channel-specific logs and payload behavior that vary by product and release.
-**Related page/topic:** /atlas/diagnostics/sap-key-mapping-diagnostics/
-**Practical implication:** Prove selection, channel delivery, receiver processing, confirmation, and key mapping as separate checkpoints before changing master data or resending.
-**Tags:** master-data, sap-mdg, diagnostics, replication, drf, business-partner
+**Sources:** [SAP APIs for Business Partner](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/44e06f22436c43e582db6ccd5250e29b/9fca825858239244e10000000a4450e5.html), [SAP Business Partner replication using ALE](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/6fe343fea9b943f4875eb4425f19ed43.html), and [SAP Object Replication Status](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/543df06bbf584228ad293552d4ece873.html).
+**Date checked:** 2026-09-24
+**Confidence:** high for the DRF, SOAP, and ALE diagnostic boundaries; medium for mapping and target behavior that depend on the configured landscape.
+**Practical implication:** Follow one BP to the first unproven handoff before changing master data or resending it.
 
 
     Home
@@ -2003,7 +2042,7 @@ REVIEWED: 2026-06-13
 
     Atlas Diagnostic
     SAP business partner replication diagnostics
-    A checkpoint-led workflow for missing, incomplete, or duplicate Business Partner records across SAP systems.
+    Trace one business partner from replication scope to the target object, without confusing source selection, transport, inbound processing, and cross-system identity.
 
 
 
@@ -2016,105 +2055,71 @@ REVIEWED: 2026-06-13
 
 
 
-    Core idea
-    Business Partner replication is a chain of independently testable checkpoints: the source object is eligible, the Data Replication Framework (DRF) selects it for the intended target, the configured channel sends a message, the receiver processes it, a confirmation returns where applicable, and key mapping links the source and target identities. A source-side success alone does not prove that the target record was created or updated correctly.
+    Replication is a chain, not one status
+    A Business Partner can be correct in the source system and still be absent, incomplete, or duplicated in the target. The useful question is not simply whether “replication worked.” We need to know which decision in the chain was last proven.
+    For a DRF-based landscape, a practical model is:
+    source BP → replication model and filters → outbound implementation → SOAP or IDoc delivery → target inbound processing → target identity and confirmation
+    Each boundary has different evidence. A successful source-side replication run does not by itself prove that the receiving system created or updated the intended BP.
 
-    Replication checkpoints
-
-
-        CheckpointEvidenceIf it fails
-
-
-        Object eligibilityBP status, approval state where relevant, replication model filters, target system, and change context.Correct the source object or DRF model selection; do not troubleshoot transport yet.
-        Outbound replicationDRF replication status or log with object, target, run, and communication channel.Use the log message to separate filter, configuration, payload, and technical failures.
-        Channel deliverySOAP message monitor, middleware correlation, or ALE/IDoc status according to the configured channel.Follow the channel-specific technical evidence rather than assuming all BP replication uses IDoc.
-        Receiver processingInbound processing result, application log, target BP, roles, and referenced error.Resolve target validation, mapping, grouping, number assignment, or role-specific data.
-        Confirmation and key mappingConfirmation status where supported and source-to-target object identifiers.Correct the mapping or confirmation failure before resending, or a duplicate can be created.
-
-
+    Find the first unproven handoff
+    BoundaryQuestionUseful evidence
+      Source objectIs this the correct BP version and is it ready for the configured replication process?BP number and UUID where available, roles, activation/change context, expected target.
+      DRF scopeDid the active replication model and its filters select this object for this target?Replication model, outbound implementation, target business system, filter values, replication run/log.
+      Outbound messageWas a message actually created through the configured channel?Run ID, message or IDoc identifier, sender/receiver, timestamp.
+      Technical deliveryDid the message reach the receiving system?SOAP runtime evidence or IDoc status according to the channel.
+      Target processingDid the target accept the payload and apply the relevant BP segments?Inbound message result, application log, target BP, roles and organizational segments.
+      IdentityDid both systems agree which source and target records represent the same BP?Confirmation, source/receiver identifiers, key mapping, duplicate evidence.
 
 
 
-    Common symptoms
 
-      BP created in source system but does not appear in target system after expected replication time.
-      BP appears in target but with missing roles, addresses, or bank details.
-      Target system creates a duplicate BP instead of updating the existing one.
-      Replication shows success in the source but the target BP has different data.
-      Specific BP role (customer, vendor, contact) is missing after replication.
+    Start with the architecture that actually ran
+    SAP S/4HANA supports Business Partner integration through several interfaces, including SOAP, IDoc, and OData. In MDG scenarios, the Data Replication Framework is commonly the selection and orchestration layer, but DRF does not imply one transport technology. SAP also documents DRF-based BP replication through IDoc for ALE scenarios.
+    This matters during support. If the configured outbound implementation uses SOAP, an empty IDoc monitor tells us nothing. If it uses ALE, a SOAP monitor is the wrong place to start. First identify the replication model, outbound implementation, target business system, and communication channel. Then follow the evidence produced by that path.
+    For replication to SAP S/4HANA, SAP currently recommends SOA-based BP replication when possible because ALE does not cover all Business Partner-related attributes. Existing ALE landscapes are still valid scenarios, but a missing attribute can be a channel-scope issue rather than a failed resend.
 
+    DRF selection is not target success
+    The replication model answers who should receive which business object under which filters. The outbound implementation determines how that object is prepared and sent. Object Replication Status and its replication log can then show the progress and result of a replication run for a business object and business system.
+    Once an outbound message exists, switch from configuration to runtime evidence. For SOAP-based BP replication, SAP documents the BusinessPartnerSUITEBulkReplicateRequest service and message monitoring in SRT_MONI. For ALE, follow the actual IDoc control record and status history. Do not keep changing DRF filters after the correct object and target have already produced a message.
 
-    Likely causes
+    When the BP exists but some data is missing
+    An incomplete target BP is not automatically a transport failure. The current SOAP Business Partner service has segment-level behavior, and SAP supports partial-data handling through DRF segment filters and Complete Transmission Indicators (CTI). A role, tax number, address usage, customer sales-area partner function, or another segment may therefore be absent because it was outside the selected payload scope or handled differently by the target.
+    Compare the source data, the outbound payload, and the target result at the first missing segment. If the field was not sent, investigate selection or service scope. If it was sent but rejected or transformed, move to target validation, value mapping, or application logic.
+    Relationships also deserve their own trace. SAP exposes separate SOAP services for Business Partner relationships, and relationship processing can depend on the main BP message. A BP that exists correctly while its contact or other relationship is missing is therefore a different incident from a missing BP header.
 
-      Replication model selection: the object, target, or filter values are outside the active DRF model and outbound implementation.
-      Key mapping missing or stale: the source and target identifiers are not linked consistently, increasing the risk of duplicate creation or failed updates.
-      Data quality block: the BP data fails validation in the target system (missing required field, invalid format, duplicate tax number).
-      Channel or payload coverage: the configured replication channel or outbound implementation does not carry the expected role, relationship, or attribute for that scenario.
-      Target system configuration: the target system has different BP grouping, number ranges, or role assignment rules that conflict with the replicated data.
+    Identity must be proven before a resend
+    Different BP numbers across systems can be intentional. Key mapping records that the source and receiver identifiers represent the same business object. SAP's SOAP confirmation service can return the receiver BP identifiers together with replication status, which is useful evidence when the target uses a different number.
+    This makes blind resends risky. If the first message created a target BP but the confirmation or key mapping did not complete as expected, another send may not follow the same identity path. Before replaying, establish whether a target object already exists, which source and receiver IDs are linked, and whether the previous confirmation was processed. For deeper identity analysis, use the SAP Key Mapping Diagnostics.
 
+    A practical trace
 
-    Where to check in SAP
-
-      DRF replication status and log — filter by BP, target business system, run, and channel where available.
-      SOAP or middleware monitor — use the message or correlation ID when service-based replication is configured.
-      WE02 / WE05 — inspect IDoc status only when ALE is the configured replication channel.
-      Key Mapping Framework or scenario-specific mapping — verify source and target object identifiers.
-      Transaction BP or the release-appropriate Business Partner app in the target — verify general data, roles, organizational segments, relationships, and identifiers.
-
-
-    Key objects and identifiers
-
-      Business Partner number and UUID/GUID: keep both when the integration exposes them; a displayed number alone may not be the cross-system identity.
-      Replication model, outbound implementation, and target business system: together define which object is selected and where it is sent.
-      Message or correlation ID: connects source replication evidence to middleware and receiver processing.
-      Confirmation and key-mapping record: connects a successfully created target object back to the source identity.
+      Define one case. Capture the source BP number and UUID where available, expected target, required roles or segments, and the business change that should have replicated.
+      Prove DRF scope. Confirm the active model, outbound implementation, target business system, and filter values for this BP. If the object was not selected, stay on the source side.
+      Capture the outbound identity. Record the replication run and the actual SOAP message or IDoc identifier. This is the handoff from configuration to runtime evidence.
+      Follow the configured channel. For SOAP, trace the web-service message and its receiver result. For ALE, follow the IDoc and its statuses. If middleware is present, use the same message or correlation identity across the hop.
+      Inspect the target object. Compare the required BP roles, customer or supplier segments, addresses, identifiers, relationships, and other relevant data with what the payload contained.
+      Close the identity loop. Check confirmation and key mapping where the scenario uses them. Only then decide whether a resend, mapping correction, source-data correction, or target-side fix is appropriate.
 
 
-    Diagnostic workflow
-
-      Identify the BP number and UUID/GUID where available, source, intended target, replication model, expected roles or segments, and expected timing.
-      Use the DRF replication status or log to confirm whether the object was selected for that target and which communication channel handled it.
-      Trace the outbound message through the configured channel: SOAP or middleware evidence for service-based replication, or WE02/WE05 for ALE.
-      Confirm receiver-side processing and open the target Business Partner. Compare roles, organizational segments, relationships, addresses, and identifiers—not only header data.
-      Verify confirmation and key mapping where the scenario supports them. Determine whether the target recognized an existing object or chose create processing.
-      Compare source and target data at the first missing segment, then use the relevant payload, application log, or validation message to explain the gap.
-
-
-    Typical fixes or next actions
-
-      Correct DRF model selection, target assignment, or outbound implementation only after the failed checkpoint is demonstrated.
-      Create or correct key mapping between source and target systems.
-      Fix data quality issues in the source BP before replicating.
-      Adjust target grouping, number assignment, role, or validation rules only with master-data governance and integration owners.
-      If duplicates exist, evaluate merge or deactivation options with master data governance.
-
-
-    What to capture first
-    Capture the BP number and technical identifier where available, source and target systems, replication model, communication channel, run and message identifiers, timestamp, expected roles or segments, source replication status, receiver status, confirmation result, and key-mapping evidence. Do not include real personal, bank, tax, or client-sensitive values in public incident notes.
-
-    Channel choice matters
-    SAP's S/4HANA guidance recommends service-oriented architecture for Business Partner replication because ALE does not cover every BP attribute. That does not make an existing ALE scenario invalid, but it means a missing field can be a channel-coverage question rather than a transient delivery failure. Confirm the approved architecture and release-specific scope before adding retries or custom mappings.
+    Four patterns that look similar but are not
+    No outbound message exists. Stay with source readiness, replication model selection, filters, and the outbound implementation. Transport is not yet the problem.
+    The message exists but never reaches the target. Follow the configured SOAP, middleware, or ALE route. This is a delivery problem until evidence shows otherwise.
+    The target BP exists but one role or segment is missing. Compare payload scope with target processing. Check DRF segment filters, service coverage, CTI behavior where relevant, mapping, and target validation before resending the full BP.
+    A duplicate BP appears. Stop treating the incident as simple delivery. Establish source and target identifiers, confirmation history, key mapping, and how the target decided between create and update. Duplicate remediation can affect downstream documents and usually needs master-data governance ownership.
 
     Official references
 
-      SAP: Data Replication Framework
-      SAP: replicating a Business Partner
-      SAP: display of object replication status
-      SAP: Business Partner replication using ALE
+      SAP Help Portal — APIs for Business Partner (SAP S/4HANA 2025 FPS01).
+      SAP Help Portal — Business Partner – Replicate to Client (SOAP).
+      SAP Help Portal — Business Partner – Receive Confirmation from Client.
+      SAP Help Portal — Business Partner – Partial Data Model.
+      SAP Help Portal — Data Replication of Business Partner Master Data Using ALE.
+      SAP Help Portal — Display of Object Replication Status.
+      SAP Help Portal — Key Mapping.
 
 
-    Escalation signals
-
-      Replication failures affect many business partners or all target systems.
-      A duplicate BP was created in a target system and needs data steward or business approval to merge.
-      The issue involves key mapping, number ranges, or BP grouping changes that require MDG/ BASIS involvement.
-      Missing bank, tax, or address data has compliance, payment, or reporting impact.
-
-
-    Boundaries and non-goals
-    This page is a diagnostic frame, not a BP replication configuration guide. It does not cover MDG replication model design, key mapping setup, or BP grouping configuration. It does not replace SAP's master data governance documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    Boundary
+    This page covers the end-to-end diagnostic boundary for Business Partner replication. Exact outbound implementations, filters, service versions, middleware routes, target validation, number assignment, and key-harmonization rules depend on the product and release. The customer- and supplier-specific pages cover their organizational segments; the CVI diagnostic covers synchronization between BP and customer or supplier objects inside an SAP system.
 
 
 

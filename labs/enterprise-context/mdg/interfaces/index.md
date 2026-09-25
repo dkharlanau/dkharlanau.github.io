@@ -32,7 +32,7 @@ semantic_links:
     title: "SAP MDG DRF Operations & Replay — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/replication/operations/"
   - type: "same_domain"
-    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    title: "SAP Business Partner — Roles, CVI and Organizational Data"
     url: "/labs/enterprise-context/business-partner/"
   - type: "same_domain"
     title: "Data, Master Data and Governance — Enterprise Context Lab"

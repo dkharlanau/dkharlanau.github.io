@@ -39,7 +39,7 @@ semantic_links:
     title: "SAP MDG Change Request Type Matrix — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/governance-engine/change-request-matrix/"
   - type: "same_domain"
-    title: "SAP Business Partner — CVI, Configuration, Guardrails and Extensions"
+    title: "SAP Business Partner — Roles, CVI and Organizational Data"
     url: "/labs/enterprise-context/business-partner/"
   - type: "same_domain"
     title: "SAP MDG Consolidation & Golden Record — Enterprise Context Lab"

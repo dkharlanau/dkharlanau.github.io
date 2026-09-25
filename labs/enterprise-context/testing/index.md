@@ -104,8 +104,8 @@ semantic_links:
   - type: "same_domain"
     title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
     url: "/labs/enterprise-context/development/"
-  - type: "related_topic"
-    title: "SAP EWM — Deployment & Warehouse Execution Map"
+  - type: "integrates_with"
+    title: "SAP EWM — Warehouse Execution, Objects and Integration Boundaries"
     url: "/labs/enterprise-context/ewm/"
 # ai-discovery-managed:end
 ---
