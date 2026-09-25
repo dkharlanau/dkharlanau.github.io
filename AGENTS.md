@@ -3,7 +3,7 @@
 Project-specific guidance for AI coding and research agents working in this public GitHub Pages repository.
 Use this file as the main entry point. Open deeper docs only when the task needs them.
 
-**Last updated:** 2026-08-17. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
+**Last updated:** 2026-09-25. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
 
 ## Repository Purpose
 
@@ -206,6 +206,7 @@ Read `docs/ai/CONTENT_VERIFICATION_POLICY.md` for the full policy.
 ## Visual Detail Checks
 
 - The visual system is defined in `docs/editorial-design-system.md` (tokens, typography, spacing, components, page templates). Read it before changing shared CSS; update it in the same commit when the system changes.
+- Reuse named components from `docs/editorial-design-system.md` before inventing route-local UI. For educational comparison/reference matrices, use the documented `.study-table` pattern instead of creating another table treatment.
 - For shared CSS changes, inspect the homepage, a profile, a hub, and a long article at desktop and mobile widths. Compare screenshots at the same viewport and state.
 - Check portrait/photo corners against their frames, media clipping, straight divider ends, spacing, text wrapping, and keyboard focus. A passing build does not establish visual quality.
 - Keep border radii on components, not universal selectors. Give a framed photo one clipping owner so inset image corners do not expose the frame background.

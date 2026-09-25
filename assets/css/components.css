@@ -189,6 +189,79 @@ button.btn {
   }
 }
 
+/* ---------- Study tables ---------- */
+
+/* Default table for educational comparisons, reference matrices, and
+   assessment material. Pair with .table-scroll so narrow screens keep a
+   readable type size and scroll horizontally instead of compressing columns. */
+.study-table {
+  margin: var(--space-5) 0 var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  box-shadow: 0 8px 24px rgba(31, 36, 44, 0.04);
+}
+
+.study-table > .study-table__table {
+  width: 100%;
+  min-width: 46rem;
+  margin: 0;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0;
+  background: var(--color-bg);
+  font-size: var(--text-base);
+  line-height: 1.62;
+}
+
+.study-table > .study-table__table thead th {
+  padding: var(--space-4) var(--space-5);
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-accent-soft);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.study-table > .study-table__table tbody :is(td, th) {
+  padding: var(--space-4) var(--space-5);
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  text-align: left;
+  vertical-align: top;
+}
+
+.study-table > .study-table__table :is(th, td) + :is(th, td) {
+  border-left: 1px solid var(--color-border);
+}
+
+.study-table > .study-table__table tbody tr:nth-child(even) > * {
+  background: var(--color-surface);
+}
+
+.study-table > .study-table__table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.study-table > .study-table__table tbody th,
+.study-table > .study-table__table tbody strong {
+  color: var(--color-text);
+  font-weight: 650;
+}
+
+@media (max-width: 767px) {
+  .study-table > .study-table__table {
+    min-width: 48rem;
+    font-size: var(--text-base);
+  }
+}
+
 /* ---------- Code blocks ---------- */
 
 pre {

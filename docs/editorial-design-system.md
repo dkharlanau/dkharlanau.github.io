@@ -104,11 +104,15 @@ diagrams).
   (neutral border), text links otherwise. 44px minimum hit target.
 - **Tables**: full width, 2px top/bottom rules, hairline row separators,
   strong header. Give cells real breathing room: use about 16px vertical and
-  20–24px horizontal padding for normal study tables, with body text around
-  17px where space permits. Linear source registries and table-like link rows
-  should use the same relaxed vertical rhythm instead of compact dashboard
-  density. On mobile the table box scrolls horizontally; text never shrinks
-  below readable size.
+  20–24px horizontal padding for normal tables. On mobile the table box scrolls
+  horizontally; text never shrinks below readable size.
+- **Study table**: use the named `.table-scroll.study-table` wrapper with a
+  `.study-table__table` table for educational comparisons, reference matrices,
+  assessment material, and compact object/field catalogues. It is the default
+  reusable table pattern for new study content: 17px body text, 14px headers,
+  relaxed cell padding, a quiet accent header, light row separation, and
+  horizontal scrolling on small screens. Reuse this component before adding
+  route-local table CSS.
 - **Code**: `pre` on `--color-surface`, 1px border, 8px radius, horizontal
   scroll. Inline code with a subtle border.
 - **Callouts**: `.callout--note` (accent), `.callout--important` (amber),
