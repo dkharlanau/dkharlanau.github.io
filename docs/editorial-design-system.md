@@ -141,8 +141,10 @@ diagrams).
 - **Wide technical** (enterprise-context graphs): `--container-wide` is allowed
   for diagrams, wide tables, and the hero headline. The headline should use the
   available width instead of being constrained to a narrow text column; the
-  supporting lead and evidence rail can share the row below. Body sections keep
-  the normal editorial measure.
+  supporting lead and evidence rail can share the row below. Do not hard-code
+  line breaks in technical hero titles: a title that fits should stay on one
+  line, while longer titles wrap naturally. Body sections keep the normal
+  editorial measure.
 - **Home**: headline, short explanation, two entry routes, search,
   start-from-a-topic list. Nothing else competes for the first viewport.
 
