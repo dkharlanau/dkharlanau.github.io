@@ -62,7 +62,8 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
   <section class="research-canvas__inventory" id="last-day">
     <header><p class="research-canvas__eyebrow">Last-day review</p><h2>Read this page first. Open a deep page only when an answer breaks.</h2></header>
     <p>For the final review, do not reread the whole library. Use the compact model below. Try to explain each row without notes, give one example, and name one failure signal. If the answer is weak, open the linked primary page. If the answer is clear, move on.</p>
-    <table>
+    <div class="sales-cert-table">
+      <table>
       <thead><tr><th>Area</th><th>Compact model</th><th>What you must be able to explain</th></tr></thead>
       <tbody>
         <tr><td><strong>O2C + master data</strong></td><td>Demand → order → confirmation → delivery → PGI → billing → accounting → clearing. BP, product, sales area, plant and commercial records feed the flow before and during execution.</td><td>What the order commits to, what happens later, and which data layer owns a wrong value.</td></tr>
@@ -75,6 +76,7 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
         <tr><td><strong>Public Edition + automation</strong></td><td>Fit-to-Standard defines scope before extension. Configuration, roles, integration, migration and testing support the Sales process. BKK monitors fulfillment exceptions; 1MC brings eligible billing sources together; AI proposes/extracts; 1O0 plans; 1BS analyzes; 2YJ predicts.</td><td>Separate observation, proposal, planning, prediction and authoritative ERP transaction state.</td></tr>
       </tbody>
     </table>
+    </div>
 
     <h3>Ten primary pages</h3>
     <p>This is the shortest local reading route. The rest of the library is reference material.</p>
@@ -122,7 +124,8 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
     <header><p class="research-canvas__eyebrow">Time budget</p><h2>Plan about 44–56 hours for an active certification pass.</h2></header>
     <p>As checked on September 24, 2026, SAP lists <strong>33 hr 38 min</strong> across the five current Sales courses above. That is the vendor's course clock, not a promise that you will be ready after 33 hours. Pausing to draw flows, do exercises, correct mistakes and explain the mechanism takes additional time.</p>
     <p>For this roadmap, a realistic <strong>exam-focused active route is about 44–56 hours</strong>. That estimate includes the official Sales lessons, one primary local explanation per topic, targeted exercises, the capstone and explain-back. If Public Edition implementation foundations are weak, add the full <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition">Implementing SAP S/4HANA Cloud Public Edition</a> course, currently listed at <strong>8 hr 26 min</strong>. Lead-level diagnostic depth can add another 8–15 hours, but it should be chosen by gaps rather than read cover to cover.</p>
-    <table>
+    <div class="sales-cert-table">
+      <table>
       <thead><tr><th>Stage</th><th>Working study budget</th><th>Why it varies</th></tr></thead>
       <tbody>
         <tr><td>1. O2C, organization, master data</td><td>3–4 hr</td><td>Faster if the standard document flow and organizational levels are already familiar.</td></tr>
@@ -137,6 +140,7 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
         <tr><td>10. Automation and analytics</td><td>7–8 hr</td><td>The official course is 6 hr 30 min and covers six different jobs.</td></tr>
       </tbody>
     </table>
+    </div>
     <p><strong>Calendar view:</strong> 10 focused hours per week is roughly 5–6 weeks; 15 hours per week is about 3–4 weeks; 20 hours per week is about 2½–3 weeks. Add time for the full foundation course or weak-topic repetition. If you already know classic SD well, use saved time on Public Edition differences and the advanced/analytics blocks rather than rereading familiar basics.</p>
     <p>These are planning estimates, not official SAP preparation requirements and not a pass prediction. The stop condition is competence: you can explain the flow, work the example and handle a changed scenario.</p>
   </section>
@@ -269,7 +273,8 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
   <section class="research-canvas__inventory" id="consolidation">
     <header><p class="research-canvas__eyebrow">Content consolidation</p><h2>One topic gets one primary page; companion pages answer a different question.</h2></header>
     <p>The Sales cluster has grown enough that reading every related page now creates repetition. The rule for preparation is simple: read the primary page once, then open a companion only when the current exercise exposes a specific gap. This keeps depth without turning the site into several parallel textbooks.</p>
-    <table>
+    <div class="sales-cert-table">
+      <table>
       <thead><tr><th>Topic</th><th>Primary page for learning</th><th>Companions kept for a distinct job</th></tr></thead>
       <tbody>
         <tr><td>Order-to-Cash</td><td><a href="/atlas/concepts/order-to-cash/">SAP Order-to-Cash Process</a></td><td>The former standalone process map has been consolidated into this page. Its old URL is kept only as a pointer so links do not break.</td></tr>
@@ -282,6 +287,7 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
         <tr><td>Practice and diagnosis</td><td><a href="/labs/enterprise-context/sales-diagnostics/">Sales Diagnostic Casebook</a> for worked cases</td><td><a href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">SD O2C Diagnostics Hub</a> is a symptom-to-check router. They are different study modes.</td></tr>
       </tbody>
     </table>
+    </div>
     <p><strong>Editorial rule:</strong> before creating or substantially expanding a Sales page, compare its reader question with the primary page above. If the intent is the same, improve the primary page and keep the secondary route as a short pointer or focused reference. Split only when the reader is solving a clearly different problem.</p>
   </section>
 
