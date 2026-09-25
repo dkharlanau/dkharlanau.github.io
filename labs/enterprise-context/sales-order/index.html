@@ -177,6 +177,48 @@ source_links:
     <p>The same principle applies one level lower. If a schedule line behaves incorrectly, check the item category and the planning input used for schedule-line determination before changing the schedule-line category itself. The visible category is often the result of an upstream decision.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="field-provenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Field provenance</p>
+      <h2>{{ graph.field_provenance.title }}</h2>
+      <p>{{ graph.field_provenance.summary }}</p>
+    </header>
+
+    <div class="ecg-memory-grid">
+      {% for item in graph.field_provenance.partner_memory %}
+      <article class="ecg-memory-card">
+        <span>PARTNER</span>
+        <strong>{{ item.partner }}</strong>
+        <h3>{{ item.owns }}</h3>
+        <ul>{% for value in item.examples %}<li>{{ value }}</li>{% endfor %}</ul>
+        <p>{{ item.caveat }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="ecg-determination-list">
+      {% for item in graph.field_provenance.fields %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{{ item.partner_role }}</span><small>{{ item.level }}</small></div>
+          <h3>{{ item.field }}</h3>
+          <p class="ecg-question">{{ item.source }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Mechanism</h4><p>{{ item.mechanism }}</p></div>
+          <div><h4>Rule</h4><p>{{ item.rule }}</p></div>
+          <div><h4>Used next</h4><p>{{ item.downstream }}</p></div>
+        </div>
+        {% if item.technical_hint %}
+        <p class="ecg-lead-lens"><strong>Technical hint:</strong> {{ item.technical_hint }}</p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+
+    <p class="ecg-caption"><strong>Assessment shortcut:</strong> sold-to is mainly commercial context; ship-to drives destination and logistics context; bill-to owns invoice-recipient context; payer owns payment context. Tax is the exception to simple memorization: geography, classifications, and tax-ID origin are separate decisions.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="dependency-engine" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Logistics dependency</p>
