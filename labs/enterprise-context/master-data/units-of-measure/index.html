@@ -1,0 +1,106 @@
+---
+layout: default
+title: "SAP Sales Master Data — Units of Measure and Quantity Constraints"
+description: "A practical deep dive into Units of Measure and Quantity Constraints in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+permalink: /labs/enterprise-context/master-data/units-of-measure/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-25
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Units of Measure and Quantity Constraints</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.UOM</p>
+      <h1>Units of Measure and Quantity Constraints</h1>
+      <p>Units of measure translate commercial quantities into the units used by inventory, pricing and logistics. Incorrect conversion data can look like a pricing, ATP or delivery issue even when the root cause is the product's UoM setup.</p>
+      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Object profile</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.UOM</strong><small>Catalogue ID</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>logistics adjacent master</strong><small>Data class</small></div>
+      <em>Product, base UoM, alternative UoM, sales UoM and distribution chain.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Know what the object owns before tracing a document.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">database</span>
+      <p><strong>Scope:</strong> Product, base UoM, alternative UoM, sales UoM and distribution chain.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Important data</h3>
+        <p>Base unit, alternative units, conversion numerator/denominator, sales unit, delivery unit and quantity rounding or minimum-order constraints where maintained.</p>
+      </div>
+      <div>
+        <h3>Configuration boundary</h3>
+        <p>The conversion factors belong to product master data. Pricing units, rounding rules and process-specific quantity controls may involve additional configuration or document logic.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime use</p>
+      <h2>How the data enters Order-to-Cash.</h2>
+      <p>Sales order quantities may be entered in a sales unit, converted to base quantity for ATP and inventory, and priced per another pricing unit. Delivery and EDI/API messages also depend on consistent unit semantics.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
+      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
+      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
+      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Troubleshooting</p>
+      <h2>Start with the most specific evidence.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p>Compare order unit, pricing unit, base unit and delivered unit. Recalculate the conversion manually. If only one material is affected, inspect the alternative-UoM conversion before changing pricing or ATP configuration.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>A concise answer that still shows depth.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p>For quantity problems I map every unit: entered sales unit, pricing unit, base unit and delivery unit. Then I verify the product conversion factors and only after that the consuming process.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Related master-data pages">
+      <span>Continue</span>
+      <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+    </nav>
+  </section>
+</div>
