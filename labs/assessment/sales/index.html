@@ -61,7 +61,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
           <li>Complete the 20-minute route.</li>
           <li><a href="#enterprise-structure-memory">Enterprise structure</a></li>
           <li><a href="#incompletion-memory">Incompletion</a>, <a href="#copy-control-memory">Copy control</a>, and <a href="#output-control-memory">Output Control</a></li>
-          <li><a href="#monitoring-apps-memory">Monitoring apps</a></li>
+          <li><a href="#monitoring-apps-memory">Monitoring apps</a> and <a href="#sales-ai-memory">AI-assisted order entry</a></li>
           <li><a href="#multiple-address-memory">Multiple Address Handling</a></li>
         </ol>
       </div>
@@ -315,6 +315,32 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
       <p><strong>Deep dives:</strong> <a href="/labs/enterprise-context/shipping/">Shipping</a> for delivery and PGI · <a href="/labs/enterprise-context/billing/">Billing</a> for invoice and FI transfer · <a href="/labs/enterprise-context/finance-logistics/">FI/CO Logistics Bridge</a> for valuation, COGS, receivables, revenue, and reconciliation.</p>
     </div>
   </section>
+  <section class="research-canvas__inventory" id="sales-ai-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales / AI-assisted order entry</p>
+      <h2>FILE → EXTRACT → PROPOSE → VALIDATE → SIMULATE → CREATE.</h2>
+      <p>AI can reduce manual order entry, but the Sales order must still pass business validation and ERP controls.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In SAP S/4HANA Cloud Public Edition, Create Sales Orders - AI-Assisted Extraction uses SAP Document AI to read customer purchase-order files and create a sales order request. The system proposes fields such as customer and item data, checks completeness, and lets the user review or correct the request. A complete request can be simulated before the sales order is created. My Lead boundary is clear: AI extracts and proposes; master data, Sales rules, authorization, and simulation validate the transaction before the ERP write.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Evidence</h3><p>Keep the source purchase-order file and make extracted values reviewable. The model output is a proposal, not proof that the business data is correct.</p></div>
+      <div><h3>Validation</h3><p>Check customer, sales area, product, quantity, unit, dates, addresses, duplicates, and other required business data against ERP context.</p></div>
+      <div><h3>Authority</h3><p>Separate proposal generation from transaction authority. The workflow still needs the correct user or service authorization to create the order.</p></div>
+      <div><h3>Operations</h3><p>Design retry, duplicate protection, exception handling, monitoring, and reconciliation so a failed extraction or write does not create silent or duplicate work.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Release boundary:</strong> the app and entitlement are release-sensitive. The control model is broader: source evidence → proposal → ERP validation → authorized execution → reconciliation.</p>
+      <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/565f8b8bd23944f1b04836a1b424c647.html">SAP Help: Create Sales Orders - AI-Assisted Extraction</a> · <a href="/labs/business-ai/document-to-erp-ai/">Open the Document-to-ERP AI control model</a></p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="monitoring-apps-memory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Sales monitoring apps</p>
