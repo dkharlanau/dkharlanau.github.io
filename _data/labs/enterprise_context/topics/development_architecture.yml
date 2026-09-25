@@ -6,8 +6,8 @@ domain: "SAP Technical Architecture"
 process_family: "Cross-enterprise / application development and extensibility"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-09-24"
-reviewed_together_at: "2026-09-24"
+updated_at: "2026-09-25"
+reviewed_together_at: "2026-09-25"
 review_note: "Reviewed against current SAP Help, SAP Learning, CAP documentation and SAP-owned Clean ABAP guidance. Updated for Clean Core Levels, side-by-side tooling and the SAP S/4HANA custom code migration/adaptation workstream."
 
 business_question: "If I need new SAP-related functionality, where should I build it, with which programming model, runtime, language and deployment model?"
@@ -247,6 +247,109 @@ three_tier_history:
       meaning: "Classical ABAP extensions and legacy code that cannot follow the Tier 1/2 rules."
   current_position: "SAP has replaced this qualification model with Clean Core Levels A-D. Existing code created under the old model does not automatically need to be rewritten only because the terminology changed."
   source_refs: [SRC-SAP-CLEAN-CORE-LEVEL-CONCEPT, SRC-SAP-CLEAN-CORE-EXTENSIBILITY-WHITEPAPER]
+
+functional_consultant_technical_map:
+  title: "Technical Extension Map for Functional Consultants"
+  summary: >-
+    We do not need to become full-time ABAP developers to lead a logistics solution.
+    We do need to trace standard logic, recognize inherited enhancement points, understand
+    the transaction boundary, and choose a supported extension contract.
+  source_boundary: >-
+    S/Toolkit is useful as a map of classic ERP and ABAP concepts. We use it to recognize
+    inherited code and debugging patterns. New design guidance comes from current SAP
+    extensibility documentation and the Clean Core Level model.
+  workflow:
+    - order: 1
+      title: "Prove the standard owner"
+      question: "Is the behavior already owned by master data, configuration, copy control, workflow, output, or the inbound payload?"
+      action: "Reconstruct the standard decision before reading custom code."
+    - order: 2
+      title: "Trace the runtime"
+      question: "Where does expected and actual behavior first diverge?"
+      action: "Use application logs, traces, debugger/call stack, where-used analysis, and a working-vs-failing comparison."
+    - order: 3
+      title: "Recognize the legacy hook"
+      question: "Is an inherited exit, classic BAdI, VOFM routine, enhancement point, or modification changing the result?"
+      action: "Read it as an existing system contract. Do not assume it is the right extension model for new work."
+    - order: 4
+      title: "Translate code into business intent"
+      question: "What is the code really trying to do?"
+      action: "Classify the intent: default a field, validate, determine, calculate, copy data, enrich output, persist data, or call another system."
+    - order: 5
+      title: "Choose the current contract"
+      question: "What is the highest clean-core level that can express the intent?"
+      action: "Prefer standard configuration, then key-user extensibility, released ABAP Cloud APIs/BAdIs, or side-by-side APIs/events. Keep classic ABAP only where the deployment and requirement justify it."
+  consultant_literacy:
+    - name: "Enhancement discovery"
+      know: "BAdI, customer exit, user exit, explicit/implicit enhancement, enhancement spot, and where-used/call-stack concepts."
+      lead_use: "Find who changed the standard result before proposing another enhancement."
+    - name: "Debugging and checkpoints"
+      know: "Breakpoints, watchpoints, call stack, checkpoint groups, ASSERT/LOG-POINT, ST22, SAT, and ST05."
+      lead_use: "Collect evidence from runtime instead of guessing from configuration or source code."
+    - name: "Application log"
+      know: "BAL/SLG1, log object/subobject, external ID, persistent application messages."
+      lead_use: "Make batch and integration failures supportable without debugger access."
+    - name: "Data access"
+      know: "Released CDS views and APIs first; classic direct-table reads and old DDIC/CDS patterns are inherited-system knowledge."
+      lead_use: "Avoid designing new integrations around internal persistence that can change during S/4HANA evolution."
+    - name: "Transaction and asynchronous boundaries"
+      know: "BAPI commit behavior, update task, RFC/bgRFC concepts, retries, and idempotency."
+      lead_use: "Separate a successful technical call from a committed and business-valid document."
+  legacy_to_current:
+    - legacy: "MV45*/RV60* user exits and classic customer exits"
+      current: "Released Custom Logic BAdIs or ABAP Cloud extension points where the business context exposes them"
+      rule: "Keep the business intent; do not migrate the include name."
+    - legacy: "Classic BAdIs such as ME_PROCESS_PO_CUST"
+      current: "App-specific released purchasing BAdIs in Custom Logic, or released developer extensibility"
+      rule: "Check the exact app, business context, and released object before designing."
+    - legacy: "VOFM routine or pricing include"
+      current: "Released pricing configuration and Custom Logic BAdIs"
+      rule: "First classify requirement, base, amount, copy, and field-enrichment intent."
+    - legacy: "Direct table read"
+      current: "Released CDS view, OData/SOAP API, or released ABAP API"
+      rule: "Treat internal persistence as implementation detail unless SAP explicitly releases it."
+    - legacy: "Implicit enhancement or modification"
+      current: "Released extension point or side-by-side contract"
+      rule: "Use modification-style techniques as inherited-system debt, not a default design."
+    - legacy: "BAPI plus hand-coded commit/retry logic"
+      current: "Released business API/event contract with explicit commit, retry, duplicate, and monitoring design"
+      rule: "The transaction boundary is part of the integration contract."
+  process_routes:
+    - process: "Sales order"
+      route: "/labs/enterprise-context/sales-order/"
+      focus: "Sales-document fields, checks, inbound values, and classic MV45* recognition."
+    - process: "Pricing"
+      route: "/labs/enterprise-context/pricing/"
+      focus: "VOFM, KOMK/KOMP, pricing result handling, and cloud pricing BAdIs."
+    - process: "Billing"
+      route: "/labs/enterprise-context/billing/"
+      focus: "Copy/data transfer, billing split, FI handoff, and classic RV60*/V60B recognition."
+    - process: "Procurement"
+      route: "/labs/enterprise-context/procurement/"
+      focus: "PR/PO processing, checks, pricing, account assignment, workflow, and BAPI boundaries."
+    - process: "Shipping"
+      route: "/labs/enterprise-context/shipping/"
+      focus: "Route, storage-location, delivery processing, and EWM/TM ownership."
+    - process: "Production / MRP"
+      route: "/labs/enterprise-context/production/"
+      focus: "MRP engine boundaries, planning proposals, production-version logic, and high-impact legacy MD* enhancements."
+    - process: "Integration operations"
+      route: "/labs/enterprise-context/integration-operations/"
+      focus: "BAPI transaction boundaries, RFC/qRFC/bgRFC, retry, idempotency, logging, and operational evidence."
+  assessment_answer: >-
+    I first prove the standard owner and the first wrong runtime value. In an inherited ERP
+    or Private Edition system I can recognize classic exits and BAdIs, but I do not use their
+    names as the architecture. I translate the custom code into business intent, then choose
+    the highest clean-core option available for the target release: configuration, key-user
+    logic, released ABAP Cloud extension points, or a side-by-side API/event design.
+  source_refs:
+    - SRC-STOOLKIT-ABAP-CONSULTANTS
+    - SRC-STOOLKIT-ENHANCEMENT-FRAMEWORK
+    - SRC-STOOLKIT-CDS
+    - SRC-STOOLKIT-CHECKPOINT
+    - SRC-SAP-ABAP-EXTENSION-GUIDE-2025
+    - SRC-SAP-S4-KEY-USER-EXTENSIBILITY
+    - SRC-SAP-ABAP-CLOUD-EXTENSIBILITY
 
 clean_core_levels:
   principle: "Aim for the highest clean-core level that can meet the business requirement."

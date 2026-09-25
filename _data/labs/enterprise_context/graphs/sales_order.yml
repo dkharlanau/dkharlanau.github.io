@@ -1023,6 +1023,49 @@ causal_edges:
     predicate: provides_context_to
     to: DET-SD-CREDIT
 
+technical_extension_map:
+  title: "Sales-order extension and tracing map"
+  principle: >-
+    A custom sales-order value is not the starting point. First prove whether the value
+    came from standard determination, reference copying, manual entry, or the inbound
+    interface. Only then trace custom logic.
+  inherited_system_recognition:
+    - hook: "MV45AFZZ — USEREXIT_MOVE_FIELD_TO_VBAK / USEREXIT_MOVE_FIELD_TO_VBAP"
+      purpose: "Recognize classic code that moves or derives header and item data in sales-document processing."
+      boundary: "Useful for inherited ERP and classic Private/on-premise code reading; not a Public Cloud extension model."
+    - hook: "MV45AFZZ — USEREXIT_SAVE_DOCUMENT / USEREXIT_SAVE_DOCUMENT_PREPARE"
+      purpose: "Recognize save-time validations or side effects in classic sales-document processing."
+      boundary: "Treat save-time custom code as high-impact because it can affect the complete document lifecycle."
+    - hook: "Classic SD customer exits and enhancement points"
+      purpose: "Identify historical logic around availability, text, document flow, foreign trade, and other SD processing."
+      boundary: "Verify the exact enhancement in the target release instead of copying an old include pattern."
+  current_s4_paths:
+    - hook: "SD_SLS_MODIFY_HEAD / SD_SLS_MODIFY_ITEM"
+      purpose: "Set or change values for custom fields in sales-document header or item contexts."
+      boundary: "Released Custom Logic path; availability still depends on the app and business context."
+    - hook: "SD_SLS_MODIFY_HEAD_BUSINESS / SD_SLS_MODIFY_ITEM_BUSINESS"
+      purpose: "Change supported business-data fields in current sales-document processing."
+      boundary: "Use only the fields and business contexts exposed by the released BAdI contract."
+    - hook: "Custom Fields + API extensibility"
+      purpose: "Carry supported extension fields through sales apps and released sales APIs."
+      boundary: "Keep UI, business logic, and API exposure aligned; a field visible in one channel is not automatically available everywhere."
+  tracing_sequence:
+    - "Compare the failing order with a working order at the same document, item, customer, product, and sales-area scope."
+    - "Compare manual creation with API or interface creation and mark every field supplied explicitly by the inbound payload."
+    - "Trace the first wrong runtime value to master data, configuration, copy control, or standard determination."
+    - "Only then inspect the relevant BAdI, user exit, enhancement implementation, or custom field logic."
+    - "For a new design, translate the old hook into business intent and check the current released extension contract."
+  assessment_answer: >-
+    In an inherited system I know the classic MV45* exits because they often explain why
+    a sales order behaves differently from standard. I do not start a new design there.
+    I first prove the standard owner, then use the released sales-document BAdIs or other
+    clean-core extension option that matches the target edition and business context.
+  source_refs:
+    - SRC-STOOLKIT-ABAP-SALES
+    - SRC-SAP-SALES-DOCUMENT-BADIS-2608
+    - SRC-SAP-S4-KEY-USER-EXTENSIBILITY
+    - SRC-SAP-ABAP-CLOUD-EXTENSIBILITY
+
 impact_traces:
   - id: TRACE-SD-PLANT-CHANGE
     title: "What can change if the plant changes?"

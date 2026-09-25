@@ -6,7 +6,7 @@ domain: "SAP Technical Architecture"
 process_family: "Application development, quality, delivery and operations"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-09-25"
 reviewed_together_at: "2026-08-14"
 
 architect_thesis:
@@ -157,6 +157,33 @@ categories:
         architect_view: "Make ATC a gate, not an optional developer ritual. Central ATC is especially valuable in mixed legacy landscapes."
         automation_value: "very high"
         source_refs: [SRC-TBX-ABAP-QUALITY]
+
+      - id: TOOL-ABAP-DEBUGGER
+        name: "ABAP Debugger"
+        type: "SAP runtime diagnostics"
+        use_for: "Stop at the first wrong runtime value, inspect the call stack, compare variables, and prove which implementation changed the business result."
+        architect_view: "A functional Lead does not need to write every class, but should be able to read the call stack, set a useful breakpoint or watchpoint, and hand the developer evidence instead of a guess."
+        avoid_when: "A production incident can be explained by application logs, traces, or standard analysis without intrusive debugging."
+        automation_value: "low"
+        source_refs: [SRC-TBX-ABAP-DEBUGGER]
+
+      - id: TOOL-ABAP-CHECKPOINTS
+        name: "Checkpoint Groups (SAAB)"
+        type: "SAP diagnostic instrumentation"
+        use_for: "Activate controlled BREAK-POINT, LOG-POINT, or ASSERT instrumentation for a user, server, or broader context."
+        architect_view: "Useful when the code already contains checkpoint instrumentation or when background/update processing makes an ordinary interactive breakpoint weak evidence."
+        avoid_when: "Do not activate broad or expensive checkpoints in production without a clear scope, validity period, and operational reason."
+        automation_value: "low"
+        source_refs: [SRC-TBX-ABAP-CHECKPOINTS]
+
+      - id: TOOL-ENHANCEMENT-DISCOVERY
+        name: "Enhancement Framework discovery"
+        type: "SAP extension diagnostics"
+        use_for: "Find active BAdIs, enhancement spots, source-code enhancements, and the implementation that executes in an inherited ABAP process."
+        architect_view: "Use enhancement metadata, where-used analysis, and the runtime call stack. Old CL_EXITHANDLER breakpoint tricks can help with classic BAdIs, but they are not a universal discovery method for modern kernel BAdIs."
+        avoid_when: "The behavior is still unexplained by standard configuration, master data, copy logic, workflow, or the inbound payload."
+        automation_value: "low"
+        source_refs: [SRC-TBX-ENHANCEMENT-FRAMEWORK]
 
       - id: TOOL-CAP-TEST
         name: "CAP cds.test / @cap-js/cds-test"

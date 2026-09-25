@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-25
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -75,6 +75,7 @@ source_links:
 # ai-discovery-managed:end
 ---
 {% assign evidence = site.data.labs.enterprise_context.sources.production %}
+{% assign graph = site.data.labs.enterprise_context.graphs.production %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Production</li></ol>
@@ -168,6 +169,34 @@ source_links:
     </header>
     <p>During execution, the manufacturing order can collect component, activity and other actual costs. Goods receipt credits the order according to the valuation design. What remains is handled through the applicable product-costing model: work in process, variance calculation and settlement can be period-based or order-based, and SAP S/4HANA Cloud also has event-based production cost posting scenarios.</p>
     <p>The settlement rule defines which portions of a sender's costs go to which receivers. In traditional Product Cost by Order or Product Cost by Period scenarios, the settlement type and period-end design determine how WIP and variances are handled. This is why a technically completed order can still require financial processing, and why a remaining balance should be explained rather than cleared by assumption.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="technical-extension-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Technical extension map</p>
+      <h2>MRP hooks have a wide blast radius. Separate planning logic from display logic.</h2>
+      <p>{{ graph.technical_extension_map.principle }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Inherited MRP / classic ABAP</h3>
+        {% for item in graph.technical_extension_map.inherited_system_recognition %}
+        <p><strong><code>{{ item.hook }}</code></strong><br />{{ item.purpose }} <em>{{ item.boundary }}</em></p>
+        {% endfor %}
+      </div>
+      <div>
+        <h3>Current S/4HANA path</h3>
+        {% for item in graph.technical_extension_map.current_s4_paths %}
+        <p><strong><code>{{ item.hook }}</code></strong><br />{{ item.purpose }} <em>{{ item.boundary }}</em></p>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="research-route-list">
+      {% for step in graph.technical_extension_map.tracing_sequence %}
+      <a href="/labs/enterprise-context/development/#functional-consultant-map"><span>{{ forloop.index }}</span><strong>Trace before code</strong><small>{{ step }}</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>Lead answer:</strong> {{ graph.technical_extension_map.assessment_answer }}</p>
   </section>
 
   <section class="research-canvas__inventory" id="lead-lens" data-reveal>

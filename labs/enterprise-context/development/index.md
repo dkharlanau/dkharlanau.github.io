@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-24
+last_modified_at: 2026-09-25
 hide_global_cta: true
 tags:
   - sap
@@ -219,6 +219,61 @@ source_links:
         <div class="ecg-determination-card__index">0{{ forloop.index }}</div>
         <div class="ecg-determination-card__copy"><h3>Verification step</h3><p>{{ check }}</p></div>
       </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="functional-consultant-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ABAP for functional consultants</p>
+      <h2>Know how to trace and extend. Do not turn every requirement into custom code.</h2>
+      <p>{{ topic.functional_consultant_technical_map.summary }}</p>
+      <p>{{ topic.functional_consultant_technical_map.source_boundary }}</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      {% for item in topic.functional_consultant_technical_map.workflow %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ item.order }}</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ item.title }}</h3>
+          <p><strong>Question:</strong> {{ item.question }}</p>
+          <p><strong>Action:</strong> {{ item.action }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="research-route-list">
+      {% for item in topic.functional_consultant_technical_map.consultant_literacy %}
+      <a href="/labs/enterprise-context/development/toolbox/abap-runtime-ui/"><span>ABAP</span><strong>{{ item.name }}</strong><small>{{ item.know }} <b>Lead use:</b> {{ item.lead_use }}</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Legacy to clean core</p>
+      <h2>Translate the intent. Do not migrate the old hook name.</h2>
+      <p>Classic exits and BAdIs remain important because inherited ERP and Private Edition systems contain them. For new work, the same business intent should be checked against the current released contract.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.functional_consultant_technical_map.legacy_to_current %}
+      <a href="/labs/enterprise-context/data/development.json"><span>MAP</span><strong>{{ item.legacy }} → {{ item.current }}</strong><small>{{ item.rule }}</small><i class="material-symbols-outlined" aria-hidden="true">sync_alt</i></a>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>Assessment answer:</strong> {{ topic.functional_consultant_technical_map.assessment_answer }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Process maps</p>
+      <h2>Technical literacy becomes useful only when it is attached to the business process.</h2>
+      <p>Use these routes to see which extension and tracing questions matter in each logistics area.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.functional_consultant_technical_map.process_routes %}
+      <a href="{{ item.route }}"><span>SAP</span><strong>{{ item.process }}</strong><small>{{ item.focus }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_outward</i></a>
       {% endfor %}
     </div>
   </section>

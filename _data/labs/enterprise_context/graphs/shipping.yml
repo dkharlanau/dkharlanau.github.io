@@ -636,6 +636,64 @@ extension_layers:
     source_refs:
       - SRC-SAP-EWM-SPLIT-BADI
 
+  - id: SHP-EXT-DELIVERY-CLASSIC
+    title: "Classic Delivery Processing Hooks"
+    principle: >-
+      In inherited Logistics Execution code, delivery save exits, route exits, and copy
+      routines can alter a result after standard determination. Treat them as diagnostic
+      landmarks and prove the standard delivery rule before touching custom code.
+    technical_shape:
+      - "MV50AFZ1 / USEREXIT_SAVE_DOCUMENT_PREPARE can contain classic delivery save-time logic"
+      - "EXIT_SAPL0VRF_001 is a classic route-determination exit"
+      - "FV50C* copy routines can influence transferred delivery data and therefore split-relevant header values"
+    diagnostic_checks:
+      - "check delivery type, item category, copy control, route and storage-location determination first"
+      - "use delivery split analysis before introducing custom split logic"
+      - "trace whether a save exit changes a field after standard determination"
+      - "translate the business intent into a current released delivery extension for new work"
+    trap: "Debugging an old exit first and missing that standard copy control or determination already explains the result."
+    source_refs:
+      - SRC-STOOLKIT-DELIVERY-PROCESSING
+
+  - id: SHP-EXT-STORAGE-LOCATION-LEGACY
+    title: "Classic Storage-Location Determination"
+    principle: >-
+      In inherited ERP or classic Private/on-premise code, recognize storage-location
+      enhancements as a possible owner of a delivery result. First prove the standard
+      plant, shipping, and warehouse context before reading or changing the enhancement.
+    technical_shape:
+      - "legacy landscapes can contain BAdI LE_SHP_STORLOC_DETERMINATION"
+      - "classic helper logic can also call SD_STORAGE_LOCATION_DETERMINE"
+      - "treat these names as diagnostic landmarks, not as the default extension design for new work"
+    diagnostic_checks:
+      - "compare the delivering plant, shipping point, item category, and warehouse context"
+      - "check whether the storage location was supplied explicitly or determined"
+      - "identify the active enhancement implementation before changing Customizing"
+      - "in a new design, check current released delivery extensibility for the target edition"
+    trap: "Using a classic storage-location enhancement to compensate for a wrong plant, delivery design, or warehouse ownership boundary."
+    source_refs:
+      - SRC-STOOLKIT-ABAP-LOGISTICS
+
+  - id: SHP-EXT-DELIVERY-CURRENT
+    title: "Delivery Custom Fields and Logic"
+    principle: >-
+      Current S/4HANA delivery extensibility is app- and business-context-specific.
+      Use released Delivery or Delivery Item contexts and supported Custom Fields and
+      Logic where available instead of recreating old VL0*N enhancement patterns.
+    technical_shape:
+      - "Delivery and Delivery Item are documented extensibility business contexts for supported outbound-delivery apps"
+      - "custom fields can be enabled for supported UI and service scenarios"
+      - "custom logic depends on the exact released extension point in the target release"
+    diagnostic_checks:
+      - "identify the exact delivery app and deployment model"
+      - "check the Extensibility documentation for the required field or BAdI"
+      - "separate S/4 delivery logic from EWM and TM execution ownership"
+      - "keep API or event propagation aligned when the custom field leaves S/4HANA"
+    trap: "Assuming a classic delivery-screen BAdI is the modern extension contract because the business requirement still mentions a custom field."
+    source_refs:
+      - SRC-SAP-OUTBOUND-DELIVERY-EXT-2025
+      - SRC-SAP-S4-KEY-USER-EXTENSIBILITY
+
 practitioner_heuristics:
   - id: SHP-H-01
     statement: "I debug dates from the first wrong date, not from the customer date backward by guesswork."
