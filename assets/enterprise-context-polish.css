@@ -1037,3 +1037,155 @@ body[data-page="/labs/enterprise-context/master-data/"] .ecg-compact-sequence p 
     grid-column: 2;
   }
 }
+
+
+/* Enterprise Context readability contract: paragraph-heavy comparison groups. */
+/*
+  Long SAP explanations must not be squeezed into narrow multi-column text.
+  This pattern keeps comparison value while preserving normal reading size.
+*/
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.25rem 0 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div + div {
+  box-sizing: border-box;
+  flex: 1 1 22rem;
+  min-width: min(100%, 22rem);
+  padding: 1.25rem 1.35rem 1.35rem;
+  border: 1px solid var(--ec-border);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: none;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns h3 {
+  margin: 0;
+  color: var(--ec-ink);
+  font-family: var(--font-body);
+  font-size: clamp(1.22rem, 1.14rem + 0.24vw, 1.42rem) !important;
+  font-weight: 720;
+  letter-spacing: -0.018em;
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns h4 {
+  display: block;
+  width: fit-content;
+  min-height: 0;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ec-blue-strong);
+  font-family: var(--font-body);
+  font-size: 0.9rem !important;
+  font-weight: 760;
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns p,
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns li {
+  max-width: 62ch;
+  color: var(--ec-soft);
+  font-size: var(--text-base, 17px);
+  line-height: 1.65;
+  text-transform: none;
+  text-wrap: pretty;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns p {
+  margin: 0.7rem 0 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns li {
+  margin: 0.45rem 0;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns strong {
+  color: var(--ec-ink);
+}
+
+/* A sentence after a comparison group is normally the memory rule. */
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns + p {
+  max-width: 72ch;
+  margin: 1.2rem 0 0;
+  padding: 1rem 1.1rem;
+  border-left: 3px solid var(--ec-blue);
+  border-radius: 0 12px 12px 0;
+  background: var(--ec-blue-softer);
+  color: var(--ec-ink);
+  font-size: var(--text-base, 17px);
+  line-height: 1.62;
+}
+
+/* The other recurring Enterprise Context grids follow the same reading floor.
+   These are comparison collections, so responsive cards are appropriate. */
+body[data-page^="/labs/enterprise-context/"] .context-graph :is(
+  .ecg-control-stack,
+  .ecg-input-grid,
+  .ecg-view-grid,
+  .ecg-heuristic-grid
+) {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph :is(
+  .ecg-control-stack,
+  .ecg-input-grid,
+  .ecg-view-grid,
+  .ecg-heuristic-grid
+) h3 {
+  font-size: clamp(1.12rem, 1.06rem + 0.2vw, 1.28rem) !important;
+  line-height: 1.35;
+}
+
+body[data-page^="/labs/enterprise-context/"] .context-graph :is(
+  .ecg-control-stack,
+  .ecg-input-grid,
+  .ecg-view-grid,
+  .ecg-heuristic-grid
+) :is(p, li),
+body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card p {
+  font-size: var(--text-base, 17px);
+  line-height: 1.62;
+}
+
+@media (min-width: 768px) {
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns p,
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns li,
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns + p,
+  body[data-page^="/labs/enterprise-context/"] .context-graph :is(
+    .ecg-control-stack,
+    .ecg-input-grid,
+    .ecg-view-grid,
+    .ecg-heuristic-grid
+  ) :is(p, li),
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-memory-card p {
+    font-size: clamp(1.04rem, 1.01rem + 0.12vw, 1.1rem);
+  }
+}
+
+@media (max-width: 760px) {
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns {
+    gap: 0.75rem;
+  }
+
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div,
+  body[data-page^="/labs/enterprise-context/"] .context-graph .ecg-decision-columns > div + div {
+    flex-basis: 100%;
+    min-width: 100%;
+    padding: 1.05rem 1.1rem 1.15rem;
+    border: 1px solid var(--ec-border);
+  }
+}

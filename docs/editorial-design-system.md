@@ -116,6 +116,13 @@ diagrams).
   groups align under the title and use vertical separators rather than repeated
   horizontal rules. Do not repeat the same question in the header and body.
   Keep body text in normal sentence case and at a readable size.
+- **Enterprise Context comparison groups**: paragraph-heavy concepts must not be
+  compressed into three or more narrow reading columns. `.ecg-decision-columns`
+  wraps responsively, keeps body text at normal reading size, and removes legacy
+  left indentation when there is no real number rail. Three columns are only
+  acceptable when each block is short; long explanations should resolve to two
+  or one column. The sentence after a comparison group may be shown as a quiet
+  memory rule when it summarizes the distinction.
 - **Atlas process maps**: `.atlas-process-map` renders a semantic ordered
   list of process steps as a five-tile grid (one column on mobile) with
   numbered step tiles, arrow connectors, and a caption. Used on Atlas
