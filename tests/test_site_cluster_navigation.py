@@ -21,35 +21,8 @@ def primary_urls(registry, locale="en"):
     return [item["url"] for item in registry[key]]
 
 
-def select_navigation_locale(html, locale):
-    """Resolve only the explicit rollout branch; this is not Liquid rendering."""
-    marker = "{% if page_locale == 'en' %}"
-    assert html.count(marker) == 1
-    start = html.index(marker)
-    body_start = start + len(marker)
-    depth = 1
-    alternate = end = None
-    for token in re.finditer(r"\{%\s*(if|unless|else|endif|endunless)\b.*?%\}", html[body_start:], re.S):
-        command = token.group(1)
-        absolute_start = body_start + token.start()
-        absolute_end = body_start + token.end()
-        if command in ("if", "unless"):
-            depth += 1
-        elif command in ("endif", "endunless"):
-            depth -= 1
-            if depth == 0:
-                end = (absolute_start, absolute_end)
-                break
-        elif command == "else" and depth == 1:
-            assert alternate is None
-            alternate = (absolute_start, absolute_end)
-    assert alternate is not None and end is not None, "Unbalanced locale branch"
-    chosen = html[body_start:alternate[0]] if locale == "en" else html[alternate[1]:end[0]]
-    return html[:start] + chosen + html[end[1]:]
-
-
-def header_product_urls(locale="en"):
-    html = select_navigation_locale(HEADER_PATH.read_text(encoding="utf-8"), locale)
+def header_product_urls():
+    html = HEADER_PATH.read_text(encoding="utf-8")
     links = re.findall(r'<a href="([^"]+)" class="([^"]*nav-link[^"]*)"', html)
     result = []
     for href, classes in links:
@@ -60,7 +33,6 @@ def header_product_urls(locale="en"):
         assert route.startswith("/"), f"Unresolved navigation URL: {href}"
         result.append(route)
     return result
-
 
 def footer_explore_urls():
     html = FOOTER_PATH.read_text(encoding="utf-8")
@@ -75,22 +47,16 @@ def footer_explore_urls():
 
 def test_primary_navigation_matches_cluster_registry():
     registry = load_registry()
-    for locale in ("en", "de", "ar", "es", "fr", "it", "nl", "pl", "pt-BR", "zh-Hans"):
-        assert header_product_urls(locale) == primary_urls(registry, locale), locale
+    assert header_product_urls() == primary_urls(registry, "en")
     # Footer is a supporting reference menu, not a second primary audience router.
     assert set(footer_explore_urls()) == set(primary_urls(registry, "fallback"))
 
 
-def test_locale_branch_selection_keeps_nested_conditions_and_common_links():
-    sample = """before{% if page_locale == 'en' %}<a href="{{ '/learn/' | relative_url }}" class="nav-link{% if active %} active{% else %} inactive{% endif %}">Learn</a>{% else %}<a href="/services/" class="nav-link{% unless inactive %} active{% endunless %}">Work</a>{% endif %}<a href="/about/" class="nav-link">About</a>after"""
-    en = select_navigation_locale(sample, "en")
-    de = select_navigation_locale(sample, "de")
-    assert "/learn/" in en and "/services/" not in en
-    assert "/services/" in de and "/learn/" not in de
-    for selected in (en, de):
-        assert selected.startswith("before") and selected.endswith("after")
-        assert "/about/" in selected
-    assert "{% else %} inactive" in en
+def test_header_navigation_is_english_only():
+    html = HEADER_PATH.read_text(encoding="utf-8")
+    assert "page_locale" not in html
+    assert "portal_nav." not in html
+    assert header_product_urls() == ["/learn/", "/knowledge/", "/about/"]
 
 
 def test_primary_navigation_routes_are_owned_by_product_clusters():
@@ -114,7 +80,7 @@ def test_machine_layer_stays_out_of_primary_navigation():
     assert machine.get("primary_navigation") is False
     for locale in ("en", "fallback"):
         assert machine["hub"] not in primary_urls(registry, locale)
-        assert machine["hub"] not in header_product_urls(locale)
+        assert machine["hub"] not in header_product_urls()
 
 
 def test_primary_navigation_has_unique_labels_and_routes():
