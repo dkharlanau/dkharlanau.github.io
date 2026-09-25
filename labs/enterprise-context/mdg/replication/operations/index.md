@@ -7,10 +7,10 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-03
-last_reviewed: 2026-09-03
+last_modified_at: 2026-09-25
+last_reviewed: 2026-09-25
 publication_wave: "sap-mdg-review-2026-09"
-review_method: "SAP S/4HANA 2025 FPS01 DRF/key-mapping primary sources + SAP BP replication KBA evidence + operational safety review"
+review_method: "SAP S/4HANA 2025 FPS01 DRF/key-mapping primary sources + SAP BP relationship deletion and package-size KBAs + operational safety review"
 search_intent: "SAP MDG DRF operations replay Business Partner replication locks key mapping DRFOUT reconciliation"
 structured_data:
   type: TechArticle
@@ -30,6 +30,14 @@ source_links:
     url: "https://userapps.support.sap.com/sap/support/knowledge/en/3730533"
   - title: "SAP KBA 3637764 — FAQ Business Partner Integration via Web Service"
     url: "https://userapps.support.sap.com/sap/support/knowledge/en/3637764"
+  - title: "SAP KBA 3383495 — Deletion of relationships are not transferred via DRFOUT"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3383495"
+  - title: "SAP KBA 3568681 — Relationships deleted in the target system after BP WS replication"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3568681"
+  - title: "SAP KBA 3520081 — Multiple payloads created during BP mass updates"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3520081"
+  - title: "SAP KBA 3445939 — BP replication message exceeds configured size limit"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3445939"
 # ai-discovery-managed:start
 primary_topic: "sap-mdg"
 ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--replication--operations.json"
@@ -142,6 +150,56 @@ There is no useful universal package size or server-group setting. Capacity, mes
 Typical technical clues from SAP's BP replication KBA include update processes in wait/on-hold status, `RECORD_LOCK`, `SAPLBS_SOA_INAPPSEQ_UPD`, `BSSOA_IAS_SEQ` and tRFC entries involving `MDG_BS_BP_OUTBOUND_DRF_CALL`. Use these clues to focus the investigation; do not treat the presence of one program name as proof of the root cause.
 
 **Lead takeaway:** the risk is not “MDG cannot handle mass BP change”. The design problem is how high-volume source change, replication mode, receiver throughput, locks, update capacity and reconciliation interact.
+
+## BP relationship deletion: do not mix delta, complete-state and package-size behavior
+
+Business Partner relationship replication has a dangerous edge case: the same target can react very differently depending on how the message was triggered.
+
+The key field is:
+
+`BusinessDocumentObjectListCompleteTransmissionIndicator`
+
+Think of it as a contract about the meaning of the payload:
+
+| Indicator | Meaning | Target interpretation |
+|---|---|---|
+| `false` | Delta message | Apply the relationships and actions that are explicitly sent. Do not assume that omitted relationships should disappear. |
+| `true` | Complete-state message | Treat the payload as the complete current relationship state. Relationships that exist in the target but are missing from the payload can be removed. |
+
+SAP KBA 3568681 documents that manual replication through `DRFOUT` can send the relationship state with the complete-transmission indicator set to `true`. This is why a manual resend is not always a harmless retry. If the payload does not contain a relationship that still exists only in the target, the receiver can interpret the omission as an instruction to remove it.
+
+Change-triggered replication behaves differently. SAP documents delta semantics for relationship messages triggered from BP changes, while KBA 3383495 adds an important deletion limitation: replication of an actual relationship deletion is supported through direct, immediate relationship replication. If direct replication is not used, SAP points to the Web Dynpro application `drf_manual_replication` for a controlled manual deletion scenario.
+
+### Why this can look like a package-size problem
+
+`PACK_SIZE_BULK` controls how many objects are grouped into a bulk message. It changes message composition, message count, payload size and runtime load. SAP support material also shows that changing this parameter can turn many single payloads into grouped payloads, and that oversized BP web-service messages can hit configured size limits.
+
+But package size is not the deletion rule.
+
+If relationships seem to disappear only when the package size is `1`, or only when several BPs are grouped together, do not conclude that the package size itself deletes data. Compare the actual relationship XML from both runs:
+
+1. Check `BusinessDocumentObjectListCompleteTransmissionIndicator`.
+2. Compare which relationships are present or omitted.
+3. Check the action codes for changed or deleted relationships.
+4. Confirm whether the run came from a BP change, direct replication, pooled processing, manual `DRFOUT`, or `drf_manual_replication`.
+5. Reconcile the target state before sending the same population again.
+
+This separates two different problems: **message semantics** and **message sizing**.
+
+### Practical decision guide
+
+| Situation | Safer approach |
+|---|---|
+| A relationship is deleted in BP and the deletion must reach S/4HANA | Use the supported direct/immediate relationship replication path. |
+| Direct replication is not used but a relationship deletion must be sent | Use the controlled manual replication approach described by SAP for relationship deletion. |
+| Manual `DRFOUT` unexpectedly removes target relationships | Inspect the complete-transmission indicator and the full relationship payload before replay. |
+| The target owns additional relationships that the source must not overwrite | Do not use complete-state semantics without an explicit design decision. A custom implementation may be needed. |
+| Large BP population creates locks, backlogs or oversized messages | Tune `PACK_SIZE_BULK` from measured capacity and payload size, then reconcile each processed population. |
+| A failure appears only with one package-size setting | Compare payloads and processing mode first; treat package size as a runtime variable, not the business cause. |
+
+SAP KBA 3568681 describes a custom option for manual `DRFOUT`: the complete-transmission flag can be changed to delta behavior through enhancement spot `MDG_SE_SPOT_BPRELSHP` / BAdI `MDG_BS_SUPPLIER_SI`. If this is done, the relationship action codes must also be correct. This is not a generic switch to apply blindly: changing the indicator changes the business meaning of the message.
+
+**Lead takeaway:** before changing package size, replaying a failed message or blaming DRF, first decide whether the payload means “apply this delta” or “replace the complete relationship state”. That distinction explains deletion behavior much better than the number of BPs in the package.
 
 ## Operational metrics
 
