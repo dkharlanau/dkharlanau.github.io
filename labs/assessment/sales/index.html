@@ -114,7 +114,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">schema</span>
-      <p><strong>60-second answer:</strong> I see the Sales enterprise structure as a set of responsibility boundaries. Company Code gives the accounting entity. Sales Organization is the commercial seller. Channel and Division add route-to-market and product context; together with Sales Organization they form the Sales Area. The Distribution Chain connects that commercial context to possible delivering plants. The Plant owns the broader fulfillment location, while the Shipping Point owns outbound execution. The design is useful because the same customer, product, and process can behave differently in a controlled context without mixing legal, commercial, and logistics responsibility.</p>
+      <p><strong>60-second answer:</strong> I read the Sales enterprise structure as responsibility boundaries. Company Code is the accounting entity. Sales Organization is the commercial seller. Distribution Channel and Division add route-to-market and product context; together they form the Sales Area. The Distribution Chain connects Sales to possible delivering plants. Plant is the fulfillment location, while Shipping Point owns outbound execution. This separates legal, commercial, and logistics responsibility without duplicating the whole process.</p>
       <a href="/labs/enterprise-context/sales-processes/master-data/#organizational-context">Open the detailed organizational-context model <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </section>
@@ -196,7 +196,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Shipping turns a due order or other logistics requirement into physical execution. The delivery document is the central object: it carries the shipping context, supports picking and packing, provides status, drives output, and is the reference for goods issue. Before delivery creation, scheduling works backward from the requested delivery date using transit, loading, pick/pack, and transportation-planning time. If the plan is no longer feasible, forward scheduling finds a new feasible date. Operations can create deliveries individually or through the delivery due list. At goods issue, stock and accounting state change, and a normal delivery-related process can move toward billing.</p>
+      <p><strong>60-second answer:</strong> Shipping turns a due requirement into physical execution. The outbound delivery is the central object for picking, packing, status, output, and goods issue. Scheduling works from the requested delivery date through transit, loading, pick/pack, and planning times; if that plan is not feasible, the system finds a later feasible date. Deliveries can be created individually or from the due list. At PGI, stock and accounting state change and a normal delivery-related process can move toward billing.</p>
       <a href="/labs/enterprise-context/shipping/">Open the Shipping & Scheduling deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
 
@@ -233,7 +233,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> A billing document is normally created with reference to an earlier business document. Physical goods are often billed from the outbound delivery, while services and billing-plan scenarios can be order-related. Copying control defines whether the reference is allowed, which quantity is billed, which data is transferred, and how pricing behaves in billing. During collective billing, compatible references can be combined; different header-relevant data can force a split. When an accounting-relevant billing document is posted, the result is transferred to FI for receivables, revenue, tax, and other configured postings. Corrections use controlled follow-on documents such as cancellation, credit memo, debit memo, or invoice correction rather than rewriting history.</p>
+      <p><strong>60-second answer:</strong> Billing starts from a billable reference: often a delivery for physical goods, or an order or billing-plan date in other scenarios. Copying control decides whether the reference is allowed and how quantity, data, and pricing move into billing. Compatible references can combine; header differences can force a split. After billing, I still prove the FI transfer for receivables, revenue, and tax. Corrections use controlled follow-on documents such as cancellation, credit memo, debit memo, or invoice correction.</p>
       <a href="/labs/enterprise-context/billing/">Open the Billing deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
 
@@ -347,7 +347,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
     </div>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Multiple Address Handling separates customer identity from physical location. Instead of creating several customer masters for one legal entity, we can maintain several BP addresses with usages and validity periods. Partner determination chooses the business role, address determination narrows the valid physical locations, and supported address-dependent data is copied into the sales document. I would pay special attention to migration, because activation does not consolidate old records automatically and integrations may need the BP address UUID rather than only the customer number or free-text address.</p>
+      <p><strong>60-second answer:</strong> Multiple Address Handling separates customer identity from physical location. One BP can hold several addresses with usages and validity periods instead of creating a customer for every location. Partner determination chooses the business role; address determination chooses the valid location and its supported address-dependent data. For migration and integration, verify how existing records are consolidated and how the target identifies the selected BP address.</p>
       <a href="/labs/enterprise-context/sales-processes/master-data/#multiple-address-handling">Open the detailed model <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
     <div class="ecg-input-grid">
@@ -380,7 +380,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> I start with the contract: are we billing actual effort, a fixed amount, a milestone, or another planned event? For Time &amp; Material, approved time, expenses, materials, or other project postings become source evidence and are prepared for customer billing. For fixed-price or milestone models, the due amount is driven mainly by the agreed billing plan or project billing rules rather than by reimbursing every cost line. In classic Resource-Related Billing, the DIP profile selects eligible source expenditure, keeps the characteristics needed for grouping and material determination, creates dynamic items, and then hands them to SD pricing and billing. I separate source selection from customer pricing, because a cost can be valid but not billable, or billable but priced differently for the customer.</p>
+      <p><strong>60-second answer:</strong> I first identify the commercial model: Time &amp; Material, fixed price, milestone, or another planned event. T&amp;M uses approved project postings as billing evidence. Fixed-price and milestone models follow the agreed billing plan or project billing rules. In classic Resource-Related Billing, the DIP profile selects eligible expenditure, keeps the characteristics needed for grouping and material determination, creates dynamic items, then hands them to SD pricing and billing. Source cost and customer price remain separate decisions.</p>
     </div>
 
     <div class="ecg-decision-columns">
@@ -464,7 +464,7 @@ tags: [sap, assessment, sap-lead, sales, sd, order-to-cash]
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> SAP S/4HANA Output Control is a cross-application framework. For Sales I first confirm whether <code>Sales_Document</code> uses the S/4HANA framework or classic SD output determination. In the S/4HANA framework, Output Parameter Determination uses BRFplus decision tables. Document attributes are conditions and the rules return the output type, receiver, channel, channel-specific settings, form template, and output relevance. Rows are ordered from specific to general, and exclusive receiver or channel rules can stop additional matches. I troubleshoot from determination to relevance, form, and only then technical sending or printing.</p>
+      <p><strong>60-second answer:</strong> I first confirm whether the Sales document uses S/4HANA Output Management or classic SD output determination. In S/4HANA Output Management, BRFplus decision tables use document attributes to determine output type, receiver, channel, channel settings, form template, and relevance. Rule order matters, and receiver or channel results can be exclusive. I troubleshoot in the same order: determination first, then relevance and form, and only then the technical mail or print channel.</p>
       <a href="/atlas/sap/output-control/">Open Output Control deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </section>
