@@ -13,11 +13,11 @@
       {% assign study_count = study_count | plus: 1 %}
       <details class="study-skill" {% if study_count == 1 %}open{% endif %}>
         <summary>
-          <span class="study-skill__heading">
+          <h3 class="study-skill__summary" id="study-{{ skill.id }}">
             <span class="study-kicker">{{ skill.track | escape }} / Practice</span>
-            <span class="study-skill__title" id="study-{{ skill.id }}">{{ skill.title | escape }}</span>
-          </span>
-          <span class="study-skill__count">{{ group.questions | size }} questions</span>
+            <span class="study-skill__title">{{ skill.title | escape }}</span>
+            <span class="study-skill__count">{{ group.questions | size }} questions</span>
+          </h3>
         </summary>
         <p class="study-skill__description">{{ skill.interview_signal | escape }}</p>
         <div class="study-questions">
