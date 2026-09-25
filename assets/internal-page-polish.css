@@ -43,20 +43,141 @@ body.page-context--knowledge .atlas-page > .article-service-cta h2 {
   letter-spacing: -.05em;
   line-height: 1.03;
 }
+/* Atlas reader layout.
+   Keep the article as the primary vertical flow. The right rail belongs to
+   the opening context only; related links and trust furniture return to the
+   full-width flow after the article. This prevents a tall body from creating
+   an artificial empty grid row beside "Related Atlas Pages". */
 body.page-context--knowledge .atlas-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 18rem);
   grid-template-areas:
-    "header header"
+    "header meta"
     "body meta"
-    "body related"
+    "related related"
     "cta cta"
     "trust trust"
     "author author"
     "disclaimer disclaimer";
+  column-gap: clamp(2.5rem, 5vw, 4rem);
+  row-gap: clamp(1.5rem, 3vw, 2.25rem);
+  align-items: start;
+  width: min(100%, 64rem);
+  max-width: 64rem;
+  margin-inline: auto;
 }
+
+body.page-context--knowledge .atlas-page > .note-header {
+  grid-area: header;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+body.page-context--knowledge .atlas-page > .note-body {
+  grid-area: body;
+  min-width: 0;
+  margin-top: 0;
+}
+
+body.page-context--knowledge .atlas-page > .atlas-meta-panel {
+  grid-area: meta;
+  align-self: start;
+  position: sticky;
+  top: calc(var(--header-height, 4rem) + 1.5rem);
+  max-height: calc(100vh - var(--header-height, 4rem) - 3rem);
+  margin: 0;
+  padding: 1rem 0 0;
+  overflow-y: auto;
+  border-top: 1px solid var(--ps-line, #d8dde1);
+  border-bottom: 0;
+  scrollbar-width: thin;
+}
+
+body.page-context--knowledge .atlas-page > .atlas-meta-panel dl {
+  display: grid;
+  gap: .7rem;
+}
+
+body.page-context--knowledge .atlas-page > .atlas-meta-panel dl > div {
+  display: grid;
+  grid-template-columns: 4.8rem minmax(0, 1fr);
+  gap: .7rem;
+  align-items: start;
+}
+
+body.page-context--knowledge .atlas-page > .atlas-related {
+  grid-area: related;
+  width: 100%;
+  margin: .5rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ps-line, #d8dde1);
+}
+
+body.page-context--knowledge .atlas-page > .atlas-related h2 {
+  margin: 0 0 .9rem;
+  font-size: 1.125rem;
+  letter-spacing: -.01em;
+}
+
+body.page-context--knowledge .atlas-page > .atlas-related ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.page-context--knowledge .atlas-page > .atlas-related li {
+  margin: 0;
+  padding: .55rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ps-line, #d8dde1) 70%, transparent);
+}
+
+body.page-context--knowledge .atlas-page > .atlas-related a {
+  display: inline;
+  line-height: 1.45;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .18em;
+}
+
 body.page-context--knowledge .atlas-page > .article-service-cta { grid-area: cta; width: 100%; }
-body.page-context--knowledge .atlas-page > .article-provenance { grid-area: trust; width: 100%; }
+body.page-context--knowledge .atlas-page > .article-provenance {
+  grid-area: trust;
+  width: 100%;
+  margin-top: 0;
+}
 body.page-context--knowledge .atlas-page > .article-author { grid-area: author !important; width: 100%; }
 body.page-context--knowledge .atlas-page > .article-disclosure { grid-area: disclaimer; width: 100%; }
+
+@media (max-width: 980px) {
+  body.page-context--knowledge .atlas-page {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "meta"
+      "body"
+      "related"
+      "cta"
+      "trust"
+      "author"
+      "disclaimer";
+    width: min(100%, 48rem);
+    row-gap: 1.5rem;
+  }
+
+  body.page-context--knowledge .atlas-page > .atlas-meta-panel {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--ps-line, #d8dde1);
+  }
+
+  body.page-context--knowledge .atlas-page > .atlas-related ul {
+    grid-template-columns: 1fr;
+  }
+}
 .research-canvas__support :is(.article-author, .article-provenance, .article-disclosure) {
   width: 100%;
   max-width: 72rem !important;
