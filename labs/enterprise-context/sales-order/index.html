@@ -138,6 +138,33 @@ source_links:
     <p>A useful reading order is therefore <strong>document type → item category → schedule line category</strong>. It is a control hierarchy, not a claim that every runtime calculation happens in that exact sequence.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="partner-text-provenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Partner, text and field provenance</p>
+      <h2>A value in the order has a source. Find that source before changing it.</h2>
+      <p>Sales documents combine proposed master data, document partners, reference-document data, determination results, and user or interface input. When one value is wrong, ask which mechanism supplied it and at what document level.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Partners: role first, person second</h3>
+        <p>Sold-to, ship-to, bill-to and payer are transaction roles. Header partners normally provide shared document context, while an item can carry a partner that differs from the header when the process allows it. Current Public Edition Sales Order API documentation distinguishes inherited header partners from item-specific partners.</p>
+        <p><strong>Consequence:</strong> a wrong ship-to can alter downstream delivery data without changing the sold-to. Check the affected partner function and document level before changing Business Partner master data.</p>
+      </div>
+      <div>
+        <h3>Texts: determine, reference or duplicate</h3>
+        <p>Text determination is separate from partner determination. Public Edition configuration includes text determination procedures and access sequences for sales-document text; configuration can also distinguish reference from duplication.</p>
+        <p><strong>Consequence:</strong> if a source text changes, referenced and duplicated text do not have to behave the same way. Test the configured behavior instead of assuming every visible text was copied once.</p>
+      </div>
+      <div>
+        <h3>Field provenance: trace the first owner</h3>
+        <p>For a surprising payment term, plant, date, partner, or text, classify the value as explicit input, master/partner proposal, reference-document transfer, determination/default, or later manual/interface change. This is a diagnostic model, not one fixed SAP runtime sequence.</p>
+        <p><strong>Example:</strong> if the payer is correct in current master data but wrong in an existing order, prove how that order obtained its payer before repairing shared data.</p>
+      </div>
+    </div>
+    <p><strong>Public Edition boundary:</strong> partner and text concepts are useful Sales mechanisms, but they are not additional units in the current C_S4CS Sales Configuration course. That course currently focuses on incompleteness, copy control, pricing and output.</p>
+    <p>First-party references: <a href="https://help.sap.com/docs/r/03c04db2a7434731b7fe21dca77440da/2602.500/en-US/792ac9e2ce884f1bbed26be36097c8eb.html">Public Edition Sales Order item partners</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/33b132c0121c41f3b412258173d76b0d/6e0359940e3a4b61ab67c71cb32bf0fd.html">Public Edition text-determination configuration example</a> · <a href="https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-sales-configuration">Sales Configuration course</a>.</p>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Process behavior</p>
