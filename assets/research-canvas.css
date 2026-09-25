@@ -474,6 +474,111 @@
   transform: translateY(0);
 }
 
+
+/* Sales certification study surface — compact labels and readable comparison tables. */
+.sales-certification-map .research-canvas__inventory > header .research-canvas__eyebrow {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 0;
+  padding: 0.42rem 0.72rem;
+  border: 1px solid #d8e2fb;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent) !important;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sales-certification-map .research-canvas__inventory > header .research-canvas__eyebrow::before {
+  width: 0.42rem;
+  height: 0.42rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.sales-certification-map .sales-cert-table {
+  margin: var(--space-6) 0;
+  overflow-x: auto;
+  border: 1px solid var(--rc-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-subtle);
+}
+
+.sales-certification-map .sales-cert-table table {
+  width: 100%;
+  min-width: 50rem;
+  margin: 0;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.sales-certification-map .sales-cert-table :is(th, td) {
+  padding: 1rem 1.1rem;
+  border: 0;
+  border-bottom: 1px solid var(--rc-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.sales-certification-map .sales-cert-table :is(th, td) + :is(th, td) {
+  border-inline-start: 1px solid var(--rc-line);
+}
+
+.sales-certification-map .sales-cert-table thead th {
+  background: var(--color-accent-soft);
+  color: var(--rc-ink);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.sales-certification-map .sales-cert-table tbody td {
+  color: var(--rc-soft);
+}
+
+.sales-certification-map .sales-cert-table tbody td:first-child {
+  width: 22%;
+  background: var(--color-surface);
+  color: var(--rc-ink);
+  font-weight: 650;
+}
+
+.sales-certification-map .sales-cert-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.sales-certification-map .sales-cert-table tbody tr {
+  transition: background 120ms ease;
+}
+
+.sales-certification-map .sales-cert-table tbody tr:hover td:not(:first-child) {
+  background: #fbfcff;
+}
+
+.sales-certification-map .sales-cert-table strong {
+  color: var(--rc-ink);
+}
+
+@media (max-width: 800px) {
+  .sales-certification-map .research-canvas__inventory > header .research-canvas__eyebrow {
+    margin-bottom: var(--space-3);
+  }
+
+  .sales-certification-map .sales-cert-table {
+    margin-inline: calc(-1 * var(--space-1));
+  }
+}
+
 @media (max-width: 800px) {
   .research-canvas { --rc-width: min(calc(100% - 2 * var(--space-4)), 42rem); }
   .research-canvas__hero { grid-template-columns: 1fr; padding-block: var(--space-7); }
