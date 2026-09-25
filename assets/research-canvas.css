@@ -24,6 +24,7 @@
   --rc-line: var(--color-border);
   --rc-signal: var(--color-accent);
   --rc-width: min(calc(100% - 2 * var(--space-5)), var(--container-medium));
+  --rc-hero-width: min(calc(100% - 2 * var(--space-5)), var(--container-wide));
   overflow: hidden;
   background: var(--color-bg);
   color: var(--rc-ink);
@@ -83,6 +84,51 @@
   width: var(--rc-width);
   margin-inline: auto;
   padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+/* Deep technical pages need a wider first read than the article body. The title
+   spans the wide container; supporting copy and the evidence rail share the
+   row below it. This keeps long SAP headings readable instead of forcing them
+   into a narrow newspaper column. */
+.context-graph .research-canvas__hero {
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.38fr);
+  grid-template-areas:
+    "eyebrow eyebrow"
+    "title title"
+    "lead signal"
+    "action signal";
+  align-items: start;
+  width: var(--rc-hero-width);
+}
+
+.context-graph .research-canvas__hero-copy { display: contents; }
+.context-graph .research-canvas__hero-copy > .research-canvas__eyebrow { grid-area: eyebrow; }
+
+.context-graph .research-canvas__hero-copy > h1 {
+  grid-area: title;
+  max-width: none;
+  font-size: clamp(2.2rem, 1.95rem + 1vw, 2.5rem) !important;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.context-graph .research-canvas__hero-copy > h1 br { display: none; }
+
+.context-graph .research-canvas__hero-copy > p:not(.research-canvas__eyebrow) {
+  grid-area: lead;
+  max-width: 44rem;
+  margin-top: var(--space-5);
+}
+
+.context-graph .research-canvas__hero-copy > .research-canvas__button {
+  grid-area: action;
+  justify-self: start;
+}
+
+.context-graph .research-canvas__hero > .research-canvas__signal {
+  grid-area: signal;
+  align-self: start;
+  margin-top: var(--space-5);
 }
 
 .research-canvas__hero-copy > p:not(.research-canvas__eyebrow) {
@@ -565,6 +611,28 @@
 @media (max-width: 800px) {
   .sales-certification-map .sales-cert-table {
     margin-inline: calc(-1 * var(--space-1));
+  }
+}
+
+@media (max-width: 1100px) {
+  .context-graph .research-canvas__hero {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "eyebrow"
+      "title"
+      "lead"
+      "action"
+      "signal";
+    width: var(--rc-width);
+  }
+
+  .context-graph .research-canvas__hero-copy > h1 {
+    max-width: 24ch;
+    font-size: clamp(2.15rem, 1.8rem + 1.8vw, 2.65rem) !important;
+  }
+
+  .context-graph .research-canvas__hero > .research-canvas__signal {
+    margin-top: var(--space-6);
   }
 }
 

@@ -78,7 +78,8 @@ Body line-height 1.7. Sans: Inter with system fallbacks. Serif (Source Serif
 and canvas H1s. Mono for code.
 
 Article reading measure: `max-width: 68ch` inside `--container-content`
-(720px).
+(720px). Deep technical heroes may use `--container-wide` for the headline while
+keeping explanatory copy and the article body on the narrower reading measure.
 
 ### Spacing
 
@@ -137,8 +138,11 @@ diagrams).
 - **Hub / landing** (`research-canvas`, `focus-page`): H1 → lead → primary
   action → numbered route lists with hairlines → method sequence → boundary
   note. No KPI tiles, no card grids of ordinary text.
-- **Wide technical** (enterprise-context graphs): `--container-wide` allowed
-  for diagrams and wide tables; same type and chrome.
+- **Wide technical** (enterprise-context graphs): `--container-wide` is allowed
+  for diagrams, wide tables, and the hero headline. The headline should use the
+  available width instead of being constrained to a narrow text column; the
+  supporting lead and evidence rail can share the row below. Body sections keep
+  the normal editorial measure.
 - **Home**: headline, short explanation, two entry routes, search,
   start-from-a-topic list. Nothing else competes for the first viewport.
 
