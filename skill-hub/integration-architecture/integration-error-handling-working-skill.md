@@ -3,7 +3,7 @@ layout: default
 title: "Integration Error Handling Working Skill"
 description: "Design retry, dead letter, and escalation logic so transient failures recover safely and permanent failures escalate correctly."
 permalink: /skill-hub/integration-architecture/integration-error-handling-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -24,7 +24,7 @@ verified: true
 
   <section>
     <h2>What this skill is for</h2>
-    <p>This skill helps you classify integration failures by type, design a retry policy that handles transient failures without causing storms, define dead letter criteria and reprocess workflows, create escalation paths for unresolvable errors, and document the error handling policy so operators and consumers know what to expect.</p>
+    <p>This skill helps you <mark class="key-idea">classify integration failures by type</mark>, design a retry policy that handles transient failures without causing storms, define dead letter criteria and reprocess workflows, create escalation paths for unresolvable errors, and document the error handling policy so operators and consumers know what to expect.</p>
   </section>
 
   <section>
@@ -97,7 +97,7 @@ verified: true
     <h2>Decision rules</h2>
     <ul>
       <li>If the failure is a network error or timeout, retry with exponential backoff and jitter.</li>
-      <li>If the failure is a schema mismatch or data validation error, send to dead letter immediately; do not retry.</li>
+      <li><mark class="key-idea">If the failure is a schema mismatch or data validation error, send to dead letter immediately; do not retry.</mark></li>
       <li>If retry count exceeds three without success, escalate to human review and stop automatic retry.</li>
       <li>If the dead letter queue grows by more than ten messages per day, trigger a process review.</li>
       <li>If the consumer is external, provide explicit error codes distinguishing retryable from non-retryable failures.</li>
@@ -180,7 +180,7 @@ status: draft | reviewed | approved
       <li>Dead letter process exists with named reviewer and review frequency.</li>
       <li>Escalation path is defined with thresholds.</li>
       <li>Reprocess runbook is tested in a non-production environment.</li>
-      <li>No silent message loss: every failure is logged, alerted, or routed to dead letter.</li>
+      <li><mark class="key-idea">No silent message loss: every failure is logged, alerted, or routed to dead letter.</mark></li>
       <li>Consumer receives actionable error information (retryable flag, error code, description).</li>
       <li>Circuit breaker or rate limit is configured for downstream recovery scenarios.</li>
     </ul>
