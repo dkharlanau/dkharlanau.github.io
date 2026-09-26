@@ -57,7 +57,7 @@ verified: true
       <li>Interface inventory with failure history.</li>
       <li>Middleware retry capabilities: max retries, backoff options, dead letter support.</li>
       <li>SAP error handling tools: AIF, IDoc status, qRFC, tRFC, BD87, SM58.</li>
-      <li>SLA requirements: max acceptable delay, ordering requirements.</li>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA and SLO requirements</a>: maximum acceptable delay, recovery budget, throughput impact, freshness impact, and ordering requirements.</li>
       <li>Dead letter queue or topic configuration.</li>
       <li>Consumer retry behavior: what consumers do on failure.</li>
       <li>Escalation contacts: who handles unresolvable errors per interface.</li>
@@ -213,6 +213,7 @@ status: draft | reviewed | approved
   <section>
     <h2>Related skills</h2>
     <ul>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA &amp; SLO Design</a> — Define how much delay and recovery time error handling is allowed to consume.</li>
       <li><a href="/skill-hub/integration-architecture/integration-observability-working-skill/">Integration Observability</a> — Detect failures so error handling can trigger.</li>
       <li><a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a> — Define error contracts for APIs.</li>
       <li><a href="/skill-hub/integration-architecture/event-driven-architecture-working-skill/">Event-Driven Architecture</a> — Handle event delivery failures.</li>
