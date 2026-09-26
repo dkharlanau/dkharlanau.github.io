@@ -56,7 +56,7 @@ verified: true
       <li>Existing interface inventory (to avoid duplication).</li>
       <li>System landscape: SAP version, middleware, consumer platforms.</li>
       <li>Authentication mechanisms available (basic, OAuth, certificate, SAP principal).</li>
-      <li>SLA requirements: availability, latency, throughput.</li>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA and SLO requirements</a>: availability, latency, throughput, and freshness where the API serves replicated or cached data.</li>
       <li>Non-functional requirements: security, compliance, payload limits.</li>
       <li>Consumer capabilities: what protocols and auth they support.</li>
       <li>Failure history of similar integrations (optional but valuable).</li>
@@ -84,7 +84,7 @@ verified: true
       <li><strong>Choose the protocol.</strong> Compare REST, OData, SOAP, IDoc, and file based on consumer needs, SAP capabilities, and team skills. <mark class="key-idea">Record the decision in an ADR.</mark></li>
       <li><strong>Define the contract.</strong> Specify endpoint, methods, request/response schema, error schema, content type, and charset. Include example payloads.</li>
       <li><strong>Design authentication.</strong> Choose mechanism, define credential lifecycle (creation, rotation, revocation), and document how consumers obtain access.</li>
-      <li><strong>Define SLA and limits.</strong> State availability target, max latency, rate limit, and payload size limit. Document what happens when limits are exceeded.</li>
+      <li><strong>Define SLA and limits.</strong> Use <a href="/skill-hub/integration-architecture/integration-sla-working-skill/">Integration SLA and SLO Design</a> to state the availability target, latency percentile, sustainable throughput, measurement window, and freshness objective where relevant. Then define rate and payload limits.</li>
       <li><strong>Design error handling.</strong> Define error codes, retryability, and consumer behavior per status code. Link to the Integration Error Handling skill.</li>
       <li><strong>Plan versioning.</strong> Choose URL versioning, header versioning, or content negotiation. Define deprecation policy and communication lead time.</li>
       <li><strong>Document operational details.</strong> Write runbook entries for: how to check health, how to diagnose failure, how to rotate credentials, who to page.</li>
@@ -165,7 +165,7 @@ status: draft | reviewed | approved
 <!-- Business owner + technical owner -->
 
 ## SLA
-<!-- Availability %, max latency p99 -->
+<!-- Availability target, p95/p99 latency, sustainable throughput, freshness if applicable, measurement window -->
 </code></pre>
   </section>
 
@@ -201,7 +201,7 @@ status: draft | reviewed | approved
       <li><strong>Separate facts from assumptions:</strong> Do not assume the consumer supports OAuth, JSON, or webhooks. Verify their capabilities explicitly.</li>
       <li><strong>Produce artifacts:</strong> Generate an API Contract Brief and an Architecture Decision Record. Do not stop at a recommendation.</li>
       <li><strong>Avoid generic language:</strong> Do not write "REST is modern and flexible." Write "Use OData if the consumer needs filtered queries over SAP entities."</li>
-      <li><strong>Handle missing information:</strong> If SLA or auth requirements are missing, list them as open questions and block the design until answered.</li>
+      <li><strong>Handle missing information:</strong> If <a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA/SLO</a> or auth requirements are missing, list them as open questions and block the design until answered.</li>
       <li><strong>Link to Atlas diagnostics:</strong> If the integration involves SAP, reference <a href="/atlas/diagnostics/sap-outbound-processing-diagnostics/">outbound processing</a> and <a href="/atlas/diagnostics/sap-inbound-processing-diagnostics/">inbound processing</a> diagnostics for failure patterns.</li>
     </ul>
   </section>
@@ -209,6 +209,7 @@ status: draft | reviewed | approved
   <section>
     <h2>Related skills</h2>
     <ul>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA &amp; SLO Design</a> — Define measurable availability, latency, throughput, and freshness targets before finalizing the API contract.</li>
       <li><a href="/skill-hub/integration-architecture/event-driven-architecture-working-skill/">Event-Driven Architecture</a> — When synchronous APIs are not the right pattern.</li>
       <li><a href="/skill-hub/integration-architecture/interface-ownership-working-skill/">Interface Ownership</a> — Assign owners before finalizing the contract.</li>
       <li><a href="/skill-hub/integration-architecture/integration-error-handling-working-skill/">Integration Error Handling</a> — Design retry and failure behavior.</li>
