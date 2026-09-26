@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>The master stores content; text determination decides where the document gets it.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,37 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>At order creation, delivery or billing, text determination can search configured sources and copy the relevant text into the document. Later copy control and text procedures determine whether that text is inherited by follow-on documents or output.</p>
+      <h2>A reusable text becomes a document snapshot through a search and copy decision.</h2>
+      <p>At Sales, delivery, or billing creation, text determination can search configured sources for a specific text ID and language. When a source is found, its content can be copied into the business document. From that point, follow-on text behavior depends on later text and copy rules rather than on the source master alone.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Name the missing text</h4><p>Start with the exact text ID, document level, language, and document where the content is wrong or missing.</p></div>
+      <div><span>02</span><h4>Read the source content</h4><p>Check the relevant customer, product, or other master source and prove that the required language and text actually exist.</p></div>
+      <div><span>03</span><h4>Follow text determination</h4><p>Trace the active text procedure and source sequence to see whether SAP reaches the expected master text.</p></div>
+      <div><span>04</span><h4>Compare the document copy</h4><p>Verify the text stored in the document. Once copied, the document can have its own text state and later changes to master content may not explain it.</p></div>
+      <div><span>05</span><h4>Trace follow-on inheritance</h4><p>If the source document is correct but delivery, billing, or output is wrong, move to copy and downstream text rules.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Separate source content, source selection, and document inheritance.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Identify the missing or wrong document text ID. Check the document language and source master text first, then trace the text determination access and any copy rules to follow-on documents.</p>
+      <p>Identify the exact text ID and language first. If the source master text is wrong, fix content. If the source is correct but the document text is missing, trace text determination. If the Sales document is correct but a follow-on document or output is wrong, inspect copy and downstream text rules. These are three different ownership layers.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Content → source selection → document copy → inheritance.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>For texts I separate content from determination. The master record stores the reusable text; text determination decides which source is read and whether the text is copied into the document.</p>
+      <p><strong>60-second answer:</strong> For Sales texts I separate content from determination. Master data stores reusable text by object, text ID, language, and context. Text determination decides which source is read and copied into the document. After the copy, follow-on documents and output can use their own text and copy rules. So I diagnose a missing text in order: source content, source selection, document snapshot, then inheritance.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>

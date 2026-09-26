@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>One business quantity can be represented by several units at different process steps.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,37 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>Sales order quantities may be entered in a sales unit, converted to base quantity for ATP and inventory, and priced per another pricing unit. Delivery and EDI/API messages also depend on consistent unit semantics.</p>
+      <h2>The same line can have an entered unit, base unit, pricing unit, and delivery unit.</h2>
+      <p>Sales can accept a commercial sales unit, convert it to the product's base quantity for inventory and availability, calculate price using a pricing unit, and later execute delivery in a logistics unit. Interfaces add another boundary because quantity without a clear unit code is not a complete business value.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Map every unit</h4><p>Write down the entered sales unit, base unit, pricing unit, and delivery or interface unit involved in the symptom.</p></div>
+      <div><span>02</span><h4>Read conversion factors</h4><p>Check the product's alternative-unit numerator and denominator and any Sales-specific unit proposal or quantity constraints.</p></div>
+      <div><span>03</span><h4>Recalculate the base quantity</h4><p>Convert the document quantity manually. This quickly separates bad master conversion from later ATP, pricing, or logistics logic.</p></div>
+      <div><span>04</span><h4>Trace the consuming process</h4><p>For price issues, inspect pricing unit and basis. For confirmation issues, inspect base quantity. For delivery issues, inspect execution unit and rounding.</p></div>
+      <div><span>05</span><h4>Validate interfaces</h4><p>Compare both quantity and unit semantics across API, EDI, or other integration payloads; equal numbers with different units are not equal business values.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Do the unit conversion before changing Pricing or ATP.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Compare order unit, pricing unit, base unit and delivered unit. Recalculate the conversion manually. If only one material is affected, inspect the alternative-UoM conversion before changing pricing or ATP configuration.</p>
+      <p>Compare order unit, pricing unit, base unit, and delivered unit, then recalculate the conversion manually. If the base quantity is already wrong, stay in product/UoM master data. If the conversion is correct, move to the mechanism that consumes it: pricing basis, ATP requirement, delivery rounding, or integration mapping.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Map units before mechanisms.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>For quantity problems I map every unit: entered sales unit, pricing unit, base unit and delivery unit. Then I verify the product conversion factors and only after that the consuming process.</p>
+      <p><strong>60-second answer:</strong> For quantity problems I first map the units: entered Sales unit, product base unit, pricing unit, and delivery or interface unit. Then I verify the conversion factors and calculate the expected base quantity manually. If that conversion is wrong, the root cause is in product/UoM data. If it is correct, I move to the consuming process such as pricing, ATP, delivery rounding, or integration. This prevents a quantity-conversion problem from looking like four different module defects.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
