@@ -3,7 +3,7 @@ layout: default
 title: "Event-Driven Architecture Working Skill"
 description: "Decide whether an event should exist, who owns it, what its contract is, and how failures are monitored and handled."
 permalink: /skill-hub/integration-architecture/event-driven-architecture-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -24,7 +24,7 @@ verified: true
 
   <section>
     <h2>What this skill is for</h2>
-    <p>This skill helps you identify which business facts should become events, confirm the authoritative source, define the event contract and schema, choose delivery semantics, design failure handling, and maintain an event catalog that consumers can trust.</p>
+    <p>This skill helps you identify which business facts should become events, <mark class="key-idea">confirm the authoritative source</mark>, define the event contract and schema, choose delivery semantics, design failure handling, and maintain an event catalog that consumers can trust.</p>
   </section>
 
   <section>
@@ -79,7 +79,7 @@ verified: true
   <section>
     <h2>Working method</h2>
     <ol>
-      <li><strong>Identify the business event.</strong> Name it after the business fact, not the technical trigger. Example: <code>OrderConfirmed</code>, not <code>SAPTableUpdated</code>.</li>
+      <li><strong>Identify the business event.</strong> <mark class="key-idea">Name it after the business fact, not the technical trigger.</mark> Example: <code>OrderConfirmed</code>, not <code>SAPTableUpdated</code>.</li>
       <li><strong>Confirm the authoritative source.</strong> Only one system publishes this event. Document why it is authoritative.</li>
       <li><strong>Define the event contract.</strong> Specify event name, schema, version, payload example, and metadata fields (timestamp, correlation ID, source).</li>
       <li><strong>List consumers and their needs.</strong> For each consumer, document what fields they use, their latency requirement, and their ordering requirement.</li>
@@ -96,7 +96,7 @@ verified: true
     <ul>
       <li>If more than three consumers need the same business fact, use an event instead of API polling.</li>
       <li>If strict ordering matters, use a partition key and ordered delivery; otherwise, allow parallel processing.</li>
-      <li>If exactly-once processing is required, implement idempotency in the consumer; do not rely on broker guarantees alone.</li>
+      <li><mark class="key-idea">If exactly-once processing is required, implement idempotency in the consumer; do not rely on broker guarantees alone.</mark></li>
       <li>If event loss is unacceptable, use a persistent queue with acknowledgment and retry.</li>
       <li>If the consumer is external or untrusted, enforce schema validation at the consumer edge.</li>
       <li>If no event catalog exists, create one before adding new events.</li>
