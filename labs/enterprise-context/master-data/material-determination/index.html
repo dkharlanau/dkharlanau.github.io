@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>The record owns the substitution mapping; configuration owns how SAP finds and applies it.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,37 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>When the user enters a material, the determination procedure can find a valid substitution record and propose or apply the alternative. The resulting sales document item structure depends on the configured substitution reason and process design.</p>
+      <h2>The requested product can change before later Sales decisions use it.</h2>
+      <p>When a material is entered, the material-determination procedure can search for a valid substitution and then apply the configured substitution behavior. The important distinction is between the maintained mapping and the engine around it: procedure, condition type, access sequence, condition table, and substitution reason decide how the record becomes document behavior.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Start from the requested product</h4><p>Capture the material the user or interface actually entered, together with the document date and Sales context.</p></div>
+      <div><span>02</span><h4>Follow the search</h4><p>Identify the active determination procedure, condition type, access sequence, and runtime key. This tells you which condition records SAP can reach.</p></div>
+      <div><span>03</span><h4>Prove the valid mapping</h4><p>Check the requested material, substitute, validity, and other key fields in the record that was found—or prove that no valid record exists.</p></div>
+      <div><span>04</span><h4>Read the substitution behavior</h4><p>Check the substitution reason and resulting item structure. The same mapping can have different business effects when configuration changes how the alternative is introduced.</p></div>
+      <div><span>05</span><h4>Continue downstream</h4><p>Only after the substitution is clear should you explain later item-category, pricing, ATP, delivery, or billing effects for the resulting Sales item.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Find whether the failure is search, record, or substitution behavior.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Check the originally requested material, document date and sales context. Use the determination analysis where available to identify the condition access. Then verify the record and substitution reason before looking at ATP or item-category effects.</p>
+      <p>Start with the originally requested material, document date, and Sales context. If SAP never reaches the expected key, the problem is in procedure or access logic. If the key is reached but no valid mapping is found, inspect the condition record. If the alternative is found but the document structure is unexpected, inspect the substitution reason and its configured behavior. ATP or item-category effects come later in the chain.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Separate the mapping from the determination engine.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Material determination is condition-technique-based substitution. The record maps a requested product to an alternative for a defined key and validity; configuration controls how that substitution behaves in the order.</p>
+      <p><strong>60-second answer:</strong> Material determination is Sales substitution based on condition technique. The record contains the requested-to-alternative product mapping for a defined key and validity. Configuration decides how SAP searches for that record and how the substitution reason changes the sales item. I diagnose it in three layers: did SAP execute the expected access, did it find a valid mapping, and did the substitution behavior create the expected item structure? Only then do I move downstream to pricing, ATP, delivery, or billing.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
