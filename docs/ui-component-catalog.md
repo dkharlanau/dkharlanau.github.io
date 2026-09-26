@@ -20,7 +20,7 @@ Choose from the reader task, not from visual similarity.
 | Compare two or three concepts | comparison-group |
 | Trace one SAP determination in depth | determination-detail |
 | Offer secondary deep-dive links | context-links |
-| Show a short ordered recall sequence | compact-sequence (candidate) |\n| Share or cite the current page | site-share |
+| Show a short ordered recall sequence | compact-sequence (candidate) |\n| Remember one central rule or distinction inside prose | key-idea-highlight (candidate) |\n| Share or cite the current page | site-share |
 
 If the content does not fit, first change the information structure. Do not create
 a new component merely because a page-specific selector is easier.
@@ -162,6 +162,25 @@ for reusable cross-domain process visuals.
 
 Reference implementation:
 /labs/enterprise-context/master-data/#master-data-o2c
+
+## key-idea-highlight
+
+Status: candidate.
+
+Purpose: give one central rule, distinction, or decision a quiet inline emphasis
+inside normal prose. It is for memory and scanning, not for status.
+
+Markup contract:
+
+    <mark class="key-idea">The distinction the reader should retain.</mark>
+
+Use only short phrases or sentences. Keep the surrounding paragraph as ordinary prose.
+Do not highlight most of a paragraph, repeat the pattern on every list item, or use it
+for warnings, compliance states, or verification. Multi-line highlights wrap naturally
+and keep the same soft cobalt selection treatment on each line.
+
+Reference implementation:
+/skill-hub/architecture/capability-mapping-working-skill/
 
 ## site-share
 
