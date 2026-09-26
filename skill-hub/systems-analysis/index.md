@@ -4,7 +4,7 @@ layout: default
 title: "Systems Analysis — Skill Group Index"
 description: "Practical working skills for systems analysts: mapping entity states, lifecycles, and interface requirements across system boundaries."
 permalink: /skill-hub/systems-analysis/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -59,6 +59,24 @@ verified: true
     <li>You need to validate that a new document type or workflow has no deadlocks, invalid states, or missing transitions.</li>
     <li>An AI agent is helping you produce analysis artifacts and you need structured instructions to guide its output.</li>
   </ul>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <h2>Tools and frameworks for Systems Analysis</h2>
+  </header>
+  <p>The <a href="/skill-hub/tools-frameworks/">Tools &amp; Frameworks Catalog</a> adds modeling instruments to the working skills in this group.</p>
+  <table class="study-table">
+    <thead><tr><th>Systems-analysis question</th><th>Useful tool</th></tr></thead>
+    <tbody>
+      <tr><td>What is inside and outside the system?</td><td><a href="/skill-hub/tools-frameworks/c4-system-context/">C4 System Context</a></td></tr>
+      <tr><td>In what order do systems interact?</td><td><a href="/skill-hub/tools-frameworks/sequence-diagrams/">Sequence Diagram</a></td></tr>
+      <tr><td>Which states and transitions are valid?</td><td><a href="/skill-hub/tools-frameworks/state-machine-diagrams/">State Machine</a></td></tr>
+      <tr><td>Which process creates or changes which data?</td><td><a href="/skill-hub/tools-frameworks/crud-matrix/">CRUD Matrix</a></td></tr>
+      <tr><td>Which rules determine a result?</td><td><a href="/skill-hub/tools-frameworks/dmn-decision-tables/">DMN &amp; Decision Tables</a></td></tr>
+      <tr><td>Do we need a formal integrated engineering model?</td><td><a href="/skill-hub/tools-frameworks/sysml-v2/">SysML v2</a></td></tr>
+    </tbody>
+  </table>
 </section>
 
 <section class="section">
