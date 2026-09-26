@@ -129,6 +129,11 @@ diagrams).
   scroll. Inline code with a subtle border.
 - **Callouts**: `.callout--note` (accent), `.callout--important` (amber),
   `.callout--warning` (red). Left rule + quiet fill; nothing brighter.
+- **Key idea highlight**: `mark.key-idea` is a candidate inline learning pattern for
+  one short rule, distinction, or decision that should be remembered. It uses the
+  existing soft cobalt selection fill, keeps normal body contrast, wraps naturally
+  across lines, and must not become paragraph-wide decoration or a substitute for
+  semantic warning/status callouts.
 - **Cards**: `.card` only for genuine collections (pathways, offers, related
   topics). Most pages should show almost no card chrome.
 - **Page FAQ**: use the shared .page-faq include-driven component for independent question/answer material. Keep native details/summary, readable question/answer type, and a compact editorial eyebrow. Do not create route-local accordion JavaScript or tiny FAQ text.
