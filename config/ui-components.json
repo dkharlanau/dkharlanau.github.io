@@ -1,7 +1,7 @@
 {
   "schema": "dkharlanau.ui-components",
   "version": 1,
-  "reviewed": "2026-09-25",
+  "reviewed": "2026-09-26",
   "purpose": "Canonical machine-readable registry for reusable website UI patterns and AI-agent component selection.",
   "source_of_truth": {
     "visual_principles": "docs/editorial-design-system.md",
@@ -522,6 +522,51 @@
         }
       ],
       "documentation_anchor": "compact-sequence"
+    },
+    {
+      "id": "key-idea-highlight",
+      "title": "Key idea highlight",
+      "status": "candidate",
+      "scope": "global",
+      "intent": "Help the reader remember one central rule, distinction, or decision inside normal prose without turning it into a card or callout.",
+      "selectors": [
+        "mark.key-idea"
+      ],
+      "source_files": [
+        "assets/css/components.css"
+      ],
+      "content_signals": [
+        "key idea",
+        "memory rule",
+        "critical distinction",
+        "decision rule",
+        "central takeaway"
+      ],
+      "use_when": [
+        "A short phrase or sentence carries the main rule or contrast the reader should retain.",
+        "The surrounding prose should remain linear and readable.",
+        "The emphasis is conceptual, not a warning or status."
+      ],
+      "avoid_when": [
+        "The whole paragraph or most list items would be highlighted.",
+        "The content is a warning, error, verification state, or compliance status.",
+        "The emphasis is decorative rather than semantically useful."
+      ],
+      "accessibility": [
+        "Marked text must remain understandable without the background color.",
+        "Keep normal text contrast and document order; do not encode a second hidden meaning in color."
+      ],
+      "responsive": [
+        "Highlight wraps naturally with the sentence.",
+        "Use box-decoration-break so multi-line emphasis keeps a clean per-line shape without changing reading width."
+      ],
+      "examples": [
+        {
+          "route": "/skill-hub/architecture/capability-mapping-working-skill/",
+          "source_file": "skill-hub/architecture/capability-mapping-working-skill.md"
+        }
+      ],
+      "documentation_anchor": "key-idea-highlight"
     }
   ]
 }
