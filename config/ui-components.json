@@ -1,6 +1,6 @@
 {
   "schema": "dkharlanau.ui-components",
-  "version": 1,
+  "version": 2,
   "reviewed": "2026-09-26",
   "purpose": "Canonical machine-readable registry for reusable website UI patterns and AI-agent component selection.",
   "source_of_truth": {
@@ -567,6 +567,98 @@
         }
       ],
       "documentation_anchor": "key-idea-highlight"
+    },
+    {
+      "id": "skill-overview",
+      "title": "Skill overview ledger",
+      "status": "candidate",
+      "scope": "skill-hub",
+      "intent": "Let the reader scan the concrete shape of a detailed skill page before entering the long-form material.",
+      "selectors": [
+        ".skill-overview",
+        ".skill-overview__item"
+      ],
+      "source_files": [
+        "assets/css/components.css",
+        "assets/reader-tools.js"
+      ],
+      "content_signals": [
+        "deliverables count",
+        "templates count",
+        "method steps",
+        "quality checks",
+        "skill at a glance"
+      ],
+      "use_when": [
+        "A Skill Hub working page has at least two factual countable structures such as deliverables, templates, method steps, or checklist items.",
+        "The counts help the reader understand the shape of the material without adding a score or readiness metric."
+      ],
+      "avoid_when": [
+        "The page has only one countable fact.",
+        "The values would be invented, manually curated, or presented as performance scores.",
+        "The page is a hub or short article where the ledger would compete with the primary navigation."
+      ],
+      "accessibility": [
+        "Render the facts as a semantic definition list.",
+        "Icons are decorative and use aria-hidden.",
+        "Labels and numeric values remain understandable without color or icons."
+      ],
+      "responsive": [
+        "Use four ruled columns when space allows and two columns on small screens.",
+        "Do not reduce label text below the shared metadata floor."
+      ],
+      "examples": [
+        {
+          "route": "/skill-hub/architecture/non-functional-requirements-working-skill/",
+          "source_file": "skill-hub/architecture/non-functional-requirements-working-skill.md"
+        }
+      ],
+      "documentation_anchor": "skill-overview"
+    },
+    {
+      "id": "copyable-template",
+      "title": "Copyable template block",
+      "status": "candidate",
+      "scope": "skill-hub",
+      "intent": "Turn ready-to-reuse template code blocks into a direct copy action while preserving the readable no-JavaScript source.",
+      "selectors": [
+        ".skill-template-block",
+        ".skill-template-block__copy"
+      ],
+      "source_files": [
+        "assets/css/components.css",
+        "assets/reader-tools.js"
+      ],
+      "content_signals": [
+        "Templates section",
+        "reusable Markdown",
+        "copy template",
+        "ready-to-paste block"
+      ],
+      "use_when": [
+        "A Skill Hub Templates section contains a preformatted block intended to be reused.",
+        "Copying the block is a natural next action for the reader."
+      ],
+      "avoid_when": [
+        "The code block is explanatory output rather than a reusable template.",
+        "The content contains secrets, private data, or values that should not be copied as-is."
+      ],
+      "accessibility": [
+        "The copy action is a real button with a visible text label and at least a 44px hit target.",
+        "Copy success and failure are announced through an aria-live status.",
+        "The original preformatted content remains available without JavaScript."
+      ],
+      "responsive": [
+        "Toolbar controls wrap vertically before the label or button becomes cramped.",
+        "The code block keeps horizontal scrolling rather than shrinking its text."
+      ],
+      "examples": [
+        {
+          "route": "/skill-hub/architecture/non-functional-requirements-working-skill/#reader-section-9",
+          "source_file": "skill-hub/architecture/non-functional-requirements-working-skill.md"
+        }
+      ],
+      "documentation_anchor": "copyable-template"
     }
   ]
 }
