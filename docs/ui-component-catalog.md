@@ -20,7 +20,9 @@ Choose from the reader task, not from visual similarity.
 | Compare two or three concepts | comparison-group |
 | Trace one SAP determination in depth | determination-detail |
 | Offer secondary deep-dive links | context-links |
-| Show a short ordered recall sequence | compact-sequence (candidate) |\n| Remember one central rule or distinction inside prose | key-idea-highlight (candidate) |\n| Share or cite the current page | site-share |
+| Show a short ordered recall sequence | compact-sequence (candidate) |
+| Remember one central rule or distinction inside prose | key-idea-highlight (candidate) |
+| Share or cite the current page | site-share |
 
 If the content does not fit, first change the information structure. Do not create
 a new component merely because a page-specific selector is easier.
@@ -196,7 +198,8 @@ Reference implementation:
 
 ## Component ownership
 
-- Global editorial components: assets/css/components.css.\n- Site share utility: assets/css/layout.css and _includes/site-share-widget.html.
+- Global editorial components: assets/css/components.css.
+- Site share utility: assets/css/layout.css and _includes/site-share-widget.html.
 - FAQ: assets/page-faq.css and _includes/page-faq.html.
 - Research/Labs composition: assets/research-canvas.css.
 - Enterprise Context domain components: assets/enterprise-context-polish.css.
