@@ -53,7 +53,7 @@ verified: true
     <h2>Inputs required</h2>
     <ul>
       <li>Interface inventory with ownership matrix.</li>
-      <li>SLA requirements: availability, latency, throughput, freshness.</li>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA and SLO requirements</a>: availability, latency, throughput, freshness, measurement windows, and breach conditions.</li>
       <li>Middleware monitoring capabilities: dashboards, metrics, log aggregation.</li>
       <li>SAP monitoring tools and transactions: SM58, SMQ1, SMQ2, BD87, WE02, SXI_MONITOR, AIF.</li>
       <li>Alerting infrastructure: email, SMS, paging, ticketing integration.</li>
@@ -83,7 +83,7 @@ verified: true
       <li><strong>Map each interface to business impact.</strong> For every interface, document the business process affected, the symptom of failure, and the cost or risk per hour of downtime.</li>
       <li><strong>Define failure modes per interface.</strong> List the ways this interface can fail: timeout, schema mismatch, auth failure, data validation error, rate limit, downstream unavailable, silent data loss.</li>
       <li><strong>Choose detection method per failure mode.</strong> Match the failure to a detectable signal: HTTP status code, queue depth, IDoc status, file absence, data volume anomaly, latency spike.</li>
-      <li><strong>Set alert thresholds.</strong> Define the metric, threshold, evaluation window, and severity. <mark class="key-idea">Base thresholds on SLA and historical baseline, not guesswork.</mark></li>
+      <li><strong>Set alert thresholds.</strong> Define the metric, threshold, evaluation window, and severity. Base thresholds on the <a href="/skill-hub/integration-architecture/integration-sla-working-skill/">agreed SLA/SLO</a> and historical baseline, not guesswork.</li>
       <li><strong>Assign alert recipients.</strong> Each alert goes to a named person or team with accountability, not a broad distribution list.</li>
       <li><strong>Create diagnostic runbook per alert.</strong> For each alert, write: what to check first, which transactions or logs to open, common causes, escalation criteria, and safe actions.</li>
       <li><strong>Test alert with simulated failure.</strong> Trigger each failure mode in a controlled way. Verify the alert fires, the recipient receives it, and the runbook leads to diagnosis.</li>
@@ -190,6 +190,7 @@ scope: Integration landscape | Project | Domain
   <section>
     <h2>Related skills</h2>
     <ul>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA &amp; SLO Design</a> — Define the measurable objectives that observability must prove.</li>
       <li><a href="/skill-hub/integration-architecture/integration-error-handling-working-skill/">Integration Error Handling</a> — Design what happens when monitoring detects a failure.</li>
       <li><a href="/skill-hub/integration-architecture/interface-ownership-working-skill/">Interface Ownership</a> — Assign alert recipients and runbook owners.</li>
       <li><a href="/skill-hub/sap-ams/incident-triage-working-skill/">Incident Triage</a> — Respond when alerts fire.</li>
