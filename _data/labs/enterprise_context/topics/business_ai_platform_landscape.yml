@@ -6,12 +6,74 @@ domain: "SAP Business AI"
 process_family: "Cross-enterprise / AI-enabled business processes"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-09-23"
+updated_at: "2026-09-26"
 verified_at: "2026-09-23"
 reviewed_together_at: "2026-09-23"
 review_note: "Reviewed together against current official SAP product, pricing, Help Portal, and S/4HANA ISLM sources."
 
 business_question: "Which SAP AI component should own the user experience, build, runtime, model access, grounding, document processing, or governance?"
+
+lead_decision_model:
+  title: "First decide whether AI should own this step at all."
+  summary: >-
+    Product names come later. Start with the business decision, the acceptable error,
+    the evidence the system may use, and the consequence of an action. A deterministic
+    rule, workflow, API, search, or report is often a better design when the path is already known.
+  evidence_type: "authored_reasoning"
+  questions:
+    - id: "uncertainty"
+      title: "1. What is uncertain?"
+      body: >-
+        Name the part that needs interpretation, prediction, generation, or dynamic reasoning.
+        If the expected result can be described as a stable rule, do not add AI only because it is available.
+    - id: "source-of-truth"
+      title: "2. What is the source of truth?"
+      body: >-
+        Define which SAP and non-SAP data may ground the answer, who owns that data,
+        how fresh it must be, and which authorizations must still apply.
+    - id: "authority"
+      title: "3. What may the AI do?"
+      body: >-
+        Separate read, recommend, prepare, and execute. A system that proposes a purchase-order
+        change has a different risk boundary from one that posts the change automatically.
+    - id: "evaluation"
+      title: "4. How do we know it is good?"
+      body: >-
+        Define business evaluation before rollout: correctness, missed cases, harmful actions,
+        latency, cost, traceability, and the fallback when confidence or required evidence is insufficient.
+    - id: "failure-owner"
+      title: "5. Who owns failure?"
+      body: >-
+        Monitoring model calls is not enough. Define who investigates wrong business outcomes,
+        how actions are traced to evidence and tool calls, and how the process continues when the AI path is unavailable.
+  assessment_answer: >-
+    I do not start with Joule, AI Core, or an agent. I start with the business job and decide
+    whether the uncertain part really needs AI. Then I define the source of truth and authorization
+    boundary, choose whether the AI may read, recommend, or act, and set an evaluation and fallback.
+    Only after that do I map the responsibility to the SAP AI component that owns it. For transactional
+    use, I also require tool contracts, identity, observability, and proof of the resulting business state.
+  trade_offs:
+    - id: "quality-latency-cost"
+      title: "Quality vs latency and cost"
+      body: >-
+        More context, larger models, and extra reasoning steps can improve some tasks but increase
+        response time and runtime cost. Measure the business outcome rather than optimizing one technical metric.
+    - id: "autonomy-control"
+      title: "Autonomy vs control"
+      body: >-
+        More autonomous execution can remove manual work, but it also increases the consequence
+        of a wrong interpretation or tool call.
+    - id: "context-minimization"
+      title: "Broad context vs data minimization"
+      body: >-
+        More data can improve relevance while expanding authorization, privacy, and governance scope.
+        Give the AI the evidence it needs, not every object it can technically reach.
+    - id: "agent-deterministic"
+      title: "Flexible agent vs deterministic automation"
+      body: >-
+        Agents are useful when the path must adapt. Stable repetitive flows are usually easier
+        to test and operate as rules, workflows, APIs, or conventional automation.
+
 
 maturity:
   gates_complete: 2

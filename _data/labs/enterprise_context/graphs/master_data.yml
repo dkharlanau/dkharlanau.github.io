@@ -12,7 +12,7 @@ process_family: "Order-to-Cash"
 process_step: "Prepare and Govern Sales Master Data"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-09-26"
 verified_at: null
 
 thesis: >-
@@ -21,6 +21,65 @@ thesis: >-
   result. I therefore debug master data from the document result backwards: which runtime
   value is wrong, which object supplied it, at which organizational level, under which
   precedence rule, and whether the same value reached every connected system.
+
+lead_decision_model:
+  title: "Before changing a record, decide what kind of truth you are changing."
+  summary: >-
+    The same visible field can come from a shared business master, a customer-product
+    relationship, a condition-style rule, a document copy, or a manual/interface change.
+    The first Lead task is to find the owner of the behavior, not the screen where the value is visible.
+  evidence_type: "authored_reasoning"
+  lenses:
+    - id: "shared-business-truth"
+      title: "Shared business truth"
+      body: >-
+        Use this lens for reusable identity and product facts that many processes consume.
+        The design question is whether the value should be true beyond one Sales document
+        or one customer relationship.
+      emphasis_label: "Risk"
+      emphasis: "Changing shared data to repair one exception can create side effects in other processes."
+    - id: "relationship-truth"
+      title: "Relationship truth"
+      body: >-
+        Some behavior belongs to the relationship between two business objects, for example
+        customer-specific product data or partner relationships. This is more precise than
+        changing a generic customer or product default.
+      emphasis_label: "Trade-off"
+      emphasis: "More precise keys reduce unwanted side effects, but increase maintenance and governance effort."
+    - id: "commercial-policy"
+      title: "Commercial policy"
+      body: >-
+        Pricing, material determination, listing/exclusion, and similar condition-style data
+        express reusable policy for a defined key and validity period. The record supplies
+        business data; configuration defines how SAP searches and interprets it.
+      emphasis_label: "Lead question"
+      emphasis: "Is the problem the maintained value, the search key, or the rule that reads it?"
+    - id: "runtime-state"
+      title: "Runtime state"
+      body: >-
+        A sales document can already contain a copied, determined, entered, or changed value.
+        Current master data therefore does not prove how an existing document received its value.
+      emphasis_label: "Diagnostic rule"
+      emphasis: "Trace provenance before changing reusable data."
+  decision_test: >-
+    If the requirement is reusable, has a clear business owner, needs governed maintenance,
+    and should influence future documents consistently, master data may be the right layer.
+    If it is document-specific, temporary, calculated from runtime context, or owned by another
+    engine, forcing it into master data usually creates hidden coupling.
+  evidence_test: >-
+    Before editing anything, prove the exact object, key, organizational scope, current value,
+    document value, and mechanism that connected them.
+  diagnostic_example:
+    weak_label: "Weak diagnosis"
+    weak: >-
+      The order has the wrong plant, so I will change the product master. The proposed fix
+      assumes the product is the owner before proving the actual source and precedence.
+    lead_label: "Lead diagnosis"
+    lead: >-
+      The order has the wrong plant. I will compare a good and bad document, trace the proposal
+      path for this context, identify the first different source value, then change only the
+      layer that owns that difference.
+
 
 boundary:
   included:
