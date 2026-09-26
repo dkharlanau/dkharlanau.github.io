@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - billing
   - extensibility
   - troubleshooting
-last_reviewed: 2026-09-25
+last_reviewed: 2026-09-26
 publication_wave: "logistics-search-wave-01"
 review_method: "SAP S/4HANA 2025 FPS01 + SAP S/4HANA Cloud Public Edition 2608 + legacy pricing enhancement cross-check + full editorial pass"
 search_intent: "SAP SD pricing procedure, condition technique and pricing troubleshooting"
@@ -100,6 +100,28 @@ source_links:
       <em>SAP S/4HANA 2025 FPS01 · SAP S/4HANA Cloud 2608</em>
     </div>
   </header>
+
+  <section class="research-canvas__inventory" id="pricing-thinking-loop" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Pricing thinking loop</p>
+      <h2>Do not start with the condition record.</h2>
+      <p>A missing or wrong price is easier to solve when you read pricing as a sequence of gates. A record matters only after the earlier gates have allowed SAP to look for it.</p>
+    </header>
+    <div class="sales-cert-table">
+      <table>
+        <thead><tr><th>Gate</th><th>Question</th><th>If it fails</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. Procedure</strong></td><td>Did the document determine the expected pricing procedure?</td><td>Check the procedure-determination inputs before looking at condition records.</td></tr>
+          <tr><td><strong>2. Permission</strong></td><td>Is the condition type active here, and do its requirements allow processing?</td><td>The system can skip a valid record without ever searching for it.</td></tr>
+          <tr><td><strong>3. Search</strong></td><td>Which access ran, with which key, on which date?</td><td>Compare the runtime key with the record you expected SAP to find.</td></tr>
+          <tr><td><strong>4. Calculation</strong></td><td>What rate, base, scale, formula, or group logic produced the amount?</td><td>A found record can still calculate to an unexpected value.</td></tr>
+          <tr><td><strong>5. Interaction</strong></td><td>Was the condition excluded, statistical, subtotaled, copied, or redetermined?</td><td>Read the final condition interaction before changing master data.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ecg-caption"><strong>Memory rule:</strong> procedure → permission → search → calculation → interaction. “The record exists” proves only one small part of the chain.</p>
+  </section>
+
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
