@@ -93,18 +93,186 @@ verified: true
   </section>
 
   <section>
-    <h2>Decision rules</h2>
+    <p class="eyebrow">Decision model</p>
+    <h2>Choose the interaction first. Choose the protocol second.</h2>
+    <p>A Lead-level integration decision does not start with REST, OData, IDoc, or Event Mesh. Start with the business interaction and the failure model. The same business object can need different patterns for different interactions: a UI may query an order synchronously, a warehouse may receive an order asynchronously, and analytics may consume an event or batch extract.</p>
+    <p><mark class="key-idea">The protocol is an implementation consequence of the interaction semantics, NFRs, platform constraints, and recovery model.</mark></p>
+
+    <h3>Decision tree</h3>
+    <ol>
+      <li>
+        <strong>What is the interaction?</strong>
+        <ul>
+          <li><strong>Query:</strong> the consumer asks for current data and needs a response now → evaluate REST or OData.</li>
+          <li><strong>Command:</strong> the consumer asks the target to perform a business action → evaluate a synchronous API only if the caller truly needs the outcome immediately; otherwise evaluate an asynchronous command/message pattern.</li>
+          <li><strong>Business fact:</strong> something already happened and independent consumers need to know → evaluate events.</li>
+          <li><strong>Bulk transfer or scheduled synchronization:</strong> large sets move on a cadence and immediate response is not required → evaluate IDoc, batch API, file, CDC, or another asynchronous bulk mechanism.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Does the caller need the business result before it can continue?</strong>
+        <ul>
+          <li><strong>Yes:</strong> synchronous API is a candidate. Define timeout, latency percentile, availability dependency, and what the caller does when the response is unknown.</li>
+          <li><strong>No:</strong> prefer decoupling. Evaluate event, queue, IDoc, or batch rather than holding two systems in one availability chain.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>What consistency and freshness are actually required?</strong>
+        <ul>
+          <li>Current authoritative state on demand → API/query pattern.</li>
+          <li>State change must be propagated quickly but temporary lag is acceptable → event/message pattern.</li>
+          <li>Periodic convergence is sufficient → batch/file/replication can be simpler and cheaper.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>What are the load and payload characteristics?</strong>
+        <ul>
+          <li>Small, bounded request/response payloads with predictable concurrency → synchronous API fits well.</li>
+          <li>Large payloads, bursts, long-running processing, or expensive SAP transactions → asynchronous processing, batching, pagination, or job-based APIs deserve priority.</li>
+          <li>Do not use a universal payload-size threshold. Measure serialization cost, network time, backend processing time, concurrency, memory, and gateway limits in the actual landscape.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>What delivery behavior matters?</strong>
+        <ul>
+          <li>If duplicates can cause business damage, define an idempotency key or business deduplication rule.</li>
+          <li>If ordering matters, define the ordering scope: global, per customer, per order, per material, or another business key. Global ordering is rarely necessary and reduces scalability.</li>
+          <li>If a timeout leaves the result unknown, provide a status lookup, correlation ID, reconciliation process, or safe retry rule.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>How many consumers exist, and who controls them?</strong>
+        <ul>
+          <li>One known consumer with a request/response need → direct API can be reasonable.</li>
+          <li>Several independent consumers reacting to the same fact → publish/subscribe becomes stronger because the producer should not orchestrate every consumer.</li>
+          <li>External partners or SaaS consumers → contract stability, throttling, authentication, network boundary, audit, and partner-supported standards may dominate the choice.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>What does SAP and the surrounding platform support cleanly?</strong>
+        <ul>
+          <li>Prefer a released standard SAP API, event, IDoc, or supported integration capability over a custom extraction from internal tables.</li>
+          <li>Check the exact S/4HANA release, deployment model, API availability, business object coverage, extensibility, middleware, and partner constraints.</li>
+          <li>If the standard contract does not cover the business need, document the gap before designing a custom interface.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Can operations recover it at 03:00?</strong>
+        <ul>
+          <li>Define monitoring, correlation, retry ownership, replay, dead-letter handling where relevant, reconciliation, and business proof of completion.</li>
+          <li>If the design cannot explain how an operator detects and safely recovers a failed transaction, the integration decision is not finished.</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3>Pattern comparison</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Pattern</th>
+          <th>Strong fit</th>
+          <th>Watch for</th>
+          <th>Typical SAP context</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>REST API</strong></td>
+          <td>Simple resource or command interactions, broad consumer compatibility, synchronous request/response.</td>
+          <td>Tight runtime dependency, chatty calls, unclear retry semantics, custom pagination/filtering conventions.</td>
+          <td>Released SAP APIs, middleware façades, side-by-side applications.</td>
+        </tr>
+        <tr>
+          <td><strong>OData</strong></td>
+          <td>Entity-oriented access where filtering, projection, navigation, metadata, and standard query semantics are valuable.</td>
+          <td>Consumers coupling to a broad data model, expensive queries, unrestricted navigation, using query flexibility where a bounded business API would be clearer.</td>
+          <td>S/4HANA and Fiori-oriented services, SAP business object access where a released OData service exists.</td>
+        </tr>
+        <tr>
+          <td><strong>SOAP</strong></td>
+          <td>Existing enterprise contracts, WSDL-based tooling, partner ecosystems, or SAP services where SOAP is the supported contract.</td>
+          <td>Replacing it only for fashion, complex WS-* dependencies, large synchronous payloads, consumer migration cost.</td>
+          <td>Established SAP enterprise services and legacy/partner integrations.</td>
+        </tr>
+        <tr>
+          <td><strong>IDoc</strong></td>
+          <td>Asynchronous SAP-centric business document exchange, established ALE/EDI flows, durable transactional distribution.</td>
+          <td>Assuming technical status equals business completion, partner-profile complexity, reprocessing ownership, semantic mapping outside SAP.</td>
+          <td>Orders, deliveries, invoices, master data, B2B/EDI and legacy SAP integration landscapes.</td>
+        </tr>
+        <tr>
+          <td><strong>Event</strong></td>
+          <td>A business fact should reach independent consumers without the producer controlling their process.</td>
+          <td>Using events as hidden commands, missing idempotency, ordering assumptions, schema evolution, replay and reconciliation.</td>
+          <td>Business-event distribution, decoupled extensions, SAP Event Mesh or other broker-based landscapes.</td>
+        </tr>
+        <tr>
+          <td><strong>File / batch</strong></td>
+          <td>Large periodic transfers, partner constraints, simple bulk exchange, non-urgent synchronization.</td>
+          <td>Weak validation, partial files, duplicate delivery, poor lineage, manual recovery, unclear cut-off times.</td>
+          <td>Legacy interfaces, bank/partner exchange, migration, large extracts and scheduled reconciliation.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Hard gates before selecting a synchronous API</h3>
     <ul>
-      <li>If the consumer is a user-facing application needing real-time data, use REST or OData.</li>
-      <li>If the integration is bulk transactional with SAP as the source or target, evaluate IDoc or OData batch before REST.</li>
-      <li>If the external system is a SaaS platform with complex query needs, use OData.</li>
-      <li>If authentication uses tokens, define a rotation process with a grace period; never hardcode credentials.</li>
-      <li>If the payload exceeds 1 MB, use an asynchronous pattern or chunked transfer; do not force synchronous.</li>
-      <li>If there are more than 5 consumers for the same data, prefer a middleware layer or event bus over direct API calls.</li>
-      <li>If the consumer is external or untrusted, enforce schema validation and rate limiting at the entry point.</li>
-      <li>If backward compatibility cannot be maintained, increment the version and support the old version for at least 90 days.</li>
+      <li><strong>Availability gate:</strong> Can the business process tolerate the caller becoming dependent on the target's runtime availability?</li>
+      <li><strong>Latency gate:</strong> Is the end-to-end latency target realistic at peak load, including SAP processing and middleware hops?</li>
+      <li><strong>Timeout gate:</strong> Is the business outcome known after a timeout, or can the caller safely determine whether the action happened?</li>
+      <li><strong>Throughput gate:</strong> Can the target sustain peak and burst load without turning the API into a remote batch processor?</li>
+      <li><strong>Recovery gate:</strong> Is there a controlled way to retry, reconcile, and prove the final business state?</li>
     </ul>
+    <p>For measurable availability, latency, throughput, recovery, and other quality attributes, use the <a href="/skill-hub/architecture/non-functional-requirements-working-skill/">Non-Functional Requirements</a> skill rather than vague labels such as “real time” or “high performance”.</p>
+
+    <h3>Decision rules</h3>
+    <ul>
+      <li>If the user or calling process must receive current data before continuing, evaluate REST or OData first, then verify latency and availability dependencies.</li>
+      <li>If the producer is announcing a completed business fact to independent consumers, evaluate an event before adding more point-to-point API calls.</li>
+      <li>If the target can process work later, do not create synchronous coupling merely because an HTTP endpoint is easy to expose.</li>
+      <li>If data transfer is high-volume or long-running, evaluate batching, asynchronous jobs, IDoc, file, CDC, or event streaming rather than one large synchronous request.</li>
+      <li>If the consumer needs flexible entity queries and the SAP service safely supports them, OData can be a strong fit; if the interaction is a bounded business command, a narrower API contract may be clearer.</li>
+      <li>If a standard SAP contract already exists and meets the need, prefer it over a custom protocol wrapper unless a documented constraint justifies the extra layer.</li>
+      <li>If an external partner mandates a contract such as SOAP, EDI/IDoc, or file exchange, treat that as a real architecture constraint and design security, validation, monitoring, and recovery around it.</li>
+      <li>If duplicates are possible, make idempotency explicit. If ordering is required, define the business key and scope of ordering rather than saying only “messages must be ordered”.</li>
+      <li>If backward compatibility cannot be maintained, version the contract and define a migration/deprecation window based on consumer criticality and release cadence; do not apply one universal number.</li>
+      <li>If the interface cannot be monitored, correlated, replayed or safely reconciled where needed, it is not production-ready regardless of protocol.</li>
+    </ul>
+
+    <h3>When to change the default</h3>
+    <p>Change the initial pattern when one constraint dominates the rest: strict ordering, very large payloads, a legal acknowledgement requirement, an external B2B standard, an existing platform mandate, offline operation, a receiving application with only one supported contract, or a recovery model that the preferred technology cannot satisfy. Record the reason in an <a href="/skill-hub/architecture/architecture-decision-record-working-skill/">Architecture Decision Record</a>.</p>
+
+    <h3>Three examples</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th>Reasoning</th>
+          <th>Likely direction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CRM user opens a customer and needs current credit-relevant information immediately.</td>
+          <td>The UI cannot continue without current state; payload is bounded; a response is required.</td>
+          <td>Released synchronous API/OData service, with timeout and fallback behavior defined.</td>
+        </tr>
+        <tr>
+          <td>An order is confirmed in S/4 and warehouse, notification, analytics, and another service must react independently.</td>
+          <td>The business fact already happened; consumers should not extend the order-save transaction or depend on each other.</td>
+          <td>Business event / publish-subscribe, with idempotency, ordering scope, replay, and schema ownership.</td>
+        </tr>
+        <tr>
+          <td>Millions of master-data records must be synchronized overnight to a legacy partner.</td>
+          <td>Immediate response is unnecessary; throughput, restartability, reconciliation, and partner capability dominate.</td>
+          <td>Bulk asynchronous pattern such as file, IDoc, replication, or batch API depending on supported contracts.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Lead answer frame:</strong> “I would not choose the protocol first. I would classify the interaction as query, command, event, or bulk transfer; confirm whether an immediate business result is required; quantify freshness, latency, volume, ordering, and availability; check standard SAP capabilities and partner constraints; then choose the simplest pattern whose failure and recovery model we can operate.”</p>
   </section>
+
 
   <section>
     <h2>Deliverables</h2>
