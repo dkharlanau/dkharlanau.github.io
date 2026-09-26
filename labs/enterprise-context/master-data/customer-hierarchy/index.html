@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>The hierarchy adds commercial context above the sold-to; it does not replace the sold-to.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,42 +65,42 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>Pricing can use hierarchy nodes as access fields when the hierarchy is active and relevant. The same structure can support reporting and account management, but its commercial effect depends on configuration and validity.</p>
+      <h2>A parent relationship matters only when a consuming rule uses it.</h2>
+      <p>The order still has its normal customer roles. A valid customer hierarchy can add a higher-level commercial context that pricing or analytics may consume. The hierarchy therefore has two separate questions: is the customer in the expected hierarchy for this date and sales area, and does the downstream rule actually use that hierarchy?</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Start from the sold-to</h4><p>Use the customer, sales area, and document date from the actual Sales document. Do not begin from a parent node in isolation.</p></div>
+      <div><span>02</span><h4>Resolve the valid hierarchy</h4><p>Check the hierarchy type, parent/child assignment, and validity that apply to this customer at that time.</p></div>
+      <div><span>03</span><h4>Find the consumer</h4><p>For pricing, prove that the relevant access sequence contains the hierarchy field and that the runtime node reaches the expected condition key. For analytics, prove which hierarchy level is used for grouping.</p></div>
+      <div><span>04</span><h4>Keep identities separate</h4><p>A hierarchy-based discount or report grouping does not change the sold-to, ship-to, bill-to, or payer identity stored in the order.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>A correct hierarchy can still have zero pricing effect.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Confirm the customer is assigned to the expected hierarchy node for the document date and sales area. Then check whether the pricing access actually includes the hierarchy field. A correct hierarchy with no relevant access has no pricing effect.</p>
+      <p>First prove the customer's valid hierarchy assignment for the document date and sales area. Then prove that the pricing access actually uses the hierarchy field and reaches the expected node. If the relationship is correct but the access never reads it, changing hierarchy master data will not repair the price.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Separate customer identity from hierarchy context.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Customer Hierarchy groups customers above the individual sold-to. I check hierarchy type, validity and sales area first, then whether pricing or analytics actually consumes the hierarchy.</p>
+      <p><strong>60-second answer:</strong> Customer Hierarchy models a commercial structure above the individual sold-to, for example a parent group with subsidiaries. It does not replace the customer roles in the order. I first prove the valid hierarchy type, sales area, date, and parent relationship. Then I check the consumer: pricing needs an access that actually uses the hierarchy field, while analytics needs a defined grouping level. A valid hierarchy by itself does not guarantee any pricing effect.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/labs/enterprise-context/pricing/">Pricing engine</a>
     </nav>
   </section>
 </div>

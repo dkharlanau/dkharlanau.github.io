@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>Configuration asks for a role; master data supplies the partner.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,37 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>At document creation the partner-determination procedure defines the roles to be resolved. Master data then supplies the candidate partners. The resulting partner set affects shipping, billing, output recipients and sometimes credit context.</p>
+      <h2>The document resolves roles first, then downstream processes consume those roles.</h2>
+      <p>At document creation the partner-determination procedure defines which partner functions are relevant and how they are resolved. Customer or Business Partner master data supplies maintained relationships. The document stores the resulting sold-to, ship-to, bill-to, payer, and any other relevant partners, and later processes consume the role that matters to them.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Name the wrong role</h4><p>Do not say “the customer is wrong.” State whether the wrong value is sold-to, ship-to, bill-to, payer, or another partner function.</p></div>
+      <div><span>02</span><h4>Read the procedure</h4><p>Check whether that role is required, optional, repeatable, or otherwise controlled by the active partner-determination design.</p></div>
+      <div><span>03</span><h4>Read the relationship</h4><p>Verify the maintained partner assignment for the relevant customer and sales area, including multiple relationships where they are allowed.</p></div>
+      <div><span>04</span><h4>Prove the document partner</h4><p>Compare the master relationship with the partner actually stored in the sales document and check whether a user, reference document, or interface changed it.</p></div>
+      <div><span>05</span><h4>Follow the consequence</h4><p>Trace only the downstream behavior owned by that role: destination, invoice recipient, payer context, output recipient, or another role-specific result.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>“Wrong customer” is too vague; name the partner function.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Read the partner procedure and the actual partners on the document. Then verify the sales-area partner assignments of the sold-to or relevant source partner. Check manual changes only after master data has been validated.</p>
+      <p>Start with the actual partner set in the document and identify the wrong role. Then compare the active partner procedure with the sales-area relationship that should supply that role. If master data is correct but the document differs, inspect reference-document transfer, explicit interface input, or a permitted manual change before editing the shared relationship.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Separate role control from partner master data.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>I separate the rule from the relationship: partner determination defines which roles are needed, while customer/BP partner functions provide the maintained partners for those roles.</p>
+      <p><strong>60-second answer:</strong> I separate the rule from the relationship. Partner determination defines which roles the Sales document needs and how they are resolved; customer or Business Partner master data provides the maintained partners for those roles. When a partner is wrong, I name the function first, compare the procedure and master relationship, then prove what the document actually stored and whether reference data, an interface, or a manual change replaced it. That is safer than changing the sold-to record because a ship-to or payer is wrong.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>

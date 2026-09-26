@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>This is an eligibility gate, not a product attribute.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,36 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>During order entry SAP checks the configured listing/exclusion procedure. A matching exclusion can reject the item; a listing scenario can reject a product that is not present in the allowed set.</p>
+      <h2>The check asks whether this customer may buy this product in this context.</h2>
+      <p>During order entry the configured procedure controls which listing or exclusion rules are evaluated. Exclusion is a negative rule: a matching record can block the product. Listing is a positive rule: the product must belong to the allowed set for the relevant key and validity.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Name the gate</h4><p>Establish whether the business uses listing, exclusion, or both. They answer opposite eligibility questions.</p></div>
+      <div><span>02</span><h4>Follow the active procedure</h4><p>Confirm which condition types and accesses are evaluated for this Sales context instead of searching every maintained record.</p></div>
+      <div><span>03</span><h4>Build the runtime key</h4><p>Use the actual customer or partner context, product, date, and configured key fields. A record for a different key or validity does not control this item.</p></div>
+      <div><span>04</span><h4>Prove the eligibility result</h4><p>For exclusion, prove the blocking match. For listing, prove whether an allowed match exists. Then explain the order reaction from that result.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Separate “no rule”, “wrong key”, and “wrong eligibility result”.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>First establish whether the process is using listing, exclusion or both. Check the customer/product key and validity. Then verify the assigned procedure and the access sequence if the expected record is not being read.</p>
+      <p>If a product is unexpectedly blocked, first prove which procedure and condition type executed. Then inspect the exact runtime key and validity. If the expected record exists but SAP never reaches its key, diagnose procedure or access logic; if the key is reached but the record does not qualify, diagnose the master record. Do not change the product master to repair an eligibility rule.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Explain the positive and negative gate.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Listing and exclusion are customer-product eligibility controls. I check the active procedure, exact condition key and validity before treating an order rejection as a product-master issue.</p>
+      <p><strong>60-second answer:</strong> Listing and exclusion control customer-product eligibility. Listing is a positive list: the product must be allowed for the relevant context. Exclusion is a negative list: a matching rule blocks the product. I diagnose the active procedure first, then the runtime key and validity, then the actual record found or missed. That keeps an order rejection in the eligibility mechanism instead of turning it into an unrelated product-master change.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
