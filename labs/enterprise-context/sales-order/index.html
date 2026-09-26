@@ -324,6 +324,30 @@ source_links:
     <p><a href="/labs/enterprise-context/sales-diagnostics/">Open the Sales Diagnostic Casebook →</a></p>
   </section>
 
+  <section class="research-canvas__inventory" id="agent-investigation" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Agent / MCP investigation</p>
+      <h2>Turn the same reasoning into a read-first workflow.</h2>
+      <p>Use the order as the runtime evidence. Retrieve only what is needed for one hypothesis, separate interpretation from execution, and verify the SAP state again after any approved change.</p>
+    </header>
+    <div class="sales-cert-table">
+      <table>
+        <thead><tr><th>Step</th><th>Question</th><th>Machine-assisted move</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Intent</strong></td><td>What looks wrong?</td><td>Turn the symptom into one testable document question.</td></tr>
+          <tr><td><strong>Retrieve</strong></td><td>Which order, item, schedule line, partner role, status, or derived value proves the current state?</td><td>Read the smallest useful slice and keep document and item identifiers as trace keys.</td></tr>
+          <tr><td><strong>Interpret</strong></td><td>Which control layer could own it?</td><td>Map the value to document control, master data, partner logic, logistics determination, pricing, credit, or another owner.</td></tr>
+          <tr><td><strong>Decide</strong></td><td>Where is the first wrong state?</td><td>Compare expected and actual states from upstream to downstream and stop at the first divergence.</td></tr>
+          <tr><td><strong>Act</strong></td><td>Is a change required and authorized?</td><td>Prefer a proposal or test-system correction; use a released write interface only with clear ownership and scope.</td></tr>
+          <tr><td><strong>Verify</strong></td><td>Did the business object and next process boundary change as expected?</td><td>Re-read the SAP object and relevant downstream status. A successful tool call is not proof of a correct process.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Public Edition example:</strong> for an unexpected item ship-to party, read the sales-order partner state before changing Business Partner data. The current Sales Order (A2X, OData V4) item-partner model exposes both inherited header partners and item-specific deviations through <code>PartnerIsSpecificForSDDocItem</code>. Compare header and item roles first; only then investigate master data or configuration if the document state does not explain the difference.</p>
+    <p><strong>Boundary:</strong> MCP or API output is interface evidence, not a separate source of truth. The current SAP business object and its process status remain authoritative.</p>
+    <p>First-party reference: <a href="https://help.sap.com/docs/r/03c04db2a7434731b7fe21dca77440da/2602.500/en-US/792ac9e2ce884f1bbed26be36097c8eb.html">Sales Order (A2X, OData V4) — Item Partner</a>.</p>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Decision index</p>
