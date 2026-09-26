@@ -93,6 +93,41 @@ sitemap: false
   </section>
 
   <section>
+    <h2>SAP Lead method stacks</h2>
+    <p>In an assessment or project, strong analysis usually combines a few views. Use the smallest stack that makes the decision defensible.</p>
+    <table class="study-table">
+      <thead><tr><th>Situation</th><th>Suggested stack</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Redesign an end-to-end SAP process</td>
+          <td><a href="/skill-hub/tools-frameworks/sipoc/">SIPOC</a> → <a href="/skill-hub/tools-frameworks/domain-storytelling/">Domain Storytelling</a> or <a href="/skill-hub/tools-frameworks/eventstorming/">EventStorming</a> → <a href="/skill-hub/tools-frameworks/bpmn/">BPMN</a> → <a href="/skill-hub/tools-frameworks/raci/">RACI</a></td>
+          <td>Frame the boundary, discover reality, formalize the flow, then assign ownership.</td>
+        </tr>
+        <tr>
+          <td>Define a cross-system integration</td>
+          <td><a href="/skill-hub/tools-frameworks/c4-system-context/">C4</a> → <a href="/skill-hub/tools-frameworks/sequence-diagrams/">Sequence Diagram</a> → <a href="/skill-hub/systems-analysis/interface-requirement-analysis-working-skill/">Interface Requirements</a> → <a href="/skill-hub/tools-frameworks/fmea/">FMEA</a></td>
+          <td>Clarify boundary, interaction order, contract expectations, and failure behavior.</td>
+        </tr>
+        <tr>
+          <td>Turn vague requirements into testable scope</td>
+          <td><a href="/skill-hub/tools-frameworks/user-story-mapping/">Story Mapping</a> → <a href="/skill-hub/tools-frameworks/example-mapping/">Example Mapping</a> → <a href="/skill-hub/tools-frameworks/dmn-decision-tables/">Decision Table / DMN</a> → <a href="/skill-hub/business-analysis/acceptance-criteria-working-skill/">Acceptance Criteria</a></td>
+          <td>Keep the journey visible, expose rules with examples, formalize complex decisions, then define proof.</td>
+        </tr>
+        <tr>
+          <td>Resolve a stuck governance decision</td>
+          <td><a href="/skill-hub/tools-frameworks/decision-rights-daci-rapid/">DACI / RAPID</a> → <a href="/skill-hub/decision-validation/trade-off-analysis-working-skill/">Trade-Off Analysis</a> → <a href="/skill-hub/architecture/architecture-decision-record-working-skill/">ADR</a></td>
+          <td>Clarify decision rights, compare options, then preserve the rationale.</td>
+        </tr>
+        <tr>
+          <td>Find why data is inconsistent across systems</td>
+          <td><a href="/skill-hub/tools-frameworks/crud-matrix/">CRUD Matrix</a> → <a href="/skill-hub/tools-frameworks/c4-system-context/">C4</a> → <a href="/skill-hub/tools-frameworks/sequence-diagrams/">Sequence Diagram</a> → <a href="/skill-hub/tools-frameworks/raci/">RACI</a></td>
+          <td>Find who changes the data, where it moves, in what order, and who owns correction.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
     <h2>Modern methods worth knowing</h2>
     <p>Modern analysis is moving away from large static requirement documents toward collaborative models, executable decisions, and traceable system models. EventStorming and Domain Storytelling improve cross-functional discovery. Example Mapping ties requirements to concrete examples. C4 keeps architecture diagrams understandable. DMN makes decision logic explicit. SysML v2 adds stronger semantics, textual notation, and a standard API for model-based systems engineering.</p>
   </section>
