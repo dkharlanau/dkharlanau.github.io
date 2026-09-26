@@ -193,6 +193,29 @@ source_links:
     <p>This sequence is more reliable than jumping directly to copy control, pricing, or a transaction code because it finds the first state that differs from the expected process.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="billing-agent-workflow" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Agent / MCP investigation</p>
+      <h2>Trace the billing gate before you automate the correction.</h2>
+      <p>Billing is a good place to keep machine assistance conservative. An agent can retrieve document state, compare references and statuses, and propose the likely owner. Creation, posting, cancellation, or commercial correction should remain explicit business actions.</p>
+    </header>
+    <div class="sales-cert-table">
+      <table>
+        <thead><tr><th>Gate</th><th>Retrieve</th><th>Interpret and verify</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Eligibility</strong></td><td>Source document, item, billing relevance, reference type.</td><td>Prove which business event is supposed to be billable before looking for an invoice.</td></tr>
+          <tr><td><strong>Selection</strong></td><td>Due date, block and processing status.</td><td>Separate “not due” from “due but creation failed”.</td></tr>
+          <tr><td><strong>Creation</strong></td><td>Billing document ID, reference documents, partners, pricing elements and split-relevant header state.</td><td>Explain whether the document was created as expected and whether a split is intentional or defective.</td></tr>
+          <tr><td><strong>Posting</strong></td><td>Accounting-transfer status and related accounting evidence.</td><td>Do not infer FI completion from the existence of the billing document.</td></tr>
+          <tr><td><strong>Correction</strong></td><td>Original billing chain and business reason.</td><td>Decide whether the event needs cancellation, a credit/debit adjustment, or another process. Do not let the tool choose the commercial meaning.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Public Edition API boundary:</strong> the current Billing Document OData V4 API can read billing header and item data, partners, pricing elements and texts; it also offers write operations such as creation and posting to Financial Accounting. For an investigation workflow, use the read capability first and keep state-changing calls outside the diagnostic step unless the process owner has explicitly approved them.</p>
+    <p><strong>Verification rule:</strong> after an approved action, re-read the billing document and the next authoritative state. For posting, that means the accounting result as well as the Sales document status. A successful API response proves the call completed, not that the end-to-end business event is correct.</p>
+    <p>First-party reference: <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/03c04db2a7434731b7fe21dca77440da/65680dabb62546029175655482f85edc.html">SAP S/4HANA Cloud Public Edition — Billing Document API</a>.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="lead-lens" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Process boundaries</p>
