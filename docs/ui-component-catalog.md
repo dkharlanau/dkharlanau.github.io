@@ -22,6 +22,7 @@ Choose from the reader task, not from visual similarity.
 | Trace one SAP determination in depth | determination-detail |
 | Offer secondary deep-dive links | context-links |
 | Show a short ordered recall sequence | compact-sequence (candidate) |
+| Summarize auditable hub content in a hero | hero-evidence-rail (candidate) |
 | Remember one central rule or distinction inside prose | key-idea-highlight (candidate) |
 | Share or cite the current page | site-share |
 
@@ -189,6 +190,31 @@ for reusable cross-domain process visuals.
 
 Reference implementation:
 /labs/enterprise-context/master-data/#master-data-o2c
+
+## hero-evidence-rail
+
+Status: candidate.
+
+Purpose: summarize a hub's auditable content inventory inside the hero without
+turning the page into a KPI dashboard. It is for facts about the material itself,
+such as working skills, deliverables, reusable templates, or explicit decision rules.
+
+Markup contract:
+
+    <dl class="hero-evidence-rail" aria-label="Content inventory">
+      <div>
+        <dt>Working skills</dt>
+        <dd><strong>6</strong><span>Short supporting context</span></dd>
+      </div>
+    </dl>
+
+Use only numbers that can be derived from the current public content. Keep the title
+and lead dominant. The rail uses hairline separators and normal reading colors; it
+must not gain card backgrounds, score rings, progress states, or performance framing.
+On medium screens it becomes two columns and on narrow mobile it becomes one column.
+
+Reference implementation:
+/skill-hub/integration-architecture/
 
 ## key-idea-highlight
 
