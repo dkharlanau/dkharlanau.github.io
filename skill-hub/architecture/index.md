@@ -4,7 +4,7 @@ layout: default
 title: "Architecture Skills"
 description: "Practical working skills for solution architects: capability mapping, design review, decision records, non-functional requirements, and system context mapping."
 permalink: /skill-hub/architecture/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -20,7 +20,7 @@ verified: true
 <section class="section atlas-hero">
   <p class="eyebrow">Skill Hub</p>
   <h1>Architecture skills</h1>
-  <p class="lead">Practical working skills for solution architects, enterprise architects, and integration architects who need to map capabilities, review designs, record decisions, and define system boundaries with clarity.</p>
+  <p class="lead">Practical working skills for solution architects, enterprise architects, and integration architects who need to <mark class="key-idea">map capabilities, review designs, record decisions, and define system boundaries with clarity.</mark></p>
   <div class="atlas-hero__actions">
     <a class="button button--primary" href="/skill-hub/sap-architecture-course/">Start the SAP Architect Field Course</a>
   </div>
@@ -30,7 +30,7 @@ verified: true
   <header class="section-heading">
     <h2>What this group covers</h2>
   </header>
-  <p>This skill group covers the core architecture activities that happen during discovery, design, review, and transition phases of enterprise and SAP projects. It is not a framework encyclopedia. It is a set of usable methods for producing useful architecture artifacts and making defensible decisions.</p>
+  <p>This skill group covers the core architecture activities that happen during discovery, design, review, and transition phases of enterprise and SAP projects. It is not a framework encyclopedia. <mark class="key-idea">It is a set of usable methods for producing useful architecture artifacts and making defensible decisions.</mark></p>
   <p>The skills here are designed to be used by humans and AI agents together. Each page includes decision rules, templates, quality checklists, and explicit agent instructions.</p>
 </section>
 
@@ -67,10 +67,10 @@ verified: true
     <h2>When to use this group</h2>
   </header>
   <ul>
-    <li>You are starting a discovery phase and need to understand what the organization actually does before proposing systems.</li>
-    <li>You have a solution design and need to review it for gaps, risks, and feasibility before build begins.</li>
+    <li>You are starting a discovery phase and need to understand what the organization actually does <mark class="key-idea">before proposing systems.</mark></li>
+    <li>You have a solution design and need to review it for gaps, risks, and feasibility <mark class="key-idea">before build begins.</mark></li>
     <li>You must choose between technical options and need a record of why one was selected and others rejected.</li>
-    <li>You need to define how fast, how available, or how secure a system must be — with numbers, not adjectives.</li>
+    <li>You need to define how fast, how available, or how secure a system must be — <mark class="key-idea">with numbers, not adjectives.</mark></li>
     <li>You need to explain a system's boundaries to stakeholders, developers, or operations teams who will support it.</li>
     <li>An AI agent is helping you produce architecture artifacts and you need structured instructions to guide its output.</li>
   </ul>
@@ -81,11 +81,11 @@ verified: true
     <h2>How the skills connect</h2>
   </header>
   <ol>
-    <li><strong>Capability Mapping</strong> establishes the business context — what functions exist and what supports them.</li>
-    <li><strong>System Context Mapping</strong> defines the system boundaries within that capability landscape.</li>
+    <li><strong>Capability Mapping</strong> establishes the business context — <mark class="key-idea">what functions exist and what supports them.</mark></li>
+    <li><strong>System Context Mapping</strong> defines <mark class="key-idea">the system boundaries within that capability landscape.</mark></li>
     <li><strong>Solution Architecture Review</strong> evaluates a proposed design against the mapped context and requirements.</li>
     <li><strong>Architecture Decision Record</strong> captures the significant choices made during design and review.</li>
-    <li><strong>Non-Functional Requirements</strong> constrain every design and review with measurable quality attributes.</li>
+    <li><strong>Non-Functional Requirements</strong> <mark class="key-idea">constrain every design and review with measurable quality attributes.</mark></li>
   </ol>
   <p>These skills are often used alongside <a href="/skill-hub/business-analysis/gap-analysis-working-skill/">Gap Analysis</a>, <a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a>, and <a href="/skill-hub/sap-ams/change-impact-analysis-working-skill/">Change Impact Analysis</a>.</p>
 </section>
@@ -94,5 +94,5 @@ verified: true
   <header class="section-heading">
     <h2>Status and limitations</h2>
   </header>
-  <p>This skill group is a public working interpretation of architecture practice. It is not official TOGAF, ArchiMate, or SAP documentation. It focuses on the subset of architecture work that produces immediate, reviewable artifacts. It does not cover detailed infrastructure sizing, network design, or security architecture at depth. Use these skills as structured starting points, not as authoritative framework substitutes.</p>
+  <p>This skill group is a public working interpretation of architecture practice. It is not official TOGAF, ArchiMate, or SAP documentation. It focuses on the subset of architecture work that produces immediate, reviewable artifacts. It does not cover detailed infrastructure sizing, network design, or security architecture at depth. Use these skills as <mark class="key-idea">structured starting points, not as authoritative framework substitutes.</mark></p>
 </section>
