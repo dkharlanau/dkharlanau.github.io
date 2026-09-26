@@ -1,17 +1,17 @@
 ---
 layout: default
 title: "SAP Sales Diagnostic Casebook — Enterprise Context Lab"
-description: "Symptom-first SAP Sales diagnostic cases for billing, down payments, JIT, configurable returns, CTO+ and third-party fulfillment."
+description: "A practical SAP Sales diagnostic casebook for finding the first wrong process state, proving ownership, and validating the fix across Sales, Billing, Logistics, and integrations."
 permalink: /labs/enterprise-context/sales-diagnostics/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags: [sap-s4hana, sap-sd, sales, diagnostics, lead-consulting, jit, returns, billing, eto]
-last_reviewed: 2026-08-16
+last_reviewed: 2026-09-26
 publication_wave: "public-framework-search-wave-04"
 review_method: "selective external evidence + page-level editorial review + authored heuristic boundary"
 evidence_review_mode: "selective_or_heuristic"
@@ -57,8 +57,8 @@ semantic_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Sales / Diagnostic Casebook</p>
-      <h1>Start from the symptom.<br />Prove the owner.</h1>
-      <p>{{ graph.summary }}</p>
+      <h1>Find the first wrong state.<br />Then prove the owner.</h1>
+      <p>{{ graph.summary }} The goal is not to list every possible cause. It is to find the first point where the actual process differs from the expected process, then move the investigation to the right owner.</p>
       <a class="research-canvas__button" href="#diagnostic-cases">Open cases <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Sales diagnostic inventory">
@@ -76,12 +76,40 @@ semantic_links:
     <a href="/labs/enterprise-context/data/sales-diagnostic-casebook.json">Open casebook JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
+  <section class="research-canvas__inventory" id="sales-diagnostics-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>A Lead does not start with a fix. A Lead narrows the state and the owner.</h2>
+      <p>For an assessment answer, show how you move from a vague symptom to evidence, ownership, and proof of recovery.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I first define the expected process state and reproduce the symptom with one bad document. Then I compare it with a good case and find the first field, status, quantity, date, message, or document step that differs. That first divergence tells me which process boundary to inspect. I collect evidence for that owner before changing configuration. After the correction, I repeat the same business path and prove both the technical state and the business result.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="first-wrong-state" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">First-wrong-state method</p>
+      <h2>Expected → actual → divergence → owner → proof.</h2>
+      <p>This five-step loop is the default way to read a Sales incident. It works across pricing, ATP, delivery, billing, master data, and integration failures.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>1. Expected</h3><p>State what should have happened at this process step. Use the business document and its intended state, not a transaction code.</p></div>
+      <div><h3>2. Actual</h3><p>Capture the wrong document, status, value, message, date, quantity, or follow-on result as evidence.</p></div>
+      <div><h3>3. Divergence</h3><p>Compare a good and bad case and find the earliest point where they stop matching.</p></div>
+      <div><h3>4. Owner</h3><p>Map that divergence to the owning layer: master data, Sales control, pricing, supply, logistics, billing, finance, or integration.</p></div>
+      <div><h3>5. Proof</h3><p>After the change, repeat the same path and prove that the corrected state produces the expected downstream result.</p></div>
+    </div>
+    <p class="ecg-caption"><strong>Rule:</strong> the first visible symptom and the root cause can live in different modules. Move backward only until you find the first wrong state; do not keep expanding the search after ownership is proven.</p>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Diagnostic contract</p>
       <h2>Use the casebook to narrow the owner, not to guess a fix.</h2>
-      <p>The cases are deliberately symptom-first. Start with the document, message or business result that is wrong. Then decide which process boundary can own the symptom. A billing problem may begin in the <a href="/labs/enterprise-context/sales-order/">sales order</a>, move through <a href="/labs/enterprise-context/shipping/">shipping</a>, and only become visible in <a href="/labs/enterprise-context/billing/">billing</a>. A price difference belongs first to the <a href="/labs/enterprise-context/pricing/">pricing model</a>. A JIT quantity problem may belong to the <a href="/labs/enterprise-context/automotive-jit/">Automotive JIT flow</a> or to message processing in <a href="/labs/enterprise-context/integration-operations/">integration operations</a>.</p>
-      <p>For each case, collect evidence before changing configuration. Compare one good document with one bad document. Capture the relevant document flow, statuses, partner and organizational data, message identity, quantities, dates and copied values. Name the first field or event where the two cases diverge. That point is normally more useful than a long list of possible Customizing settings.</p>
+      <p>The cases are symptom-first, but the investigation is state-first. Start with the document, message, or business result that is wrong. Then move backward through the process until you find the first wrong state. A billing symptom can originate in the <a href="/labs/enterprise-context/sales-order/">sales order</a>, <a href="/labs/enterprise-context/shipping/">shipping</a>, or <a href="/labs/enterprise-context/billing/">billing</a>. A price difference belongs first to the <a href="/labs/enterprise-context/pricing/">pricing model</a>. A JIT quantity problem can belong to the <a href="/labs/enterprise-context/automotive-jit/">Automotive JIT flow</a> or to <a href="/labs/enterprise-context/integration-operations/">integration operations</a>.</p>
+      <p>Collect evidence before changing configuration. Compare one good document with one bad document. Capture only the data that can separate the cases: document flow, status, partners, organizational data, message identity, quantities, dates, and copied values. The first meaningful difference is usually a better diagnostic starting point than a long list of Customizing possibilities.</p>
       <p>Product behavior is checked separately from the authored diagnostic path. For example, SAP documents how billing split analysis compares differing header and business-partner fields, while the casebook adds a practical ownership sequence for investigation. See SAP Help for <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/07e8f92c62dd47458ca446d3e6818ffd.html">Split Analysis</a> and <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/e8ff2732c8bd412a9d52f5b64e75a8f9.html">Billing Document Split and Convergence</a>. The casebook does not turn these product facts into a universal root-cause list. It keeps the evidence, the hypothesis and the recommended change as separate steps.</p>
     </header>
   </section>
@@ -90,7 +118,7 @@ semantic_links:
     <header>
       <p class="research-canvas__eyebrow">Method</p>
       <h2>{{ graph.memory_path }}</h2>
-      <p>A good diagnosis narrows the owner before it proposes a change. That sounds obvious. Production incidents remain creative evidence that it is not.</p>
+      <p>A good diagnosis narrows the owner before it proposes a change. Keep the reasoning visible: what should be true, what is actually true, where the two first diverge, who owns that state, and what will prove the fix.</p>
     </header>
     <div class="ecg-heuristic-grid">
       {% for item in graph.case_design_rules %}
@@ -153,6 +181,20 @@ semantic_links:
       {% for drill in graph.assessment_drills %}
       <details><summary><span>Q{{ forloop.index }}</span><strong>{{ drill.prompt }}</strong><small>Open answer shape</small></summary><div><ul>{% for item in drill.expected_shape %}<li>{{ item }}</li>{% endfor %}</ul></div></details>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-diagnostics-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Five habits that prevent weak incident analysis.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>symptom</small></div><h3>Should I start from the transaction where the user sees the error?</h3></header><p>Start from the business state that is wrong. The screen tells you where the symptom is visible, not necessarily where the wrong state was created.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>compare</small></div><h3>Why compare a good and bad document?</h3></header><p>Because the comparison removes many irrelevant possibilities. The first meaningful difference gives you a concrete hypothesis and a smaller ownership boundary.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>owner</small></div><h3>When do I involve another module or team?</h3></header><p>When the first wrong state belongs to that layer. Send the evidence package with the exact divergence instead of forwarding only the final symptom.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>change</small></div><h3>Why not change Customizing and test quickly?</h3></header><p>Because a change without a proven owner can hide the symptom while leaving the real defect in place. First prove which rule, data object, or interface state is wrong.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>proof</small></div><h3>What counts as proof of fix?</h3></header><p>Repeat the same business path and show that the corrected state produces the expected downstream result. A changed configuration value alone is not proof.</p></article>
     </div>
   </section>
 
