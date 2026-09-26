@@ -24,19 +24,19 @@ verified: true
   <dl class="hero-evidence-rail" aria-label="Integration Architecture content inventory">
     <div>
       <dt>Working skills</dt>
-      <dd><strong>6</strong><span>From ownership to data mesh</span></dd>
+      <dd><strong>7</strong><span>From ownership and service levels to data mesh</span></dd>
     </div>
     <div>
       <dt>Deliverables</dt>
-      <dd><strong>26</strong><span>Concrete outputs across the skill set</span></dd>
+      <dd><strong>31</strong><span>Concrete outputs across the skill set</span></dd>
     </div>
     <div>
       <dt>Copy-ready templates</dt>
-      <dd><strong>6</strong><span>One reusable template per skill</span></dd>
+      <dd><strong>7</strong><span>One reusable template per skill</span></dd>
     </div>
     <div>
       <dt>Decision rules</dt>
-      <dd><strong>49</strong><span>Explicit conditions that change the path</span></dd>
+      <dd><strong>59</strong><span>Explicit conditions that change the path</span></dd>
     </div>
   </dl>
 </section>
@@ -45,7 +45,7 @@ verified: true
   <header class="section-heading">
     <h2>What this group covers</h2>
   </header>
-  <p>Integration Architecture skills <mark class="key-idea">bridge the gap between integration theory and operational reality.</mark> They help you decide between APIs and events, define who owns an interface, design error handling that actually works, and build monitoring that catches failures before business users do.</p>
+  <p>Integration Architecture skills <mark class="key-idea">bridge the gap between integration theory and operational reality.</mark> They help you decide between APIs and events, define who owns an interface, turn business expectations into measurable service levels, design error handling that actually works, and build monitoring that catches failures before business users do.</p>
   <p>These skills are applicable to SAP-centric landscapes (IDoc, RFC, OData, AIF) and to mixed landscapes with cloud middleware, SaaS APIs, and event brokers.</p>
 </section>
 
@@ -74,32 +74,38 @@ verified: true
       <p>Assign clear ownership to every interface. Document who decides what. Prevent failures from sitting unresolved because no one is responsible.</p>
       <span class="facet-route-card__arrow" aria-hidden="true">→</span>
     </a>
-    <a class="facet-route-card" href="/skill-hub/integration-architecture/api-integration-working-skill/">
+    <a class="facet-route-card" href="/skill-hub/integration-architecture/integration-sla-working-skill/">
       <span class="facet-route-card__index" aria-hidden="true">02</span>
+      <h3>SLA &amp; SLO Design</h3>
+      <p>Turn business expectations into measurable availability, latency, throughput, and freshness objectives with clear KPIs and breach actions.</p>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/integration-architecture/api-integration-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">03</span>
       <h3>API Integration</h3>
       <p>Choose the right protocol, define contracts, handle versioning, auth, and rate limits for REST, OData, SOAP, and SAP OData services.</p>
       <span class="facet-route-card__arrow" aria-hidden="true">→</span>
     </a>
     <a class="facet-route-card" href="/skill-hub/integration-architecture/event-driven-architecture-working-skill/">
-      <span class="facet-route-card__index" aria-hidden="true">03</span>
+      <span class="facet-route-card__index" aria-hidden="true">04</span>
       <h3>Event-Driven Architecture</h3>
       <p>Decide whether an event should exist, who owns it, what its contract is, and how failures are monitored and handled.</p>
       <span class="facet-route-card__arrow" aria-hidden="true">→</span>
     </a>
     <a class="facet-route-card" href="/skill-hub/integration-architecture/integration-observability-working-skill/">
-      <span class="facet-route-card__index" aria-hidden="true">04</span>
+      <span class="facet-route-card__index" aria-hidden="true">05</span>
       <h3>Integration Observability</h3>
       <p>Design monitoring and alerting so failures are detected before business impact, and diagnostics are fast and repeatable.</p>
       <span class="facet-route-card__arrow" aria-hidden="true">→</span>
     </a>
     <a class="facet-route-card" href="/skill-hub/integration-architecture/integration-error-handling-working-skill/">
-      <span class="facet-route-card__index" aria-hidden="true">05</span>
+      <span class="facet-route-card__index" aria-hidden="true">06</span>
       <h3>Integration Error Handling</h3>
       <p>Design retry, dead letter, and escalation logic so transient failures recover safely and permanent failures escalate correctly.</p>
       <span class="facet-route-card__arrow" aria-hidden="true">→</span>
     </a>
     <a class="facet-route-card" href="/skill-hub/integration-architecture/data-mesh-working-skill/">
-      <span class="facet-route-card__index" aria-hidden="true">06</span>
+      <span class="facet-route-card__index" aria-hidden="true">07</span>
       <h3>Data Mesh</h3>
       <p>Apply data mesh principles to SAP and enterprise landscapes: identify domains, define data products, assign ownership, choose integration patterns.</p>
       <span class="facet-route-card__arrow" aria-hidden="true">→</span>
@@ -113,6 +119,7 @@ verified: true
   </header>
   <ol>
     <li><a href="/skill-hub/integration-architecture/interface-ownership-working-skill/">Interface Ownership</a> — Start here if your landscape has unclear responsibilities.</li>
+    <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA &amp; SLO Design</a> — Use to turn business expectations into measurable service objectives before choosing or approving the pattern.</li>
     <li><a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a> — Use when designing or reviewing synchronous integrations.</li>
     <li><a href="/skill-hub/integration-architecture/event-driven-architecture-working-skill/">Event-Driven Architecture</a> — Use when decoupling systems or replacing polling.</li>
     <li><a href="/skill-hub/integration-architecture/integration-observability-working-skill/">Integration Observability</a> — Use to build or improve monitoring.</li>
