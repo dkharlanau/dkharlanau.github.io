@@ -4,7 +4,7 @@ layout: default
 title: "Business Analysis — Skill Group Index"
 description: "Practical working skills for business analysis: requirements elicitation, stakeholder analysis, process analysis, gap analysis, acceptance criteria, and business rules discovery."
 permalink: /skill-hub/business-analysis/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -51,31 +51,67 @@ verified: true
   <header class="section-heading">
     <h2>Skills in this group</h2>
   </header>
-  <div class="topic-grid">
-    <div class="topic-card">
-      <h3><a href="/skill-hub/business-analysis/requirements-elicitation-working-skill/">Requirements Elicitation</a></h3>
-      <p>Turn vague stakeholder complaints into structured requirements with assumptions, constraints, risks, and acceptance criteria.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/business-analysis/stakeholder-analysis-working-skill/">Stakeholder Analysis</a></h3>
-      <p>Identify who affects or is affected by a change, what they control, what they need, and how to get reliable information from them.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/business-analysis/process-analysis-working-skill/">Process Analysis</a></h3>
-      <p>Document how work actually happens, where it breaks, what systems touch it, and who owns each step.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/business-analysis/gap-analysis-working-skill/">Gap Analysis</a></h3>
-      <p>Compare what exists today against what is required, classify the difference, and produce a closure plan with effort and ownership.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/business-analysis/acceptance-criteria-working-skill/">Acceptance Criteria</a></h3>
-      <p>Define how to verify that a requirement is met, before work starts, so that delivery has an unambiguous pass/fail standard.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/business-analysis/business-rules-discovery-working-skill/">Business Rules Discovery</a></h3>
-      <p>Extract the decision logic that governs how a business operates, document it independently of any system, and identify where current systems enforce, violate, or ignore it.</p>
-    </div>
+  <div class="skill-memory-grid" aria-label="Business Analysis skills">
+    <a class="skill-memory-card" href="/skill-hub/business-analysis/requirements-elicitation-working-skill/">
+      <div class="skill-memory-card__top">
+        <span class="material-symbols-outlined skill-memory-card__icon" aria-hidden="true">forum</span>
+        <span class="skill-memory-card__index" aria-hidden="true">01</span>
+      </div>
+      <h3>Requirements Elicitation</h3>
+      <p class="skill-memory-card__cue">Ask → clarify → verify</p>
+      <p class="skill-memory-card__description">Turn vague stakeholder input into structured requirements, assumptions, constraints, risks, and acceptance criteria.</p>
+      <span class="material-symbols-outlined skill-memory-card__arrow" aria-hidden="true">arrow_forward</span>
+    </a>
+    <a class="skill-memory-card" href="/skill-hub/business-analysis/stakeholder-analysis-working-skill/">
+      <div class="skill-memory-card__top">
+        <span class="material-symbols-outlined skill-memory-card__icon" aria-hidden="true">groups</span>
+        <span class="skill-memory-card__index" aria-hidden="true">02</span>
+      </div>
+      <h3>Stakeholder Analysis</h3>
+      <p class="skill-memory-card__cue">Who matters and why</p>
+      <p class="skill-memory-card__description">Identify who affects the change, what they control, what they need, and where reliable information comes from.</p>
+      <span class="material-symbols-outlined skill-memory-card__arrow" aria-hidden="true">arrow_forward</span>
+    </a>
+    <a class="skill-memory-card" href="/skill-hub/business-analysis/process-analysis-working-skill/">
+      <div class="skill-memory-card__top">
+        <span class="material-symbols-outlined skill-memory-card__icon" aria-hidden="true">account_tree</span>
+        <span class="skill-memory-card__index" aria-hidden="true">03</span>
+      </div>
+      <h3>Process Analysis</h3>
+      <p class="skill-memory-card__cue">How work really flows</p>
+      <p class="skill-memory-card__description">Map steps, actors, systems, handoffs, delays, exceptions, and ownership in the real process.</p>
+      <span class="material-symbols-outlined skill-memory-card__arrow" aria-hidden="true">arrow_forward</span>
+    </a>
+    <a class="skill-memory-card" href="/skill-hub/business-analysis/gap-analysis-working-skill/">
+      <div class="skill-memory-card__top">
+        <span class="material-symbols-outlined skill-memory-card__icon" aria-hidden="true">compare_arrows</span>
+        <span class="skill-memory-card__index" aria-hidden="true">04</span>
+      </div>
+      <h3>Gap Analysis</h3>
+      <p class="skill-memory-card__cue">Current → target → closure</p>
+      <p class="skill-memory-card__description">Compare today with the required state, classify the gaps, and define effort, ownership, and closure actions.</p>
+      <span class="material-symbols-outlined skill-memory-card__arrow" aria-hidden="true">arrow_forward</span>
+    </a>
+    <a class="skill-memory-card" href="/skill-hub/business-analysis/acceptance-criteria-working-skill/">
+      <div class="skill-memory-card__top">
+        <span class="material-symbols-outlined skill-memory-card__icon" aria-hidden="true">fact_check</span>
+        <span class="skill-memory-card__index" aria-hidden="true">05</span>
+      </div>
+      <h3>Acceptance Criteria</h3>
+      <p class="skill-memory-card__cue">What proves it is done?</p>
+      <p class="skill-memory-card__description">Define clear, testable pass/fail conditions before implementation starts.</p>
+      <span class="material-symbols-outlined skill-memory-card__arrow" aria-hidden="true">arrow_forward</span>
+    </a>
+    <a class="skill-memory-card" href="/skill-hub/business-analysis/business-rules-discovery-working-skill/">
+      <div class="skill-memory-card__top">
+        <span class="material-symbols-outlined skill-memory-card__icon" aria-hidden="true">rule</span>
+        <span class="skill-memory-card__index" aria-hidden="true">06</span>
+      </div>
+      <h3>Business Rules Discovery</h3>
+      <p class="skill-memory-card__cue">If → then → exception</p>
+      <p class="skill-memory-card__description">Extract rules, conditions, thresholds, and decision paths independently of the systems that enforce them.</p>
+      <span class="material-symbols-outlined skill-memory-card__arrow" aria-hidden="true">arrow_forward</span>
+    </a>
   </div>
 </section>
 

@@ -590,6 +590,143 @@ a.card h3 {
   }
 }
 
+/* ---------- Skill memory grid: icon-led navigation cards ---------- */
+
+/* Candidate pattern for a small skill family where the reader should both
+   choose a destination and remember the map. Icons are mnemonic cues, not
+   illustrations; the title and text always carry the meaning. */
+.skill-memory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  width: min(100%, var(--container-wide));
+  margin: var(--space-5) 0 var(--space-6);
+}
+
+.skill-memory-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: var(--space-3);
+  min-width: 0;
+  min-height: 17rem;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  color: var(--color-text);
+  text-decoration: none;
+  box-shadow: var(--shadow-subtle);
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.skill-memory-card:hover,
+.skill-memory-card:focus-visible {
+  border-color: color-mix(in srgb, var(--color-accent) 72%, var(--color-border));
+  color: var(--color-text);
+  text-decoration: none;
+  box-shadow: 0 10px 28px rgba(18, 84, 245, 0.08);
+  transform: translateY(-2px);
+}
+
+.skill-memory-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.skill-memory-card__icon {
+  display: inline-grid;
+  width: 3.4rem;
+  height: 3.4rem;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 18%, var(--color-border));
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: 1.85rem;
+  line-height: 1;
+}
+
+.skill-memory-card__index {
+  color: var(--color-text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.skill-memory-card h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-xl);
+  line-height: var(--leading-heading);
+  text-wrap: balance;
+}
+
+.skill-memory-card__cue {
+  margin: 0;
+  color: var(--color-accent);
+  font-size: var(--text-md);
+  font-weight: 650;
+  line-height: var(--leading-tight);
+}
+
+.skill-memory-card__description {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+  line-height: 1.58;
+}
+
+.skill-memory-card__arrow {
+  justify-self: end;
+  color: var(--color-accent);
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform 140ms ease;
+}
+
+.skill-memory-card:hover .skill-memory-card__arrow,
+.skill-memory-card:focus-visible .skill-memory-card__arrow {
+  transform: translateX(0.2rem);
+}
+
+@media (max-width: 980px) {
+  .skill-memory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .skill-memory-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-memory-card {
+    min-height: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-memory-card,
+  .skill-memory-card__arrow {
+    transition: none;
+  }
+
+  .skill-memory-card:hover,
+  .skill-memory-card:focus-visible,
+  .skill-memory-card:hover .skill-memory-card__arrow,
+  .skill-memory-card:focus-visible .skill-memory-card__arrow {
+    transform: none;
+  }
+}
+
 /* ---------- Disclosure ---------- */
 
 details {

@@ -17,6 +17,7 @@ Choose from the reader task, not from visual similarity.
 | State a scope or ownership distinction | boundary-note |
 | Choose among peer destinations | route-list |
 | Choose among three to six peer destinations with similar weight | faceted-route-grid (candidate) |
+| Remember and choose a compact skill family | skill-memory-grid (candidate) |
 | Inspect provenance and evidence | source-register |
 | Compare two or three concepts | comparison-group |
 | Trace one SAP determination in depth | determination-detail |
@@ -136,6 +137,31 @@ link.
 
 Reference implementation:
 /skill-hub/architecture/
+
+## skill-memory-grid
+
+Status: candidate.
+
+Purpose: turn a small skill family into a visual memory map without adding
+illustrations. Each card uses one simple icon, a short memory cue, a title, and a
+compact explanation. The icon is a mnemonic anchor; the text remains the source of
+meaning.
+
+Use it for roughly four to nine skills when remembering the structure matters as much
+as opening the destination. Keep icons from the shared Material Symbols set so the
+visual language stays consistent with the site. Use one icon per skill and one short
+cue such as "Ask → clarify → verify" or "If → then → exception".
+
+Do not use photographs, generated illustrations, decorative icon collections, or
+different visual styles per card. Do not use this component for ordinary article
+sections or for large inventories where scanning density matters more than memory.
+
+The full card is one link. Icons and arrows are aria-hidden. On wide screens the
+component uses three columns, then two, then one on mobile without shrinking reading
+text.
+
+Reference implementation:
+/skill-hub/business-analysis/
 
 ## source-register
 
