@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>Master data defines risk capacity; exposure and check logic decide the current outcome.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,42 +65,43 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>Sales and delivery processes can trigger credit checks against the current exposure and the BP's credit master data. A failed check can block the document or subsequent processing depending on configured check steps.</p>
+      <h2>A credit limit is only one input to a runtime credit decision.</h2>
+      <p>Sales or delivery processing can trigger a credit check for the relevant credit account and segment. The decision combines maintained credit attributes with current exposure and the configured check logic. A block is therefore a runtime result, not a direct copy of the credit limit field.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Identify account and segment</h4><p>Start from the credit account and credit segment actually evaluated for the document. Do not assume the Sales customer number is enough.</p></div>
+      <div><span>02</span><h4>Read maintained risk data</h4><p>Check limit, validity, risk class, and the other credit attributes used by the implementation for that segment.</p></div>
+      <div><span>03</span><h4>Read current exposure</h4><p>Separate static master data from dynamic exposure. A correct limit can still produce a block when current exposure or open commitments change.</p></div>
+      <div><span>04</span><h4>Trace the check rule</h4><p>Identify which check ran, which thresholds or rules it evaluated, and which reaction is configured for failure.</p></div>
+      <div><span>05</span><h4>Prove release and recheck</h4><p>If a block is released, verify the ownership of that decision and whether later document changes or processing trigger another check.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Do not raise the limit until you know what the check evaluated.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Identify the credit account and segment used by the document. Check limit, validity and risk class, then examine exposure and the check rule. Avoid changing a limit before proving that the correct segment and account were evaluated.</p>
+      <p>Identify the credit account and segment first. Then compare limit, validity, and risk data with current exposure and the exact check result. If the wrong segment was evaluated, changing a limit only hides the ownership problem. If the right segment was evaluated, prove which check failed and what should happen after release or recheck.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Account → segment → master data → exposure → check.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Credit Master Data is owned by SAP Credit Management. I identify the credit account and segment, verify limit/risk data, and then analyze the configured check and current exposure.</p>
+      <p><strong>60-second answer:</strong> Credit Master Data belongs to SAP Credit Management and is organized around the credit account and credit segment. I first prove which account and segment the document uses, then check limit, validity, and risk attributes. After that I add current exposure and the configured check rule, because a credit block is a runtime decision, not simply “limit exceeded.” I finish by proving who owns release and whether the document is rechecked later.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/labs/enterprise-context/credit/">Credit Management</a>
     </nav>
   </section>
 </div>
