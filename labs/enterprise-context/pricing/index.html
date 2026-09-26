@@ -134,6 +134,30 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="pricing-agent-workflow" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Agent / MCP investigation</p>
+      <h2>Read the runtime price before you change pricing master data.</h2>
+      <p>Machine assistance is most useful when it preserves the same pricing chain: prove the document result first, then move outward to procedure, access, record, and calculation. A condition record is evidence about master data, not proof that the document selected it.</p>
+    </header>
+    <div class="sales-cert-table">
+      <table>
+        <thead><tr><th>Step</th><th>Retrieve</th><th>Interpret and verify</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Intent</strong></td><td>The affected sales order, item, expected condition, and symptom.</td><td>Turn “wrong price” into one testable question: missing condition, wrong rate, wrong base, wrong total, or billing difference.</td></tr>
+          <tr><td><strong>Runtime result</strong></td><td>Pricing elements from the affected order: document/item identifiers, procedure step and counter, condition type, rate, base/quantity, amount, and currency where available.</td><td>Establish what SAP actually calculated before inspecting candidate condition records.</td></tr>
+          <tr><td><strong>Control path</strong></td><td>Relevant pricing procedure, condition type, access sequence, and access/key design.</td><td>Find the first layer where the expected chain differs. A missing runtime condition can be caused before condition-record lookup.</td></tr>
+          <tr><td><strong>Master data</strong></td><td>The candidate condition record, validity, key fields, unit/currency, scale, and related values.</td><td>Confirm that the record matches the runtime key and date; do not infer runtime selection from record existence alone.</td></tr>
+          <tr><td><strong>Decision</strong></td><td>The first proven divergence and its owner.</td><td>Separate configuration, pricing master data, document context, calculation logic, and billing-copy behavior before proposing a change.</td></tr>
+          <tr><td><strong>Verify</strong></td><td>The recalculated or newly created document state after an approved action.</td><td>Re-read the price elements and, when relevant, compare the downstream billing context. A successful write call is not proof that the commercial result is correct.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Public Edition API boundary:</strong> the Sales Order (A2X, OData V4) API can expose sales-order pricing elements for read-based inspection, while the Condition Record for Pricing in Sales API can read and maintain pricing master data. Use those capabilities as separate evidence layers: runtime document result first, candidate master data second. Runtime access analysis may still require the pricing-analysis/configuration evidence available in the SAP system.</p>
+    <p><strong>Action boundary:</strong> changing a condition record, manually changing a document condition, or triggering repricing can alter a commercial commitment. Keep diagnosis read-first; execute only with the correct business owner, authorization, scope, and a post-change verification step.</p>
+    <p>First-party references: <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/03c04db2a7434731b7fe21dca77440da/c947e05805d5478299e058ddfc32e976.html">Sales Order (A2X, OData V4) — Header Pricing Element</a> · <a href="https://help.sap.com/docs/r/03c04db2a7434731b7fe21dca77440da/latest/en-US/61d84394b59c4b52b6bb71017c68ce26.html">Condition Record for Pricing in Sales — Example Requests</a>.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="pricing-lead-decisions" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead design decisions</p>
