@@ -67,31 +67,43 @@ verified: true
   <header class="section-heading">
     <h2>Skills in this group</h2>
   </header>
-  <div class="topic-grid">
-    <div class="topic-card">
-      <h3><a href="/skill-hub/integration-architecture/interface-ownership-working-skill/">Interface Ownership</a></h3>
+  <div class="facet-route-grid" aria-label="Integration Architecture skills">
+    <a class="facet-route-card" href="/skill-hub/integration-architecture/interface-ownership-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">01</span>
+      <h3>Interface Ownership</h3>
       <p>Assign clear ownership to every interface. Document who decides what. Prevent failures from sitting unresolved because no one is responsible.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/integration-architecture/api-integration-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">02</span>
+      <h3>API Integration</h3>
       <p>Choose the right protocol, define contracts, handle versioning, auth, and rate limits for REST, OData, SOAP, and SAP OData services.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/integration-architecture/event-driven-architecture-working-skill/">Event-Driven Architecture</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/integration-architecture/event-driven-architecture-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">03</span>
+      <h3>Event-Driven Architecture</h3>
       <p>Decide whether an event should exist, who owns it, what its contract is, and how failures are monitored and handled.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/integration-architecture/integration-observability-working-skill/">Integration Observability</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/integration-architecture/integration-observability-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">04</span>
+      <h3>Integration Observability</h3>
       <p>Design monitoring and alerting so failures are detected before business impact, and diagnostics are fast and repeatable.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/integration-architecture/integration-error-handling-working-skill/">Integration Error Handling</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/integration-architecture/integration-error-handling-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">05</span>
+      <h3>Integration Error Handling</h3>
       <p>Design retry, dead letter, and escalation logic so transient failures recover safely and permanent failures escalate correctly.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/integration-architecture/data-mesh-working-skill/">Data Mesh</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/integration-architecture/data-mesh-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">06</span>
+      <h3>Data Mesh</h3>
       <p>Apply data mesh principles to SAP and enterprise landscapes: identify domains, define data products, assign ownership, choose integration patterns.</p>
-    </div>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
   </div>
 </section>
 
