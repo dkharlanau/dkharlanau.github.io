@@ -55,7 +55,7 @@ verified: true
       <li>Business process map showing state changes and triggers.</li>
       <li>List of current and potential consumers with their data needs.</li>
       <li>Existing event catalog (if any).</li>
-      <li>SLA requirements: delivery latency, ordering, durability.</li>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA and SLO requirements</a>: delivery latency, throughput, freshness or consumer lag, plus ordering and durability constraints.</li>
       <li>Retry and error handling policies from the organization.</li>
       <li>Middleware or broker capabilities (topics, partitions, retention, schema registry).</li>
       <li>SAP event enablement status (SAP Event Mesh, CDC, custom outbound).</li>
@@ -82,7 +82,7 @@ verified: true
       <li><strong>Identify the business event.</strong> <mark class="key-idea">Name it after the business fact, not the technical trigger.</mark> Example: <code>OrderConfirmed</code>, not <code>SAPTableUpdated</code>.</li>
       <li><strong>Confirm the authoritative source.</strong> Only one system publishes this event. Document why it is authoritative.</li>
       <li><strong>Define the event contract.</strong> Specify event name, schema, version, payload example, and metadata fields (timestamp, correlation ID, source).</li>
-      <li><strong>List consumers and their needs.</strong> For each consumer, document what fields they use, their latency requirement, and their ordering requirement.</li>
+      <li><strong>List consumers and their needs.</strong> For each consumer, document what fields they use, their <a href="/skill-hub/integration-architecture/integration-sla-working-skill/">latency and service-level objective</a>, and their ordering requirement.</li>
       <li><strong>Choose broker and topic strategy.</strong> Decide topic naming, partitioning key (if ordering matters), and retention. Record in an ADR.</li>
       <li><strong>Define delivery semantics.</strong> Choose at-least-once, at-most-once, or exactly-once. Document the trade-off and implementation.</li>
       <li><strong>Design failure handling.</strong> Define retry policy, dead letter criteria, and escalation path. Link to Integration Error Handling skill.</li>
@@ -222,7 +222,7 @@ status: draft | reviewed | approved
 
   <section>
     <h2>Latency and ordering: what these requirements mean</h2>
-    <p>These two requirements look small in an event contract, but they change the technical design. Define them per consumer instead of writing vague terms such as <em>real time</em> or <em>ordered</em>.</p>
+    <p>These two requirements look small in an event contract, but they change the technical design. Define them per consumer instead of writing vague terms such as <em>real time</em> or <em>ordered</em>. For availability, throughput, freshness, measurement windows, and KPI design, use <a href="/skill-hub/integration-architecture/integration-sla-working-skill/">Integration SLA and SLO Design</a>.</p>
     <table>
       <thead>
         <tr>
@@ -253,6 +253,7 @@ status: draft | reviewed | approved
   <section>
     <h2>Related skills</h2>
     <ul>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA &amp; SLO Design</a> — Define latency, throughput, freshness, and measurable service objectives for each consumer.</li>
       <li><a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a> — When events are not the right pattern.</li>
       <li><a href="/skill-hub/integration-architecture/integration-observability-working-skill/">Integration Observability</a> — Monitor event flows and consumer lag.</li>
       <li><a href="/skill-hub/integration-architecture/integration-error-handling-working-skill/">Integration Error Handling</a> — Design retry and dead letter behavior.</li>
