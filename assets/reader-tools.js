@@ -111,6 +111,65 @@
     article.classList.add("reader-structure--normalised");
   };
 
+  const skillSectionByHeading = (body, label) => {
+    if (!body) return null;
+    const target = normalise(label);
+    return [...body.querySelectorAll(":scope > section")].find((section) => {
+      const heading = section.querySelector(":scope > h2");
+      return normalise(heading?.textContent || "") === target;
+    }) || null;
+  };
+
+  const addSkillOverview = (article) => {
+    if (!window.location.pathname.startsWith("/skill-hub/")) return;
+    const header = article.querySelector(":scope > .note-header");
+    const body = article.querySelector(":scope > .note-body");
+    if (!header || !body || header.querySelector(":scope > .skill-overview")) return;
+
+    const definitions = [
+      { heading: "Deliverables", label: "Deliverables", icon: "inventory_2", selector: ":scope > ul > li" },
+      { heading: "Templates", label: "Templates", icon: "content_copy", selector: "pre" },
+      { heading: "Working method", label: "Method steps", icon: "format_list_numbered", selector: ":scope > ol > li" },
+      { heading: "Quality checklist", label: "Quality checks", icon: "fact_check", selector: ":scope > ul > li" }
+    ];
+
+    const facts = definitions.map((definition) => {
+      const section = skillSectionByHeading(body, definition.heading);
+      return section
+        ? { ...definition, value: section.querySelectorAll(definition.selector).length }
+        : { ...definition, value: 0 };
+    }).filter((fact) => fact.value > 0);
+
+    // A single number looks like decoration. The ledger only appears when it
+    // can summarize the shape of a substantial working-skill page.
+    if (facts.length < 2) return;
+
+    const overview = document.createElement("dl");
+    overview.className = "skill-overview";
+    overview.setAttribute("aria-label", "Skill at a glance");
+
+    facts.forEach((fact) => {
+      const item = document.createElement("div");
+      item.className = "skill-overview__item";
+
+      const icon = document.createElement("span");
+      icon.className = "material-symbols-outlined skill-overview__icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = fact.icon;
+
+      const term = document.createElement("dt");
+      term.textContent = fact.label;
+
+      const value = document.createElement("dd");
+      value.textContent = String(fact.value);
+
+      item.append(icon, term, value);
+      overview.append(item);
+    });
+
+    header.append(overview);
+  };
+
   const addToc = (article) => {
     const body = article.querySelector(":scope > .note-body");
     if (!body || article.querySelector(":scope > .reader-toc")) return;
@@ -310,6 +369,73 @@
     }
   };
 
+  const addSkillTemplateTools = (article) => {
+    if (!window.location.pathname.startsWith("/skill-hub/")) return;
+    const body = article.querySelector(":scope > .note-body");
+    const templates = skillSectionByHeading(body, "Templates");
+    if (!templates) return;
+
+    [...templates.querySelectorAll("pre")].forEach((pre, index) => {
+      if (pre.closest(".skill-template-block")) return;
+
+      const previous = pre.previousElementSibling;
+      const labelText = previous?.matches("h3, h4")
+        ? previous.textContent.trim()
+        : `Template ${index + 1}`;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "skill-template-block";
+
+      const toolbar = document.createElement("div");
+      toolbar.className = "skill-template-block__toolbar";
+
+      const label = document.createElement("span");
+      label.className = "skill-template-block__label";
+      label.textContent = labelText;
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "skill-template-block__copy";
+      button.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">content_copy</span><span>Copy template</span>';
+
+      const status = document.createElement("span");
+      status.className = "skill-template-block__status visually-hidden";
+      status.setAttribute("aria-live", "polite");
+      status.setAttribute("aria-atomic", "true");
+
+      pre.before(wrapper);
+      wrapper.append(toolbar, pre, status);
+      toolbar.append(label, button);
+
+      button.addEventListener("click", async () => {
+        const text = pre.querySelector("code")?.textContent || pre.textContent || "";
+        if (!text) return;
+
+        const activeBeforeCopy = document.activeElement;
+        const buttonLabel = button.querySelector("span:last-child");
+        button.disabled = true;
+        status.textContent = "Copying template.";
+
+        const copied = await copyText(text);
+        button.disabled = false;
+
+        if (copied) {
+          wrapper.dataset.copyState = "copied";
+          buttonLabel.textContent = "Copied";
+          status.textContent = "Template copied to the clipboard.";
+          activeBeforeCopy?.focus?.({ preventScroll: true });
+          window.setTimeout(() => {
+            delete wrapper.dataset.copyState;
+            buttonLabel.textContent = "Copy template";
+          }, 1800);
+        } else {
+          status.textContent = "Automatic copy is unavailable. Copy the selected template below.";
+          offerManualCopy(wrapper, text, button);
+        }
+      });
+    });
+  };
+
   const bindCopy = (button, container, status, referenceText, kind) => {
     if (!button) return;
     button.hidden = false;
@@ -497,9 +623,11 @@
     }
     document.querySelectorAll(".note-article, .atlas-page, article.note-detail").forEach((article) => {
       normaliseFlatSkillArticle(article);
+      addSkillOverview(article);
       addBreadcrumbs(article);
       consolidateAtlasSourceBrief(article);
       addToc(article);
+      addSkillTemplateTools(article);
     });
   };
 
