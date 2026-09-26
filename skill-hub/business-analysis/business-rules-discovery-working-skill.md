@@ -3,7 +3,7 @@ layout: default
 title: "Business Rules Discovery Working Skill"
 description: "Extract the decision logic that governs how a business operates, document it independently of any system, and identify where current systems enforce, violate, or ignore it."
 permalink: /skill-hub/business-analysis/business-rules-discovery-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -25,6 +25,59 @@ verified: true
   <section>
     <h2>What this skill is for</h2>
     <p>Business rules are the decision logic that determines what happens when: who approves what, which customers get which terms, when an order blocks, how a price is calculated. Most of this logic lives in people's heads, scattered spreadsheets, or buried in code. This skill extracts rules independently of any system, documents them with conditions and outcomes, and maps where they are enforced, violated, or missing. The output prevents the common failure where a new system is built without critical logic, or where existing systems enforce rules that the business no longer wants.</p>
+  </section>
+
+  <section>
+    <h2>Business rule vs requirement vs process</h2>
+    <p>These concepts are connected, but they answer different questions. Mixing them creates weak analysis. A process describes the flow of work. A requirement describes what the business needs. A business rule controls a decision or constrains what is allowed. The system implementation is only the technical way the current solution applies that logic.</p>
+
+    <div class="table-scroll study-table" role="region" aria-label="Business rule, requirement, process, and implementation comparison" tabindex="0">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Concept</th>
+            <th>Question it answers</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Business process</strong></td>
+            <td>What work happens, in what order, and who performs it?</td>
+            <td>Sales creates an order → credit is checked → delivery is released → goods are shipped → billing is created.</td>
+          </tr>
+          <tr>
+            <td><strong>Business requirement</strong></td>
+            <td>What outcome or capability does the business need?</td>
+            <td>High-risk sales must not be released without an approved credit decision.</td>
+          </tr>
+          <tr>
+            <td><strong>Business rule</strong></td>
+            <td>What condition decides, limits, calculates, or classifies the outcome?</td>
+            <td>If credit exposure exceeds the approved limit, block the order for release by an authorized credit manager.</td>
+          </tr>
+          <tr>
+            <td><strong>System implementation</strong></td>
+            <td>How does the current solution enforce the rule?</td>
+            <td>SAP credit check, a delivery or credit block, authorization, workflow, custom logic, or a manual control.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>A useful mental model is: <strong>business need → requirement → process step → decision → business rule → system implementation → evidence of the result</strong>. One requirement can affect several process steps. One process step can contain several rules. A rule can exist even when no system currently enforces it.</p>
+
+    <h3>How to recognize what you are hearing in a workshop</h3>
+    <ul>
+      <li>If the statement describes a sequence, hand-off, actor, trigger, or end state, it is probably a <strong>process</strong> statement.</li>
+      <li>If it describes a needed outcome, capability, control, or constraint, it is probably a <strong>requirement</strong>.</li>
+      <li>If it contains logic such as <em>if</em>, <em>only when</em>, <em>must not</em>, a threshold, eligibility condition, priority, or exception, it is probably a <strong>business rule</strong>.</li>
+      <li>If it names a transaction, workflow, table, configuration object, API, user exit, or custom program, it is probably <strong>implementation</strong>, not the business rule itself.</li>
+    </ul>
+
+    <h3>Example: keep the four layers separate</h3>
+    <p><strong>Requirement:</strong> prevent unapproved high-risk sales. <strong>Process:</strong> release a sales order for delivery. <strong>Rule:</strong> if credit exposure is above the approved limit, the order is blocked and only an authorized credit manager may release it. <strong>Implementation:</strong> SAP credit management, block logic, authorization, workflow, or another controlled mechanism.</p>
+    <p>This separation matters during SAP design. If the implementation changes, the business requirement and rule may remain valid. If the business rule changes, changing configuration without understanding the requirement can solve the wrong problem.</p>
   </section>
 
   <section>
@@ -77,12 +130,16 @@ verified: true
       <li>Which rules are written down and which exist only in people's heads?</li>
       <li>When did this rule last change, and who authorized the change?</li>
       <li>Which rules are enforced by the system but no longer match business policy?</li>
+      <li>Which business process and exact process step does this rule control?</li>
+      <li>Which business requirement, policy, risk, or outcome does this rule support?</li>
+      <li>Is the statement we just heard a process step, a requirement, a business rule, or only the current system implementation?</li>
     </ul>
   </section>
 
   <section>
     <h2>Working method</h2>
     <ol>
+      <li><strong>Anchor the rule in business context.</strong> Name the business process, the exact process step, and the requirement or policy the rule supports. Do this before discussing configuration.</li>
       <li><strong>Identify decisions in the process.</strong> Look for points where the path splits: approve/reject, block/release, calculate price, assign category.</li>
       <li><strong>For each decision, list conditions and outcomes.</strong> Format: "If [condition] and [condition], then [outcome]." Be specific about field values, thresholds, and dates.</li>
       <li><strong>Separate business rule from system implementation.</strong> The rule is the intent. The implementation is how a specific system enforces it. Document both, but separately.</li>
@@ -130,6 +187,15 @@ status: draft | reviewed | approved
 ## Rule name
 <!-- Short, descriptive name. Example: "Customer Credit Limit Assignment" -->
 
+## Business requirement / policy
+<!-- What business outcome, control, policy, or risk does this rule support? -->
+
+## Process context
+<!-- Business process, process step, trigger, and affected business roles -->
+
+## Decision point
+<!-- What decision is being made here? Example: release, block, approve, classify, calculate -->
+
 ## Conditions
 <!-- List all conditions that must be true. Example: "Customer is new (no prior orders) AND account group is Z001 (Domestic)." -->
 
@@ -165,6 +231,8 @@ status: draft | reviewed | approved
   <section>
     <h2>Quality checklist</h2>
     <ul>
+      <li>Every rule is linked to a business requirement, policy, risk, or intended outcome.</li>
+      <li>Every rule is anchored to the process step or decision it controls.</li>
       <li>Every rule has explicit conditions and outcomes.</li>
       <li>Every rule has a named business owner who can authorize changes.</li>
       <li>Rules are separated from current system implementation.</li>
@@ -190,6 +258,8 @@ status: draft | reviewed | approved
     <h2>Agent instructions</h2>
     <p>AI agents should use this skill to extract and document business rules before recommending system changes, integrations, or automation.</p>
     <ul>
+      <li><strong>Classify the statement first.</strong> Decide whether it is a process step, business requirement, business rule, assumption, or current system implementation before using it as evidence.</li>
+      <li><strong>Connect every rule to process and requirement.</strong> Record the process step it controls and the business outcome, policy, or risk it supports.</li>
       <li><strong>Start with decisions, not systems.</strong> For each decision point in a process, ask what conditions lead to what outcomes.</li>
       <li><strong>Separate the business intent from the current system implementation.</strong> Document both, but in separate fields.</li>
       <li><strong>Identify who can change the rule.</strong> If no one can, flag a governance gap.</li>
