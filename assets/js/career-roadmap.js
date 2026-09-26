@@ -66,6 +66,7 @@
   }
 
   function renderTracks() {
+    if (!trackGrid) return;
     trackGrid.replaceChildren();
     const all = document.createElement('button');
     all.className = 'career-track-card';

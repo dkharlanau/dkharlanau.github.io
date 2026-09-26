@@ -16,11 +16,14 @@ Choose from the reader task, not from visual similarity.
 | Enter a substantial Labs/research section | research-section-intro |
 | State a scope or ownership distinction | boundary-note |
 | Choose among peer destinations | route-list |
+| Choose among three to six peer destinations with similar weight | faceted-route-grid (candidate) |
 | Inspect provenance and evidence | source-register |
 | Compare two or three concepts | comparison-group |
 | Trace one SAP determination in depth | determination-detail |
 | Offer secondary deep-dive links | context-links |
-| Show a short ordered recall sequence | compact-sequence (candidate) |\n| Share or cite the current page | site-share |
+| Show a short ordered recall sequence | compact-sequence (candidate) |
+| Remember one central rule or distinction inside prose | key-idea-highlight (candidate) |
+| Share or cite the current page | site-share |
 
 If the content does not fit, first change the information structure. Do not create
 a new component merely because a page-specific selector is easier.
@@ -109,6 +112,30 @@ are not links.
 Reference implementation:
 /labs/enterprise-context/pricing/
 
+## faceted-route-grid
+
+Status: candidate.
+
+Purpose: present a small set of peer destinations as compact, clearly clickable
+cards when a plain vertical route list feels too sparse. The silhouette is
+hex-inspired, but the content remains ordinary readable text.
+
+Use it for roughly three to six destinations with comparable importance and short
+descriptions. The whole card is one link. Keep the title and description inside the
+same anchor; do not add duplicate Read more buttons.
+
+Do not use it for long paragraphs, dense comparison data, non-navigation facts, or
+large inventories. For seven or more routes, prefer route-list or another denser
+navigation pattern.
+
+On wide screens the component uses two columns; an odd final card is centered. On
+mobile it becomes one column without reducing text size. The faceted background is
+decorative only, and hover or focus must not be the only signal that an item is a
+link.
+
+Reference implementation:
+/skill-hub/architecture/
+
 ## source-register
 
 Purpose: compact source provenance for Enterprise Context pages.
@@ -163,6 +190,25 @@ for reusable cross-domain process visuals.
 Reference implementation:
 /labs/enterprise-context/master-data/#master-data-o2c
 
+## key-idea-highlight
+
+Status: candidate.
+
+Purpose: give one central rule, distinction, or decision a quiet inline emphasis
+inside normal prose. It is for memory and scanning, not for status.
+
+Markup contract:
+
+    <mark class="key-idea">The distinction the reader should retain.</mark>
+
+Use only short phrases or sentences. Keep the surrounding paragraph as ordinary prose.
+Do not highlight most of a paragraph, repeat the pattern on every list item, or use it
+for warnings, compliance states, or verification. Multi-line highlights wrap naturally
+and keep the same soft cobalt selection treatment on each line.
+
+Reference implementation:
+/skill-hub/architecture/capability-mapping-working-skill/
+
 ## site-share
 
 Purpose: provide standard share, copy-link, citation, email, and lightweight
@@ -177,7 +223,8 @@ Reference implementation:
 
 ## Component ownership
 
-- Global editorial components: assets/css/components.css.\n- Site share utility: assets/css/layout.css and _includes/site-share-widget.html.
+- Global editorial components: assets/css/components.css.
+- Site share utility: assets/css/layout.css and _includes/site-share-widget.html.
 - FAQ: assets/page-faq.css and _includes/page-faq.html.
 - Research/Labs composition: assets/research-canvas.css.
 - Enterprise Context domain components: assets/enterprise-context-polish.css.
