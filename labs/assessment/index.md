@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
 ---
@@ -84,8 +84,9 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/sales-certification/"><span>CERT</span><strong>C_S4CS Sales Certification Roadmap</strong><small>Official SAP Learning scope mapped to the Sales resources on this site, with a revision order and readiness checks.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       <a href="/labs/assessment/sales/"><span>LEAD</span><strong>Sales Lead Assessment Map</strong><small>30-second, 2-minute, and scenario answer frames across the full Order-to-Cash chain.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
       <a href="/labs/enterprise-context/sales-processes/"><span>MAP</span><strong>Sales Process Atlas</strong><small>Core and special scenarios, document chains, controls, and integrations.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
-      <a href="/labs/enterprise-context/sales-order/"><span>SO</span><strong>Sales Order Decision Map</strong><small>Master data, determinations, partner data, dates, and document controls.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing Engine</strong><small>Condition technique, calculation, diagnostics, extensions, and scenario differences.</small><i class="material-symbols-outlined" aria-hidden="true">price_check</i></a>
+      <a href="/labs/enterprise-context/sales-order/"><span>SO</span><strong>Sales Order Decision Map</strong><small>Document frame, item behavior, execution context, commercial controls, provenance, and first wrong derived state.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Shared business truth, relationship data, commercial policy, organizational scope, provenance, and blast radius.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing Engine</strong><small>Procedure, search path, calculation, diagnostics, policy trade-offs, extensions, and billing context.</small><i class="material-symbols-outlined" aria-hidden="true">price_check</i></a>
       <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>Availability, confirmations, protection, prioritization, and promise diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
       <a href="/labs/enterprise-context/credit/"><span>CR</span><strong>Credit Management</strong><small>Credit profile, exposure, check rules, blocks, decisions, and recheck.</small><i class="material-symbols-outlined" aria-hidden="true">credit_score</i></a>
       <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping and Scheduling</strong><small>Shipping point, route, dates, delivery logic, EWM and TM boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
