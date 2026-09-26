@@ -129,6 +129,7 @@ diagrams).
   scroll. Inline code with a subtle border.
 - **Callouts**: `.callout--note` (accent), `.callout--important` (amber),
   `.callout--warning` (red). Left rule + quiet fill; nothing brighter.
+- **Hero evidence rail**: `.hero-evidence-rail` is a candidate factual inventory for hub heroes. It may show auditable counts such as working skills, deliverables, templates, or decision rules. It uses hairline partitions and no card chrome; never use it for KPIs, scores, readiness percentages, or estimated vanity metrics.
 - **Key idea highlight**: `mark.key-idea` is a candidate inline learning pattern for
   one short rule, distinction, or decision that should be remembered. It uses the
   existing soft cobalt selection fill, keeps normal body contrast, wraps naturally
@@ -173,7 +174,8 @@ diagrams).
   body at reading measure → TOC → related/further reading → prev/next.
 - **Hub / landing** (`research-canvas`, `focus-page`): H1 → lead → primary
   action → numbered route lists with hairlines → method sequence → boundary
-  note. No KPI tiles, no card grids of ordinary text.
+  note. A compact evidence rail may summarize auditable content inventory, but it
+  is not a KPI surface. No KPI tiles, no card grids of ordinary text.
 - **Wide technical** (enterprise-context graphs): `--container-wide` is allowed
   for diagrams, wide tables, and the hero headline. The headline should use the
   available width instead of being constrained to a narrow text column; the
