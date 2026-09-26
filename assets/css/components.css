@@ -311,6 +311,82 @@ pre code {
 .callout--warning { border-left-color: var(--color-danger); }
 .callout--warning .callout__title { color: var(--color-danger); }
 
+/* ---------- Hero evidence rail: factual content inventory ---------- */
+
+/* Candidate hub pattern for a compact, auditable content inventory. This is
+   deliberately not a KPI surface: use it for what the page contains, not for
+   performance scores, readiness percentages, or decorative metrics. */
+.hero-evidence-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(100%, var(--container-medium));
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  border-block: 1px solid var(--color-border);
+}
+
+.hero-evidence-rail > div {
+  min-width: 0;
+  padding: var(--space-4) var(--space-5);
+}
+
+.hero-evidence-rail > div + div {
+  border-left: 1px solid var(--color-border);
+}
+
+.hero-evidence-rail dt {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.hero-evidence-rail dd {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.hero-evidence-rail dd strong {
+  color: var(--color-text);
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.hero-evidence-rail dd span {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  .hero-evidence-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-evidence-rail > div:nth-child(3) {
+    border-left: 0;
+  }
+
+  .hero-evidence-rail > div:nth-child(n + 3) {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-evidence-rail {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-evidence-rail > div + div {
+    border-top: 1px solid var(--color-border);
+    border-left: 0;
+  }
+}
+
 /* ---------- Key idea highlight: semantic inline emphasis ---------- */
 
 /* Candidate learning/knowledge pattern. Use for a short phrase or sentence that
