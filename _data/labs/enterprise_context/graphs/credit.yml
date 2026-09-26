@@ -10,7 +10,7 @@ process_family: "Order-to-Cash"
 process_step: "Evaluate Credit Risk"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-09-26"
 verified_at: null
 
 thesis: >-
@@ -19,6 +19,50 @@ thesis: >-
   partner credit profile, check rule, check steps, simulated exposure, current exposure,
   thresholds, and the configured reaction. I debug the first wrong input or decision
   instead of changing the limit until the order saves.
+
+lead_decision_model:
+  title: "Credit design is a risk policy, not a target to remove every block."
+  summary: >-
+    A strong design makes the business risk visible and controlled. The question is not
+    how to make more orders pass, but which risk the company accepts, which evidence the
+    check should use, and who may override the policy.
+  evidence_type: "authored_reasoning"
+  policies:
+    - id: "protection-flow"
+      title: "Protection vs sales flow"
+      body: >-
+        More restrictive checks can reduce financial exposure but can also stop legitimate
+        business and create manual review workload.
+      trade_off: "Risk protection, customer service, and operational effort must be designed together."
+    - id: "global-segment"
+      title: "Global simplicity vs segment precision"
+      body: "Credit segments can make policy and exposure more specific to a business scope."
+      trade_off: >-
+        More precise segmentation can improve control, but increases master-data, ownership,
+        and reconciliation complexity.
+    - id: "recheck-release"
+      title: "Recheck vs release"
+      body: >-
+        Recheck asks the policy to evaluate changed facts again. Release is an explicit
+        business acceptance of risk.
+      trade_off: >-
+        Repeated manual releases are evidence to investigate, not a substitute for fixing
+        a reproducible data, exposure, or rule problem.
+    - id: "limit-root-cause"
+      title: "Limit change vs root cause"
+      body: >-
+        Raising a credit limit can change the outcome without explaining why exposure,
+        account, segment, or another check produced the block.
+      trade_off: >-
+        Reconcile the failed decision first; change policy only when the policy itself is
+        the business decision being revised.
+  evidence_boundary:
+    fact: "Free limit remains."
+    assumption: "The document should pass the credit check."
+    proof: >-
+      Confirm the actual credit account, segment, checking rule, exposure, and failed step
+      before treating remaining limit as proof of a pass.
+
 
 boundary:
   included:
