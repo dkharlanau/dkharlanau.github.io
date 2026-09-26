@@ -69,7 +69,7 @@ verified: true
       <li>What is the data product's output port: API, event stream, file, or analytical model?</li>
       <li>Who owns the quality, schema, and SLA of this data product?</li>
       <li>How do consumers discover that this data product exists?</li>
-      <li>What is the SLA for data freshness, and how is it measured?</li>
+      <li>What is the <a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA/SLO for data freshness</a>, where is freshness measured, and what happens when it is missed?</li>
       <li>How is access controlled: role-based, attribute-based, or consumer-specific?</li>
       <li>What happens when the source schema changes?</li>
       <li>Is this data product reusable, or is it a one-off extract?</li>
@@ -207,6 +207,7 @@ status: draft | published | deprecated
   <section>
     <h2>Related skills</h2>
     <ul>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA &amp; SLO Design</a> — Define measurable freshness, availability, latency, and capacity objectives for data products.</li>
       <li><a href="/skill-hub/integration-architecture/interface-ownership-working-skill/">Interface Ownership</a> — Assign owners to data product output ports.</li>
       <li><a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a> — Design synchronous output ports.</li>
       <li><a href="/skill-hub/dama-dmbok/data-lineage-working-skill/">Data Lineage</a> — Trace data product origins.</li>
