@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-24
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - atp
   - logistics
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-26
 publication_wave: "logistics-search-wave-01"
 review_method: "SAP primary sources + factual review + editorial rewrite"
 search_intent: "SAP sales order processing with item category and schedule line determination"
@@ -111,6 +111,18 @@ source_links:
       <p>The document works because several decisions meet in one place. Reading those boundaries correctly is more useful than memorizing a large list of transactions or tables.</p>
     </div>
     <a href="/labs/enterprise-context/data/sales-order-graph.json">Open the structured sales-order model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-order-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Read the order as a stack of decisions.</h2>
+      <p>A strong answer starts with the document frame, then moves through item behavior, execution, commercial controls, and the first wrong derived result.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I read a sales order in layers. The sales document type sets the transaction frame. The item category gives each item its process role, and the schedule line controls time- and quantity-related execution. Then I check the derived logistics context such as plant, shipping, scheduling, and availability, while pricing and credit remain separate commercial controls. If something is wrong, I trace the visible value back to its source and find the first derived result that differs before changing master data or configuration.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="memory-model" data-reveal>
@@ -328,6 +340,20 @@ source_links:
         <p>{{ determination.remember }}</p>
       </article>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-order-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Five questions that expose the real control layer.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>item</small></div><h3>The item category is wrong. What should I check first?</h3></header><p>Check the determination inputs before forcing the result: sales document type, material item-category group, item usage, and any higher-level item that participates in the determination.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>schedule</small></div><h3>The schedule line behaves incorrectly. Do I change the schedule-line category?</h3></header><p>Not first. Verify the item category and the planning input used for schedule-line determination. The visible category is often the result of an upstream decision.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>shipping</small></div><h3>The shipping point is wrong. Where can the error start?</h3></header><p>Start with the delivering plant and the inputs used for shipping-point determination. A wrong upstream logistics result can make a later shipping rule look wrong even when its configuration is correct.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>ATP</small></div><h3>ATP confirmed an unexpected date. What does that prove?</h3></header><p>It proves the availability engine returned a confirmation for the context it received. Verify plant, requested dates, requirement data, and the active ATP rules before treating the confirmation itself as the root cause.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>output</small></div><h3>The order is correct but the confirmation is missing. Is the order wrong?</h3></header><p>Not necessarily. Output is a separate communication decision after the business document exists. Diagnose the output framework and its determination instead of changing the sales-order control without evidence.</p></article>
     </div>
   </section>
 
