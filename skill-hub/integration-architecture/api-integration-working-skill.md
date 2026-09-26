@@ -3,7 +3,7 @@ layout: default
 title: "API Integration Working Skill"
 description: "Choose protocols, define contracts, and design resilient synchronous integrations for REST, OData, SOAP, and SAP services."
 permalink: /skill-hub/integration-architecture/api-integration-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -24,7 +24,7 @@ verified: true
 
   <section>
     <h2>What this skill is for</h2>
-    <p>This skill helps you decide which protocol to use for a given integration need, define the API contract with version and error semantics, design authentication and rate-limiting, and document the integration so it can be operated without guessing.</p>
+    <p>This skill helps you decide which protocol to use for a given integration need, <mark class="key-idea">define the API contract with version and error semantics</mark>, design authentication and rate-limiting, and document the integration so it can be operated without guessing.</p>
   </section>
 
   <section>
@@ -81,7 +81,7 @@ verified: true
     <h2>Working method</h2>
     <ol>
       <li><strong>Map the need to a pattern.</strong> Document the business process, data entities, direction, frequency, and consumer count. Classify as read, write, or bidirectional.</li>
-      <li><strong>Choose the protocol.</strong> Compare REST, OData, SOAP, IDoc, and file based on consumer needs, SAP capabilities, and team skills. Record the decision in an ADR.</li>
+      <li><strong>Choose the protocol.</strong> Compare REST, OData, SOAP, IDoc, and file based on consumer needs, SAP capabilities, and team skills. <mark class="key-idea">Record the decision in an ADR.</mark></li>
       <li><strong>Define the contract.</strong> Specify endpoint, methods, request/response schema, error schema, content type, and charset. Include example payloads.</li>
       <li><strong>Design authentication.</strong> Choose mechanism, define credential lifecycle (creation, rotation, revocation), and document how consumers obtain access.</li>
       <li><strong>Define SLA and limits.</strong> State availability target, max latency, rate limit, and payload size limit. Document what happens when limits are exceeded.</li>
@@ -173,7 +173,7 @@ status: draft | reviewed | approved
     <h2>Quality checklist</h2>
     <ul>
       <li>Contract has a version number and a deprecation policy.</li>
-      <li>Every error code states whether the consumer should retry.</li>
+      <li><mark class="key-idea">Every error code states whether the consumer should retry.</mark></li>
       <li>Authentication mechanism is documented with rotation steps.</li>
       <li>Rate limits and payload size limits are specified.</li>
       <li>Backward compatibility rule is stated explicitly.</li>
