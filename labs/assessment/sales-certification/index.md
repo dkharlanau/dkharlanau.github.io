@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 career_impact: none
 career_reason: "Study navigation and self-assessment prompts assembling existing Sales capabilities; this hub is not a new career skill or standalone technical evidence source."
@@ -33,6 +33,23 @@ tags: [sap, sales, sd, certification, c_s4cs, s4hana-cloud-public-edition]
       <em>External scope checked on September 24, 2026. This is a working study guide, not an official SAP exam specification.</em>
     </div>
   </header>
+
+  <section class="research-canvas__inventory" id="assessment-answer-pattern">
+    <header>
+      <p class="research-canvas__eyebrow">Assessment answer pattern</p>
+      <h2>Build the answer from five parts instead of recalling a paragraph.</h2>
+      <p>Use this pattern for configuration, process, troubleshooting, and integration questions. It keeps the answer short enough for an interview and deep enough to show ownership.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>1. Rule</h3><p>State the business rule or process goal in one sentence.</p></div>
+      <div><h3>2. Owner</h3><p>Name the SAP object or control layer that owns the behavior.</p></div>
+      <div><h3>3. Effect</h3><p>Explain what changes in the document, stock, value, date, status, or follow-on process.</p></div>
+      <div><h3>4. Evidence</h3><p>Say what you would inspect to prove the runtime result.</p></div>
+      <div><h3>5. Boundary</h3><p>Name the next process owner or the first place where responsibility leaves Sales.</p></div>
+    </div>
+    <p class="ecg-caption"><strong>Example:</strong> “Third-party sales changes fulfillment ownership: the vendor supplies the customer, the sales item triggers procurement, I verify the sales-item and purchasing document flow, and Procurement owns the supplier-side execution.” The exact documents depend on the configured variant, but the reasoning pattern stays the same.</p>
+  </section>
+
 
   <section class="research-canvas__inventory" id="today">
     <header>
