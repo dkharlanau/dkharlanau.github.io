@@ -4,7 +4,7 @@ layout: default
 title: "Failure Mode / Resilience Review — Working Skill"
 description: "A cross-domain method to identify failure modes, detection gaps, containment, recovery, and resilience tests before production incidents expose them."
 permalink: /skill-hub/problem-solving-operations/failure-mode-resilience-review-working-skill/
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-26
 status: needs_verification
 verified: false
 robots: noindex,follow
@@ -106,6 +106,11 @@ Residual risk:
     <li>Critical failure modes are tested before release where feasible.</li>
     <li>Residual risk is explicit rather than hidden behind “monitor closely”.</li>
   </ul>
+</section>
+
+<section class="section">
+  <header class="section-heading"><h2>Related tool</h2></header>
+  <p><a href="/skill-hub/tools-frameworks/fmea/">FMEA</a> provides a compact matrix for failure mode, effect, cause, control, action, and ownership. Use the working skill on this page for the broader resilience review and FMEA when a structured risk table helps the team reason consistently.</p>
 </section>
 
 <section class="section">
