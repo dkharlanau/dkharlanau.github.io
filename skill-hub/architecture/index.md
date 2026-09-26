@@ -4,7 +4,7 @@ layout: default
 title: "Architecture Skills"
 description: "Practical working skills for solution architects: capability mapping, design review, decision records, non-functional requirements, and system context mapping."
 permalink: /skill-hub/architecture/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -38,27 +38,37 @@ verified: true
   <header class="section-heading">
     <h2>Skills in this group</h2>
   </header>
-  <div class="topic-grid">
-    <div class="topic-card">
-      <h3><a href="/skill-hub/architecture/capability-mapping-working-skill/">Capability Mapping</a></h3>
+  <div class="facet-route-grid" aria-label="Architecture skills">
+    <a class="facet-route-card" href="/skill-hub/architecture/capability-mapping-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">01</span>
+      <h3>Capability Mapping</h3>
       <p>Map what the organization does, what systems support it, and where gaps exist between business functions and technical enablement.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/architecture/system-context-mapping-working-skill/">System Context Mapping</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/architecture/system-context-mapping-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">02</span>
+      <h3>System Context Mapping</h3>
       <p>Define what a system does, what it depends on, what depends on it, and where the integration boundaries lie.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/architecture/solution-architecture-review-working-skill/">Solution Architecture Review</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/architecture/solution-architecture-review-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">03</span>
+      <h3>Solution Architecture Review</h3>
       <p>Review a proposed solution design against requirements, constraints, risks, and non-functional needs before commitment.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/architecture/architecture-decision-record-working-skill/">Architecture Decision Record</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/architecture/architecture-decision-record-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">04</span>
+      <h3>Architecture Decision Record</h3>
       <p>Record why a significant architectural choice was made, what options were rejected, and what consequences follow.</p>
-    </div>
-    <div class="topic-card">
-      <h3><a href="/skill-hub/architecture/non-functional-requirements-working-skill/">Non-Functional Requirements</a></h3>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="facet-route-card" href="/skill-hub/architecture/non-functional-requirements-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">05</span>
+      <h3>Non-Functional Requirements</h3>
       <p>Define measurable quality attributes — performance, availability, security, maintainability — that constrain the solution.</p>
-    </div>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
   </div>
 </section>
 
