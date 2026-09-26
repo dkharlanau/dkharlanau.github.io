@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - billing
   - extensibility
   - troubleshooting
-last_reviewed: 2026-09-25
+last_reviewed: 2026-09-26
 publication_wave: "logistics-search-wave-01"
 review_method: "SAP S/4HANA 2025 FPS01 + SAP S/4HANA Cloud Public Edition 2608 + legacy pricing enhancement cross-check + full editorial pass"
 search_intent: "SAP SD pricing procedure, condition technique and pricing troubleshooting"
@@ -105,6 +105,32 @@ source_links:
     <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
     <p><strong>Core distinction:</strong> the pricing procedure defines what may be calculated; condition records provide business values; the document supplies the runtime context. A valid record in the database proves only that the record exists.</p>
     <a href="/labs/enterprise-context/data/pricing-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Choose → search → calculate → compare.</h2>
+      <p>A strong pricing answer follows the runtime chain instead of starting from a condition record or a table.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I first confirm which pricing procedure the document uses. Then I check whether the expected condition type is present and allowed to run. If it has an access sequence, I follow the accesses with the actual runtime key until SAP finds or does not find a valid condition record. If the record is found but the result is wrong, I move to rate, base, scales, formulas, exclusion, and interaction with other conditions. For billing differences, I compare the order and invoice as separate pricing contexts before changing master data.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-fast-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Fast model</p>
+      <h2>Four questions before touching a condition record.</h2>
+      <p>These questions reduce most pricing incidents to the layer that actually owns the result.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>1. Which procedure?</h3><p>Prove the pricing procedure selected for this document context.</p></div>
+      <div><h3>2. Which condition?</h3><p>Check whether the condition type is present, relevant, and allowed to participate.</p></div>
+      <div><h3>3. Which source?</h3><p>Follow the access sequence, runtime key, validity, unit, currency, and scale to the actual value source.</p></div>
+      <div><h3>4. Which calculation?</h3><p>If a value is found, inspect the base, formulas, exclusions, subtotals, scales, and interaction with other conditions.</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="pricing-memory" data-reveal>
@@ -302,6 +328,20 @@ source_links:
     </div>
 
     <p class="ecg-caption">If the commercial price is correct but the accounting result is wrong, the investigation has crossed out of Pricing. Continue with <a href="/labs/enterprise-context/finance-logistics/">FI/CO for Logistics</a> rather than changing condition records.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Five questions that separate search, calculation, and downstream effects.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>procedure</small></div><h3>The condition record exists, but there is no price. What do I check first?</h3></header><p>Start with the pricing procedure used by the document. A valid record cannot help if the expected condition type is missing, inactive, or not reached in this procedure.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>access</small></div><h3>Why is another record selected instead of the one I expected?</h3></header><p>Read the access sequence with the actual runtime key and access order. Pricing uses the configured search path, not the record that looks most specific when viewed separately.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>base</small></div><h3>The rate is correct but the amount is wrong. Where is the problem?</h3></header><p>Inspect the condition base, scales, formulas, group behavior, and exclusions. A correct rate applied to the wrong base still gives the wrong commercial result.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>billing</small></div><h3>The order price is correct but the invoice price differs. Is Pricing broken?</h3></header><p>Not necessarily. Billing can copy or redetermine pricing according to copying control and the billing context. Compare the two documents and find the first pricing-context difference.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>extension</small></div><h3>When should I use custom logic?</h3></header><p>Only after standard condition technique cannot express the business rule cleanly. First classify the missing capability—field, requirement, base, amount, or external service—then use the extension model supported by the deployment.</p></article>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
