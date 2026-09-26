@@ -16,6 +16,7 @@ Choose from the reader task, not from visual similarity.
 | Enter a substantial Labs/research section | research-section-intro |
 | State a scope or ownership distinction | boundary-note |
 | Choose among peer destinations | route-list |
+| Choose among three to six peer destinations with similar weight | faceted-route-grid (candidate) |
 | Inspect provenance and evidence | source-register |
 | Compare two or three concepts | comparison-group |
 | Trace one SAP determination in depth | determination-detail |
@@ -110,6 +111,30 @@ are not links.
 
 Reference implementation:
 /labs/enterprise-context/pricing/
+
+## faceted-route-grid
+
+Status: candidate.
+
+Purpose: present a small set of peer destinations as compact, clearly clickable
+cards when a plain vertical route list feels too sparse. The silhouette is
+hex-inspired, but the content remains ordinary readable text.
+
+Use it for roughly three to six destinations with comparable importance and short
+descriptions. The whole card is one link. Keep the title and description inside the
+same anchor; do not add duplicate Read more buttons.
+
+Do not use it for long paragraphs, dense comparison data, non-navigation facts, or
+large inventories. For seven or more routes, prefer route-list or another denser
+navigation pattern.
+
+On wide screens the component uses two columns; an odd final card is centered. On
+mobile it becomes one column without reducing text size. The faceted background is
+decorative only, and hover or focus must not be the only signal that an item is a
+link.
+
+Reference implementation:
+/skill-hub/architecture/
 
 ## source-register
 
