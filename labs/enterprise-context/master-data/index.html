@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -41,9 +41,9 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data</p>
-      <h1>SAP Sales master data:<br />what exists and what it controls.</h1>
-      <p>Start with the catalogue. Learn the object, its key or organizational scope, and where Sales uses it. Only after that move to precedence, diagnostics, governance, or replication.</p>
-      <a class="research-canvas__button" href="#sales-master-data-catalog">Open the master-data catalogue <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Master data is upstream behavior,<br />not a list of records.</h1>
+      <p>A strong SAP Lead reads master data as reusable business decisions. We ask what truth is being maintained, at which key and organizational level, who owns it, how the runtime document consumes it, and what can break when that truth changes.</p>
+      <a class="research-canvas__button" href="#master-data-decision-model">Start with the decision model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Sales master-data catalogue inventory">
       <p>Study inventory</p>
@@ -58,6 +58,56 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
     <p><strong>Use one boundary:</strong> master data is reusable maintained data that survives beyond one sales document. Business Partner and Product are business masters. Customer-material and partner assignments are relationship data. Pricing, material determination, listing/exclusion, and free-goods records are validity-based condition data. Sales Organization, pricing procedure, and a Sales Order belong to different layers.</p>
     <a href="/labs/enterprise-context/sales-processes/master-data/">Open the full reference graph <span class="material-symbols-outlined" aria-hidden="true">account_tree</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="master-data-decision-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead decision model</p>
+      <h2>Before changing a record, decide what kind of truth you are changing.</h2>
+      <p>The same visible field can come from a shared business master, a customer-product relationship, a condition-style rule, a document copy, or a manual/interface change. The first Lead task is to find the owner of the behavior, not the screen where the value is visible.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Shared business truth</h3>
+        <p>Use this lens for reusable identity and product facts that many processes consume. The design question is whether the value should be true beyond one Sales document or one customer relationship.</p>
+        <p><strong>Risk:</strong> changing shared data to repair one exception can create side effects in other processes.</p>
+      </div>
+      <div>
+        <h3>Relationship truth</h3>
+        <p>Some behavior belongs to the relationship between two business objects, for example customer-specific product data or partner relationships. This is more precise than changing a generic customer or product default.</p>
+        <p><strong>Trade-off:</strong> more precise keys reduce unwanted side effects, but increase maintenance and governance effort.</p>
+      </div>
+      <div>
+        <h3>Commercial policy</h3>
+        <p>Pricing, material determination, listing/exclusion, and similar condition-style data express reusable policy for a defined key and validity period. The record supplies business data; configuration defines how SAP searches and interprets it.</p>
+        <p><strong>Lead question:</strong> is the problem the maintained value, the search key, or the rule that reads it?</p>
+      </div>
+      <div>
+        <h3>Runtime state</h3>
+        <p>A sales document can already contain a copied, determined, entered, or changed value. Current master data therefore does not prove how an existing document received its value.</p>
+        <p><strong>Diagnostic rule:</strong> trace provenance before changing reusable data.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <div>
+        <p><strong>Decision test:</strong> if the requirement is reusable, has a clear business owner, needs governed maintenance, and should influence future documents consistently, master data may be the right layer. If it is document-specific, temporary, calculated from runtime context, or owned by another engine, forcing it into master data usually creates hidden coupling.</p>
+        <p><strong>Evidence test:</strong> before editing anything, prove the exact object, key, organizational scope, current value, document value, and mechanism that connected them.</p>
+      </div>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Weak diagnosis</h4>
+        <p>“The order has the wrong plant, so I will change the product master.” The proposed fix assumes the product is the owner before proving the actual source and precedence.</p>
+      </div>
+      <div>
+        <h4>Lead diagnosis</h4>
+        <p>“The order has the wrong plant. I will compare a good and bad document, trace the proposal path for this context, identify the first different source value, then change only the layer that owns that difference.”</p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="sales-master-data-catalog" data-reveal>
@@ -318,7 +368,7 @@ tags:
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>Answer shape:</strong> “In Sales I separate business masters such as Business Partner and Product; relationship and content data such as Customer Material, partner functions, hierarchies, texts, and item proposals; condition-style data such as pricing, material determination, listing/exclusion, and free goods; and adjacent data such as credit, units, batches, BOMs, and variant configuration. Then I state the exact organizational/key level, the fields that drive the process, and the runtime consumer.”</p>
+      <p><strong>60-second answer:</strong> “I treat Sales master data as reusable upstream decisions, not as a list of tables. First I classify the behavior: shared business truth, relationship-specific data, condition-style policy, or adjacent logistics and risk data. Then I prove the exact key and organizational scope, the precedence or search logic that consumes it, and the document value that resulted. If something is wrong, I compare expected and actual provenance before changing shared data. The design goal is the smallest correct owner with clear governance and no hidden side effects.”</p>
     </div>
 
     <div class="ecg-diagnostic">
