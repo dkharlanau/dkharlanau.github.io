@@ -311,6 +311,33 @@ pre code {
 .callout--warning { border-left-color: var(--color-danger); }
 .callout--warning .callout__title { color: var(--color-danger); }
 
+/* ---------- Key idea highlight: semantic inline emphasis ---------- */
+
+/* Candidate learning/knowledge pattern. Use for a short phrase or sentence that
+   carries the central rule, distinction, or decision. It should feel like a
+   deliberate text highlight, not a card or status banner. */
+mark.key-idea {
+  margin-inline: -0.06em;
+  padding: 0.06em 0.18em;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-soft);
+  color: inherit;
+  font-weight: inherit;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+@media print {
+  mark.key-idea {
+    margin-inline: 0;
+    padding: 0;
+    background: transparent;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+  }
+}
+
 /* ---------- Cards: only for genuine collections ---------- */
 
 .card {
