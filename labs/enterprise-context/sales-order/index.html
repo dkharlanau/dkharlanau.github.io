@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-24
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - atp
   - logistics
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-26
 publication_wave: "logistics-search-wave-01"
 review_method: "SAP primary sources + factual review + editorial rewrite"
 search_intent: "SAP sales order processing with item category and schedule line determination"
@@ -103,6 +103,23 @@ source_links:
       <em>Source-tracked · no client data</em>
     </div>
   </header>
+
+  <section class="research-canvas__inventory" id="sales-order-thinking-loop" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">How to think about an order</p>
+      <h2>Trace the first wrong decision, not the last visible error.</h2>
+      <p>A sales order is the result of several decisions made at different layers. Use the same five questions every time the document looks wrong.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>1. Business request</h3><p>What is the customer asking us to sell, deliver, promise, price, or bill?</p></div>
+      <div><h3>2. Control layer</h3><p>Is the behavior owned by document type, item category, schedule line, partner logic, master data, or a separate control such as incompleteness?</p></div>
+      <div><h3>3. Derived result</h3><p>What did SAP actually derive: item category, plant, schedule line, confirmed quantity, price, block, partner, or follow-on relevance?</p></div>
+      <div><h3>4. First wrong state</h3><p>Find the earliest derived result that differs from the expected process. Later errors are often only consequences.</p></div>
+      <div><h3>5. Owner and evidence</h3><p>Trace that result to its source and prove it with document data, determination inputs, configuration, or master data before changing anything.</p></div>
+    </div>
+    <p class="ecg-caption"><strong>Memory rule:</strong> request → control → result → first wrong state → owner. If an item is not deliverable, do not start with the delivery transaction. First prove the item and schedule-line behavior that should make delivery possible.</p>
+  </section>
+
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
