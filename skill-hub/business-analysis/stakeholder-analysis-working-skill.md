@@ -3,7 +3,7 @@ layout: default
 title: "Stakeholder Analysis Working Skill"
 description: "Identify who affects or is affected by a change, what they control, what they need, and how to get reliable information from them."
 permalink: /skill-hub/business-analysis/stakeholder-analysis-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -201,6 +201,14 @@ stakeholder: Name | Role | Area
       <li><strong>Flag missing stakeholders as governance gaps.</strong> If a critical step has no owner, state this explicitly and do not proceed as if ownership exists.</li>
       <li><strong>Link to Atlas diagnostics</strong> when stakeholder gaps relate to SAP processes. For example, unclear credit management ownership should reference <a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a>.</li>
       <li><strong>Do not invent stakeholders or contact details.</strong> If a role is missing, flag it. Do not fill gaps with generic placeholders.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/raci/">RACI</a> — Clarify recurring delivery and process ownership after the stakeholder map is known.</li>
+      <li><a href="/skill-hub/tools-frameworks/decision-rights-daci-rapid/">DACI / RAPID</a> — Use when the real problem is decision rights rather than task ownership.</li>
     </ul>
   </section>
 
