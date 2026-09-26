@@ -94,45 +94,187 @@ verified: true
 
   <section>
     <h2>Decision rules</h2>
-    <ul>
-      <li>If a capability has no business owner, do not assign a system to it until ownership is clarified.</li>
-      <li>If two systems support the same capability with different data, <mark class="key-idea">flag a data consistency risk, not just a duplication.</mark></li>
-      <li>If a capability is supported by a spreadsheet or email workflow, classify it as a workaround, not as supported.</li>
-      <li>If a capability is required by regulation but unsupported, mark it as a compliance gap regardless of business priority.</li>
-      <li>If a system supports a capability but no one in the business uses it, <mark class="key-idea">classify as adoption gap, not capability gap.</mark></li>
-      <li>If the map contains more than 50 capabilities, the granularity is too fine; merge related capabilities into higher-level groupings.</li>
-      <li>If a capability cannot be described in one verb-noun phrase, it is probably a process, not a capability; decompose or rephrase.</li>
-    </ul>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Capability mapping decision rules">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Condition</th>
+            <th scope="col">Decision</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>No business owner is confirmed.</td>
+            <td>Do not assign a system until ownership is clarified.</td>
+          </tr>
+          <tr>
+            <td>Two systems support the same capability with different data.</td>
+            <td>Flag a data consistency risk, not just a duplication.</td>
+          </tr>
+          <tr>
+            <td>The capability runs through a spreadsheet or email workflow.</td>
+            <td>Classify it as a workaround, not as supported.</td>
+          </tr>
+          <tr>
+            <td>A regulation requires the capability, but it is unsupported.</td>
+            <td>Mark it as a compliance gap regardless of business priority.</td>
+          </tr>
+          <tr>
+            <td>The system supports the capability, but the business does not use it.</td>
+            <td>Classify it as an adoption gap, not a capability gap.</td>
+          </tr>
+          <tr>
+            <td>The map contains more than 50 capabilities.</td>
+            <td>The granularity is probably too fine. Merge related capabilities into higher-level groups.</td>
+          </tr>
+          <tr>
+            <td>A capability cannot be described with one clear verb-noun phrase.</td>
+            <td>It is probably a process rather than a capability. Decompose it or rename it.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section>
     <h2>Deliverables</h2>
-    <ul>
-      <li><strong>Capability Map Matrix</strong> — Categories, capabilities, system support levels, owners, and gap flags in a single table or diagram.</li>
-      <li><strong>Gap and Overlap Register</strong> — Prioritized list of gaps and overlaps with business impact, risk level, and proposed action.</li>
-      <li><strong>System Coverage Summary</strong> — Per-system view of which capabilities it supports, partially supports, or should support but does not.</li>
-      <li><strong>Stakeholder Validation Notes</strong> — Record of who reviewed the map, what corrections were made, and what remains disputed.</li>
-    </ul>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Capability mapping deliverables">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Deliverable</th>
+            <th scope="col">What it contains</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Capability Map Matrix</th>
+            <td>Categories, capabilities, system support levels, owners, and gap flags in one view.</td>
+          </tr>
+          <tr>
+            <th scope="row">Gap and Overlap Register</th>
+            <td>Prioritized gaps and overlaps with business impact, risk level, proposed action, and owner.</td>
+          </tr>
+          <tr>
+            <th scope="row">System Coverage Summary</th>
+            <td>A per-system view of capabilities that are fully supported, partially supported, or missing.</td>
+          </tr>
+          <tr>
+            <th scope="row">Stakeholder Validation Notes</th>
+            <td>Who reviewed the map, what changed after review, and which points remain disputed.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section>
     <h2>Templates</h2>
-    <h3>Capability Map Matrix (Markdown table)</h3>
-    <pre><code>| Category | Capability | Business Owner | System | Support Level | Gap Type | Notes |
-|----------|------------|----------------|--------|-------------|----------|-------|
-| Source | Manage supplier qualification | Procurement Director | SAP SRM | Fully supported | — | — |
-| Source | Evaluate supplier performance | Procurement Director | Excel + Email | Workaround | Gap | No central record; audit risk |
-| Plan | Generate production schedule | Plant Manager | SAP PP + Excel | Partial | Overlap | Scheduling done in both; data mismatch weekly |
-| Deliver | Process customer return | Customer Service Lead | SAP SD | Fully supported | — | — |
-| Govern | Maintain material master data | MDM Lead | SAP MDG | Fully supported | — | — |
+    <p>Use the first table to build the capability view. Use the second to turn gaps and overlaps into decisions and actions.</p>
 
-## Gap and Overlap Register
+    <h3>Capability Map Matrix</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Capability Map Matrix example">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Capability</th>
+            <th scope="col">Business owner</th>
+            <th scope="col">System</th>
+            <th scope="col">Support level</th>
+            <th scope="col">Gap type</th>
+            <th scope="col">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Source</td>
+            <td>Manage supplier qualification</td>
+            <td>Procurement Director</td>
+            <td>SAP SRM</td>
+            <td>Fully supported</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Source</td>
+            <td>Evaluate supplier performance</td>
+            <td>Procurement Director</td>
+            <td>Excel + Email</td>
+            <td>Workaround</td>
+            <td>Gap</td>
+            <td>No central record; audit risk</td>
+          </tr>
+          <tr>
+            <td>Plan</td>
+            <td>Generate production schedule</td>
+            <td>Plant Manager</td>
+            <td>SAP PP + Excel</td>
+            <td>Partial</td>
+            <td>Overlap</td>
+            <td>Scheduling exists in both; data mismatch weekly</td>
+          </tr>
+          <tr>
+            <td>Deliver</td>
+            <td>Process customer return</td>
+            <td>Customer Service Lead</td>
+            <td>SAP SD</td>
+            <td>Fully supported</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Govern</td>
+            <td>Maintain material master data</td>
+            <td>MDM Lead</td>
+            <td>SAP MDG</td>
+            <td>Fully supported</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-| ID | Capability | Gap Type | Business Impact | Risk Level | Proposed Action | Owner | Due Date |
-|----|------------|----------|-----------------|------------|-----------------|-------|----------|
-| GAP-001 | Evaluate supplier performance | Missing system | Audit findings, delayed sourcing | High | Implement SRM supplier scorecard or Ariba module | Procurement Director | YYYY-MM-DD |
-| OVL-001 | Generate production schedule | System overlap | Weekly reconciliation effort, planning errors | Medium | Consolidate scheduling in SAP PP; retire spreadsheet | Plant Manager | YYYY-MM-DD |
-</code></pre>
+    <h3>Gap and Overlap Register</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Gap and Overlap Register example">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Capability</th>
+            <th scope="col">Gap type</th>
+            <th scope="col">Business impact</th>
+            <th scope="col">Risk</th>
+            <th scope="col">Proposed action</th>
+            <th scope="col">Owner</th>
+            <th scope="col">Due date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GAP-001</td>
+            <td>Evaluate supplier performance</td>
+            <td>Missing system</td>
+            <td>Audit findings, delayed sourcing</td>
+            <td>High</td>
+            <td>Implement SRM supplier scorecard or the relevant Ariba capability.</td>
+            <td>Procurement Director</td>
+            <td>YYYY-MM-DD</td>
+          </tr>
+          <tr>
+            <td>OVL-001</td>
+            <td>Generate production schedule</td>
+            <td>System overlap</td>
+            <td>Weekly reconciliation effort, planning errors</td>
+            <td>Medium</td>
+            <td>Consolidate scheduling in SAP PP and retire the spreadsheet.</td>
+            <td>Plant Manager</td>
+            <td>YYYY-MM-DD</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section>
@@ -151,13 +293,38 @@ verified: true
 
   <section>
     <h2>Common mistakes</h2>
-    <ul>
-      <li><strong>Mistake:</strong> <mark class="key-idea">Mapping systems instead of capabilities.</mark> <strong>Consequence:</strong> The map becomes a system inventory with no business meaning, and gaps remain invisible because every system is "present."</li>
-      <li><strong>Mistake:</strong> Using generic framework categories that do not match the organization's language. <strong>Consequence:</strong> Stakeholders cannot validate the map because they do not recognize their work in the labels.</li>
-      <li><strong>Mistake:</strong> Treating spreadsheet workarounds as supported capabilities. <strong>Consequence:</strong> Transformation projects underestimate integration and data quality effort.</li>
-      <li><strong>Mistake:</strong> Creating the map in isolation and presenting it as final. <strong>Consequence:</strong> Business stakeholders reject the map because it misattributes ownership or misses shadow processes.</li>
-      <li><strong>Mistake:</strong> Including too many capabilities at too fine a granularity. <strong>Consequence:</strong> The map becomes unreadable and the gaps are lost in detail.</li>
-    </ul>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Common capability mapping mistakes and consequences">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Mistake</th>
+            <th scope="col">Consequence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Mapping systems instead of capabilities</th>
+            <td>The map becomes a system inventory with no business meaning, so gaps remain invisible because every system is simply “present.”</td>
+          </tr>
+          <tr>
+            <th scope="row">Using generic framework categories that do not match the organization’s language</th>
+            <td>Stakeholders struggle to validate the map because they do not recognize their work in the labels.</td>
+          </tr>
+          <tr>
+            <th scope="row">Treating spreadsheet workarounds as supported capabilities</th>
+            <td>Transformation projects underestimate integration, control, and data-quality effort.</td>
+          </tr>
+          <tr>
+            <th scope="row">Creating the map in isolation and presenting it as final</th>
+            <td>Business stakeholders reject it because ownership is wrong or shadow processes are missing.</td>
+          </tr>
+          <tr>
+            <th scope="row">Using too many capabilities at too fine a granularity</th>
+            <td>The map becomes hard to scan and the important gaps disappear in detail.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section>
