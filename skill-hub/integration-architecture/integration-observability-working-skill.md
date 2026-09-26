@@ -3,7 +3,7 @@ layout: default
 title: "Integration Observability Working Skill"
 description: "Design monitoring and alerting for integrations so failures are detected before business users report them, and diagnostics are fast and repeatable."
 permalink: /skill-hub/integration-architecture/integration-observability-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -24,7 +24,7 @@ verified: true
 
   <section>
     <h2>What this skill is for</h2>
-    <p>This skill helps you map each integration to its business impact, define failure modes and detection methods, set alert thresholds, assign alert recipients, create diagnostic runbooks, and validate the entire monitoring setup with simulated failures.</p>
+    <p>This skill helps you <mark class="key-idea">map each integration to its business impact</mark>, define failure modes and detection methods, set alert thresholds, assign alert recipients, create diagnostic runbooks, and validate the entire monitoring setup with simulated failures.</p>
   </section>
 
   <section>
@@ -83,7 +83,7 @@ verified: true
       <li><strong>Map each interface to business impact.</strong> For every interface, document the business process affected, the symptom of failure, and the cost or risk per hour of downtime.</li>
       <li><strong>Define failure modes per interface.</strong> List the ways this interface can fail: timeout, schema mismatch, auth failure, data validation error, rate limit, downstream unavailable, silent data loss.</li>
       <li><strong>Choose detection method per failure mode.</strong> Match the failure to a detectable signal: HTTP status code, queue depth, IDoc status, file absence, data volume anomaly, latency spike.</li>
-      <li><strong>Set alert thresholds.</strong> Define the metric, threshold, evaluation window, and severity. Base thresholds on SLA and historical baseline, not guesswork.</li>
+      <li><strong>Set alert thresholds.</strong> Define the metric, threshold, evaluation window, and severity. <mark class="key-idea">Base thresholds on SLA and historical baseline, not guesswork.</mark></li>
       <li><strong>Assign alert recipients.</strong> Each alert goes to a named person or team with accountability, not a broad distribution list.</li>
       <li><strong>Create diagnostic runbook per alert.</strong> For each alert, write: what to check first, which transactions or logs to open, common causes, escalation criteria, and safe actions.</li>
       <li><strong>Test alert with simulated failure.</strong> Trigger each failure mode in a controlled way. Verify the alert fires, the recipient receives it, and the runbook leads to diagnosis.</li>
@@ -99,7 +99,7 @@ verified: true
       <li>If SAP is involved, monitor SM58 (tRFC errors), SMQ1/SMQ2 (qRFC queues), BD87/WE02 (IDoc status), and AIF errors.</li>
       <li>If middleware is involved, monitor queue depth, error rate, latency, and consumer lag.</li>
       <li>If an alert fires more than three times per week without action, tune the threshold or fix the root cause.</li>
-      <li>If no runbook exists for an alert, create one before the interface goes live.</li>
+      <li><mark class="key-idea">If no runbook exists for an alert, create one before the interface goes live.</mark></li>
       <li>If an alert goes to a distribution list with more than five people, replace it with a named owner and an escalation path.</li>
       <li>If a file transfer is involved, monitor file arrival time, file size, and record count, not just job completion.</li>
     </ul>
