@@ -3,7 +3,7 @@ layout: default
 title: "Requirements Elicitation Working Skill"
 description: "Turn vague stakeholder complaints into structured requirements with assumptions, constraints, risks, and acceptance criteria."
 permalink: /skill-hub/business-analysis/requirements-elicitation-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -202,6 +202,15 @@ status: draft | reviewed | approved
       <li><strong>Flag conflicts instead of resolving them silently.</strong> Document both conflicting requirements and ask who has decision authority.</li>
       <li><strong>Avoid generic framework language.</strong> Do not write "the system shall be user-friendly." Write specific, testable statements.</li>
       <li><strong>Link to Atlas diagnostics</strong> when requirements relate to SAP processes. For example, credit management requirements should reference <a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/domain-storytelling/">Domain Storytelling</a> — Use a concrete business story to expose tacit work and missing requirements.</li>
+      <li><a href="/skill-hub/tools-frameworks/eventstorming/">EventStorming</a> — Useful when requirements depend on a complex event-driven domain.</li>
+      <li><a href="/skill-hub/tools-frameworks/user-story-mapping/">User Story Mapping</a> — Organize discovered needs into a user journey and release slices.</li>
     </ul>
   </section>
 
