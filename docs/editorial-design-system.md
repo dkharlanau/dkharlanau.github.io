@@ -127,6 +127,15 @@ diagrams).
   route-local table CSS.
 - **Code**: `pre` on `--color-surface`, 1px border, 8px radius, horizontal
   scroll. Inline code with a subtle border.
+- **Skill overview ledger**: detailed Skill Hub working pages may show a small
+  definition-list ledger derived from real content counts such as deliverables,
+  reusable templates, method steps, and quality checks. Use hairlines and scan icons,
+  not metric cards. Never turn it into readiness, difficulty, progress, or performance
+  scoring.
+- **Copyable templates**: only reusable blocks inside a Skill Hub `Templates` section
+  receive a copy toolbar. Keep the original `pre` as the no-JavaScript baseline,
+  keep the button label visible, announce clipboard feedback, and fall back to manual
+  selection when automatic copy is unavailable.
 - **Callouts**: `.callout--note` (accent), `.callout--important` (amber),
   `.callout--warning` (red). Left rule + quiet fill; nothing brighter.
 - **Key idea highlight**: `mark.key-idea` is a candidate inline learning pattern for

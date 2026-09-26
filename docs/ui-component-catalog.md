@@ -24,6 +24,8 @@ Choose from the reader task, not from visual similarity.
 | Show a short ordered recall sequence | compact-sequence (candidate) |
 | Remember one central rule or distinction inside prose | key-idea-highlight (candidate) |
 | Share or cite the current page | site-share |
+| Scan the shape of a detailed Skill Hub page | skill-overview |
+| Copy a ready-to-reuse Skill Hub template | copyable-template |
 
 If the content does not fit, first change the information structure. Do not create
 a new component merely because a page-specific selector is easier.
@@ -208,6 +210,44 @@ and keep the same soft cobalt selection treatment on each line.
 
 Reference implementation:
 /skill-hub/architecture/capability-mapping-working-skill/
+
+## skill-overview
+
+Status: candidate.
+
+Purpose: give a detailed Skill Hub page a small factual scan layer before the long
+article begins. The component is generated from real page structures: Deliverables,
+Templates, Working method, and Quality checklist. It is an editorial ledger, not a
+scorecard.
+
+The ledger appears only when at least two facts are present. Counts are derived from
+the current DOM, so authors do not maintain duplicate numbers in frontmatter or prose.
+
+Use icons only as scan aids. The definition-list labels and counts must carry the
+meaning on their own. Do not add readiness percentages, difficulty scores, progress,
+or decorative KPI tiles.
+
+Reference implementation:
+/skill-hub/architecture/non-functional-requirements-working-skill/
+
+## copyable-template
+
+Status: candidate.
+
+Purpose: make a ready-to-reuse block in a Skill Hub `Templates` section directly
+copyable without hiding or replacing the source content.
+
+`reader-tools.js` enhances `pre` blocks inside the Templates section with a quiet
+toolbar, the local template heading, and a visible `Copy template` button. The raw
+preformatted block remains the no-JavaScript baseline. Copy feedback is announced to
+assistive technology, and the existing manual-copy fallback is used when clipboard
+access is unavailable.
+
+Do not apply this treatment to every code sample. It is for reusable templates, not
+for explanatory examples or generated output.
+
+Reference implementation:
+/skill-hub/architecture/non-functional-requirements-working-skill/#reader-section-9
 
 ## site-share
 
