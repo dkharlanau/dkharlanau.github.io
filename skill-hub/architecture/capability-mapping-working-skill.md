@@ -3,7 +3,7 @@ layout: default
 title: "Capability Mapping"
 description: "Map what the organization does, what systems support it, and where gaps exist between business functions and technical enablement."
 permalink: /skill-hub/architecture/capability-mapping-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -24,7 +24,7 @@ verified: true
 
   <section>
     <h2>What this skill is for</h2>
-    <p>This skill produces a structured view of organizational capabilities and their system support. It answers three questions: what functions does the organization perform, which systems enable each function, and where is the coverage incomplete, duplicated, or outdated? The output is used during discovery, transformation planning, and vendor selection to ground conversations in observable reality rather than aspirational diagrams.</p>
+    <p>This skill produces a structured view of organizational capabilities and their system support. It answers three questions: <mark class="key-idea">what functions does the organization perform, which systems enable each function, and where is the coverage incomplete, duplicated, or outdated?</mark> The output is used during discovery, transformation planning, and vendor selection to ground conversations in observable reality rather than aspirational diagrams.</p>
   </section>
 
   <section>
@@ -44,7 +44,7 @@ verified: true
     <p>A manufacturing division runs production planning on a legacy MES, inventory on SAP ECC, and scheduling on spreadsheets. The project team needs to know which ECC functions move to S/4, which stay with the MES, and which spreadsheet-based scheduling must be replaced or integrated. Capability mapping reveals that capacity planning is double-maintained in ECC and spreadsheets, creating a data consistency risk.</p>
 
     <h3>Example 2: Post-merger integration</h3>
-    <p>Two companies with separate ERPs merge. The integration team must decide which system becomes the record for each function. Mapping capabilities shows that both companies perform supplier qualification, but one uses a dedicated SRM module while the other uses email and shared folders. The gap is not technical — it is process maturity — and the map makes this visible to decision-makers.</p>
+    <p>Two companies with separate ERPs merge. The integration team must decide which system becomes the record for each function. Mapping capabilities shows that both companies perform supplier qualification, but one uses a dedicated SRM module while the other uses email and shared folders. <mark class="key-idea">The gap is not technical — it is process maturity</mark> — and the map makes this visible to decision-makers.</p>
 
     <h3>Example 3: Cloud procurement evaluation</h3>
     <p>A procurement director wants a new e-sourcing platform. IT lists 47 requirements from the vendor. The capability map shows that 12 of those requirements are already met by an existing SAP Ariba module that is underutilized because of poor training. The map prevents redundant purchase and redirects effort toward adoption.</p>
@@ -81,7 +81,7 @@ verified: true
   <section>
     <h2>Working method</h2>
     <ol>
-      <li><strong>Define the scope.</strong> Identify the business domain, time horizon, and decision the map must support. A map for merger integration has different granularity than a map for module selection.</li>
+      <li><strong>Define the scope.</strong> <mark class="key-idea">Identify the business domain, time horizon, and decision the map must support.</mark> A map for merger integration has different granularity than a map for module selection.</li>
       <li><strong>Identify capability categories.</strong> Group functions into 5–10 categories relevant to the domain (for example: Plan, Source, Make, Deliver, Sell, Support, Govern). Do not use generic framework categories unless they fit the organization's language.</li>
       <li><strong>List capabilities within each category.</strong> Name each capability as a verb-noun phrase at a consistent level of granularity (for example: "Manage supplier qualification," "Generate production schedule," "Process customer return"). Aim for 15–40 capabilities total.</li>
       <li><strong>Map system support.</strong> For each capability, record which system or systems enable it. Use four support levels: Fully supported, Partially supported, Supported by workaround, Not supported.</li>
@@ -96,10 +96,10 @@ verified: true
     <h2>Decision rules</h2>
     <ul>
       <li>If a capability has no business owner, do not assign a system to it until ownership is clarified.</li>
-      <li>If two systems support the same capability with different data, flag a data consistency risk, not just a duplication.</li>
+      <li>If two systems support the same capability with different data, <mark class="key-idea">flag a data consistency risk, not just a duplication.</mark></li>
       <li>If a capability is supported by a spreadsheet or email workflow, classify it as a workaround, not as supported.</li>
       <li>If a capability is required by regulation but unsupported, mark it as a compliance gap regardless of business priority.</li>
-      <li>If a system supports a capability but no one in the business uses it, classify as adoption gap, not capability gap.</li>
+      <li>If a system supports a capability but no one in the business uses it, <mark class="key-idea">classify as adoption gap, not capability gap.</mark></li>
       <li>If the map contains more than 50 capabilities, the granularity is too fine; merge related capabilities into higher-level groupings.</li>
       <li>If a capability cannot be described in one verb-noun phrase, it is probably a process, not a capability; decompose or rephrase.</li>
     </ul>
@@ -152,7 +152,7 @@ verified: true
   <section>
     <h2>Common mistakes</h2>
     <ul>
-      <li><strong>Mistake:</strong> Mapping systems instead of capabilities. <strong>Consequence:</strong> The map becomes a system inventory with no business meaning, and gaps remain invisible because every system is "present."</li>
+      <li><strong>Mistake:</strong> <mark class="key-idea">Mapping systems instead of capabilities.</mark> <strong>Consequence:</strong> The map becomes a system inventory with no business meaning, and gaps remain invisible because every system is "present."</li>
       <li><strong>Mistake:</strong> Using generic framework categories that do not match the organization's language. <strong>Consequence:</strong> Stakeholders cannot validate the map because they do not recognize their work in the labels.</li>
       <li><strong>Mistake:</strong> Treating spreadsheet workarounds as supported capabilities. <strong>Consequence:</strong> Transformation projects underestimate integration and data quality effort.</li>
       <li><strong>Mistake:</strong> Creating the map in isolation and presenting it as final. <strong>Consequence:</strong> Business stakeholders reject the map because it misattributes ownership or misses shadow processes.</li>
