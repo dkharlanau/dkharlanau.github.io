@@ -3,7 +3,7 @@ layout: default
 title: "System Context Mapping"
 description: "Define what a system does, what it depends on, what depends on it, and where the integration boundaries lie."
 permalink: /skill-hub/architecture/system-context-mapping-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -207,6 +207,14 @@ verified: true
       <li><strong>Do not invent systems.</strong> If the user describes a system but cannot name adjacent systems, list placeholders and ask for confirmation.</li>
       <li><strong>Link to Atlas for integration patterns.</strong> If the system is part of an SAP landscape, reference <a href="/atlas/concepts/sap-integration-architecture/">SAP Integration Architecture</a> and <a href="/atlas/concepts/event-driven-architecture/">Event-Driven Architecture</a> for pattern guidance.</li>
     </ol>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/c4-system-context/">C4 System Context</a> — Use the established context-view notation when the audience needs a simple, shared system boundary map.</li>
+      <li><a href="/skill-hub/tools-frameworks/sequence-diagrams/">Sequence Diagrams</a> — Go deeper only when interaction order across the mapped boundary matters.</li>
+    </ul>
   </section>
 
   <section>
