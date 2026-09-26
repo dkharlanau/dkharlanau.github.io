@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 sitemap: true
-last_modified_at: 2026-08-18
+last_modified_at: 2026-09-26
 last_reviewed: 2026-08-18
 publication_wave: "career-search-wave-01"
 review_method: "editorial review + Career Factory validation + internal route review"
@@ -53,7 +53,7 @@ semantic_links:
       <p class="research-canvas__eyebrow">Career Roadmap / SAP Lead</p>
       <h1>Turn Labs into<br />interview evidence.</h1>
       <p>This roadmap sits above the Labs. It puts technical material into career context: skills, interview signals, evidence routes, and practice. The goal is not to finish a reading list. The goal is to know what you can explain, diagnose, design, and defend as a Lead.</p>
-      <a class="research-canvas__button" href="#career-tracks">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#career-skills">Open the skills <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
       <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
     <figure class="system-opening-visual">
@@ -85,12 +85,6 @@ semantic_links:
     </div>
   </section>
 
-  <section class="research-canvas__inventory" id="career-tracks" data-reveal>
-    <header><p class="research-canvas__eyebrow">Career map</p><h2>Six tracks. One SAP Lead profile.</h2><p>The map includes functional depth, architecture, AI, delivery discipline, and consulting judgment. Narrow expertise matters. Cross-boundary control is what makes it Lead-level.</p></header>
-    <div class="career-health" id="career-health" aria-label="Career Factory coverage"></div>
-    <div class="career-track-grid" id="career-track-grid" aria-label="Career tracks"></div>
-  </section>
-
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Supporting Skill Hub</p><h2>Use working skills to strengthen the answer between Labs.</h2><p>Labs explain SAP and enterprise contexts. Skill Hub adds reusable consulting and architecture techniques. Use both when the assessment moves from “what happens?” to “how would you lead it?”</p></header>
     <div class="research-route-list">
@@ -103,7 +97,7 @@ semantic_links:
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="career-skills" data-reveal>
     <header><p class="research-canvas__eyebrow">Skills</p><h2>Prepare the interview signal, not the keyword.</h2><p id="career-active-label">All tracks</p></header>
     <div class="ir-toolbar">
       <div class="career-filters" id="career-tier-filters" aria-label="Filter by skill tier"></div>
