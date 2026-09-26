@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -18,7 +18,7 @@ tags:
   - invoice
   - accounting
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-26
 publication_wave: "logistics-search-wave-02"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP SD billing process, billing determination and troubleshooting"
@@ -96,6 +96,28 @@ source_links:
       <em>SAP S/4HANA 2025 FPS01 · primary-source review</em>
     </div>
   </header>
+
+  <section class="research-canvas__inventory" id="billing-thinking-loop" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Billing thinking loop</p>
+      <h2>Name the gate that failed.</h2>
+      <p>“No invoice” is not one problem. Billing is a sequence of states. Locate the first gate that did not pass, then investigate only the controls that can own that gate.</p>
+    </header>
+    <div class="sales-cert-table">
+      <table>
+        <thead><tr><th>Gate</th><th>Evidence</th><th>Question</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. Billable</strong></td><td>Source item and billing relevance</td><td>Is this process supposed to bill from the order, delivery, plan, or another reference?</td></tr>
+          <tr><td><strong>2. Due</strong></td><td>Billing status, date, block, due-list selection</td><td>Is the source eligible now, or is a prerequisite still open?</td></tr>
+          <tr><td><strong>3. Created</strong></td><td>Billing document and creation log</td><td>Did copy control and grouping allow the target document to be created correctly?</td></tr>
+          <tr><td><strong>4. Posted</strong></td><td>Accounting status and journal entry</td><td>Did the commercial invoice reach Financial Accounting successfully?</td></tr>
+          <tr><td><strong>5. Issued</strong></td><td>Output or electronic-document state</td><td>Was the customer-facing or legally required invoice actually produced by the downstream channel?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ecg-caption"><strong>Memory rule:</strong> billable → due → created → posted → issued. Do not use a later green status to assume an earlier or downstream state is correct.</p>
+  </section>
+
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
