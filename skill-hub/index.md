@@ -4,7 +4,7 @@ layout: default
 title: "Skill Hub — Practical Working Skills for Enterprise Consultants and AI Agents"
 description: "A library of practical working skills for enterprise consultants, business analysts, data consultants, solution architects, integration architects, SAP AMS consultants, and AI agents. Not a glossary. Not a framework encyclopedia. Usable work skills."
 permalink: /skill-hub/
-last_modified_at: 2026-09-05
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -25,6 +25,7 @@ verified: true
     <a class="button" href="/skill-hub/problem-solving-operations/">Problem solving &amp; operations</a>
     <a class="button" href="/skill-hub/dama-dmbok/">Data &amp; DAMA skills</a>
     <a class="button" href="/skill-hub/business-analysis/">Business analysis skills</a>
+    <a class="button" href="/skill-hub/tools-frameworks/">Tools &amp; frameworks</a>
     <a class="button" href="/skill-hub/testing-quality-delivery/">Testing &amp; QA skills</a>
     <a class="button" href="/skill-hub/architecture/">Architecture skills</a>
     <a class="button" href="/skill-hub/integration-architecture/">Integration skills</a>
@@ -113,6 +114,10 @@ verified: true
     <div class="topic-card">
       <h3><a href="/skill-hub/systems-analysis/">Systems Analysis</a></h3>
       <p>State and lifecycle analysis, interface requirement analysis. Map how entities behave inside systems and what data crosses boundaries.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/tools-frameworks/">Tools &amp; Frameworks</a></h3>
+      <p>Choose practical analysis instruments by problem: RACI, SIPOC, BPMN, EventStorming, Domain Storytelling, Example Mapping, DMN, C4, UML views, FMEA, SysML v2, and more.</p>
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/decision-validation/">Decision & Validation</a></h3>
@@ -328,6 +333,7 @@ verified: true
     <li><a href="/skill-hub/artifact-templates/">Artifact Templates</a> — Reusable templates that skills reference.</li>
     <li><a href="/skill-hub/quality-rules/">Quality Rules</a> — What makes a Skill Hub page good or bad.</li>
     <li><a href="/skill-hub/framework-map/">Framework Map</a> — How major frameworks map to practical work.</li>
+    <li><a href="/skill-hub/tools-frameworks/">Tools &amp; Frameworks Catalog</a> — Choose an analysis method by the problem you need to solve.</li>
   </ul>
 </section>
 
