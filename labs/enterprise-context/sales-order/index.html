@@ -128,42 +128,32 @@ source_links:
   <section class="research-canvas__inventory" id="sales-order-lead-decisions" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead reading model</p>
-      <h2>Do not ask which field is wrong. Ask which decision became wrong first.</h2>
-      <p>A sales order is where several owners meet. The visible symptom may sit in Sales while the first wrong state comes from master data, document control, pricing, supply, shipping, credit, integration, or copied reference data.</p>
+      <h2>{{ graph.lead_decision_model.title }}</h2>
+      <p>{{ graph.lead_decision_model.summary }}</p>
     </header>
 
     <div class="ecg-decision-columns">
+      {% for step in graph.lead_decision_model.steps %}
       <div>
-        <h3>1. What is the business intent?</h3>
-        <p>State what the order should achieve: sell which product or service, to whom, under which commercial and fulfillment promise.</p>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.body }}</p>
       </div>
-      <div>
-        <h3>2. Which layer owns the decision?</h3>
-        <p>Separate transaction frame, item behavior, schedule execution, master-data proposal, commercial calculation, supply confirmation, and downstream execution.</p>
-      </div>
-      <div>
-        <h3>3. What evidence proves the owner?</h3>
-        <p>Compare expected and actual document state, then trace the value or status to its input, determination, reference, or external result.</p>
-      </div>
-      <div>
-        <h3>4. What depends on it next?</h3>
-        <p>Before changing the rule, identify downstream consequences for ATP, delivery, warehouse, transport, billing, finance, output, and integrations where relevant.</p>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
-      <p><strong>Design trade-off:</strong> a local override can repair one document quickly, while a reusable rule can prevent repeated manual work. The correct choice depends on whether the requirement is an exception or a stable business rule, who owns it, and how much downstream behavior it changes.</p>
+      <p><strong>Design trade-off:</strong> {{ graph.lead_decision_model.trade_off }}</p>
     </div>
 
     <div class="ecg-diagnostic">
       <div>
         <h4>Symptom</h4>
-        <p>The order has an unexpected delivery result. Do not start by changing shipping or ATP because those are the last visible layers.</p>
+        <p>{{ graph.lead_decision_model.diagnostic_example.symptom }}</p>
       </div>
       <div>
         <h4>Reasoning path</h4>
-        <p>Check the item and schedule-line context, plant and dates, then the supply and shipping decisions that consume them. Stop at the first wrong derived result and prove its owner before changing anything.</p>
+        <p>{{ graph.lead_decision_model.diagnostic_example.reasoning }}</p>
       </div>
     </div>
   </section>
