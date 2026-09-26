@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>The BOM owns the structure; item categories own the Sales behavior of that structure.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,37 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>When the header is entered, BOM explosion creates subitems. Item category determination then controls whether the header or components are pricing- or delivery-relevant. Classic ERLA and LUMF-style designs represent different control patterns.</p>
+      <h2>Explosion answers “which components?”; Sales control answers “which level matters?”</h2>
+      <p>When the sellable header is entered, the valid Sales BOM can explode into component subitems. The BOM explains the product structure and quantities. Item-category and process configuration then decide whether commercial value, delivery relevance, and other Sales behavior live mainly on the header, the components, or both.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Prove the BOM context</h4><p>Start with header product, plant or usage context, validity, and the BOM alternative that should apply to the Sales item.</p></div>
+      <div><span>02</span><h4>Check the explosion</h4><p>Compare the expected component structure and quantities with the subitems actually created in the document.</p></div>
+      <div><span>03</span><h4>Read item categories</h4><p>Identify the header and component item categories created by the explosion. This is where the product structure becomes Sales behavior.</p></div>
+      <div><span>04</span><h4>Locate commercial and logistics control</h4><p>Prove which level is pricing-relevant, delivery-relevant, or otherwise active before changing the BOM structure.</p></div>
+      <div><span>05</span><h4>Continue downstream</h4><p>If the structure and item categories are correct, diagnose pricing, ATP, delivery, or billing at the level that actually owns that process.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Wrong components and wrong component behavior are different failures.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Verify the BOM usage, validity and plant first. Then inspect the exploded item categories and their pricing/delivery relevance. If the structure is correct but pricing is wrong, troubleshoot item-category configuration rather than the BOM itself.</p>
+      <p>If components are missing or wrong, start with BOM usage, validity, plant context, alternative, and component quantities. If the structure is correct but pricing or delivery relevance is wrong, inspect the resulting item categories and their controls. Editing the BOM cannot repair a Sales-control problem when the explosion itself is correct.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Structure first; Sales control second.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>A Sales BOM is product-structure master data. It tells SAP which components belong to the header; item categories decide where pricing and delivery control live.</p>
+      <p><strong>60-second answer:</strong> A Sales BOM defines the product structure behind a sellable header. When the header is entered, the valid BOM can explode into components. I separate that structure from Sales control: item-category determination decides how the header and subitems behave and where pricing or delivery relevance lives. If components are wrong, I diagnose BOM validity and structure; if the components are correct but their commercial behavior is wrong, I move to item categories.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>

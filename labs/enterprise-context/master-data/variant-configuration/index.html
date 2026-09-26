@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>The model defines what can be configured; the Sales item stores the chosen configuration instance.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,37 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>During sales order entry the user or interface supplies characteristic values. The configuration engine checks dependencies and can influence BOM selection, routing, pricing conditions, procurement or make-to-order behavior.</p>
+      <h2>Characteristic choices become an executable product definition for this Sales item.</h2>
+      <p>During order entry the user or interface supplies characteristic values for a configurable product. The configuration model checks allowed values and dependencies and creates a configuration instance on the item. That instance can then influence product structure, pricing, production, procurement, and other downstream decisions.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Start with the configurable product</h4><p>Confirm the product and the active configuration model or profile expected for the Sales item.</p></div>
+      <div><span>02</span><h4>Read the instance</h4><p>Inspect the characteristic values actually stored on the item, not only the reusable class or model definition.</p></div>
+      <div><span>03</span><h4>Check completeness and dependencies</h4><p>Find missing, inconsistent, defaulted, or dependency-driven values before debugging a downstream result.</p></div>
+      <div><span>04</span><h4>Trace the derived result</h4><p>Follow how the configuration instance influences BOM, routing, pricing, procurement, or make-to-order logic for this item.</p></div>
+      <div><span>05</span><h4>Keep model and execution separate</h4><p>If the configuration is correct but production, procurement, or pricing is wrong, move to the downstream mechanism that consumes the selected variant.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Debug the Sales configuration instance before the downstream consequence.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Start with the configuration instance on the sales item. Check missing or inconsistent characteristic values, then evaluate dependencies and selected BOM/routing results. Only after the model is sound should pricing or production consequences be debugged.</p>
+      <p>Start with the configuration instance stored on the Sales item and compare it with the expected characteristic values. Resolve missing or inconsistent values and dependency results first. Then verify the BOM, routing, pricing, production, or procurement result derived from that instance. If the instance is correct, the root cause belongs downstream rather than in Variant Configuration itself.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Reusable model → item instance → downstream consequence.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Variant Configuration defines the exact variant of a configurable product. I distinguish the reusable model from the configuration instance stored on the sales item and trace downstream BOM, pricing and fulfillment effects.</p>
+      <p><strong>60-second answer:</strong> Variant Configuration separates a reusable product model from the configuration instance stored on one Sales item. The model defines characteristics, allowed values, and dependencies; the item stores the customer's selected or derived values. I validate that instance first, then trace the resulting BOM, pricing, production, or procurement behavior. If the instance is correct, I move to the downstream process instead of changing the configuration model.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>

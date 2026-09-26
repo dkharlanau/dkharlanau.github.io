@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>Cross-selling suggests another item; it does not replace or entitle one.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,42 +65,44 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>During sales order entry the system can display related products for the user to add. The suggestion is normally optional; selected products become ordinary sales items and are then processed by normal pricing, ATP and delivery logic.</p>
+      <h2>The main product triggers a recommendation, then ownership moves to normal Sales items.</h2>
+      <p>During order entry the main product and Sales context can trigger related-product suggestions. The user can add a suggested product, but the original item remains. Once a suggestion becomes a document item, normal item-category, pricing, ATP, delivery, and billing logic take over.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Start with the main product</h4><p>Confirm the product and Sales context that should trigger a recommendation.</p></div>
+      <div><span>02</span><h4>Read the assignment</h4><p>Check the maintained related products, profile, sequence, and other context used by the cross-selling design.</p></div>
+      <div><span>03</span><h4>Prove the suggestion</h4><p>Separate “no recommendation was produced” from “the user did not select it.” Those are different states.</p></div>
+      <div><span>04</span><h4>Hand off to Sales processing</h4><p>After a suggested product is added, troubleshoot its price, confirmation, delivery, or billing as a normal Sales item.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Separate recommendation failure from item-processing failure.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Check whether the main product and sales context match the maintained cross-selling data. Then verify the assigned cross-selling profile or determination logic if suggestions do not appear.</p>
+      <p>If suggestions do not appear, check the main product, Sales context, maintained related-product data, and the profile or logic that activates the recommendation. If the recommendation appears but a selected item later behaves incorrectly, leave Cross-Selling and diagnose that Sales item. The recommendation mechanism does not own downstream pricing or fulfillment.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Recommendation is not substitution or entitlement.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Cross-selling is recommendation data around a main product. It adds optional suggestions; it does not substitute the original item or automatically represent a free-goods entitlement.</p>
+      <p><strong>60-second answer:</strong> Cross-Selling recommends additional products around a main item. The original item stays in the order, so this is different from Material Determination, and the suggestion is not a free-goods entitlement. I first prove the main-product context and recommendation data. If the user adds a suggested product, normal Sales item processing takes ownership from that point.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/labs/enterprise-context/master-data/material-determination/">Material determination</a>
+      <a href="/labs/enterprise-context/master-data/item-proposal/">Item proposal</a>
+      <a href="/labs/enterprise-context/master-data/free-goods/">Free goods</a>
     </nav>
   </section>
 </div>

@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>Select the partner first; select the physical address second.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,36 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>During sales processing the selected address can become the ship-to, bill-to or other partner address copied into the document. It can affect delivery execution, tax-relevant location context, outputs and integrations that transmit partner addresses downstream.</p>
+      <h2>One Business Partner can be correct while the document address is still wrong.</h2>
+      <p>Partner determination resolves the Business Partner for a role. Address logic then resolves which valid physical address of that partner belongs to the document context. The selected address can be copied into Sales, delivery, billing, output, or integration payloads and can matter for execution and location-dependent processing.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Name the partner role</h4><p>Start with the actual ship-to, bill-to, payer, or other partner in the document. Do not diagnose an address before confirming the correct Business Partner was selected.</p></div>
+      <div><span>02</span><h4>Read address usage and validity</h4><p>Check which address UUID is valid for the relevant usage and document date. Multiple addresses are expected; the question is which one qualifies.</p></div>
+      <div><span>03</span><h4>Compare the document snapshot</h4><p>Verify the address that was copied into the Sales document. A later master-data change does not automatically prove what the document originally contained.</p></div>
+      <div><span>04</span><h4>Follow downstream consumers</h4><p>Check whether delivery, billing, tax context, output, or an interface consumed the document address or performed its own determination.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Wrong partner and wrong address are different incidents.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Compare the address stored in the document with the BP address records and their validity. Check address usage and partner role first. Then investigate document-specific address changes or interface payloads.</p>
+      <p>First prove that the document has the correct partner role. Then compare its stored address with the BP's valid address usages for the document date. If master data is correct but the document differs, inspect document-specific address changes, reference copying, or interface input. If the document is correct but a downstream payload is wrong, move the diagnosis to that consumer.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Partner identity and physical address are two decisions.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>I treat address data as a separate relationship layer below the Business Partner. First determine the partner, then determine the valid address usage and confirm what was copied into the document.</p>
+      <p><strong>60-second answer:</strong> I treat partner identity and physical address as two separate decisions. Partner determination tells me which Business Partner fills a role; address usage and validity tell me which physical address of that partner is relevant. I compare the valid BP address with the address snapshot stored in the document, then follow that value into delivery, billing, output, tax context, or integrations. This avoids changing the partner relationship when only the address is wrong.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>

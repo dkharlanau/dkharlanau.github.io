@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>“Material master” is too broad; name the view and the field.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,37 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>Product data participates in item category determination, plant proposal, shipping-point determination, pricing keys, ATP, route and scheduling context, revenue account determination and text selection. Plant-level values become particularly important once the process moves from commercial order entry into fulfillment.</p>
+      <h2>One product supplies inputs to several different Sales engines.</h2>
+      <p>Commercial fields can influence item behavior, pricing keys, hierarchy, tax, or account-determination context. Plant and logistics fields can influence availability, loading, shipping, and scheduling. The product master therefore does not “decide” the final result by itself; it supplies inputs that several determination engines interpret.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Name the visible symptom</h4><p>Wrong item category, plant, shipping point, ATP result, price key, tax classification, or account-assignment input are different problems.</p></div>
+      <div><span>02</span><h4>Find the source field</h4><p>Identify the exact product field that can feed that mechanism instead of reviewing every material view.</p></div>
+      <div><span>03</span><h4>Check the owning view</h4><p>Use the correct sales organization/distribution channel, plant, unit, or other organizational level for the document item.</p></div>
+      <div><span>04</span><h4>Trace the determination</h4><p>Follow the configuration that interprets the master-data value. A correct field can still produce an unexpected result if the consuming rule is different.</p></div>
+      <div><span>05</span><h4>Check the blast radius</h4><p>Before changing shared product data, identify every process that consumes the field. A plant or logistics change can affect more than the Sales document you started with.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Trace one wrong result back to one product field.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Start with the material and exact sales area/plant used by the item. Compare the document value with the relevant product view, then trace the determination that consumes the field. Avoid checking a generic material screen without confirming organizational level.</p>
+      <p>Start from the first wrong derived value in the item, then identify the product field that can feed it. Verify that field in the exact sales-area or plant view used by the order and trace the consuming determination. This is faster and safer than scanning the whole product master or changing a shared field because one document looks wrong.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Name the view, field, consumer, and blast radius.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>For a product issue I name the exact material view and field, not just 'material master'. Sales-area fields drive commercial behavior; plant fields drive ATP and shipping; configuration then interprets those values.</p>
+      <p><strong>60-second answer:</strong> For a product issue I never stop at “material master.” I name the exact field and organizational view, then the determination that consumes it. Sales-area data supports commercial behavior; plant and logistics data support availability and execution; units and classification can affect several processes. I compare the master value with the first wrong document result and check the blast radius before changing shared product data.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>

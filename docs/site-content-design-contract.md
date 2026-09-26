@@ -12,6 +12,7 @@ structure easier to read, compare, navigate, verify, answer, trace, or remember.
 ## Sources of truth
 
 - Product-level direction: DESIGN.md
+- Learn editorial purpose and review: [Learn North Star](learn-north-star.md)
 - Visual tokens and system rules: docs/editorial-design-system.md
 - Reusable component catalog: docs/ui-component-catalog.md
 - Machine-readable component registry: config/ui-components.json
@@ -21,6 +22,18 @@ structure easier to read, compare, navigate, verify, answer, trace, or remember.
 
 Do not create a competing design specification in a route README or page-local
 stylesheet.
+
+## Learn editorial purpose
+
+Before writing or reviewing SAP learning content, read
+[Learn North Star](learn-north-star.md). It governs the learning outcome for SAP
+Enterprise, Assessment, and related Learn material: build the thinking of a strong
+SAP Lead, rather than collect SAP theory.
+
+Use its nine principles as review lenses and its five outcomes as evidence of learning:
+understand, reason, decide, explain, and act. They are not compulsory section headings.
+A technically accurate or visually polished section is not editorially finished when
+it only helps the reader know more without thinking better.
 
 ## Content shape to UI shape
 
@@ -78,4 +91,6 @@ A content or UI edit is complete only when:
 3. mobile and desktop behavior are defined;
 4. accessibility behavior is preserved;
 5. registry and documentation remain synchronized;
-6. repository validation and rendered checks pass.
+6. repository validation and rendered checks pass;
+7. Learn content passes the North Star editorial review, with concrete evidence for
+   the five learning outcomes recorded in the PR or editorial handoff.

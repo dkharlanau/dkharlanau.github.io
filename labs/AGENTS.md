@@ -2,6 +2,22 @@
 
 This file applies to work under `labs/` in addition to the repository-level `AGENTS.md`.
 
+## Learn North Star
+
+Before writing, editing, or reviewing SAP learning content, read
+[Learn North Star](../docs/learn-north-star.md). It is the editorial source of truth
+for SAP Enterprise deep dives, Assessment preparation, and related learning material.
+
+Define what the reader will be able to understand, reason through, decide, explain,
+and do. Use the North Star's nine principles as review lenses, not a compulsory page
+template. Keep technical depth when it enables that capability; do not optimize for
+page count, word count, or accumulated theory.
+
+Before calling an editorial change complete, apply the North Star's editorial test
+and record concrete evidence for the five outcomes in the PR or editorial handoff.
+Preserve uncertainty and decision context in any related machine-readable output.
+Career mapping and passing checks support this review; neither replaces it.
+
 ## Career Factory
 
 Labs are source material for the SAP Lead career roadmap. New Lab content must not appear without an explicit career decision.
