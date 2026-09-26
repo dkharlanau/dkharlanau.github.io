@@ -273,6 +273,14 @@ status: draft | reviewed | approved
   </section>
 
   <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/example-mapping/">Example Mapping</a> — Validate a rule with concrete normal, boundary, and failure examples.</li>
+      <li><a href="/skill-hub/tools-frameworks/dmn-decision-tables/">DMN &amp; Decision Tables</a> — Make interacting rules explicit and testable instead of burying them in prose or process gateways.</li>
+    </ul>
+  </section>
+
+  <section>
     <h2>Related skills</h2>
     <ul>
       <li><a href="/skill-hub/business-analysis/requirements-elicitation-working-skill/">Requirements Elicitation Working Skill</a></li>
