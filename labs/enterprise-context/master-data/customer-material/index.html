@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -30,7 +30,7 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.CMIR</p>
       <h1>Customer Material</h1>
-      <p>Customer-material information records describe the relationship between one customer and one product. They are useful when the customer uses its own material number, description or logistics expectations. This is more specific than either the generic customer or the generic product master.</p>
+      <p>A customer-material information record stores the Sales relationship between one customer and one product. It is useful when that customer uses a different product number, description, or customer-specific logistics data. Think of it as the exception layer between the generic customer and generic product masters.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>The object owns the customer–product relationship, not the product itself.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,36 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>During order entry SAP can translate the customer's product reference to the internal product and propose customer-specific data. Because this record is more specific than generic product data, it is often the right place to look when only one customer sees different behavior for the same material.</p>
+      <h2>One relationship can change the same product for one customer.</h2>
+      <p>During order entry SAP can use the customer-material relationship to translate the customer's product reference and supply supported customer-specific values. This makes the record especially important when the same internal product behaves correctly for most customers but differently for one customer and sales-area context.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Match the relationship</h4><p>Confirm the customer, sales organization, distribution channel, and product used by the order. A record in another sales-area context is not evidence for this document.</p></div>
+      <div><span>02</span><h4>Read the customer-specific value</h4><p>Check the customer material number, description, and the logistics or text fields that are actually maintained for this relationship.</p></div>
+      <div><span>03</span><h4>Compare the fallback</h4><p>Compare the result with the relevant customer and product defaults. For example, standard delivering-plant proposal can consider a customer-material record before ship-to and product master data.</p></div>
+      <div><span>04</span><h4>Prove the document result</h4><p>Check what was stored in the sales order and what later documents consume. Do not change shared product data to repair a customer-specific exception until the source is proven.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>If only one customer is different, start with the relationship.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>If the issue appears for one customer/product combination, check the customer-material record early. Compare its values with the generic product and ship-to customer defaults, especially for plant, delivery and text behavior.</p>
+      <p>If the issue appears for one customer/product combination, check this record early. For a wrong plant, compare the customer-material value with the ship-to and product defaults. For a wrong customer product number or description, prove the exact relationship key and what the order stored. The useful question is not “is the product master correct?” but “which source won for this customer-product pair?”</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Explain the exception layer in one minute.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Customer Material is a relationship master. I use it when behavior is specific to a customer-product pair, especially customer product numbers, descriptions and logistics defaults.</p>
+      <p><strong>60-second answer:</strong> Customer Material is relationship master data between a customer and a product in a Sales context. I use it for customer-specific product numbers, descriptions, and supported logistics defaults. If one customer sees different behavior for the same material, I check this layer before changing the generic product master. I prove the exact customer, sales organization, distribution channel, and product key, compare the relationship value with the fallback customer and product data, and then verify which value the sales order actually stored.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
