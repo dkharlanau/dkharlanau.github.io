@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -18,7 +18,7 @@ tags:
   - invoice
   - accounting
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-26
 publication_wave: "logistics-search-wave-02"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP SD billing process, billing determination and troubleshooting"
@@ -84,8 +84,8 @@ source_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Deep vertical / Sales Billing</p>
-      <h1>Billing starts before the invoice<br />and ends after it is saved.</h1>
-      <p>In SAP S/4HANA Sales, billing turns a billable commercial reference into an invoice, credit memo, debit memo, or another billing document. The useful model is a chain: establish what is billable, create the correct billing document, then prove the accounting and correction state.</p>
+      <h1>Billing is a chain of states,<br />not one invoice event.</h1>
+      <p>In SAP S/4HANA Sales, billing starts with a billable reference and ends only when the commercial, accounting, and correction states are clear. Read it as a chain: eligibility → due-list selection → billing creation → accounting posting → correction or output when required.</p>
       <a class="research-canvas__button" href="#runtime">Follow the billing chain <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Sales Billing article scope">
@@ -101,6 +101,33 @@ source_links:
     <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
     <p><strong>Core idea:</strong> a delivery, an entry in the billing due list, a saved billing document, and a posted journal entry are different states. Treating them as one event is the source of many confusing billing investigations.</p>
     <a href="/labs/enterprise-context/data/billing-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="billing-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Explain Billing as five separate decisions.</h2>
+      <p>A Lead answer becomes much clearer when it separates what is billable, what is selected, what is created, what is posted, and how an error is corrected.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> I start with billing relevance and the correct reference document. Then I check whether the source is due for billing, because due-list selection and billing creation are different steps. During creation, copying control and split criteria decide how data and references become the billing document. After that I verify the FI posting separately. If the business event was wrong, I distinguish cancellation from a credit or debit adjustment and prove the complete document chain.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="billing-memory-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Eligibility → selection → creation → posting → correction.</h2>
+      <p>These five states are enough to structure most billing design discussions and production incidents.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>1. Eligibility</h3><p>Which source item is billable, and is billing order-related, delivery-related, plan-based, or controlled by another process variant?</p></div>
+      <div><h3>2. Selection</h3><p>Is the source actually due now? Check dates, blocks, status, and process prerequisites before blaming billing creation.</p></div>
+      <div><h3>3. Creation</h3><p>Which billing type is created, how is data copied, and should several references combine or split?</p></div>
+      <div><h3>4. Posting</h3><p>Did the saved billing document create the expected accounting result, or is the FI handoff incomplete?</p></div>
+      <div><h3>5. Correction</h3><p>Is the original billing event wrong and needs cancellation, or is the business asking for a new commercial adjustment?</p></div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
@@ -178,6 +205,20 @@ source_links:
       <div><h3>Finance and external evidence</h3><p>Was the billing document posted correctly, and was the customer-facing or legally required invoice issued through the relevant downstream process?</p></div>
     </div>
     <p class="ecg-caption">A green status in one layer is not proof that the entire order-to-cash event is complete. Reconcile the reference, billing document, accounting result, and—where relevant—the output or electronic-document state.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="billing-faq" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FAQ / fast repetition</p>
+      <h2>Five checks that keep Billing problems in the right layer.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>due list</small></div><h3>The source is not in the billing due list. Where do I start?</h3></header><p>Start with billing relevance, the correct reference document, billing date, blocks, status, and process prerequisites. Do not start with copying control until the source is actually eligible for selection.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>creation</small></div><h3>The source is selected but no invoice is created. What changed?</h3></header><p>You have already crossed the selection boundary. Move to billing creation: simulation or run log, copying requirements, transferred data, split criteria, and errors raised during creation.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>split</small></div><h3>Why did two references create two invoices?</h3></header><p>Compare the resulting billing header state and find the first split-relevant difference. Then trace that value back to source data or transfer logic instead of forcing documents together.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>finance</small></div><h3>Does a saved billing document prove revenue was posted?</h3></header><p>No. The billing document proves the commercial document exists. The accounting status and related journal entry are separate evidence for the FI result.</p></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>correction</small></div><h3>Cancellation or credit memo?</h3></header><p>Cancellation reverses the original billing event. A credit or debit memo represents a new commercial adjustment. Choose from the business meaning first, then apply the correct process and localization rules.</p></article>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
