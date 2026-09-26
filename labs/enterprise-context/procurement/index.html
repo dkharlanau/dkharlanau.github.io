@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-09-26
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -20,7 +20,7 @@ tags:
   - procure-to-pay
   - special-procurement
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-26
 publication_wave: "logistics-search-wave-01"
 review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + full editorial rewrite"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
@@ -100,6 +100,47 @@ source_links:
       <p>That sequence is a useful reference, not a universal document recipe. Stock transfer, consignment, subcontracting, services, third-party procurement, and other variants deliberately change which events are required.</p>
     </div>
     <a href="/labs/enterprise-context/data/procurement-graph.json">Open the structured procurement model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="procurement-lead-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead decision model</p>
+      <h2>A purchase order is the result of earlier choices. Diagnose those choices first.</h2>
+      <p>A strong procurement answer starts with the requirement, source strategy, commercial context, process control, and completion proof. The PO is where those decisions meet; it is not automatically where the wrong decision started.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> “I start with the business requirement: what is needed, where, when, and for which consumption or stock purpose. Then I prove why this source of supply is valid, which commercial terms apply, and which item and account-assignment model defines execution. I separate approval and supplier communication from document correctness. Finally I follow receipt or service acceptance, invoice verification, and the financial state such as GR/IR. If a value is wrong, I find the first decision that differs instead of overwriting the PO.”</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Lowest price vs resilient supply</h3>
+        <p>The cheapest source is not automatically the best source when reliability, lead time, capacity, quality, contractual commitment, or business continuity matters.</p>
+        <p><strong>Lead question:</strong> which constraints are part of the sourcing decision, and which are only preferences?</p>
+      </div>
+      <div>
+        <h3>Specific source rule vs maintenance cost</h3>
+        <p>Source lists, quota arrangements, contracts, scheduling agreements, and info records solve different problems. More source rules can improve control but also create more validity, ownership, and reconciliation work.</p>
+        <p><strong>Lead question:</strong> which object owns the decision we are trying to express?</p>
+      </div>
+      <div>
+        <h3>Control vs cycle time</h3>
+        <p>Approval can reduce commitment risk, but unnecessary workflow steps can slow down routine purchasing and create operational queues.</p>
+        <p><strong>Lead question:</strong> what risk requires approval, who owns it, and what evidence should allow straight-through processing?</p>
+      </div>
+      <div>
+        <h3>Document complete vs process complete</h3>
+        <p>An approved PO is only a commitment. Receipt, service acceptance, supplier invoice, and reconciliation are separate states.</p>
+        <p><strong>Lead rule:</strong> define the business completion proof before calling the procurement flow successful.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Fact vs assumption:</strong> “Supplier A has an info record” is a fact. “Supplier A should be selected” is an assumption until the requirement context and the active source-of-supply rules are reconstructed.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="process-atlas" data-reveal>
