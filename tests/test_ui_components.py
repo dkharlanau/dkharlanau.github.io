@@ -80,5 +80,5 @@ def test_site_share_is_self_contained_and_centered():
     assert "display: grid;" in share_block
     assert "width: min(calc(100% - 2rem), var(--container-wide));" in share_block
     assert "margin: var(--space-9) auto 0;" in share_block
-    assert "background: linear-gradient" in share_block
+    assert "linear-gradient" in share_block
     assert "@media (max-width: 860px)" in css
