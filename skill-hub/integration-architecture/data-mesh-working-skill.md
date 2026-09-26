@@ -3,7 +3,7 @@ layout: default
 title: "Data Mesh Working Skill"
 description: "Apply data mesh principles to SAP and enterprise landscapes by identifying domains, defining data products, assigning ownership, and choosing integration patterns."
 permalink: /skill-hub/integration-architecture/data-mesh-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -24,7 +24,7 @@ verified: true
 
   <section>
     <h2>What this skill is for</h2>
-    <p>This skill helps you identify domains in an enterprise landscape, define data products with clear output ports and ownership, assign data product owners, establish lightweight federated governance, and choose integration patterns that connect domains without recentralizing everything into a single warehouse team.</p>
+    <p>This skill helps you identify domains in an enterprise landscape, define data products with clear output ports and ownership, assign data product owners, establish lightweight federated governance, and choose integration patterns that <mark class="key-idea">connect domains without recentralizing everything into a single warehouse team.</mark></p>
   </section>
 
   <section>
@@ -79,7 +79,7 @@ verified: true
   <section>
     <h2>Working method</h2>
     <ol>
-      <li><strong>Identify domains.</strong> Map business domains based on organizational boundaries, data ownership, and process autonomy. Avoid purely technical boundaries.</li>
+      <li><strong>Identify domains.</strong> Map business domains based on organizational boundaries, data ownership, and process autonomy. <mark class="key-idea">Avoid purely technical boundaries.</mark></li>
       <li><strong>Map data products per domain.</strong> For each domain, list data it produces that other domains or systems consume. Name each data product clearly.</li>
       <li><strong>Define output ports.</strong> For each data product, specify the interface: synchronous API, event stream, batch file, or analytical export. Match the port to consumer needs.</li>
       <li><strong>Assign ownership.</strong> Name a business owner (quality, semantics) and a technical owner (schema, infrastructure, SLA) for each data product.</li>
@@ -96,7 +96,7 @@ verified: true
       <li>If data is used only within one domain, keep it internal; do not publish as a data product.</li>
       <li>If data is consumed by two or more domains, publish it as a data product with a defined output port.</li>
       <li>If freshness requirement is under one hour, use an event or API; if batch is acceptable, use a scheduled extract.</li>
-      <li>If no domain owner exists, assign one before publishing; unowned data products become swamps.</li>
+      <li><mark class="key-idea">If no domain owner exists, assign one before publishing; unowned data products become swamps.</mark></li>
       <li>If governance is missing, start with lightweight standards and a small governance group, not a large committee.</li>
       <li>If SAP is the source, respect SAP licensing and data model constraints; do not expose raw tables directly.</li>
       <li>If a data product has no consumers after six months, deprecate it.</li>
