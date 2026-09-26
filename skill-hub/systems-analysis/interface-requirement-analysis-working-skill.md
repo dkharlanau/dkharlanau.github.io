@@ -3,7 +3,7 @@ layout: default
 title: "Interface Requirement Analysis Working Skill"
 description: "Define what data crosses a system boundary, in which direction, under what conditions, and with what quality and error-handling requirements."
 permalink: /skill-hub/systems-analysis/interface-requirement-analysis-working-skill/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -284,6 +284,15 @@ Produce the output in the Interface Requirement Analysis template format: data e
       <li><strong>Don't</strong> omit the ownership matrix. An interface without ownership will fail in production with no one accountable.</li>
       <li><strong>Don't</strong> skip the "does NOT do" section. Scope creep in interface projects is common and expensive.</li>
       <li><strong>Don't</strong> invent data elements or SLAs. If the stakeholder cannot provide them, list placeholders and ask for confirmation.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/c4-system-context/">C4 System Context</a> — Make the system boundary and direct external relationships explicit.</li>
+      <li><a href="/skill-hub/tools-frameworks/sequence-diagrams/">Sequence Diagrams</a> — Clarify message order, callbacks, failures, retries, and response paths.</li>
+      <li><a href="/skill-hub/tools-frameworks/crud-matrix/">CRUD Matrix</a> — Check which process or system creates and changes the data crossing the boundary.</li>
     </ul>
   </section>
 
