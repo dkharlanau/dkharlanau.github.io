@@ -55,7 +55,7 @@ verified: true
       <li>Interface inventory: all known APIs, IDocs, RFCs, file transfers, events.</li>
       <li>System landscape diagram showing sources, targets, and middleware.</li>
       <li>Organizational chart or team directory.</li>
-      <li>Existing SLAs or operational agreements.</li>
+      <li>Existing <a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLAs, SLOs, or operational agreements</a>.</li>
       <li>Incident history for the last 6–12 months (to find pain points).</li>
       <li>Middleware configuration: queues, topics, routing rules.</li>
       <li>Project documentation for recent or upcoming interfaces.</li>
@@ -197,6 +197,7 @@ scope: System landscape | Project | Domain
   <section>
     <h2>Related skills</h2>
     <ul>
+      <li><a href="/skill-hub/integration-architecture/integration-sla-working-skill/">SLA &amp; SLO Design</a> — Assign ownership for service-level commitments, measurements, and breach actions.</li>
       <li><a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a> — Design interfaces after ownership is clear.</li>
       <li><a href="/skill-hub/integration-architecture/integration-observability-working-skill/">Integration Observability</a> — Build monitoring around owned interfaces.</li>
       <li><a href="/skill-hub/integration-architecture/integration-error-handling-working-skill/">Integration Error Handling</a> — Define error response for owned interfaces.</li>
