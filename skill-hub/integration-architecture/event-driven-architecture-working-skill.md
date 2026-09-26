@@ -221,6 +221,36 @@ status: draft | reviewed | approved
   </section>
 
   <section>
+    <h2>Latency and ordering: what these requirements mean</h2>
+    <p>These two requirements look small in an event contract, but they change the technical design. Define them per consumer instead of writing vague terms such as <em>real time</em> or <em>ordered</em>.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Requirement</th>
+          <th>What it means</th>
+          <th>Good contract wording</th>
+          <th>Why it changes the design</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Latency requirement</strong></td>
+          <td>The maximum acceptable time between the business fact happening and the consumer being able to use the event.</td>
+          <td><code>Warehouse: &lt; 30 s from OrderConfirmed to accepted event</code></td>
+          <td>Tighter latency can affect broker choice, batching, retry delays, monitoring thresholds, and whether an asynchronous pattern is suitable at all.</td>
+        </tr>
+        <tr>
+          <td><strong>Ordering requirement</strong></td>
+          <td>Whether related events must be processed in the same business sequence in which they happened.</td>
+          <td><code>Strict per orderId; no global ordering</code></td>
+          <td>Ordering can require a stable partition key and limited parallelism. Stronger ordering usually reduces throughput and makes replay and retry design more important.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><mark class="key-idea">Ask for the smallest guarantee the business really needs.</mark> A warehouse may need an order event within 30 seconds but no strict order across different orders. A billing consumer may accept five minutes of latency but require status changes for the same <code>orderId</code> to stay in sequence.</p>
+  </section>
+
+  <section>
     <h2>Related skills</h2>
     <ul>
       <li><a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a> — When events are not the right pattern.</li>
