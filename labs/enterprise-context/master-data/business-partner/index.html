@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>Start with identity, then role, then organizational level.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,36 +65,37 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>At order entry the sold-to party establishes much of the commercial context. Ship-to data can influence shipping conditions, plant proposal and delivery address; bill-to and payer data matter later for billing, payment and credit context. Partner determination decides which roles are required, while the BP/customer master supplies the maintained candidates and defaults.</p>
+      <h2>The same Business Partner can supply different data to different parts of the process.</h2>
+      <p>At order entry the document uses specific partner roles and organizational views, not one flat customer record. Sold-to, ship-to, bill-to, and payer can contribute different context. General BP data identifies the party; customer roles make the BP usable in customer processes; company-code and sales-area data provide the organizational values consumed by Sales and Finance.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Name the partner role</h4><p>Start from the actual sold-to, ship-to, bill-to, payer, or other partner stored in the document. “The customer” is too broad for diagnosis.</p></div>
+      <div><span>02</span><h4>Confirm the required BP role</h4><p>Check that the Business Partner is extended for the business context the process needs before reading field values.</p></div>
+      <div><span>03</span><h4>Read the owning level</h4><p>Separate general BP data from company-code and sales-area data. Use the exact sales organization, distribution channel, division, and company code from the process.</p></div>
+      <div><span>04</span><h4>Trace the consumer</h4><p>Connect the field to the mechanism that uses it: pricing, shipping, payment, partner determination, tax, account determination, or another process decision.</p></div>
+      <div><span>05</span><h4>Prove the document value</h4><p>Compare master data with what the document stored and check copy logic, interface input, replication, or manual override only after the owning master level is clear.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Most “customer master” problems are really role or level problems.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Start from the actual partner number and sales area in the document. Check the relevant BP role, then the sales-area or company-code view that owns the field. Only after that trace partner determination, copy logic, replication or a document override.</p>
+      <p>Start from the wrong document value and name its partner role. Then identify whether the field belongs to general BP data, company-code data, or the exact sales-area view. If the master value is correct but the document is not, move to partner determination, reference/copy behavior, interface input, replication, or an allowed override. Do not change a global BP attribute to repair a sales-area-specific issue.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Use role + level + consumer.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>In S/4HANA, customer master data is represented through Business Partner with customer roles. I separate general BP data from company-code and sales-area data, then identify which partner role and organizational level owns the field used by the sales process.</p>
+      <p><strong>60-second answer:</strong> In S/4HANA the customer is represented through Business Partner with customer roles, but Sales does not read one flat record. I name the partner function first, then the organizational level that owns the field: general BP, company code, or sales area. After that I trace the mechanism that consumes the value and compare it with what the document stored. This prevents a broad BP change when the real problem belongs to one role or one sales-area view.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>

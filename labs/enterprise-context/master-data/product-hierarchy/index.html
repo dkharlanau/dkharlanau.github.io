@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>A hierarchy classifies products; it has no business effect until a rule consumes it.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,42 +65,43 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>Pricing can use product hierarchy values in condition tables. Reporting and commercial segmentation can aggregate sales by the same structure. The value therefore becomes important whenever a rule or analysis is intentionally defined above material level.</p>
+      <h2>The hierarchy lets one rule operate above individual material level.</h2>
+      <p>A product carries a hierarchy or grouping value in its Sales context. Pricing can use that value as part of a condition key, while analytics can use it to aggregate products into commercial families. The hierarchy becomes operational only when a consuming rule, report, or selection model is designed to read it.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Read the product context</h4><p>Confirm the product and Sales view used by the document, then identify the maintained hierarchy or grouping value.</p></div>
+      <div><span>02</span><h4>Name the business use</h4><p>Is the hierarchy meant to drive pricing, reporting, segmentation, selection, or another rule? A populated field alone explains nothing.</p></div>
+      <div><span>03</span><h4>Trace the consumer</h4><p>For pricing, follow the condition table and access that uses the hierarchy. For analytics, confirm the level and aggregation logic used by the report.</p></div>
+      <div><span>04</span><h4>Compare at the right level</h4><p>When several materials share a hierarchy node, test whether the result is consistently group-based before changing one product record.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>Do not blame the hierarchy until you prove the consumer.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Check the hierarchy value on the product sales view used by the order. Then inspect the condition table or reporting logic that is supposed to consume it. Do not assume the hierarchy has runtime effect merely because it is populated.</p>
+      <p>Check the hierarchy value on the exact product Sales view used by the order. Then inspect the pricing access, report, or selection logic that is supposed to consume it. If the field is correct but the consumer never reads it, changing the product hierarchy cannot repair the result.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Classification first; business effect second.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Product Hierarchy is a commercial grouping of products. I verify the maintained hierarchy value and then the pricing or reporting logic that consumes that value.</p>
+      <p><strong>60-second answer:</strong> Product Hierarchy is a commercial classification above individual material level. The product master supplies the hierarchy value, but that value has no effect by itself. I first verify the correct Sales view and hierarchy node, then the consumer: for pricing, the condition key and access; for analytics, the grouping level and report logic. This separates wrong classification from a rule that simply does not use the hierarchy.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/labs/enterprise-context/pricing/">Pricing engine</a>
+      <a href="/labs/enterprise-context/sales-analytics/">Sales analytics</a>
     </nav>
   </section>
 </div>

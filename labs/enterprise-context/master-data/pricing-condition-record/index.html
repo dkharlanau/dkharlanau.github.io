@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -44,7 +44,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Know what the object owns before tracing a document.</h2>
+      <h2>The record owns the commercial value; the pricing engine owns the search.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
@@ -65,42 +65,43 @@ tags:
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>How the data enters Order-to-Cash.</h2>
-      <p>The pricing procedure calls condition types. Their access sequences search condition tables in order. When a valid record is found, the record supplies the value that appears as a pricing condition in the sales document.</p>
+      <h2>A condition record is reached only after several pricing decisions are already correct.</h2>
+      <p>The document first uses a pricing procedure. The expected condition type must participate, and its access sequence must reach a condition table whose runtime key matches the document. Only then can a valid condition record supply a rate, amount, scale, currency, unit, or other maintained commercial value.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify</h4><p>Use the actual document partner, product, sales area, plant, date and other key fields. Do not debug a generic master record.</p></div>
-      <div><span>02</span><h4>Read</h4><p>Find the maintained value at the organizational or relationship level that owns it.</p></div>
-      <div><span>03</span><h4>Determine</h4><p>Trace the configuration or condition technique that consumes the master data.</p></div>
-      <div><span>04</span><h4>Compare</h4><p>Compare the determined value with what is stored in the sales document and any follow-on document.</p></div>
+      <div><span>01</span><h4>Prove the procedure</h4><p>Confirm the pricing procedure used by the actual document before checking condition records.</p></div>
+      <div><span>02</span><h4>Find the condition</h4><p>Check whether the expected condition type is present, relevant, and allowed to participate.</p></div>
+      <div><span>03</span><h4>Follow the access</h4><p>Read the access sequence and the runtime key values used for each condition table.</p></div>
+      <div><span>04</span><h4>Validate the record</h4><p>Check key fields, validity, amount or percentage, currency, unit, pricing unit, and scales for the record SAP actually found or failed to find.</p></div>
+      <div><span>05</span><h4>Continue into calculation</h4><p>If the record is found but the final amount is wrong, move beyond master data into base value, formulas, exclusions, grouping, and other pricing interactions.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Start with the most specific evidence.</h2>
+      <h2>“The record exists” is not a pricing diagnosis.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Start from the condition line in pricing analysis. Identify the condition type and access attempted, then check the exact key combination and validity of the record. Also verify currency, unit and scale basis.</p>
+      <p>Start from pricing analysis and identify the condition type, access attempted, and actual runtime key. If SAP never reaches the expected key, the record is not the root cause. If the key is reached, validate the record's validity, currency, unit, pricing unit, scale, and value. If the record is found correctly, continue into calculation rather than creating another record.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>A concise answer that still shows depth.</h2>
+      <h2>Separate search logic from maintained value.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p>Pricing configuration defines how SAP searches; the condition record contains the commercial value. I use pricing analysis to see which access was attempted and why a record was or was not found.</p>
+      <p><strong>60-second answer:</strong> A pricing condition record is master data that contains a commercial value for a defined key and validity. It does not decide how SAP searches. I first prove the pricing procedure and condition type, then follow the access sequence with the actual runtime key. Only when SAP reaches that key do I validate the record, currency, unit, scale, and validity. If the record is found but the amount is still wrong, I move into pricing calculation rather than duplicating master data.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/labs/enterprise-context/pricing/">Pricing engine</a>
     </nav>
   </section>
 </div>
