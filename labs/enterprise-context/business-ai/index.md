@@ -105,55 +105,31 @@ source_links:
   <section class="research-canvas__inventory" id="ai-lead-decision" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead decision model</p>
-      <h2>First decide whether AI should own this step at all.</h2>
-      <p>Product names come later. Start with the business decision, the acceptable error, the evidence the system may use, and the consequence of an action. A deterministic rule, workflow, API, search, or report is often a better design when the path is already known.</p>
+      <h2>{{ topic.lead_decision_model.title }}</h2>
+      <p>{{ topic.lead_decision_model.summary }}</p>
     </header>
 
     <div class="ecg-decision-columns">
+      {% for question in topic.lead_decision_model.questions %}
       <div>
-        <h3>1. What is uncertain?</h3>
-        <p>Name the part that needs interpretation, prediction, generation, or dynamic reasoning. If the expected result can be described as a stable rule, do not add AI only because it is available.</p>
+        <h3>{{ question.title }}</h3>
+        <p>{{ question.body }}</p>
       </div>
-      <div>
-        <h3>2. What is the source of truth?</h3>
-        <p>Define which SAP and non-SAP data may ground the answer, who owns that data, how fresh it must be, and which authorizations must still apply.</p>
-      </div>
-      <div>
-        <h3>3. What may the AI do?</h3>
-        <p>Separate read, recommend, prepare, and execute. A system that proposes a purchase-order change has a different risk boundary from one that posts the change automatically.</p>
-      </div>
-      <div>
-        <h3>4. How do we know it is good?</h3>
-        <p>Define business evaluation before rollout: correctness, missed cases, harmful actions, latency, cost, traceability, and the fallback when confidence or required evidence is insufficient.</p>
-      </div>
-      <div>
-        <h3>5. Who owns failure?</h3>
-        <p>Monitoring model calls is not enough. Define who investigates wrong business outcomes, how actions are traced to evidence and tool calls, and how the process continues when the AI path is unavailable.</p>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> “I do not start with Joule, AI Core, or an agent. I start with the business job and decide whether the uncertain part really needs AI. Then I define the source of truth and authorization boundary, choose whether the AI may read, recommend, or act, and set an evaluation and fallback. Only after that do I map the responsibility to the SAP AI component that owns it. For transactional use, I also require tool contracts, identity, observability, and proof of the resulting business state.”</p>
+      <p><strong>60-second answer:</strong> “{{ topic.lead_decision_model.assessment_answer }}”</p>
     </div>
 
     <div class="ecg-decision-columns">
+      {% for item in topic.lead_decision_model.trade_offs %}
       <div>
-        <h3>Quality vs latency and cost</h3>
-        <p>More context, larger models, and extra reasoning steps can improve some tasks but increase response time and runtime cost. Measure the business outcome rather than optimizing one technical metric.</p>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.body }}</p>
       </div>
-      <div>
-        <h3>Autonomy vs control</h3>
-        <p>More autonomous execution can remove manual work, but it also increases the consequence of a wrong interpretation or tool call.</p>
-      </div>
-      <div>
-        <h3>Broad context vs data minimization</h3>
-        <p>More data can improve relevance while expanding authorization, privacy, and governance scope. Give the AI the evidence it needs, not every object it can technically reach.</p>
-      </div>
-      <div>
-        <h3>Flexible agent vs deterministic automation</h3>
-        <p>Agents are useful when the path must adapt. Stable repetitive flows are usually easier to test and operate as rules, workflows, APIs, or conventional automation.</p>
-      </div>
+      {% endfor %}
     </div>
   </section>
 

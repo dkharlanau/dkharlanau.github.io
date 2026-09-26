@@ -78,6 +78,7 @@ source_links:
     url: "https://help.sap.com/docs/variant-configuration-and-pricing/supported-standard-pricing-exits/supported-standard-pricing-exits"
 # ai-discovery-managed:end
 ---
+{% assign graph = site.data.labs.enterprise_context.graphs.pricing %}
 {% assign evidence = site.data.labs.enterprise_context.sources.pricing %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -136,49 +137,36 @@ source_links:
   <section class="research-canvas__inventory" id="pricing-lead-decisions" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead design decisions</p>
-      <h2>Pricing design is a choice about policy, ownership, and change cost.</h2>
-      <p>The condition technique is not the decision. It is one implementation model. Start with the commercial rule, then choose the simplest pricing design that keeps the rule understandable, maintainable, and testable across its lifecycle.</p>
+      <h2>{{ graph.lead_decision_model.title }}</h2>
+      <p>{{ graph.lead_decision_model.summary }}</p>
     </header>
 
     <div class="ecg-decision-columns">
+      {% for lens in graph.lead_decision_model.lenses %}
       <div>
-        <h3>Specificity vs maintenance</h3>
-        <p>A very specific key can express a precise commercial exception, but every extra dimension increases the number of records, ownership questions, and failure modes.</p>
-        <p><strong>Ask:</strong> does this field change the business meaning of the price, or only make the key more complicated?</p>
+        <h3>{{ lens.title }}</h3>
+        <p>{{ lens.body }}</p>
+        <p><strong>Ask:</strong> {{ lens.question }}</p>
       </div>
-      <div>
-        <h3>Standard rule vs extension</h3>
-        <p>Use standard pricing behavior when it can express the policy cleanly. Custom logic is justified when the missing rule is real and the supported extension model can own it without hiding the commercial logic.</p>
-        <p><strong>Ask:</strong> are we extending a capability, or coding around a data or configuration problem?</p>
-      </div>
-      <div>
-        <h3>Current policy vs historical continuity</h3>
-        <p>A price can be copied, retained, or redetermined later depending on the document flow and configured pricing behavior. The business must decide which events are allowed to change the commercial result.</p>
-        <p><strong>Ask:</strong> what should happen when quantity, date, customer context, or billing context changes?</p>
-      </div>
-      <div>
-        <h3>Precision vs explainability</h3>
-        <p>A design can be technically correct and still be hard to support. If users and support teams cannot explain why one condition won, the operating cost becomes part of the design.</p>
-        <p><strong>Ask:</strong> can we explain the selected value from document context to final price element?</p>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
       <div>
-        <p><strong>Separate fact from assumption.</strong> “A condition record exists” is a fact about master data. “SAP should use this record” is an assumption until pricing analysis proves the procedure, condition, access, runtime key, validity, and calculation path.</p>
-        <p><strong>Lead evidence:</strong> capture the first point where a working and failing document take different pricing paths. That difference is more useful than a long list of plausible causes.</p>
+        <p><strong>Separate fact from assumption.</strong> “{{ graph.lead_decision_model.evidence_boundary.fact }}” is a fact about master data. “{{ graph.lead_decision_model.evidence_boundary.assumption }}” is an assumption until the runtime path is proven.</p>
+        <p><strong>Lead evidence:</strong> {{ graph.lead_decision_model.evidence_boundary.proof }}</p>
       </div>
     </div>
 
     <div class="ecg-diagnostic">
       <div>
         <h4>Requirement</h4>
-        <p>“Give a special discount to one customer for a defined product context and period.” Start by defining the business key, owner, validity, fallback, and audit expectation.</p>
+        <p>{{ graph.lead_decision_model.example.requirement }}</p>
       </div>
       <div>
         <h4>Decision</h4>
-        <p>If standard condition technique can express the key and validity cleanly, keep the rule visible there. If it cannot, classify exactly what is missing before choosing a supported extension. Do not jump from “special case” to custom code.</p>
+        <p>{{ graph.lead_decision_model.example.reasoning }}</p>
       </div>
     </div>
   </section>

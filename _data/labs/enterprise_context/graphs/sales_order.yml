@@ -10,13 +10,55 @@ process_family: "Order-to-Cash"
 process_step: "Create Sales Order"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-09-23"
+updated_at: "2026-09-26"
 verified_at: null
 
 thesis: >-
   A sales order is not only a document. It is a chain of business decisions.
   One result often becomes an input for the next decision, so a wrong value should
   first be traced to its origin before configuration is changed.
+
+lead_decision_model:
+  title: "Do not ask which field is wrong. Ask which decision became wrong first."
+  summary: >-
+    A sales order is where several owners meet. The visible symptom may sit in Sales while
+    the first wrong state comes from master data, document control, pricing, supply, shipping,
+    credit, integration, or copied reference data.
+  evidence_type: "authored_reasoning"
+  steps:
+    - id: "intent"
+      title: "1. What is the business intent?"
+      body: >-
+        State what the order should achieve: sell which product or service, to whom,
+        under which commercial and fulfillment promise.
+    - id: "owner"
+      title: "2. Which layer owns the decision?"
+      body: >-
+        Separate transaction frame, item behavior, schedule execution, master-data proposal,
+        commercial calculation, supply confirmation, and downstream execution.
+    - id: "evidence"
+      title: "3. What evidence proves the owner?"
+      body: >-
+        Compare expected and actual document state, then trace the value or status to its
+        input, determination, reference, or external result.
+    - id: "dependency"
+      title: "4. What depends on it next?"
+      body: >-
+        Before changing the rule, identify downstream consequences for ATP, delivery, warehouse,
+        transport, billing, finance, output, and integrations where relevant.
+  trade_off: >-
+    A local override can repair one document quickly, while a reusable rule can prevent repeated
+    manual work. The correct choice depends on whether the requirement is an exception or a stable
+    business rule, who owns it, and how much downstream behavior it changes.
+  diagnostic_example:
+    symptom: >-
+      The order has an unexpected delivery result. Do not start by changing shipping or ATP
+      because those are the last visible layers.
+    reasoning: >-
+      Check the item and schedule-line context, plant and dates, then the supply and shipping
+      decisions that consume them. Stop at the first wrong derived result and prove its owner
+      before changing anything.
+
 
 model_boundary:
   release_scope:

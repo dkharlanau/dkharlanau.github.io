@@ -135,36 +135,23 @@ source_links:
   <section class="research-canvas__inventory" id="atp-lead-decisions" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead policy decisions</p>
-      <h2>Availability is not only a calculation. Scarcity needs a business policy.</h2>
-      <p>PAC explains what can be promised from the current supply-and-demand context. Advanced ATP decisions become relevant when the business must decide who should receive scarce supply, whether existing promises may move, and whether alternatives are acceptable.</p>
+      <h2>{{ graph.lead_decision_model.title }}</h2>
+      <p>{{ graph.lead_decision_model.summary }}</p>
     </header>
 
     <div class="ecg-decision-columns">
+      {% for policy in graph.lead_decision_model.policies %}
       <div>
-        <h3>Service priority vs equal treatment</h3>
-        <p>Allocation and protection rules can differentiate demand instead of letting every requirement compete in the same way.</p>
-        <p><strong>Trade-off:</strong> protecting strategic demand can improve service for one segment while intentionally reducing flexibility for another.</p>
+        <h3>{{ policy.title }}</h3>
+        <p>{{ policy.body }}</p>
+        <p><strong>Trade-off:</strong> {{ policy.trade_off }}</p>
       </div>
-      <div>
-        <h3>Stable promise vs later optimization</h3>
-        <p>Backorder processing can revisit confirmations after supply or priorities change.</p>
-        <p><strong>Trade-off:</strong> reallocating supply can improve the overall business outcome, but it can also move an earlier customer promise. Governance and customer communication therefore matter.</p>
-      </div>
-      <div>
-        <h3>Exact source vs fulfillment flexibility</h3>
-        <p>Alternative-based fulfillment can search beyond the first product or location context when the business allows it.</p>
-        <p><strong>Trade-off:</strong> more alternatives can increase service, but may add logistics cost, substitution rules, and explanation complexity.</p>
-      </div>
-      <div>
-        <h3>Fast answer vs precise context</h3>
-        <p>A confirmation is only as meaningful as the requirement, dates, plant, scope, and active policy behind it.</p>
-        <p><strong>Lead rule:</strong> do not optimize ATP policy until the basic PAC result is understood and the business objective is explicit.</p>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
-      <p><strong>Fact vs assumption:</strong> “100 pieces are physically in stock” is a stock fact. “This order should receive 100” is a promise assumption until the requirement date, scope, competing demand, and active scarcity policy are evaluated.</p>
+      <p><strong>Fact vs assumption:</strong> “{{ graph.lead_decision_model.evidence_boundary.fact }}” is a stock fact. “{{ graph.lead_decision_model.evidence_boundary.assumption }}” is a promise assumption. {{ graph.lead_decision_model.evidence_boundary.proof }}</p>
     </div>
   </section>
 

@@ -77,6 +77,7 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/b33a97f3014f43c488ec798633824081.html"
 # ai-discovery-managed:end
 ---
+{% assign graph = site.data.labs.enterprise_context.graphs.procurement %}
 {% assign evidence = site.data.labs.enterprise_context.sources.procurement %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -105,41 +106,28 @@ source_links:
   <section class="research-canvas__inventory" id="procurement-lead-model" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead decision model</p>
-      <h2>A purchase order is the result of earlier choices. Diagnose those choices first.</h2>
-      <p>A strong procurement answer starts with the requirement, source strategy, commercial context, process control, and completion proof. The PO is where those decisions meet; it is not automatically where the wrong decision started.</p>
+      <h2>{{ graph.lead_decision_model.title }}</h2>
+      <p>{{ graph.lead_decision_model.summary }}</p>
     </header>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> “I start with the business requirement: what is needed, where, when, and for which consumption or stock purpose. Then I prove why this source of supply is valid, which commercial terms apply, and which item and account-assignment model defines execution. I separate approval and supplier communication from document correctness. Finally I follow receipt or service acceptance, invoice verification, and the financial state such as GR/IR. If a value is wrong, I find the first decision that differs instead of overwriting the PO.”</p>
+      <p><strong>60-second answer:</strong> “{{ graph.lead_decision_model.assessment_answer }}”</p>
     </div>
 
     <div class="ecg-decision-columns">
+      {% for item in graph.lead_decision_model.trade_offs %}
       <div>
-        <h3>Lowest price vs resilient supply</h3>
-        <p>The cheapest source is not automatically the best source when reliability, lead time, capacity, quality, contractual commitment, or business continuity matters.</p>
-        <p><strong>Lead question:</strong> which constraints are part of the sourcing decision, and which are only preferences?</p>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.body }}</p>
+        <p><strong>Lead question:</strong> {{ item.question }}</p>
       </div>
-      <div>
-        <h3>Specific source rule vs maintenance cost</h3>
-        <p>Source lists, quota arrangements, contracts, scheduling agreements, and info records solve different problems. More source rules can improve control but also create more validity, ownership, and reconciliation work.</p>
-        <p><strong>Lead question:</strong> which object owns the decision we are trying to express?</p>
-      </div>
-      <div>
-        <h3>Control vs cycle time</h3>
-        <p>Approval can reduce commitment risk, but unnecessary workflow steps can slow down routine purchasing and create operational queues.</p>
-        <p><strong>Lead question:</strong> what risk requires approval, who owns it, and what evidence should allow straight-through processing?</p>
-      </div>
-      <div>
-        <h3>Document complete vs process complete</h3>
-        <p>An approved PO is only a commitment. Receipt, service acceptance, supplier invoice, and reconciliation are separate states.</p>
-        <p><strong>Lead rule:</strong> define the business completion proof before calling the procurement flow successful.</p>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
-      <p><strong>Fact vs assumption:</strong> “Supplier A has an info record” is a fact. “Supplier A should be selected” is an assumption until the requirement context and the active source-of-supply rules are reconstructed.</p>
+      <p><strong>Fact vs assumption:</strong> “{{ graph.lead_decision_model.evidence_boundary.fact }}” is a fact. “{{ graph.lead_decision_model.evidence_boundary.assumption }}” is an assumption. {{ graph.lead_decision_model.evidence_boundary.proof }}</p>
     </div>
   </section>
 

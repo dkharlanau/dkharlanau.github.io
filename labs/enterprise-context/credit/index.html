@@ -78,6 +78,7 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/4d49cb392251391ee10000000a15822b.html"
 # ai-discovery-managed:end
 ---
+{% assign graph = site.data.labs.enterprise_context.graphs.credit %}
 {% assign evidence = site.data.labs.enterprise_context.sources.credit %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -118,36 +119,23 @@ source_links:
   <section class="research-canvas__inventory" id="credit-lead-decisions" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead policy decisions</p>
-      <h2>Credit design is a risk policy, not a target to remove every block.</h2>
-      <p>A strong design makes the business risk visible and controlled. The question is not how to make more orders pass, but which risk the company accepts, which evidence the check should use, and who may override the policy.</p>
+      <h2>{{ graph.lead_decision_model.title }}</h2>
+      <p>{{ graph.lead_decision_model.summary }}</p>
     </header>
 
     <div class="ecg-decision-columns">
+      {% for policy in graph.lead_decision_model.policies %}
       <div>
-        <h3>Protection vs sales flow</h3>
-        <p>More restrictive checks can reduce financial exposure but can also stop legitimate business and create manual review workload.</p>
-        <p><strong>Trade-off:</strong> risk protection, customer service, and operational effort must be designed together.</p>
+        <h3>{{ policy.title }}</h3>
+        <p>{{ policy.body }}</p>
+        <p><strong>Trade-off:</strong> {{ policy.trade_off }}</p>
       </div>
-      <div>
-        <h3>Global simplicity vs segment precision</h3>
-        <p>Credit segments can make policy and exposure more specific to a business scope.</p>
-        <p><strong>Trade-off:</strong> more precise segmentation can improve control, but increases master-data, ownership, and reconciliation complexity.</p>
-      </div>
-      <div>
-        <h3>Recheck vs release</h3>
-        <p>Recheck asks the policy to evaluate changed facts again. Release is an explicit business acceptance of risk.</p>
-        <p><strong>Governance:</strong> repeated manual releases are evidence to investigate, not a substitute for fixing a reproducible data, exposure, or rule problem.</p>
-      </div>
-      <div>
-        <h3>Limit change vs root cause</h3>
-        <p>Raising a credit limit can change the outcome without explaining why exposure, account, segment, or another check produced the block.</p>
-        <p><strong>Lead rule:</strong> reconcile the failed decision first; change policy only when the policy itself is the business decision being revised.</p>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
-      <p><strong>Fact vs assumption:</strong> “free limit remains” proves only one part of the credit picture. A pass is an assumption until the actual credit account, segment, checking rule, exposure, and failed step are known.</p>
+      <p><strong>Fact vs assumption:</strong> “{{ graph.lead_decision_model.evidence_boundary.fact }}” is one fact in the credit picture. “{{ graph.lead_decision_model.evidence_boundary.assumption }}” is an assumption. {{ graph.lead_decision_model.evidence_boundary.proof }}</p>
     </div>
   </section>
 

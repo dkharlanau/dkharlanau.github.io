@@ -10,13 +10,61 @@ process_family: "Order-to-Cash"
 process_step: "Price Sales Document"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-09-24"
+updated_at: "2026-09-26"
 verified_at: null
 
 thesis: >-
   Pricing is not a number. It is a search and calculation pipeline. When the final value
   is wrong, I first find the first point where the actual pricing path differs from the
   expected path: procedure, condition, requirement, access, record, calculation, or extension.
+
+lead_decision_model:
+  title: "Pricing design is a choice about policy, ownership, and change cost."
+  summary: >-
+    The condition technique is not the decision. It is one implementation model.
+    Start with the commercial rule, then choose the simplest pricing design that keeps
+    the rule understandable, maintainable, and testable across its lifecycle.
+  evidence_type: "authored_reasoning"
+  lenses:
+    - id: "specificity-maintenance"
+      title: "Specificity vs maintenance"
+      body: >-
+        A very specific key can express a precise commercial exception, but every extra
+        dimension increases the number of records, ownership questions, and failure modes.
+      question: "Does this field change the business meaning of the price, or only make the key more complicated?"
+    - id: "standard-extension"
+      title: "Standard rule vs extension"
+      body: >-
+        Use standard pricing behavior when it can express the policy cleanly. Custom logic
+        is justified when the missing rule is real and the supported extension model can own
+        it without hiding the commercial logic.
+      question: "Are we extending a capability, or coding around a data or configuration problem?"
+    - id: "continuity-redetermination"
+      title: "Current policy vs historical continuity"
+      body: >-
+        A price can be copied, retained, or redetermined later depending on the document flow
+        and configured pricing behavior. The business must decide which events are allowed to
+        change the commercial result.
+      question: "What should happen when quantity, date, customer context, or billing context changes?"
+    - id: "precision-explainability"
+      title: "Precision vs explainability"
+      body: >-
+        A design can be technically correct and still be hard to support. If users and support
+        teams cannot explain why one condition won, the operating cost becomes part of the design.
+      question: "Can we explain the selected value from document context to final price element?"
+  evidence_boundary:
+    fact: "A condition record exists."
+    assumption: "SAP should use this record."
+    proof: >-
+      Pricing analysis must prove the procedure, condition, access, runtime key, validity,
+      and calculation path. Capture the first point where a working and failing document take different paths.
+  example:
+    requirement: "Give a special discount to one customer for a defined product context and period."
+    reasoning: >-
+      Define the business key, owner, validity, fallback, and audit expectation first.
+      If standard condition technique can express the key and validity cleanly, keep the rule
+      visible there. If it cannot, classify exactly what is missing before choosing a supported extension.
+
 
 boundary:
   included:
