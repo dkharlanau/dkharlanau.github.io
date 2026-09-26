@@ -3,7 +3,7 @@ layout: default
 title: "Scope Boundary Definition Working Skill"
 description: "Define what is in scope, what is out of scope, and what sits at the boundary so that projects do not drift into adjacent problems."
 permalink: /skill-hub/business-analysis/scope-boundary-definition-working-skill/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -250,6 +250,14 @@ Implement automatic credit check at SAP S/4 order creation (VA01) to reduce manu
       <li><strong>Produce one Scope Boundary Note per project or phase.</strong> Do not mix phases into one note.</li>
       <li><strong>Do not label everything "Must have."</strong> Be strict. If the project can succeed without it, it is "Should have" or "Could have."</li>
       <li><strong>Link to Atlas diagnostics</strong> when boundaries relate to SAP processes. For example, credit management scope boundaries should reference <a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/impact-mapping/">Impact Mapping</a> — Keep scope connected to a measurable goal, actors, and expected behavior change.</li>
+      <li><a href="/skill-hub/tools-frameworks/moscow-prioritization/">MoSCoW</a> — Make explicit scope trade-offs for a defined release or timebox.</li>
     </ul>
   </section>
 

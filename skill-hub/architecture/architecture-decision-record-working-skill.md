@@ -3,7 +3,7 @@ layout: default
 title: "Architecture Decision Record"
 description: "Record why a significant architectural choice was made, what options were rejected, and what consequences follow."
 permalink: /skill-hub/architecture/architecture-decision-record-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -221,6 +221,14 @@ review_date: YYYY-MM-DD
       <li><strong>Assess reversibility realistically.</strong> Do not default to "moderately reversible." Consider data migration, contract terms, skill retraining, and integration rework.</li>
       <li><strong>Link to related skills.</strong> If the ADR concerns integration, reference <a href="/skill-hub/integration-architecture/event-driven-architecture-working-skill/">Event-Driven Architecture</a> or <a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a>. If it concerns data, reference <a href="/atlas/concepts/data-contracts/">Data Contracts</a>.</li>
     </ol>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/decision-rights-daci-rapid/">DACI / RAPID</a> — Clarify who drives, contributes to, agrees with, and makes the decision before recording it.</li>
+      <li><a href="/skill-hub/tools-frameworks/impact-mapping/">Impact Mapping</a> — Use when the architectural option must be traced back to a measurable business outcome.</li>
+    </ul>
   </section>
 
   <section>

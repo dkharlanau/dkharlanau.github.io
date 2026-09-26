@@ -3,7 +3,7 @@ layout: default
 title: "State and Lifecycle Analysis Working Skill"
 description: "Map the states an entity passes through, the events that trigger transitions, and the conditions that must hold at each stage so that no invalid state reaches production."
 permalink: /skill-hub/systems-analysis/state-lifecycle-analysis-working-skill/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -279,6 +279,14 @@ Produce the output in the State Lifecycle Analysis template format: states table
       <li><strong>Don't</strong> treat configuration as the only truth. Check production data for legacy statuses and bypasses.</li>
       <li><strong>Don't</strong> skip the "does NOT cover" section. Scope creep in lifecycle mapping is common.</li>
       <li><strong>Don't</strong> invent guard conditions or custom code names. If you cannot verify the guard, flag it as unconfirmed.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/state-machine-diagrams/">State Machine Diagrams</a> — Formalize verified states, events, transitions, and guards.</li>
+      <li><a href="/skill-hub/tools-frameworks/sequence-diagrams/">Sequence Diagrams</a> — Add interaction order when lifecycle transitions depend on several systems.</li>
     </ul>
   </section>
 

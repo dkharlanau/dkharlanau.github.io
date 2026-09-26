@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-25
+last_modified_at: 2026-09-26
 hide_global_cta: true
 tags:
   - architecture
@@ -30,7 +30,7 @@ tags:
       <a class="research-canvas__button" href="#framework-routes">Open the frameworks <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <figure class="hub-canvas__visual">
-      <img src="/assets/img/hubs/framework-instruments-field.webp" alt="Four different reasoning instruments connected by one evidence spine." width="1728" height="1024" decoding="async" fetchpriority="high" />
+      <img src="/assets/img/hubs/framework-instruments-field.webp" alt="Reusable reasoning instruments connected by one evidence spine." width="1728" height="1024" decoding="async" fetchpriority="high" />
       <figcaption>Stable method → changing case → reusable outcome</figcaption>
     </figure>
     <div class="research-canvas__signal" aria-label="Framework inventory">
@@ -39,6 +39,7 @@ tags:
       <div class="research-canvas__signal-line"><span>02</span><strong>DDD</strong><small>Decisions</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>RDP</strong><small>Repeatable data work</small></div>
       <div class="research-canvas__signal-line"><span>04</span><strong>MEDDPICC</strong><small>Opportunity qualification</small></div>
+      <div class="research-canvas__signal-line"><span>05</span><strong>ANALYSIS</strong><small>Tools &amp; models</small></div>
       <em>Frameworks stay independent from the domains where they are applied.</em>
     </div>
   </header>
@@ -54,6 +55,7 @@ tags:
       <a href="/ddd/"><span>DDD</span><strong>Decision Design</strong><small>Structure architecture and operating decisions so assumptions, options, evidence, constraints, and consequences remain inspectable.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/reusable-data-procedures/"><span>RDP</span><strong>Reusable Data Procedures</strong><small>Turn repeated file discovery, mapping, validation, and transformation into governed procedures that can be run again.</small><i class="material-symbols-outlined" aria-hidden="true">repeat</i></a>
       <a href="/frameworks/meddpicc/"><span>MEDDPICC</span><strong>Opportunity Qualification</strong><small>Separate technical interest from a qualified business opportunity by testing value, authority, decision path, internal support, commercial process, and alternatives.</small><i class="material-symbols-outlined" aria-hidden="true">filter_alt</i></a>
+      <a href="/skill-hub/tools-frameworks/"><span>ANALYSIS</span><strong>Tools &amp; Frameworks Catalog</strong><small>Choose RACI, SIPOC, BPMN, EventStorming, DMN, C4, UML views, FMEA, SysML v2, and related methods by the problem they solve.</small><i class="material-symbols-outlined" aria-hidden="true">handyman</i></a>
       <a href="/labs/templates/"><span>OPS</span><strong>Operational Protocols</strong><small>Practical templates for RCA, integration failure analysis, runbooks, change impact, cutover, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
     </div>
   </section>

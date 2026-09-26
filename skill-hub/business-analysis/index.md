@@ -117,6 +117,27 @@ verified: true
 
 <section class="section">
   <header class="section-heading">
+    <h2>Tools and frameworks for Business Analysis</h2>
+  </header>
+  <p>Use the <a href="/skill-hub/tools-frameworks/">Tools &amp; Frameworks Catalog</a> when the working skill tells you <em>what job to do</em> but you need a concrete instrument for the workshop or artifact.</p>
+  <table class="study-table">
+    <thead><tr><th>BA problem</th><th>Useful tool</th></tr></thead>
+    <tbody>
+      <tr><td>Ownership is unclear</td><td><a href="/skill-hub/tools-frameworks/raci/">RACI</a> or <a href="/skill-hub/tools-frameworks/decision-rights-daci-rapid/">DACI / RAPID</a></td></tr>
+      <tr><td>Process scope is unclear</td><td><a href="/skill-hub/tools-frameworks/sipoc/">SIPOC</a></td></tr>
+      <tr><td>Process flow and exceptions need precision</td><td><a href="/skill-hub/tools-frameworks/bpmn/">BPMN</a></td></tr>
+      <tr><td>Business and IT do not share the same process model</td><td><a href="/skill-hub/tools-frameworks/domain-storytelling/">Domain Storytelling</a> or <a href="/skill-hub/tools-frameworks/eventstorming/">EventStorming</a></td></tr>
+      <tr><td>A backlog has no user journey</td><td><a href="/skill-hub/tools-frameworks/user-story-mapping/">User Story Mapping</a></td></tr>
+      <tr><td>A requirement is vague</td><td><a href="/skill-hub/tools-frameworks/example-mapping/">Example Mapping</a></td></tr>
+      <tr><td>Rules are complex or contradictory</td><td><a href="/skill-hub/tools-frameworks/dmn-decision-tables/">DMN &amp; Decision Tables</a></td></tr>
+      <tr><td>Features are disconnected from outcomes</td><td><a href="/skill-hub/tools-frameworks/impact-mapping/">Impact Mapping</a></td></tr>
+      <tr><td>Scope needs a hard priority decision</td><td><a href="/skill-hub/tools-frameworks/moscow-prioritization/">MoSCoW</a></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <header class="section-heading">
     <h2>Recommended path through this group</h2>
   </header>
   <ol>

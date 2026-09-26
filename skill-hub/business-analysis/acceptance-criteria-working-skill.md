@@ -3,7 +3,7 @@ layout: default
 title: "Acceptance Criteria Working Skill"
 description: "Define how to verify that a requirement is met, before work starts, so that delivery has an unambiguous pass/fail standard."
 permalink: /skill-hub/business-analysis/acceptance-criteria-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -199,6 +199,14 @@ Then &lt;expected outcome&gt;
       <li><strong>Produce an Acceptance Criteria Set per requirement.</strong> Link to the Requirements Brief.</li>
       <li><strong>Do not include implementation details in criteria.</strong> Criteria state what must be true, not how to build it.</li>
       <li><strong>Link to Atlas diagnostics</strong> when criteria relate to SAP validation. For example, incompletion procedure criteria should reference <a href="/atlas/diagnostics/sap-incompletion-procedure-diagnostics/">SAP Incompletion Procedure Diagnostics</a>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/example-mapping/">Example Mapping</a> — Turn vague rules into concrete examples and unresolved questions before writing criteria.</li>
+      <li><a href="/skill-hub/tools-frameworks/dmn-decision-tables/">DMN &amp; Decision Tables</a> — Structure acceptance logic when several conditions determine the expected outcome.</li>
     </ul>
   </section>
 

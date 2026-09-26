@@ -3,7 +3,7 @@ layout: default
 title: "Process Analysis Working Skill"
 description: "Document how work actually happens, where it breaks, what systems touch it, and who owns each step — not how it is supposed to happen."
 permalink: /skill-hub/business-analysis/process-analysis-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -196,6 +196,16 @@ scope: As-is | To-be | Gap
       <li><strong>Produce a Process Analysis Note.</strong> If documentation contradicts reality, document reality and flag the documentation gap.</li>
       <li><strong>Link to Atlas diagnostics</strong> when process gaps relate to SAP. For example, O2C process blocks should reference <a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a>.</li>
       <li><strong>Do not optimize a process you have not observed.</strong> If you only have documentation, state that the analysis is unverified.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Related tools and frameworks</h2>
+    <ul>
+      <li><a href="/skill-hub/tools-frameworks/sipoc/">SIPOC</a> — Frame suppliers, inputs, process, outputs, and customers before detailed modeling.</li>
+      <li><a href="/skill-hub/tools-frameworks/bpmn/">BPMN</a> — Model validated flow, decisions, exceptions, and participant boundaries with precision.</li>
+      <li><a href="/skill-hub/tools-frameworks/domain-storytelling/">Domain Storytelling</a> — Discover the real process through a concrete story told by domain experts.</li>
+      <li><a href="/skill-hub/tools-frameworks/eventstorming/">EventStorming</a> — Discover events, policies, hotspots, and domain boundaries in complex flows.</li>
     </ul>
   </section>
 
