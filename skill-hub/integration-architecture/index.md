@@ -4,7 +4,7 @@ layout: default
 title: "Integration Architecture — Skill Group Index"
 description: "Practical working skills for designing, owning, monitoring, and troubleshooting enterprise integrations in SAP and mixed landscapes."
 permalink: /skill-hub/integration-architecture/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -20,14 +20,32 @@ verified: true
 <section class="section atlas-hero">
   <p class="eyebrow">Skill Hub — Integration Architecture</p>
   <h1>Design, own, monitor, and fix integrations.</h1>
-  <p class="lead">Practical working skills for integration architects and operators who need to make integration decisions, assign ownership, define contracts, handle failures, and build observability in SAP and mixed enterprise landscapes.</p>
+  <p class="lead">Practical working skills for integration architects and operators who need to make integration decisions, <mark class="key-idea">assign ownership, define contracts, handle failures, and build observability</mark> in SAP and mixed enterprise landscapes.</p>
+  <dl class="hero-evidence-rail" aria-label="Integration Architecture content inventory">
+    <div>
+      <dt>Working skills</dt>
+      <dd><strong>6</strong><span>From ownership to data mesh</span></dd>
+    </div>
+    <div>
+      <dt>Deliverables</dt>
+      <dd><strong>26</strong><span>Concrete outputs across the skill set</span></dd>
+    </div>
+    <div>
+      <dt>Copy-ready templates</dt>
+      <dd><strong>6</strong><span>One reusable template per skill</span></dd>
+    </div>
+    <div>
+      <dt>Decision rules</dt>
+      <dd><strong>49</strong><span>Explicit conditions that change the path</span></dd>
+    </div>
+  </dl>
 </section>
 
 <section class="section">
   <header class="section-heading">
     <h2>What this group covers</h2>
   </header>
-  <p>Integration Architecture skills bridge the gap between integration theory and operational reality. They help you decide between APIs and events, define who owns an interface, design error handling that actually works, and build monitoring that catches failures before business users do.</p>
+  <p>Integration Architecture skills <mark class="key-idea">bridge the gap between integration theory and operational reality.</mark> They help you decide between APIs and events, define who owns an interface, design error handling that actually works, and build monitoring that catches failures before business users do.</p>
   <p>These skills are applicable to SAP-centric landscapes (IDoc, RFC, OData, AIF) and to mixed landscapes with cloud middleware, SaaS APIs, and event brokers.</p>
 </section>
 
