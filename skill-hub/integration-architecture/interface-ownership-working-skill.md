@@ -3,7 +3,7 @@ layout: default
 title: "Interface Ownership Working Skill"
 description: "Assign clear ownership to every interface, document who decides what, and prevent failures from sitting unresolved because no one is responsible."
 permalink: /skill-hub/integration-architecture/interface-ownership-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-26
 status: reviewed
 verified: true
 ---
@@ -24,7 +24,7 @@ verified: true
 
   <section>
     <h2>What this skill is for</h2>
-    <p>This skill helps you inventory all interfaces in a landscape, classify them by type and criticality, assign four distinct ownership roles per interface, document the ownership matrix, identify gaps, and establish a change process so ownership stays current.</p>
+    <p>This skill helps you inventory all interfaces in a landscape, classify them by type and criticality, <mark class="key-idea">assign four distinct ownership roles per interface</mark>, document the ownership matrix, identify gaps, and establish a change process so ownership stays current.</p>
   </section>
 
   <section>
@@ -42,7 +42,7 @@ verified: true
   <section>
     <h2>Real work situations</h2>
     <h3>Situation 1: IDoc failures sit unresolved</h3>
-    <p>Customer master IDocs from SAP to a CRM are failing with status 51. The SAP basis team says the IDoc is correct. The CRM team says the data is wrong. The middleware team says the routing is fine. After three days, a sales manager complains that new customers cannot be created. No one was clearly responsible for end-to-end resolution.</p>
+    <p>Customer master IDocs from SAP to a CRM are failing with status 51. The SAP basis team says the IDoc is correct. The CRM team says the data is wrong. The middleware team says the routing is fine. After three days, a sales manager complains that new customers cannot be created. <mark class="key-idea">No one was clearly responsible for end-to-end resolution.</mark></p>
     <h3>Situation 2: Schema change without approval</h3>
     <p>A developer adds a mandatory field to a customer API to support a new project. Two downstream systems start failing because they do not send the new field. There is no documented owner who approves schema changes, so the developer assumed it was safe.</p>
     <h3>Situation 3: AMS team lacks business context</h3>
@@ -90,7 +90,7 @@ verified: true
         </ul>
       </li>
       <li><strong>Document in ownership matrix.</strong> Record interface ID, source, target, direction, type, criticality, and all four owners. See template below.</li>
-      <li><strong>Identify gaps.</strong> Flag interfaces with missing owners, conflicting claims, or owners who have left the organization.</li>
+      <li><strong>Identify gaps.</strong> <mark class="key-idea">Flag interfaces with missing owners, conflicting claims, or owners who have left the organization.</mark></li>
       <li><strong>Assign missing owners.</strong> For each gap, propose an owner based on domain, system, or incident history. Get written confirmation.</li>
       <li><strong>Define change process.</strong> Document how ownership is updated when systems change, teams reorganize, or projects end.</li>
       <li><strong>Validate with incident drill.</strong> Simulate a failure for a critical interface. Verify that the operational owner knows who to contact and that the business owner can make decisions.</li>
