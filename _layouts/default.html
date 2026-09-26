@@ -100,6 +100,9 @@
   <link rel="stylesheet" href="{{ '/assets/css/layout.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   <link rel="stylesheet" href="{{ '/assets/css/components.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   <link rel="stylesheet" href="{{ '/assets/learning-materials.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  {% if page.url contains '/skill-hub/' %}
+  <link rel="stylesheet" href="{{ '/assets/skill-hub-enhancements.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  {% endif %}
   {% if page.url == '/labs/assessment/sales-certification/' %}
   <link rel="stylesheet" href="{{ '/assets/sales-certification.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   {% endif %}
@@ -206,6 +209,9 @@
   {% endif %}
   {% include seo/lab-breadcrumb-data.html %}
   {% include seo/structured-data-sitewide-graph.html %}
+  {% if page.url contains '/skill-hub/' %}
+  <script src="{{ '/assets/skill-hub-enhancements.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  {% endif %}
 </body>
 
 </html>
