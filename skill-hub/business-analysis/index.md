@@ -117,6 +117,29 @@ verified: true
 
 <section class="section">
   <header class="section-heading">
+    <h2>Methods that strengthen BA work</h2>
+    <p>Use the skill to define the work. Use the method when a specific structure helps you think or facilitate.</p>
+  </header>
+  <div class="table-scroll">
+    <table class="study-table">
+      <thead><tr><th>Problem</th><th>Method</th><th>Use it with</th></tr></thead>
+      <tbody>
+        <tr><td>Ownership is unclear</td><td><a href="/skill-hub/methods-catalog/raci-matrix/">RACI</a> or <a href="/skill-hub/methods-catalog/daci/">DACI</a></td><td><a href="/skill-hub/business-analysis/stakeholder-analysis-working-skill/">Stakeholder Analysis</a></td></tr>
+        <tr><td>Process boundary is unclear</td><td><a href="/skill-hub/methods-catalog/sipoc/">SIPOC</a></td><td><a href="/skill-hub/business-analysis/process-analysis-working-skill/">Process Analysis</a></td></tr>
+        <tr><td>Detailed flow and handoffs are disputed</td><td><a href="/skill-hub/methods-catalog/bpmn/">BPMN</a></td><td><a href="/skill-hub/business-analysis/process-analysis-working-skill/">Process Analysis</a></td></tr>
+        <tr><td>Decision logic has many conditions</td><td><a href="/skill-hub/methods-catalog/dmn-decision-tables/">DMN Decision Tables</a></td><td><a href="/skill-hub/business-analysis/business-rules-discovery-working-skill/">Business Rules Discovery</a></td></tr>
+        <tr><td>A story is vague</td><td><a href="/skill-hub/methods-catalog/example-mapping/">Example Mapping</a></td><td><a href="/skill-hub/business-analysis/acceptance-criteria-working-skill/">Acceptance Criteria</a></td></tr>
+        <tr><td>A flat backlog hides the journey</td><td><a href="/skill-hub/methods-catalog/user-story-mapping/">User Story Mapping</a></td><td><a href="/skill-hub/business-analysis/user-story-refinement-working-skill/">User Story Refinement</a></td></tr>
+        <tr><td>Features are not linked to outcomes</td><td><a href="/skill-hub/methods-catalog/impact-mapping/">Impact Mapping</a></td><td>Requirements and scope work</td></tr>
+        <tr><td>Everything is called Must</td><td><a href="/skill-hub/methods-catalog/moscow-prioritization/">MoSCoW</a></td><td>Scope and backlog refinement</td></tr>
+        <tr><td>End-to-end delay is the real problem</td><td><a href="/skill-hub/methods-catalog/value-stream-mapping/">Value Stream Mapping</a></td><td>Process and Gap Analysis</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
     <h2>Recommended path through this group</h2>
   </header>
   <ol>
