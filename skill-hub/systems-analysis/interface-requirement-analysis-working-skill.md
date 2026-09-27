@@ -3,7 +3,7 @@ layout: default
 title: "Interface Requirement Analysis Working Skill"
 description: "Define what data crosses a system boundary, in which direction, under what conditions, and with what quality and error-handling requirements."
 permalink: /skill-hub/systems-analysis/interface-requirement-analysis-working-skill/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -284,6 +284,15 @@ Produce the output in the Interface Requirement Analysis template format: data e
       <li><strong>Don't</strong> omit the ownership matrix. An interface without ownership will fail in production with no one accountable.</li>
       <li><strong>Don't</strong> skip the "does NOT do" section. Scope creep in interface projects is common and expensive.</li>
       <li><strong>Don't</strong> invent data elements or SLAs. If the stakeholder cannot provide them, list placeholders and ask for confirmation.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Useful methods for this skill</h2>
+    <ul>
+      <li><a href="/skill-hub/methods-catalog/crud-matrix/">CRUD Matrix</a> — expose which system creates, reads, updates, or retires each business entity before defining the interface.</li>
+      <li><a href="/skill-hub/architecture/system-context-mapping-working-skill/">System Context Mapping</a> — establish the surrounding system boundary and adjacent systems.</li>
+      <li><a href="/skill-hub/methods-catalog/eventstorming/">EventStorming</a> — use when the business event that should trigger the interface is not yet understood consistently.</li>
     </ul>
   </section>
 
