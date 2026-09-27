@@ -99,6 +99,10 @@ verified: true
   </header>
   <div class="topic-grid">
     <div class="topic-card">
+      <h3><a href="/skill-hub/methods-catalog/">Methods &amp; Frameworks Catalog</a></h3>
+      <p>Problem-first selector for RACI, DACI, SIPOC, BPMN, DMN, EventStorming, Example Mapping, User Story Mapping, Impact Mapping, MoSCoW, Value Stream Mapping, CRUD, and existing context/lifecycle/ADR skills.</p>
+    </div>
+    <div class="topic-card">
       <h3><a href="/skill-hub/problem-solving-operations/">Problem Solving &amp; Operations</a></h3>
       <p>Evidence-driven troubleshooting, data reconciliation, process deviation analysis, procedure and runbook design. Product-neutral core skills with domain adapters for SaaS, APIs, data, cloud, and SAP.</p>
     </div>
