@@ -3,7 +3,7 @@ layout: default
 title: "Process Analysis Working Skill"
 description: "Document how work actually happens, where it breaks, what systems touch it, and who owns each step — not how it is supposed to happen."
 permalink: /skill-hub/business-analysis/process-analysis-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -196,6 +196,16 @@ scope: As-is | To-be | Gap
       <li><strong>Produce a Process Analysis Note.</strong> If documentation contradicts reality, document reality and flag the documentation gap.</li>
       <li><strong>Link to Atlas diagnostics</strong> when process gaps relate to SAP. For example, O2C process blocks should reference <a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a>.</li>
       <li><strong>Do not optimize a process you have not observed.</strong> If you only have documentation, state that the analysis is unverified.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Useful methods for this skill</h2>
+    <ul>
+      <li><a href="/skill-hub/methods-catalog/sipoc/">SIPOC</a> — set the process boundary and critical inputs/outputs before detailed modeling.</li>
+      <li><a href="/skill-hub/methods-catalog/bpmn/">BPMN</a> — model stable process flow, decisions, roles, events, messages, and important exceptions.</li>
+      <li><a href="/skill-hub/methods-catalog/value-stream-mapping/">Value Stream Mapping</a> — use when lead time, queues, rework, and handoffs matter more than notation detail.</li>
+      <li><a href="/skill-hub/methods-catalog/eventstorming/">EventStorming</a> — use when teams do not yet share the same domain language or causal model.</li>
     </ul>
   </section>
 
