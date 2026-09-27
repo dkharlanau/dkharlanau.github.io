@@ -49,6 +49,25 @@ verified: true
 
 <section class="section">
   <header class="section-heading">
+    <h2>Methods that strengthen systems analysis</h2>
+  </header>
+  <div class="table-scroll">
+    <table class="study-table">
+      <thead><tr><th>Question</th><th>Method</th><th>What it adds</th></tr></thead>
+      <tbody>
+        <tr><td>What sits inside and outside the system?</td><td><a href="/skill-hub/architecture/system-context-mapping-working-skill/">System Context Mapping / C4 context</a></td><td>People, external systems, responsibility boundary</td></tr>
+        <tr><td>Who creates or changes each business object?</td><td><a href="/skill-hub/methods-catalog/crud-matrix/">CRUD Matrix</a></td><td>Entity-to-system or entity-to-process responsibility</td></tr>
+        <tr><td>What meaningful events exist in the domain?</td><td><a href="/skill-hub/methods-catalog/eventstorming/">EventStorming</a></td><td>Shared domain model, hotspots, policies, candidate boundaries</td></tr>
+        <tr><td>How does work route across people and systems?</td><td><a href="/skill-hub/methods-catalog/bpmn/">BPMN</a></td><td>Process events, tasks, gateways, messages, handoffs</td></tr>
+        <tr><td>How is a complex outcome decided?</td><td><a href="/skill-hub/methods-catalog/dmn-decision-tables/">DMN Decision Tables</a></td><td>Explicit input conditions and outcomes</td></tr>
+        <tr><td>How does an entity move through valid states?</td><td><a href="/skill-hub/systems-analysis/state-lifecycle-analysis-working-skill/">State &amp; Lifecycle Analysis</a></td><td>States, events, transitions, guards</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
     <h2>When to use this group</h2>
   </header>
   <ul>
