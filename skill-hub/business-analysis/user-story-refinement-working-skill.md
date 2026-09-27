@@ -3,7 +3,7 @@ layout: default
 title: "User Story Refinement Working Skill"
 description: "Turn vague user stories into structured, implementable backlog items with acceptance criteria, boundaries, and dependencies."
 permalink: /skill-hub/business-analysis/user-story-refinement-working-skill/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -286,6 +286,16 @@ Then the system blocks delivery, logs error "Credit segment missing," and routes
       <li><strong>Produce one Story Brief per story.</strong> Do not bundle multiple stories into one brief.</li>
       <li><strong>Do not write acceptance criteria that contain implementation instructions.</strong> Criteria state what must be true, not how to build it.</li>
       <li><strong>Link to Atlas diagnostics</strong> when stories relate to SAP processes. For example, credit management stories should reference <a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Useful methods for this skill</h2>
+    <ul>
+      <li><a href="/skill-hub/methods-catalog/user-story-mapping/">User Story Mapping</a> — restore end-to-end journey context before refining individual backlog items.</li>
+      <li><a href="/skill-hub/methods-catalog/example-mapping/">Example Mapping</a> — clarify rules, examples, and questions for one story.</li>
+      <li><a href="/skill-hub/methods-catalog/moscow-prioritization/">MoSCoW</a> — make release trade-offs explicit when scope is larger than capacity.</li>
+      <li><a href="/skill-hub/methods-catalog/impact-mapping/">Impact Mapping</a> — reconnect stories to measurable outcomes when the backlog has become feature-driven.</li>
     </ul>
   </section>
 
