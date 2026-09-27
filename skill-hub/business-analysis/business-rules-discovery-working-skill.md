@@ -3,7 +3,7 @@ layout: default
 title: "Business Rules Discovery Working Skill"
 description: "Extract the decision logic that governs how a business operates, document it independently of any system, and identify where current systems enforce, violate, or ignore it."
 permalink: /skill-hub/business-analysis/business-rules-discovery-working-skill/
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -270,6 +270,16 @@ status: draft | reviewed | approved
       <li><strong>Do not infer rules from system behavior alone.</strong> System behavior may be a bug, a workaround, or outdated configuration.</li>
       <li><strong>Link to Atlas diagnostics</strong> when rules relate to SAP validation. For example, delivery block rules should reference <a href="/atlas/diagnostics/sap-delivery-block-analysis/">SAP Delivery Block Analysis</a>.</li>
     </ul>
+  </section>
+
+  <section>
+    <h2>Useful methods for this skill</h2>
+    <ul>
+      <li><a href="/skill-hub/methods-catalog/dmn-decision-tables/">DMN Decision Tables</a> — turn confirmed multi-condition business rules into explicit, reviewable decision logic.</li>
+      <li><a href="/skill-hub/methods-catalog/example-mapping/">Example Mapping</a> — use concrete examples to expose hidden rule boundaries, exceptions, and unanswered questions.</li>
+      <li><a href="/skill-hub/methods-catalog/bpmn/">BPMN</a> — keep process routing separate from detailed decision logic.</li>
+    </ul>
+    <p>A useful split is: BPMN shows when the decision happens; DMN shows how the outcome is decided.</p>
   </section>
 
   <section>
