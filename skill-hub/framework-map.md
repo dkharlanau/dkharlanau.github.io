@@ -3,7 +3,7 @@ layout: default
 title: "Framework Map — How Enterprise Frameworks Map to Practical Work"
 description: "A practical map connecting DAMA-DMBOK, BABOK, TOGAF-style architecture, integration architecture, and SAP AMS to usable work skills. Not a framework summary."
 permalink: /skill-hub/framework-map/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -20,6 +20,12 @@ verified: true
   <p class="eyebrow">Skill Hub — Foundation</p>
   <h1>Framework Map</h1>
   <p class="lead">How major enterprise frameworks map to practical work skills. This is not a framework summary. It is a routing map: when you encounter a framework concept, here is the skill that turns it into action.</p>
+
+  <section>
+    <h2>Need a technique, not a framework map?</h2>
+    <p>Use the <a href="/skill-hub/methods-catalog/">Methods &amp; Frameworks Catalog</a> when the starting point is a concrete problem: unclear ownership, disputed process scope, complex decision logic, vague requirements, slow end-to-end flow, or unclear system/data boundaries.</p>
+    <p>The Framework Map answers “where does this body of knowledge connect to Skill Hub?” The Methods Catalog answers “which method should I use in this situation, and how do I use it?”</p>
+  </section>
 
   <section>
     <h2>DAMA-DMBOK</h2>
