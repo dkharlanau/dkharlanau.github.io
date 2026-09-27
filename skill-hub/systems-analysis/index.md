@@ -4,7 +4,7 @@ layout: default
 title: "Systems Analysis — Skill Group Index"
 description: "Practical working skills for systems analysts: mapping entity states, lifecycles, and interface requirements across system boundaries."
 permalink: /skill-hub/systems-analysis/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -20,7 +20,7 @@ verified: true
 <section class="section atlas-hero">
   <p class="eyebrow">Skill Hub — Systems Analysis</p>
   <h1>Systems Analysis skills</h1>
-  <p class="lead">Practical working skills for systems analysts, business analysts, and SAP consultants who need to map how entities behave inside systems, how they move between states, and what data crosses boundaries between systems.</p>
+  <p class="lead">Practical working skills for systems analysts, business analysts, and SAP consultants who need to map how entities behave inside systems, how they move between states, and what data crosses boundaries between systems.</p>\n  <div class="atlas-hero__actions">\n    <a class="button" href="/skill-hub/methods-catalog/">Open methods &amp; frameworks catalog</a>\n  </div>
 </section>
 
 <section class="section">
