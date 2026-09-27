@@ -3,7 +3,7 @@ layout: default
 title: "Stakeholder Analysis Working Skill"
 description: "Identify who affects or is affected by a change, what they control, what they need, and how to get reliable information from them."
 permalink: /skill-hub/business-analysis/stakeholder-analysis-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -202,6 +202,16 @@ stakeholder: Name | Role | Area
       <li><strong>Link to Atlas diagnostics</strong> when stakeholder gaps relate to SAP processes. For example, unclear credit management ownership should reference <a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a>.</li>
       <li><strong>Do not invent stakeholders or contact details.</strong> If a role is missing, flag it. Do not fill gaps with generic placeholders.</li>
     </ul>
+  </section>
+
+  <section>
+    <h2>Useful methods for this skill</h2>
+    <ul>
+      <li><a href="/skill-hub/methods-catalog/stakeholder-power-interest-matrix/">Power–Interest Matrix</a> — choose the engagement level using evidence of influence and impact.</li>
+      <li><a href="/skill-hub/methods-catalog/raci-matrix/">RACI Matrix</a> — assign recurring activity and deliverable ownership after the stakeholder map is understood.</li>
+      <li><a href="/skill-hub/methods-catalog/daci/">DACI</a> — use when the real ambiguity is who drives and who approves a decision.</li>
+    </ul>
+    <p>Do not start with RACI when you still do not know who the real stakeholders are. Discover the people and authority first, then assign ownership.</p>
   </section>
 
   <section>
