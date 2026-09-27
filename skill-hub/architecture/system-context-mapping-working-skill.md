@@ -3,7 +3,7 @@ layout: default
 title: "System Context Mapping"
 description: "Define what a system does, what it depends on, what depends on it, and where the integration boundaries lie."
 permalink: /skill-hub/architecture/system-context-mapping-working-skill/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -207,6 +207,16 @@ verified: true
       <li><strong>Do not invent systems.</strong> If the user describes a system but cannot name adjacent systems, list placeholders and ask for confirmation.</li>
       <li><strong>Link to Atlas for integration patterns.</strong> If the system is part of an SAP landscape, reference <a href="/atlas/concepts/sap-integration-architecture/">SAP Integration Architecture</a> and <a href="/atlas/concepts/event-driven-architecture/">Event-Driven Architecture</a> for pattern guidance.</li>
     </ol>
+  </section>
+
+  <section>
+    <h2>Method context</h2>
+    <p>This skill uses the same big-picture idea as a <a href="https://c4model.com/diagrams/system-context">C4 System Context diagram</a>: put the system in scope at the center and show the people and external systems around it. Keep technology detail for deeper views.</p>
+    <ul>
+      <li><a href="/skill-hub/methods-catalog/crud-matrix/">CRUD Matrix</a> — add data-operation responsibility when the context map shows where systems connect but not who may create or change the object.</li>
+      <li><a href="/skill-hub/methods-catalog/eventstorming/">EventStorming</a> — use when the business events and domain boundaries are still unclear.</li>
+      <li><a href="/skill-hub/methods-catalog/">Methods &amp; Frameworks Catalog</a> — choose the next method by the uncertainty you still need to remove.</li>
+    </ul>
   </section>
 
   <section>
