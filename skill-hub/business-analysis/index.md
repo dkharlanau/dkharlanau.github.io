@@ -4,7 +4,7 @@ layout: default
 title: "Business Analysis — Skill Group Index"
 description: "Practical working skills for business analysis: requirements elicitation, stakeholder analysis, process analysis, gap analysis, acceptance criteria, and business rules discovery."
 permalink: /skill-hub/business-analysis/
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-27
 status: reviewed
 verified: true
 ---
@@ -20,7 +20,7 @@ verified: true
 <section class="section atlas-hero">
   <p class="eyebrow">Skill Hub — Business Analysis</p>
   <h1>Turn ambiguity into structured, actionable requirements.</h1>
-  <p class="lead">Skills for eliciting needs, mapping stakeholders, analyzing processes, finding gaps, defining acceptance criteria, and discovering business rules. Usable on enterprise, SAP, and data projects.</p>
+  <p class="lead">Skills for eliciting needs, mapping stakeholders, analyzing processes, finding gaps, defining acceptance criteria, and discovering business rules. Usable on enterprise, SAP, and data projects.</p>\n  <div class="atlas-hero__actions">\n    <a class="button" href="/skill-hub/methods-catalog/">Open methods &amp; frameworks catalog</a>\n  </div>
 </section>
 
 <section class="section">
