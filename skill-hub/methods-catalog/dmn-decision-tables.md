@@ -151,7 +151,7 @@ sitemap: false
       <li><a href="/skill-hub/business-analysis/business-rules-discovery-working-skill/">Business Rules Discovery</a></li>
       <li><a href="/skill-hub/methods-catalog/example-mapping/">Example Mapping</a></li>
       <li><a href="/skill-hub/methods-catalog/bpmn/">BPMN</a></li>
-      <li><a href="/skill-hub/testing-quality-delivery/test-scenario-derivation-working-skill/">Test Scenario Derivation</a></li>
+      <li><a href="/skill-hub/decision-validation/test-scenario-derivation-working-skill/">Test Scenario Derivation</a></li>
       <li><a href="/skill-hub/systems-analysis/state-lifecycle-analysis-working-skill/">State &amp; Lifecycle Analysis</a></li>
     </ul>
   </section>
