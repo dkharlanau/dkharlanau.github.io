@@ -18,7 +18,7 @@ tags:
   - postgresql
   - sql
   - query-design
-  - null
+  - sql-null
   - explain
 related:
   - /atlas/databases/
