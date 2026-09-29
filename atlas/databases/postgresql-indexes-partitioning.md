@@ -118,10 +118,10 @@ ON users (lower(email));</code></pre>
     <h2>Sources</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, chapters 1, 4, and 6.</li>
-      <li><a href="https://www.postgresql.org/docs/current/indexes-types.html">PostgreSQL: Index Types</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/indexes-partial.html">PostgreSQL: Partial Indexes</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/indexes-expressional.html">PostgreSQL: Indexes on Expressions</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/ddl-partitioning.html">PostgreSQL: Table Partitioning</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/indexes-types.html">PostgreSQL: Index Types</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/indexes-partial.html">PostgreSQL: Partial Indexes</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/indexes-expressional.html">PostgreSQL: Indexes on Expressions</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/ddl-partitioning.html">PostgreSQL: Table Partitioning</a></li>
     </ul>
   </div>
 
