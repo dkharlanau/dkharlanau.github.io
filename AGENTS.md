@@ -3,7 +3,7 @@
 Project-specific guidance for AI coding and research agents working in this public GitHub Pages repository.
 Use this file as the main entry point. Open deeper docs only when the task needs them.
 
-**Last updated:** 2026-09-25. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
+**Last updated:** 2026-09-29. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
 
 ## Repository Purpose
 
@@ -85,6 +85,7 @@ Atlas sections:
 - `atlas/maps/` — Process, document-flow, data dependency, and cross-domain navigation maps
 - `atlas/ai-operations/` — AI-assisted support, operational memory, governance, human review
 - `atlas/data-quality/` — Master data, quality signals, governance failure modes
+- `atlas/databases/` — Database engineering and PostgreSQL mental models, query/schema patterns, performance, reliability, and recovery playbooks
 - `atlas/automation/` — Support automation, agentic workflows, developer automation
 - `atlas/research-notes/` — **Noindex working area** — useful but not polished expert content
 - `atlas/links/` — Reference routes to profile, services, datasets
