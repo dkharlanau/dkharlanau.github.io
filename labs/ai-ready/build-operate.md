@@ -210,6 +210,99 @@ Useful production measures include:
 - eval pass rate or accepted-output rate;
 - human correction time for tasks where review is part of the process.
 
+
+### After the free wins, every saving buys a trade-off
+
+Some savings are close to free: remove useless calls, stabilize the cache prefix, shorten irrelevant context, move background work to batch, and stop producing text nobody uses.
+
+After that, the discussion changes. We start trading **quality, latency, generality, or operating effort** for lower cost. That can still be the right decision, but now the eval becomes the gate.
+
+<div class="table-scroll study-table" role="region" aria-label="AI cost and quality trade-offs" tabindex="0">
+<table class="study-table__table">
+<thead>
+<tr><th scope="col">Lever</th><th scope="col">What we trade</th><th scope="col">When it can make sense</th><th scope="col">What must prove it</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">Lower reasoning effort</th><td>Depth of analysis on harder tasks.</td><td>The task is mostly extraction, classification, routine explanation, or well-bounded reasoning and the provider exposes an effort control.</td><td>Run the same cases at each setting. Check both pass rate and cost per successful task.</td></tr>
+<tr><th scope="row">Cheap first, retry the failures</th><td>More latency on the cases that fail first pass, plus a reliable way to detect failure.</td><td>Most requests are easy and failure can be detected by tests, schema checks, confidence rules, or a reviewer.</td><td>Measure the full cascade, including retries. A cheap first call is useful only if detection is strong.</td></tr>
+<tr><th scope="row">Task budgets</th><td>Some hard cases will stop earlier or escalate.</td><td>Long-tail agent runs create much of the spend and the business accepts explicit stop states.</td><td>Track pass rate by budget level and define what happens at <code>budget_exhausted</code>.</td></tr>
+<tr><th scope="row">Stronger model, lower effort</th><td>Sometimes very little; sometimes a surprising quality drop.</td><td>A stronger model can solve the task with a lower effort setting or fewer retries than a mid-tier model.</td><td>Benchmark the combination. Model price alone does not tell us task economics.</td></tr>
+<tr><th scope="row">Step down a model tier</th><td>Generality and performance on ambiguous or difficult cases.</td><td>Work is high-volume, narrow, easy to check, and mistakes are recoverable.</td><td>Compare by task segment, not only one average score. Keep the hard cases visible.</td></tr>
+<tr><th scope="row">Routing and cascades</th><td>Router errors and extra architecture.</td><td>Traffic has clear easy and hard populations, so not every request needs the same model.</td><td>Measure wrong-route rate, retry rate, quality by route, and the cost of the router itself.</td></tr>
+<tr><th scope="row">Cheap workers under an orchestrator</th><td>Coordination, duplicated context, and more failure paths.</td><td>The work can be split into genuinely independent parts and merged cleanly.</td><td>Compare against one capable model. More workers are not automatically cheaper.</td></tr>
+<tr><th scope="row">Distill or specialize a smaller model</th><td>Generality, plus a training and serving pipeline to maintain.</td><td>The task is narrow, repetitive, stable, high-volume, and there is enough labeled behavior to teach and test it.</td><td>Count training, serving, monitoring, retraining, and drift costs. Evaluate outside the training examples.</td></tr>
+<tr><th scope="row">Self-host open weights</th><td>Managed-service simplicity for infrastructure, capacity planning, patching, safety work, and idle hardware risk.</td><td>Volume is high, utilization can stay high, deployment constraints justify it, and the selected model passes the same quality gate.</td><td>Use total cost of ownership, not GPU price. Include people, redundancy, storage, observability, upgrades, and spare capacity.</td></tr>
+</tbody>
+</table>
+</div>
+
+A useful order is:
+
+1. remove waste;
+2. use provider discounts and caching;
+3. reduce unnecessary context and output;
+4. tune effort and budgets;
+5. route easy and hard work differently;
+6. change the model only after the earlier levers are measured;
+7. consider specialization or self-hosting only when volume and operating maturity justify it.
+
+The sequence is not a law. It is a way to avoid rebuilding the architecture before checking the cheaper changes.
+
+### The eval is the gate
+
+Cost work without an eval is guesswork. If we cannot tell whether the cheaper version is still good enough, we cannot safely optimize it.
+
+For a first practical baseline, freeze **20–30 representative requests**. This is not a magic number; it is a small working set that a team can review quickly. Include normal cases, difficult cases, and at least a few failures that matter.
+
+Use the cheapest scoring method that gives a trustworthy answer:
+
+- exact checks or unit tests for deterministic outputs;
+- schema and business-rule checks for structured results;
+- golden answers where the expected result is stable;
+- a short human rubric for quality that cannot be checked exactly;
+- a model grader only where simpler checks are not enough.
+
+Keep the request set fixed while comparing model, effort, routing, prompt, and budget changes. If the test population changes every time, the cost comparison is weak.
+
+A simple decision table is enough:
+
+<div class="table-scroll study-table" role="region" aria-label="AI cost optimization decision gate" tabindex="0">
+<table class="study-table__table">
+<thead>
+<tr><th scope="col">Change</th><th scope="col">Cost</th><th scope="col">Quality</th><th scope="col">Decision</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">Cheaper and same quality</th><td>Down</td><td>Stable</td><td>Good candidate. Check latency and control boundaries, then keep it.</td></tr>
+<tr><th scope="row">Cheaper and slightly worse</th><td>Down</td><td>Down</td><td>Business decision. Is the quality loss inside the agreed tolerance?</td></tr>
+<tr><th scope="row">Cheaper but more retries</th><td>Maybe down</td><td>Unclear</td><td>Calculate the full task cost. The first call is not the unit of value.</td></tr>
+<tr><th scope="row">More expensive but much better</th><td>Up</td><td>Up</td><td>May still win if it removes retries, review, rework, or business failure.</td></tr>
+</tbody>
+</table>
+</div>
+
+Related: [Evals and Reliability](/labs/ai-ready/evals-reliability/).
+
+### Five questions for one cost meeting
+
+We can usually tell in one meeting whether the opportunity is mainly **measurement, architecture, model choice, or platform economics**. We do not need source-code access to start.
+
+<div class="table-scroll study-table" role="region" aria-label="Five AI cost discovery questions" tabindex="0">
+<table class="study-table__table">
+<thead>
+<tr><th scope="col">Question</th><th scope="col">Why it matters</th><th scope="col">What the answer tells us</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">1. What does one successful task cost today?</th><td>A monthly invoice or price per million tokens is too far from the business outcome. We need cost per completed, accepted task.</td><td>If nobody can answer, the first project is measurement. That is often a small project and it unlocks every later decision.</td></tr>
+<tr><th scope="row">2. How much reusable input actually becomes cached input?</th><td>Agent loops and repeated workflows often resend a large stable prefix. If reuse is expected but cache reads stay low, part of the architecture is wasting work.</td><td>Low reuse points us toward prefix instability, changing tool schemas, request ordering, or provider eligibility before we touch model quality.</td></tr>
+<tr><th scope="row">3. Which AI traffic has nobody waiting for it?</th><td>Evals, enrichment, report generation, bulk classification, embeddings, and nightly jobs usually do not need interactive latency.</td><td>This is the candidate set for batch, queues, lower-priority service tiers, and more aggressive scheduling.</td></tr>
+<tr><th scope="row">4. Do we have an eval, or only an opinion?</th><td>Without a repeatable outcome check, we cannot safely lower effort, change models, add routing, or tighten budgets.</td><td>If there is no eval, that becomes the first deliverable. Freeze representative requests and create the smallest scoring method that works.</td></tr>
+<tr><th scope="row">5. What are we not allowed to do?</th><td>Residency, retention, approved-model lists, security rules, latency commitments, contracts, and committed cloud spend can remove options before cost analysis starts.</td><td>Strong constraints usually make the low-risk levers more valuable: measurement, caching, context reduction, batching, and call reduction.</td></tr>
+</tbody>
+</table>
+</div>
+
+These five answers also tell us what kind of work this is. A missing task-cost metric means observability first. Poor cache reuse means request-shape work. A large offline share means scheduling and batch. No eval means quality measurement. Tight constraints mean architecture optimization inside the current boundary.
+
 ### Know where not to optimize
 
 Do not trade away the control boundary to save tokens. Authorization, policy, transaction checks, and required evidence still belong in normal software. Do not cache dynamic business facts without a freshness rule. Do not hide source evidence just to make context smaller. Do not use a weaker model for a high-risk decision only because its token price is lower.
