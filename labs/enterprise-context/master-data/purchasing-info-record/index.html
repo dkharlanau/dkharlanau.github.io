@@ -1,0 +1,106 @@
+---
+layout: default
+title: "SAP Purchasing Info Record — Supplier-Material Relationship"
+description: "A practical SAP S/4HANA guide to Purchasing Info Records: supplier-material key, purchasing organization and plant scope, purchasing conditions, planned delivery time, order unit, source determination, and diagnostics."
+permalink: /labs/enterprise-context/master-data/purchasing-info-record/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-mm
+  - procurement
+  - purchasing-info-record
+  - supplier
+  - material-master
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">SAP Enterprise</a></li><li><a href="/labs/enterprise-context/master-data/">Master Data</a></li><li aria-current="page">Purchasing Info Record</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Procurement / Relationship Data</p>
+      <h1>Purchasing Info Record: how this supplier supplies this material.</h1>
+      <p>A supplier can supply many materials, and one material can have many suppliers. The Purchasing Info Record is the reusable relationship layer between them, with purchasing-specific commercial and delivery data.</p>
+      <a class="research-canvas__button" href="#mental-model">Start with the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Boundary:</strong> PIR is not the supplier master and not the material master. It specializes the supplier × material relationship. Source List, Quota Arrangement, and outline agreements can still decide which source is selected.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="mental-model" data-reveal>
+    <header><p class="research-canvas__eyebrow">Mental model</p><h2>Think supplier × material × purchasing context.</h2><p>If purchasing behavior is wrong for only one supplier-material pair, the info record is one of the first objects to inspect.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Supplier</h3><p>Who provides the material?</p></div>
+      <div><h3>Material</h3><p>What is being procured?</p></div>
+      <div><h3>Purchasing organization / plant</h3><p>Where is this relationship valid?</p></div>
+      <div><h3>Info record</h3><p>What price, delivery time, order unit, and other purchasing defaults apply to this relationship?</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Key and scope</p><h2>Know the key before you debug the value.</h2><p>The same value can be correct in one sourcing context and wrong in another.</p></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchasing Info Record key fields and process effects">
+      <table class="study-table__table">
+        <thead><tr><th>Field or dimension</th><th>Why it matters</th><th>Typical process effect</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Supplier + material</strong></td><td>Core relationship key.</td><td>Separates supplier-specific behavior from generic supplier or material data.</td></tr>
+          <tr><td><strong>Purchasing organization / plant</strong></td><td>Organizational scope of purchasing data.</td><td>Allows different commercial and logistics data by purchasing context.</td></tr>
+          <tr><td><strong>Purchasing conditions</strong></td><td>Price and condition validity.</td><td>Provides reusable purchasing price context.</td></tr>
+          <tr><td><strong>Planned delivery time</strong></td><td>Expected supplier lead time.</td><td>Influences planning and delivery expectations.</td></tr>
+          <tr><td><strong>Order unit / conversion</strong></td><td>How the relationship is ordered.</td><td>Prevents quantity and UoM errors.</td></tr>
+          <tr><td><strong>Tolerances / confirmations</strong></td><td>Supplier-material execution controls where maintained.</td><td>Influences receipt and follow-on processing.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime use</p><h2>PIR supplies reusable defaults; source determination decides whether it is used.</h2><p>The info record can support MRP, requisition and PO processing, but another source-of-supply object can be more decisive for source selection.</p></header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Demand</h4><p>A requirement creates or needs a procurement proposal.</p></div>
+      <div><span>02</span><h4>Source</h4><p>Source determination checks valid source-of-supply evidence.</p></div>
+      <div><span>03</span><h4>Relationship</h4><p>If this supplier-material source is used, the PIR supplies its purchasing data.</p></div>
+      <div><span>04</span><h4>Purchase Order</h4><p>Commercial and delivery defaults are proposed into the PO.</p></div>
+      <div><span>05</span><h4>Execution</h4><p>Receipt and invoice behavior continue with the document values and related controls.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead diagnosis</p><h2>Find the owning layer before changing data.</h2><p>When only one supplier-material combination is wrong, compare the PIR with supplier, material, source list, agreement, and final PO values.</p></header>
+    <div class="ecg-diagnostic">
+      <div><h4>Start here</h4><p>Check supplier + material + purchasing organization + plant + info record category + validity/conditions.</p></div>
+      <div><h4>Do not jump here</h4><p>Do not change the generic material master to fix a supplier-specific lead time or order unit unless the generic value is truly the owner.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>Assessment answer:</strong> “A Purchasing Info Record is supplier-material relationship data. It stores reusable purchasing conditions and logistics defaults at purchasing-organization or plant context. I still separate it from source selection rules such as Source List and Quota Arrangement.”</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references</h2></header>
+    <ul>
+      <li><a href="https://help.sap.com/docs/s4hana-cloud-best-practices/from-planning-to-fulfillment-consumer-products-6aa-mx/create-purchasing-info-record?locale=en-US&state=PRODUCTION&version=2608">SAP Help — Create Purchasing Info Record</a></li>
+    </ul>
+    <nav class="ecg-context-links" aria-label="Purchasing Info Record related pages">
+      <span>Related</span>
+      <a href="/labs/enterprise-context/master-data/supplier/">Supplier</a>
+      <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
+      <a href="/labs/enterprise-context/master-data/source-list/">Source List</a>
+      <a href="/labs/enterprise-context/master-data/quota-arrangement/">Quota Arrangement</a>
+      <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
+    </nav>
+  </section>
+</div>
