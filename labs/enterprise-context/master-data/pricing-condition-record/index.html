@@ -1,19 +1,23 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Pricing Condition Record"
-description: "A practical deep dive into Pricing Condition Record in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+description: "A practical SAP S/4HANA Sales guide to pricing condition records: keys, validity, scales, maintenance, Fiori apps, APIs, data model, runtime diagnostics and Lead-level governance."
 permalink: /labs/enterprise-context/master-data/pricing-condition-record/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
   - master-data
+  - pricing
 ---
+
+{% assign evidence = site.data.labs.enterprise_context.sources.pricing %}
+{% assign source_ids = "SRC-SAP-PRICING-CONDITION-TECHNIQUE,SRC-SAP-PRICING-ANALYSIS,SRC-SAP-PRICING-MANAGE-PRICES,SRC-SAP-PRICING-ACCESS-EXCLUSIVE,SRC-SAP-PRICING-APPROVAL-WORKFLOW,SRC-SAP-PRICING-CONDITION-RECORD-API,SRC-SAP-PRICING-CLOUD-PRICE-MAINTENANCE,SRC-SAP-PRICING-S4-DATA-MODEL" | split: "," %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
@@ -30,92 +34,592 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.PRICE</p>
       <h1>Pricing Condition Record</h1>
-      <p>A pricing condition record is the maintained commercial value that pricing searches for. Price, discount, surcharge, freight or another condition can be stored against a specific key combination such as customer/material or price list/product hierarchy.</p>
-      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p>A condition record is where the commercial number lives. It may store a price, discount, surcharge, freight value, tax-related rate or another pricing value for a defined key and validity period. It does not decide whether SAP will search for that value.</p>
+      <a class="research-canvas__button" href="#runtime">Trace the pricing path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
-      <p>Object profile</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.PRICE</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>condition record</strong><small>Data class</small></div>
-      <em>Condition type, condition table/key combination, validity, currency/unit and scales.</em>
+      <p>Lead mental model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>record</strong><small>commercial data</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>access</strong><small>search logic</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>price element</strong><small>document result</small></div>
+      <em>Do not debug all three layers as if they were the same object.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The record owns the commercial value; the pricing engine owns the search.</h2>
+      <h2>The record stores a commercial value. Configuration decides if SAP reaches it.</h2>
+      <p>This distinction is the fastest way to avoid weak pricing diagnosis. A valid record can exist in the database and still be irrelevant to the current document.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Condition type, condition table/key combination, validity, currency/unit and scales.</p>
-    </div>
+
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Condition type, key fields, amount or percentage, currency, pricing unit, valid-from/to dates, scales and condition-specific control data.</p>
+        <h3>Master data</h3>
+        <p>The condition record contains the maintained value and its business scope: condition type, key combination, validity, amount or percentage, currency, pricing unit, unit of measure, scales and supported condition-specific data.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>Condition type, access sequence and pricing procedure are configuration. The condition record is master data. This distinction is central when troubleshooting pricing.</p>
+        <h3>Configuration</h3>
+        <p>Condition table, access sequence, condition type, pricing procedure, requirements, formulas and procedure determination decide how SAP searches and calculates.</p>
       </div>
+      <div>
+        <h3>Runtime result</h3>
+        <p>The sales or billing document contains the price elements produced by pricing. A manual document condition is a document result or override; it is not automatically a change to the master condition record.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">database</span>
+      <p><strong>Useful question:</strong> “Is the problem in the maintained value, in the search path, or in the calculation after the value was found?” This question normally removes a large part of the search space.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="record-anatomy" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Record anatomy</p>
+      <h2>Most production pricing errors are not caused by the numeric rate alone.</h2>
+      <p>The same number can be correct or wrong depending on the key, date, currency, unit and scale context.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Pricing condition record anatomy">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Record element</th>
+            <th>What it controls</th>
+            <th>Typical failure signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Condition type</strong></td>
+            <td>Business meaning of the value: price, discount, surcharge, freight or another pricing element.</td>
+            <td>The right number is maintained under a condition type that is not used by the active pricing procedure.</td>
+          </tr>
+          <tr>
+            <td><strong>Condition table / key</strong></td>
+            <td>The dimensions that make the record specific, for example Sales Org + Distribution Channel + Customer + Material.</td>
+            <td>The record exists, but the runtime access uses a different customer, material, hierarchy, price list or sales-area value.</td>
+          </tr>
+          <tr>
+            <td><strong>Validity</strong></td>
+            <td>The time window in which the record may be selected.</td>
+            <td>A price works yesterday or next month but not on the document pricing date.</td>
+          </tr>
+          <tr>
+            <td><strong>Amount / percentage</strong></td>
+            <td>The maintained commercial rate.</td>
+            <td>The expected record is found, but the commercial value itself is wrong.</td>
+          </tr>
+          <tr>
+            <td><strong>Currency</strong></td>
+            <td>The currency in which an amount is interpreted.</td>
+            <td>The amount looks numerically correct but converts or compares incorrectly in the document currency.</td>
+          </tr>
+          <tr>
+            <td><strong>Pricing unit and UoM</strong></td>
+            <td>Defines whether the rate means, for example, EUR 10 per 1 EA or EUR 10 per 100 EA.</td>
+            <td>The price is wrong by a clean factor such as 10, 100 or 1,000.</td>
+          </tr>
+          <tr>
+            <td><strong>Scales</strong></td>
+            <td>Changes the rate when quantity, value, weight, volume or another configured scale basis crosses a threshold.</td>
+            <td>The price changes only when the order quantity or value reaches a specific level.</td>
+          </tr>
+          <tr>
+            <td><strong>Release / approval status</strong></td>
+            <td>Where supported, controls whether the record is usable for productive pricing.</td>
+            <td>The record is visible in maintenance but is blocked, in review or rejected and therefore not usable in normal pricing.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="lead-decision" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead decision</p>
-      <h2>Choose the smallest commercial key the business can govern reliably.</h2>
-      <p>Every extra key field can make a price more precise. It also creates more records, more overlap risk, and more effort to explain why one value was selected.</p>
+      <h2>Choose the smallest pricing key the business can govern reliably.</h2>
+      <p>More fields make a record more specific, but they also multiply master-data volume, overlap risk, testing effort and the number of explanations needed when a price is wrong.</p>
     </header>
+
     <div class="ecg-decision-columns">
-      <div><h3>Specificity</h3><p>Add a dimension when it changes the commercial meaning of the price or discount and the business can maintain it consistently.</p></div>
-      <div><h3>Fallback</h3><p>Design the search path so a missing specific record has an intentional result. A fallback should be a policy, not an accidental side effect.</p></div>
-      <div><h3>Time</h3><p>Validity is part of the commercial rule. Overlapping or stale periods can produce a technically valid value that is commercially wrong.</p></div>
+      <div>
+        <h3>Specificity</h3>
+        <p>Add a dimension only when it changes the commercial meaning. “We might need it later” is usually not enough reason to create another pricing dimension.</p>
+      </div>
+      <div>
+        <h3>Fallback</h3>
+        <p>Design the access sequence so a missing specific record has an intentional result. A generic fallback should be a commercial policy, not an accidental side effect.</p>
+      </div>
+      <div>
+        <h3>Governance</h3>
+        <p>Every key field needs a stable source and an owner. A pricing key is weak when one of its dimensions is populated inconsistently or has no clear maintenance process.</p>
+      </div>
     </div>
-    <p class="ecg-caption"><strong>Trade-off:</strong> precision versus maintainability and explainability. The best key is not automatically the key with the most fields.</p>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Example</h4>
+        <p>Access 10 may search Customer + Material, access 20 Customer Group + Material, and access 30 Material only. The sequence expresses business priority. The record itself does not.</p>
+      </div>
+      <div>
+        <h4>Lead check</h4>
+        <p>Before adding a new key combination, estimate record volume and ask who will maintain it during price changes, annual renewals, acquisitions, product launches and customer reorganizations.</p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>A condition record is reached only after several pricing decisions are already correct.</h2>
-      <p>The document first uses a pricing procedure. The expected condition type must participate, and its access sequence must reach a condition table whose runtime key matches the document. Only then can a valid condition record supply a rate, amount, scale, currency, unit, or other maintained commercial value.</p>
+      <h2>A condition record is reached only after several earlier decisions are already correct.</h2>
+      <p>Debug pricing in the same order in which SAP builds the answer. Starting directly in VK13 or a condition table often proves only that some record exists, not that the document can use it.</p>
     </header>
+
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Prove the procedure</h4><p>Confirm the pricing procedure used by the actual document before checking condition records.</p></div>
-      <div><span>02</span><h4>Find the condition</h4><p>Check whether the expected condition type is present, relevant, and allowed to participate.</p></div>
-      <div><span>03</span><h4>Follow the access</h4><p>Read the access sequence and the runtime key values used for each condition table.</p></div>
-      <div><span>04</span><h4>Validate the record</h4><p>Check key fields, validity, amount or percentage, currency, unit, pricing unit, and scales for the record SAP actually found or failed to find.</p></div>
-      <div><span>05</span><h4>Continue into calculation</h4><p>If the record is found but the final amount is wrong, move beyond master data into base value, formulas, exclusions, grouping, and other pricing interactions.</p></div>
+      <div>
+        <span>01</span>
+        <h4>Prove the pricing procedure</h4>
+        <p>Confirm which pricing procedure the actual document uses. In classic SD, the determination combines sales area, document pricing procedure and customer pricing procedure.</p>
+      </div>
+      <div>
+        <span>02</span>
+        <h4>Find the expected condition type</h4>
+        <p>Check that the condition type is present in the procedure and that requirements or other controls do not make it irrelevant.</p>
+      </div>
+      <div>
+        <span>03</span>
+        <h4>Read the access sequence</h4>
+        <p>Follow the accesses in order. Check which condition table each access uses and whether the access was executed or skipped.</p>
+      </div>
+      <div>
+        <span>04</span>
+        <h4>Compare the runtime key</h4>
+        <p>Use the document values SAP actually used: customer, material, sales area, hierarchy node, price list, customer group or other fields in the key.</p>
+      </div>
+      <div>
+        <span>05</span>
+        <h4>Validate the record</h4>
+        <p>Check validity, release status, amount, currency, pricing unit, UoM, scales and any condition-specific fields.</p>
+      </div>
+      <div>
+        <span>06</span>
+        <h4>Continue into calculation</h4>
+        <p>If the correct record was found, move to base value, calculation type, formulas, exclusion, group logic, subtotals, manual changes and repricing behavior.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fork_right</span>
+      <p><strong>Important nuance:</strong> “The access sequence always stops at the first hit” is too simple. An access can be marked as exclusive, which controls whether the search stops after a successful access. Always read the actual access configuration before assuming first-hit behavior.</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="validity" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Validity and lifecycle</p>
+      <h2>Time is part of the pricing rule, not just record housekeeping.</h2>
+      <p>A pricing record is only meaningful together with the pricing date used by the document and the way overlapping validity periods are maintained.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Pricing date</h3>
+        <p>Do not assume the system is checking “today”. Diagnose the pricing date in the actual document and the relevant pricing logic. Different business scenarios can use different date sources.</p>
+      </div>
+      <div>
+        <h3>Overlaps</h3>
+        <p>When a new record overlaps an existing record with the same pricing key, maintenance tools can delimit, split or replace existing validity periods depending on the function used. Treat overlap handling as a data-change event, not only as a warning.</p>
+      </div>
+      <div>
+        <h3>Retirement</h3>
+        <p>When audit history matters, prefer controlled validity delimitation instead of deleting historical pricing data. Use the correct last-valid date rather than blindly setting every old record to “today”.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">approval</span>
+      <p><strong>Approval-aware maintenance:</strong> in deployments that use sales price approval workflows, blocked or in-review prices cannot be used in normal pricing. Not every condition record participates in this workflow, so confirm whether release status is supported for the condition record in question.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="scales" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Scales, units and calculation</p>
+      <h2>A condition record can hold more than one simple rate.</h2>
+      <p>When pricing becomes wrong only at certain quantities or values, scales and units become higher-probability suspects than the access sequence.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Scale basis</h3>
+        <p>Scales can be based on quantity, value, weight, volume or other supported bases. The threshold logic belongs to the condition record and condition design together.</p>
+      </div>
+      <div>
+        <h3>Calculation type</h3>
+        <p>The condition type defines whether SAP interprets a rate as an amount, percentage, quantity-based value or another calculation form. The record supplies the maintained value for that rule.</p>
+      </div>
+      <div>
+        <h3>Pricing unit</h3>
+        <p>Always read amount + pricing unit + UoM together. “100 EUR” is incomplete information when the record actually means “100 EUR per 100 pieces”.</p>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Diagnostic pattern:</strong> if the result is wrong by a stable factor, check pricing unit and unit conversion before changing the condition amount.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="maintenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Maintenance surfaces</p>
+      <h2>Know the classic transactions, but design for the deployment you actually run.</h2>
+      <p>On-premise, Private Cloud and Public Cloud can expose different maintenance paths. A Lead answer should separate durable pricing concepts from a specific GUI transaction.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Pricing condition maintenance and configuration tools">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Tool / transaction</th>
+            <th>Purpose</th>
+            <th>Practical note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>VK11 / VK12 / VK13</strong></td>
+            <td>Create / change / display sales condition records in classic SD.</td>
+            <td>Useful references for on-premise and Private Cloud landscapes where the classic transactions are available.</td>
+          </tr>
+          <tr>
+            <td><strong>Set Material Prices – Sales</strong></td>
+            <td>Maintain material price condition records one by one.</td>
+            <td>Used in SAP S/4HANA Cloud. The app ID can be VK12; do not confuse that app ID with availability of the classic GUI transaction.</td>
+          </tr>
+          <tr>
+            <td><strong>Set Service Prices – Sales</strong></td>
+            <td>Maintain service price condition records.</td>
+            <td>Separate maintenance surface for service pricing in supported Cloud scenarios.</td>
+          </tr>
+          <tr>
+            <td><strong>Set Tax Rates – Sales</strong></td>
+            <td>Maintain sales tax rates.</td>
+            <td>Keep tax-rate maintenance separate from general commercial price maintenance.</td>
+          </tr>
+          <tr>
+            <td><strong>F4111 — Manage Prices – Sales</strong></td>
+            <td>Search, create, edit, copy, import and mass-maintain multiple condition records.</td>
+            <td>Strong operational choice when the business needs list-based maintenance, import, reference-based creation or approval-aware price management.</td>
+          </tr>
+          <tr>
+            <td><strong>V/03</strong></td>
+            <td>Create condition tables in classic Customizing.</td>
+            <td>Configuration, not master-data maintenance. Change/display transactions are separate.</td>
+          </tr>
+          <tr>
+            <td><strong>V/06</strong></td>
+            <td>Define condition types.</td>
+            <td>Controls pricing behavior such as calculation type and manual/automatic characteristics.</td>
+          </tr>
+          <tr>
+            <td><strong>V/07</strong></td>
+            <td>Define access sequences.</td>
+            <td>Search order, tables, requirements and exclusive behavior belong here.</td>
+          </tr>
+          <tr>
+            <td><strong>V/08</strong></td>
+            <td>Maintain pricing procedures.</td>
+            <td>Controls sequence, requirements, subtotals, account keys and other procedure-level behavior.</td>
+          </tr>
+          <tr>
+            <td><strong>OVKK</strong></td>
+            <td>Classic pricing procedure determination.</td>
+            <td>Connects sales area, document pricing procedure and customer pricing procedure to a pricing procedure.</td>
+          </tr>
+          <tr>
+            <td><strong>V/LD</strong></td>
+            <td>Execute pricing reports.</td>
+            <td>Useful for controlled listing and analysis of condition master data in classic environments.</td>
+          </tr>
+          <tr>
+            <td><strong>API_SLSPRICINGCONDITIONRECORD_SRV</strong></td>
+            <td>Create, read, update and delete pricing condition records through a released API.</td>
+            <td>For SAP S/4HANA Cloud integration, SAP documents communication scenario <code>SAP_COM_0294</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">cloud</span>
+      <p><strong>Public Cloud:</strong> do not answer “use VK11” as a universal maintenance instruction. Classic VK11/VK12/VK13 transactions are not available as classic transaction apps in SAP S/4HANA Cloud Public Edition; use the supported price-maintenance apps for the target scope.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="mass-maintenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mass maintenance and migration</p>
+      <h2>Loading prices is not only a file-import task. It is a commercial cutover.</h2>
+      <p>Record count proves that data moved. It does not prove that customers will receive the intended price.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Operational mass change</h3>
+        <p>Use supported price-maintenance apps and controlled import or reference-based creation for recurring business changes. Separate normal maintenance from project migration.</p>
+      </div>
+      <div>
+        <h3>Initial migration</h3>
+        <p>For S/4HANA projects, prefer supported Migration Cockpit objects and current migration content where they fit. Treat LSMW and SCAT as legacy techniques, not the default recommendation for a new S/4HANA design.</p>
+      </div>
+      <div>
+        <h3>Integration</h3>
+        <p>For repeatable external creation or updates, use a released API where possible. Build idempotency, error handling, ownership and reconciliation around it instead of treating the API as a simple upload pipe.</p>
+      </div>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Before load</h4>
+        <p>Freeze the key design, clean duplicate and overlapping records, define ownership, validate currencies/UoM, and agree the effective date.</p>
+      </div>
+      <div>
+        <h4>After load</h4>
+        <p>Test representative orders across specific and fallback accesses, scale boundaries, future-dated prices, billing repricing and exceptional customer/product combinations.</p>
+      </div>
+    </div>
+
+    <nav class="ecg-context-links" aria-label="Pricing operations links">
+      <span>Operations</span>
+      <a href="/labs/enterprise-context/pricing/operations/">Pricing delivery & operations</a>
+      <a href="/labs/enterprise-context/pricing/casebook/">Pricing casebook</a>
+    </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="data-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Technical data model</p>
+      <h2>Do not confuse condition master data with document pricing persistence.</h2>
+      <p>This is a common S/4HANA troubleshooting trap because the word “condition” appears in both places.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Condition master</h3>
+        <p>In the classic technical model, generated <code>A*</code> condition tables hold the key combination and reference the condition record. <code>KONH</code> and <code>KONP</code> are important classic master-data tables around the condition record header and item/value data.</p>
+      </div>
+      <div>
+        <h3>Document price elements</h3>
+        <p>In SAP S/4HANA, transactional pricing-result persistence moved from the classic <code>KONV</code> model to <code>PRCD_ELEMENTS</code>. This is evidence about document pricing results, not the master condition record itself.</p>
+      </div>
+      <div>
+        <h3>Lead rule</h3>
+        <p>Start with supported applications and pricing analysis. Go to tables only when you know which layer you are proving and when direct table inspection is appropriate for the deployment.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="troubleshooting" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>“The record exists” is not a pricing diagnosis.</h2>
+      <h2>“The condition record exists” is not a diagnosis.</h2>
+      <p>Pricing Analysis is normally stronger evidence than browsing condition records in isolation because it shows what the document tried to do.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Start from pricing analysis and identify the condition type, access attempted, and actual runtime key. If SAP never reaches the expected key, the record is not the root cause. If the key is reached, validate the record's validity, currency, unit, pricing unit, scale, and value. If the record is found correctly, continue into calculation rather than creating another record.</p>
+
+    <div class="ecg-compact-sequence">
+      <div>
+        <span>01</span>
+        <h4>Define the symptom</h4>
+        <p>One customer, one product, one sales area, one date, one quantity? Or a broad population? This tells you whether to suspect data or design first.</p>
+      </div>
+      <div>
+        <span>02</span>
+        <h4>Open pricing analysis</h4>
+        <p>Identify the condition type, the accesses attempted, skipped or successful, and the reason SAP gives for the result.</p>
+      </div>
+      <div>
+        <span>03</span>
+        <h4>Prove the key</h4>
+        <p>Compare the actual runtime fields with the record key. Do not substitute what the user expected the customer group or material to be.</p>
+      </div>
+      <div>
+        <span>04</span>
+        <h4>Check the record lifecycle</h4>
+        <p>Validate pricing date, validity, release status and overlap history.</p>
+      </div>
+      <div>
+        <span>05</span>
+        <h4>Check units and scales</h4>
+        <p>Validate currency, pricing unit, UoM and threshold behavior.</p>
+      </div>
+      <div>
+        <span>06</span>
+        <h4>Move downstream</h4>
+        <p>If the correct rate was found, investigate calculation base, formulas, exclusions, group conditions, manual changes, copy control and billing repricing.</p>
+      </div>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Pricing condition diagnostic patterns">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Symptom</th>
+            <th>Higher-probability check</th>
+            <th>Do not do first</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Price missing for one customer/material</td>
+            <td>Runtime key, validity, release status, specific access</td>
+            <td>Create another generic record</td>
+          </tr>
+          <tr>
+            <td>Wrong price for many customers</td>
+            <td>Pricing procedure, access order, generic fallback, mass change</td>
+            <td>Edit one customer's record</td>
+          </tr>
+          <tr>
+            <td>Correct below 100 EA, wrong above 100 EA</td>
+            <td>Scale basis, threshold and pricing unit</td>
+            <td>Change the base condition type immediately</td>
+          </tr>
+          <tr>
+            <td>Order correct, invoice different</td>
+            <td>Billing pricing type / copy-control repricing and billing date context</td>
+            <td>Assume the sales-order record was overwritten</td>
+          </tr>
+          <tr>
+            <td>Record visible but not used</td>
+            <td>Access execution, key fields, validity and release/approval status</td>
+            <td>Assume database existence means runtime eligibility</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="governance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Governance</p>
+      <h2>Commercial authority and technical authority should be visible.</h2>
+      <p>Pricing master data can change revenue immediately. That makes ownership, approval and auditability part of the solution design.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Commercial owner</h3>
+        <p>Owns the intended price, discount policy, effective dates, approval thresholds and who may request a change.</p>
+      </div>
+      <div>
+        <h3>SAP / pricing owner</h3>
+        <p>Owns condition design, key combinations, access behavior, deployment-specific maintenance tooling, transportable configuration and technical controls.</p>
+      </div>
+      <div>
+        <h3>Operations</h3>
+        <p>Owns controlled mass changes, failed imports/interfaces, reconciliation, production evidence and rollback or correction procedures.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+      <p><strong>Practical control:</strong> high-impact price changes should have an effective date, owner, approval path where supported, representative order tests and evidence that the intended population changed — not only a successful save or import message.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="traps" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Patterns worth remembering</p>
+      <h2>Small details create large commercial effects.</h2>
+    </header>
+
+    <div class="ecg-heuristic-grid">
+      <article>
+        <span>KEY</span>
+        <h3>A more specific record wins only if the search reaches it first.</h3>
+        <p>Specificity is not automatic precedence. Access sequence order expresses the priority.</p>
+      </article>
+      <article>
+        <span>DATE</span>
+        <h3>Do not debug against today's date by habit.</h3>
+        <p>Use the pricing date of the document and the validity period SAP evaluates.</p>
+      </article>
+      <article>
+        <span>UNIT</span>
+        <h3>Read rate, pricing unit and UoM as one value.</h3>
+        <p>A clean factor error often points to the unit context rather than the commercial price itself.</p>
+      </article>
+      <article>
+        <span>STATUS</span>
+        <h3>Existing does not mean usable.</h3>
+        <p>A condition record may be blocked or in an approval state where it cannot participate in productive pricing.</p>
+      </article>
+      <article>
+        <span>DOCUMENT</span>
+        <h3>Manual order conditions do not rewrite master data.</h3>
+        <p>Separate a document override from the maintained condition record and from a later billing repricing event.</p>
+      </article>
+      <article>
+        <span>CHANGE</span>
+        <h3>A new validity period can change old records.</h3>
+        <p>Overlapping maintenance may delimit or split existing records. Review the resulting time line, not only the new row.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Separate search logic from maintained value.</h2>
+      <h2>Separate value, search and result.</h2>
+      <p>A strong Lead answer shows both SAP knowledge and diagnostic order.</p>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> A pricing condition record is master data that contains a commercial value for a defined key and validity. It does not decide how SAP searches. I first prove the pricing procedure and condition type, then follow the access sequence with the actual runtime key. Only when SAP reaches that key do I validate the record, currency, unit, scale, and validity. If the record is found but the amount is still wrong, I move into pricing calculation rather than duplicating master data.</p>
+      <p><strong>60-second answer:</strong> A pricing condition record is sales master data that stores a commercial value for a defined condition type, key combination and validity period. It can also contain currency, pricing unit and scales. The record does not control how SAP searches for it. I first prove the pricing procedure and condition type, then follow the access sequence and the actual runtime key. If SAP reaches the record, I check validity, release status, unit, currency and scales. If the right record is found but the amount is still wrong, I continue into calculation logic, exclusions, manual changes and billing repricing. For operations, I also separate classic VK11/VK12/VK13 maintenance from current Fiori apps, mass maintenance, approval and API-based integration.</p>
     </div>
-    <nav class="ecg-context-links" aria-label="Related master-data pages">
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Likely follow-up</h4>
+        <p><strong>Why can a record exist but not be used?</strong> Wrong pricing procedure, condition type not active, access skipped, runtime key mismatch, invalid date, release status, wrong scale context or another pricing interaction.</p>
+      </div>
+      <div>
+        <h4>Lead-level follow-up</h4>
+        <p><strong>How would you design price maintenance?</strong> Start from commercial ownership and volume, keep the key as small as possible, define intentional fallback, use deployment-appropriate maintenance, control approvals and prove representative business results after mass change.</p>
+      </div>
+    </div>
+
+    <nav class="ecg-context-links" aria-label="Related pricing pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
       <a href="/labs/enterprise-context/pricing/">Pricing engine</a>
+      <a href="/labs/enterprise-context/pricing/anatomy/">Pricing anatomy</a>
+      <a href="/labs/enterprise-context/pricing/operations/">Pricing delivery & operations</a>
+      <a href="/labs/enterprise-context/pricing/casebook/">Pricing casebook</a>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed master-data graph</a>
     </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Product behavior is checked against SAP sources.</h2>
+      <p>The practical diagnostic and governance guidance above is independently written. Release-sensitive claims are kept separate from durable pricing concepts.</p>
+    </header>
+
+    <div class="research-route-list">
+      {% for source_id in source_ids %}
+        {% assign source = evidence.sources | where: "id", source_id | first %}
+        {% if source %}
+        <a href="{{ source.url }}" target="_blank" rel="noopener">
+          <span>SRC</span>
+          <strong>{{ source.title }}</strong>
+          <small>{{ source.product_scope }} · {{ source.release_scope }}</small>
+          <i class="material-symbols-outlined" aria-hidden="true">open_in_new</i>
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
   </section>
 </div>
