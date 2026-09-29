@@ -12,6 +12,10 @@ hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
+  - sap-mm
+  - sap-fi
+  - cvi
+  - business-partner
   - master-data
 ---
 
@@ -172,7 +176,7 @@ tags:
           <tr><th scope="row">FI-AP</th><td><code>FLVN00</code> FI Supplier</td><td>Company code</td><td>Reconciliation account, payment methods, withholding tax and AP controls.</td></tr>
           <tr><th scope="row">Credit Management</th><td><code>UKM000</code></td><td>Credit profile / credit segment</td><td>Credit limits, risk-related master data and credit-check context for Sales.</td></tr>
           <tr><th scope="row">Contact / Relationships</th><td><code>BUP001</code> + relationship category</td><td>BP relationship</td><td>Contact person, department, function, authority, validity and relationship-specific address information.</td></tr>
-          <tr><th scope="row">Industry / solution-specific</th><td>Additional delivered or custom roles</td><td>Depends on application</td><td>Examples include carrier/forwarder, contract partner, employee or customer-defined <code>Y*</code>/<code>Z*</code> roles. Treat these as solution-dependent, not universal core roles.</td></tr>
+          <tr><th scope="row">Industry / solution-specific</th><td>Additional delivered or custom roles</td><td>Depends on application</td><td>Examples include <code>CRM010</code> Carrier in supported logistics solutions, contract-partner roles such as <code>MKK</code> where relevant, or customer-defined <code>Y*</code>/<code>Z*</code> roles. Treat these as solution-dependent, not universal core roles.</td></tr>
         </tbody>
       </table>
     </div>
@@ -231,6 +235,33 @@ tags:
         </tbody>
       </table>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-extended-customizing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Extended customizing</p>
+      <h2>The BP framework also controls identity semantics, addresses and legal classifications.</h2>
+      <p>Not every project changes these settings, but a Lead should know where they belong because migration and integration defects often surface here.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Extended Business Partner customizing areas">
+      <table class="study-table__table">
+        <thead><tr><th>Area</th><th>What it is used for</th><th>When to care</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Business Partner types</th><td>Additional BP classification/control available in classic BP customizing.</td><td>When a solution uses type-specific field or process behavior. Do not confuse BP type with the fixed BP category Person / Organization / Group.</td></tr>
+          <tr><th scope="row">Address determination</th><td>Address types/usages, transactions and international address versions.</td><td>When one BP has several addresses or different applications need different physical addresses.</td></tr>
+          <tr><th scope="row">Identification numbers</th><td>Identification categories and types for external or legal identifiers.</td><td>Migration, compliance, duplicate prevention and integration with external registries.</td></tr>
+          <tr><th scope="row">Tax numbers</th><td>Tax-number categories and country-specific tax identification.</td><td>Customer/supplier onboarding, tax determination, invoicing and compliance.</td></tr>
+          <tr><th scope="row">Organization attributes</th><td>Industry systems, industries, legal forms and related organization metadata.</td><td>Segmentation, reporting, legal classification and CVI field mapping.</td></tr>
+          <tr><th scope="row">Person attributes</th><td>Titles, name affixes/prefixes, name formatting and person-specific master attributes.</td><td>Contact-person quality, localization and identity matching.</td></tr>
+          <tr><th scope="row">Data origin</th><td>Origin/source classification for BP data where used.</td><td>When governance needs to know which system or process supplied the attribute.</td></tr>
+          <tr><th scope="row">Tax jurisdiction</th><td>Structure and assignment of jurisdiction codes by region/postal context where applicable.</td><td>Location-sensitive tax scenarios.</td></tr>
+          <tr><th scope="row">Screen layout / sequence</th><td>Classic BP UI layout and application-specific sections.</td><td>When a field exists technically but users cannot reach it in the expected BP role or view.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="ecg-caption"><strong>Configuration discipline:</strong> change these controls only when they represent a durable business rule. Do not use global BP customizing to fix one local master-data record.</p>
   </section>
 
   <section class="research-canvas__inventory" id="bp-cvi" data-reveal>
