@@ -1,18 +1,23 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Credit Master Data"
-description: "A practical deep dive into Credit Master Data in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+description: "A practical SAP S/4HANA Credit Management guide to Business Partner credit profiles, credit segments, scoring, risk class, credit limits, external ratings, APIs, runtime use and troubleshooting."
 permalink: /labs/enterprise-context/master-data/credit-master-data/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
+  - sap-fscm
   - master-data
+  - business-partner
+  - credit-management
+  - integration
+  - troubleshooting
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -30,78 +35,402 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.CREDIT</p>
       <h1>Credit Master Data</h1>
-      <p>SAP Credit Management stores risk and limit information separately from ordinary Sales customer data. The relevant unit is the credit account and credit segment, which lets one customer have different credit control across business contexts.</p>
-      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p>Credit master data is not one customer-level credit limit. SAP Credit Management separates global policy in the Business Partner credit profile from segment-specific capacity. Runtime exposure then changes as orders, deliveries, billing and receivables move through the process.</p>
+      <a class="research-canvas__button" href="#profile-vs-segment">Read the credit model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
-      <p>Object profile</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.CREDIT</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>business master</strong><small>Data class</small></div>
-      <em>Business Partner/credit account, credit segment and validity.</em>
+      <p>Lead mental model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>profile</strong><small>global risk policy</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>segment</strong><small>credit capacity</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>exposure</strong><small>runtime commitment</small></div>
+      <em>Do not solve a runtime exposure problem by changing master data before you know which layer is wrong.</em>
     </div>
   </header>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="profile-vs-segment" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Master data defines risk capacity; exposure and check logic decide the current outcome.</h2>
+      <h2>Profile sets policy. Segment carries capacity. Exposure is runtime state.</h2>
+      <p>This separation is the fastest way to understand SAP Credit Management. The same Business Partner can have one global risk policy and different credit limits for different credit segments.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Business Partner/credit account, credit segment and validity.</p>
-    </div>
+
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Credit segment, credit limit, validity, risk class, check rule and related scoring/risk attributes used by the implementation.</p>
+        <h3>Credit Profile</h3>
+        <p>Business Partner-wide credit data. Typical fields include the rule for scoring and credit-limit calculation, score, risk class, credit-check rule, customer credit group, external ratings and other credit information.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>Credit master data provides limit and risk attributes. Credit-check rules, automatic control and reaction behavior are configuration in SAP Credit Management.</p>
+        <h3>Credit Segment Data</h3>
+        <p>Data for one credit-management scope. The segment contains values such as credit limit, validity, special-attention or block information and other segment-specific controls supported by the implementation.</p>
+      </div>
+      <div>
+        <h3>Runtime Exposure</h3>
+        <p>Open commitments are not master data. Sales orders, deliveries, billing transfer and Financial Accounting can change exposure. Credit checks combine this changing exposure with the maintained policy.</p>
       </div>
     </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Assessment trap:</strong> risk class and check rule are maintained on the Credit Profile, not independently per credit segment. The credit limit is segment-specific. If you describe all three as “segment fields”, you mix two different data scopes.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="anatomy" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Profile anatomy</p>
+      <h2>The important fields describe risk, calculation policy and decision control.</h2>
+      <p>Do not memorize the screen as a list. Read every field as an input to a business decision.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP Credit Management profile and segment data">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>What it means</th>
+            <th>Useful diagnostic question</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Scoring and credit-limit rule</strong></td>
+            <td>Defines the procedure used to calculate score and credit limits. The exact formulas and inputs are configuration-dependent.</td>
+            <td>Was the expected rule assigned, and was the value calculated or manually overridden?</td>
+          </tr>
+          <tr>
+            <td><strong>Score</strong></td>
+            <td>Numeric or classified creditworthiness result used by the credit model. SAP can keep the calculated value even when a manual value is entered.</td>
+            <td>Is the visible score current, valid and based on the expected information?</td>
+          </tr>
+          <tr>
+            <td><strong>Risk class</strong></td>
+            <td>Business Partner-level risk classification. It can be maintained manually or determined from the score, depending on the design.</td>
+            <td>Did the risk class change because the score changed, because of a manual decision, or because of a rule change?</td>
+          </tr>
+          <tr>
+            <td><strong>Check rule</strong></td>
+            <td>Defines which credit-check steps SAP executes and which parameters or thresholds are used by those steps.</td>
+            <td>Which check step actually failed? “Credit limit exceeded” is not the only possible negative result.</td>
+          </tr>
+          <tr>
+            <td><strong>Customer credit group</strong></td>
+            <td>Classification that can support grouping, analysis or rule logic in the credit-management design.</td>
+            <td>Is the account classified in the intended group, and does that classification affect the implemented policy?</td>
+          </tr>
+          <tr>
+            <td><strong>Credit limit</strong></td>
+            <td>Approved limit for a credit segment. It is capacity, not the current available amount.</td>
+            <td>Is the correct segment being checked, is the limit valid, and what exposure is already consuming it?</td>
+          </tr>
+          <tr>
+            <td><strong>Validity</strong></td>
+            <td>Limits the period in which a score or credit limit can be treated as current, depending on the maintained data and calculation rule.</td>
+            <td>Did the system recalculate or invalidate a value because its validity ended?</td>
+          </tr>
+          <tr>
+            <td><strong>Special attention / block reason</strong></td>
+            <td>Additional control information that can indicate an account requiring special handling or a blocked credit account.</td>
+            <td>Is the negative result caused by capacity, or by an explicit account-level restriction?</td>
+          </tr>
+          <tr>
+            <td><strong>External ratings</strong></td>
+            <td>Credit information from external providers can support the internal risk assessment and score calculation.</td>
+            <td>Which provider, rating date and validity were used, and did a new rating trigger recalculation?</td>
+          </tr>
+          <tr>
+            <td><strong>Collateral, credit insurance, negative events and exceptions</strong></td>
+            <td>Additional credit information can qualify the risk picture and, where configured, influence checks or analyst decisions.</td>
+            <td>Is the information still valid, relevant for the check and maintained at the correct profile or segment scope?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="score-limit" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Score, risk class and limit</p>
+      <h2>Automation is useful only when you can explain what drives the result.</h2>
+      <p>SAP Credit Management can calculate the score, derive a risk class and calculate credit limits using configured rules. The value is not “smart” by itself: it is the output of formulas, input data, validity and process governance.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Collect credit signals</h4><p>Internal information can include payment behavior and other credit-relevant master or transaction data. External ratings can add another source of risk information.</p></div>
+      <div><span>02</span><h4>Calculate or maintain score</h4><p>The scoring rule turns selected inputs into a score. Depending on design, the score can also be entered or adjusted manually.</p></div>
+      <div><span>03</span><h4>Derive risk class</h4><p>The risk class translates the score into a policy category that is easier to use in checks, analysis and governance.</p></div>
+      <div><span>04</span><h4>Calculate segment limit</h4><p>Credit-limit formulas can produce limits for the relevant credit segments. Different segments can therefore have different approved capacity for the same Business Partner.</p></div>
+      <div><span>05</span><h4>Apply governance</h4><p>Manual overrides, approvals, validity and change history matter because credit values are business-risk decisions, not only system calculations.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology_alt</span>
+      <p><strong>Lead question:</strong> if the business says “the system calculated the wrong limit”, ask which input or formula is wrong before changing the final number. Otherwise the next recalculation can recreate the same problem.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="segments" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Credit segments</p>
+      <h2>A segment is a policy boundary, not another copy of the customer master.</h2>
+      <p>Credit segments let the organization separate credit capacity across meaningful scopes such as business lines, regions or other risk-management structures. Sales and Finance integration maps business transactions into the relevant segment.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Why use segments?</h3>
+        <p>A customer may be acceptable for one business scope but constrained in another. Segment-specific limits avoid one global number becoming the only control for every business relationship.</p>
+      </div>
+      <div>
+        <h3>Integration boundary</h3>
+        <p>The Sales or FI side must determine the credit-control context and map it to the credit segment used by SAP Credit Management. If that mapping is wrong, a correct credit profile can still produce the wrong business result.</p>
+      </div>
+      <div>
+        <h3>Main segment</h3>
+        <p>Some designs use a main credit segment to provide an aggregated view or additional control across lower-level segments. Treat this as a deliberate architecture choice and verify the actual contribution and check settings in the target system.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Design test:</strong> every segment should answer a business question. If nobody can explain why two segments need different capacity or risk treatment, the segmentation may be adding operational complexity without better control.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="external-data" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">External information and security</p>
+      <h2>The profile can hold more than an internal score.</h2>
+      <p>Credit analysts often need evidence that does not come from Sales orders or FI open items. SAP supports external credit information and additional credit data so the decision can reflect the wider risk picture.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>External credit agencies</h3>
+        <p>SAP supports integration with external credit agencies. In current S/4HANA documentation, SAP S/4HANA Cloud for credit integration can bring external credit information into the Credit Management process.</p>
+      </div>
+      <div>
+        <h3>Credit insurance and collateral</h3>
+        <p>Insurance and collateral can be maintained with amount, validity and relevance information. They should be treated as governed risk instruments, not as free extra limit.</p>
+      </div>
+      <div>
+        <h3>Negative events and exceptions</h3>
+        <p>Negative credit events and check exceptions can capture information that does not fit a simple limit-versus-exposure model. Their validity and ownership should be explicit.</p>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Data-governance point:</strong> external ratings can be stale, legally sensitive or valid only for a defined period. Keep source, date, validity and consent requirements visible in the operating model.</p>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>A credit limit is only one input to a runtime credit decision.</h2>
-      <p>Sales or delivery processing can trigger a credit check for the relevant credit account and segment. The decision combines maintained credit attributes with current exposure and the configured check logic. A block is therefore a runtime result, not a direct copy of the credit limit field.</p>
+      <h2>A credit block is produced from master data plus current process state.</h2>
+      <p>SAP documentation names risk class, check rule and credit-limit settings as the minimum Business Partner data for credit-check execution. The check then evaluates the relevant account and segment against current exposure and the configured check steps.</p>
     </header>
+
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify account and segment</h4><p>Start from the credit account and credit segment actually evaluated for the document. Do not assume the Sales customer number is enough.</p></div>
-      <div><span>02</span><h4>Read maintained risk data</h4><p>Check limit, validity, risk class, and the other credit attributes used by the implementation for that segment.</p></div>
-      <div><span>03</span><h4>Read current exposure</h4><p>Separate static master data from dynamic exposure. A correct limit can still produce a block when current exposure or open commitments change.</p></div>
-      <div><span>04</span><h4>Trace the check rule</h4><p>Identify which check ran, which thresholds or rules it evaluated, and which reaction is configured for failure.</p></div>
-      <div><span>05</span><h4>Prove release and recheck</h4><p>If a block is released, verify the ownership of that decision and whether later document changes or processing trigger another check.</p></div>
+      <div><span>01</span><h4>Resolve the credit account</h4><p>Start from the account actually checked by the Sales process. In standard Sales integration the payer is central; do not assume the sold-to party is always the credit account.</p></div>
+      <div><span>02</span><h4>Resolve the credit segment</h4><p>Prove the organizational mapping that selects the segment. A wrong segment makes every later comparison misleading.</p></div>
+      <div><span>03</span><h4>Read the Credit Profile</h4><p>Check risk class, check rule, score or external information and whether the profile is blocked or requires special attention.</p></div>
+      <div><span>04</span><h4>Read segment capacity</h4><p>Check the segment limit, validity and other segment-specific data. Then keep it separate from the runtime exposure.</p></div>
+      <div><span>05</span><h4>Read exposure and failed step</h4><p>Find which commitments consume capacity and which configured check step produced the negative result.</p></div>
+      <div><span>06</span><h4>Choose recheck or release</h4><p>Recheck after the underlying data or exposure changes. Release only when an authorized credit decision accepts the risk.</p></div>
+    </div>
+
+    <nav class="ecg-context-links" aria-label="Credit runtime deep dive">
+      <span>Runtime detail</span>
+      <a href="/labs/enterprise-context/credit/">Credit Management — checks, exposure and release</a>
+      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/labs/enterprise-context/billing/">Billing and FI boundary</a>
+    </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="maintenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Maintenance and integration</p>
+      <h2>Know which surface owns master data and which surface only shows runtime exposure.</h2>
+      <p>On-premise and Private Cloud projects often use classic transactions together with Fiori apps. Public Cloud projects use released apps, configuration activities and APIs. Keep the business object stable and verify the tool for the deployment model.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Credit master data maintenance and technical anchors">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Tool / object</th>
+            <th>Purpose</th>
+            <th>Practical use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>BP role UKM000</strong></td>
+            <td>Activates SAP Credit Management data for the Business Partner.</td>
+            <td>First check when the expected credit profile or segment data is missing.</td>
+          </tr>
+          <tr>
+            <td><strong>UKM_BP / BP</strong></td>
+            <td>Classic maintenance/display entry point for credit-management Business Partner data in supported on-premise or Private Cloud landscapes.</td>
+            <td>Useful technical anchor for profile, risk class, check rule and segment data.</td>
+          </tr>
+          <tr>
+            <td><strong>Manage Credit Accounts</strong></td>
+            <td>Fiori-based maintenance and analysis of credit accounts, profile data, segment data and additional credit information.</td>
+            <td>Useful for analysts who need one account view rather than several technical transactions.</td>
+          </tr>
+          <tr>
+            <td><strong>API_CRDTMBUSINESSPARTNER_0001</strong></td>
+            <td>API for maintaining SAP Credit Management Business Partner and credit-account data.</td>
+            <td>Use for governed integration of risk class, rules, segment limits and other supported credit fields instead of direct table updates.</td>
+          </tr>
+          <tr>
+            <td><strong>UKM_COMMITMENTS</strong></td>
+            <td>Displays and analyzes credit exposure commitments in supported on-premise landscapes.</td>
+            <td>Use when the master data looks correct but exposure is unexpectedly high or low.</td>
+          </tr>
+          <tr>
+            <td><strong>Change history</strong></td>
+            <td>Credit master fields support change documents with time, user and old/new values.</td>
+            <td>Use it to prove whether a block started after a limit, risk class, rule or account change.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">auto_fix_high</span>
+      <p><strong>Useful SAP behavior:</strong> when defaults for scoring/limit calculation and the default check rule are configured, SAP can create the Credit Management role, profile and segment data on-the-fly when a sales document requests a credit check. Convenient automation can therefore hide missing onboarding steps; always know whether your project relies on it.</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="integration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration and identity</p>
+      <h2>The credit result is only as good as the account identity and incoming data.</h2>
+      <p>Credit Management sits between Business Partner, Sales and Finance. A field can be correct in each system and still produce the wrong answer if the account mapping or update flow is wrong.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Customer vs Business Partner</h3>
+        <p>When customer and Business Partner numbers are not identical, SAP documentation points to BAdI <strong>UKM_CONV2PARTNER</strong> for deriving the correct Business Partner. This is an identity problem, not a credit-limit problem.</p>
+      </div>
+      <div>
+        <h3>Sales and FI updates</h3>
+        <p>Sales and Finance contribute commitments and payment information to Credit Management. Diagnose missing or duplicated exposure at the update boundary before touching risk policy.</p>
+      </div>
+      <div>
+        <h3>External data</h3>
+        <p>Ratings and agency data can enter from external services. Define ownership, refresh frequency, failure handling and which fields are authoritative before automating recalculation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="troubleshooting" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Do not raise the limit until you know what the check evaluated.</h2>
+      <h2>Do not raise the limit until you know the first wrong input.</h2>
+      <p>A disciplined investigation follows the same order as the runtime decision. Each step removes a different class of root cause.</p>
     </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Which account was checked?</h4><p>Prove payer and credit-account identity. If the wrong account is used, every profile comparison is irrelevant.</p></div>
+      <div><span>02</span><h4>Which segment was checked?</h4><p>Prove the credit-control-to-segment mapping and the segment actually used by the document.</p></div>
+      <div><span>03</span><h4>Is the profile complete?</h4><p>Check UKM000 role, risk class, check rule, block status, score and any relevant external information.</p></div>
+      <div><span>04</span><h4>Is the segment data correct?</h4><p>Check credit limit, validity and segment-specific controls. Compare calculated and manually maintained values where relevant.</p></div>
+      <div><span>05</span><h4>Is exposure correct?</h4><p>Reconcile the amount to Sales, delivery, billing and receivables. Exposure is a separate runtime layer.</p></div>
+      <div><span>06</span><h4>Which check step failed?</h4><p>Read the credit-check result and log. A customer can fail for reasons other than simple limit utilization.</p></div>
+      <div><span>07</span><h4>What changed?</h4><p>Use change history to correlate the first failure with changes to rule, risk class, limit, block reason or other maintained data.</p></div>
+      <div><span>08</span><h4>What proves the fix?</h4><p>Recheck the document after correcting the real cause. Do not use a manual release as proof that the defect is gone.</p></div>
+    </div>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Identify the credit account and segment first. Then compare limit, validity, and risk data with current exposure and the exact check result. If the wrong segment was evaluated, changing a limit only hides the ownership problem. If the right segment was evaluated, prove which check failed and what should happen after release or recheck.</p>
+      <p><strong>Common anti-pattern:</strong> Sales says “credit is wrong”, support opens the profile, increases the limit and closes the ticket. This can hide a wrong payer, wrong segment, stale exposure, expired limit, changed check rule or explicit account block. Fix the first wrong input, not the final symptom.</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="classic-vs-fscm" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">S/4HANA mental reset</p>
+      <h2>Do not bring classic credit-master habits into FSCM without checking the ownership model.</h2>
+      <p>In S/4HANA Credit Management, the Business Partner with role UKM000, Credit Profile and Credit Segment Data form the main master-data model. Classic customer-credit transactions and tables are useful migration or historical references, but they should not drive the architecture of a new FSCM design.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Old question</h3>
+        <p>“Which customer master credit field should I change?”</p>
+      </div>
+      <div>
+        <h3>Better S/4HANA question</h3>
+        <p>“Which Business Partner credit profile and segment are evaluated, and which system owns the risk decision?”</p>
+      </div>
+      <div>
+        <h3>Lead consequence</h3>
+        <p>Migration must include policy, limits, mappings, exposure behavior, analyst ownership and operational processes — not only field conversion.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Account → segment → master data → exposure → check.</h2>
+      <h2>Profile → segment → exposure → check → decision.</h2>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Credit Master Data belongs to SAP Credit Management and is organized around the credit account and credit segment. I first prove which account and segment the document uses, then check limit, validity, and risk attributes. After that I add current exposure and the configured check rule, because a credit block is a runtime decision, not simply “limit exceeded.” I finish by proving who owns release and whether the document is rechecked later.</p>
+      <p><strong>90-second answer:</strong> In S/4HANA, credit master data belongs to SAP Credit Management and is maintained for the Business Partner in role UKM000. I separate global Credit Profile data from Credit Segment Data. The profile contains the scoring and credit-limit rule, score, risk class, check rule and other account-wide credit information. The segment contains the credit limit and segment-specific controls. At runtime the system resolves the credit account and segment, combines this master data with current credit exposure and executes the configured check steps. That is why a credit block is not simply “limit exceeded”. For support I first prove account and segment, then profile and limit, then exposure and the failed check step. I use change history to see what changed and I recheck after fixing the real cause. A manual release is a risk decision, not a technical fix.</p>
     </div>
-    <nav class="ecg-context-links" aria-label="Related master-data pages">
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Strong follow-up</h3>
+        <p><strong>Can risk class differ by segment?</strong> Not in the standard model described by SAP Help. Risk class and check rule are Credit Profile data; the limit is segment-specific.</p>
+      </div>
+      <div>
+        <h3>Strong diagnostic point</h3>
+        <p>If the limit looks correct but the order is blocked, inspect the check rule and failed step before changing the limit.</p>
+      </div>
+      <div>
+        <h3>Strong architecture point</h3>
+        <p>Credit Management is a cross-process control: Sales triggers the check, BP/FSCM owns credit policy, Finance contributes exposure, and the credit analyst owns exception decisions.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Source anchors</p>
+      <h2>Primary SAP references behind the model above.</h2>
+      <p>The page remains a draft and noindex. These sources are used to keep release-sensitive product behavior separate from project-specific design choices.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Business Partner credit data</h3>
+        <p><a href="https://help.sap.com/docs/PRODUCT_ID/7b24a64d9d0941bda1afa753263d9e39/faa59d153bf84212a5f0bbc829f9d364.html?locale=en-US&amp;state=PRODUCTION&amp;version=latest">SAP Help — Credit Master Data of Business Partner</a><br>
+        <a href="https://help.sap.com/docs/PRODUCT_ID/7b24a64d9d0941bda1afa753263d9e39/567d0684f1dc4b64ba4f658699eb9f67.html?locale=en-US&amp;state=PRODUCTION&amp;version=LATEST">SAP Help — Check Rule and Risk Class Assignment</a></p>
+      </div>
+      <div>
+        <h3>Profile fields and API</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/44e06f22436c43e582db6ccd5250e29b/57b053dde37b43ccb8752d6ed162c116.html">SAP Help — Credit Management Profile</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f4efce11800043b58a738a5cc1a7f793/64e8c928499341ffb0eaac517a882b7d.html?locale=en-US">SAP Help — Credit Management Master Data API</a></p>
+      </div>
+      <div>
+        <h3>External information and exposure</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/0bfd0ef8ac604566b03299809b86b10e/7287eb57aa65f232e10000000a441470.html">SAP Help — Integration with External Credit Agencies</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/3ec97dc7917a4211a650f54c148dcf87-570.html">SAP Help — Display Credit Exposure</a></p>
+      </div>
+    </div>
+
+    <nav class="ecg-context-links" aria-label="Related master-data and credit pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/master-data/business-partner/">Business Partner</a>
+      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed master-data graph</a>
       <a href="/labs/enterprise-context/credit/">Credit Management</a>
+      <a href="/labs/enterprise-context/sales-order/">Sales Order</a>
     </nav>
   </section>
 </div>
