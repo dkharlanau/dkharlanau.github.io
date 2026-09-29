@@ -157,7 +157,29 @@ This workflow should make the repository better while the user studies: fewer du
 
 Use data-driven visuals when a relationship, process, ownership boundary, decision chain, or runtime state is easier to understand spatially than as prose.
 
-The preferred pattern is derived from the repository's sibling **Visual Workbench** project:
+The preferred pattern is derived from the repository's sibling **Visual Workbench** project.
+
+### Reuse discovery gate
+
+Before creating a new Lab visual, renderer, or graph component, inspect the relevant
+`dkharlanau` sibling repositories and decide whether an existing semantic model or
+projection can be reused:
+
+- **Visual Workbench** for relationship, dependency, process, handoff, data-flow and system-flow rendering;
+- **Data Relationship Map** for identity, lineage, cardinality, provenance and ambiguous/broken relationship analysis;
+- **Transformation Graph** for dependency, impact and traceability views;
+- **Process as Code** for process semantics, BPMN, Process Analysis Canvas and generated flow views;
+- **Mapping as Code** for mapping and field-level lineage;
+- **Enterprise Change Graph** for change-impact relationships;
+- **Enterprise Architecture Composer** for architecture projections already compatible with Visual Workbench.
+
+Read only the relevant README and contract/renderer/adapter files needed to make the
+reuse decision. Do not add another diagram library or parallel semantic format until
+these candidates have been checked. Prefer a small adapter or generated SVG/HTML
+projection over copying a complete sibling engine into the website. Keep the sibling
+repository that owns the semantics authoritative.
+
+Then apply these rules:
 
 1. **Model meaning first** — store stable semantic nodes, groups/lanes, stages, relationships, owners, statuses, and views. Do not store hand-picked x/y coordinates or presentation colors in the knowledge model.
 2. **Choose the visual method from the question**:
@@ -181,6 +203,20 @@ For Order-to-Cash runtime views, the first reference implementation is:
 - machine surface: `/labs/enterprise-context/data/sales-master-data.json`
 
 Do not import or copy the full Visual Workbench rendering engine into the site merely to draw one diagram. Reuse its semantic grammar and keep the website renderer deliberately lightweight unless a later requirement justifies a formal adapter.
+
+### Rendered-page proof
+
+After changing a Lab visual or its surrounding UI:
+
+1. build the site;
+2. open the exact affected Lab route, not only the component demo;
+3. inspect desktop and mobile rendering;
+4. for diagrams, verify node/edge labels, reading order, clipping, overflow and the relationship being taught;
+5. run `node scripts/visual_smoke_test.mjs --site-dir _site --routes <route>` when the route is supported;
+6. report which sibling repositories were inspected, what was reused, and what the rendered page showed.
+
+A generated SVG, passing schema validation, or green Jekyll build is not sufficient
+evidence that the learning visual works on the page.
 
 ## Study UI component selection
 
