@@ -1,17 +1,22 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Batch Master and Classification"
-description: "A practical deep dive into Batch Master and Classification in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+title: "SAP S/4HANA Batch Master — Data, Configuration and Determination"
+description: "A practical SAP S/4HANA guide to batch master data, batch classification, shelf life, status management, batch determination, SD/MM/PP/QM/EWM integration, troubleshooting and assessment recall."
 permalink: /labs/enterprise-context/master-data/batch-master/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-09-26
+status: published
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
+  - sap-mm
+  - sap-pp
+  - sap-qm
+  - sap-ewm
+  - batch-management
   - master-data
 ---
 
@@ -21,87 +26,505 @@ tags:
     <li><a href="/labs/">Labs</a></li>
     <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
     <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
-    <li aria-current="page">Batch Master and Classification</li>
+    <li aria-current="page">Batch Master</li>
   </ol>
 </nav>
 
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.BATCH</p>
-      <h1>Batch Master and Classification</h1>
-      <p>Batch master data identifies a specific lot of a product and can carry characteristics such as production date, shelf life, origin or quality attributes. Sales and delivery use those values when the product is batch-managed and selection matters.</p>
-      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">SAP Logistics / Master Data / MD.SD.BATCH</p>
+      <h1>Batch Master: the identity of one real lot</h1>
+      <p>A product master describes what a product should be. A batch master describes what one real production or procurement lot actually is: its batch number, dates, origin, status and measured characteristics.</p>
+      <p>That difference becomes important in food, chemicals, pharmaceuticals and other industries where two quantities of the same material can have different shelf life, potency, quality, origin or legal status.</p>
+      <a class="research-canvas__button" href="#process">Follow the end-to-end process <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.BATCH</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>logistics adjacent master</strong><small>Data class</small></div>
-      <em>Product, plant, batch, status and classification characteristics.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Batch</strong><small>One physical lot</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Classification</strong><small>Actual lot properties</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Determination</strong><small>Which lot to use</small></div>
+      <em>Keep master data, stock and determination logic separate when you design or troubleshoot the process.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The batch describes a lot; the determination strategy decides which lot to use.</h2>
+      <h2>Three objects answer three different questions.</h2>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Product, plant, batch, status and classification characteristics.</p>
-    </div>
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Batch number, material/product, plant or batch level depending on design, status, shelf-life dates and classification characteristics.</p>
+        <h3>Product / Material Master</h3>
+        <p><strong>What should this product be?</strong></p>
+        <p>It contains general product settings such as batch-management relevance, total shelf life, minimum remaining shelf life and target specification ranges.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>Batch characteristics and status are master data. The batch-determination strategy, search procedure and selection class are configuration.</p>
+        <h3>Batch Master</h3>
+        <p><strong>What is this lot actually like?</strong></p>
+        <p>It stores the identity and lot-specific data: batch number, production or expiration dates, supplier batch, origin, status and classification values.</p>
+      </div>
+      <div>
+        <h3>Batch Search Strategy</h3>
+        <p><strong>Which lot should the process use?</strong></p>
+        <p>It defines the selection criteria, sort rule, batch-split behavior and quantity proposal used during batch determination.</p>
       </div>
     </div>
-  </section>
 
-  <section class="research-canvas__inventory" id="runtime" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>Selection starts from the product and plant, then narrows to eligible lots.</h2>
-      <p>For a batch-managed product, the process can search available lots according to the active batch-determination design. Batch master and classification describe each candidate; the strategy decides which characteristics, status, date, and other selection criteria matter. Delivery or warehouse execution then continues with the batch that was actually selected.</p>
-    </header>
-    <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Confirm batch relevance</h4><p>Start with the actual product, plant, and execution context. Prove that the product is batch-managed before analysing a batch strategy.</p></div>
-      <div><span>02</span><h4>Read candidate lots</h4><p>Check the batch status, classification characteristics, shelf-life or date attributes, and plant context for the lots that could satisfy the demand.</p></div>
-      <div><span>03</span><h4>Trace the selection strategy</h4><p>Identify the strategy or search logic that filters and sorts those candidates. Master data describes the lots; configuration explains why one candidate is preferred.</p></div>
-      <div><span>04</span><h4>Prove availability and selection</h4><p>An eligible batch must also be usable in the execution context. Compare candidate quantity and status with the batch finally assigned to the delivery or warehouse step.</p></div>
-      <div><span>05</span><h4>Keep traceability intact</h4><p>After selection, follow the actual batch through delivery and inventory evidence instead of treating classification as proof that the lot was issued.</p></div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Lead rule:</strong> a batch can be perfectly maintained and still not be selected. Master data says what the batch is. Determination logic decides whether it is a candidate. Availability and warehouse execution decide whether it can actually be consumed or shipped.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>An eligible batch and a selected batch are different states.</h2>
+      <p class="research-canvas__eyebrow">Core data</p>
+      <h2>What belongs to the Batch Master?</h2>
+      <p>The exact field set depends on the release and process, but the following groups are the ones worth remembering.</p>
     </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Identity and origin</h3>
+        <p>Material, batch number, plant context when plant-level batches are used, supplier, supplier batch number, country or region of origin and descriptive text.</p>
+      </div>
+      <div>
+        <h3>Dates and usability</h3>
+        <p>Date of manufacture, shelf life expiration date or best-before date, availability date, last goods receipt date, next inspection date and certification dates where relevant.</p>
+      </div>
+      <div>
+        <h3>Status and lifecycle</h3>
+        <p>Restricted or unrestricted batch status when batch status management is active, deletion indicator and other lifecycle information.</p>
+      </div>
+      <div>
+        <h3>Classification</h3>
+        <p>Measured technical or business values such as potency, viscosity, color, grade, concentration, quality class, production line or other customer-specific attributes.</p>
+      </div>
+    </div>
+
     <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>If the expected batch is not selected, first prove that it is valid and usable for the product and plant. Then compare its status and characteristics with the active selection criteria and sorting logic. If the strategy selects it but execution still fails, move to quantity, storage, warehouse, or delivery evidence rather than changing classification blindly.</p>
+      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      <p><strong>Do not confuse batch master with batch stock.</strong> The master record describes the lot. Stock records tell you how much of that batch is available in a plant or storage location and in which stock category it sits.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture decision</p>
+      <h2>Batch level defines what “unique batch number” means.</h2>
+      <p>The batch level is a central Customizing decision. It must be agreed early because changing it after productive batch data and stock exist can become a conversion project rather than a small configuration change.</p>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Batch level</th>
+            <th>Unique key in business terms</th>
+            <th>Batch class type</th>
+            <th>Design consequence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Plant level</td>
+            <td>Material + Plant + Batch</td>
+            <td><code>022</code></td>
+            <td>The same material and batch number can represent different batches in different plants.</td>
+          </tr>
+          <tr>
+            <td>Material level</td>
+            <td>Material + Batch</td>
+            <td><code>023</code></td>
+            <td>The batch identity follows the material across plants.</td>
+          </tr>
+          <tr>
+            <td>Client level</td>
+            <td>Batch number is unique across the client</td>
+            <td><code>023</code></td>
+            <td>The strongest uniqueness rule. It requires strict governance of number assignment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Customizing is under <strong>Logistics - General → Batch Management → Specify Batch Level and Activate Status Management</strong>. Do not memorize a “best” level without context. Choose it from traceability, inter-plant flow, numbering and integration requirements.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classification</p>
+      <h2>Classification is where the batch becomes useful for selection.</h2>
+      <p>Batch classification stores values that differ from lot to lot. It is also the bridge between the Batch Master and automatic batch determination.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>User-defined characteristics</h3>
+        <p>Create business characteristics such as <code>Z_POTENCY</code>, <code>Z_GRADE</code> or <code>Z_COLOR</code> when the property is not already represented by a standard batch field.</p>
+      </div>
+      <div>
+        <h3>Reference / object characteristics</h3>
+        <p>These read values from referenced application fields. They are useful when a value already exists in the batch master and should be reused in classification logic.</p>
+      </div>
+      <div>
+        <h3>Standard <code>LOBM_*</code> characteristics</h3>
+        <p>SAP provides batch-specific characteristics for common logic such as expiration date, status, delivery date, remaining shelf life, storage location and available quantity.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">science</span>
+      <p><strong>Important:</strong> not every characteristic used by a search strategy belongs in the batch class. Some dynamic standard characteristics, such as remaining shelf life, are calculated for determination and are used in the selection class rather than stored as normal batch values.</p>
+    </div>
+
+    <h3>Product target vs. batch actual</h3>
+    <p>A useful design is to keep the allowed or target range at material level and the real measured value at batch level. Example: the product allows potency from 95% to 105%; batch B240091 was measured at 99.4%. This makes the classification useful for quality checks, usability rules and customer-specific selection.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="process" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Implementation path</p>
+      <h2>How I would configure batch management on a project.</h2>
+      <p>The order matters. If you start with search strategies before the batch model is stable, you create logic around master data that can still change.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Decide the batch identity</h4><p>Define the batch level, numbering concept and whether batch status management is required. Treat this as an architecture decision, not a transaction setting.</p></div>
+      <div><span>02</span><h4>Activate the material</h4><p>Set the material as batch-managed in the relevant material master views. Define shelf-life data where the business needs expiration checks.</p></div>
+      <div><span>03</span><h4>Design classification</h4><p>Create only characteristics that have a clear business use. Build the batch class and assign it to the material. Avoid a large “everything we might need” class.</p></div>
+      <div><span>04</span><h4>Define creation and dates</h4><p>Decide internal or external batch numbering, when batches may be created automatically, which dates come from the supplier or production, and which fields are mandatory.</p></div>
+      <div><span>05</span><h4>Configure determination</h4><p>Build condition tables, access sequences, strategy types, search procedures, selection classes and sort rules for the required MM, PP or SD process.</p></div>
+      <div><span>06</span><h4>Maintain strategy records</h4><p>Create the actual search-strategy master records with key combinations, selection values, sort rule, split controls and quantity proposal.</p></div>
+      <div><span>07</span><h4>Test the complete chain</h4><p>Test goods receipt, quality status, stock, sales or production determination, split behavior, warehouse execution and where-used traceability with realistic batches.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Creation</p>
+      <h2>A batch is often created at the first goods receipt, but it does not have to be.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>External procurement</h3>
+        <p>At goods receipt, the user or interface provides a batch number or the system creates one. Supplier batch, production date and SLED can be captured from the inbound process.</p>
+      </div>
+      <div>
+        <h3>Internal production</h3>
+        <p>The finished-product batch is normally created or assigned around production and goods receipt. Component batches consumed by the order become part of the genealogy.</p>
+      </div>
+      <div>
+        <h3>Manual pre-creation</h3>
+        <p>Create the batch before stock exists when data must be prepared in advance, for example certification data, planned batch identity or controlled classification values.</p>
+      </div>
+    </div>
+
+    <p>For daily master-data work, SAP provides the <strong>Manage Batches</strong> app (<code>F2462</code>) to search, display, create and edit batches. Classic transactions such as <code>MSC1N</code>, <code>MSC2N</code> and <code>MSC3N</code> are still useful in many on-premise landscapes.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Shelf life</p>
+      <h2>SLED is a process rule, not only a date field.</h2>
+    </header>
+
+    <p>If total shelf life is maintained for the material and the date of manufacture is entered at goods receipt, SAP can calculate the shelf life expiration date. Minimum remaining shelf life can then be checked at goods receipt. Depending on configuration, a failed check can produce a warning or an error.</p>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Material rule</h4><p>Maintain total shelf life and, where required, minimum remaining shelf life in the product or material master.</p></div>
+      <div><span>02</span><h4>Goods receipt</h4><p>Enter production date or SLED. The system calculates or checks the date according to the configured rule.</p></div>
+      <div><span>03</span><h4>Batch master</h4><p>The final SLED becomes lot-specific master data and can also be exposed through standard batch characteristics.</p></div>
+      <div><span>04</span><h4>Determination</h4><p>Use remaining shelf life for selection and expiration date for sorting when the business wants FEFO-like behavior.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">event</span>
+      <p><strong>FEFO is not one checkbox.</strong> A good design combines shelf-life data, selection rules, sort sequence and the warehouse stock-removal logic. A batch can have the earliest expiration date and still be unusable because of status, stock category, customer requirements or warehouse constraints.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Batch determination</p>
+      <h2>Read determination as a pipeline.</h2>
+      <p>This sequence is one of the most useful models for both implementation and support.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Find the search procedure</h4><p>The business transaction calls the relevant batch-determination procedure for SD, Inventory Management, Production or another application.</p></div>
+      <div><span>02</span><h4>Find a valid strategy</h4><p>SAP evaluates strategy types and adopts the first valid search strategy. Key combinations can include fields such as customer, material, plant, movement type or order type.</p></div>
+      <div><span>03</span><h4>Select candidate batches</h4><p>The selection class and characteristic values filter batches that match the required specification.</p></div>
+      <div><span>04</span><h4>Check availability</h4><p>Matching master data is not enough. The system checks whether usable quantity exists for the process.</p></div>
+      <div><span>05</span><h4>Sort the result</h4><p>The sort rule orders the surviving batches, for example by expiration date, batch characteristic or available quantity.</p></div>
+      <div><span>06</span><h4>Propose quantity and split</h4><p>If several batches are allowed, quantity proposal and split settings decide how the requirement is distributed.</p></div>
+    </div>
+
+    <p>Batch search strategy uses the condition technique. The configuration contains <strong>condition tables → access sequence → strategy type → search procedure → assignment to the business transaction</strong>. The maintained strategy record is the runtime master data that supplies selection and sorting rules.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Process</th>
+            <th>Classic strategy maintenance</th>
+            <th>Typical key fields</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Inventory Management</td>
+            <td><code>MBC1 / MBC2 / MBC3</code></td>
+            <td>Movement type, plant, material</td>
+          </tr>
+          <tr>
+            <td>Production / Process Orders</td>
+            <td><code>COB1 / COB2 / COB3</code></td>
+            <td>Order type, plant, component material</td>
+          </tr>
+          <tr>
+            <td>Sales &amp; Distribution</td>
+            <td><code>VCH1 / VCH2 / VCH3</code></td>
+            <td>Customer, material, plant or sales-related keys depending on design</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SD process</p>
+      <h2>Sales can determine a batch in the order or in the delivery.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Sales-order determination</h3>
+        <p>Use it when the batch is part of the commercial promise or customer specification. The order can already carry the selected batch or selection requirements.</p>
+      </div>
+      <div>
+        <h3>Delivery determination</h3>
+        <p>Use it when the real warehouse stock should drive the decision closer to picking. This is common when many batches can satisfy the same sales requirement.</p>
+      </div>
+      <div>
+        <h3>Batch split</h3>
+        <p>A delivery item can be fulfilled from several batches. The parent item represents the commercial demand; split subitems represent the physical lots that will be picked and issued.</p>
+      </div>
+    </div>
+
+    <p>A customer can also require specific batch properties. Example: Customer A accepts only grade A product with at least 60 days of remaining shelf life. That requirement belongs in the determination design, not as a manual warehouse instruction.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration</p>
+      <h2>The same batch crosses MM, QM, PP, SD and EWM.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>MM / Purchasing</h3>
+        <p>Goods receipt creates or updates the lot, captures supplier batch and dates, creates batch stock and can check minimum remaining shelf life.</p>
+      </div>
+      <div>
+        <h3>QM</h3>
+        <p>Inspection results can provide the measured values that classify the batch. Quality decisions can also influence whether the stock or batch is usable in the next process.</p>
+      </div>
+      <div>
+        <h3>PP / Process Manufacturing</h3>
+        <p>Component batches are selected for production and the finished batch is created at receipt. The consumed component lots and produced lot form the basis of batch genealogy.</p>
+      </div>
+      <div>
+        <h3>SD</h3>
+        <p>Sales or delivery determination can select lots according to customer, material, plant, shelf life and specification rules. Batch split supports fulfillment from more than one lot.</p>
+      </div>
+      <div>
+        <h3>EWM</h3>
+        <p>In EWM scenarios, batch determination can run directly in EWM. S/4HANA can pass selection characteristics while EWM considers warehouse-specific stock and picking rules.</p>
+      </div>
+      <div>
+        <h3>Integration APIs</h3>
+        <p>The current Batch Master Record OData service is exposed as <code>API_BATCH_SRV_0001</code> in communication scenario <code>SAP_COM_0337</code> for supported S/4HANA Cloud integrations.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <p><strong>Architecture boundary:</strong> decide which system owns batch selection. If EWM performs determination, changing only the S/4 search strategy may have no effect on warehouse picking.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Status and stock</p>
+      <h2>“Blocked batch” can mean several different things.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Batch status</h3>
+        <p>When batch status management is active, the lot can be unrestricted or restricted. The status can participate in determination through standard characteristic <code>LOBM_ZUSTD</code>.</p>
+      </div>
+      <div>
+        <h3>Stock category</h3>
+        <p>Quantity can sit in unrestricted-use, quality inspection, blocked or another stock category. This is inventory state, not the same thing as the batch status.</p>
+      </div>
+      <div>
+        <h3>Availability</h3>
+        <p>A batch can match classification and still have no usable quantity for the current document because stock is in another location, category, warehouse or is already committed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Traceability</p>
+      <h2>Batch management becomes valuable when something goes wrong.</h2>
+      <p>For a complaint or recall, the useful question is not “does the batch exist?” but “where did it come from, what went into it, and where did it go?”</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Supplier or source lot</h4><p>Identify the received raw-material or externally procured batch and its supplier reference.</p></div>
+      <div><span>02</span><h4>Production consumption</h4><p>Trace which component batches were consumed by the production or process order.</p></div>
+      <div><span>03</span><h4>Finished batch</h4><p>Identify the produced lot, its inspection results, dates and classification.</p></div>
+      <div><span>04</span><h4>Outbound delivery</h4><p>Trace which batch and quantity were issued in each delivery.</p></div>
+      <div><span>05</span><h4>Customer impact</h4><p>Use the document chain to identify affected customers, quantities and dates for targeted recall or investigation.</p></div>
+    </div>
+
+    <p>The Batch Information Cockpit and batch where-used functions are the natural investigation tools. For support work, trace actual goods movements and documents; classification alone cannot prove that a lot was physically consumed or shipped.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Troubleshooting</p>
+      <h2>When the “wrong batch” is selected, find the first stage where reality differs from expectation.</h2>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Symptom</th>
+            <th>Check first</th>
+            <th>Common root cause</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>No strategy found</td>
+            <td>Business step, search procedure, strategy type and key combination</td>
+            <td>The condition record does not match plant, customer, movement type, order type or material.</td>
+          </tr>
+          <tr>
+            <td>Expected batch is missing</td>
+            <td>Selection class and actual characteristic values</td>
+            <td>The batch does not satisfy one selection condition, remaining shelf life or status rule.</td>
+          </tr>
+          <tr>
+            <td>Correct batch exists but is not proposed</td>
+            <td>Usable stock and availability</td>
+            <td>Quantity is in the wrong stock category, storage context or is not available for the transaction.</td>
+          </tr>
+          <tr>
+            <td>Correct batches, wrong order</td>
+            <td>Sort sequence</td>
+            <td>Expiration date or another characteristic is missing from the sort rule or sorted in the wrong direction.</td>
+          </tr>
+          <tr>
+            <td>Correct batches, wrong split quantity</td>
+            <td>Number of splits and quantity proposal</td>
+            <td>The strategy limits the split or distributes quantity differently from the business expectation.</td>
+          </tr>
+          <tr>
+            <td>Works in S/4 but not in warehouse</td>
+            <td>System ownership of determination</td>
+            <td>EWM performs its own determination or stock removal and therefore uses another control layer.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <nav class="ecg-context-links" aria-label="Batch diagnostics">
+      <span>Deep dive</span>
+      <a href="/atlas/diagnostics/sap-batch-determination-diagnostics/">Batch determination diagnostics</a>
+    </nav>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Project lessons</p>
+      <h2>Design choices that save problems later.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Do not overload classification</h3>
+        <p>Every characteristic should have an owner and a use: selection, sorting, quality, compliance, analytics or integration. Otherwise it becomes expensive master data with no process value.</p>
+      </div>
+      <div>
+        <h3>Separate source from calculated data</h3>
+        <p>Decide which fields come from the supplier, production, QM or a calculation. Do not let several interfaces overwrite the same batch property without ownership rules.</p>
+      </div>
+      <div>
+        <h3>Test bad batches, not only good ones</h3>
+        <p>Create expired, restricted, low-stock and wrong-specification batches. A design is proven when SAP rejects the right candidates for the right reason.</p>
+      </div>
+      <div>
+        <h3>Test cross-module ownership</h3>
+        <p>Agree whether SD, EWM, PP or another step is responsible for the final batch selection. Otherwise teams can configure several competing solutions.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Separate lot attributes from lot selection.</h2>
+      <h2>A strong 60-second answer.</h2>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Batch Master describes an individual lot: product, plant context, status, dates, and classification characteristics. It does not by itself decide which batch Sales or delivery will use. I first prove the candidate lot is valid and usable, then trace the batch-determination strategy that filters and sorts candidates, and finally verify the batch actually assigned in execution. That separates master-data eligibility from selection and warehouse or delivery availability.</p>
+      <p><strong>Batch Master represents one real lot of a material.</strong> The material master defines the general product and rules such as batch relevance and shelf life; the batch stores lot-specific values such as dates, status, origin and classification. Batch determination is a separate condition-technique process: SAP finds a search strategy, filters batches by selection characteristics, checks availability, sorts the valid candidates and proposes quantities or batch splits. In an incident I therefore separate four layers: master data, determination rules, stock availability and execution in SD, PP or EWM.</p>
     </div>
+
+    <h3>Questions I would expect in a Lead assessment</h3>
+    <ul>
+      <li>What is the difference between the material master, batch master and batch search strategy?</li>
+      <li>How do plant, material and client batch levels change the uniqueness of the batch number?</li>
+      <li>Why can class type be <code>022</code> or <code>023</code>?</li>
+      <li>How does a selection class differ from the batch class?</li>
+      <li>What is the runtime order of batch determination?</li>
+      <li>How would you implement FEFO and minimum remaining shelf life?</li>
+      <li>Why can a batch satisfy classification but still not be selected?</li>
+      <li>What is the difference between batch status and stock type?</li>
+      <li>Where would you perform batch determination: sales order, delivery or EWM, and why?</li>
+      <li>How would you trace a customer complaint back to raw-material batches?</li>
+    </ul>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Current SAP references</p>
+      <h2>Useful source pages</h2>
+    </header>
+    <ul>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/49d0972a760b4646918ce9fddb034d64/0dfeb753128eb44ce10000000a174cb4.html">SAP Help — Batch Determination</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/4eb099dbc8a6435c9b36a854a7e05522/16feb753128eb44ce10000000a174cb4.html">SAP Help — Definition of a Batch Search Strategy</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/4eb099dbc8a6435c9b36a854a7e05522/9d6c49f60a1840959a70a852f5db168f.html">SAP Help — Definition of a Batch Sort Sequence</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/4eb099dbc8a6435c9b36a854a7e05522/1effb753128eb44ce10000000a174cb4.html">SAP Help — Calculating and Checking the Shelf Life Expiration Date</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/2d95c3180a974e0aad07556ee4d28e94/78f6ef525c1b287ee10000000a44176d.html">SAP Help — Batch Determination When Using SAP EWM</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/32da8359c8ee4e8b8e8c5e15cacba5aa/34b021588aee0a02e10000000a44147b.html">SAP Help — Manage Batches</a></li>
+    </ul>
+
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
       <a href="/labs/enterprise-context/shipping/">Shipping and execution</a>
+      <a href="/atlas/diagnostics/sap-batch-determination-diagnostics/">Batch determination diagnostics</a>
     </nav>
   </section>
 </div>
