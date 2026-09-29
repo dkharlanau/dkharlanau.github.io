@@ -196,6 +196,195 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="configuration-blueprint" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration blueprint</p>
+      <h2>How I would set up Credit Management in a project.</h2>
+      <p>I configure Credit Management from the business policy outward. First decide what risk we want to control, then build segments, rules and Sales integration around that decision. Starting from transactions normally creates configuration without a clear operating model.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div>
+        <span>01</span>
+        <h4>Define the credit operating model</h4>
+        <p>Decide who owns credit policy, who can change a limit, who can release a blocked document, which customers need credit checks, and what should happen when a check fails. Agree this before configuration.</p>
+      </div>
+      <div>
+        <span>02</span>
+        <h4>Design credit segments</h4>
+        <p>Create only the segments that represent a real risk boundary, for example a business line or region that needs its own limit. Define the segment currency and decide whether a main segment is needed for an additional aggregated control.</p>
+      </div>
+      <div>
+        <span>03</span>
+        <h4>Connect Sales organization to the segment</h4>
+        <p>Sales determines a credit-control context and SAP Credit Management maps that context to a credit segment. Prove the full chain from Sales Area to Credit Control Area to Credit Segment. A wrong mapping means the correct customer can still be checked against the wrong limit.</p>
+      </div>
+      <div>
+        <span>04</span>
+        <h4>Define risk classes and check rules</h4>
+        <p>Create a small number of risk classes that the business can explain. Then define check rules for the required policy. The check rule should contain only checks that lead to a real business action.</p>
+      </div>
+      <div>
+        <span>05</span>
+        <h4>Configure the check steps</h4>
+        <p>Typical checks include static or dynamic credit-limit checks, maximum document value, overdue items, oldest open item or dunning-related checks. Define the threshold and reaction deliberately. A warning, block and analyst review are different operating choices.</p>
+      </div>
+      <div>
+        <span>06</span>
+        <h4>Build scoring and limit logic</h4>
+        <p>If limits or risk classes are calculated automatically, define the calculation rule, formulas, input data and validity. Keep the formula understandable enough that a credit analyst can explain why the result changed.</p>
+      </div>
+      <div>
+        <span>07</span>
+        <h4>Activate the Sales integration</h4>
+        <p>Decide which sales document types, delivery events and item categories are credit-relevant. Make sure the relevant item values update exposure. In classic on-premise or Private Cloud configuration, Sales provides the trigger and FSCM owns the actual credit-check logic.</p>
+      </div>
+      <div>
+        <span>08</span>
+        <h4>Prepare Business Partner credit data</h4>
+        <p>Assign role <strong>UKM000</strong>, maintain the Credit Profile, create the required segment data, set limits and validity, and define defaults for new accounts if the project wants automatic profile creation.</p>
+      </div>
+      <div>
+        <span>09</span>
+        <h4>Configure analyst workflow and authorization</h4>
+        <p>Blocked documents need an owner. Define who receives documented credit decisions, who may release or reject them, which amounts need additional approval, and who is allowed to change credit master data.</p>
+      </div>
+      <div>
+        <span>10</span>
+        <h4>Test policy, not only configuration</h4>
+        <p>Test a new customer, a customer close to the limit, an overdue customer, different segments, a released order that is changed later, a payment that reduces exposure, and a delivery recheck. The test set should prove the business policy end to end.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">architecture</span>
+      <p><strong>Implementation rule:</strong> do not create many risk classes, check rules and segments just because SAP allows it. Every variant becomes master-data work, testing effort, authorization logic and a production support path. Keep the model as small as the business policy allows.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="credit-process" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">End-to-end process</p>
+      <h2>What happens from Sales Order to credit decision.</h2>
+      <p>The process is easier to remember as a sequence of decisions. Sales identifies the commercial context, Credit Management evaluates risk, and the credit analyst handles exceptions.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div>
+        <span>01</span>
+        <h4>Sales document starts the check</h4>
+        <p>A user creates or changes a credit-relevant sales document. Depending on the design, the check can also run at delivery or another configured checkpoint.</p>
+      </div>
+      <div>
+        <span>02</span>
+        <h4>Determine the credit account</h4>
+        <p>Sales identifies the account whose creditworthiness is checked. In the standard Sales flow the payer is central. This is why sold-to and credit account are not always the same business partner.</p>
+      </div>
+      <div>
+        <span>03</span>
+        <h4>Determine the credit segment</h4>
+        <p>The Sales organizational context leads to a Credit Control Area, which is mapped to the relevant Credit Segment. The segment tells Credit Management which limit and exposure scope to use.</p>
+      </div>
+      <div>
+        <span>04</span>
+        <h4>Read the Credit Profile</h4>
+        <p>The system reads global policy data such as risk class and check rule, plus the relevant segment limit and validity. Additional information such as blocks, ratings or exceptions can also affect the decision model.</p>
+      </div>
+      <div>
+        <span>05</span>
+        <h4>Build the current exposure picture</h4>
+        <p>Credit Management considers the commitments that belong to the account and segment. Open orders, deliveries and receivables can consume capacity at different stages of the process.</p>
+      </div>
+      <div>
+        <span>06</span>
+        <h4>Execute the check rule</h4>
+        <p>The check rule runs its configured steps. One step may test limit utilization, another overdue debt, another document value or payment behavior. The first useful diagnostic question is therefore “which step failed?”</p>
+      </div>
+      <div>
+        <span>07</span>
+        <h4>Pass or block</h4>
+        <p>If the policy is satisfied, processing continues. If a blocking check fails, the document receives a credit block and Credit Management can create a documented credit decision with the evidence behind the negative result.</p>
+      </div>
+      <div>
+        <span>08</span>
+        <h4>Credit analyst reviews the exception</h4>
+        <p>The analyst reviews the account, exposure, failed checks and supporting information. The analyst can wait for the risk situation to change, reject the business, or make an authorized exception decision.</p>
+      </div>
+      <div>
+        <span>09</span>
+        <h4>Recheck, release or reject</h4>
+        <p><strong>Recheck</strong> means run the policy again using current data. <strong>Release</strong> means accept the risk and allow processing despite the negative result. <strong>Reject</strong> means the business should not continue under the current conditions.</p>
+      </div>
+      <div>
+        <span>10</span>
+        <h4>Exposure moves with the document flow</h4>
+        <p>As the process moves from order to delivery, billing and Financial Accounting, the composition of exposure changes. The commitment should move between stages rather than remain duplicated.</p>
+      </div>
+      <div>
+        <span>11</span>
+        <h4>Later events can check again</h4>
+        <p>A released order is not permanently “credit safe”. Relevant changes, delivery processing or another configured event can trigger a new check using the latest master data and exposure.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+      <p><strong>Memory model:</strong> document event → payer → segment → profile → exposure → check steps → result → analyst decision → recheck. If support follows the same sequence, the investigation normally reaches the wrong input much faster.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="credit-process-features" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Process features</p>
+      <h2>Details that often explain “strange” credit behavior.</h2>
+      <p>Most confusing credit incidents are understandable once you know where SAP intentionally separates policy, runtime state and exception handling.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Dynamic check is time-sensitive</h3>
+        <p>A dynamic limit check does not simply look at one total. It limits the considered commitments to the configured credit horizon. Two customers with the same total exposure can therefore produce different results when the timing of commitments differs.</p>
+      </div>
+      <div>
+        <h3>Free limit does not guarantee a pass</h3>
+        <p>The check rule may contain overdue-item, document-value, dunning or other checks. Available limit proves only that the limit step may pass.</p>
+      </div>
+      <div>
+        <h3>Release is not a correction</h3>
+        <p>A manual release records a business exception. If the exposure, mapping or master data is wrong, release does not repair that defect.</p>
+      </div>
+      <div>
+        <h3>Main segment can add another control</h3>
+        <p>Where the design uses a main credit segment, the project can require checks at main-segment level, individual segment level, or both. A local segment can therefore have free capacity while an aggregated control still blocks the document.</p>
+      </div>
+      <div>
+        <h3>Exposure relevance starts before Credit Management</h3>
+        <p>Sales item and document settings decide which commercial values are credit-relevant. If an item should not consume credit, that decision must be intentional and tested.</p>
+      </div>
+      <div>
+        <h3>Default data can hide incomplete onboarding</h3>
+        <p>With suitable defaults, Credit Management can create required credit data when the first credit check is requested. This is convenient, but it can hide that the normal customer-onboarding process did not create or review the profile explicitly.</p>
+      </div>
+      <div>
+        <h3>Parent-child risk needs a clear owner</h3>
+        <p>Group structures can centralize credit risk through Business Partner relationships. Decide whether the child, parent or both carry meaningful checks; otherwise the same economic risk can be controlled twice or not at all.</p>
+      </div>
+      <div>
+        <h3>Billing changes exposure but is not the main check event</h3>
+        <p>Billing and the transfer to Financial Accounting move the commitment toward receivables. When exposure is wrong after billing, inspect the lifecycle before assuming the credit limit itself is wrong.</p>
+      </div>
+      <div>
+        <h3>Document changes can invalidate an earlier decision</h3>
+        <p>Quantity, value, requested date, payer or other credit-relevant changes can make the original check result outdated. The process must define when the document is checked again.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Best test scenario:</strong> create an order that fails, correct the real cause, recheck it, release a different order manually, then change that released order and continue to delivery. This single scenario proves much more than a happy-path “order below limit” test.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="external-data" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">External information and security</p>
