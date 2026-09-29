@@ -4,7 +4,7 @@ layout: default
 title: "SAP ATP Is Not Inventory"
 description: "A practical explanation of why SAP available-to-promise is customer commitment logic, not a simple inventory count."
 permalink: /atlas/concepts/sap-atp-is-not-inventory/
-last_modified_at: 2026-09-12
+last_modified_at: 2026-09-29
 atlas_section: concepts
 domain: SAP operations
 subdomain: Sales and fulfillment
@@ -27,6 +27,7 @@ tags:
   - sap-sd
   - diagnostics
 related:
+  - /labs/enterprise-context/atp/
   - /atlas/concepts/order-to-cash/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /services/sap-ams-consulting/
@@ -123,6 +124,7 @@ sitemap: true
 
     <h2>Boundaries and non-goals</h2>
     <p>This page explains the diagnostic distinction; it is not a configuration recipe. Release level, classic versus advanced ATP, fulfilment sourcing, external order management, industry functions, and custom enhancements can change the applicable monitor and calculation. Confirm the active architecture before using transaction-level advice.</p>
+    <p>For the deeper design view — PAC, Product Allocation, Supply Protection, BOP, ABC, Supply Creation-Based Confirmation, configuration layers, APIs and operational evidence — continue to the <a href="/labs/enterprise-context/atp/">ATP / aATP Enterprise Context Lab</a>.</p>
 
     <h2>Official references</h2>
     <ul>
@@ -135,6 +137,7 @@ sitemap: true
   <section class="atlas-related">
     <h2>Related Atlas Pages</h2>
     <ul>
+      <li><a href="/labs/enterprise-context/atp/">ATP / aATP Enterprise Context Lab</a></li>
       <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
       <li><a href="/atlas/concepts/sap-stock-exists-not-promisable/">SAP Stock Exists but Is Not Promisable</a></li>
       <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a></li>
