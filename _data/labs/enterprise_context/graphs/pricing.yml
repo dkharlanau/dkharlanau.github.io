@@ -300,6 +300,43 @@ pricing_pipeline:
     source_refs:
       - SRC-SAP-PRICING-PROCEDURES
 
+
+reference_condition_records:
+  title: "Reference conditions — reuse the record, not the whole pricing design"
+  principle: >-
+    A Sales condition type can reuse condition records maintained for another condition type.
+    The reference can even point to another pricing application, such as Purchasing (M).
+    This is condition-record reuse; the SD pricing procedure still owns the Sales calculation.
+  fields:
+    - "Reference Condition Type"
+    - "Reference Application"
+  cross_application_example: >-
+    SAP documents a cost-plus example where a Purchasing condition contains the purchase price
+    and a Sales condition reuses that purchase-price condition record. In Sales, the reference
+    application is M (Purchasing).
+  prerequisites:
+    - "The reference condition type exists in the reference application."
+    - "The access sequence of the Sales condition and the reference condition share at least one common condition table."
+    - "Condition records are maintained for the reference condition type in the reference application."
+  runtime: >-
+    When the Sales condition is processed, the system uses the configured reference condition
+    type and reference application while searching for the valid condition record.
+  boundary: >-
+    The reference does not import an MM calculation schema into SD. Sequence, requirements,
+    subtotals, exclusions, and the final calculation remain part of the SD pricing procedure.
+  myth: >-
+    Standard SAP documentation does not require a zero-value placeholder condition record for
+    the referring SD condition type. The record is maintained for the reference condition type.
+    Treat any placeholder pattern as implementation-specific unless the target system proves it.
+  diagnostic_sequence:
+    - "Confirm the SD condition is actually present and eligible in the active pricing procedure."
+    - "Check Reference Condition Type and Reference Application."
+    - "Prove the referenced condition type exists in that application."
+    - "Compare the access sequences and identify the common condition table/key."
+    - "Inspect the record and runtime key in the reference application."
+  source_refs:
+    - SRC-SAP-PRICING-REFERENCE-CONDITIONS
+
 condition_controls:
   - id: PRC-CTRL-REQUIREMENT
     title: "Requirement"
@@ -336,6 +373,114 @@ condition_controls:
     diagnostic_question: "Is custom calculation replacing the standard amount?"
     source_refs:
       - SRC-SAP-PRICING-CUSTOM-LOGIC-AMOUNT
+
+
+copy_and_repricing_model:
+  title: "Copy is overloaded: separate master data, document flow, and repricing"
+  distinction:
+    - id: "condition-record-copy"
+      title: "Copy condition records"
+      owns: "Master-data maintenance"
+      explanation: >-
+        Create new condition records from existing records. Source and target can use different
+        condition types or tables when SAP's compatibility rules are satisfied. This does not copy a sales document.
+    - id: "document-copy-control"
+      title: "Copy a business document"
+      owns: "Document flow / copy control"
+      explanation: >-
+        Controls whether a source document can create a target document and how header/item data,
+        quantities, dates, pricing context, and other fields are transferred.
+    - id: "pricing-type"
+      title: "Pricing type / repricing"
+      owns: "Pricing during copy or change"
+      explanation: >-
+        Tells pricing which existing elements to keep and which parts to redetermine. It is one
+        control inside the document-copy or repricing context, not a condition-record copy rule.
+  pricing_types:
+    - code: "A"
+      short: "Update scales"
+      behavior: "Keep the existing condition types; re-evaluate scale-dependent pricing for the changed quantity."
+    - code: "B"
+      short: "New pricing"
+      behavior: "Redetermine pricing from the current document context."
+    - code: "C"
+      short: "Keep manual, redetermine others"
+      behavior: "Carry manual pricing elements forward and redetermine the remaining pricing."
+    - code: "D"
+      short: "Copy elements"
+      behavior: "Keep pricing elements without finding condition types again; values can still be re-evaluated from the copied rate/base context."
+    - code: "E"
+      short: "Freeze elements and values"
+      behavior: "Copy pricing elements and their values unchanged."
+    - code: "F"
+      short: "Internal"
+      behavior: "Reserved for internal group-condition processing."
+    - code: "G"
+      short: "Keep most, refresh tax/internal"
+      behavior: "Treat most conditions like D, but redetermine taxes and selected internal, cost, cash-discount, intercompany, and related categories."
+    - code: "H"
+      short: "Refresh freight"
+      behavior: "Redetermine freight-related conditions; other conditions follow the A-style behavior."
+  automatic_field_triggers:
+    - field: "Pricing date"
+      pricing_type: "C"
+    - field: "Exchange rate"
+      pricing_type: "A"
+    - field: "Ship-to party"
+      pricing_type: "G"
+    - field: "Payer"
+      pricing_type: "G"
+    - field: "Terms of payment"
+      pricing_type: "A"
+    - field: "Incoterms"
+      pricing_type: "H"
+    - field: "Batch"
+      pricing_type: "G"
+    - field: "Plant"
+      pricing_type: "G"
+    - field: "Quantity"
+      pricing_type: "A"
+    - field: "Material"
+      pricing_type: "B"
+  condition_record_copy_rules:
+    - "If source and target condition tables differ, they must have the same number of fields and only one field may differ."
+    - "If source and target condition types differ, SAP requires compatible calculation rule, scale type, condition class, and plus/minus indicator."
+  condition_update:
+    principle: >-
+      Condition Update is not repricing. It tracks cumulative use of a condition record
+      across relevant sales and billing documents.
+    use: "It supports limits such as maximum condition value, maximum quantity, or maximum number of sales orders."
+    diagnostic_question: "Is the condition absent because pricing changed, or because its cumulative limit has already been consumed?"
+  lead_rule: >-
+    When someone says “the condition was copied,” ask what exactly was copied: master data,
+    document data, or pricing elements. The investigation path is different for each.
+  source_refs:
+    - SRC-SAP-PRICING-COPY-CONDITION-RECORDS
+    - SRC-SAP-PRICING-BILLING-PRICING-TYPES
+    - SRC-SAP-PRICING-COPYING-CONTROL
+    - SRC-SAP-PRICING-CONDITION-UPDATE
+
+modern_s4_pricing_controls:
+  title: "Two S/4HANA controls worth knowing as a Lead"
+  items:
+    - id: "modular-pricing"
+      title: "Modular pricing procedures"
+      problem: "One giant pricing procedure becomes hard to own when countries and business processes multiply."
+      model: >-
+        An inclusion point in a main pricing procedure can determine a subprocedure at runtime.
+        The common and specific parts can be separated instead of cloning full procedures for every combination.
+      lead_question: "Which part is truly common, and which part varies by country, sales organization, or business process?"
+      source_refs:
+        - SRC-SAP-PRICING-MODULAR-PROCEDURES
+    - id: "access-levels"
+      title: "Role-based access to price elements"
+      problem: "Not every user should see or edit sensitive elements such as internal cost or margin."
+      model: >-
+        Access levels can be assigned to condition types or subtotal lines in a pricing procedure
+        and combined with business-role restrictions for read and write access.
+      lead_question: "Does the pricing design also define who may see and change sensitive commercial data?"
+      source_refs:
+        - SRC-SAP-PRICING-ACCESS-LEVELS
 
 extension_layers:
   - id: PRC-EXT-CLASSIC
