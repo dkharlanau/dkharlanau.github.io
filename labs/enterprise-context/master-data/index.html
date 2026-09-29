@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Core Catalogue and Runtime Use"
-description: "A practical SAP S/4HANA Sales master-data catalogue covering Business Partner, product, customer-material, partner relationships, hierarchies, texts, pricing conditions, material determination, listing and exclusion, free goods, cross-selling, credit, units, batches, BOMs, and variant configuration."
+title: "SAP Sales & Logistics Master Data — Core Catalogue and Runtime Use"
+description: "A practical SAP S/4HANA master-data catalogue covering Sales plus adjacent logistics and procurement data: Business Partner, product, classification, serial numbers, supplier, purchasing info records, source lists, quota arrangements, pricing, credit, batches, BOMs, and variant configuration."
 permalink: /labs/enterprise-context/master-data/
 status: draft
 verified: false
@@ -40,7 +40,7 @@ tags:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Sales / Master Data</p>
+      <p class="research-canvas__eyebrow">SAP Sales / Logistics / Master Data</p>
       <h1>Master data is upstream behavior,<br />not a list of records.</h1>
       <p>A strong SAP Lead reads master data as reusable business decisions. We ask what truth is being maintained, at which key and organizational level, who owns it, how the runtime document consumes it, and what can break when that truth changes.</p>
       <a class="research-canvas__button" href="#master-data-decision-model">Start with the decision model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
@@ -50,13 +50,13 @@ tags:
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ sales_master_data.index.summary.entity_count }}</strong><small>Master-data objects</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ catalog_group_keys | size }}</strong><small>Object groups</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>6</strong><small>O2C touchpoints</small></div>
-      <em>Core Sales first · adjacent logistics second · configuration stays separate</em>
+      <em>Core Sales first · cross-logistics and procurement next · configuration stays separate</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
-    <p><strong>Use one boundary:</strong> master data is reusable maintained data that survives beyond one sales document. Business Partner and Product are business masters. Customer-material and partner assignments are relationship data. Pricing, material determination, listing/exclusion, and free-goods records are validity-based condition data. Sales Organization, pricing procedure, and a Sales Order belong to different layers.</p>
+    <p><strong>Use one boundary:</strong> reusable data must be separated from configuration and runtime documents. Business Partner, Customer, Supplier and Product are business masters. Customer-material and Purchasing Info Record are relationship data. Classification and Serial Numbers add reusable cross-logistics identity. Source List and Quota Arrangement control sourcing context. Sales Organization, pricing procedures, purchase contracts, Sales Orders and Purchase Orders belong to different layers.</p>
     <a href="/labs/enterprise-context/sales-processes/master-data/">Open the full reference graph <span class="material-symbols-outlined" aria-hidden="true">account_tree</span></a>
   </section>
 
@@ -100,8 +100,8 @@ tags:
   <section class="research-canvas__inventory" id="sales-master-data-catalog" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Complete study catalogue</p>
-      <h2>Know these objects before you debug a Sales document.</h2>
-      <p>This catalogue covers the standard Sales core plus the adjacent logistics and risk master data that Sales regularly consumes. The last group is adjacent by ownership, but it is still important in Order-to-Cash.</p>
+      <h2>Know these objects before you debug an end-to-end logistics process.</h2>
+      <p>The first groups keep the Sales core. The last group adds cross-logistics and procurement-owned data that becomes important when the process crosses fulfillment, traceability, planning, or sourcing.</p>
     </header>
 
     {% for group_key in catalog_group_keys %}
@@ -148,6 +148,12 @@ tags:
             {% when "MD.SD.BATCH" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/batch-master/" %}
             {% when "MD.SD.BOM" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/sales-bom/" %}
             {% when "MD.SD.VC" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/variant-configuration/" %}
+            {% when "MD.SD.CLASSIFICATION" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/classification/" %}
+            {% when "MD.SD.SERIAL" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/serial-numbers/" %}
+            {% when "MD.SD.SUPPLIER" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/supplier/" %}
+            {% when "MD.SD.PIR" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/purchasing-info-record/" %}
+            {% when "MD.SD.SOURCELIST" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/source-list/" %}
+            {% when "MD.SD.QUOTA" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/quota-arrangement/" %}
           {% endcase %}
 
           {% if entity.code == "MD.SD.PRODUCT" and cmir_entity %}
@@ -212,17 +218,17 @@ tags:
       </div>
     {% endfor %}
 
-    <p class="ecg-master-summary"><strong>What this makes visible:</strong> Listing / Exclusion, Material Determination, Free Goods, Cross-Selling, Sales Item Proposals, hierarchies, and reusable texts are part of the Sales data landscape. They should not disappear behind the broad labels “customer master” and “material master”.</p>
+    <p class="ecg-master-summary"><strong>What this makes visible:</strong> “Customer master” and “material master” are only the start. Classification, serial identity, supplier-material relationships, source eligibility and quota allocation can become just as important once the process crosses Sales, Inventory, Procurement, EWM, Production, Quality, or Service.</p>
   </section>
 
   <section class="research-canvas__inventory" id="high-leverage-fields" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">High-leverage fields</p>
-      <h2>Many important Sales controls are fields inside a master object, not separate master-data objects.</h2>
-      <p>For assessment questions, name both the object and the field. Saying only “customer master” or “material master” is too broad.</p>
+      <h2>Many important logistics controls are fields inside a master object, not separate master-data objects.</h2>
+      <p>For assessment questions, name the object, the organizational scope, and the field. Saying only “customer master”, “material master”, or “vendor master” is too broad.</p>
     </header>
 
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="High-leverage Sales master-data fields">
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="High-leverage Sales and logistics master-data fields">
       <table class="study-table__table">
         <thead>
           <tr>
@@ -261,6 +267,31 @@ tags:
             <td><strong>Credit Master Data</strong></td>
             <td>Credit segment, credit limit and validity, risk class, check rule</td>
             <td>Credit evaluation and block/release behavior</td>
+          </tr>
+          <tr>
+            <td><strong>Classification</strong></td>
+            <td>Class type, class, characteristic definition, allowed values, object valuation</td>
+            <td>Search and selection, batch eligibility, variant configuration, integration attributes</td>
+          </tr>
+          <tr>
+            <td><strong>Serial Number</strong></td>
+            <td>Material serial-number profile, material + serial identity, status, stock/location context, equipment link where used</td>
+            <td>Individual-unit traceability across goods movements, delivery, service, and audit</td>
+          </tr>
+          <tr>
+            <td><strong>Supplier / Purchasing Organization</strong></td>
+            <td>Purchasing-organization data, order currency, Incoterms, payment terms, partner functions</td>
+            <td>Supplier eligibility and purchasing defaults</td>
+          </tr>
+          <tr>
+            <td><strong>Purchasing Info Record</strong></td>
+            <td>Supplier + material, purchasing organization/plant, conditions, planned delivery time, order unit, tolerances</td>
+            <td>Reusable supplier-material commercial and logistics defaults</td>
+          </tr>
+          <tr>
+            <td><strong>Source List / Quota Arrangement</strong></td>
+            <td>Validity, fixed/blocked source, MRP sourcing control, quota, allocated/base quantity</td>
+            <td>Which sources may be used and how requirements are allocated among them</td>
           </tr>
         </tbody>
       </table>
@@ -316,7 +347,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Order-to-Cash use</p>
       <h2>Map the catalogue to the process.</h2>
-      <p>You do not need to memorize nineteen isolated definitions. Remember which objects become important at each O2C step.</p>
+      <p>Do not memorize isolated definitions. Remember which objects become important at each process step, then follow the ownership boundary when the flow moves from Sales into fulfillment or Procurement.</p>
     </header>
 
     <div class="ecg-compact-sequence">
@@ -333,7 +364,7 @@ tags:
       <div>
         <span>03</span>
         <h4>ATP and shipping</h4>
-        <p>Product sales/plant data, Customer Material, ship-to/address data, units of measure, availability and loading fields, plus Batch data where relevant.</p>
+        <p>Product sales/plant data, Customer Material, ship-to/address data, units of measure, availability and loading fields, plus Classification, Batch and Serial Number data where relevant.</p>
       </div>
       <div>
         <span>04</span>
@@ -343,13 +374,18 @@ tags:
       <div>
         <span>05</span>
         <h4>Delivery</h4>
-        <p>Ship-to and address, Product/UoM data, loading and logistics fields, Batch master/classification, and document partners carried into execution.</p>
+        <p>Ship-to and address, Product/UoM data, loading and logistics fields, Classification, Batch Master, Serial Numbers, and document partners carried into execution.</p>
       </div>
       <div>
         <span>06</span>
         <h4>Billing and output</h4>
         <p>Bill-to and payer, company-code customer context, payment/tax/account attributes, pricing conditions, reusable texts, and output recipient context.</p>
       </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">swap_horiz</span>
+      <p><strong>Procurement handoff:</strong> when demand requires external supply, trace Product → Supplier → Purchasing Info Record → Source List / Quota Arrangement. Do not treat this as one fixed sequence: source determination decides which records are relevant for the concrete requirement, date, plant, and purchasing context.</p>
     </div>
   </section>
 
@@ -393,7 +429,7 @@ tags:
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> “I treat Sales master data as reusable upstream decisions, not as a list of tables. First I classify the behavior: shared business truth, relationship-specific data, condition-style policy, or adjacent logistics and risk data. Then I prove the exact key and organizational scope, the precedence or search logic that consumes it, and the document value that resulted. If something is wrong, I compare expected and actual provenance before changing shared data. The design goal is the smallest correct owner with clear governance and no hidden side effects.”</p>
+      <p><strong>60-second answer:</strong> “I treat Sales master data as reusable upstream decisions, not as a list of tables. First I classify the behavior: shared business truth, relationship-specific data, condition-style policy, or adjacent logistics and sourcing data. Then I prove the exact key and organizational scope, the precedence or search logic that consumes it, and the document value that resulted. If something is wrong, I compare expected and actual provenance before changing shared data. The design goal is the smallest correct owner with clear governance and no hidden side effects.”</p>
     </div>
 
     <div class="ecg-diagnostic">
@@ -424,13 +460,19 @@ tags:
       <a href="/labs/enterprise-context/master-data/item-proposal/">Item Proposal</a>
       <a href="/labs/enterprise-context/master-data/listing-exclusion/">Listing / Exclusion</a>
       <a href="/labs/enterprise-context/master-data/cross-selling/">Cross-Selling</a>
+      <a href="/labs/enterprise-context/master-data/classification/">Classification</a>
+      <a href="/labs/enterprise-context/master-data/serial-numbers/">Serial Numbers</a>
+      <a href="/labs/enterprise-context/master-data/supplier/">Supplier</a>
+      <a href="/labs/enterprise-context/master-data/purchasing-info-record/">Purchasing Info Record</a>
+      <a href="/labs/enterprise-context/master-data/source-list/">Source List</a>
+      <a href="/labs/enterprise-context/master-data/quota-arrangement/">Quota Arrangement</a>
       <a href="/labs/enterprise-context/organizational-structure/">SAP Organizational Structure</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Full source-backed reference graph</a>
     </nav>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">extension</span>
-      <p><strong>Specialized layers outside this standard core:</strong> promotions and sales deals, condition contracts and settlement management, dynamic recommendation services, compliance-specific data, and industry master data such as Retail assortments. Keep them as extensions instead of hiding them inside the universal Sales list.</p>
+      <p><strong>Keep the boundary clean:</strong> purchase contracts and scheduling agreements are long-term procurement documents, not another customer/material-style master object. Production versions, routings, inspection plans, equipment structures, service masters, Retail assortments, compliance data, promotions, and settlement objects belong to their owning module or specialized layer and should be linked rather than flattened into one universal list.</p>
     </div>
   </section>
 
