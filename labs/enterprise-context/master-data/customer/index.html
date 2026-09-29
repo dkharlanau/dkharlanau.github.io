@@ -1,0 +1,95 @@
+---
+layout: default
+title: "SAP S/4HANA Customer Master Data"
+description: "A focused SAP S/4HANA Customer master-data page covering Business Partner customer roles, sales-area and company-code scope, high-leverage fields, runtime use, and diagnostics."
+permalink: /labs/enterprise-context/master-data/customer/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - customer-master
+  - business-partner
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Customer</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP S/4HANA / Sales / Customer Master Data</p>
+      <h1>Customer</h1>
+      <p>In S/4HANA, Customer is not an isolated master object. It is a Business Partner extended with customer roles and organizational views. For Sales, the key layer is the customer role with sales-area data. For Finance, company-code data matters. The same business partner can therefore support several business processes without duplicating the identity.</p>
+      <a class="research-canvas__button" href="#customer-scope">See the data layers <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Assessment anchor</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>FLCU01</strong><small>Customer — Sales</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>FLCU00</strong><small>Customer — FI</small></div>
+      <em>Identity → role → organizational view → runtime consumer.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" id="customer-scope" data-reveal>
+    <header><p class="research-canvas__eyebrow">Data model</p><h2>Separate the customer identity from the organizational views.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Business Partner</h3><p>Shared identity, name, addresses, communication data and relationships. This is the cross-application identity anchor.</p></div>
+      <div><h3>Sales Area</h3><p>Sales Organization + Distribution Channel + Division. This is where Sales-specific customer behavior is maintained.</p></div>
+      <div><h3>Company Code</h3><p>Accounting-specific customer data used by FI-AR, such as reconciliation and payment-related settings.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">High-leverage fields</p><h2>Know the fields that change Sales behavior.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important customer master-data fields">
+      <table class="study-table__table">
+        <thead><tr><th>Area</th><th>Examples</th><th>Typical effect</th></tr></thead>
+        <tbody>
+          <tr><td>Pricing</td><td>Customer pricing procedure, price list, customer pricing group</td><td>Condition access and pricing procedure context</td></tr>
+          <tr><td>Shipping</td><td>Shipping condition, delivery priority, complete/partial delivery settings</td><td>Shipping-point/route context and delivery behavior</td></tr>
+          <tr><td>Billing / FI</td><td>Payment terms, Incoterms, account assignment group</td><td>Billing defaults and account-determination input</td></tr>
+          <tr><td>Tax</td><td>Customer tax classification</td><td>Tax-determination input</td></tr>
+          <tr><td>Partners</td><td>Ship-to, bill-to, payer and other partner assignments</td><td>Partner determination and downstream document partners</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead diagnosis</p><h2>Start from the wrong document value, then prove the source.</h2></header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Identify the symptom</h4><p>Wrong payer, shipping condition, payment term, pricing key, tax classification, or block are different problems.</p></div>
+      <div><span>02</span><h4>Check the exact role and scope</h4><p>Confirm BP, customer role, sales area or company code used by the process.</p></div>
+      <div><span>03</span><h4>Check more specific layers</h4><p>Partner relationships, customer-material data, hierarchy or document overrides can be more specific than a generic customer default.</p></div>
+      <div><span>04</span><h4>Trace the consumer</h4><p>Separate the maintained value from the configuration that interprets it.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment recall</p><h2>Customer is a BP capability, not a second identity.</h2></header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In S/4HANA I start with the Business Partner identity and then check the customer roles and organizational views. FLCU01 carries Sales customer data by sales area; FLCU00 carries customer accounting data by company code. For a Sales issue I name the exact sales-area field, verify whether a more specific relationship record overrides the generic value, and then trace the determination that consumes it.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Customer related pages">
+      <span>Related</span>
+      <a href="/labs/enterprise-context/master-data/business-partner/">Business Partner deep dive</a>
+      <a href="/labs/enterprise-context/master-data/partner-functions/">Partner Functions</a>
+      <a href="/labs/enterprise-context/master-data/customer-material/">Customer Material</a>
+      <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
+    </nav>
+  </section>
+</div>
