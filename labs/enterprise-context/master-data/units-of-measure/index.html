@@ -1,17 +1,19 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Units of Measure and Quantity Constraints"
-description: "A practical deep dive into Units of Measure and Quantity Constraints in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+title: "SAP S/4HANA Units of Measure — Sales & Logistics"
+description: "A practical SAP Lead guide to units of measure in S/4HANA: base and alternative UoM, Sales and Purchasing units, pricing, EWM, batch-specific UoM, catch weight, integration and diagnostics."
 permalink: /labs/enterprise-context/master-data/units-of-measure/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
+  - sap-mm
+  - sap-ewm
   - master-data
 ---
 
@@ -28,80 +30,348 @@ tags:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.UOM</p>
+      <p class="research-canvas__eyebrow">SAP Sales / Logistics / Master Data / MD.SD.UOM</p>
       <h1>Units of Measure and Quantity Constraints</h1>
-      <p>Units of measure translate commercial quantities into the units used by inventory, pricing and logistics. Incorrect conversion data can look like a pricing, ATP or delivery issue even when the root cause is the product's UoM setup.</p>
+      <p>A quantity in SAP is never just a number. It is a number, a unit, and a conversion context. Sales may work in boxes, inventory in pieces, Purchasing in pallets, pricing in kilograms, and EWM in a preferred packaging unit. The design is correct only when these meanings stay consistent across the whole process.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.UOM</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>logistics adjacent master</strong><small>Data class</small></div>
-      <em>Product, base UoM, alternative UoM, sales UoM and distribution chain.</em>
+      <div class="research-canvas__signal-line"><span>02</span><strong>cross-process master</strong><small>Data class</small></div>
+      <em>Product, base UoM, alternative UoM, commercial units, conversion factors and quantity constraints.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>One business quantity can be represented by several units at different process steps.</h2>
+      <h2>Map the quantity chain before you debug the module.</h2>
+      <p>The base UoM is the stock backbone. Other units are business views of the same physical quantity. A sales order can therefore be correct in BOX and still be wrong in EA after conversion. Pricing can use another unit again. The important question is not “Which unit is displayed?” but “Which unit does this process consume, and how was it converted?”</p>
     </header>
     <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Product, base UoM, alternative UoM, sales UoM and distribution chain.</p>
+      <span class="material-symbols-outlined" aria-hidden="true">straighten</span>
+      <p><strong>Lead rule:</strong> quantity without a unit is incomplete data. Product plus quantity plus UoM is the minimum semantic contract for logistics and integration.</p>
     </div>
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Base unit, alternative units, conversion numerator/denominator, sales unit, delivery unit and quantity rounding or minimum-order constraints where maintained.</p>
+        <h3>Base UoM</h3>
+        <p>The stock-keeping unit. Inventory quantities are managed in this unit and quantities entered in other supported units are converted to it.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>The conversion factors belong to product master data. Pricing units, rounding rules and process-specific quantity controls may involve additional configuration or document logic.</p>
+        <h3>Alternative UoM</h3>
+        <p>A material-specific representation such as BOX, PAL or ROLL. It needs a conversion to the base UoM when SAP cannot derive the relationship centrally.</p>
       </div>
+      <div>
+        <h3>Process UoM</h3>
+        <p>Sales unit, order unit, delivery unit, production unit or warehouse-preferred unit. These units guide a specific process but do not replace the base UoM.</p>
+      </div>
+      <div>
+        <h3>Price UoM</h3>
+        <p>The unit behind a commercial price. It can differ from the unit used to order, sell or physically move the product.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">What is configured where</p>
+      <h2>Separate central UoM definitions from material-specific conversions.</h2>
+      <p>SAP keeps the catalogue of units and dimensions centrally, while product master data defines how a specific material uses those units. Mixing these two levels is a common design mistake.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Central UoM catalogue</h3>
+        <p>Dimensions, SAP unit codes, language-dependent texts, ISO codes and general conversion rules are maintained centrally. In classic S/4HANA this is associated with Customizing transaction <strong>CUNI</strong> and the <strong>T006*</strong> tables.</p>
+      </div>
+      <div>
+        <h3>Product conversion</h3>
+        <p>The product defines its base UoM and material-specific alternative units. A conversion such as <strong>1 BOX = 12 EA</strong> belongs to the product because a box does not contain the same number of pieces for every material.</p>
+      </div>
+      <div>
+        <h3>Sales scope</h3>
+        <p>The Sales unit can be proposed for the relevant sales organization and distribution channel. It is a commercial default, not a new stock unit.</p>
+      </div>
+      <div>
+        <h3>Warehouse scope</h3>
+        <p>EWM can use a preferred UoM to represent the packaging size normally handled in a warehouse. A warehouse-specific preferred UoM can override the global proposal where supported.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Design rule:</strong> do not create a global conversion only because two unit codes exist. Use a central conversion for a true physical relationship inside one dimension. Use product master data when the relationship depends on the material or packaging.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Worked example</p>
+      <h2>One product can use EA, BOX and PAL without creating three inventories.</h2>
+      <p>Assume the base UoM is <strong>EA</strong>, one <strong>BOX = 12 EA</strong>, and one <strong>PAL = 480 EA</strong>.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Sales enters 3 BOX</h4><p>The commercial quantity is easy for the customer to understand.</p></div>
+      <div><span>02</span><h4>SAP derives 36 EA</h4><p>The material conversion produces the base quantity used by inventory-related logic.</p></div>
+      <div><span>03</span><h4>Pricing uses its own basis</h4><p>The price may be per BOX, per EA, per KG or per pricing unit such as 100 EA. Do not assume that the pricing unit follows the Sales unit.</p></div>
+      <div><span>04</span><h4>Delivery checks executable quantity</h4><p>If the delivery unit is BOX, the quantity normally has to respect the defined delivery multiple and other delivery constraints.</p></div>
+      <div><span>05</span><h4>EWM can prefer BOX</h4><p>The warehouse may pick and store in BOX while the inventory backbone remains EA.</p></div>
+      <div><span>06</span><h4>Purchasing can order PAL</h4><p>A supplier order can use PAL while the same product is sold in BOX and stocked in EA.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>The same line can have an entered unit, base unit, pricing unit, and delivery unit.</h2>
-      <p>Sales can accept a commercial sales unit, convert it to the product's base quantity for inventory and availability, calculate price using a pricing unit, and later execute delivery in a logistics unit. Interfaces add another boundary because quantity without a clear unit code is not a complete business value.</p>
+      <h2>Trace the unit as the quantity moves through Sales, ATP, delivery, warehouse and finance.</h2>
+      <p>A unit problem often appears several steps after the incorrect conversion was introduced. The fastest diagnostic method is to calculate the expected base quantity manually, then follow the consumers of that quantity.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Map every unit</h4><p>Write down the entered sales unit, base unit, pricing unit, and delivery or interface unit involved in the symptom.</p></div>
-      <div><span>02</span><h4>Read conversion factors</h4><p>Check the product's alternative-unit numerator and denominator and any Sales-specific unit proposal or quantity constraints.</p></div>
-      <div><span>03</span><h4>Recalculate the base quantity</h4><p>Convert the document quantity manually. This quickly separates bad master conversion from later ATP, pricing, or logistics logic.</p></div>
-      <div><span>04</span><h4>Trace the consuming process</h4><p>For price issues, inspect pricing unit and basis. For confirmation issues, inspect base quantity. For delivery issues, inspect execution unit and rounding.</p></div>
-      <div><span>05</span><h4>Validate interfaces</h4><p>Compare both quantity and unit semantics across API, EDI, or other integration payloads; equal numbers with different units are not equal business values.</p></div>
+      <div><span>01</span><h4>Capture the entered quantity</h4><p>Record the document quantity and UoM exactly as the user or interface supplied them.</p></div>
+      <div><span>02</span><h4>Validate the product conversion</h4><p>Check that the entered unit is valid for the product and recalculate the expected base quantity from the alternative-unit factor.</p></div>
+      <div><span>03</span><h4>Separate pricing</h4><p>Check condition unit, pricing unit and pricing quantity independently. A correct physical conversion can still have a wrong commercial basis.</p></div>
+      <div><span>04</span><h4>Separate availability</h4><p>If the base requirement is correct, continue into ATP or aATP scope, supply and confirmation logic instead of changing UoM master data.</p></div>
+      <div><span>05</span><h4>Check execution rules</h4><p>Delivery unit, minimum delivery quantity, packaging, rounding and warehouse-preferred units can change what is practical to execute.</p></div>
+      <div><span>06</span><h4>Check the external contract</h4><p>For API, IDoc or EDI flows, compare both the quantity and the unit code on each side. The same number with a different unit is a different business value.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales quantity controls</p>
+      <h2>UoM and quantity constraints solve different problems.</h2>
+      <p>The conversion answers “what quantity is this?” Quantity controls answer “is this quantity commercially or operationally acceptable?” Keeping the two concepts separate makes troubleshooting much faster.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Sales unit</h3>
+        <p>The proposed unit for Sales transactions. Users can normally choose another valid alternative UoM when the process allows it.</p>
+      </div>
+      <div>
+        <h3>Delivery unit</h3>
+        <p>Defines the delivery multiple. If the delivery unit represents 30 bottles, executable delivery quantities must respect that multiple.</p>
+      </div>
+      <div>
+        <h3>Minimum order quantity</h3>
+        <p>Controls the smallest commercial order quantity. In standard Sales behavior, falling below it can produce a warning during order entry.</p>
+      </div>
+      <div>
+        <h3>Minimum delivery quantity</h3>
+        <p>Controls the smallest delivery quantity and can trigger a warning during delivery processing.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Do not over-simplify:</strong> delivery multiples, rounding profiles, packaging rules, ATP confirmations and EWM handling can all influence the final executable quantity. A delivery issue is not automatically a UoM issue.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Purchasing and valuation</p>
+      <h2>Order unit and order price unit can be different on purpose.</h2>
+      <p>Purchasing may order a product in one unit but negotiate price in another. For example, a supplier can deliver boxes while pricing by kilogram. This is a commercial conversion problem, not an inventory design problem.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Order unit</h3>
+        <p>The quantity unit used in the purchase order, for example BOX or PAL.</p>
+      </div>
+      <div>
+        <h3>Order price unit</h3>
+        <p>The unit used as the price basis and relevant for invoice-verification logic. It can differ from the order unit.</p>
+      </div>
+      <div>
+        <h3>Goods receipt</h3>
+        <p>The entered receipt quantity still has to resolve to the product's stock quantity. The unit used by the user is not necessarily the unit in which stock is ultimately managed.</p>
+      </div>
+      <div>
+        <h3>Lead check</h3>
+        <p>When GR value looks wrong, compare order quantity, order unit, order price unit, conversion factors and price before investigating FI postings.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Variable conversions</p>
+      <h2>Fixed alternative UoM, batch-specific UoM and catch weight are not the same design.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Fixed alternative UoM</h3>
+        <p>Use it when the relationship is stable for the material: for example, every BOX always contains 12 EA.</p>
+      </div>
+      <div>
+        <h3>Batch-specific UoM</h3>
+        <p>Use it when the real conversion varies by batch. SAP can keep a planned conversion in the material and an actual conversion in the batch, then use the actual factor when the batch is known.</p>
+      </div>
+      <div>
+        <h3>Catch weight</h3>
+        <p>Use a catch-weight concept when the business must control two quantities together, for example cases and actual kilograms. This is more than displaying one quantity in another unit.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">scale</span>
+      <p><strong>Assessment contrast:</strong> batch-specific UoM solves a conversion that varies by batch. Catch weight solves a process where logistics and valuation need parallel quantity meaning. The detailed implementation depends on product scope and deployment.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead design decisions</p>
+      <h2>A stable base unit matters more than a convenient screen default.</h2>
+      <p>UoM design has a long life. A poor base unit or an overloaded packaging unit creates fractions, rounding, interface mappings and migration work in every downstream process.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Avoid unnecessary fractions</h3>
+        <p>If stock is physically controlled in pieces, using BOX as the base can create fractional stock whenever single pieces are consumed. Prefer a stable stock-keeping unit that matches operational reality.</p>
+      </div>
+      <div>
+        <h3>Do not overload BOX</h3>
+        <p>If one supplier's box contains 10 EA and another contains 12 EA, one global BOX conversion cannot describe both relationships safely. Use a clearer packaging design, supplier-specific process data, distinct units or separate products as appropriate.</p>
+      </div>
+      <div>
+        <h3>Treat base-UoM change as high risk</h3>
+        <p>SAP restricts base-UoM changes when stock and relevant open documents exist. On a live product, analyse stock, purchasing, Sales, production, interfaces and history before treating the change as master-data maintenance.</p>
+      </div>
+      <div>
+        <h3>Do not use conversion as versioning</h3>
+        <p>If an old 12-piece pack and a new 10-piece pack must coexist, simply changing the BOX conversion can make the same unit mean two things. Model the business difference explicitly.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration contract</p>
+      <h2>Map unit codes; do not recreate material conversions in every interface.</h2>
+      <p>Integrations often fail because teams focus on the number and treat the UoM as formatting. In reality, the UoM is part of the business contract and can have SAP-internal, ISO or network-specific external representations.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Send quantity and UoM together</h4><p>Never send an unqualified quantity and expect the receiving system to assume EA, KG or another default.</p></div>
+      <div><span>02</span><h4>Define code mapping</h4><p>Document whether the interface uses SAP internal codes, ISO codes or another external standard such as a network-specific code list.</p></div>
+      <div><span>03</span><h4>Keep one conversion owner</h4><p>Material-specific conversion should normally have one authoritative owner. Avoid duplicating BOX-to-EA logic independently in S/4, middleware and the partner system.</p></div>
+      <div><span>04</span><h4>Reject unknown semantics</h4><p>An unknown or invalid UoM should be visible as a mapping or business error, not silently replaced with a convenient default.</p></div>
+      <div><span>05</span><h4>Test round trips</h4><p>For outbound and inbound flows, prove that the original business quantity survives code mapping, conversion and rounding in both directions.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Technical reference</p>
+      <h2>Know the main data objects, but diagnose from business meaning first.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Central definitions</h3>
+        <p><strong>CUNI / T006*</strong> — units, dimensions, texts and central conversion semantics.</p>
+      </div>
+      <div>
+        <h3>Base UoM</h3>
+        <p><strong>MARA-MEINS</strong> — the product's base unit of measure.</p>
+      </div>
+      <div>
+        <h3>Alternative UoM</h3>
+        <p><strong>MARM</strong> — alternative units and material-specific conversion factors, including numerator and denominator fields.</p>
+      </div>
+      <div>
+        <h3>Sales UoM</h3>
+        <p><strong>MVKE-VRKME</strong> — Sales-unit proposal in the distribution-chain context.</p>
+      </div>
+      <div>
+        <h3>Material documents in S/4HANA</h3>
+        <p><strong>MATDOC</strong> is the core persistence for material-document line items in the simplified S/4HANA inventory model. Do not treat old ECC storage assumptions around MSEG as the architecture of record.</p>
+      </div>
+      <div>
+        <h3>Practical display</h3>
+        <p>Product maintenance, document item details and relevant Fiori apps expose different UoM views. Always confirm the organizational context and the exact quantity field you are reading.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Do the unit conversion before changing Pricing or ATP.</h2>
+      <h2>Start with the first wrong quantity, not the last failed document.</h2>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Compare order unit, pricing unit, base unit, and delivered unit, then recalculate the conversion manually. If the base quantity is already wrong, stay in product/UoM master data. If the conversion is correct, move to the mechanism that consumes it: pricing basis, ATP requirement, delivery rounding, or integration mapping.</p>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Wrong price</h3>
+        <p>Check Sales unit, condition unit, pricing quantity and conversion before changing the pricing procedure or condition record.</p>
+      </div>
+      <div>
+        <h3>Wrong ATP confirmation</h3>
+        <p>Recalculate the base requirement. If it is wrong, stay in product/UoM data. If it is correct, continue into ATP or aATP.</p>
+      </div>
+      <div>
+        <h3>Unexpected delivery quantity</h3>
+        <p>Check delivery unit, minimum delivery quantity, rounding or packaging rules and the quantity copied from the sales document.</p>
+      </div>
+      <div>
+        <h3>Wrong GR value</h3>
+        <p>Compare order unit, order price unit, price and conversion. The physical receipt and the valuation basis can use different units.</p>
+      </div>
+      <div>
+        <h3>Warehouse quantity looks strange</h3>
+        <p>Compare base UoM, alternative UoM and EWM preferred or stock-specific UoM before assuming that stock itself is incorrect.</p>
+      </div>
+      <div>
+        <h3>EDI or API quantity mismatch</h3>
+        <p>Compare product ID, quantity, unit code, external-code mapping and rounding on both systems. Do not compare numbers alone.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment traps</p>
+      <h2>Five distinctions prevent most weak answers.</h2>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Base UoM is not Sales UoM</h4><p>Sales can work in BOX while inventory remains in EA.</p></div>
+      <div><span>02</span><h4>Sales UoM is not pricing UoM</h4><p>A product sold in BOX can still be priced by EA, KG or a pricing unit such as 100 EA.</p></div>
+      <div><span>03</span><h4>Order unit is not order price unit</h4><p>Purchasing can order BOX and price KG. The conversion must be controlled explicitly.</p></div>
+      <div><span>04</span><h4>Batch-specific is not catch weight</h4><p>One changes the conversion by batch; the other manages parallel quantity meaning.</p></div>
+      <div><span>05</span><h4>Code mapping is not quantity conversion</h4><p>Mapping SAP code to ISO code changes representation. Converting BOX to EA changes the business quantity basis.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Map units before mechanisms.</h2>
+      <h2>Explain UoM as a cross-process quantity contract.</h2>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> For quantity problems I first map the units: entered Sales unit, product base unit, pricing unit, and delivery or interface unit. Then I verify the conversion factors and calculate the expected base quantity manually. If that conversion is wrong, the root cause is in product/UoM data. If it is correct, I move to the consuming process such as pricing, ATP, delivery rounding, or integration. This prevents a quantity-conversion problem from looking like four different module defects.</p>
+      <p><strong>60-second answer:</strong> In S/4HANA I treat units of measure as a quantity contract across the process. The base UoM is the stock backbone, while Sales, Purchasing, delivery and EWM can use alternative units with defined conversions. Pricing has its own unit semantics, so I do not assume that the Sales unit and condition unit are the same. For a defect I first capture the entered quantity and UoM, recalculate the base quantity, and only then move to pricing, ATP, delivery, warehouse or valuation logic. For integration I always treat quantity plus UoM as one field-level contract and separate external code mapping from material-specific conversion.</p>
+    </div>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Likely follow-up: What would you check first?</h3>
+        <p>The exact document quantity/UoM, the material's alternative-unit conversion, and the resulting base quantity.</p>
+      </div>
+      <div>
+        <h3>Likely follow-up: When is fixed conversion wrong?</h3>
+        <p>When the real relationship varies by batch, supplier, packaging version or another business context that the fixed factor cannot represent.</p>
+      </div>
+      <div>
+        <h3>Likely follow-up: Why can price be wrong when quantity is right?</h3>
+        <p>Because pricing uses its own condition unit, pricing quantity and commercial conversion basis.</p>
+      </div>
+      <div>
+        <h3>Likely follow-up: What is the Lead concern?</h3>
+        <p>Choose a stable quantity model, define one conversion owner, understand the blast radius, and avoid fixing a local symptom with a global master-data change.</p>
+      </div>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
+      <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
+      <a href="/labs/enterprise-context/atp/">ATP / aATP</a>
+      <a href="/labs/enterprise-context/pricing/">Pricing</a>
+      <a href="/labs/enterprise-context/procurement/">Procurement</a>
+      <a href="/labs/enterprise-context/ewm/">EWM</a>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
     </nav>
   </section>
 </div>
