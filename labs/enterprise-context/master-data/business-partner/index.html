@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Business Partner / Customer"
-description: "A practical deep dive into Business Partner / Customer in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+description: "A practical SAP S/4HANA Business Partner guide for Sales: roles, CVI, grouping and number ranges, organizational extensions, field control, governance, restrictions, runtime behavior and diagnostics."
 permalink: /labs/enterprise-context/master-data/business-partner/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -76,6 +76,105 @@ tags:
     <p class="ecg-caption"><strong>Lead check:</strong> before extending or changing the BP, name the consumers that should change and the consumers that must stay unchanged.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="bp-management" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Management model</p>
+      <h2>Create the identity once; extend it only where the business needs it.</h2>
+      <p>In S/4HANA the Business Partner is the leading object for customer and supplier master data. A company that is both customer and supplier normally needs one BP with several roles, not two unrelated identities. Governance therefore starts with identity ownership and continues with controlled role and organizational extensions.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Choose the BP category</h4><p>Select <strong>Person</strong>, <strong>Organization</strong>, or <strong>Group</strong>. This drives the basic data model, especially name fields. Treat this as a structural decision, not a label.</p></div>
+      <div><span>02</span><h4>Choose grouping and numbering</h4><p>The BP grouping determines the BP number range and whether numbering is internal or external. Use a clear numbering policy before migration or integration starts.</p></div>
+      <div><span>03</span><h4>Assign only the roles that are needed</h4><p>Add customer, supplier, contact, employee, or other roles according to the real business relationship. A role activates application-specific data; it does not automatically create every organizational view.</p></div>
+      <div><span>04</span><h4>Extend organizational data</h4><p>Create the required company-code, sales-area, or purchasing-organization data. A customer role without the required sales area still cannot support that Sales process.</p></div>
+      <div><span>05</span><h4>Govern changes</h4><p>Restrict who may create, extend, block, or change BPs. For larger landscapes, use workflow or MDG-style governance so identity, tax, bank, sales, purchasing, and finance data have clear owners.</p></div>
+      <div><span>06</span><h4>Replicate through supported interfaces</h4><p>Keep BP, customer, and supplier mappings stable across systems. For S/4HANA integrations, treat BP as the identity anchor and avoid building a new customer-only or supplier-only integration model.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Lead rule:</strong> create one identity, then add business capabilities through roles and organizational extensions. Do not create a second BP just because the same legal entity is used by another process.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-roles" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business Partner roles</p>
+      <h2>BP roles answer “what can this party do in SAP?”</h2>
+      <p>The standard system contains many roles and installed components can add more. For logistics and Sales, these are the roles worth knowing first.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important SAP Business Partner roles for logistics">
+      <table class="study-table__table">
+        <thead><tr><th>Role</th><th>Meaning</th><th>Main data level</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>000000</code></th><td>Business Partner (General)</td><td>BP-level general data</td><td>Identity, name, addresses, communication and general attributes. It does not make the BP a Sales customer or purchasing supplier by itself.</td></tr>
+          <tr><th scope="row"><code>FLCU00</code></th><td>Customer (Financial Accounting)</td><td>Customer + company code</td><td>Required when the customer participates in FI-AR. Company-code data includes accounting-specific settings such as reconciliation and payment-related data.</td></tr>
+          <tr><th scope="row"><code>FLCU01</code></th><td>Customer (Sales and Distribution)</td><td>Customer + sales area</td><td>Required for Sales customer data. The sales area is Sales Organization + Distribution Channel + Division.</td></tr>
+          <tr><th scope="row"><code>FLVN00</code></th><td>Supplier (Financial Accounting)</td><td>Supplier + company code</td><td>Supports FI-AP supplier data at company-code level.</td></tr>
+          <tr><th scope="row"><code>FLVN01</code></th><td>Supplier (Purchasing)</td><td>Supplier + purchasing organization</td><td>Supports purchasing-specific supplier data and purchasing-organization extension.</td></tr>
+          <tr><th scope="row"><code>BUP001</code></th><td>Contact Person</td><td>Person BP + relationship</td><td>Represents a person connected to an organization. The relationship to the organization is separate from the customer's SD partner functions.</td></tr>
+          <tr><th scope="row"><code>BUP002</code></th><td>Prospect</td><td>BP role</td><td>Useful when the party exists before it becomes a full operational customer.</td></tr>
+          <tr><th scope="row"><code>BUP003</code></th><td>Employee</td><td>BP role</td><td>Used when an employee must participate as a business partner in supported processes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Do not mix two different role concepts.</strong> <code>FLCU01</code> is a <em>Business Partner role</em>. Sold-to, ship-to, bill-to and payer are <em>Sales partner functions</em>. A BP can have the customer role and still appear in different partner functions in the sales document.</p>
+    </div>
+    <p class="ecg-caption">A BP role is assigned to the Business Partner. The related role category controls application-specific behavior and is also used by CVI. Partner functions belong to Sales partner determination and master relationships; they solve a different problem.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration playbook</p>
+      <h2>Configure BP from identity to CVI, not from isolated screens.</h2>
+      <p>A stable setup is a chain. If one layer is inconsistent, creation or synchronization can fail even when the visible BP data looks correct.</p>
+    </header>
+    <ol>
+      <li><strong>Define BP number ranges and groupings.</strong> Under <em>Cross-Application Components → SAP Business Partner → Business Partner → Basic Settings → Number Ranges and Groupings</em>, define intervals and assign them to groupings. Decide which ranges are internal and which are external.</li>
+      <li><strong>Define BP roles and role categories.</strong> Under <em>Business Partner → Basic Settings → Business Partner Roles</em>, maintain the roles the business is allowed to use. Standard customer and supplier roles normally remain the anchor for CVI.</li>
+      <li><strong>Control fields.</strong> Use BP field-modification / field-grouping settings to make fields required, optional, display-only, or hidden for the relevant context. Keep these settings compatible with customer and supplier field status.</li>
+      <li><strong>Configure customer and supplier account groups.</strong> Account groups still matter because they control customer/supplier number ranges, field status, and other application-specific behavior.</li>
+      <li><strong>Map BP grouping to customer/supplier account group.</strong> In <em>Master Data Synchronization → Customer/Vendor Integration</em>, define the BP-to-customer and BP-to-supplier number assignment. Decide whether BP and customer/supplier use the same number.</li>
+      <li><strong>Map BP role categories for CVI.</strong> Configure which BP role categories create or maintain customer and supplier data. A custom role alone does not automatically become a customer or supplier role.</li>
+      <li><strong>Test organizational extension.</strong> Create the company code, sales area and purchasing organization combinations used in real processes. Test both a complete case and a deliberately incomplete case.</li>
+      <li><strong>Test synchronization and error handling.</strong> Verify BP → Customer/Supplier and any required reverse direction, including number mapping, mandatory fields and integration queues or error handling used by the landscape.</li>
+    </ol>
+    <div class="ecg-decision-columns">
+      <div><h3>BP grouping</h3><p>Controls the Business Partner number range. This is an identity decision.</p></div>
+      <div><h3>Customer / supplier account group</h3><p>Controls the customer or supplier application object, including its number-range and field-status behavior.</p></div>
+      <div><h3>CVI mapping</h3><p>Connects both models. This is where grouping, account group, role category, field mapping and number policy must agree.</p></div>
+    </div>
+    <p class="ecg-caption"><strong>Practical tooling:</strong> on-premise and private-cloud systems commonly use transaction <code>BP</code> for maintenance. SAP S/4HANA Cloud Public Edition uses released Fiori apps such as <strong>Manage Business Partner Master Data</strong> and configuration through the cloud configuration model rather than unrestricted classic SPRO access.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-restrictions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Restrictions and design limits</p>
+      <h2>Some BP choices are structural. Treat them as migration and governance decisions.</h2>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP Business Partner restrictions and design limits">
+      <table class="study-table__table">
+        <thead><tr><th>Constraint</th><th>What it means in practice</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">BP category is fixed</th><td>Person, Organization, or Group is selected at creation. SAP does not allow the BP category to be changed later. If the legal identity was modeled incorrectly, this is not a simple field correction.</td></tr>
+          <tr><th scope="row">Grouping assignment is fixed</th><td>The grouping determines the BP number range and cannot be reassigned after creation. Design grouping and migration number policy before loading master data.</td></tr>
+          <tr><th scope="row">Role is not extension</th><td>Adding <code>FLCU01</code> does not mean that every sales area exists. Adding <code>FLCU00</code> does not mean that every company code exists. Organizational data must be created for the exact business scope.</td></tr>
+          <tr><th scope="row">CVI mappings must agree</th><td>BP grouping, customer/supplier account group, role category, number assignment and field status must be compatible. A mismatch can terminate synchronization.</td></tr>
+          <tr><th scope="row">Same-number design has prerequisites</th><td>If BP and customer/supplier should use the same identifier, the relevant number ranges and external/internal assignment rules must be compatible. Do not decide this after migration design is complete.</td></tr>
+          <tr><th scope="row">Role removal can be blocked</th><td>A role assignment may be required by existing relationships or application use. Check where-used and process dependencies before removing a role.</td></tr>
+          <tr><th scope="row">Do not delete transactional history</th><td>For partners already used in business documents, blocking, deletion flags, data-retention rules and archiving are safer governance tools than trying to erase the identity.</td></tr>
+          <tr><th scope="row">Deployment model matters</th><td>Public Cloud exposes released apps, configuration activities and APIs. Private Cloud/on-premise allow a broader classic configuration and extension surface. Do not design a solution around a transaction or enhancement point that the target deployment does not release.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Lead check before creation or migration:</strong> category, grouping, number policy, account-group mapping, required roles, organizational extensions, ownership, and source system must be decided together. Fixing them independently later is expensive.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
@@ -109,13 +208,31 @@ tags:
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> In S/4HANA the customer is represented through Business Partner with customer roles, but Sales does not read one flat record. I name the partner function first, then the organizational level that owns the field: general BP, company code, or sales area. After that I trace the mechanism that consumes the value and compare it with what the document stored. This prevents a broad BP change when the real problem belongs to one role or one sales-area view.</p>
+      <p><strong>60-second answer:</strong> In S/4HANA the Business Partner is the leading identity for customer and supplier master data. I separate four layers: BP category and grouping, BP role, organizational extension, and the process that consumes the data. For Sales I normally expect <code>FLCU01</code> plus the required sales-area data; for FI customer data I use <code>FLCU00</code>. CVI maps BP groupings and roles to customer or supplier account groups and number ranges. Category and grouping are structural choices, so I design them before migration. I also separate BP roles from SD partner functions such as sold-to or payer. When something fails, I check role, organizational level, CVI mapping, field status, and then the document value.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
+      <a href="/labs/enterprise-context/master-data/partner-functions/">Customer partner functions</a>
+      <a href="/labs/enterprise-context/master-data/bp-addresses/">BP addresses and usages</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
       <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
     </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP reference</p>
+      <h2>Use the product documentation to verify deployment-specific details.</h2>
+      <p>The page uses current SAP Help as the reference boundary. Exact configuration activities and available apps can differ between S/4HANA Cloud Public Edition, Private Edition and on-premise releases.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Business Partner model</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/45efed579120bc12e10000000a4450e5.html" target="_blank" rel="noopener">Business Partner — SAP Help</a> explains the leading-object model and central role concept.</p></div>
+      <div><h3>CVI</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/25b46c8241fd4852bf7876d87bed8fd0.html" target="_blank" rel="noopener">Business Partner Approach / Customer-Supplier Integration</a> covers the S/4HANA conversion and CVI model.</p></div>
+      <div><h3>Grouping</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/15c19fb1f02544eebafaf5953a8e14ef.html" target="_blank" rel="noopener">Business Partner Number Grouping</a> documents internal/external numbering and the fixed grouping assignment.</p></div>
+      <div><h3>Customer roles</h3><p><a href="https://help.sap.com/docs/s4hana-best-practices/create-customer-master-bnd/creating-customer-master-data-general-data" target="_blank" rel="noopener">Creating Customer Master Data — General Data</a> describes <code>FLCU00</code> and <code>FLCU01</code>.</p></div>
+      <div><h3>Customer role / CVI control</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/e2ed3a4751e4462489ff090777beae52.html" target="_blank" rel="noopener">Maintaining Customer Data</a> explains mandatory and optional customer role behavior in CVI.</p></div>
+      <div><h3>BP role concept</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/30ff8eff4aa3480c9a0edf88828d7732/4caf8d5377a0ec23e10000000a174cb4.html" target="_blank" rel="noopener">Business Partner Role</a> describes role assignment, validity and where-used behavior.</p></div>
+    </div>
   </section>
 </div>
