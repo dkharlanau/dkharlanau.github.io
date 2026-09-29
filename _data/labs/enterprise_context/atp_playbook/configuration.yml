@@ -1,6 +1,6 @@
 id: AATP-PLAYBOOK-CONFIG
 title: aATP Configuration and Release Guardrails
-updated_at: '2026-09-23'
+updated_at: '2026-09-29'
 release_scope:
 - SAP S/4HANA 2025 FPS01 where cited
 - Current SAP Learning deployment-model guidance accessed 2026-09-23
@@ -148,6 +148,31 @@ configuration_playbook:
     failure_pattern: The last-mile confirmation decision can be operational rather than a configuration or PAC issue.
     source_refs:
     - SRC-SAP-AATP-R4D
+  - id: ATP-CFG-09
+    title: Supply Creation-Based Confirmation
+    business_question: If current and planned supply is insufficient, may the promise trigger new feasible supply?
+    controls:
+    - choose the intended SBC check type, such as PPAC or PAC with supply creation
+    - PP/DS planning strategy, strategy profile, product heuristics, and planning procedures
+    - component availability and relevant resource capacity
+    - supported combinations with PAL, ABC, BOP, and the target production scenario
+    failure_pattern: SBC is not a promise against imaginary stock. The confirmation depends on PP/DS being able to create and date a feasible procurement or production proposal.
+    source_refs:
+    - SRC-SAP-AATP-SBC-PPDS
+    - SRC-SAP-AATP-SBC-SCENARIOS
+  - id: ATP-CFG-10
+    title: Runtime evidence and integration
+    business_question: How will we prove what the check did and expose the result safely to other systems?
+    controls:
+    - Review Availability Check Result for the calculation path and chosen confirmation
+    - Advanced ATP Check OData service for supported external simulation scenarios
+    - BOP monitor and run logs for reconfirmation evidence
+    - application-log granularity only when the operational question requires it
+    failure_pattern: An integration that only returns a quantity without the check context, or logging that is enabled without retention discipline, creates support debt rather than observability.
+    source_refs:
+    - SRC-SAP-AATP-RACR
+    - SRC-SAP-AATP-API-OPS
+    - SRC-SAP-AATP-ABC-LOG
 release_guardrails:
   title: Release-sensitive facts — do not carry old aATP limits into a modern design
   items:
@@ -169,6 +194,17 @@ release_guardrails:
       and Object and Value Determination.
     source_refs:
     - SRC-SAP-AATP-OVERVIEW
+  - statement: Supply Protection can be used together with BOP and Product Allocation. Treat old blanket incompatibility statements as release-specific historical guidance, not a current design rule.
+    source_refs:
+    - SRC-SAP-AATP-SUP
+    - SRC-SAP-AATP-BOP-STRATEGIES
+  - statement: Supply Creation-Based Confirmation is a planning integration with PP/DS. It can create planned orders, purchase requisitions, or stock-transfer requisitions for uncovered quantity and use their dates to build the sales-order confirmation.
+    source_refs:
+    - SRC-SAP-AATP-SBC-PPDS
+    - SRC-SAP-AATP-SBC-SCENARIOS
+  - statement: Supply Assignment (ARun) is a specialized supply-to-demand assignment capability that can be executed from BOP, among other paths. Do not present it as the default ATP calculation for every SD scenario.
+    source_refs:
+    - SRC-SAP-AATP-ARUN
   - statement: App IDs, roles, service activation details, and feature restrictions are release- and edition-sensitive.
       Verify them for the target system instead of copying an older setup guide.
     source_refs:
