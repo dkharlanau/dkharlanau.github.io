@@ -27,7 +27,6 @@ tags:
   - sap-sd
   - diagnostics
 related:
-  - /labs/enterprise-context/atp/
   - /atlas/concepts/order-to-cash/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /services/sap-ams-consulting/
