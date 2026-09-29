@@ -1,18 +1,19 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Customer Material"
-description: "A practical deep dive into Customer Material in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+description: "A practical SAP Lead guide to Customer Material in SAP S/4HANA Sales: CMIR keys and fields, F2499, runtime behavior, plant priority, unit conversion, classification, additional customer materials, APIs, migration and diagnostics."
 permalink: /labs/enterprise-context/master-data/customer-material/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-30
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
   - master-data
+  - customer-material
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -30,91 +31,593 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.CMIR</p>
       <h1>Customer Material</h1>
-      <p>A customer-material information record stores the Sales relationship between one customer and one product. It is useful when that customer uses a different product number, description, or customer-specific logistics data. Think of it as the exception layer between the generic customer and generic product masters.</p>
+      <p>A Customer-Material Info Record (CMIR) stores the relationship between one customer and one internal product in a Sales context. It lets SAP understand the customer's product number and can also hold customer-specific logistics values. The product remains one internal SAP product; the relationship adds the customer-specific view.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.CMIR</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>relationship record</strong><small>Data class</small></div>
-      <em>Customer, sales organization, distribution channel and product/material.</em>
+      <div class="research-canvas__signal-line"><span>02</span><strong>relationship master data</strong><small>Data class</small></div>
+      <em>Customer + sales organization + distribution channel + internal product/material.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The object owns the customer–product relationship, not the product itself.</h2>
+      <h2>One internal product can have a different commercial identity for each customer.</h2>
+      <p>The CMIR does not create a new product. It translates the customer-product relationship into values that Sales can use during order processing.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Customer, sales organization, distribution channel and product/material.</p>
-    </div>
+
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Customer material number, customer description, delivery-related defaults, tolerances, texts and customer-specific logistics values where supported.</p>
+        <h3>Internal identity</h3>
+        <p>SAP uses the internal product or material number for stock, ATP, MRP, delivery, goods issue and most internal processing.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>A customer-material record does not replace the product master. It specializes the customer-product relationship and works together with the generic product and customer records.</p>
+        <h3>Customer identity</h3>
+        <p>The customer can call the same product by a different SKU and description. CMIR keeps that mapping close to the Sales process.</p>
       </div>
+      <div>
+        <h3>Relationship rules</h3>
+        <p>Supported logistics values such as plant, delivery priority, sales unit, tolerances, partial-delivery settings and texts can specialize this customer-product pair.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <p><strong>Lead rule:</strong> use CMIR when the rule belongs to the customer × product relationship. Do not duplicate the product master only because a customer uses another SKU.</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" id="lead-decision" data-reveal>
+  <section class="research-canvas__inventory" id="maintenance" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead decision</p>
-      <h2>Use customer-specific data for a real relationship rule, not as an exception bucket.</h2>
-      <p>Customer Material is powerful because it can specialize one customer-product relationship without changing the generic product. That precision also creates a maintenance obligation.</p>
+      <p class="research-canvas__eyebrow">Maintenance</p>
+      <h2>Current S/4HANA uses the Manage Customer Materials app; classic GUI transactions still matter in some landscapes.</h2>
+      <p>The exact maintenance UI depends on the S/4HANA deployment and release. Keep the business object separate from the transaction used to maintain it.</p>
     </header>
-    <div class="ecg-decision-columns">
-      <div><h3>Good fit</h3><p>The rule is stable, belongs to one customer-product relationship, and has a clear business owner who can maintain it.</p></div>
-      <div><h3>Weak fit</h3><p>The value changes every order, depends on runtime logic, or exists only to compensate for a wrong generic product or customer setup.</p></div>
-      <div><h3>Trade-off</h3><p>Relationship data limits blast radius, but too many exceptions increase data volume, testing, governance, and support complexity.</p></div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>Use</th>
+            <th>Boundary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>F2499</code> Manage Customer Materials</td>
+            <td>Create, copy, change, search and delete Customer Material records; manage drafts and important change history.</td>
+            <td>Current S/4HANA Fiori app. It also supports advanced functions such as additional customer materials, classification and address-dependent shipping when the prerequisites exist.</td>
+          </tr>
+          <tr>
+            <td><code>VD51</code></td>
+            <td>Create customer-material information.</td>
+            <td>Classic GUI / on-premise-oriented knowledge. Check availability in the target deployment.</td>
+          </tr>
+          <tr>
+            <td><code>VD52</code></td>
+            <td>Change customer-material information.</td>
+            <td>Useful in classic and migration validation scenarios where the transaction is available.</td>
+          </tr>
+          <tr>
+            <td><code>VD53</code></td>
+            <td>Display customer-material information.</td>
+            <td>Useful for read-only troubleshooting in classic environments.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <p class="ecg-caption"><strong>Lead check:</strong> ask whether the exception should still be true for the next order from the same customer for the same product.</p>
+
+    <p class="ecg-caption">Do not project classic GUI transactions into SAP S/4HANA Cloud Public Edition without checking the current app and scope. For assessment answers, state the concept first and the maintenance UI second.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Key and fields</p>
+      <h2>The key is narrow; the consequences can reach several Sales decisions.</h2>
+      <p>The standard API entity uses customer, sales organization, distribution channel and material as key fields. The record then carries the customer-specific values for that relationship.</p>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Field or group</th>
+            <th>What it means</th>
+            <th>Why a Lead cares</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Customer</td>
+            <td>The customer to which the relationship applies.</td>
+            <td>A correct material mapping for another customer proves nothing for this order.</td>
+          </tr>
+          <tr>
+            <td>Sales Organization + Distribution Channel</td>
+            <td>The Sales context in which the record is valid.</td>
+            <td>A frequent cause of “CMIR exists but SAP does not use it” is a different sales-area context.</td>
+          </tr>
+          <tr>
+            <td>Internal Material / Product</td>
+            <td>Your company's product identity.</td>
+            <td>This remains the object used by internal logistics.</td>
+          </tr>
+          <tr>
+            <td>Customer Material</td>
+            <td>The product number used by the customer.</td>
+            <td>Important for manual order entry, EDI and external order capture.</td>
+          </tr>
+          <tr>
+            <td>Customer Material Description</td>
+            <td>A customer-specific product description.</td>
+            <td>Can make customer-facing documents easier to reconcile with the customer's own catalogue.</td>
+          </tr>
+          <tr>
+            <td>Plant</td>
+            <td>A customer-product specific delivering plant.</td>
+            <td>It has a higher priority than the ship-to and material-master plant during standard plant proposal.</td>
+          </tr>
+          <tr>
+            <td>Delivery Priority</td>
+            <td>A priority value for this customer-product combination.</td>
+            <td>Do not place a customer-specific rule in the general customer master if it applies to one product only.</td>
+          </tr>
+          <tr>
+            <td>Minimum Delivery Quantity</td>
+            <td>Minimum quantity to be delivered for this relationship.</td>
+            <td>Can explain why an order behaves differently from the same material for another customer.</td>
+          </tr>
+          <tr>
+            <td>Partial Delivery / Maximum Partial Deliveries</td>
+            <td>Controls whether and how the order quantity can be split into partial deliveries.</td>
+            <td>Separate relationship-level agreements from generic customer settings.</td>
+          </tr>
+          <tr>
+            <td>Under- / Overdelivery Tolerance</td>
+            <td>Accepted quantity deviation around the order quantity.</td>
+            <td>Important for delivery completion and quantity-control discussions.</td>
+          </tr>
+          <tr>
+            <td>Sales Unit and Conversion</td>
+            <td>Customer-specific sales unit and conversion factors where supported.</td>
+            <td>Useful when the customer orders the same product in its own commercial packaging unit.</td>
+          </tr>
+          <tr>
+            <td>Item Usage</td>
+            <td>An indicator that can participate in item-category determination.</td>
+            <td>It can change sales-item behavior for one relationship without creating another material.</td>
+          </tr>
+          <tr>
+            <td>Rounding Profile</td>
+            <td>Rules used to round order quantities to deliverable units.</td>
+            <td>Check the complete UoM and product setup before using CMIR to compensate for a weak base design.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>One relationship can change the same product for one customer.</h2>
-      <p>During order entry SAP can use the customer-material relationship to translate the customer's product reference and supply supported customer-specific values. This makes the record especially important when the same internal product behaves correctly for most customers but differently for one customer and sales-area context.</p>
+      <p class="research-canvas__eyebrow">Runtime path</p>
+      <h2>Translate the customer's SKU first, then prove which customer-specific values reached the order.</h2>
+      <p>Example: the customer sends SKU <code>AX-4711</code>, while SAP internally uses material <code>FG-100045</code>.</p>
     </header>
+
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Match the relationship</h4><p>Confirm the customer, sales organization, distribution channel, and product used by the order. A record in another sales-area context is not evidence for this document.</p></div>
-      <div><span>02</span><h4>Read the customer-specific value</h4><p>Check the customer material number, description, and the logistics or text fields that are actually maintained for this relationship.</p></div>
-      <div><span>03</span><h4>Compare the fallback</h4><p>Compare the result with the relevant customer and product defaults. For example, standard delivering-plant proposal can consider a customer-material record before ship-to and product master data.</p></div>
-      <div><span>04</span><h4>Prove the document result</h4><p>Check what was stored in the sales order and what later documents consume. Do not change shared product data to repair a customer-specific exception until the source is proven.</p></div>
+      <div><span>01</span><h4>Resolve the Sales context</h4><p>SAP knows the relevant customer, sales organization and distribution channel for the document.</p></div>
+      <div><span>02</span><h4>Receive the customer product reference</h4><p>The user, EDI message, API or external order channel provides the customer's product number.</p></div>
+      <div><span>03</span><h4>Resolve the relationship</h4><p>The customer-material relationship connects <code>AX-4711</code> with internal product <code>FG-100045</code> in the valid Sales context.</p></div>
+      <div><span>04</span><h4>Use the internal product</h4><p>ATP, inventory, MRP, delivery and accounting-relevant logistics continue with the internal SAP product.</p></div>
+      <div><span>05</span><h4>Copy supported relationship values</h4><p>The sales item can receive customer-specific description, plant, sales unit, tolerances, partial-delivery rules, delivery priority, item usage or texts according to the maintained data and scenario.</p></div>
+      <div><span>06</span><h4>Prove the document result</h4><p>Check what the sales order actually stored. The master record is a possible source; the document result is the evidence for downstream processing.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Diagnostic rule:</strong> when the order is wrong, do not stop at “the CMIR is correct”. Prove the exact key, then inspect the values stored in the order item and the later document flow.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>If only one customer is different, start with the relationship.</h2>
+      <p class="research-canvas__eyebrow">Plant determination</p>
+      <h2>CMIR is the most specific standard plant source in the normal Sales sequence.</h2>
+      <p>For standard sales-item plant proposal, SAP documents the priority in this order:</p>
     </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Customer Material</h4><p>Use the plant maintained for this customer-product relationship.</p></div>
+      <div><span>02</span><h4>Ship-to Party</h4><p>If CMIR does not provide a plant, use the delivering plant from the ship-to customer master data.</p></div>
+      <div><span>03</span><h4>Material Master</h4><p>If neither relationship nor ship-to data provides a plant, use the delivering plant from the material master.</p></div>
+      <div><span>04</span><h4>Manual or extended logic</h4><p>If the standard proposal does not satisfy the requirement, evaluate manual entry, address-dependent data, sourcing functionality or a justified extension.</p></div>
+    </div>
+
+    <p class="ecg-caption">This priority explains a common incident: “the material master plant is correct, but the order gets another plant.” The more specific customer-material relationship can intentionally win.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Customer-specific units</p>
+      <h2>Use CMIR for a customer-specific commercial unit, not for a broken base-UoM design.</h2>
+      <p>A customer may use a different commercial unit name or conversion for the same physical product. S/4HANA Customer Material can hold sales-unit and conversion information where the scenario supports it.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Example</h3>
+        <p>SAP manages the product in <code>PC</code>. One customer orders <code>CASE</code>, where one case contains 20 pieces.</p>
+      </div>
+      <div>
+        <h3>Good design</h3>
+        <p>The base and alternative units remain coherent in the product master. CMIR adds the customer-specific commercial view.</p>
+      </div>
+      <div>
+        <h3>Weak design</h3>
+        <p>Using customer-specific conversion to hide inconsistent product units across Sales, warehouse and purchasing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classification</p>
+      <h2>Customer Material can carry default configuration values for configurable products.</h2>
+      <p>SAP supports class type <code>052</code> for Customer-Material Info Record classification. This lets a customer-product relationship hold characteristic values that can be passed to sales-document configuration when the prerequisites and Customizing are in place.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Use a configurable product</h4><p>The material must support the relevant configuration process.</p></div>
+      <div><span>02</span><h4>Use class type 052</h4><p>Maintain a class and characteristics that are permitted for Customer-Material Info Record classification.</p></div>
+      <div><span>03</span><h4>Maintain the relationship values</h4><p>Example: one customer always buys the pump with <code>Voltage = 230V</code> and <code>Housing = Stainless Steel</code>.</p></div>
+      <div><span>04</span><h4>Adopt values into the sales item</h4><p>Where configured, the sales document can reuse these characteristic values instead of asking the user to enter the same customer defaults every time.</p></div>
+    </div>
+
     <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>If the issue appears for one customer/product combination, check this record early. For a wrong plant, compare the customer-material value with the ship-to and product defaults. For a wrong customer product number or description, prove the exact relationship key and what the order stored. The useful question is not “is the product master correct?” but “which source won for this customer-product pair?”</p>
+      <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+      <p><strong>Boundary:</strong> CMIR classification provides customer-specific defaults or values. The configurable product model still owns which characteristics and combinations are valid.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Modern S/4HANA capabilities</p>
+      <h2>Do not repeat old ECC limitations as universal S/4HANA rules.</h2>
+      <p>The F2499 app contains functions that are easy to miss if the design is based only on the classic KNMT mental model.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Additional customer materials</h3>
+        <p>F2499 can assign several customer-material identifiers to one product. This helps with customer renumbering, mergers, legacy SKUs, e-commerce identifiers and parallel external systems.</p>
+      </div>
+      <div>
+        <h3>Address-dependent shipping</h3>
+        <p>If multiple address handling for Business Partners is active, the app can link customer addresses to specific delivering plants for each customer material.</p>
+      </div>
+      <div>
+        <h3>Draft and change support</h3>
+        <p>The app supports draft records and exposes important changes, which improves controlled maintenance compared with treating CMIR as a small hidden table.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Assessment trap:</strong> the classic key of table <code>KNMT</code> is useful technical knowledge, but it is not enough to conclude that modern S/4HANA cannot support several customer identifiers or address-dependent behavior.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Boundaries</p>
+      <h2>CMIR, pricing, substitution and sellability solve different problems.</h2>
+      <p>A strong design starts by naming the problem correctly. Similar-looking functions should not be used as substitutes for each other.</p>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Function</th>
+            <th>Question it answers</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Customer Material</td>
+            <td>What does this customer call our product, and what relationship-specific Sales values apply?</td>
+            <td><code>Customer SKU AX-4711 → SAP Material FG-100045</code></td>
+          </tr>
+          <tr>
+            <td>Pricing Condition Record</td>
+            <td>What price, discount, surcharge, freight or tax condition applies?</td>
+            <td>Customer + material determines a negotiated price.</td>
+          </tr>
+          <tr>
+            <td>Material Determination</td>
+            <td>Should the material entered in the sales document be replaced or substituted by another material?</td>
+            <td>Discontinued material is replaced by its successor.</td>
+          </tr>
+          <tr>
+            <td>Listing / Exclusion</td>
+            <td>May this customer order the product at all?</td>
+            <td>A regulated product is excluded for a customer or market.</td>
+          </tr>
+          <tr>
+            <td>Product Master</td>
+            <td>What is the product itself?</td>
+            <td>Base UoM, product group, plant-level and Sales-relevant product settings.</td>
+          </tr>
+          <tr>
+            <td>Customer / Business Partner</td>
+            <td>What applies to this customer generally?</td>
+            <td>Partner roles, shipping data, payment and Sales-area customer settings.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+      <p><strong>Memory model:</strong> CMIR translates the customer's language into your product context. Material Determination can change the product. Pricing calculates the commercial amount. Listing and Exclusion control sellability.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">EDI and integration</p>
+      <h2>CMIR removes customer-specific product translation from every interface.</h2>
+      <p>In B2B integration, the external order often contains the customer's SKU, not your internal material number. A governed Customer Material relationship lets the Sales process own that translation instead of hard-coding mappings in each interface.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>External order arrives</h4><p>Customer, customer SKU, quantity and unit come from EDI, API, portal or another order-capture channel.</p></div>
+      <div><span>02</span><h4>Resolve the customer product</h4><p>The relationship converts the external customer identifier into the internal SAP product context.</p></div>
+      <div><span>03</span><h4>Create the sales item</h4><p>The internal material drives standard Sales and logistics processing.</p></div>
+      <div><span>04</span><h4>Return the customer's identity where required</h4><p>Confirmations, invoices or other outputs can expose the customer reference when the document and form mapping are designed to do so.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">integration_instructions</span>
+      <p><strong>Architecture rule:</strong> before building a custom cross-reference table in middleware, check whether Customer Material already owns the business mapping. Keep the mapping close to the business object that consumes it.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">API and data access</p>
+      <h2>Use released interfaces before designing new direct-table dependencies.</h2>
+      <p>S/4HANA exposes Customer Material through standard API and CDS surfaces. Direct table access can still be useful for diagnosis in permitted environments, but it should not be the default integration design.</p>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Surface</th>
+            <th>Technical name</th>
+            <th>Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>OData API</td>
+            <td><code>API_CUSTOMER_MATERIAL_SRV</code></td>
+            <td>Create, read, update and delete Customer Material data from external applications where the API is available.</td>
+          </tr>
+          <tr>
+            <td>API entity</td>
+            <td><code>A_CustomerMaterial</code></td>
+            <td>Exposes key and business properties such as customer material, description, plant, item usage, delivery priority, UoM and tolerances.</td>
+          </tr>
+          <tr>
+            <td>CDS view</td>
+            <td><code>I_CustomerMaterial_2</code></td>
+            <td>Current Customer Material CDS view for analytical or extension scenarios supported by the target deployment.</td>
+          </tr>
+          <tr>
+            <td>Deprecated CDS</td>
+            <td><code>I_CustomerMaterial</code></td>
+            <td>Do not start new development on a deprecated view when the successor is available.</td>
+          </tr>
+          <tr>
+            <td>Classic table</td>
+            <td><code>KNMT</code></td>
+            <td>Important for technical diagnosis and legacy understanding; do not make it the universal integration contract.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Migration</p>
+      <h2>Migration scope depends on the migration approach; validate business behavior, not only record counts.</h2>
+      <p>For direct transfer from ERP to SAP S/4HANA, SAP documents the migration object <code>S4_SD_CUSTOMER_MATERIAL</code>. Its scope includes basic data, long texts and classification data, while address-dependent data is documented as out of scope for that direct-transfer object.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Migrate prerequisites first</h4><p>Customer, product, class and characteristic dependencies must be available before relationship data can be used consistently.</p></div>
+      <div><span>02</span><h4>Select the migration approach</h4><p>Direct transfer, staging or another project method can expose different object structures and scope. Do not treat one technical alias as universal across releases.</p></div>
+      <div><span>03</span><h4>Load the relationship</h4><p>Move the required basic data, texts and classification according to the selected object and target release.</p></div>
+      <div><span>04</span><h4>Validate in the target system</h4><p>Confirm the customer, product and Sales-area keys and inspect the migrated relationship in the available app or transaction.</p></div>
+      <div><span>05</span><h4>Prove Sales behavior</h4><p>Create a test sales order using the customer SKU. Check material resolution, plant, UoM, tolerances, texts and configuration values that are in project scope.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Lead acceptance criterion:</strong> “10,000 CMIR rows loaded” is not enough. The migrated data is accepted when the business mapping and dependent Sales behavior work in representative orders.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="diagnostics" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostics</p>
+      <h2>Start from the symptom and identify the first wrong layer.</h2>
+      <p>CMIR incidents are often solved quickly when the investigation starts with the exact relationship key and the sales-order result instead of changing generic master data.</p>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Symptom</th>
+            <th>First checks</th>
+            <th>Next boundary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Customer SKU does not resolve</td>
+            <td>Customer, sales organization, distribution channel, internal product, customer-material identifier and record validity.</td>
+            <td>Inbound mapping / material determination / custom logic only after the relationship key is proven.</td>
+          </tr>
+          <tr>
+            <td>Wrong plant in the sales order</td>
+            <td>CMIR plant first, then ship-to plant, then material-master plant. Check address-dependent shipping if used.</td>
+            <td>Sourcing or extension logic if the standard sequence is not the requirement.</td>
+          </tr>
+          <tr>
+            <td>Wrong customer description</td>
+            <td>Customer Material description and what the sales item stored.</td>
+            <td>Output form or interface mapping if the document item is already correct.</td>
+          </tr>
+          <tr>
+            <td>Wrong partial-delivery behavior</td>
+            <td>Relationship-level partial-delivery indicator, maximum partial deliveries and document item values.</td>
+            <td>Customer master, document logic or delivery processing only after the item data is proven.</td>
+          </tr>
+          <tr>
+            <td>Wrong under- / overdelivery behavior</td>
+            <td>CMIR tolerances and the resulting order/delivery item values.</td>
+            <td>Delivery and completion logic.</td>
+          </tr>
+          <tr>
+            <td>Wrong unit conversion</td>
+            <td>Product base/alternative UoM, CMIR sales unit and conversion factors.</td>
+            <td>Interface unit mapping or custom conversion after master data is consistent.</td>
+          </tr>
+          <tr>
+            <td>Wrong configurable-product defaults</td>
+            <td>CMIR class type 052 values and adoption settings, then the sales-item configuration instance.</td>
+            <td>Variant Configuration model if the relationship values were transferred correctly.</td>
+          </tr>
+          <tr>
+            <td>CMIR exists but order ignores it</td>
+            <td>Exact Sales-area key, product/customer pair, document result and target-release behavior. In classic implementations also verify relevant sales-document settings before assuming an ABAP defect.</td>
+            <td>Enhancement or custom processing only after standard determination is excluded.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead-decision" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead decisions</p>
+      <h2>Use the narrowest correct owner for the rule.</h2>
+      <p>CMIR is useful because it limits the blast radius of a customer-specific rule. That benefit disappears when the object becomes a dumping ground for unstable exceptions.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Use CMIR</h3>
+        <p>The value is stable for the same customer-product relationship and has a clear business owner.</p>
+      </div>
+      <div>
+        <h3>Use customer or product master</h3>
+        <p>The value is generic for the customer or product and should apply across many relationships.</p>
+      </div>
+      <div>
+        <h3>Use runtime logic</h3>
+        <p>The value changes by order, date, stock, route, plant load or another runtime condition that master data should not freeze.</p>
+      </div>
+      <div>
+        <h3>Use an extension</h3>
+        <p>The requirement truly depends on a dimension not represented by the standard object and standard S/4HANA capabilities cannot model it safely.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <p><strong>Lead question:</strong> “Should this value still be true for the next order from the same customer for the same product?” If not, master data may be the wrong owner.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment traps</p>
+      <h2>Five shortcuts create weak CMIR answers.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>“CMIR is only customer SKU mapping”</h3>
+        <p>The SKU mapping is central, but the object can also carry customer-product specific logistics values, UoM information, classification and modern Fiori extensions.</p>
+      </div>
+      <div>
+        <h3>“The material master plant always wins”</h3>
+        <p>Standard plant proposal gives Customer Material higher priority than ship-to and material-master sources.</p>
+      </div>
+      <div>
+        <h3>“One internal material can have only one customer identifier”</h3>
+        <p>Modern F2499 supports additional customer materials, so do not generalize an old technical limitation into a current product rule.</p>
+      </div>
+      <div>
+        <h3>“CMIR contains the sales price”</h3>
+        <p>Pricing belongs to condition technique. Relationship master data and commercial price are different responsibilities.</p>
+      </div>
+      <div>
+        <h3>“If CMIR is correct, the incident is solved”</h3>
+        <p>The sales order is the runtime evidence. Always check which value reached the item and which later process consumed it.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Explain the exception layer in one minute.</h2>
+      <h2>Customer language → internal product → relationship rules → document evidence.</h2>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Customer Material is relationship master data between a customer and a product in a Sales context. I use it for customer-specific product numbers, descriptions, and supported logistics defaults. If one customer sees different behavior for the same material, I check this layer before changing the generic product master. I prove the exact customer, sales organization, distribution channel, and product key, compare the relationship value with the fallback customer and product data, and then verify which value the sales order actually stored.</p>
+      <p><strong>60-second answer:</strong> A Customer-Material Info Record is Sales master data for the relationship between a customer and an internal product. I mainly use it when the customer has its own SKU or description, but it can also hold relationship-specific values such as plant, delivery priority, sales unit, partial-delivery settings, tolerances, item usage and texts. In standard plant proposal, CMIR is checked before the ship-to customer and the material master. In modern S/4HANA, F2499 also supports additional customer materials, classification and address-dependent shipping. For integration I prefer the released Customer Material API and current CDS view instead of building new direct-table dependencies. For diagnosis I prove the exact customer and Sales-area key, then check what the sales order actually stored before changing shared master data or code.</p>
     </div>
-    <nav class="ecg-context-links" aria-label="Related master-data pages">
-      <span>Continue</span>
-      <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
-    </nav>
   </section>
+
+  <section class="research-canvas__inventory" id="evidence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>Current SAP documentation used for release-sensitive points.</h2>
+      <p>This page remains a working Lab with <code>verified: false</code>. The sources below support the current Fiori capabilities, API/CDS interfaces, plant priority, classification and migration boundaries.</p>
+    </header>
+
+    <div class="research-route-list">
+      <a href="https://help.sap.com/docs/PRODUCT_ID/a376cd9ea00d476b96f18dea1247e6a5/0f988925a9f446f8aa27e04eda4105d2.html?locale=en-US&amp;state=PRODUCTION&amp;version=2602.500" target="_blank" rel="noopener"><span>SRC</span><strong>Manage Customer Materials</strong><small>SAP S/4HANA · F2499, additional customer materials, classification, address-dependent shipping</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/03c04db2a7434731b7fe21dca77440da/818ca99efeea42bcbe995cbe8c6b24be.html?version=2602.500" target="_blank" rel="noopener"><span>SRC</span><strong>Customer Materials API Entity</strong><small>SAP S/4HANA Cloud · A_CustomerMaterial keys and properties</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/c0c54048d35849128be8e872df5bea6d/87fae757dc3bf032e10000000a441470.html" target="_blank" rel="noopener"><span>SRC</span><strong>CDS Views for Sales</strong><small>SAP S/4HANA · I_CustomerMaterial_2 and deprecated predecessor</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/168bc95360267214e10000000a174cb4.html" target="_blank" rel="noopener"><span>SRC</span><strong>Delivering Plants</strong><small>SAP S/4HANA 2025 FPS01 · CMIR → ship-to → material master priority</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/PRODUCT_ID/7b24a64d9d0941bda1afa753263d9e39/b9cdc353b677b44ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SRC</span><strong>Classifying Customer-Material Info Records</strong><small>SAP S/4HANA · class type 052 and transfer to sales-document configuration</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/d3a3eb7caa1842858bf0372e17ad3909/6e17a3a2949c4623b10d3d5e4b5f3c1e.html" target="_blank" rel="noopener"><span>SRC</span><strong>SD - Customer Material Migration Object</strong><small>SAP S/4HANA · direct transfer, S4_SD_CUSTOMER_MATERIAL, scope and validation</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/3614994254bf4625aeb761c6ca05dd73.html" target="_blank" rel="noopener"><span>SRC</span><strong>Material Determination</strong><small>SAP S/4HANA · boundary between customer-product mapping and material substitution</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
+  </section>
+
+  <nav class="ecg-context-links" aria-label="Related SAP Enterprise pages">
+    <span>Continue</span>
+    <a href="/labs/enterprise-context/master-data/">Master Data</a>
+    <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
+    <a href="/labs/enterprise-context/master-data/pricing-condition-record/">Pricing Condition Record</a>
+    <a href="/labs/enterprise-context/master-data/material-determination/">Material Determination</a>
+    <a href="/labs/enterprise-context/master-data/listing-exclusion/">Listing &amp; Exclusion</a>
+    <a href="/labs/enterprise-context/master-data/variant-configuration/">Variant Configuration</a>
+    <a href="/labs/enterprise-context/sales-order/">Sales Order</a>
+  </nav>
 </div>
