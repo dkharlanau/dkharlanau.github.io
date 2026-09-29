@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Business Partner / Customer"
-description: "A practical SAP S/4HANA Business Partner guide for Sales: roles, CVI, grouping and number ranges, organizational extensions, field control, governance, restrictions, runtime behavior and diagnostics."
+title: "SAP S/4HANA Business Partner — Customer, Supplier & Cross-Functional Master Data"
+description: "A practical SAP S/4HANA Business Partner guide across Sales, Finance, Purchasing and Credit Management: roles, CVI, number ranges, field control, relationships, governance, restrictions and diagnostics."
 permalink: /labs/enterprise-context/master-data/business-partner/
 status: draft
 verified: false
@@ -28,16 +28,16 @@ tags:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.BP</p>
-      <h1>Business Partner / Customer</h1>
-      <p>The Business Partner is the identity layer behind the customer in SAP S/4HANA. Sales does not read one flat customer record. It reads role-specific and organizational data: general BP data, customer company-code data, and customer sales-area data. That separation explains why the same customer can behave differently by sales organization, distribution channel, division, or company code.</p>
+      <p class="research-canvas__eyebrow">SAP S/4HANA / Cross-Functional Master Data / BP</p>
+      <h1>Business Partner</h1>
+      <p>The Business Partner is the shared identity layer behind customers, suppliers, contacts and other business relationships in SAP S/4HANA. Applications do not read one flat record. They use role-specific and organizational data: Sales reads sales-area customer data, Finance reads company-code data, Purchasing reads purchasing-organization supplier data, and Credit Management reads credit-segment data. The same BP can therefore participate in several processes without duplicating the core identity.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.BP</strong><small>Catalogue ID</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>business master</strong><small>Data class</small></div>
-      <em>Business Partner, customer role, company code, and sales area.</em>
+      <em>One identity; several roles, organizational views and application consumers.</em>
     </div>
   </header>
 
@@ -123,8 +123,63 @@ tags:
       <span class="material-symbols-outlined" aria-hidden="true">warning</span>
       <p><strong>Do not mix two different role concepts.</strong> <code>FLCU01</code> is a <em>Business Partner role</em>. Sold-to, ship-to, bill-to and payer are <em>Sales partner functions</em>. A BP can have the customer role and still appear in different partner functions in the sales document.</p>
     </div>
+
     <p class="ecg-caption">A BP role is assigned to the Business Partner. The related role category controls application-specific behavior and is also used by CVI. Partner functions belong to Sales partner determination and master relationships; they solve a different problem.</p>
   </section>
+
+  <section class="research-canvas__inventory" id="bp-role-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Role model</p>
+      <h2>Role category, BP role, role grouping and partner function are different objects.</h2>
+      <p>These terms sound similar, but they control different parts of the model. Keeping them separate makes configuration and troubleshooting much faster.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Business Partner role model">
+      <table class="study-table__table">
+        <thead><tr><th>Object</th><th>What it controls</th><th>Example</th><th>Do not confuse it with</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">BP role category</th><td>Technical category behind one or more BP roles. It connects a role to application behavior and can be used by CVI.</td><td>Customer or supplier role category</td><td>The visible role selected by the user</td></tr>
+          <tr><th scope="row">BP role</th><td>Business view of the BP and the application data that can be maintained.</td><td><code>FLCU01</code>, <code>FLVN01</code>, <code>UKM000</code></td><td>Sales or Purchasing partner function</td></tr>
+          <tr><th scope="row">BP role grouping</th><td>Convenience grouping of several BP roles so they can be selected together during maintenance.</td><td>A solution-specific group of related roles</td><td>BP number-range grouping</td></tr>
+          <tr><th scope="row">BP view</th><td>Controls screen/view behavior for a BP role in classic BP maintenance.</td><td>General or application-specific BP view</td><td>Organizational extension such as sales area</td></tr>
+          <tr><th scope="row">Partner function</th><td>Role that a partner plays in a business transaction or partner-determination procedure.</td><td>Sold-to, Ship-to, Payer, Supplier, Ordering Address</td><td>BP role</td></tr>
+          <tr><th scope="row">Relationship category</th><td>Defines a relationship between two BPs, including allowed categories, cardinality and validity behavior.</td><td><code>BUR001</code> Contact Person</td><td>Partner function in a Sales or Purchasing document</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">schema</span>
+      <p><strong>Memory shortcut:</strong> role = what this BP can do; organizational extension = where it can do it; partner function = what it does in one business process; relationship = how two BPs are connected.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-component-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Cross-component map</p>
+      <h2>One BP can serve SD, FI, MM, Credit Management and relationship-driven processes.</h2>
+      <p>The important design question is not “which module owns the BP?” The BP owns the common identity; each application owns its role-specific and organizational data.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Business Partner cross-component map">
+      <table class="study-table__table">
+        <thead><tr><th>Component</th><th>Role / object</th><th>Organizational level</th><th>Typical data consumed</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Cross-Application</th><td><code>000000</code> General BP</td><td>Client / BP</td><td>Name, address, communication, bank details, identification and tax data, relationships.</td></tr>
+          <tr><th scope="row">SD</th><td><code>FLCU01</code> Customer</td><td>Sales area</td><td>Shipping, pricing-relevant customer fields, Incoterms, delivery priority, tax, sales blocks and Sales partner relationships.</td></tr>
+          <tr><th scope="row">FI-AR</th><td><code>FLCU00</code> FI Customer</td><td>Company code</td><td>Reconciliation account, payment terms, payment methods, dunning and accounting controls.</td></tr>
+          <tr><th scope="row">MM Purchasing</th><td><code>FLVN01</code> Supplier</td><td>Purchasing organization</td><td>Order currency, Incoterms, purchasing payment terms, partner functions and purchasing controls.</td></tr>
+          <tr><th scope="row">FI-AP</th><td><code>FLVN00</code> FI Supplier</td><td>Company code</td><td>Reconciliation account, payment methods, withholding tax and AP controls.</td></tr>
+          <tr><th scope="row">Credit Management</th><td><code>UKM000</code></td><td>Credit profile / credit segment</td><td>Credit limits, risk-related master data and credit-check context for Sales.</td></tr>
+          <tr><th scope="row">Contact / Relationships</th><td><code>BUP001</code> + relationship category</td><td>BP relationship</td><td>Contact person, department, function, authority, validity and relationship-specific address information.</td></tr>
+          <tr><th scope="row">Industry / solution-specific</th><td>Additional delivered or custom roles</td><td>Depends on application</td><td>Examples include carrier/forwarder, contract partner, employee or customer-defined <code>Y*</code>/<code>Z*</code> roles. Treat these as solution-dependent, not universal core roles.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="ecg-caption"><strong>Lead rule:</strong> do not duplicate the legal identity because another component needs more data. Extend the existing BP with the correct role and organizational scope, unless the real-world party is genuinely a different entity.</p>
+  </section>
+
 
   <section class="research-canvas__inventory" id="bp-configuration" data-reveal>
     <header>
@@ -147,8 +202,130 @@ tags:
       <div><h3>Customer / supplier account group</h3><p>Controls the customer or supplier application object, including its number-range and field-status behavior.</p></div>
       <div><h3>CVI mapping</h3><p>Connects both models. This is where grouping, account group, role category, field mapping and number policy must agree.</p></div>
     </div>
+
     <p class="ecg-caption"><strong>Practical tooling:</strong> on-premise and private-cloud systems commonly use transaction <code>BP</code> for maintenance. SAP S/4HANA Cloud Public Edition uses released Fiori apps such as <strong>Manage Business Partner Master Data</strong> and configuration through the cloud configuration model rather than unrestricted classic SPRO access.</p>
   </section>
+
+  <section class="research-canvas__inventory" id="bp-customizing-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Customizing map</p>
+      <h2>Know which control belongs to BP and which belongs to the application object.</h2>
+      <p>The BP framework controls identity and role behavior. Customer and supplier account groups still control important application-specific settings. CVI connects the two models.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Business Partner customizing map">
+      <table class="study-table__table">
+        <thead><tr><th>Area</th><th>Main control</th><th>Lead question</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">BP role categories</th><td>Define the technical role categories used by BP roles and application integration.</td><td>Does the role category represent the required application behavior, or are we creating a custom role only for naming?</td></tr>
+          <tr><th scope="row">BP roles</th><td>Assign role category, role behavior and BP view. Classic configuration can also hide roles from role selection.</td><td>Which users and processes actually need this role?</td></tr>
+          <tr><th scope="row">BP role groupings</th><td>Group several BP roles for easier maintenance.</td><td>Is this only a maintenance convenience, or are we incorrectly treating it as a number-range grouping?</td></tr>
+          <tr><th scope="row">BP number ranges</th><td>Define non-overlapping number-range intervals and internal/external assignment.</td><td>Which system owns identity creation?</td></tr>
+          <tr><th scope="row">BP groupings</th><td>Assign a BP number range to a grouping. The grouping is selected during creation and is a structural choice.</td><td>What numbering and source-system policy does this grouping represent?</td></tr>
+          <tr><th scope="row">Field groupings</th><td>Control whether fields are required, optional, display-only or hidden according to supported BP control levels.</td><td>Are BP field controls compatible with customer/supplier field status and the deployment model?</td></tr>
+          <tr><th scope="row">BP relationships</th><td>Define relationship categories and their attributes, cardinality and validity behavior.</td><td>Is this a true relationship between two identities, or should it be a document partner function?</td></tr>
+          <tr><th scope="row">Customer / supplier account groups</th><td>Control number ranges, field selection and application-specific behavior for customer/supplier objects.</td><td>Does this account group match the business use and CVI mapping?</td></tr>
+          <tr><th scope="row">CVI mapping</th><td>Map BP groupings, customer/supplier account groups, role categories and number assignment.</td><td>Can BP and customer/supplier objects synchronize without conflicting number or field rules?</td></tr>
+          <tr><th scope="row">Partner determination</th><td>SD and MM define their own partner functions, schemas/procedures and assignments.</td><td>Are we solving document-role determination, not BP-role configuration?</td></tr>
+          <tr><th scope="row">Data protection</th><td>Data controllers and purposes can restrict and explain processing of BP personal data where the feature is active.</td><td>Who is allowed to process this data, and for which purpose?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-cvi" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">CVI architecture</p>
+      <h2>CVI is the bridge between BP identity and customer/supplier application objects.</h2>
+      <p>Customer/Vendor Integration is not just a migration topic. In S/4HANA it keeps BP, customer and supplier representations consistent. The design must align number assignment, account groups, role categories and mandatory fields.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Choose number ownership</h4><p>Decide whether BP, customer or supplier numbers are generated internally or supplied externally. Do not assume that same-number design is mandatory.</p></div>
+      <div><span>02</span><h4>Map grouping to account group</h4><p>For BP → Customer and BP → Supplier, connect the BP grouping to the correct account group. Configure the reverse direction where required by the migration or operating model.</p></div>
+      <div><span>03</span><h4>Choose same-number policy</h4><p>If the same identifier must be used, the BP and customer/supplier intervals and assignment modes must be compatible. This is a prerequisite of same-number synchronization, not a universal rule for every BP design.</p></div>
+      <div><span>04</span><h4>Map role categories</h4><p>Define which BP role categories trigger customer or supplier integration. A custom role does not become a customer or supplier only because its name looks similar.</p></div>
+      <div><span>05</span><h4>Reconcile mandatory fields</h4><p>A field required on one side and unavailable or hidden on the other can stop synchronization. Compare BP field grouping with customer/supplier field status before blaming CVI itself.</p></div>
+      <div><span>06</span><h4>Plan conversion and recovery</h4><p>For system conversion, use the supported synchronization and post-processing tools, such as the synchronization cockpit in applicable on-premise/private-cloud scenarios, and define who owns failed records.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+      <p><strong>1:1 identity rule:</strong> CVI links one customer to one BP and one supplier to one BP. The same BP can still be both the customer and the supplier when both roles belong to the same real-world party.</p>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">api</span>
+      <p><strong>Interface rule:</strong> integrations must respect the BP/CVI model instead of writing only the legacy customer or supplier representation. The exact supported API, SOAP service, migration object or classic CVI interface depends on the target deployment and release.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-mm" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">MM / Purchasing</p>
+      <h2>Supplier BP uses the same identity model, but a different organizational extension.</h2>
+      <p>For Procurement, the useful split is general BP → supplier role → purchasing organization → company code. This mirrors the Sales split but the application data and partner determination are different.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>General BP</h4><p>Create the organization or person once with general identity data.</p></div>
+      <div><span>02</span><h4><code>FLVN01</code> Supplier</h4><p>Maintain purchasing-organization data such as order currency, purchasing terms and supplier-specific Purchasing controls.</p></div>
+      <div><span>03</span><h4><code>FLVN00</code> FI Supplier</h4><p>Maintain company-code accounting data needed for Accounts Payable.</p></div>
+      <div><span>04</span><h4>Purchasing partner schema</h4><p>Define MM partner functions and schemas separately from BP roles. Supplier partner functions can be maintained for the relevant Purchasing context and proposed into purchasing documents.</p></div>
+      <div><span>05</span><h4>Optional deeper levels</h4><p>In scenarios that use supplier sub-ranges or supply regions, Purchasing data can become more specific. Treat these as additional data-retention levels, not as new BP identities.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
+      <p><strong>Assessment trap:</strong> <code>FLVN01</code> is a BP supplier role. A Purchasing partner function such as supplier, ordering address or invoicing party is part of MM partner determination. They are not the same configuration object.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-field-control" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Field control</p>
+      <h2>When a field is missing, first find which control layer owns its status.</h2>
+      <p>BP maintenance can combine BP field grouping with application-specific customer or supplier field status. This is why one field can appear required, hidden or display-only in a role even when another role shows it differently.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>BP field grouping</h3><p>Classic/private deployments can control fields by client and, where supported, by BP role, activity or BP type. Do not assume all control levels are available in every cloud-ready or MDG mode.</p></div>
+      <div><h3>Customer / supplier field status</h3><p>Account groups still influence which application fields are required or optional. CVI needs compatible rules on both sides.</p></div>
+      <div><h3>Screen / BP view</h3><p>A field can be technically available but not visible in the current BP view or application section. Diagnose view and field-control configuration before creating an enhancement.</p></div>
+    </div>
+
+    <p class="ecg-caption"><strong>Lead check:</strong> “field not visible in BP” is a symptom. Check role, BP view, field group, account group and deployment-specific restrictions before changing code.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-relationships" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Relationships</p>
+      <h2>Use BP relationships for identity-to-identity connections.</h2>
+      <p>A relationship connects two Business Partners and is controlled by a relationship category. It can have validity and relationship-specific attributes. The standard contact-person model is a good example.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Contact person</h3><p>Create the contact as a BP of category Person and connect it to the organization with relationship category <code>BUR001</code>. Department, function, authority and relationship-specific address data can belong to that connection.</p></div>
+      <div><h3>Validity</h3><p>Relationships can be time-dependent. This is useful when a contact or responsibility is valid only for a period.</p></div>
+      <div><h3>Boundary</h3><p>A BP relationship is not a substitute for Sold-to / Ship-to / Payer or Purchasing partner determination. Use each model for its own decision.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="bp-governance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Governance and data protection</p>
+      <h2>BP governance is about ownership, access and lifecycle — not only field maintenance.</h2>
+      <p>Because the BP can be shared by Sales, Procurement and Finance, uncontrolled changes have a wide blast radius. Governance should define who can create the identity, who can extend application roles, and who can change sensitive data.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Ownership</h3><p>Separate identity stewardship from application ownership. A central team may own name, legal identity and tax data while Sales, Procurement and Finance own their organizational extensions.</p></div>
+      <div><h3>Authorization</h3><p>Restrict creation, change and search according to role and organizational responsibility. Sensitive bank, tax and personal data deserve stronger controls than ordinary commercial fields.</p></div>
+      <div><h3>Data controller and purpose</h3><p>Where the feature is active, SAP can assign data controllers and processing purposes to BP master data and derive them from organizational context such as company, sales organization or purchasing organization.</p></div>
+      <div><h3>Lifecycle</h3><p>For used BPs, prefer blocking, deletion flags, end-of-purpose handling and archiving according to policy. Do not treat removal of historical identity as ordinary master-data cleanup.</p></div>
+    </div>
+  </section>
+
 
   <section class="research-canvas__inventory" id="bp-restrictions" data-reveal>
     <header>
@@ -159,6 +336,8 @@ tags:
       <table class="study-table__table">
         <thead><tr><th>Constraint</th><th>What it means in practice</th></tr></thead>
         <tbody>
+          <tr><th scope="row">CVI is part of the S/4HANA model</th><td>Customer and supplier application objects must remain synchronized with the Business Partner model. Do not design new interfaces that bypass this consistency layer.</td></tr>
+          <tr><th scope="row">1:1 CVI assignment</th><td>One customer maps to one BP and one supplier maps to one BP. A single BP may still carry both customer and supplier roles for the same real-world party.</td></tr>
           <tr><th scope="row">BP category is fixed</th><td>Person, Organization, or Group is selected at creation. SAP does not allow the BP category to be changed later. If the legal identity was modeled incorrectly, this is not a simple field correction.</td></tr>
           <tr><th scope="row">Grouping assignment is fixed</th><td>The grouping determines the BP number range and cannot be reassigned after creation. Design grouping and migration number policy before loading master data.</td></tr>
           <tr><th scope="row">Role is not extension</th><td>Adding <code>FLCU01</code> does not mean that every sales area exists. Adding <code>FLCU00</code> does not mean that every company code exists. Organizational data must be created for the exact business scope.</td></tr>
@@ -167,6 +346,8 @@ tags:
           <tr><th scope="row">Role removal can be blocked</th><td>A role assignment may be required by existing relationships or application use. Check where-used and process dependencies before removing a role.</td></tr>
           <tr><th scope="row">Do not delete transactional history</th><td>For partners already used in business documents, blocking, deletion flags, data-retention rules and archiving are safer governance tools than trying to erase the identity.</td></tr>
           <tr><th scope="row">Deployment model matters</th><td>Public Cloud exposes released apps, configuration activities and APIs. Private Cloud/on-premise allow a broader classic configuration and extension surface. Do not design a solution around a transaction or enhancement point that the target deployment does not release.</td></tr>
+          <tr><th scope="row">Field-control model can differ</th><td>Classic BP field grouping and cloud-ready/MDG modes do not expose exactly the same control options. Verify which field-control activities are supported before copying an on-premise design into another deployment.</td></tr>
+          <tr><th scope="row">Application roles need their organization</th><td><code>FLVN01</code> still needs purchasing-organization data, <code>FLVN00</code> company-code data, <code>FLCU01</code> sales-area data and <code>FLCU00</code> company-code data. A role without the required organizational extension is incomplete for that process.</td></tr>
         </tbody>
       </table>
     </div>
@@ -198,7 +379,23 @@ tags:
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Start from the wrong document value and name its partner role. Then identify whether the field belongs to general BP data, company-code data, or the exact sales-area view. If the master value is correct but the document is not, move to partner determination, reference/copy behavior, interface input, replication, or an allowed override. Do not change a global BP attribute to repair a sales-area-specific issue.</p>
+      <p>Start from the wrong process result, then name the BP role, organizational level and consumer. If master data is correct but the document is not, move to partner determination, reference/copy behavior, interface input, replication or an allowed override. Do not change a global BP attribute to repair a sales-area- or purchasing-organization-specific issue.</p>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Business Partner troubleshooting symptoms">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>First checks</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Customer cannot be used in Sales</th><td><code>FLCU01</code>, exact sales-area extension, blocks, then Sales partner determination.</td></tr>
+          <tr><th scope="row">Supplier cannot be used in Purchasing</th><td><code>FLVN01</code>, purchasing-organization extension, supplier status, then MM partner schema.</td></tr>
+          <tr><th scope="row">Company-code data missing</th><td><code>FLCU00</code> or <code>FLVN00</code> and the exact company code.</td></tr>
+          <tr><th scope="row">CVI synchronization fails</th><td>Grouping ↔ account-group mapping, number ranges, role-category mapping and mandatory-field conflicts.</td></tr>
+          <tr><th scope="row">Field is hidden or unexpectedly required</th><td>BP role/view, BP field grouping, customer/supplier account-group field status and deployment mode.</td></tr>
+          <tr><th scope="row">Wrong contact person</th><td>BP relationship category, relationship validity and relationship attributes before changing Sales partner data.</td></tr>
+          <tr><th scope="row">Credit check does not use expected BP</th><td>Payer/credit-account logic, <code>UKM000</code> and the required credit-segment data.</td></tr>
+          <tr><th scope="row">Duplicate customer and supplier identities</th><td>Check whether they represent one legal party that should share one BP with both customer and supplier roles.</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -209,7 +406,7 @@ tags:
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> In S/4HANA the Business Partner is the leading identity for customer and supplier master data. I separate four layers: BP category and grouping, BP role, organizational extension, and the process that consumes the data. For Sales I normally expect <code>FLCU01</code> plus the required sales-area data; for FI customer data I use <code>FLCU00</code>. CVI maps BP groupings and roles to customer or supplier account groups and number ranges. Category and grouping are structural choices, so I design them before migration. I also separate BP roles from SD partner functions such as sold-to or payer. When something fails, I check role, organizational level, CVI mapping, field status, and then the document value.</p>
+      <p><strong>60-second answer:</strong> In S/4HANA I treat Business Partner as the shared identity and customer/supplier data as application extensions. I start with BP category and grouping, then the BP role, then the exact organizational level. <code>FLCU01</code> means Sales customer and needs sales-area data; <code>FLCU00</code> supplies FI customer data; <code>FLVN01</code> supplies Purchasing data; <code>FLVN00</code> supplies FI supplier data; and <code>UKM000</code> adds Credit Management. CVI connects BP groupings and role categories with customer/supplier account groups and number assignment. I keep BP roles separate from Sales or Purchasing partner functions and from BP relationships. If something fails, I check role, organizational extension, CVI mapping, field control and then the consuming document or process.</p>
     </div>
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
@@ -235,6 +432,11 @@ tags:
       <div><h3>Customer role / CVI control</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/e2ed3a4751e4462489ff090777beae52.html" target="_blank" rel="noopener">Maintaining Customer Data</a> explains mandatory and optional customer role behavior in CVI.</p></div>
       <div><h3>BP role concept</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/30ff8eff4aa3480c9a0edf88828d7732/4caf8d5377a0ec23e10000000a174cb4.html" target="_blank" rel="noopener">Business Partner Role</a> describes role assignment, validity and where-used behavior.</p></div>
       <div><h3>Credit Management role</h3><p><a href="https://help.sap.com/docs/PRODUCT_ID/7b24a64d9d0941bda1afa753263d9e39/faa59d153bf84212a5f0bbc829f9d364.html" target="_blank" rel="noopener">Credit Master Data of Business Partner</a> explains <code>UKM000</code>, credit profiles and credit-segment data used by Sales credit checks.</p></div>
+      <div><h3>Supplier model</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_BEST_PRACTICES/create-supplier-master-bne-56ccaf9fbaf5bc19a4cd462421191488/purpose" target="_blank" rel="noopener">Create Supplier Master</a> shows the shared BP identity with company-code and purchasing-organization-specific supplier data.</p></div>
+      <div><h3>Number assignment</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/7d6fbd534f22b44ce10000000a174cb4.html" target="_blank" rel="noopener">Number Assignment</a> explains customer/supplier account-group number ranges and organizational uniqueness.</p></div>
+      <div><h3>Contact person relationships</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/0cd54e10713244d0b958039cb746847b.html" target="_blank" rel="noopener">Contact Person</a> documents BP category Person and relationship category <code>BUR001</code>.</p></div>
+      <div><h3>Relationship categories</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/daaf594a02d54b6dad5a7c26a542f61c.html" target="_blank" rel="noopener">Business Partner Relationship Categories</a> documents relationship type, cardinality and validity behavior.</p></div>
+      <div><h3>Data controller and purpose</h3><p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/ed34f7cbe14a4acab071dd6f52b6c022.html" target="_blank" rel="noopener">Implicitly Derive Data Controller and Purpose</a> explains derivation from organizational context.</p></div>
     </div>
   </section>
 </div>
