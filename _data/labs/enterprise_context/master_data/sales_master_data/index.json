@@ -1,15 +1,15 @@
 {
   "id": "INDEX-SD-MASTER-DATA",
   "title": "SAP S/4HANA Sales Master Data Graph",
-  "version": "0.2.0",
-  "updated_at": "2026-09-23",
+  "version": "0.3.0",
+  "updated_at": "2026-09-29",
   "status": "draft",
   "verified": false,
   "summary": {
-    "entity_count": 19,
+    "entity_count": 25,
     "groups": 4,
     "behavior_profiles": 8,
-    "design_goal": "Explain Sales behavior through the data, relationships, conditions, organizational context, and runtime events that mechanisms read.",
+    "design_goal": "Explain Sales and end-to-end logistics behavior through business masters, relationships, source-of-supply data, organizational scope and the runtime mechanisms that consume them.",
     "primary_question": "Which maintained object supplied this value, under which scope and validity, and what does it change downstream?"
   },
   "group_order": [
@@ -117,15 +117,6 @@
       ]
     },
     {
-      "question": "Batch or serial trace is wrong",
-      "path": [
-        "MD.SD.PRODUCT",
-        "BEH.SD.BATCH",
-        "BEH.SD.SERIAL",
-        "Delivery"
-      ]
-    },
-    {
       "question": "Item rejected before pricing",
       "path": [
         "MD.SD.LISTEXCL",
@@ -155,6 +146,34 @@
         "MD.SD.ITEMPROPOSAL",
         "MD.SD.PRODUCT",
         "DOC.SD.SALES_ORDER.ITEM"
+      ]
+    },
+    {
+      "question": "Wrong classification or characteristic value",
+      "path": [
+        "MD.SD.CLASSIFICATION",
+        "MD.SD.PRODUCT",
+        "MD.SD.BATCH",
+        "MD.SD.VC"
+      ]
+    },
+    {
+      "question": "Serial trace is wrong",
+      "path": [
+        "MD.SD.PRODUCT",
+        "MD.SD.SERIAL",
+        "Delivery",
+        "Inventory Management"
+      ]
+    },
+    {
+      "question": "Wrong procurement source",
+      "path": [
+        "MD.SD.PRODUCT",
+        "MD.SD.SUPPLIER",
+        "MD.SD.PIR",
+        "MD.SD.SOURCELIST",
+        "MD.SD.QUOTA"
       ]
     }
   ],
@@ -194,11 +213,12 @@
     "Output parameter determination stays in the mechanism/configuration layer until its deployment-specific rule data model is modeled.",
     "Product compliance/customer compliance is adjacent and should remain its own compliance graph.",
     "Retail assortments/site/article master data remain industry-specific.",
-    "Empties/full-products behavior remains an industry extension until beverage or deposit logistics has its own model."
+    "Empties/full-products behavior remains an industry extension until beverage or deposit logistics has its own model.",
+    "Purchasing contracts and scheduling agreements are long-term procurement documents. They can participate in source determination, but this catalogue does not relabel them as master-data objects."
   ],
   "coverage_audit": {
-    "reviewed_at": "2026-09-23",
-    "conclusion": "Core Sales master data coverage is broad. Remaining gaps are mainly specialized commercial-agreement, recommendation, compliance, and industry layers rather than missing universal Sales master objects.",
+    "reviewed_at": "2026-09-29",
+    "conclusion": "Core Sales master data is broad, and the cross-logistics layer now includes classification, serial identity, suppliers and the main source-of-supply records needed to reason across Sales and Procurement.",
     "core_covered": [
       "Business Partner / Customer",
       "Business Partner multiple addresses and address usage",
@@ -217,9 +237,15 @@
     "adjacent_covered": [
       "Credit master data",
       "Units of measure and quantity constraints",
-      "Batch and classification",
+      "Classification",
+      "Batch master",
+      "Serial number",
       "Sales BOM / product structure",
-      "Variant configuration context"
+      "Variant configuration context",
+      "Business Partner / Supplier",
+      "Purchasing Info Record",
+      "Source List",
+      "Quota Arrangement"
     ],
     "intentional_boundaries": [
       "Sales organization, distribution channel, division, company code, plant, and shipping point are enterprise structure / organizational context, not classic business master data.",
@@ -227,7 +253,8 @@
       "Tax classifications are customer/product attributes and tax results are condition/pricing outcomes; they do not require a second generic Sales master-data entity.",
       "Payment terms, Incoterms, delivery priority, shipping condition, account-assignment groups, and similar values are high-leverage attributes of BP/product/sales views, not separate master objects.",
       "Customer expected price is primarily transactional/inbound-order context and exception handling, not a universal reusable Sales master record.",
-      "Sales deals, promotions, condition contracts, settlement management, omnichannel promotion services, compliance, and Retail assortments are specialized commercial or industry layers and should stay outside the universal core."
+      "Sales deals, promotions, condition contracts, settlement management, omnichannel promotion services, compliance, and Retail assortments are specialized commercial or industry layers and should stay outside the universal core.",
+      "Purchasing contracts and scheduling agreements are long-term purchasing documents. They may be sources of supply but are not modeled here as customer/material-style master data."
     ]
   }
 }
