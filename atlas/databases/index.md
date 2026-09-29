@@ -133,7 +133,7 @@ related:
     <h2>Sources and further reading</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, Manning, 2024; Russian edition: <em>Антипаттерны PostgreSQL и как их избежать</em>, Piter, 2026.</li>
-      <li><a href="https://www.postgresql.org/docs/current/">PostgreSQL 18 documentation</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/">PostgreSQL 18 documentation</a></li>
       <li><a href="https://www.postgresql.org/docs/release/">PostgreSQL release notes</a></li>
       <li><a href="https://github.com/vyruss/postgresql-mistakes">Example code for the book</a></li>
     </ul>
