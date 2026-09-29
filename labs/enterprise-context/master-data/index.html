@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Sales & Logistics Master Data — Core Catalogue and Runtime Use"
-description: "A practical SAP S/4HANA master-data catalogue covering Sales plus adjacent logistics and procurement data: Customer, material/product, classification, serial numbers, equipment, EWM warehouse-product data, supplier, purchasing info records, source lists, quota arrangements, pricing, credit, batches, BOMs, and variant configuration."
+description: "A practical SAP S/4HANA master-data catalogue covering Sales plus adjacent logistics and procurement data: Customer, material/product, classification, dangerous-goods Product Compliance, serial numbers, equipment, EWM warehouse-product data, supplier, purchasing info records, source lists, quota arrangements, pricing, credit, batches, BOMs, and variant configuration."
 permalink: /labs/enterprise-context/master-data/
 status: draft
 verified: false
@@ -56,7 +56,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
-    <p><strong>Use one boundary:</strong> reusable data must be separated from configuration and runtime documents. Business Partner, Customer, Supplier and Product are business masters. Customer-material and Purchasing Info Record are relationship data. Classification and Serial Numbers add reusable cross-logistics identity. Source List and Quota Arrangement control sourcing context. Sales Organization, pricing procedures, purchase contracts, Sales Orders and Purchase Orders belong to different layers.</p>
+    <p><strong>Use one boundary:</strong> reusable data must be separated from configuration and runtime documents. Business Partner, Customer, Supplier and Product are business masters. Customer-material and Purchasing Info Record are relationship data. Classification and Serial Numbers add reusable cross-logistics identity. Dangerous Goods / Product Compliance adds regulatory assessment data that logistics documents consume at runtime. Source List and Quota Arrangement control sourcing context. Sales Organization, pricing procedures, purchase contracts, Sales Orders and Purchase Orders belong to different layers.</p>
     <a href="/labs/enterprise-context/sales-processes/master-data/">Open the full reference graph <span class="material-symbols-outlined" aria-hidden="true">account_tree</span></a>
   </section>
 
@@ -241,6 +241,11 @@ tags:
             <td>Search and selection, batch eligibility, variant configuration, integration attributes</td>
           </tr>
           <tr>
+            <td><strong><a href="/labs/enterprise-context/master-data/dangerous-goods/">Dangerous Goods / Product Compliance</a></strong></td>
+            <td>Compliance relevance, compliance view, compliance purpose, regulation version, released dangerous-goods classification, packaged-product context</td>
+            <td>Transport permissibility, mixed-loading checks, logistics blocks/warnings, regulatory descriptions and transport output</td>
+          </tr>
+          <tr>
             <td><strong>Serial Number</strong></td>
             <td>Material serial-number profile, material + serial identity, status, stock/location context, equipment link where used</td>
             <td>Individual-unit traceability across goods movements, delivery, service, and audit</td>
@@ -341,7 +346,7 @@ tags:
       <div>
         <span>03</span>
         <h4>ATP and shipping</h4>
-        <p>Product sales/plant data, Customer Material, ship-to/address data, units of measure, availability and loading fields, plus Classification, Batch and Serial Number data where relevant.</p>
+        <p>Product sales/plant data, Customer Material, ship-to/address data, units of measure, availability and loading fields, plus Classification, Dangerous Goods / Product Compliance, Batch and Serial Number data where relevant.</p>
       </div>
       <div>
         <span>04</span>
@@ -351,7 +356,7 @@ tags:
       <div>
         <span>05</span>
         <h4>Delivery</h4>
-        <p>Ship-to and address, Product/UoM data, loading and logistics fields, Classification, Batch Master, Serial Numbers, and document partners carried into execution.</p>
+        <p>Ship-to and address, Product/UoM data, loading and logistics fields, Classification, Dangerous Goods / Product Compliance, Batch Master, Serial Numbers, and document partners carried into execution.</p>
       </div>
       <div>
         <span>06</span>
