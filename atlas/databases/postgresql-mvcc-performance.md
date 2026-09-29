@@ -143,11 +143,11 @@ related:
     <h2>Sources</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, chapter 6 and Appendix B.</li>
-      <li><a href="https://www.postgresql.org/docs/current/mvcc.html">PostgreSQL: Concurrency Control</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/routine-vacuuming.html">PostgreSQL: Routine Vacuuming</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/runtime-config-resource.html">PostgreSQL: Resource Consumption</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/monitoring-stats.html">PostgreSQL: Statistics Collector and Views</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/pgstatstatements.html">PostgreSQL: pg_stat_statements</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/mvcc.html">PostgreSQL: Concurrency Control</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/routine-vacuuming.html">PostgreSQL: Routine Vacuuming</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/runtime-config-resource.html">PostgreSQL: Resource Consumption</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/monitoring-stats.html">PostgreSQL: Statistics Collector and Views</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/pgstatstatements.html">PostgreSQL: pg_stat_statements</a></li>
     </ul>
   </div>
 
