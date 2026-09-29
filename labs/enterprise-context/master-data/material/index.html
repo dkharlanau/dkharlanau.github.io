@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP S/4HANA Material Master Data"
-description: "A focused SAP S/4HANA Material master-data page covering sales, plant, MRP, units, classification, batch, serial, EWM and runtime logistics behavior."
+description: "A focused SAP S/4HANA Material master-data page covering sales, plant, MRP, units, classification, foreign trade, batch, serial, EWM and runtime logistics behavior."
 permalink: /labs/enterprise-context/master-data/material/
 status: draft
 verified: false
@@ -13,6 +13,7 @@ tags:
   - sap-s4hana
   - sap-sd
   - sap-mm
+  - international-trade
   - material-master
   - master-data
 ---
@@ -32,14 +33,14 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP S/4HANA / Cross-Logistics / Material Master</p>
       <h1>Material</h1>
-      <p>Material master data is one of the main control surfaces in SAP Logistics. The same material can carry commercial, planning, warehouse, accounting and execution attributes. A Lead should never answer only “check MM03”. The useful answer names the view, field, organizational scope and runtime mechanism that consumes it.</p>
+      <p>Material master data is one of the main control surfaces in SAP Logistics. The same material can carry commercial, planning, warehouse, accounting and international-trade attributes. A Lead should never answer only “check MM03”. The useful answer names the view or classification object, field, organizational scope, validity and runtime mechanism that consumes it.</p>
       <a class="research-canvas__button" href="#material-views">Map the views <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Assessment anchor</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Material</strong><small>Shared identity</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>Views</strong><small>Org-specific behavior</small></div>
-      <em>Material → view → field → determination → document.</em>
+      <em>Material → view / classification → field → determination → document.</em>
     </div>
   </header>
 
@@ -54,9 +55,14 @@ tags:
           <tr><td>Plant / MRP</td><td>MRP type, lot size, procurement type, strategy group, availability check</td><td>MRP, ATP/aATP, procurement and production</td></tr>
           <tr><td>Plant / Shipping</td><td>Loading group, transportation-related fields</td><td>Shipping-point and route/scheduling context</td></tr>
           <tr><td>Accounting / Valuation</td><td>Valuation class, price control and valuation data</td><td>Inventory valuation and account determination</td></tr>
+          <tr><td>International Trade Classification</td><td>Commodity code, customs tariff number, control class, numbering scheme, classification country and validity</td><td>Cross-border logistics, customs, trade compliance and Intrastat</td></tr>
           <tr><td>Warehouse / EWM</td><td>Warehouse-specific product settings and handling controls where used</td><td>Putaway, picking, replenishment and warehouse execution</td></tr>
         </tbody>
       </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">info</span>
+      <p><strong>S/4HANA boundary:</strong> current International Trade classification is not just another editable field in a plant view. Product classification is maintained through its own numbering schemes, validity and classification apps. The product master can display the result, but the classification lifecycle has its own owner.</p>
     </div>
   </section>
 
@@ -66,26 +72,279 @@ tags:
       <div><h3>Classification</h3><p>Classes and characteristics describe materials and other objects with reusable attributes used for search, batch selection, configuration and integration.</p></div>
       <div><h3>Batch and Serial</h3><p>Batch identifies a lot; serial number identifies one individual unit. A material can use either or both depending on traceability requirements.</p></div>
       <div><h3>Customer / Supplier relationship</h3><p>Customer Material and Purchasing Info Record add relationship-specific data without changing the generic material truth.</p></div>
+      <div><h3>International Trade</h3><p>Trade classification links the product to legal code systems. It is country/numbering-scheme and validity aware, so it should not be reduced to one permanent “statistical number”.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="foreign-trade-classification" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Foreign trade classification</p>
+      <h2>The old question “Where is STAWN?” is too small for S/4HANA.</h2>
+      <p>In ECC, consultants often learned one material field as the statistical or commodity-code field. In current S/4HANA International Trade, the stronger mental model is a classification lifecycle: maintain a legal code system, make its content valid, assign the numbering scheme to the relevant country or region, classify the product for a validity period, and let the downstream trade process consume that classification.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Numbering scheme</h4><p>Defines the legal or statistical code system, for example an EU commodity-code scheme.</p></div>
+      <div><span>02</span><h4>Numbering-scheme content</h4><p>Contains the actual codes, descriptions, validity and, where relevant, customs units.</p></div>
+      <div><span>03</span><h4>Country / region assignment</h4><p>Connects the numbering scheme to the countries or regions for which it is relevant.</p></div>
+      <div><span>04</span><h4>Product classification</h4><p>Assigns the code to the product time-dependently. Classification can be maintained in mass.</p></div>
+      <div><span>05</span><h4>Runtime consumption</h4><p>Cross-border logistics, customs, compliance and statistical reporting read the classification needed for their legal context.</p></div>
+      <div><span>06</span><h4>Audit and reclassification</h4><p>When the tariff changes, a new valid assignment can replace the old one without losing classification history.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Terminology that matters</p>
+      <h2>Commodity code, customs tariff number, ECCN and statistical value are different objects.</h2>
+      <p>This distinction is a good Lead-level assessment check. If these terms are mixed together, design and troubleshooting quickly move to the wrong owner.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="International trade classification concepts">
+      <table class="study-table__table">
+        <thead><tr><th>Concept</th><th>What it represents</th><th>Do not confuse it with</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Commodity code</strong></td>
+            <td>A foreign-trade classification number inside a commodity-code numbering scheme. It is commonly used for statistical and customs-related classification. In the EU, the Combined Nomenclature is a typical example.</td>
+            <td>One universal product code valid for every country and every year.</td>
+          </tr>
+          <tr>
+            <td><strong>Customs tariff number</strong></td>
+            <td>A separate International Trade nomenclature. S/4HANA supports its own numbering schemes and can also model tariff numbers that depend on product end use.</td>
+            <td>The commodity-code object. They are related, but SAP models them separately.</td>
+          </tr>
+          <tr>
+            <td><strong>Control class</strong></td>
+            <td>A legal-control classification such as an Export Control Classification Number (ECCN) where the legal regulation requires it.</td>
+            <td>A customs/statistical tariff code.</td>
+          </tr>
+          <tr>
+            <td><strong>Country / region of origin</strong></td>
+            <td>An origin attribute used by trade and customs processes.</td>
+            <td>The tariff or commodity classification. Origin answers “where”; classification answers “what under this nomenclature”.</td>
+          </tr>
+          <tr>
+            <td><strong>Statistical value</strong></td>
+            <td>A monetary value required for statistical reporting such as Intrastat. In standard S/4HANA pricing, condition type <code>GRWR</code> can calculate it.</td>
+            <td>The commodity code. One classifies the product; the other values the movement for statistics.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ECC to S/4HANA</p>
+      <h2>Do not migrate the old field mindset as the new architecture.</h2>
+      <p>Legacy fields can still matter for migration, compatibility or localization, but they should not be treated as the design authority for the current S/4HANA International Trade classification model.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="ECC and S/4HANA foreign trade classification comparison">
+      <table class="study-table__table">
+        <thead><tr><th>Classic mental model</th><th>Current S/4HANA International Trade model</th><th>Lead implication</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>MARC-STAWN</code> / plant-level statistical-number thinking</td>
+            <td>Product classification is represented by dedicated International Trade data. SAP exposes product commodity codes through CDS <code>I_ProdCommodityCodeDEX</code>, with <code>/SAPSLL/MARITC</code> as the main persistence table in the documented extraction mapping.</td>
+            <td>Do not build a new interface or diagnostic only around the legacy field.</td>
+          </tr>
+          <tr>
+            <td>Maintain the value directly in a material screen</td>
+            <td>Dedicated Fiori apps classify and reclassify products time-dependently. Product master functions can display current International Trade classification.</td>
+            <td>Separate product maintenance from trade-classification governance.</td>
+          </tr>
+          <tr>
+            <td>One number belongs to the material</td>
+            <td>Classification depends on numbering scheme, country/region and validity date.</td>
+            <td>Always ask “which scheme, country and key date?” before saying the code is wrong.</td>
+          </tr>
+          <tr>
+            <td>Foreign Trade means one import/export tab</td>
+            <td>International Trade separates commodity codes, customs tariff numbers, control classes, compliance and Intrastat functions.</td>
+            <td>Find the legal object and the process owner before changing data.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Localization caveat:</strong> some country-specific solutions can still expose local foreign-trade fields in product/material maintenance. Do not generalize a localization field into the generic S/4HANA International Trade architecture.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration and master-data setup</p>
+      <h2>Configure the code system first; classify products second.</h2>
+      <p>A product cannot be classified correctly if the numbering scheme or its content is missing, inactive, mapped to the wrong country, or valid for the wrong period.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define numbering scheme</h4><p>Define the classification framework for commodity codes. Customs tariff numbers have their own corresponding setup.</p></div>
+      <div><span>02</span><h4>Define scheme content</h4><p>Choose how the codes are supplied: maintained locally, loaded from a data provider, or transferred from SAP GTS.</p></div>
+      <div><span>03</span><h4>Define format and UoM system</h4><p>Maintain number length and the Unit of Measure System when supplementary/customs units are part of the content.</p></div>
+      <div><span>04</span><h4>Activate content</h4><p>Only valid and activated content should be used for product classification.</p></div>
+      <div><span>05</span><h4>Assign scheme to country/region</h4><p>This connects the legal code system to the classification countries that use it.</p></div>
+      <div><span>06</span><h4>Classify and reclassify</h4><p>Assign codes to products with validity dates. Plan annual tariff changes before the new legal period starts.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">public</span>
+      <p><strong>EU example:</strong> SAP Best Practices uses numbering-scheme content <code>EU01</code> as an example for the Combined Nomenclature of the European Union. Treat delivered content IDs as implementation content, not as a reason to hard-code one scheme into integrations.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Fiori operations</p>
+      <h2>Use the classification apps for the classification lifecycle.</h2>
+      <p>Exact app availability and roles depend on deployment and release. The following IDs are useful assessment anchors for current S/4HANA International Trade.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="International Trade Fiori apps">
+      <table class="study-table__table">
+        <thead><tr><th>App</th><th>App ID</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Manage Commodity Codes</td><td><code>F2516</code></td><td>Maintain commodity-code master content when it is not supplied only by an external provider.</td></tr>
+          <tr><td>Classify Products - Commodity Codes</td><td><code>F2151</code></td><td>Assign a commodity code time-dependently to unclassified products and support mass classification.</td></tr>
+          <tr><td>Reclassify Products - Commodity Codes</td><td><code>F2152</code></td><td>Replace an existing product classification with another time-dependent assignment.</td></tr>
+          <tr><td>Display Classified Products - International Trade</td><td><code>F3789</code></td><td>Review current and historical classifications, remarks and change information.</td></tr>
+          <tr><td>Display International Trade Classification</td><td><code>F3935</code> in current Public Cloud documentation</td><td>Display active classification information from the product context.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">admin_panel_settings</span>
+      <p><strong>Authorizations:</strong> in current S/4HANA Cloud Public Edition content, the main role templates are <code>SAP_BR_TRD_CLS_SPECIALIST</code> and <code>SAP_BR_ADMINISTRATOR_SLL</code>. Private Cloud/on-premise catalogs and role IDs differ, so verify the target release instead of copying Cloud roles into another deployment.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Time dependency</p>
+      <h2>Validity is part of the classification key.</h2>
+      <p>Tariff content changes over time. A product that was correctly classified last year can require a different code next year. S/4HANA therefore supports time-dependent assignment and reclassification instead of forcing the new code to overwrite historical meaning.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Future-dated changes</h3><p>Prepare the next classification before the legal effective date and make the new assignment valid from that date.</p></div>
+      <div><h3>History</h3><p>Use display/history functions to explain which code was valid on the date of the business transaction.</p></div>
+      <div><h3>Mass reclassification</h3><p>Use mass functions when an annual tariff update changes many products. Do not treat hundreds of manual MM02 changes as a control process.</p></div>
+      <div><h3>Audit evidence</h3><p>Keep classification remarks, change history and ownership visible because tariff classification is a legal master-data decision.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Intrastat and statistical value</p>
+      <h2>Classification and value meet in reporting, but they come from different controls.</h2>
+      <p>Intrastat needs the correct product classification and the correct statistical value. When the report is wrong, first identify which of those two inputs is wrong.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Product classification</h4><p>The valid commodity code comes from International Trade classification for the relevant numbering scheme, country and date.</p></div>
+      <div><span>02</span><h4>Movement and document context</h4><p>Quantity, partner, countries, dates and other logistics data come from the relevant procurement, delivery and billing flow.</p></div>
+      <div><span>03</span><h4>Statistical value</h4><p>Standard condition type <code>GRWR</code> can calculate the statistical value in pricing and place it in <code>KOMP-GKWRT</code>.</p></div>
+      <div><span>04</span><h4>Document persistence</h4><p>SAP documents that the statistical value is stored in the respective billing or purchasing documents.</p></div>
+      <div><span>05</span><h4>Intrastat declaration</h4><p>The declaration combines the required transaction data for the reporting period.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Assessment correction:</strong> do not say that all International Trade data is maintained or stored only at delivery level. Product classification is master data, while statistical value is a pricing-derived document value and SAP explicitly supports it in both Sales billing and Purchasing contexts.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">AI-assisted classification</p>
+      <h2>Use proposals to reduce search work, not to remove legal ownership.</h2>
+      <p>Starting with S/4HANA 2023 FPS03, SAP supports trade-classification proposals for commodity codes and customs tariff numbers using SAP HANA fuzzy search over similarly described products. Current Cloud content also exposes classification decisions created with agent assistance.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>What the system can propose</h3><p>The system compares an unclassified product with previously classified products and can calculate proposal scores from similar descriptions.</p></div>
+      <div><h3>What still needs governance</h3><p>A similarity score is not legal proof that a tariff classification is correct. The trade specialist still needs controlled source data, review and an auditable decision.</p></div>
+      <div><h3>Where AI helps</h3><p>Use proposals for candidate ranking, exception queues and faster review of large product sets. Measure acceptance quality and rework, not only how many suggestions were generated.</p></div>
+      <div><h3>Where AI should stop</h3><p>Do not let an opaque model update legal classifications directly without role control, effective dates, traceability and a defined correction process.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration boundary</p>
+      <h2>Choose one owner for tariff content and one controlled path into S/4HANA.</h2>
+      <p>The numbering-scheme content can be local, supplied by a data provider or transferred from SAP GTS. That is an architectural choice. Avoid maintaining the same legal code list independently in S/4HANA, middleware, GTS and a customs broker without clear ownership.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>External data provider</h3><p>Use governed content integration when tariff updates are supplied externally. Validate versions, activation and application logs before classifying products.</p></div>
+      <div><h3>SAP GTS</h3><p>When GTS owns trade content or compliance, make the distribution direction explicit and avoid parallel manual maintenance.</p></div>
+      <div><h3>APIs and extraction</h3><p>For integrations, prefer released APIs/CDS where available. SAP documents commodity-code extraction with <code>I_ProdCommodityCodeDEX</code> instead of requiring consumers to read legacy material fields.</p></div>
+      <div><h3>Transportation Management</h3><p>TM can have its own commodity-code source and apps for transportation. Confirm whether TM consumes product classification or a TM-specific code before diagnosing “the commodity code”.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Lead diagnosis</p><h2>Trace the first wrong derived value.</h2></header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Name the symptom</h4><p>Wrong item category, ATP result, plant, shipping point, source, valuation or warehouse behavior are different paths.</p></div>
-      <div><span>02</span><h4>Name the view</h4><p>Sales, plant, MRP, accounting and warehouse data have different organizational scopes.</p></div>
-      <div><span>03</span><h4>Name the field</h4><p>Find the exact master-data input that can influence the failed result.</p></div>
+      <div><span>01</span><h4>Name the symptom</h4><p>Wrong item category, ATP result, plant, shipping point, source, valuation, commodity code or warehouse behavior are different paths.</p></div>
+      <div><span>02</span><h4>Name the view or scheme</h4><p>Sales, plant, MRP, accounting, warehouse and International Trade data have different scopes. For trade classification add numbering scheme, country and key date.</p></div>
+      <div><span>03</span><h4>Name the field or assignment</h4><p>Find the exact master-data input that can influence the failed result.</p></div>
       <div><span>04</span><h4>Trace the mechanism</h4><p>Configuration and runtime logic interpret the field; the material master does not make every decision by itself.</p></div>
-      <div><span>05</span><h4>Check blast radius</h4><p>A shared material change can affect Sales, Procurement, MRP, Inventory, EWM, Production and Finance.</p></div>
+      <div><span>05</span><h4>Check blast radius</h4><p>A shared material or classification change can affect Sales, Procurement, MRP, Inventory, EWM, Production, Finance, customs and reporting.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="foreign-trade-diagnostics" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Foreign trade diagnostics</p>
+      <h2>Start with scheme, country and date before changing the product.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>No commodity code available</h3><p>Check whether the numbering-scheme content exists, is activated and is valid for the required period before investigating the product assignment.</p></div>
+      <div><h3>Product is unclassified</h3><p>Check the classification country, numbering scheme and key date. A code can exist globally while no valid product assignment exists.</p></div>
+      <div><h3>Old code still appears</h3><p>Check validity periods and reclassification history. Do not overwrite history simply to make today’s screen look correct.</p></div>
+      <div><h3>Intrastat value is wrong</h3><p>Separate classification from valuation. If the code is correct, inspect <code>GRWR</code>, pricing, Incoterms and the statistical-value document flow.</p></div>
+      <div><h3>Code differs by country</h3><p>That can be correct. Product classification is legal-context dependent; compare numbering schemes rather than expecting one global number.</p></div>
+      <div><h3>TM shows another code</h3><p>Confirm the TM commodity-code source. A correct International Trade classification does not prove that TM is configured to consume the same source.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment recall</p><h2>Do not say “material master”; say which view and why.</h2></header>
+    <header>
+      <p class="research-canvas__eyebrow">Lead design decisions</p>
+      <h2>Classification is a governed decision, not a field-filling task.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Ownership</h3><p>Define who owns the legal code content, who classifies products, who approves exceptions and who resolves blocked trade documents.</p></div>
+      <div><h3>Content source</h3><p>Choose local maintenance, a data provider or SAP GTS deliberately. The choice affects update speed, licensing, monitoring and recovery.</p></div>
+      <div><h3>Annual change process</h3><p>Plan future-dated tariff updates, mass reclassification, testing and cutover before the new tariff period becomes legally effective.</p></div>
+      <div><h3>Migration</h3><p>Map legacy fields to the S/4 numbering-scheme model. Validate country and validity semantics instead of copying old field values blindly.</p></div>
+      <div><h3>Integration contract</h3><p>Expose stable business keys and validity. Do not make external systems depend on internal tables when a released interface exists.</p></div>
+      <div><h3>Control evidence</h3><p>Keep change history and reviewer evidence because tariff classification can affect duties, declarations and legal controls.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment recall</p><h2>Do not say “material master”; say which view, classification and why.</h2></header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Material master data is cross-functional. Sales-area views provide commercial inputs, plant and MRP views control planning and availability, logistics fields influence shipping and warehouse execution, and accounting views control valuation. For a problem I identify the first wrong document value, map it to the exact material field and organizational view, then trace the configuration or process that consumes that field. I also check more specific relationship data before changing a shared material default.</p>
+      <p><strong>60-second answer:</strong> Material master data is cross-functional. Sales-area views provide commercial inputs, plant and MRP views control planning and availability, logistics fields influence shipping and warehouse execution, and accounting views control valuation. For International Trade I do not treat the old statistical-number field as the design model. I identify the numbering scheme, classification country, validity date and product assignment, then separate commodity code, customs tariff number, legal-control class and statistical value. If the result is wrong, I trace the first wrong source and the process that consumed it before changing shared product data.</p>
     </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Likely follow-up</h4>
+        <p><strong>Why is S/4HANA better for tariff changes?</strong> Product assignments are time-dependent and can be reclassified in mass, so a new legal period does not require destroying the previous classification history.</p>
+      </div>
+      <div>
+        <h4>Likely follow-up</h4>
+        <p><strong>Is GRWR the commodity code?</strong> No. <code>GRWR</code> is a pricing condition used to determine statistical value. The commodity code is product classification master data.</p>
+      </div>
+    </div>
+
     <nav class="ecg-context-links" aria-label="Material related pages">
       <span>Related</span>
       <a href="/labs/enterprise-context/master-data/product/">Product / Material deep dive</a>
@@ -94,5 +353,35 @@ tags:
       <a href="/labs/enterprise-context/master-data/serial-numbers/">Serial Numbers</a>
       <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
     </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="material-sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>Current SAP product behavior is checked against SAP Help.</h2>
+      <p>Release-sensitive details on apps, roles and AI-assisted proposals should still be checked in the target system release during implementation.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Classification model</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/dfb1ceeb602c4a1dbde1171e3493209e/a373eb5758a01370e10000000a44147b.html">SAP Help — International Trade Classification</a></p>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/dfb1ceeb602c4a1dbde1171e3493209e/63671488220b407ba5ad381bcaf960b6.html">SAP Help — Customs Tariff Numbers</a></p>
+      </div>
+      <div>
+        <h3>Commodity-code setup</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/dfb1ceeb602c4a1dbde1171e3493209e/4618b192b2e146f0af816aacd30d87a3.html">SAP Help — Define Numbering Scheme Content for Commodity Codes</a></p>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/dfb1ceeb602c4a1dbde1171e3493209e/0b1ba157318b3925e10000000a4450e5.html">SAP Help — Classify Products - Commodity Codes</a></p>
+      </div>
+      <div>
+        <h3>Product data model</h3>
+        <p><a href="https://help.sap.com/docs/SAP_SUS_SDI/b15a1be1941c44d4be60ba206536283d/ed9973298f6f4bf58bac9a9674dfec53.html">SAP Help — Product extraction and commodity-code mapping</a></p>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/6dd96f68c48e4c139cda7b1bac5599b1/1e98bee50fcf4b9fb1a6adbd990ad75a.html">SAP Help — Display Classified Products - International Trade</a></p>
+      </div>
+      <div>
+        <h3>Reporting and assisted classification</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/dfb1ceeb602c4a1dbde1171e3493209e/59358f9f25d8459ca9ca9ecadc6887d3.html">SAP Help — Calculate Statistical Value</a></p>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/6dd96f68c48e4c139cda7b1bac5599b1/a373eb5758a01370e10000000a44147b.html">SAP Help — International Trade Classification in S/4HANA Cloud</a></p>
+      </div>
+    </div>
   </section>
 </div>

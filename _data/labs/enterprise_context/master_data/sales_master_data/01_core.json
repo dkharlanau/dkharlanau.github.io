@@ -382,6 +382,10 @@
         {
           "name": "minimum order / delivery quantity and delivery unit",
           "why": "Shape quantity acceptance and delivery rounding."
+        },
+        {
+          "name": "international trade classification",
+          "why": "Links the product to time-dependent commodity, tariff and control classifications by numbering scheme/country for cross-border processes."
         }
       ],
       "consumed_by": [
@@ -393,7 +397,9 @@
         "route/scheduling",
         "billing/account determination",
         "text determination",
-        "batch determination"
+        "batch determination",
+        "International Trade classification",
+        "Intrastat"
       ],
       "writes_or_influences": [
         "sales item category input",
@@ -402,7 +408,9 @@
         "availability context",
         "pricing keys",
         "quantity/UoM behavior",
-        "product grouping"
+        "product grouping",
+        "trade classification context",
+        "Intrastat classification input"
       ],
       "precedence": [
         "Global product data is not the same as sales-organization/distribution-channel data or plant data.",
@@ -426,10 +434,12 @@
           "MAKT",
           "MVKE",
           "MARC",
-          "MARM"
+          "MARM",
+          "/SAPSLL/MARITC"
         ],
         "released_cds": [
-          "Product Sales Data / A_ProductSalesDelivery"
+          "Product Sales Data / A_ProductSalesDelivery",
+          "I_ProdCommodityCodeDEX"
         ],
         "notes": [
           "Use released views/APIs for integrations where available; direct-table thinking is an implementation diagnostic, not the architecture contract."
@@ -441,12 +451,14 @@
         "ATP not executed as expected",
         "price access misses a product key",
         "delivery quantity is rounded or rejected unexpectedly",
-        "sales status blocks the item"
+        "sales status blocks the item",
+        "commodity code missing, expired or wrong for the classification country/key date"
       ],
       "lead_questions": [
         "Which product view owns the field: global, sales, plant or UoM?",
         "Is the product still the one originally entered, or was it substituted?",
-        "Which downstream mechanism consumes this field?"
+        "Which downstream mechanism consumes this field?",
+        "For International Trade, which numbering scheme, classification country and key date apply?"
       ],
       "relations": [
         {
@@ -483,7 +495,11 @@
       "source_refs": [
         "SRC-SDMD-PRODUCT-AREAS",
         "SRC-SDMD-PRODUCT-SALES-DATA",
-        "SRC-SDMD-ITEM-CATEGORY"
+        "SRC-SDMD-ITEM-CATEGORY",
+        "SRC-SDMD-INTTRADE-CLASSIFICATION",
+        "SRC-SDMD-INTTRADE-NUMBERING",
+        "SRC-SDMD-INTTRADE-DATAMODEL",
+        "SRC-SDMD-INTRASTAT-STATVALUE"
       ]
     },
     {
