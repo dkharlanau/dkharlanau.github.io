@@ -1,18 +1,20 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Sales Item Proposal"
-description: "A practical deep dive into Sales Item Proposal in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+title: "SAP Sales Item Proposal — Static, Dynamic & Intelligent Product Proposal"
+description: "A practical SAP S/4HANA Sales guide to Item Proposal: VA51, customer assignment, Dynamic Product Proposal, runtime behavior, tables, diagnostics, integration limits and Lead-level design choices."
 permalink: /labs/enterprise-context/master-data/item-proposal/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
   - master-data
+  - item-proposal
+  - product-proposal
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -30,78 +32,361 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.ITEMPROPOSAL</p>
       <h1>Sales Item Proposal</h1>
-      <p>An item proposal is a reusable shopping list for sales order entry. It is useful when a customer repeatedly orders the same set of products. Instead of entering each line manually, the user can call a proposal and copy selected items and quantities into the document.</p>
+      <p>An Item Proposal is a reusable basket for Sales order entry. It works well when a customer repeatedly buys the same group of products and the order desk should not type the same materials every time. The important design question is not only how to create one in VA51, but whether the business needs a fixed basket, a dynamic proposal, or a different mechanism completely.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.ITEMPROPOSAL</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>relationship record</strong><small>Data class</small></div>
-      <em>Proposal, sales area, products, proposed quantities and customer assignment where used.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>VA51 / VA52 / VA53</strong><small>Maintain proposal</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>KNVV-VSORT</strong><small>Customer assignment</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Category D</strong><small>Sales document category</small></div>
+      <em>Think of it as controlled order-entry assistance, not as pricing, ATP, substitution, or entitlement logic.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>This is an entry shortcut, not a determination engine.</h2>
+      <h2>A saved basket and a recommendation engine are two different designs.</h2>
+      <p>SAP uses similar language around Item Proposal and Product Proposal, but there are two useful mental models. A classic Item Proposal is an explicit list maintained as a Sales document. Dynamic Product Proposal can build a customer-specific list from several sources such as order history, listing, exclusion, item proposals and customer-material information.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Proposal, sales area, products, proposed quantities and customer assignment where used.</p>
-    </div>
+
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Proposal identifier, products/materials, proposed quantities, units, sales area and customer assignment or usage context.</p>
+        <h3>Static Item Proposal</h3>
+        <p>A person maintains the basket. The proposal contains products and optional quantities. It is stable, simple to explain, easy to audit, and useful when repeat orders are predictable.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>Item proposal data is not cross-selling and not a material determination rule. It is an explicit reusable list, whereas cross-selling recommends additional products and material determination substitutes a requested product.</p>
+        <h3>Dynamic Product Proposal</h3>
+        <p>The system determines candidate products through a procedure and access sequence. It is better when the proposal should react to order history, assortment rules, exclusions, or several customer-specific sources.</p>
       </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Lead rule:</strong> do not build dynamic logic just because it is available. If a customer orders the same 12 products every week, a controlled static proposal may be easier to own than a complex determination procedure. If the basket changes with history, assortment or commercial rules, static maintenance becomes the wrong tool.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Where it fits</p>
+      <h2>Use it where repetitive entry is the real problem.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Good fit</h3>
+        <p>Inside Sales, telephone orders, repeat wholesale orders, regular replenishment baskets, opening-order packs, and customer-specific product sets where users still control the final order.</p>
+      </div>
+      <div>
+        <h3>Poor fit</h3>
+        <p>Automated inbound orders, hard product-substitution rules, mandatory assortment restrictions, complex recommendations, or scenarios where another system already sends the final order items.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+      <p><strong>Project lesson:</strong> an Item Proposal saves keystrokes, but it also creates master-data ownership. Someone must decide who owns the basket, when it expires, how obsolete products are removed, and whether quantities are still meaningful. Without ownership, proposal lists slowly turn into historical clutter.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classic setup</p>
+      <h2>The static proposal is a special Sales document.</h2>
+      <p>In classic SD, the proposal is created through the Sales document framework. Many standard systems use an Item Proposal document type such as <strong>MS</strong>; customer systems may copy or rename it. The important control is the Sales document category <strong>D — Item Proposal</strong>, not the literal document-type key.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define the proposal document type</h4><p>Review the Item Proposal document type in <strong>VOV8</strong>. A typical proposal type has document category D and no normal delivery or billing follow-on because the proposal is an entry object, not an order to fulfil.</p></div>
+      <div><span>02</span><h4>Allow it for the Sales area</h4><p>If your design restricts document types by Sales area, maintain the assignment in <strong>OVAZ</strong>. Do not diagnose VA51 first if the document type itself is not allowed for the Sales organization, distribution channel and division.</p></div>
+      <div><span>03</span><h4>Create the basket</h4><p>Use <strong>VA51</strong>, enter Item Proposal Type and Sales area, then maintain materials and proposed quantities. A description can be used as a search term. The system assigns a proposal number when you save.</p></div>
+      <div><span>04</span><h4>Assign it to the customer</h4><p>Maintain the proposal in the customer Sales-area data. In S/4HANA this is normally handled through Business Partner customer role <strong>FLCU01</strong>; classic systems may use XD02/VD02. The technical customer field is <strong>KNVV-VSORT</strong>.</p></div>
+      <div><span>05</span><h4>Use it during order entry</h4><p>In VA01, use <strong>Propose Items</strong>. The user can copy the whole list with quantities, without quantities, or use a selection list and choose only the required lines.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>The proposal helps create items; it does not continue to own them.</h2>
-      <p>The proposal supports faster order or quotation entry by presenting a reusable set of products and proposed quantities. The user selects or copies the relevant lines into the document. After that, those lines behave as normal Sales items: item-category, pricing, ATP, delivery, and billing logic belong to their own mechanisms.</p>
+      <p class="research-canvas__eyebrow">Runtime</p>
+      <h2>The proposal explains how an item entered the order. It does not own the item afterwards.</h2>
+      <p>This boundary is useful in production support. A proposal can put a material and quantity in front of the user, but it does not decide the final item category, price, confirmed date, plant, route, delivery block, billing relevance, or account determination.</p>
     </header>
+
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Open the right proposal</h4><p>Confirm the proposal identifier, Sales context, and any customer assignment used to make the list available.</p></div>
-      <div><span>02</span><h4>Read the maintained list</h4><p>Check which products, quantities, and units the proposal actually contains instead of diagnosing the finished order first.</p></div>
-      <div><span>03</span><h4>Copy selected lines</h4><p>The proposal supplies entry data. The user can select the relevant items; the proposal does not independently create a complete Sales transaction.</p></div>
-      <div><span>04</span><h4>Hand ownership to the order</h4><p>Once copied, troubleshoot price, confirmation, delivery, or billing from the normal Sales-order mechanisms. The proposal no longer explains those downstream results.</p></div>
+      <div><span>01</span><h4>Resolve the customer context</h4><p>Start with sold-to party and Sales area. For a static proposal, check whether the expected proposal is assigned to that exact customer Sales-area segment.</p></div>
+      <div><span>02</span><h4>Present proposal lines</h4><p>The user sees candidate materials and, where maintained, proposed quantities. A static proposal can also be called manually by proposal number.</p></div>
+      <div><span>03</span><h4>Convert a proposal line into an order item</h4><p>When the user copies or enters quantity for a proposed material, SAP creates a normal Sales document item. From here the usual Sales logic starts to matter.</p></div>
+      <div><span>04</span><h4>Hand off to normal SD determination</h4><p>Item-category determination, pricing, ATP/aATP, plant determination, shipping, schedule lines, delivery and billing are diagnosed from their own configuration and master data.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+      <p><strong>Useful diagnostic split:</strong> “the product was not proposed” is an Item/Product Proposal problem. “the product was proposed but has the wrong price or confirmation” is normally no longer an Item Proposal problem.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Dynamic Product Proposal</p>
+      <h2>Dynamic proposal is procedure-driven and can combine several sources.</h2>
+      <p>The dynamic framework is useful when a single saved basket is too rigid. SAP can build the proposal from several source types and define the order in which those sources are evaluated.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Customer procedure</h3>
+        <p>The customer Sales-area data can hold the Product Proposal customer procedure. The technical field is <strong>KNVV-PVKSM</strong>. This is not the same field as the static Item Proposal assignment in KNVV-VSORT.</p>
+      </div>
+      <div>
+        <h3>Document procedure</h3>
+        <p>The Sales document type can contribute a document procedure. Together with the customer procedure, this helps determine which Product Proposal procedure is used during online processing.</p>
+      </div>
+    </div>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define customer procedure</h4><p>Classify the customer for Product Proposal processing.</p></div>
+      <div><span>02</span><h4>Define document procedure</h4><p>Classify the Sales document type so different order types can use different proposal behavior.</p></div>
+      <div><span>03</span><h4>Maintain sources</h4><p>Typical sources include order history, listed materials, excluded materials, Item Proposal and Customer-Material Info Records. Customer-specific sources can also be added.</p></div>
+      <div><span>04</span><h4>Build the procedure and access sequence</h4><p>Control which sources are called, in which sequence, and how their results are combined.</p></div>
+      <div><span>05</span><h4>Choose online or background access</h4><p>For several or expensive sources, background generation can reduce online load. Online determination is useful where fresh context matters more than precomputation.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">speed</span>
+      <p><strong>Performance decision:</strong> if the proposal reads multiple sources for many customers, moving expensive work to background generation is not only a technical tuning step. It is an architecture choice between freshness and order-entry response time.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Important runtime nuance</p>
+      <h2>A dynamic proposal line is not yet a fully processed Sales item.</h2>
+      <p>For Dynamic Product Proposal, SAP can display proposal rows before standard item-level processing is executed. Pricing, availability, incompletion and similar checks are triggered when an order quantity is entered and the material becomes a real document item with an item number.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p>This explains a common test result: a product may be visible in the proposal with historical quantity information, but it does not yet have the same calculated state as a normal order item. Do not compare proposal-row behavior with a completed VBAP item too early.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">BOM behavior</p>
+      <h2>The proposal can hold a BOM header, but VA51 is not where the BOM is exploded.</h2>
+      <p>SAP allows a BOM or configurable header material to be included in an Item Proposal. The explosion or configuration happens when the material is copied into the Sales order. The determined Sales item category must allow the required structure processing.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Practical check:</strong> if a user says “the BOM does not explode in VA51,” that is normally expected. Test the transfer into the actual Sales order and then inspect item-category structure scope and configuration behavior.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Technical anchors</p>
+      <h2>Know which object you are actually debugging.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Classic static proposal</h3>
+        <p><strong>VBAK</strong> — Sales document header for the Item Proposal.<br>
+        <strong>VBAP</strong> — proposal items/materials.<br>
+        <strong>KNVV-VSORT</strong> — Item Proposal assigned to the customer Sales area.</p>
+      </div>
+      <div>
+        <h3>Dynamic Product Proposal</h3>
+        <p><strong>KNVV-PVKSM</strong> — customer procedure for Product Proposal.<br>
+        <strong>VBPK</strong> — Product Proposal header/result data.<br>
+        <strong>VBPV</strong> — Product Proposal material/quantity data.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Do not use VAKH/VAKP as Item Proposal database tables.</strong> Static Item Proposals are Sales documents and are anchored in VBAK/VBAP. <strong>VAKP</strong> is also the name of an SAP transaction used for T180 configuration, which makes this naming mistake easy to repeat.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transactions & operations</p>
+      <h2>A small transaction set covers most support work.</h2>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>VA51</h4><p>Create Sales Item Proposal.</p></div>
+      <div><span>02</span><h4>VA52</h4><p>Change Sales Item Proposal.</p></div>
+      <div><span>03</span><h4>VA53</h4><p>Display Sales Item Proposal.</p></div>
+      <div><span>04</span><h4>VA55</h4><p>List Item Proposals and review them in bulk.</p></div>
+      <div><span>05</span><h4>VA01</h4><p>Create the Sales order and test Propose Items in the real document context.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration boundary</p>
+      <h2>Do not assume UI proposal logic will run for inbound automation.</h2>
+      <p>The classic Dynamic Product Proposal framework has important execution constraints. SAP documents that Product Proposal is not generated in several technical creation paths, including batch input, incoming IDocs, BAPIs, change/display processing and creation with reference.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <p><strong>Architecture consequence:</strong> if EDI, API or middleware already creates Sales orders automatically, do not design the business requirement around a VA01 entry aid without proving the exact runtime path. For interfaces, the safer contract is usually explicit order items or a separately designed proposal/enrichment service.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Intelligent Product Proposal</p>
+      <h2>S/4HANA can extend the dynamic framework with quantity prediction and API access.</h2>
+      <p>Intelligent Product Proposal builds on Dynamic Product Proposal. SAP supports predictive quantity logic such as exponential smoothing and provides the OData service <strong>API_INTELLIGENTPRODUCTPROPOSAL_SRV</strong> for reading generated product and quantity proposals.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">analytics</span>
+      <p><strong>Lead question:</strong> before enabling “intelligence,” define the decision it improves. If users only need a stable repeat-order basket, prediction adds complexity without solving a real problem. If quantities change over time and order history is meaningful, the intelligent layer becomes more relevant.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Separate a missing proposal item from a bad Sales item.</h2>
+      <h2>Start with the symptom, then move to the owning layer.</h2>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>If a product is missing before copying, inspect the proposal itself, its assignment, and Sales context. If the product was copied correctly but later has the wrong price, date, confirmation, or delivery behavior, leave Item Proposal and diagnose the resulting Sales item. That ownership boundary prevents an entry aid from becoming a false root cause.</p>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Proposal number is not offered</h3>
+        <p>Check the sold-to party, Sales area, <strong>KNVV-VSORT</strong>, proposal validity and whether the Item Proposal document exists in the expected Sales area.</p>
+      </div>
+      <div>
+        <h3>Dynamic list is empty</h3>
+        <p>Check customer procedure, document procedure, online/background procedure determination, source access sequence and whether the selected source has usable data.</p>
+      </div>
+      <div>
+        <h3>Wrong products are proposed</h3>
+        <p>Identify the source indicator first. Then inspect source priority, listing/exclusion, order-history window, explicit Item Proposal content and customer-material data.</p>
+      </div>
+      <div>
+        <h3>Quantities look old</h3>
+        <p>Separate static maintained quantity from background-generated history quantity. If background processing is used, check when the proposal data was last generated.</p>
+      </div>
+      <div>
+        <h3>Product appears but price/ATP is missing</h3>
+        <p>For dynamic proposals this can be expected before an order quantity is entered. Standard checks start when the proposal row becomes a real order item.</p>
+      </div>
+      <div>
+        <h3>Works in VA01, fails through interface</h3>
+        <p>Verify the creation channel. Classic Product Proposal has execution limits for IDoc/BAPI and other non-interactive paths.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision guide</p>
+      <h2>Pick the mechanism that owns the business rule.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Item Proposal</h3>
+        <p>“This customer often buys this basket.” Use it for fast, user-controlled entry of a known set.</p>
+      </div>
+      <div>
+        <h3>Dynamic Product Proposal</h3>
+        <p>“Build a relevant basket from several customer-specific sources.” Use it when the list should change with history or assortment context.</p>
+      </div>
+      <div>
+        <h3>Cross-Selling</h3>
+        <p>“When this product is entered, suggest another product.” The trigger is the product, not simply the customer basket.</p>
+      </div>
+      <div>
+        <h3>Material Determination</h3>
+        <p>“Replace or substitute the requested material according to a rule.” This is substitution logic, not order-entry convenience.</p>
+      </div>
+      <div>
+        <h3>Customer-Material Info Record</h3>
+        <p>“This customer uses a different product number or customer-specific material data.” It maps the relationship; it is not a reusable basket.</p>
+      </div>
+      <div>
+        <h3>Listing / Exclusion</h3>
+        <p>“This customer may or may not buy this material.” It controls eligibility rather than simply proposing a convenient list.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead-level design checks</p>
+      <h2>Before configuration, answer the operating questions.</h2>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Who owns the basket?</h4><p>Sales operations, key-account team, product team, or automated generation? Ownership matters more than the transaction used to maintain it.</p></div>
+      <div><span>02</span><h4>How often does it change?</h4><p>Stable for months suggests static maintenance. Changing every order suggests a dynamic source or another recommendation design.</p></div>
+      <div><span>03</span><h4>Are quantities meaningful?</h4><p>Copying stale quantities can be worse than copying no quantities. Decide whether the business wants a product reminder or a true repeat-order template.</p></div>
+      <div><span>04</span><h4>Which channel consumes it?</h4><p>VA01, Fiori, Interaction Center, EDI, API, mobile sales, or another application can have different runtime support. Prove the channel before finalizing the design.</p></div>
+      <div><span>05</span><h4>How will we remove old data?</h4><p>Define review, validity and retirement rules. A proposal that nobody cleans becomes a source of wrong products and user distrust.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Contrast entry assistance with determination.</h2>
+      <h2>Explain the difference between entry assistance and determination.</h2>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Item Proposal is reusable Sales entry assistance: a maintained set of products and proposed quantities that a user can copy into an order or quotation. It is not material substitution and it is not cross-selling recommendation logic. I use it to explain how the line entered the document; after the copy, normal item-category, pricing, ATP, delivery, and billing mechanisms own the result.</p>
+      <p><strong>90-second answer:</strong> An Item Proposal is a reusable list of materials and optional quantities used to speed up Sales document entry. In the classic setup I create it in VA51 as a Sales document with category D and can assign it to the customer Sales-area data through KNVV-VSORT. In VA01 the user can copy all items with quantities, without quantities, or select individual lines. I keep it separate from Dynamic Product Proposal: DPP uses customer and document procedures plus an access sequence to combine sources such as order history, listing, exclusion, Item Proposal and Customer-Material Info. Another key point is ownership: once a proposal line becomes a real Sales item, normal item-category, pricing, ATP, delivery and billing logic take over. So in support I first decide whether the failure is in proposing the item or in processing the resulting Sales item.</p>
     </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Strong follow-up</h3>
+        <p>If asked about tables, name <strong>VBAK/VBAP</strong> for the static proposal, <strong>KNVV-VSORT</strong> for customer assignment, <strong>KNVV-PVKSM</strong> for the dynamic customer procedure, and <strong>VBPK/VBPV</strong> for Product Proposal data.</p>
+      </div>
+      <div>
+        <h3>Strong architecture point</h3>
+        <p>If the process is automated through IDoc/API, verify support before reusing UI proposal logic. An entry aid for a human order taker is not automatically an integration rule.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Source anchors</p>
+      <h2>Primary SAP references used for the model above.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Item Proposal</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/378bc95360267214e10000000a174cb4.html">SAP Help — Sales Item Proposals</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/24f3b9537cceb44ce10000000a174cb4.html">SAP Help — Create Sales Item Proposals</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/612e2d93800f455b97fc364cee51573a.html">SAP Help — List Item Proposals</a></p>
+      </div>
+      <div>
+        <h3>Dynamic / Intelligent</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/f25e586c6d94475299a7d552cff94656.html">SAP Help — Dynamic Product Proposal</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/50bd87ba35004f6280a820b20ddd1f02.html">SAP Help — Intelligent Product Proposal</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/73122fae9acf4206a29b3ce0932d72d2.html">SAP Help — Intelligent Product Proposal API</a></p>
+      </div>
+    </div>
+
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/master-data/cross-selling/">Cross-selling</a>
-      <a href="/labs/enterprise-context/master-data/material-determination/">Material determination</a>
+      <a href="/labs/enterprise-context/master-data/customer-material/">Customer-Material Info</a>
+      <a href="/labs/enterprise-context/master-data/cross-selling/">Cross-Selling</a>
+      <a href="/labs/enterprise-context/master-data/material-determination/">Material Determination</a>
+      <a href="/labs/enterprise-context/master-data/listing-exclusion/">Listing / Exclusion</a>
     </nav>
   </section>
 </div>
