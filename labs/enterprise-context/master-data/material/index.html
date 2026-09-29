@@ -1,0 +1,98 @@
+---
+layout: default
+title: "SAP S/4HANA Material Master Data"
+description: "A focused SAP S/4HANA Material master-data page covering sales, plant, MRP, units, classification, batch, serial, EWM and runtime logistics behavior."
+permalink: /labs/enterprise-context/master-data/material/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - sap-mm
+  - material-master
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Material</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP S/4HANA / Cross-Logistics / Material Master</p>
+      <h1>Material</h1>
+      <p>Material master data is one of the main control surfaces in SAP Logistics. The same material can carry commercial, planning, warehouse, accounting and execution attributes. A Lead should never answer only “check MM03”. The useful answer names the view, field, organizational scope and runtime mechanism that consumes it.</p>
+      <a class="research-canvas__button" href="#material-views">Map the views <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Assessment anchor</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Material</strong><small>Shared identity</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Views</strong><small>Org-specific behavior</small></div>
+      <em>Material → view → field → determination → document.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" id="material-views" data-reveal>
+    <header><p class="research-canvas__eyebrow">Data model</p><h2>One material, many business views.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important material master views">
+      <table class="study-table__table">
+        <thead><tr><th>View / scope</th><th>Important examples</th><th>Main consumers</th></tr></thead>
+        <tbody>
+          <tr><td>Basic Data</td><td>Base UoM, material group, gross/net weight, configurable indicator</td><td>Cross-application identity and quantity handling</td></tr>
+          <tr><td>Sales</td><td>Item category group, sales unit, delivering plant, product hierarchy, pricing group, account assignment group</td><td>Sales order, pricing, shipping, billing</td></tr>
+          <tr><td>Plant / MRP</td><td>MRP type, lot size, procurement type, strategy group, availability check</td><td>MRP, ATP/aATP, procurement and production</td></tr>
+          <tr><td>Plant / Shipping</td><td>Loading group, transportation-related fields</td><td>Shipping-point and route/scheduling context</td></tr>
+          <tr><td>Accounting / Valuation</td><td>Valuation class, price control and valuation data</td><td>Inventory valuation and account determination</td></tr>
+          <tr><td>Warehouse / EWM</td><td>Warehouse-specific product settings and handling controls where used</td><td>Putaway, picking, replenishment and warehouse execution</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Connected master data</p><h2>Material is the hub; other master objects refine identity and behavior.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Classification</h3><p>Classes and characteristics describe materials and other objects with reusable attributes used for search, batch selection, configuration and integration.</p></div>
+      <div><h3>Batch and Serial</h3><p>Batch identifies a lot; serial number identifies one individual unit. A material can use either or both depending on traceability requirements.</p></div>
+      <div><h3>Customer / Supplier relationship</h3><p>Customer Material and Purchasing Info Record add relationship-specific data without changing the generic material truth.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead diagnosis</p><h2>Trace the first wrong derived value.</h2></header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Name the symptom</h4><p>Wrong item category, ATP result, plant, shipping point, source, valuation or warehouse behavior are different paths.</p></div>
+      <div><span>02</span><h4>Name the view</h4><p>Sales, plant, MRP, accounting and warehouse data have different organizational scopes.</p></div>
+      <div><span>03</span><h4>Name the field</h4><p>Find the exact master-data input that can influence the failed result.</p></div>
+      <div><span>04</span><h4>Trace the mechanism</h4><p>Configuration and runtime logic interpret the field; the material master does not make every decision by itself.</p></div>
+      <div><span>05</span><h4>Check blast radius</h4><p>A shared material change can affect Sales, Procurement, MRP, Inventory, EWM, Production and Finance.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment recall</p><h2>Do not say “material master”; say which view and why.</h2></header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> Material master data is cross-functional. Sales-area views provide commercial inputs, plant and MRP views control planning and availability, logistics fields influence shipping and warehouse execution, and accounting views control valuation. For a problem I identify the first wrong document value, map it to the exact material field and organizational view, then trace the configuration or process that consumes that field. I also check more specific relationship data before changing a shared material default.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Material related pages">
+      <span>Related</span>
+      <a href="/labs/enterprise-context/master-data/product/">Product / Material deep dive</a>
+      <a href="/labs/enterprise-context/master-data/classification/">Classification</a>
+      <a href="/labs/enterprise-context/master-data/batch-master/">Batch Master</a>
+      <a href="/labs/enterprise-context/master-data/serial-numbers/">Serial Numbers</a>
+      <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
+    </nav>
+  </section>
+</div>
