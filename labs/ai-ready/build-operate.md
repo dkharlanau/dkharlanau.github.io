@@ -7,9 +7,9 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-22
+last_modified_at: 2026-09-29
 hide_global_cta: true
-tags: [ai, deployment, operations, observability, cicd, reliability]
+tags: [ai, deployment, operations, observability, cicd, reliability, cost, token-economics]
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -101,6 +101,131 @@ One user request can expand into many model and tool calls. A tool-using agent m
 We normally care about request timeout, maximum context, agent steps, parallel workers, model cost, tool-call count, queue depth, user or tenant rate limits, and concurrency against external systems.
 
 These limits are part of system behavior. When a budget is exhausted, the system should return a clear degraded result or escalation state rather than quietly continue until an upstream service becomes the bottleneck.
+
+<h2 id="token-economics">Token economics: optimize cost per successful task</h2>
+
+Token cost is only one part of AI cost. A workflow becomes expensive when it makes too many model calls, carries the same context again and again, produces more output than the task needs, uses a premium model for simple work, or lets retries and agent loops multiply silently.
+
+The useful unit is therefore **cost per successful task**, not price per million tokens.
+
+```text
+cost per successful task
+  = total model + tool + retrieval + infrastructure spend
+    / number of outcomes that pass the quality gate
+```
+
+This changes the optimization question. A cheaper model that creates more retries or more rejected answers can make the final task more expensive. A larger model can sometimes be cheaper if it solves the task in one call instead of five. Measure the full path.
+
+<div class="callout callout--note">
+  <p><strong>Lead rule:</strong> optimize for the lowest cost that still passes the required quality, latency, security, and control gates.</p>
+</div>
+
+### First find where the cost is created
+
+For each request or business task, separate these drivers:
+
+- number of model calls;
+- uncached input tokens;
+- cached reads and cache writes, when the provider exposes them;
+- output and reasoning tokens;
+- retrieval, search, and paid tool calls;
+- agent steps, retries, and parallel workers;
+- media input such as large images, audio, or video;
+- vector storage, cache storage, or other supporting infrastructure.
+
+Then rank traces by total cost. The expensive tail often teaches more than the average.
+
+<div class="table-scroll study-table" role="region" aria-label="AI cost optimization levers" tabindex="0">
+<table class="study-table__table">
+<thead>
+<tr><th scope="col">Lever</th><th scope="col">What changes</th><th scope="col">Use it when</th><th scope="col">Main check</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">Model routing</th><td>Use a smaller or cheaper model for simple classification, extraction, formatting, or low-risk steps. Escalate only harder cases.</td><td>One expensive model handles every request today.</td><td>Keep one eval set across routes. A cheaper call is not a saving if failure and retry rates rise.</td></tr>
+<tr><th scope="row">Prompt caching</th><td>Keep reusable instructions, examples, and tool definitions in a stable prefix so the provider can reuse processed context.</td><td>Many requests share a large common prefix.</td><td>Measure actual cache-hit tokens. Dynamic timestamps, user data, reordered tools, or other early changes can destroy prefix reuse.</td></tr>
+<tr><th scope="row">Batch or flex execution</th><td>Move non-interactive work to a discounted asynchronous service tier when the provider offers one.</td><td>Evals, enrichment, classification, embeddings, document processing, or overnight jobs do not need an immediate answer.</td><td>Confirm turnaround time, rate limits, retry behavior, and the current provider price before building the business case.</td></tr>
+<tr><th scope="row">Context reduction</th><td>Retrieve only the evidence needed for this question instead of sending the full manual, chat history, or data export.</td><td>Input grows faster than answer quality.</td><td>Evaluate retrieval coverage. Cutting context is useful only if the required evidence still reaches the model.</td></tr>
+<tr><th scope="row">Progressive tool disclosure</th><td>Expose only the tool families relevant to the current route or task instead of placing every schema in every call.</td><td>A large tool catalog consumes context although most tools are never used.</td><td>Routing must be testable. Do not hide a tool that is required for a legitimate exception path.</td></tr>
+<tr><th scope="row">Programmatic tool chaining</th><td>Filter, aggregate, validate, or join tool results in normal code and pass the model the useful result rather than raw payloads.</td><td>Large JSON responses repeatedly enter model context.</td><td>Keep source IDs and evidence needed for traceability. Compression must not erase the reason behind a decision.</td></tr>
+<tr><th scope="row">Prompt and schema audit</th><td>Remove obsolete instructions, duplicated examples, unused schema fields, and prompting written for an older model.</td><td>Prompts have grown through many incremental fixes.</td><td>Run the same evals before and after. Shorter is useful only when behavior stays good.</td></tr>
+<tr><th scope="row">Output discipline</th><td>Ask for the smallest output the next consumer needs: structured fields, short explanations, or bounded sections.</td><td>The model writes long prose that is later parsed, summarized, or discarded.</td><td>Do not remove explanations that are required for audit, user trust, or decision quality.</td></tr>
+<tr><th scope="row">Agent budgets</th><td>Cap steps, retries, tool calls, wall time, parallel workers, and spend per task.</td><td>Agent loops occasionally run much longer than normal.</td><td>Define a useful stop state such as <code>budget_exhausted</code> or <code>insufficient_evidence</code> instead of silently continuing.</td></tr>
+<tr><th scope="row">Semantic or result caching</th><td>Reuse a previous answer or deterministic result when the new request is equivalent enough.</td><td>Questions repeat and the underlying fact is stable.</td><td>Key the cache by permission scope, data version, and freshness. Do not reuse a result across users or states that should be isolated.</td></tr>
+<tr><th scope="row">Media reduction</th><td>Crop, resize, sample, or extract the relevant part of image, video, or audio before model ingestion.</td><td>Large media enters the model although only a small region or time window matters.</td><td>Keep enough resolution and context for the decision. Validate the reduced input on representative cases.</td></tr>
+</tbody>
+</table>
+</div>
+
+### Preserve the stable prefix
+
+Prompt caching deserves special attention because it can fail silently. A long shared prompt may look reusable to a developer while one changing field near the beginning makes most of the prefix different.
+
+A safer request shape is:
+
+```text
+stable provider / system instructions
+stable tool definitions
+stable reference rules
+------------------------- cache-friendly boundary
+user-specific context
+current timestamp or request metadata
+new user input
+```
+
+The exact cache rules are provider- and model-specific. The design principle is stable: put shared content before changing content, preserve ordering where possible, and monitor reported cache usage instead of assuming reuse happened.
+
+### Reduce calls before reducing intelligence
+
+A common mistake is to start by switching every call to the cheapest model. First remove calls that should not exist.
+
+Examples:
+
+- use code for exact calculations, filtering, sorting, validation, and policy checks;
+- stop asking a model to summarize data that the next function can read directly;
+- avoid a second model call when structured output from the first call already contains the required fields;
+- stop an agent after sufficient evidence instead of asking for one more search “just in case”;
+- merge independent prompt steps when one well-defined call can perform them safely;
+- do not run several workers on work that is not genuinely parallel.
+
+Call reduction often improves latency and reliability at the same time as cost.
+
+### Use a simple optimization loop
+
+1. **Measure.** Record tokens, calls, cache usage, retries, tools, latency, quality result, and cost for each task.
+2. **Find the expensive shape.** Separate normal requests from the costly tail: long contexts, loops, retries, media, or premium-model routes.
+3. **Change one lever.** For example, stabilize the prefix, reduce retrieval size, cap output, route easy cases, or move offline work to batch.
+4. **Run the same eval set.** Compare quality, latency, and cost on the same population.
+5. **Keep the change only if the full task improves.** A token reduction that causes more human correction is not an optimization.
+
+Useful production measures include:
+
+- cost per request;
+- **cost per successful task**;
+- input, cached-input, output, and reasoning tokens when available;
+- model calls and tool calls per task;
+- cache-hit token ratio;
+- retry rate;
+- agent steps and parallel workers;
+- p50 and p95 latency;
+- eval pass rate or accepted-output rate;
+- human correction time for tasks where review is part of the process.
+
+### Know where not to optimize
+
+Do not trade away the control boundary to save tokens. Authorization, policy, transaction checks, and required evidence still belong in normal software. Do not cache dynamic business facts without a freshness rule. Do not hide source evidence just to make context smaller. Do not use a weaker model for a high-risk decision only because its token price is lower.
+
+The right question is not “How do we use fewer tokens?” It is “Which part of this task is creating spend without creating accepted business value?”
+
+### Current provider examples
+
+Provider details move quickly, so use these as implementation references rather than permanent price assumptions:
+
+- [OpenAI Prompt Caching](https://developers.openai.com/api/docs/guides/prompt-caching) — current cache behavior, prefix rules, usage fields, and model-specific pricing notes.
+- [OpenAI Batch API](https://developers.openai.com/api/docs/guides/batch) — asynchronous batch processing for work that does not need an immediate response.
+- [Google Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing) — examples of standard, cached-context, batch, and other service tiers.
+- [Google Gemini Batch API](https://ai.google.dev/gemini-api/docs/batch-api) — asynchronous batch behavior and service-level details.
+
+Reviewed for this section: 29 Sep 2026. Recheck current model pricing before using a percentage or unit rate in a financial estimate.
 
 ## Cache only with a freshness rule
 
