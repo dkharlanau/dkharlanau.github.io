@@ -247,6 +247,78 @@
       "relation": "proposes",
       "to": "DOC.SD.SALES_ORDER.ITEM",
       "why": "reusable product and quantity combinations speed sales order entry"
+    },
+    {
+      "from": "MD.SD.BATCH",
+      "relation": "references",
+      "to": "MD.SD.CLASSIFICATION",
+      "why": "batch characteristics use the cross-application classification framework"
+    },
+    {
+      "from": "MD.SD.VC",
+      "relation": "references",
+      "to": "MD.SD.CLASSIFICATION",
+      "why": "variant configuration can reuse characteristics and classes"
+    },
+    {
+      "from": "MD.SD.SERIAL",
+      "relation": "references",
+      "to": "MD.SD.PRODUCT",
+      "why": "serial-number procedures are controlled from material/product context"
+    },
+    {
+      "from": "MD.SD.SUPPLIER",
+      "relation": "specializes",
+      "to": "MD.SD.BP",
+      "why": "supplier is another role and business context of Business Partner"
+    },
+    {
+      "from": "MD.SD.PIR",
+      "relation": "references",
+      "to": "MD.SD.SUPPLIER",
+      "why": "purchasing info record specializes supplier-material purchasing data"
+    },
+    {
+      "from": "MD.SD.PIR",
+      "relation": "references",
+      "to": "MD.SD.PRODUCT",
+      "why": "purchasing info record specializes supplier-material purchasing data"
+    },
+    {
+      "from": "MD.SD.SOURCELIST",
+      "relation": "references",
+      "to": "MD.SD.PRODUCT",
+      "why": "source-list validity is maintained by material and plant"
+    },
+    {
+      "from": "MD.SD.SOURCELIST",
+      "relation": "references",
+      "to": "MD.SD.SUPPLIER",
+      "why": "external source-list records can identify a supplier"
+    },
+    {
+      "from": "MD.SD.SOURCELIST",
+      "relation": "references",
+      "to": "MD.SD.PIR",
+      "why": "source assignment can point to supplier-material source context"
+    },
+    {
+      "from": "MD.SD.QUOTA",
+      "relation": "references",
+      "to": "MD.SD.PRODUCT",
+      "why": "quota arrangements allocate material/plant requirements"
+    },
+    {
+      "from": "MD.SD.QUOTA",
+      "relation": "references",
+      "to": "MD.SD.SUPPLIER",
+      "why": "external quota items can allocate requirements to suppliers"
+    },
+    {
+      "from": "MD.SD.QUOTA",
+      "relation": "references",
+      "to": "MD.SD.SOURCELIST",
+      "why": "source eligibility and quota allocation are complementary sourcing controls"
     }
   ],
   "impact_traces": [
