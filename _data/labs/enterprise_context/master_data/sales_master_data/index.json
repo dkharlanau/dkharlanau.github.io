@@ -6,10 +6,10 @@
   "status": "draft",
   "verified": false,
   "summary": {
-    "entity_count": 25,
+    "entity_count": 29,
     "groups": 4,
     "behavior_profiles": 8,
-    "design_goal": "Explain Sales and end-to-end logistics behavior through business masters, relationships, source-of-supply data, organizational scope and the runtime mechanisms that consume them.",
+    "design_goal": "Explain Sales and end-to-end logistics behavior through customer, material, cross-logistics identity, supplier relationships, source-of-supply data, organizational scope and the runtime mechanisms that consume them.",
     "primary_question": "Which maintained object supplied this value, under which scope and validity, and what does it change downstream?"
   },
   "group_order": [
@@ -175,6 +175,22 @@
         "MD.SD.SOURCELIST",
         "MD.SD.QUOTA"
       ]
+    },
+    {
+      "question": "Serial exists but service history is wrong",
+      "path": [
+        "MD.SD.PRODUCT",
+        "MD.SD.SERIAL",
+        "MD.SD.EQUIPMENT"
+      ]
+    },
+    {
+      "question": "Warehouse product behavior is wrong",
+      "path": [
+        "MD.SD.PRODUCT",
+        "MD.SD.EWM_PRODUCT",
+        "EWM"
+      ]
     }
   ],
   "boundary_notes": [
@@ -218,7 +234,7 @@
   ],
   "coverage_audit": {
     "reviewed_at": "2026-09-29",
-    "conclusion": "Core Sales master data is broad, and the cross-logistics layer now includes classification, serial identity, suppliers and the main source-of-supply records needed to reason across Sales and Procurement.",
+    "conclusion": "Core Sales master data is broad, and the cross-logistics layer includes classification, serial identity, equipment, EWM warehouse-product data, suppliers and the main source-of-supply records needed to reason across Sales, Inventory, Warehouse, Service and Procurement.",
     "core_covered": [
       "Business Partner / Customer",
       "Business Partner multiple addresses and address usage",
@@ -245,7 +261,9 @@
       "Business Partner / Supplier",
       "Purchasing Info Record",
       "Source List",
-      "Quota Arrangement"
+      "Quota Arrangement",
+      "Equipment / technical object",
+      "Warehouse Product / EWM product data"
     ],
     "intentional_boundaries": [
       "Sales organization, distribution channel, division, company code, plant, and shipping point are enterprise structure / organizational context, not classic business master data.",
