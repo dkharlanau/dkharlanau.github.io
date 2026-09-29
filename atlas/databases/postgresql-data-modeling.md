@@ -120,10 +120,10 @@ currency_code text NOT NULL
     <h2>Sources</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, chapters 3 and 5 and Appendix B.</li>
-      <li><a href="https://www.postgresql.org/docs/current/datatype-datetime.html">PostgreSQL: Date/Time Types</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/datatype-character.html">PostgreSQL: Character Types</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/ddl-constraints.html">PostgreSQL: Constraints</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/datatype-json.html">PostgreSQL: JSON Types</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/datatype-datetime.html">PostgreSQL: Date/Time Types</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/datatype-character.html">PostgreSQL: Character Types</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/ddl-constraints.html">PostgreSQL: Constraints</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/datatype-json.html">PostgreSQL: JSON Types</a></li>
       <li><a href="https://www.postgresql.org/docs/18/functions-uuid.html">PostgreSQL 18: UUID Functions</a></li>
     </ul>
   </div>
