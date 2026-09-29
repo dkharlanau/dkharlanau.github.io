@@ -25,6 +25,8 @@ related:
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /atlas/diagnostics/sap-delivery-block-analysis/
   - /atlas/sap/sap-partner-determination-failures/
+  - /labs/enterprise-context/sales-order/
+  - /labs/enterprise-context/sales-processes/mechanisms/
   - /labs/assessment/sales-certification/
 robots: noindex,follow
 sitemap: false
@@ -240,6 +242,8 @@ sitemap: false
       <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a> — broader triage when the first stopping control is not yet known.</li>
       <li><a href="/atlas/diagnostics/sap-delivery-block-analysis/">SAP Delivery Block Analysis</a> — when an explicit delivery block is the evidence.</li>
       <li><a href="/atlas/sap/sap-partner-determination-failures/">SAP Partner Determination Failures</a> — when missing partner data is the likely source of incompleteness.</li>
+      <li><a href="/labs/enterprise-context/sales-order/">Sales Order Decision Map</a> — place incompleteness beside item category, schedule line, copy control, and output.</li>
+      <li><a href="/labs/enterprise-context/sales-processes/mechanisms/#mec-sd-incomp">Sales Mechanism Library</a> — compact mechanism card with configuration surfaces, failure traces, tests, and classic transaction landmarks.</li>
     </ul>
   </section>
 
