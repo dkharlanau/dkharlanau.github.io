@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags: [ai, architecture, mcp, rag, agents, evals, security]
 ---
@@ -33,6 +33,7 @@ These pages start from architecture. Each topic asks the same questions: what pr
 | Evals | How do we know a model, prompt, retrieval, or tool change is better? | [Evals and Reliability](/labs/ai-ready/evals-reliability/) |
 | Security | How do we keep untrusted content away from permissions and sensitive actions? | [Security and Governance](/labs/ai-ready/security-governance/) |
 | Production | How do we deploy, observe, version, and roll back an AI service? | [Build and Operate](/labs/ai-ready/build-operate/) |
+| Token economics | How do we control growing AI spend without weakening the outcome? | [Token economics](/labs/ai-ready/build-operate/#token-economics) |
 
 ## Engineering path
 
@@ -47,7 +48,7 @@ The handbook fills the gaps between those large architecture areas:
 
 Then the [Practice layer](/labs/ai-ready/practice/) makes model selection, context selection, retrieval, and a controlled local assistant executable.
 
-## Four rules worth remembering
+## Five rules worth remembering
 
 **Known next step → workflow.** If the process is stable, code the sequence and let the model handle only uncertain interpretation.
 
@@ -56,6 +57,8 @@ Then the [Practice layer](/labs/ai-ready/practice/) makes model selection, conte
 **Shared capability → consider MCP.** Use the protocol when reuse across AI clients creates value, not because a diagram needs another box.
 
 **Risky write → application control.** The model can propose an action. Authorization, approval, validation, idempotency, and audit stay outside the model.
+
+**Growing cost → task economics.** Measure cost per successful task. Remove unnecessary calls and repeated context before weakening the model or the control boundary.
 
 ## Runnable practice
 
