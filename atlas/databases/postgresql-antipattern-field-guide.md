@@ -152,7 +152,7 @@ related:
     <h2>Sources</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, chapters 2–11 and Appendix B.</li>
-      <li><a href="https://www.postgresql.org/docs/current/">PostgreSQL 18 documentation</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/">PostgreSQL 18 documentation</a></li>
       <li><a href="/atlas/databases/postgresql-query-patterns/">Query patterns — expanded explanation</a></li>
       <li><a href="/atlas/databases/postgresql-data-modeling/">Data modeling — expanded explanation</a></li>
       <li><a href="/atlas/databases/postgresql-indexes-partitioning/">Indexes and partitioning — expanded explanation</a></li>
