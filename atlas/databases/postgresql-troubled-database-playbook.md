@@ -156,10 +156,10 @@ related:
     <h2>Sources</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, chapter 11 and Appendix B.</li>
-      <li><a href="https://www.postgresql.org/docs/current/monitoring.html">PostgreSQL: Monitoring Database Activity</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/app-pgdump.html">PostgreSQL: pg_dump</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/pgstatstatements.html">PostgreSQL: pg_stat_statements</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/routine-vacuuming.html">PostgreSQL: Routine Vacuuming</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/monitoring.html">PostgreSQL: Monitoring Database Activity</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/app-pgdump.html">PostgreSQL: pg_dump</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/pgstatstatements.html">PostgreSQL: pg_stat_statements</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/routine-vacuuming.html">PostgreSQL: Routine Vacuuming</a></li>
     </ul>
   </div>
 
