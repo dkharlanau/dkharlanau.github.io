@@ -1,18 +1,20 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Cross-Selling Assignment Data"
-description: "A practical deep dive into Cross-Selling Assignment Data in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+title: "SAP Cross-Selling in Sales Orders — Related Product Recommendations"
+description: "A practical SAP S/4HANA Sales guide to Cross-Selling: how material-driven recommendations work, how they differ from Item Proposal, classic configuration, diagnostics, deployment boundaries and Lead-level assessment recall."
 permalink: /labs/enterprise-context/master-data/cross-selling/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
   - master-data
+  - cross-selling
+  - product-proposal
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -21,7 +23,7 @@ tags:
     <li><a href="/labs/">Labs</a></li>
     <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
     <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
-    <li aria-current="page">Cross-Selling Assignment Data</li>
+    <li aria-current="page">Cross-Selling</li>
   </ol>
 </nav>
 
@@ -29,15 +31,16 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.CROSS</p>
-      <h1>Cross-Selling Assignment Data</h1>
-      <p>Cross-selling recommends additional products when a main product is entered. It supports assisted selling and upsell scenarios, but it should be kept conceptually separate from substitution: the original product remains, while other products are suggested.</p>
+      <h1>Cross-Selling</h1>
+      <p>Cross-Selling helps the order taker offer a useful companion product at the moment a main product is entered. The main item stays in the order; SAP simply proposes related items that the user may add. Think “phone → case” or “printer → cable and toner”, not “replace one product with another”.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.CROSS</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>relationship record</strong><small>Data class</small></div>
-      <em>Main product, suggested products and configured sales context/profile.</em>
+      <div class="research-canvas__signal-line"><span>02</span><strong>material-driven</strong><small>Trigger</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>condition technique</strong><small>Classic determination</small></div>
+      <em>Main product → related-product proposal → optional user selection → normal Sales item processing.</em>
     </div>
   </header>
 
@@ -62,6 +65,47 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business picture</p>
+      <h2>The recommendation should make sense because of the product already in the order.</h2>
+      <p>Imagine a customer orders an industrial printer. The order taker can immediately offer the correct cable, starter toner and a maintenance kit. The customer may accept one, all or none of them. The printer remains the main item.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Good Cross-Selling case</h3>
+        <p>The relationship is product-driven and easy to explain: laptop → docking station, machine → spare-parts kit, pump → compatible seal set.</p>
+      </div>
+      <div>
+        <h3>Poor Cross-Selling case</h3>
+        <p>The business really wants a customer-specific repeat basket, a mandatory assortment rule, automatic substitution, or a free item. Another Sales mechanism owns those requirements better.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology_alt</span>
+      <p><strong>Memory rule:</strong> Cross-Selling answers <em>“What else fits this product?”</em> Item Proposal answers <em>“What does this customer usually order?”</em></p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classic setup</p>
+      <h2>Do not memorize transactions first. Follow the determination chain.</h2>
+      <p>Classic SAP S/4HANA Cross-Selling uses the condition technique together with a Cross-Selling profile. The profile controls how recommendations are determined and presented, while the condition setup resolves which related products belong to the triggering material.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define the determination key</h4><p>Choose which business fields should identify the relationship. A simple design may start from the entered material; a more specific design can include Sales context where the business needs different recommendations.</p></div>
+      <div><span>02</span><h4>Build the condition technique</h4><p>Maintain the condition table, access sequence and Cross-Selling determination scheme. This is the search logic SAP uses to find related products.</p></div>
+      <div><span>03</span><h4>Define the Cross-Selling profile</h4><p>The profile controls important runtime choices such as determination logic, pricing display, dialog behavior and whether availability should be checked for proposed items.</p></div>
+      <div><span>04</span><h4>Determine the profile</h4><p>Assign the profile through the relevant Sales area, document and customer procedure context. If the profile is not determined, correct relationship data alone will not produce the expected dialog.</p></div>
+      <div><span>05</span><h4>Maintain relationships and test</h4><p>In classic GUI landscapes, <strong>VB41</strong> is commonly used for Cross-Selling condition records. Enter the main material in the Sales order and prove that the expected proposals appear in the intended context.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+      <p><strong>Lead habit:</strong> treat transaction codes such as VB41 and the classic OV4x Customizing transactions as release-specific entry points. The reusable knowledge is the determination model: key → access → relationship → profile → dialog.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
@@ -78,13 +122,121 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Cross-Selling vs Item Proposal</p>
+      <h2>They both suggest products, but they start from different questions.</h2>
+      <p>This distinction is easy to test in an assessment: remove the material from the order. If the proposal logic no longer has a trigger, you are probably discussing Cross-Selling. If the customer itself is enough to build a useful basket, you are closer to Item or Product Proposal.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Cross-Selling versus Item Proposal comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Question</th>
+            <th scope="col">Cross-Selling</th>
+            <th scope="col">Item / Product Proposal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">What triggers it?</th>
+            <td>A material already entered in the Sales document.</td>
+            <td>The customer and Sales context; a static proposal can also be called explicitly.</td>
+          </tr>
+          <tr>
+            <th scope="row">What business question does it answer?</th>
+            <td>“What additional product fits the item being ordered?”</td>
+            <td>“What products are relevant for this customer or repeat order?”</td>
+          </tr>
+          <tr>
+            <th scope="row">Typical source</th>
+            <td>Material-to-related-material relationships found through Cross-Selling determination.</td>
+            <td>A maintained basket, or dynamic sources such as order history, listing, customer-material data and other proposal sources.</td>
+          </tr>
+          <tr>
+            <th scope="row">User experience</th>
+            <td>A recommendation dialog appears after the triggering material is processed; the user accepts or ignores suggestions.</td>
+            <td>The user receives a customer-oriented proposal list and copies selected items or quantities into the order.</td>
+          </tr>
+          <tr>
+            <th scope="row">Best fit</th>
+            <td>Accessories, consumables and companion products that belong naturally to another product.</td>
+            <td>Repeat orders, customer-specific baskets and history-based order-entry assistance.</td>
+          </tr>
+          <tr>
+            <th scope="row">What happens after selection?</th>
+            <td colspan="2">The selected material becomes a normal Sales item. Item category, pricing, ATP/aATP, plant, shipping, delivery and billing are then controlled by their normal owners.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+      <p><strong>Fast assessment answer:</strong> Cross-Selling is <strong>material-driven</strong>; Item or Product Proposal is mainly <strong>customer-driven</strong>. Cross-Selling grows the basket around an item. Item Proposal reduces repetitive order entry for a customer.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Choose the right mechanism</p>
+      <h2>Similar screens can hide very different business rules.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Cross-Selling</h3>
+        <p><strong>Main material → companion product.</strong><br>Use when the relationship belongs to the product being ordered.</p>
+      </div>
+      <div>
+        <h3>Item / Product Proposal</h3>
+        <p><strong>Customer → likely basket.</strong><br>Use when the goal is faster customer-specific order entry or history-based proposals.</p>
+      </div>
+      <div>
+        <h3>Material Determination</h3>
+        <p><strong>Entered material → replacement material.</strong><br>Use when the business wants substitution, not an additional line.</p>
+      </div>
+      <div>
+        <h3>Free Goods</h3>
+        <p><strong>Commercial rule → free quantity or item.</strong><br>Use when the extra product is an entitlement, not an optional recommendation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Finding good combinations</p>
+      <h2>Cross-Selling data can be designed from evidence, not only from opinion.</h2>
+      <p>SAP documents report <strong>SDCRSL01</strong> as a way to analyze Sales orders for products that are frequently bought together. That can reveal useful combinations before they are maintained as Cross-Selling relationships.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">query_stats</span>
+      <p><strong>Design caution:</strong> “often bought together” is a signal, not automatically a business rule. Validate compatibility, margin, availability, legal restrictions and commercial ownership before turning an observed pair into a recommendation.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
       <h2>Separate recommendation failure from item-processing failure.</h2>
     </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Prove the trigger</h4><p>Is the expected main material really in the order, and is the test using the intended Sales area and document type?</p></div>
+      <div><span>02</span><h4>Prove profile determination</h4><p>Check the customer/document/Sales-area context that selects the Cross-Selling profile. A missing profile can look like missing master data.</p></div>
+      <div><span>03</span><h4>Prove the relationship</h4><p>Confirm the relevant condition record or relationship data, validity and access key. Test the same key that the order is actually using.</p></div>
+      <div><span>04</span><h4>Separate display from determination</h4><p>If the system found candidates but the dialog does not behave as expected, inspect profile settings such as dialog control and availability-check behavior.</p></div>
+      <div><span>05</span><h4>Stop at the ownership boundary</h4><p>If the suggested item is added successfully but later has the wrong price, confirmation, plant or delivery behavior, diagnose the normal Sales item. Cross-Selling has already finished its job.</p></div>
+    </div>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>If suggestions do not appear, check the main product, Sales context, maintained related-product data, and the profile or logic that activates the recommendation. If the recommendation appears but a selected item later behaves incorrectly, leave Cross-Selling and diagnose that Sales item. The recommendation mechanism does not own downstream pricing or fulfillment.</p>
+      <p><strong>Useful split:</strong> “SAP did not propose the product” and “SAP proposed it, but the new line behaves incorrectly” are two different incidents with different owners.</p>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Deployment boundary</p>
+      <h2>Do not carry classic GUI configuration into every S/4HANA deployment model.</h2>
+      <p>The classic Cross-Selling function described on this page is documented by SAP for S/4HANA On-Premise. SAP S/4HANA Cloud Public Edition has its own product-proposal scope, including Intelligent Product Proposal. For a Public Edition design, confirm the available scope and apps first instead of assuming that VB41 or classic OV4x configuration is available.</p>
+    </header>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -94,8 +246,13 @@ tags:
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Cross-Selling recommends additional products around a main item. The original item stays in the order, so this is different from Material Determination, and the suggestion is not a free-goods entitlement. I first prove the main-product context and recommendation data. If the user adds a suggested product, normal Sales item processing takes ownership from that point.</p>
+      <p><strong>60-second answer:</strong> Cross-Selling is a material-driven recommendation function. When a user enters a main product, SAP can propose related products such as accessories or consumables. Classic determination uses the condition technique plus a Cross-Selling profile. The user decides whether to add a proposal; the main item is not replaced. That is why Cross-Selling is different from Material Determination, Free Goods and customer-driven Item Proposal. For support, I check the trigger, profile determination and relationship data first, then hand any pricing, ATP or fulfillment issue to the normal Sales-item logic.</p>
     </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+      <p><strong>Assessment trap:</strong> if the interviewer asks for recommendations based on customer purchase history, do not answer Cross-Selling. SAP explicitly separates material-triggered Cross-Selling from customer-driven Dynamic Product Proposal.</p>
+    </div>
+
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
@@ -104,5 +261,30 @@ tags:
       <a href="/labs/enterprise-context/master-data/item-proposal/">Item proposal</a>
       <a href="/labs/enterprise-context/master-data/free-goods/">Free goods</a>
     </nav>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary evidence</p>
+      <h2>Sources used to verify the factual layer.</h2>
+      <p>The explanations and examples above are independently written. These SAP sources verify the classic Cross-Selling behavior, the distinction from Dynamic Product Proposal and the Public Edition proposal boundary.</p>
+    </header>
+    <div class="ecg-source-list">
+      <article>
+        <span>SAP Help · SAP S/4HANA 2025 FPS01 On-Premise</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/141db853dcfcb44ce10000000a174cb4.html" rel="noopener noreferrer">Cross Selling</a></h3>
+        <p>Runtime dialog, condition-technique prerequisites, Cross-Selling profile, availability-check option and SDCRSL01 analysis.</p>
+      </article>
+      <article>
+        <span>SAP Help · SAP S/4HANA On-Premise</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/f25e586c6d94475299a7d552cff94656.html" rel="noopener noreferrer">Dynamic Product Proposal</a></h3>
+        <p>Verifies the core distinction: Product Proposal is customer and Sales-area driven, while Cross-Selling is triggered by the material.</p>
+      </article>
+      <article>
+        <span>SAP Support · SAP S/4HANA Cloud Public Edition</span>
+        <h3><a href="https://userapps.support.sap.com/sap/support/knowledge/en/3685085" rel="noopener noreferrer">How to use the Intelligent Item Proposal functionality</a></h3>
+        <p>Public Edition scope for static and intelligent/dynamic product proposals and supported Sales-order apps.</p>
+      </article>
+    </div>
   </section>
 </div>
