@@ -3,11 +3,11 @@ layout: default
 title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
 description: "Practical workspaces for SAP enterprise knowledge, S/4HANA migration, enterprise assurance, AI architecture, Business AI, operational protocols, SAP Lead interview preparation, and assessment practice."
 permalink: /labs/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-09-25
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap
