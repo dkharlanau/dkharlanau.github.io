@@ -32,6 +32,33 @@ reference route and the component source CSS or HTML.
 If a stable component fits, reuse it. If a domain component fits inside the same
 domain, reuse it there. A candidate is not a default.
 
+### 2a. Search the DKHARLANAU ecosystem before inventing infrastructure
+
+When the task needs a graph, diagram, process view, architecture map, lineage view,
+relationship model, or another reusable visual behavior, inspect the relevant sibling
+repositories under the same GitHub owner before adding a new external library or
+building a second renderer.
+
+Use intent to narrow the search:
+
+- `visual-workbench` — semantic visual models, relationship/dependency/process/data-flow methods, ELK layout, SVG/HTML rendering;
+- `data-relationship-map` — identity, lineage, cardinality, provenance, orphan and ambiguity analysis;
+- `transformation-graph` — dependency, impact, traceability and interactive graph exploration;
+- `process-as-code` — governed process models, process canvas, BPMN and generated flow views;
+- `mapping-as-code` — mapping and field-level lineage projections;
+- `enterprise-change-graph` — change impact and regression-scope relationships;
+- `enterprise-architecture-composer` — architecture projections that already target Visual Workbench.
+
+Inspect the README plus the specific schema, adapter, renderer, or output contract that
+matches the task. Do not copy a complete sibling engine into the site just because it
+exists. Prefer, in order: an existing site component; a compatible sibling semantic
+contract or generated artifact; a small explicit adapter; then a new local component.
+The owning repository remains authoritative for its semantics.
+
+Record the repositories inspected and the reuse decision in the agent handoff. This
+prevents later agents from rediscovering the same capability or creating a parallel
+implementation.
+
 ### 3. Diagnose the actual failure
 
 Classify the problem before editing:
@@ -84,6 +111,19 @@ At minimum check:
 
 CI runs Jekyll, accessibility checks, and a browser visual smoke test. A green build
 does not replace visual reasoning; it only proves that known gates passed.
+
+For a route-level visual change, build first and run the affected route through the
+browser smoke tool, for example:
+
+```sh
+bundle exec jekyll build
+node scripts/visual_smoke_test.mjs --site-dir _site --routes /labs/enterprise-context/master-data/business-partner/
+```
+
+Inspect the generated desktop and mobile screenshots. Check hierarchy, wrapping,
+edge/node readability for diagrams, overflow, spacing, and whether the visual actually
+answers the reader task. A UI or diagram change is not complete merely because the
+source validates or the SVG was generated.
 
 ### 7. Systemize the result
 
