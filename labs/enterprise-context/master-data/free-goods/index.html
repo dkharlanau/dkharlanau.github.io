@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Free Goods Condition Record"
-description: "A practical deep dive into Free Goods Condition Record in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+description: "A practical deep dive into Free Goods Condition Record in SAP S/4HANA Sales: entitlement logic, worked examples, runtime behavior, pricing and ATP boundaries, diagnostics and assessment recall."
 permalink: /labs/enterprise-context/master-data/free-goods/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -30,50 +30,240 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.FREEGOODS</p>
       <h1>Free Goods Condition Record</h1>
-      <p>Free goods define quantity-based commercial incentives such as 'buy ten, receive one free'. The record describes when the incentive applies and how the free quantity is calculated.</p>
-      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p>Free Goods is the SD mechanism for quantity-based commercial incentives such as “buy ten, get one free”. The condition record defines the entitlement. Pricing and item configuration decide how the free quantity is represented and valued.</p>
+      <a class="research-canvas__button" href="#worked-examples">Start with worked examples <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.FREEGOODS</strong><small>Catalogue ID</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>condition record</strong><small>Data class</small></div>
-      <em>Customer/product key, validity, minimum quantity and calculation rule.</em>
+      <em>Customer/product key, validity, minimum quantity, calculation rule and free quantity.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The record defines the entitlement; configuration defines the free-item behavior.</h2>
+      <h2>Free Goods determines quantity first. Pricing determines value second.</h2>
+      <p>A pricing condition answers “what amount should I charge?”. A Free Goods record answers “does this order qualify for a free quantity, and how much?”. Keep these two questions separate when you design or troubleshoot the process.</p>
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Customer/product key, validity, minimum quantity and calculation rule.</p>
+      <p><strong>Ownership boundary:</strong> the condition record stores the commercial entitlement. Procedure assignment, item category, pricing relevance, ATP and delivery behavior belong to configuration and downstream processing.</p>
     </div>
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Condition key, validity period, minimum quantity, free-goods quantity or ratio, unit and inclusive/exclusive calculation mode.</p>
+        <h3>Important record data</h3>
+        <p>Condition key, validity period, minimum quantity, reference quantity, free quantity, unit and calculation rule.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>The condition record stores the commercial entitlement. Procedure assignment and item behavior are configuration.</p>
+        <h3>Lead question</h3>
+        <p>Do not ask only “which transaction maintains Free Goods?”. Ask where the promotion is owned, what quantity qualifies, how partial confirmation should behave, and how Finance wants the benefit reported.</p>
       </div>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="worked-examples" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Worked examples</p>
+      <h2>The easiest way to understand Free Goods is to follow the quantities.</h2>
+      <p>The scenarios below are illustrative examples. They show the reasoning pattern; they are not evidence from a specific client system.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Example 1 — inclusive</h3>
+        <p>The commercial offer is <strong>“10 pieces for the price of 9”</strong>.</p>
+        <pre><code>Customer orders: 10 EA
+Delivered:       10 EA
+Chargeable:       9 EA
+Free:             1 EA</code></pre>
+        <p>The physical quantity stays 10. SAP separates the free part from the chargeable part. This model fits a promotion where the customer receives the requested quantity but pays for less.</p>
+      </div>
+      <div>
+        <h3>Example 2 — exclusive</h3>
+        <p>The commercial offer is <strong>“buy 10, get 1 extra”</strong>.</p>
+        <pre><code>Customer orders: 10 EA
+Chargeable:      10 EA
+Free:             1 EA
+Delivered:       11 EA</code></pre>
+        <p>The free quantity is additional. This model is useful for bonus units, launch samples or an extra promotional material.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Memory rule:</strong> inclusive means part of the requested quantity is free; exclusive means free quantity is added on top of the requested quantity.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Calculation rule</p>
+      <h2>“10 + 1” is still incomplete until we define how 25 pieces should behave.</h2>
+      <p>Assume the agreement is one free unit for every ten ordered units. The business result depends on the calculation rule.</p>
+    </header>
+
+    <div class="table-scroll study-table" role="region" aria-label="Free Goods calculation examples" tabindex="0">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Ordered quantity</th>
+            <th>Proportional idea</th>
+            <th>Whole-unit idea</th>
+            <th>Question for the business</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>9 EA</td>
+            <td>Below the qualifying base</td>
+            <td>0 free</td>
+            <td>Does a minimum threshold block the promotion?</td>
+          </tr>
+          <tr>
+            <td>10 EA</td>
+            <td>1 free</td>
+            <td>1 free</td>
+            <td>This is the simple qualifying case.</td>
+          </tr>
+          <tr>
+            <td>19 EA</td>
+            <td>Could scale proportionally</td>
+            <td>1 free</td>
+            <td>Do incomplete groups count?</td>
+          </tr>
+          <tr>
+            <td>20 EA</td>
+            <td>2 free</td>
+            <td>2 free</td>
+            <td>Both models align on a full multiple.</td>
+          </tr>
+          <tr>
+            <td>25 EA</td>
+            <td>Could produce a proportional result before rounding</td>
+            <td>2 free</td>
+            <td>What are the UoM and rounding rules?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The technical configuration only makes sense after the commercial rule is clear. “Buy 10, get 1” sounds precise, but it is not precise enough for 19, 25 or 29 units.</p>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
       <h2>A quantity threshold becomes an entitlement, then a Sales item structure.</h2>
-      <p>Free-goods determination searches the relevant customer/product context and validates date, quantity, unit, and the maintained calculation rule. When the order qualifies, the record supplies the entitlement. Configuration then decides how that entitlement appears in the Sales document and how the resulting free quantity behaves.</p>
+      <p>Free-goods determination searches the relevant customer/product context and validates date, quantity, unit and the maintained calculation rule. When the order qualifies, the record supplies the entitlement. Configuration then decides how that entitlement appears in the Sales document and how the resulting free quantity behaves.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Follow the determination key</h4><p>Use the actual customer, product, date, and other condition fields to prove which free-goods record can be reached.</p></div>
-      <div><span>02</span><h4>Check qualification</h4><p>Validate the ordered quantity, unit, minimum threshold, validity period, and the record used for the entitlement.</p></div>
+      <div><span>01</span><h4>Follow the determination key</h4><p>Use the actual customer, product, date and other condition fields to prove which free-goods record can be reached.</p></div>
+      <div><span>02</span><h4>Check qualification</h4><p>Validate the ordered quantity, unit, minimum threshold, validity period and the record used for the entitlement.</p></div>
       <div><span>03</span><h4>Calculate the benefit</h4><p>Read the maintained free quantity or ratio and distinguish inclusive from exclusive logic before comparing document quantities.</p></div>
       <div><span>04</span><h4>Read the resulting item structure</h4><p>If entitlement is correct but the free item behaves incorrectly, move from master data to item-category and process configuration.</p></div>
-      <div><span>05</span><h4>Keep recommendations separate</h4><p>Cross-selling can suggest another product; Free Goods creates a commercial quantity entitlement. The two mechanisms answer different business questions.</p></div>
+      <div><span>05</span><h4>Trace downstream execution</h4><p>A free item can still consume stock, require confirmation, move through delivery and create cost. “Free” is a commercial statement, not a logistics shortcut.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ATP and delivery example</p>
+      <h2>A promotion can be correct commercially and still create a bad logistics result.</h2>
+      <p>Consider a simple exclusive promotion.</p>
+    </header>
+
+    <pre><code>Ordered main product:     100 EA
+Free Goods entitlement:    10 EA
+Confirmed main quantity:   40 EA</code></pre>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Possible business rule A</h3>
+        <p>Keep all 10 free units because the customer qualified based on the original order quantity.</p>
+      </div>
+      <div>
+        <h3>Possible business rule B</h3>
+        <p>Reduce the free quantity to 4 because only 40% of the main quantity is currently confirmed.</p>
+      </div>
+      <div>
+        <h3>Possible business rule C</h3>
+        <p>Do not deliver the free item until the main item reaches the required delivery quantity.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+      <p><strong>Lead decision:</strong> define the partial-delivery rule with Sales and Logistics before go-live. Otherwise ATP may expose a requirement that was never specified in the promotion design.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Pricing and Finance example</p>
+      <h2>Zero customer price does not mean zero business cost.</h2>
+      <p>A free product normally still leaves inventory and therefore still has cost. Finance may want only the cost of the free item, or explicit visibility of the promotional discount.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Model 1 — no price on the free item</h3>
+        <pre><code>Free item price: 0
+Revenue:         0
+Cost:            visible downstream</code></pre>
+        <p>This keeps the Sales document simple. The commercial effect is visible mainly through the free item and its cost.</p>
+      </div>
+      <div>
+        <h3>Model 2 — price, then discount to zero</h3>
+        <pre><code>Gross value:        100 EUR
+Promotion discount: -100 EUR
+Net value:             0 EUR</code></pre>
+        <p>This can give Finance and profitability reporting a clearer view of the commercial value given away.</p>
+      </div>
+    </div>
+
+    <p>The configuration question is therefore not only “should the free item be priced?”. The stronger question is <strong>how should the promotion be represented in margin and profitability reporting?</strong></p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Choose the right mechanism</p>
+      <h2>Do not use Free Goods for every zero-price scenario.</h2>
+    </header>
+
+    <div class="table-scroll study-table" role="region" aria-label="Free Goods mechanism comparison" tabindex="0">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Business question</th>
+            <th>Better starting mechanism</th>
+            <th>Illustrative case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Should an existing item become free?</td>
+            <td><a href="/labs/enterprise-context/pricing/">Pricing / 100% discount</a></td>
+            <td>MAT-X is already ordered; only its commercial value changes.</td>
+          </tr>
+          <tr>
+            <td>Should quantity be created or split because of a promotion?</td>
+            <td>Free Goods</td>
+            <td>For every 10 MAT-A, grant 1 free unit.</td>
+          </tr>
+          <tr>
+            <td>Which material should replace the one entered?</td>
+            <td><a href="/labs/enterprise-context/master-data/material-determination/">Material Determination</a></td>
+            <td>Customer enters old MAT-A; SAP substitutes MAT-B.</td>
+          </tr>
+          <tr>
+            <td>May this customer order the material at all?</td>
+            <td><a href="/labs/enterprise-context/master-data/listing-exclusion/">Listing / Exclusion</a></td>
+            <td>MAT-B is blocked for customer C1000.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -82,9 +272,39 @@ tags:
       <p class="research-canvas__eyebrow">Troubleshooting</p>
       <h2>Separate “not entitled” from “entitled but wrong item behavior”.</h2>
     </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Document context</h4><p>Check the real sales area, customer, material, date, quantity and sales unit. Do not debug from a screenshot of the condition record alone.</p></div>
+      <div><span>02</span><h4>Qualification</h4><p>Verify validity, minimum quantity and the calculation rule. A record can exist and still not qualify.</p></div>
+      <div><span>03</span><h4>Determination path</h4><p>Prove which key and access should find the record. If a required runtime field is empty or different, the record is unreachable.</p></div>
+      <div><span>04</span><h4>Expected entitlement</h4><p>Calculate the expected free quantity manually. This separates condition-master problems from later item-behavior problems.</p></div>
+      <div><span>05</span><h4>Downstream behavior</h4><p>If the quantity is correct but pricing, ATP, delivery or billing is wrong, move to the owning configuration layer instead of creating another condition record.</p></div>
+    </div>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>If no free quantity appears, prove the condition key, validity, ordered quantity, unit, and threshold first. If the record qualifies and the calculated entitlement is correct but the document structure or pricing is wrong, move to free-goods and item-category configuration. Do not create another condition record to repair an item-behavior problem.</p>
+      <p><strong>Diagnostic rule:</strong> first prove entitlement. Then prove item behavior. This prevents master-data fixes from being used to hide configuration problems.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Design questions</p>
+      <h2>Before configuration, make the promotion precise.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Commercial rule</h3>
+        <p>Inclusive or exclusive? Same product or another product? Minimum quantity? Whole units or proportional result? Which UoM controls the threshold?</p>
+      </div>
+      <div>
+        <h3>Execution rule</h3>
+        <p>What happens with partial ATP confirmation, split deliveries, backorders and unavailable promotional stock?</p>
+      </div>
+      <div>
+        <h3>Financial rule</h3>
+        <p>Should the benefit appear only as a zero-value free item, or should Finance see the gross value and promotional deduction separately?</p>
+      </div>
     </div>
   </section>
 
@@ -95,13 +315,16 @@ tags:
     </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Free Goods is quantity-based commercial entitlement stored in condition master data. I first prove the runtime key, validity, ordered unit and threshold, then calculate the expected free quantity and distinguish inclusive from exclusive logic. The record tells me what the customer is entitled to; configuration decides how the free quantity appears and behaves in the Sales document. That is also different from Cross-Selling, which only recommends an additional product.</p>
+      <p><strong>60-second answer:</strong> Free Goods is a quantity-based commercial entitlement in SD condition master data. I first prove the runtime key, validity, ordered unit and threshold, then calculate the expected free quantity and distinguish inclusive from exclusive logic. The record tells me what the customer is entitled to; configuration decides how the free quantity appears and behaves in the Sales document. In a real design I also clarify ATP and partial deliveries, pricing and profitability reporting, and the boundary to normal discounts or material substitution.</p>
     </div>
-    <nav class="ecg-context-links" aria-label="Related master-data pages">
+    <nav class="ecg-context-links" aria-label="Related Free Goods topics">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/master-data/cross-selling/">Cross-selling</a>
+      <a href="/labs/enterprise-context/pricing/">Pricing</a>
+      <a href="/labs/enterprise-context/atp/">ATP / aATP</a>
+      <a href="/labs/enterprise-context/master-data/material-determination/">Material Determination</a>
+      <a href="/labs/enterprise-context/master-data/listing-exclusion/">Listing / Exclusion</a>
+      <a href="/labs/enterprise-context/finance-logistics/">Finance &amp; Logistics</a>
       <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
     </nav>
   </section>
