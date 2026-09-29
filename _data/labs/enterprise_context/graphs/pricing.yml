@@ -888,6 +888,142 @@ condition_record_operations:
     source_refs:
       - SRC-SAP-PRICING-MANAGE-PRICES-REFERENCE
 
+
+special_pricing_patterns:
+  thesis: >-
+    Special pricing functions do not replace the normal pricing chain. They change one specific
+    part of it: what is accumulated, which valid conditions stay active, where a value is sourced,
+    or whether an existing result is overridden.
+  patterns:
+    - id: "group-conditions"
+      title: "Group conditions"
+      memory: "Calculate from the group, then distribute to items."
+      changes: >-
+        The scale or condition basis can be built from several document items instead of one item.
+        Group-condition routine 1 accumulates items with the same condition type; routine 2 can
+        accumulate across condition types; routine 3 groups by material pricing group (KONDM).
+      examples: "KP00 whole-unit discount, KP01 incomplete-unit surcharge, DIFF rounding difference."
+      boundary: "Interval scales (scale type D) cannot be used for group conditions."
+      first_check: "Which items belong to the group, which quantity/value was accumulated, and how was the result distributed?"
+      source_refs:
+        - SRC-SAP-PRICING-LEARNING-SPECIAL-FUNCTIONS
+        - SRC-SAP-PRICING-LEARNING-SPECIAL-TYPES
+
+    - id: "condition-exclusion"
+      title: "Condition exclusion"
+      memory: "Found does not mean active."
+      changes: >-
+        Pricing can find several technically valid conditions and then deactivate some of them.
+        The exclusion indicator can be defined for a whole condition type or only for one condition record.
+      boundary: >-
+        Conditions before the excluding step are not affected. Later conditions are skipped only when
+        their assigned requirement logic checks the exclusion indicator.
+      first_check: "In pricing analysis, distinguish 'not found' from 'found but inactive/excluded' before touching master data."
+      source_refs:
+        - SRC-SAP-PRICING-LEARNING-SPECIAL-FUNCTIONS
+
+    - id: "condition-update"
+      title: "Condition update"
+      memory: "The record can be consumed over time."
+      changes: >-
+        SAP can accumulate condition value, condition base, or number of orders against one condition record
+        and stop using it after a configured maximum is exceeded.
+      examples: "Promotion budget, limited-volume discount, limited number of discounted orders."
+      boundary: "This is cumulative usage tracking, not document repricing and not condition exclusion."
+      first_check: "Inspect accumulated usage and the record limits before assuming the access failed."
+      source_refs:
+        - SRC-SAP-PRICING-LEARNING-SPECIAL-FUNCTIONS
+        - SRC-SAP-PRICING-CONDITION-UPDATE
+
+    - id: "condition-supplements"
+      title: "Condition supplements"
+      memory: "A base price can bring dependent conditions with it."
+      changes: >-
+        Supplement conditions are maintained inside the main condition record and are found together with it.
+        They do not need their own access sequence.
+      examples: "A price record that always carries a linked surcharge or discount."
+      boundary: >-
+        The allowed supplements are controlled by a supplementary pricing procedure assigned to the main condition type.
+      first_check: "Start from the main condition record; do not search for a separate access path that does not exist."
+      source_refs:
+        - SRC-SAP-PRICING-LEARNING-SPECIAL-FUNCTIONS
+
+    - id: "manual-net-and-minimum"
+      title: "Manual net and minimum price"
+      memory: "Override and floor are different business decisions."
+      changes: >-
+        HM00 can replace the order value at header level and redistribute it across items; PN00 can set an item net price
+        and deactivate the original item conditions; PMIN adds only the missing difference when a minimum price is not reached.
+      boundary: "Do not model a negotiated override as a minimum-price rule, or a minimum-price rule as manual pricing."
+      first_check: "Ask whether the business wants to replace the calculated price or only enforce a floor."
+      source_refs:
+        - SRC-SAP-PRICING-LEARNING-SPECIAL-TYPES
+
+    - id: "interval-scales"
+      title: "Graduated interval scales"
+      memory: "Different slices of one quantity can use different rates."
+      changes: >-
+        Standard condition type PR02 demonstrates scale type D: each interval of the ordered quantity can be priced
+        with its own scale rate instead of applying one rate to the whole quantity.
+      boundary: >-
+        In SAP's standard PR00/PR02 example only one price is effective; PR02 follows PR00 and makes PR00 inactive.
+        Interval scales cannot be combined with group conditions.
+      first_check: "Check scale type, scale boundaries, and the last scale point before debugging the rate."
+      source_refs:
+        - SRC-SAP-PRICING-LEARNING-SPECIAL-TYPES
+
+    - id: "free-goods"
+      title: "Free-goods pricing"
+      memory: "Free quantity and pricing behavior are separate decisions."
+      changes: >-
+        A free-goods item can be non-priced, or pricing can be active with a 100% discount design.
+        SAP documents requirement 55 for the latter pattern; it checks the special free-goods pricing indicator.
+      boundary: >-
+        Do not assume every TANN/free-goods design uses the same pricing behavior. The accounting and CO-PA treatment
+        depends on whether the free item is priced, discounted, or deliberately not priced.
+      first_check: "Check the item-category pricing indicator before investigating the discount condition."
+      source_refs:
+        - SRC-SAP-PRICING-FREE-GOODS
+
+    - id: "customer-hierarchy"
+      title: "Customer hierarchy pricing"
+      memory: "The price key can come from a hierarchy node, not only the sold-to party."
+      changes: >-
+        Pricing-relevant hierarchy nodes can carry condition records. In the classic standard HI01/HI02 model,
+        exclusive access means the first valid record at the lowest applicable level wins.
+      boundary: >-
+        In the newer S/4HANA Cloud hierarchy model, hierarchy evaluation direction and distance are configurable
+        in the access sequence, so 'lowest node always wins' is not a universal rule.
+      first_check: "Prove which hierarchy version and pricing-relevant node were copied into the document, then follow the access direction."
+      source_refs:
+        - SRC-SAP-PRICING-CUSTOMER-HIERARCHY
+        - SRC-SAP-PRICING-CUSTOMER-HIERARCHY-CLOUD
+
+  exclusion_methods:
+    - code: "A"
+      behavior: "Best condition among condition types in one exclusion group."
+    - code: "B"
+      behavior: "Best condition record within one condition type."
+    - code: "C"
+      behavior: "Compare the total of group 1 with group 2; keep the better group."
+    - code: "D"
+      behavior: "If group 1 has a valid condition, deactivate group 2."
+    - code: "E"
+      behavior: "Like B, but keep the least favorable condition record."
+    - code: "F"
+      behavior: "Like C, but keep the least favorable group."
+    - code: "L"
+      behavior: "Like A, but keep the least favorable condition."
+
+  tax_boundary:
+    memory: "Tax is a pricing element, but tax ownership is broader than SD pricing."
+    behavior: >-
+      Tax condition types use condition class D. Pricing types such as G deliberately redetermine tax while keeping
+      most other copied pricing elements. Tax determination can also depend on FI tax configuration or an external tax engine.
+    first_check: "Before changing an SD condition record, prove which layer owns the tax rate and taxability decision."
+    source_refs:
+      - SRC-SAP-PRICING-LEARNING-TAX
+
 special_condition_examples:
   boundary: >-
     SAP-delivered condition types are memory anchors for standard behavior. They are not a recommendation
