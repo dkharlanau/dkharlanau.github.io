@@ -329,24 +329,193 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Pricing and billing</p>
-      <h2>Pricing level and billing level are related, but they are not the same setting.</h2>
-      <p>The processing model tells you where pricing normally lives. Billing still depends on item-category billing relevance, delivery or order-related billing design, copy control and document flow.</p>
+      <p class="research-canvas__eyebrow">Goods issue and billing</p>
+      <h2>Follow the item that carries execution and value.</h2>
+      <p>For standard ERLA and LUMF processing, pricing, delivery and billing normally stay on the same logical level. This makes the model easy to remember, but the actual document still depends on item-category, schedule-line, billing-relevance and copy-control configuration.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Standard billing and goods issue behavior for ERLA and LUMF item categories">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Item category</th>
+            <th>Role</th>
+            <th>Pricing</th>
+            <th>Delivery / goods issue</th>
+            <th>Billing</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>TAQ</code></td>
+            <td>ERLA main item</td>
+            <td>Yes</td>
+            <td>Yes — header is the logistics item</td>
+            <td>Yes — standard billable value is carried by the header</td>
+          </tr>
+          <tr>
+            <td><code>TAE</code></td>
+            <td>ERLA subitem</td>
+            <td>No</td>
+            <td>No — normally structural / explanatory only</td>
+            <td>No separate billing item</td>
+          </tr>
+          <tr>
+            <td><code>TAP</code></td>
+            <td>LUMF main item</td>
+            <td>No</td>
+            <td>No — header is mainly structural</td>
+            <td>No separate billing item</td>
+          </tr>
+          <tr>
+            <td><code>TAN</code></td>
+            <td>LUMF subitem</td>
+            <td>Yes</td>
+            <td>Yes — each component is a logistics item</td>
+            <td>Yes — components normally become the billable items</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Configuration boundary:</strong> the table describes standard delivered behavior. Do not diagnose a productive system from the category name alone. Verify the item category in <code>VOV7</code>, the schedule line, billing relevance, copy control and the actual delivery/billing document.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>ERLA goods issue</h3>
+        <p>The main item is delivery-relevant, so the goods movement is posted for the header material. The <code>TAE</code> components do not normally create separate outbound-delivery or goods-issue items.</p>
+        <p>In a standard sell-from-stock outbound process, movement type <code>601</code> is a common result. Treat this as a downstream logistics result, not as a property built into <code>TAQ</code>.</p>
+      </div>
+      <div>
+        <h3>LUMF goods issue</h3>
+        <p>The <code>TAN</code> components are the delivery items. Each physical component can therefore post its own goods issue. The <code>TAP</code> header does not normally post a separate goods movement.</p>
+        <p>Again, <code>601</code> is typical for standard customer delivery from own stock, but the real movement type must be proved from the delivery and movement configuration.</p>
+      </div>
+      <div>
+        <h3>ERLA billing</h3>
+        <p>The invoice normally contains the commercial header item. The customer sees and is charged for the finished product or kit as one commercial object. <code>TAE</code> components do not normally create separate billing lines.</p>
+      </div>
+      <div>
+        <h3>LUMF billing</h3>
+        <p>The billable value sits on the <code>TAN</code> components. The invoice can therefore show separate component quantities and prices, while <code>TAP</code> remains a structural parent.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Delivery group behavior</p>
+      <h2>LUMF components can be separate items without becoming separate customer promises.</h2>
+      <p>When components are the executable items, SAP can correlate them through a delivery group. The goal is to prevent one component from being promised as if the rest of the kit did not exist.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>ATP confirms components</h4><p>Each delivery-relevant component can have its own confirmation date and quantity.</p></div>
+      <div><span>02</span><h4>Delivery group correlates the dates</h4><p>The system can align the BOM items to the first date on which all required items in the group can be delivered together.</p></div>
+      <div><span>03</span><h4>The latest constraint drives the group</h4><p>If one component is available later than the others, that later component can determine the executable date for the whole delivery group.</p></div>
+      <div><span>04</span><h4>Configuration decides the correlation rule</h4><p>The main-item category controls whether correlated schedule lines are generated. Current S/4HANA documentation supports delivery-group modes for date correlation and date-plus-quantity correlation.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+      <p><strong>Lead point:</strong> LUMF is component-level logistics, not necessarily independent component delivery. The delivery group is what turns several component confirmations back into one coordinated customer promise.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Profitability and margin analysis</p>
+      <h2>Billing level suggests the reporting grain, but account assignment still owns the accounting result.</h2>
+      <p>It is useful to expect header-level commercial margin for ERLA and component-level commercial margin for LUMF, but do not state this as an unconditional CO-PA rule. Profitability-segment derivation, account assignment, COGS processing and the active Margin Analysis design can change the final reporting grain.</p>
     </header>
 
     <div class="ecg-decision-columns">
       <div>
-        <h3>Pricing evidence</h3>
-        <p>Check which items carry condition records and net value. In ERLA this is normally the main item; in LUMF it is normally the components.</p>
+        <h3>ERLA</h3>
+        <p>The header carries price, delivery and billing in the standard model, so revenue and COGS evidence normally concentrates on the header product. This supports finished-product or kit-level margin analysis when account assignment follows the standard structure.</p>
       </div>
       <div>
-        <h3>Billing evidence</h3>
-        <p>Check billing relevance and the actual billing-document items. Do not assume that every visible subitem in the order becomes an invoice line.</p>
+        <h3>LUMF</h3>
+        <p>The components carry price, delivery and billing, so profitability can be analysed at component level when the accounting objects and profitability characteristics follow those items.</p>
       </div>
       <div>
-        <h3>Finance consequence</h3>
-        <p>Revenue and cost postings follow the billing and goods-movement documents, not the visual hierarchy of the sales order. A Lead traces document flow before discussing account determination.</p>
+        <h3>DISH</h3>
+        <p>Current S/4HANA Cloud Sales Kit documentation explicitly treats the header as the logistics object while subitems carry price. For this model, SAP documents profitability reporting at main-item level and propagates the profitability segment from the main item to subitems.</p>
       </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">analytics</span>
+      <p><strong>Support edge case:</strong> SAP KBA 3441527 documents a specific situation where message <code>KE350</code> is not issued for a billing item with category <code>TAQ</code>, while the same product can raise the message with another item category. Treat this as a narrow CO-PA diagnostic clue, not as a general rule for all TAQ billing.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">DISH billing variants</p>
+      <h2>Hybrid Sales Kits can separate logistics, pricing and invoice behavior.</h2>
+      <p>Current S/4HANA Cloud Sales Kit scope includes the <code>DISH</code> model, where logistics stay at the main item and pricing is carried by the subitems. SAP also provides main-item variants for normal, rebated and free-of-charge processing.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="DISH sales kit main item variants">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Item category</th>
+            <th>Purpose</th>
+            <th>Pricing / invoice behavior</th>
+            <th>Logistics / profitability behavior</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>FPHD</code></td>
+            <td>Default DISH main item</td>
+            <td>Subitems carry the sales price</td>
+            <td>Main item is logistics-relevant; SAP documents profitability reporting at main-item level</td>
+          </tr>
+          <tr>
+            <td><code>FBHD</code></td>
+            <td>Free-of-charge with invoice</td>
+            <td>A 100% rebate makes the item free of charge while the billing process still exists</td>
+            <td>Main-item logistics model remains</td>
+          </tr>
+          <tr>
+            <td><code>FFOC</code></td>
+            <td>Free-of-charge without billing</td>
+            <td>No pricing and no invoice</td>
+            <td>Process ends after delivery</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">cloud</span>
+      <p><strong>Scope boundary:</strong> these DISH variants come from current S/4HANA Cloud Sales Kit scope. Verify availability, naming and supported combinations in the exact target release before copying them into an on-premise or private-edition design.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Returns and credit memos</p>
+      <h2>Preserve the BOM hierarchy when the commercial flow reverses.</h2>
+      <p>A returns process is not only a negative copy of the original order. Follow-on documents must preserve the higher-level item relationship if item-category determination and BOM structure still depend on it.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Trace the source hierarchy</h4><p>Record the BOM header, subitems and higher-level item references in the returns order.</p></div>
+      <div><span>02</span><h4>Inspect the generated credit memo request</h4><p>Check whether the parent-child relationship is still present. In classic document structures, field <code>UEPOS</code> identifies the higher-level item.</p></div>
+      <div><span>03</span><h4>Re-check item-category determination</h4><p>If the hierarchy is lost, SAP can determine an unexpected item category or fail to reproduce the intended BOM header/subitems.</p></div>
+      <div><span>04</span><h4>Separate product logic from a known product defect</h4><p>SAP KBA 3122379 documents this symptom for advanced returns: BOM hierarchy information can be lost when the credit memo request is generated.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">assignment_return</span>
+      <p><strong>Diagnostic rule:</strong> when a returns or refund document suddenly loses the expected BOM item categories, compare hierarchy fields and document flow before changing the BOM or item-category customizing. The root cause can be the copy/generation step, not master data.</p>
     </div>
   </section>
 
@@ -576,6 +745,30 @@ tags:
         <h3><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/c0c45109928241b098c1f305c48c22df/843e7581398749d7a8a18cd00b462b76.html?locale=en-US&amp;state=PRODUCTION&amp;version=2608" rel="noopener noreferrer">Sales Order Processing for Sales Kits</a></h3>
         <p>Current Cloud scope describing ERLA, LUMF and the hybrid CPFH and DISH sales-kit models.</p>
         <small>Checked 2026-09-29.</small>
+      </article>
+      <article>
+        <span>SAP Help Portal · SAP S/4HANA 2025 FPS01</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/1764b65334e6b54ce10000000a174cb4.html" rel="noopener noreferrer">Delivery Group Correlation in BOMs</a></h3>
+        <p>Correlation of BOM component schedule lines and the item-category controls for delivery groups.</p>
+        <small>Checked 2026-09-29.</small>
+      </article>
+      <article>
+        <span>SAP Help Portal · SAP S/4HANA Cloud Sales Kits</span>
+        <h3><a href="https://help.sap.com/docs/s4hana-cloud-best-practices/sales-order-processing-for-sales-kits-31q-ch/overview-on-possible-item-categories-for-bom-main-item" rel="noopener noreferrer">Overview on Possible Item Categories for BOM Main Item</a></h3>
+        <p>Current Sales Kit variants, including DISH item categories FPHD, FBHD and FFOC and their billing/profitability behavior.</p>
+        <small>Checked 2026-09-29.</small>
+      </article>
+      <article>
+        <span>SAP Knowledge Base Article · CO-PA</span>
+        <h3><a href="https://userapps.support.sap.com/sap/support/knowledge/en/3441527" rel="noopener noreferrer">KBA 3441527 — KE350 and TAQ billing items</a></h3>
+        <p>Narrow troubleshooting case showing different KE350 behavior for TAQ versus other item categories.</p>
+        <small>Checked 2026-09-29; full content requires SAP support access.</small>
+      </article>
+      <article>
+        <span>SAP Knowledge Base Article · Advanced Returns</span>
+        <h3><a href="https://userapps.support.sap.com/sap/support/knowledge/en/3122379" rel="noopener noreferrer">KBA 3122379 — BOM hierarchy lost in credit memo request</a></h3>
+        <p>Known advanced-returns symptom where higher-level item information can be lost and affect item-category determination.</p>
+        <small>Checked 2026-09-29; full content requires SAP support access.</small>
       </article>
       <article>
         <span>SAP Help Portal · Order BOMs · SAP S/4HANA 2025 FPS01</span>
