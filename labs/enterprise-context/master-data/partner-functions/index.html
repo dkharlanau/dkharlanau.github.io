@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Customer Sales Partner Functions"
-description: "A practical deep dive into Customer Sales Partner Functions in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+description: "A practical SAP S/4HANA Sales reference for partner functions: standard codes, partner types, customer relationships, contract and hierarchy functions, runtime behavior, APIs and diagnostics."
 permalink: /labs/enterprise-context/master-data/partner-functions/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -58,6 +58,163 @@ tags:
       <div>
         <h3>Configuration boundary</h3>
         <p>The partner procedure is configuration; the partner assignment is master data. A required role can therefore fail either because configuration expects it or because no suitable master relationship exists.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="partner-function-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Partner function map</p>
+      <h2>Know the four core customer roles first. Then read the extended roles by partner type and scenario.</h2>
+      <p>There is no single universal list that is identical in every SAP system. SAP delivers standard functions, but the active set depends on deployment, language conversion, installed scope and Customizing. The table below is the high-value Sales set to know for design, support and assessment work.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">translate</span>
+      <p><strong>Internal code and UI abbreviation are not always the same.</strong> For the four standard customer roles, SAP APIs use the language-independent database values <code>AG</code>, <code>WE</code>, <code>RE</code> and <code>RG</code>. In an English UI they are commonly shown as <code>SP</code>, <code>SH</code>, <code>BP</code> and <code>PY</code>. For integrations, CDS filters and API payloads, verify which representation the interface expects instead of copying the visible UI abbreviation.</p>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Core SAP Sales customer partner functions">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Internal key</th><th>English UI</th><th>Partner type</th><th>Function</th><th>What this role owns</th><th>Typical impact</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><code>AG</code></th><td><code>SP</code></td><td><code>KU</code> Customer</td><td><strong>Sold-to party</strong></td><td>The customer placing the order and the main commercial relationship for the sales document.</td><td>Sales-area context, sales data such as sales office or price-list data, partner determination and many customer-specific commercial defaults.</td></tr>
+          <tr><th scope="row"><code>WE</code></th><td><code>SH</code></td><td><code>KU</code> Customer</td><td><strong>Ship-to party</strong></td><td>The party that receives the goods.</td><td>Delivery address, unloading point, goods-receiving hours and other receiving/shipping context consumed by delivery execution.</td></tr>
+          <tr><th scope="row"><code>RE</code></th><td><code>BP</code></td><td><code>KU</code> Customer</td><td><strong>Bill-to party</strong></td><td>The party that receives the invoice.</td><td>Invoice address plus billing communication and document-output context.</td></tr>
+          <tr><th scope="row"><code>RG</code></th><td><code>PY</code></td><td><code>KU</code> Customer</td><td><strong>Payer</strong></td><td>The party responsible for settling the receivable.</td><td>Payment-oriented billing data, bank details and downstream receivables/payment context.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="ecg-caption">Assessment shortcut: do not answer “the customer.” Name the exact role. One legal customer can order, another location can receive, a shared-service center can receive the invoice, and a parent company can pay.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="extended-functions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Extended standard set</p>
+      <h2>Sales partner processing is not limited to four customer roles.</h2>
+      <p>SAP Sales can also work with contact people, employees, suppliers and scenario-specific customer partners. These functions are useful in contracts, logistics execution, output, integrations and project-related Sales scenarios.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Extended SAP Sales partner functions">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Internal key</th><th>Function</th><th>Partner type</th><th>Where it matters</th><th>Lead note</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><code>AP</code></th><td>Contact person</td><td><code>AP</code> Contact Person</td><td>Sales documents, customer contacts, output and integrations.</td><td>The contact is connected to the customer/BP relationship. Do not model it as another sold-to customer just to get a named person into a document.</td></tr>
+          <tr><th scope="row"><code>ZM</code></th><td>Employee responsible</td><td><code>PE</code> Personnel</td><td>Sales, billing-request and service/output scenarios.</td><td>The value is a personnel/workforce identity, not a customer number.</td></tr>
+          <tr><th scope="row"><code>VE</code></th><td>Sales employee</td><td><code>PE</code> Personnel</td><td>Sales-document responsibility and reporting where the procedure includes the function.</td><td>Useful for ownership and analytics, but only if personnel integration and partner determination are designed consistently.</td></tr>
+          <tr><th scope="row"><code>VW</code></th><td>Person responsible</td><td><code>PE</code> Personnel</td><td>Selected Sales/service and output scenarios.</td><td>Do not assume every personnel function exists in every sales document type.</td></tr>
+          <tr><th scope="row"><code>LF</code></th><td>Supplier / vendor partner</td><td><code>LI</code> Supplier</td><td>Scenarios that allow a supplier partner, including selected billing-request integrations.</td><td>A supplier partner uses a supplier number. It is not interchangeable with a customer partner.</td></tr>
+          <tr><th scope="row">configured</th><td>Forwarding agent</td><td><code>LI</code> Supplier</td><td>Shipping and logistics execution.</td><td>SAP standard Sales processing supports a forwarding-agent partner under the supplier partner type. Verify the actual function key in the target procedure instead of assuming a universal code.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Do not confuse partner type with partner function.</strong> Sales processing uses four main partner types: <code>KU</code> Customer, <code>LI</code> Supplier, <code>PE</code> Personnel and <code>AP</code> Contact Person. A partner function is the specific business role inside that type, for example <code>WE</code> Ship-to under <code>KU</code> or <code>ZM</code> Employee Responsible under <code>PE</code>.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="special-functions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Scenario-specific functions</p>
+      <h2>Some partner functions only make sense when a specific Sales design is active.</h2>
+      <p>These are worth recognizing because they often appear in complex O2C assessments and integrations.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Scenario-specific SAP Sales partner functions">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Key</th><th>Function</th><th>Scenario</th><th>What it controls</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><code>AA</code></th><td>Additional authorized sold-to party for release orders</td><td>Sales contracts</td><td>Allows an additional sold-to party to release products against a contract when partner authorization is configured.</td></tr>
+          <tr><th scope="row"><code>AW</code></th><td>Additional authorized ship-to party for release orders</td><td>Sales contracts</td><td>Defines additional partners that may receive products released against the contract.</td></tr>
+          <tr><th scope="row"><code>1A</code>–<code>1D</code></th><td>Customer hierarchy node partners</td><td>Customer hierarchy</td><td>Stores the hierarchy path in the sales document so hierarchy-dependent pricing, reporting or document analysis can use the relevant nodes. SAP standard provides four levels and the design can be extended further.</td></tr>
+          <tr><th scope="row"><code>SP</code></th><td>Forwarding Agent</td><td>Outbound delivery / logistics integration</td><td>Can represent the forwarding agent in logistics execution. This is a strong example of why an internal/configuration code must be interpreted in its exact application and language context: <code>SP</code> is also the English display abbreviation for sold-to party <code>AG</code>.</td></tr>
+          <tr><th scope="row"><code>U3</code></th><td>Carrier</td><td>Outbound delivery / logistics integration</td><td>Identifies a carrier in supported logistics-integration scenarios.</td></tr>
+          <tr><th scope="row"><code>P1</code>–<code>P4</code></th><td>Project personnel functions</td><td>Project-related Sales / service scenarios</td><td>SAP documents personnel functions such as Project Manager, Project Accountant, Project Controller and Project Partner in relevant S/4HANA Cloud scenarios.</td></tr>
+          <tr><th scope="row"><code>ED</code></th><td>EDI mail recipient</td><td>Output / communication scenarios</td><td>A personnel-type partner function used in supported output contexts.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="ecg-caption">Custom <code>Z*</code> partner functions are normal in customer systems. The design question is not “does SAP have a code for this name?” but “what partner type, determination source, cardinality, change rule and downstream consumer does this function need?”</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="complete-list" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Find the real list</p>
+      <h2>The exhaustive list is the one configured in your system.</h2>
+      <p>For design or troubleshooting, first read the system instead of relying on a static cheat sheet.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Released CDS</h3>
+        <p><code>I_PartnerFunction</code> and <code>I_PartnerFunctionText</code> provide the available partner functions and their partner types. Use them when you need a clean, released view of the configured catalogue.</p>
+      </div>
+      <div>
+        <h3>Customer master relationship</h3>
+        <p><code>I_CustSalesPartnerFunc</code> exposes customer, sales organization, distribution channel, division, partner counter and partner function. The Business Partner API exposes the same master-data concept through <code>A_CustSalesPartnerFunc</code>.</p>
+      </div>
+      <div>
+        <h3>Sales document runtime</h3>
+        <p><code>I_SalesOrderPartner</code> lets you inspect the partner function actually stored at sales-order header level and whether the partner is a customer, supplier, personnel number or contact person.</p>
+      </div>
+      <div>
+        <h3>Classic diagnostics</h3>
+        <p>In private-cloud/on-premise investigations, <code>TPAR</code> is a useful partner-function definition reference, <code>KNVP</code> is the classic customer sales partner-assignment table, and <code>VBPA</code> stores document partners. Prefer released CDS/API objects for new integrations.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">api</span>
+      <p><strong>Integration rule:</strong> many Sales APIs expect the database/internal partner-function format. For example, send <code>WE</code> for ship-to when the API requires the internal value, even if the English UI displays <code>SH</code>. Never hard-code translated UI labels into an integration contract.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="control-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Control model</p>
+      <h2>A partner function is useful only when the full determination chain is coherent.</h2>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define the function</h4><p>Know the business meaning and the partner type that supplies the number: customer, supplier, personnel or contact person.</p></div>
+      <div><span>02</span><h4>Place it in a procedure</h4><p>Decide whether the role is required, optional, repeatable, changeable and where SAP should search for it.</p></div>
+      <div><span>03</span><h4>Assign the procedure</h4><p>Connect the procedure to the relevant master-data or document context such as a customer account group, sales document header/item design or delivery design.</p></div>
+      <div><span>04</span><h4>Maintain the relationship</h4><p>For customer partner functions, maintain the actual assigned partner in the correct sales area and use the partner counter when several assignments are allowed.</p></div>
+      <div><span>05</span><h4>Prove the document result</h4><p>The document partner set is the runtime truth. Reference documents, interfaces, manual changes and item-level deviations can produce a result different from the master-data default.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP reference points</p>
+      <h2>Use these sources when you need to verify a code or scenario.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Core Sales functions</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/03c04db2a7434731b7fe21dca77440da/89d75897601d428b8c4bf89b3fd49610.html">Sales API — Partner</a> documents the internal <code>AG/WE/RE/RG</code> values and English UI abbreviations.</p>
+      </div>
+      <div>
+        <h3>Partner types</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/0871bd534f22b44ce10000000a174cb4.html">Partner Type and Partner Function</a> documents the four Sales partner types and common customer, supplier, personnel and contact functions.</p>
+      </div>
+      <div>
+        <h3>Configured catalogue</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/0f69f8fb28ac4bf48d2b57b9637e81fa/931621625e484055bd90ccacb42ad89e.html">CDS I_PartnerFunction</a> is the released view for available partner functions and partner types.</p>
+      </div>
+      <div>
+        <h3>Contract authorization</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/aad223652a144a05a995dc4c405b2d52.html">FAQ for Sales Contracts</a> documents <code>AA</code> and <code>AW</code> for additional authorized release-order partners.</p>
       </div>
     </div>
   </section>
