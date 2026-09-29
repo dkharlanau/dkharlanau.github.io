@@ -102,223 +102,206 @@ We normally care about request timeout, maximum context, agent steps, parallel w
 
 These limits are part of system behavior. When a budget is exhausted, the system should return a clear degraded result or escalation state rather than quietly continue until an upstream service becomes the bottleneck.
 
-<h2 id="token-economics">Token economics: optimize cost per successful task</h2>
+<h2 id="token-economics">Token economics: spend where intelligence matters</h2>
 
-Token cost is only one part of AI cost. A workflow becomes expensive when it makes too many model calls, carries the same context again and again, produces more output than the task needs, uses a premium model for simple work, or lets retries and agent loops multiply silently.
+AI cost rarely grows because of one expensive model call. It grows because the system repeats work: the same context is sent again, agents take too many steps, retries multiply, large tool schemas travel with every request, and long answers are produced only to be shortened later.
 
-The useful unit is therefore **cost per successful task**, not price per million tokens.
+So do not optimize **price per token**. Optimize **cost per accepted task**.
 
 ```text
-cost per successful task
-  = total model + tool + retrieval + infrastructure spend
-    / number of outcomes that pass the quality gate
+cost per accepted task
+  = model + tool + retrieval + infrastructure cost
+    / tasks that pass the quality gate
 ```
 
-This changes the optimization question. A cheaper model that creates more retries or more rejected answers can make the final task more expensive. A larger model can sometimes be cheaper if it solves the task in one call instead of five. Measure the full path.
+A cheaper call can still be the expensive option if it creates more retries, more review, or more failed outcomes.
 
 <div class="callout callout--note">
-  <p><strong>Lead rule:</strong> optimize for the lowest cost that still passes the required quality, latency, security, and control gates.</p>
+  <p><strong>Lead rule:</strong> reduce cost only while quality, latency, security, and control stay inside the agreed boundary.</p>
 </div>
 
-### First find where the cost is created
+### First: find the waste
 
-For each request or business task, separate these drivers:
+Before changing the model, trace where money is actually going.
 
-- number of model calls;
-- uncached input tokens;
-- cached reads and cache writes, when the provider exposes them;
+Look at:
+
+- model calls per task;
+- uncached input versus cached input;
 - output and reasoning tokens;
-- retrieval, search, and paid tool calls;
-- agent steps, retries, and parallel workers;
-- media input such as large images, audio, or video;
-- vector storage, cache storage, or other supporting infrastructure.
+- retries and agent steps;
+- tool and search calls;
+- repeated tool schemas or large JSON payloads;
+- media size;
+- human correction after the model is done.
 
-Then rank traces by total cost. The expensive tail often teaches more than the average.
+The average is useful. The expensive tail is usually more useful. Ten normal requests and one runaway agent can have the same average as eleven healthy requests.
 
-<div class="table-scroll study-table" role="region" aria-label="AI cost optimization levers" tabindex="0">
+### Take the cheap wins first
+
+These changes often reduce cost without changing the task itself.
+
+<div class="table-scroll study-table" role="region" aria-label="Low-risk AI cost levers" tabindex="0">
 <table class="study-table__table">
 <thead>
-<tr><th scope="col">Lever</th><th scope="col">What changes</th><th scope="col">Use it when</th><th scope="col">Main check</th></tr>
+<tr><th scope="col">Lever</th><th scope="col">What to change</th><th scope="col">Watch for</th></tr>
 </thead>
 <tbody>
-<tr><th scope="row">Model routing</th><td>Use a smaller or cheaper model for simple classification, extraction, formatting, or low-risk steps. Escalate only harder cases.</td><td>One expensive model handles every request today.</td><td>Keep one eval set across routes. A cheaper call is not a saving if failure and retry rates rise.</td></tr>
-<tr><th scope="row">Prompt caching</th><td>Keep reusable instructions, examples, and tool definitions in a stable prefix so the provider can reuse processed context.</td><td>Many requests share a large common prefix.</td><td>Measure actual cache-hit tokens. Dynamic timestamps, user data, reordered tools, or other early changes can destroy prefix reuse.</td></tr>
-<tr><th scope="row">Batch or flex execution</th><td>Move non-interactive work to a discounted asynchronous service tier when the provider offers one.</td><td>Evals, enrichment, classification, embeddings, document processing, or overnight jobs do not need an immediate answer.</td><td>Confirm turnaround time, rate limits, retry behavior, and the current provider price before building the business case.</td></tr>
-<tr><th scope="row">Context reduction</th><td>Retrieve only the evidence needed for this question instead of sending the full manual, chat history, or data export.</td><td>Input grows faster than answer quality.</td><td>Evaluate retrieval coverage. Cutting context is useful only if the required evidence still reaches the model.</td></tr>
-<tr><th scope="row">Progressive tool disclosure</th><td>Expose only the tool families relevant to the current route or task instead of placing every schema in every call.</td><td>A large tool catalog consumes context although most tools are never used.</td><td>Routing must be testable. Do not hide a tool that is required for a legitimate exception path.</td></tr>
-<tr><th scope="row">Programmatic tool chaining</th><td>Filter, aggregate, validate, or join tool results in normal code and pass the model the useful result rather than raw payloads.</td><td>Large JSON responses repeatedly enter model context.</td><td>Keep source IDs and evidence needed for traceability. Compression must not erase the reason behind a decision.</td></tr>
-<tr><th scope="row">Prompt and schema audit</th><td>Remove obsolete instructions, duplicated examples, unused schema fields, and prompting written for an older model.</td><td>Prompts have grown through many incremental fixes.</td><td>Run the same evals before and after. Shorter is useful only when behavior stays good.</td></tr>
-<tr><th scope="row">Output discipline</th><td>Ask for the smallest output the next consumer needs: structured fields, short explanations, or bounded sections.</td><td>The model writes long prose that is later parsed, summarized, or discarded.</td><td>Do not remove explanations that are required for audit, user trust, or decision quality.</td></tr>
-<tr><th scope="row">Agent budgets</th><td>Cap steps, retries, tool calls, wall time, parallel workers, and spend per task.</td><td>Agent loops occasionally run much longer than normal.</td><td>Define a useful stop state such as <code>budget_exhausted</code> or <code>insufficient_evidence</code> instead of silently continuing.</td></tr>
-<tr><th scope="row">Semantic or result caching</th><td>Reuse a previous answer or deterministic result when the new request is equivalent enough.</td><td>Questions repeat and the underlying fact is stable.</td><td>Key the cache by permission scope, data version, and freshness. Do not reuse a result across users or states that should be isolated.</td></tr>
-<tr><th scope="row">Media reduction</th><td>Crop, resize, sample, or extract the relevant part of image, video, or audio before model ingestion.</td><td>Large media enters the model although only a small region or time window matters.</td><td>Keep enough resolution and context for the decision. Validate the reduced input on representative cases.</td></tr>
+<tr><th scope="row">Prompt caching</th><td>Keep stable instructions, examples, and tool definitions in a stable prefix.</td><td>One changing timestamp, user field, or reordered tool near the top can kill reuse.</td></tr>
+<tr><th scope="row">Batch / async work</th><td>Move evals, enrichment, reports, embeddings, and nightly jobs away from interactive execution when the provider supports it.</td><td>Check turnaround time, retries, and current service pricing.</td></tr>
+<tr><th scope="row">Smaller context</th><td>Send the evidence needed for this task, not the whole manual, chat history, or export.</td><td>Measure retrieval coverage. Smaller context is not better if the answer loses the key evidence.</td></tr>
+<tr><th scope="row">Fewer tool schemas</th><td>Show the model only the tools relevant to the current route or stage.</td><td>Do not hide tools required for valid exception paths.</td></tr>
+<tr><th scope="row">Programmatic filtering</th><td>Filter, join, calculate, and validate in code before data enters model context.</td><td>Keep source IDs and evidence needed for traceability.</td></tr>
+<tr><th scope="row">Prompt cleanup</th><td>Remove old instructions, duplicated examples, and unused schema fields.</td><td>Run the same eval before and after. Shorter is useful only if behavior holds.</td></tr>
+<tr><th scope="row">Shorter output</th><td>Ask for the smallest output the next consumer really needs.</td><td>Do not remove explanation needed for audit, review, or a business decision.</td></tr>
+<tr><th scope="row">Agent limits</th><td>Cap steps, retries, tool calls, wall time, parallel workers, and spend.</td><td>Define a useful stop state such as <code>budget_exhausted</code> instead of letting the loop drift.</td></tr>
 </tbody>
 </table>
 </div>
 
-### Preserve the stable prefix
-
-Prompt caching deserves special attention because it can fail silently. A long shared prompt may look reusable to a developer while one changing field near the beginning makes most of the prefix different.
-
-A safer request shape is:
+A useful prompt shape is simple:
 
 ```text
-stable provider / system instructions
+stable instructions
 stable tool definitions
 stable reference rules
-------------------------- cache-friendly boundary
+---------------------- reuse boundary
 user-specific context
-current timestamp or request metadata
-new user input
+current request
 ```
 
-The exact cache rules are provider- and model-specific. The design principle is stable: put shared content before changing content, preserve ordering where possible, and monitor reported cache usage instead of assuming reuse happened.
+The exact caching rules depend on the provider and model. The design rule does not: **put stable content before changing content and measure actual cache usage.**
 
-### Reduce calls before reducing intelligence
+### Remove calls before reducing intelligence
 
-A common mistake is to start by switching every call to the cheapest model. First remove calls that should not exist.
+The first instinct is often: “use a cheaper model.” That is not always the best first move.
 
-Examples:
+Start by removing calls that should not exist:
 
-- use code for exact calculations, filtering, sorting, validation, and policy checks;
-- stop asking a model to summarize data that the next function can read directly;
-- avoid a second model call when structured output from the first call already contains the required fields;
-- stop an agent after sufficient evidence instead of asking for one more search “just in case”;
-- merge independent prompt steps when one well-defined call can perform them safely;
-- do not run several workers on work that is not genuinely parallel.
+- exact calculation → code;
+- sorting or filtering → code;
+- policy check → code;
+- validation → code;
+- data that can be joined before the model → join it first;
+- second model call that only reformats the first result → remove it;
+- one more agent search after enough evidence is already available → stop.
 
-Call reduction often improves latency and reliability at the same time as cost.
+Fewer calls usually improve cost, latency, and reliability at the same time.
 
-### Use a simple optimization loop
+### Then the trade-offs begin
 
-1. **Measure.** Record tokens, calls, cache usage, retries, tools, latency, quality result, and cost for each task.
-2. **Find the expensive shape.** Separate normal requests from the costly tail: long contexts, loops, retries, media, or premium-model routes.
-3. **Change one lever.** For example, stabilize the prefix, reduce retrieval size, cap output, route easy cases, or move offline work to batch.
-4. **Run the same eval set.** Compare quality, latency, and cost on the same population.
-5. **Keep the change only if the full task improves.** A token reduction that causes more human correction is not an optimization.
-
-Useful production measures include:
-
-- cost per request;
-- **cost per successful task**;
-- input, cached-input, output, and reasoning tokens when available;
-- model calls and tool calls per task;
-- cache-hit token ratio;
-- retry rate;
-- agent steps and parallel workers;
-- p50 and p95 latency;
-- eval pass rate or accepted-output rate;
-- human correction time for tasks where review is part of the process.
-
-
-### After the free wins, every saving buys a trade-off
-
-Some savings are close to free: remove useless calls, stabilize the cache prefix, shorten irrelevant context, move background work to batch, and stop producing text nobody uses.
-
-After that, the discussion changes. We start trading **quality, latency, generality, or operating effort** for lower cost. That can still be the right decision, but now the eval becomes the gate.
+After the low-risk savings, cheaper usually means giving something up: reasoning depth, latency, generality, or operating simplicity.
 
 <div class="table-scroll study-table" role="region" aria-label="AI cost and quality trade-offs" tabindex="0">
 <table class="study-table__table">
 <thead>
-<tr><th scope="col">Lever</th><th scope="col">What we trade</th><th scope="col">When it can make sense</th><th scope="col">What must prove it</th></tr>
+<tr><th scope="col">Lever</th><th scope="col">What you trade</th><th scope="col">Good fit</th><th scope="col">How to prove it</th></tr>
 </thead>
 <tbody>
-<tr><th scope="row">Lower reasoning effort</th><td>Depth of analysis on harder tasks.</td><td>The task is mostly extraction, classification, routine explanation, or well-bounded reasoning and the provider exposes an effort control.</td><td>Run the same cases at each setting. Check both pass rate and cost per successful task.</td></tr>
-<tr><th scope="row">Cheap first, retry the failures</th><td>More latency on the cases that fail first pass, plus a reliable way to detect failure.</td><td>Most requests are easy and failure can be detected by tests, schema checks, confidence rules, or a reviewer.</td><td>Measure the full cascade, including retries. A cheap first call is useful only if detection is strong.</td></tr>
-<tr><th scope="row">Task budgets</th><td>Some hard cases will stop earlier or escalate.</td><td>Long-tail agent runs create much of the spend and the business accepts explicit stop states.</td><td>Track pass rate by budget level and define what happens at <code>budget_exhausted</code>.</td></tr>
-<tr><th scope="row">Stronger model, lower effort</th><td>Sometimes very little; sometimes a surprising quality drop.</td><td>A stronger model can solve the task with a lower effort setting or fewer retries than a mid-tier model.</td><td>Benchmark the combination. Model price alone does not tell us task economics.</td></tr>
-<tr><th scope="row">Step down a model tier</th><td>Generality and performance on ambiguous or difficult cases.</td><td>Work is high-volume, narrow, easy to check, and mistakes are recoverable.</td><td>Compare by task segment, not only one average score. Keep the hard cases visible.</td></tr>
-<tr><th scope="row">Routing and cascades</th><td>Router errors and extra architecture.</td><td>Traffic has clear easy and hard populations, so not every request needs the same model.</td><td>Measure wrong-route rate, retry rate, quality by route, and the cost of the router itself.</td></tr>
-<tr><th scope="row">Cheap workers under an orchestrator</th><td>Coordination, duplicated context, and more failure paths.</td><td>The work can be split into genuinely independent parts and merged cleanly.</td><td>Compare against one capable model. More workers are not automatically cheaper.</td></tr>
-<tr><th scope="row">Distill or specialize a smaller model</th><td>Generality, plus a training and serving pipeline to maintain.</td><td>The task is narrow, repetitive, stable, high-volume, and there is enough labeled behavior to teach and test it.</td><td>Count training, serving, monitoring, retraining, and drift costs. Evaluate outside the training examples.</td></tr>
-<tr><th scope="row">Self-host open weights</th><td>Managed-service simplicity for infrastructure, capacity planning, patching, safety work, and idle hardware risk.</td><td>Volume is high, utilization can stay high, deployment constraints justify it, and the selected model passes the same quality gate.</td><td>Use total cost of ownership, not GPU price. Include people, redundancy, storage, observability, upgrades, and spare capacity.</td></tr>
+<tr><th scope="row">Lower reasoning effort</th><td>Depth on harder cases.</td><td>Routine extraction, classification, or bounded reasoning.</td><td>Run the same eval at each effort level.</td></tr>
+<tr><th scope="row">Cheap first, retry failures</th><td>Latency on failed first attempts.</td><td>Most requests are easy and failure is easy to detect.</td><td>Count retries in the final task cost.</td></tr>
+<tr><th scope="row">Tighter task budgets</th><td>Some difficult tasks will stop or escalate.</td><td>Long-tail agent runs create much of the spend.</td><td>Compare pass rate and cost at each budget.</td></tr>
+<tr><th scope="row">Step down model tier</th><td>Performance on ambiguous or difficult work.</td><td>High-volume, narrow, checkable tasks.</td><td>Compare easy and hard segments separately.</td></tr>
+<tr><th scope="row">Routing / cascades</th><td>Router errors and more architecture.</td><td>Traffic contains clear easy and hard populations.</td><td>Measure wrong routes, retries, and total cascade cost.</td></tr>
+<tr><th scope="row">Specialized smaller model</th><td>Generality plus training and serving work.</td><td>Stable, repetitive, high-volume tasks.</td><td>Include training, serving, monitoring, and drift in the economics.</td></tr>
+<tr><th scope="row">Self-host open weights</th><td>Managed-service simplicity.</td><td>High sustained utilization or strong deployment constraints.</td><td>Use total cost of ownership, not GPU price.</td></tr>
 </tbody>
 </table>
 </div>
 
-A useful order is:
+The order is usually:
 
 1. remove waste;
-2. use provider discounts and caching;
-3. reduce unnecessary context and output;
+2. improve cache and batch use;
+3. shrink unnecessary context and output;
 4. tune effort and budgets;
 5. route easy and hard work differently;
-6. change the model only after the earlier levers are measured;
-7. consider specialization or self-hosting only when volume and operating maturity justify it.
+6. change the model;
+7. consider specialization or self-hosting only when volume justifies the operating burden.
 
-The sequence is not a law. It is a way to avoid rebuilding the architecture before checking the cheaper changes.
+This is not a law. It is a way to avoid redesigning the platform before fixing obvious waste.
 
 ### The eval is the gate
 
-Cost work without an eval is guesswork. If we cannot tell whether the cheaper version is still good enough, we cannot safely optimize it.
+If we cannot measure quality, we cannot safely reduce cost.
 
-For a first practical baseline, freeze **20–30 representative requests**. This is not a magic number; it is a small working set that a team can review quickly. Include normal cases, difficult cases, and at least a few failures that matter.
+For a first baseline, freeze **20–30 representative requests**. Include normal work, difficult work, and failures that matter. Keep the set unchanged while comparing prompts, models, effort, routing, and budgets.
 
-Use the cheapest scoring method that gives a trustworthy answer:
+Use the cheapest reliable scoring method:
 
-- exact checks or unit tests for deterministic outputs;
-- schema and business-rule checks for structured results;
-- golden answers where the expected result is stable;
-- a short human rubric for quality that cannot be checked exactly;
-- a model grader only where simpler checks are not enough.
+- deterministic test;
+- schema or business-rule check;
+- golden answer;
+- short human rubric;
+- model grader only when simpler checks are not enough.
 
-Keep the request set fixed while comparing model, effort, routing, prompt, and budget changes. If the test population changes every time, the cost comparison is weak.
-
-A simple decision table is enough:
+The decision is then simple:
 
 <div class="table-scroll study-table" role="region" aria-label="AI cost optimization decision gate" tabindex="0">
 <table class="study-table__table">
 <thead>
-<tr><th scope="col">Change</th><th scope="col">Cost</th><th scope="col">Quality</th><th scope="col">Decision</th></tr>
+<tr><th scope="col">Result</th><th scope="col">Meaning</th></tr>
 </thead>
 <tbody>
-<tr><th scope="row">Cheaper and same quality</th><td>Down</td><td>Stable</td><td>Good candidate. Check latency and control boundaries, then keep it.</td></tr>
-<tr><th scope="row">Cheaper and slightly worse</th><td>Down</td><td>Down</td><td>Business decision. Is the quality loss inside the agreed tolerance?</td></tr>
-<tr><th scope="row">Cheaper but more retries</th><td>Maybe down</td><td>Unclear</td><td>Calculate the full task cost. The first call is not the unit of value.</td></tr>
-<tr><th scope="row">More expensive but much better</th><td>Up</td><td>Up</td><td>May still win if it removes retries, review, rework, or business failure.</td></tr>
+<tr><th scope="row">Cheaper, same quality</th><td>Keep it if latency and controls are still acceptable.</td></tr>
+<tr><th scope="row">Cheaper, slightly worse</th><td>Business decision: is the quality loss inside the agreed tolerance?</td></tr>
+<tr><th scope="row">Cheaper call, more retries</th><td>Recalculate the full task cost. The first call is not the unit of value.</td></tr>
+<tr><th scope="row">More expensive, much better</th><td>It may still win if it removes review, retries, rework, or business failure.</td></tr>
 </tbody>
 </table>
 </div>
 
 Related: [Evals and Reliability](/labs/ai-ready/evals-reliability/).
 
-### Five questions for one cost meeting
+### Five questions that expose the real cost problem
 
-We can usually tell in one meeting whether the opportunity is mainly **measurement, architecture, model choice, or platform economics**. We do not need source-code access to start.
+You can usually identify the project shape in one meeting.
 
 <div class="table-scroll study-table" role="region" aria-label="Five AI cost discovery questions" tabindex="0">
 <table class="study-table__table">
 <thead>
-<tr><th scope="col">Question</th><th scope="col">Why it matters</th><th scope="col">What the answer tells us</th></tr>
+<tr><th scope="col">Ask</th><th scope="col">What the answer tells you</th></tr>
 </thead>
 <tbody>
-<tr><th scope="row">1. What does one successful task cost today?</th><td>A monthly invoice or price per million tokens is too far from the business outcome. We need cost per completed, accepted task.</td><td>If nobody can answer, the first project is measurement. That is often a small project and it unlocks every later decision.</td></tr>
-<tr><th scope="row">2. How much reusable input actually becomes cached input?</th><td>Agent loops and repeated workflows often resend a large stable prefix. If reuse is expected but cache reads stay low, part of the architecture is wasting work.</td><td>Low reuse points us toward prefix instability, changing tool schemas, request ordering, or provider eligibility before we touch model quality.</td></tr>
-<tr><th scope="row">3. Which AI traffic has nobody waiting for it?</th><td>Evals, enrichment, report generation, bulk classification, embeddings, and nightly jobs usually do not need interactive latency.</td><td>This is the candidate set for batch, queues, lower-priority service tiers, and more aggressive scheduling.</td></tr>
-<tr><th scope="row">4. Do we have an eval, or only an opinion?</th><td>Without a repeatable outcome check, we cannot safely lower effort, change models, add routing, or tighten budgets.</td><td>If there is no eval, that becomes the first deliverable. Freeze representative requests and create the smallest scoring method that works.</td></tr>
-<tr><th scope="row">5. What are we not allowed to do?</th><td>Residency, retention, approved-model lists, security rules, latency commitments, contracts, and committed cloud spend can remove options before cost analysis starts.</td><td>Strong constraints usually make the low-risk levers more valuable: measurement, caching, context reduction, batching, and call reduction.</td></tr>
+<tr><th scope="row">1. What does one accepted task cost today?</th><td>If the answer is only a monthly invoice or token price, measurement is the first project.</td></tr>
+<tr><th scope="row">2. How much repeated input is actually cached?</th><td>Low reuse points to unstable prefixes, changing tool schemas, request ordering, or provider eligibility.</td></tr>
+<tr><th scope="row">3. Which AI traffic has nobody waiting for it?</th><td>That is your batch and asynchronous candidate set.</td></tr>
+<tr><th scope="row">4. Do we have an eval, or only an opinion?</th><td>No eval means model, effort, routing, and budget changes are mostly guesswork.</td></tr>
+<tr><th scope="row">5. What are we not allowed to change?</th><td>Residency, security, latency, approved-model lists, contracts, and committed cloud spend may remove options before cost work starts.</td></tr>
 </tbody>
 </table>
 </div>
 
-These five answers also tell us what kind of work this is. A missing task-cost metric means observability first. Poor cache reuse means request-shape work. A large offline share means scheduling and batch. No eval means quality measurement. Tight constraints mean architecture optimization inside the current boundary.
+These answers usually point to one of five starting points: **measurement, request shape, batch execution, evaluation, or architecture constraints.**
+
+### Operate it as a loop
+
+1. **Measure** cost and quality per task.
+2. **Find** the expensive pattern, not just the expensive model.
+3. **Change one lever.**
+4. **Run the same eval.**
+5. **Keep the change only if the whole task improves.**
+
+Useful production measures are cost per accepted task, calls per task, cached-input share, retry rate, agent steps, p50/p95 latency, eval pass rate, and human correction time.
 
 ### Know where not to optimize
 
-Do not trade away the control boundary to save tokens. Authorization, policy, transaction checks, and required evidence still belong in normal software. Do not cache dynamic business facts without a freshness rule. Do not hide source evidence just to make context smaller. Do not use a weaker model for a high-risk decision only because its token price is lower.
+Do not save tokens by weakening authorization, policy checks, transaction controls, evidence, or auditability. Do not cache dynamic business facts without a freshness rule. Do not hide sources just to make context smaller.
 
-The right question is not “How do we use fewer tokens?” It is “Which part of this task is creating spend without creating accepted business value?”
+The right question is not “How do we use fewer tokens?”
+
+It is: **“Which spend is not creating accepted business value?”**
 
 ### Current provider examples
 
-Provider details move quickly, so use these as implementation references rather than permanent price assumptions:
+Provider behavior and pricing move quickly. Use current documentation before putting any percentage into a business case:
 
-- [OpenAI Prompt Caching](https://developers.openai.com/api/docs/guides/prompt-caching) — current cache behavior, prefix rules, usage fields, and model-specific pricing notes.
-- [OpenAI Batch API](https://developers.openai.com/api/docs/guides/batch) — asynchronous batch processing for work that does not need an immediate response.
-- [Google Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing) — examples of standard, cached-context, batch, and other service tiers.
-- [Google Gemini Batch API](https://ai.google.dev/gemini-api/docs/batch-api) — asynchronous batch behavior and service-level details.
+- [OpenAI Prompt Caching](https://developers.openai.com/api/docs/guides/prompt-caching)
+- [OpenAI Batch API](https://developers.openai.com/api/docs/guides/batch)
+- [Google Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing)
+- [Google Gemini Batch API](https://ai.google.dev/gemini-api/docs/batch-api)
 
-Reviewed for this section: 29 Sep 2026. Recheck current model pricing before using a percentage or unit rate in a financial estimate.
+Reviewed for this section: 29 Sep 2026.
 
 ## Cache only with a freshness rule
 
