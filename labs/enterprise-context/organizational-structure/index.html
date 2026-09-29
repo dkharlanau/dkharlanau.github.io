@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP Organizational Structure in Sales — Assignments and Runtime Impact"
-description: "A practical SAP S/4HANA Sales organizational-structure guide focused on Sales Area design, enterprise-structure assignments, Plant and Shipping Point links, intercompany boundaries, pricing, master-data scope, runtime impact, and diagnostics."
+title: "SAP Organizational Structure — Sales, Logistics, Procurement and Finance"
+description: "A practical SAP S/4HANA organizational-structure guide focused on Sales assignments and their links to Procurement, Inventory, MRP, Production, Quality, EWM, Transportation, Finance, Controlling, and Asset Management."
 permalink: /labs/enterprise-context/organizational-structure/
 status: draft
 verified: false
@@ -22,6 +22,15 @@ tags:
   - plant
   - shipping-point
   - intercompany
+  - procurement
+  - inventory-management
+  - mrp
+  - production
+  - quality-management
+  - ewm
+  - transportation-management
+  - controlling
+  - asset-management
   - assessment
 source_links:
   - title: "Identifying Organizational Units in SAP S/4HANA Sales"
@@ -44,6 +53,22 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ee6ff9b281d8448f96b4fe6c89f2bdc8/3620136dffda4ad78a62a9fdd1d0bbc0.html"
   - title: "Sales Groups for Sales Office"
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/c0c54048d35849128be8e872df5bea6d/1a5a0c659c8a44f4a27e6312b56c8446.html"
+  - title: "Enterprise Structure in SAP S/4HANA"
+    url: "https://learning.sap.com/courses/exploring-end-to-end-business-processes-in-sap-business-suite/providing-a-general-definition-of-the-enterprise-structure-in-sap-s-4hana_caeaf054-4564-4e5b-8824-86ac6b03cf5b"
+  - title: "Organizational Units in Materials Management"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/defining-organizational-units-in-materials-management"
+  - title: "Material Requirements Planning and MRP Areas"
+    url: "https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/running-materials-requirements-planning"
+  - title: "SAP EWM Warehouse Structures"
+    url: "https://learning.sap.com/courses/processes-in-sap-s-4hana-ewm/outlining-warehouse-structures"
+  - title: "Quality Management Data at Plant Level"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f7fddfe4caca43dd967ac4c9ce6a70e4/1415c453f57eb44ce10000000a174cb4.html?locale=en-US&state=PRODUCTION&version=2023.latest"
+  - title: "Transportation Management Organizational Structures"
+    url: "https://learning.sap.com/courses/implementing-sap-s-4hana-cloud-public-edition-transportation-management/creating-organizational-structures-and-business-partners_ae016ccc-2b9f-4ac6-872b-0f10697ef657"
+  - title: "Financial Accounting Organizational Units"
+    url: "https://learning.sap.com/courses/customizing-core-settings-in-financial-accounting-in-sap-s4hana/managing-organizational-units-in-financial-accounting-fi"
+  - title: "Asset Management Organizational Units"
+    url: "https://learning.sap.com/courses/sap-s-4hana-cloud-public-edition-asset-management-configuration/configuring-organizational-units_abbc49c1-a9af-44e9-8db0-e38ef76d396f"
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -59,23 +84,23 @@ source_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Sales / Enterprise Structure</p>
+      <p class="research-canvas__eyebrow">SAP S/4HANA / Enterprise Structure</p>
       <h1>Organizational structure is a network of assignments, not a hierarchy to memorize.</h1>
-      <p>The useful question is not only “Which SAP organizational units exist?” We need to know which combinations are valid, which data is stored at each level, which unit owns the next process step, and what breaks when one assignment is missing or wrong.</p>
+      <p>Sales is our starting point, but a real order crosses Procurement, Inventory, Planning, Warehouse, Transportation, Finance, and sometimes Maintenance. The useful question is not only “Which organizational units exist?” We need to know which combinations are valid, which module owns each boundary, and what changes when an assignment is missing or wrong.</p>
       <a class="research-canvas__button" href="#assignment-map">Start with the assignment map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Organizational structure study inventory">
       <p>Study inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>10</strong><small>Core units and keys</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>10</strong><small>Assignments to trace</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>8</strong><small>Diagnostic checks</small></div>
-      <em>Sales first · Finance and Logistics boundaries included</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Sales</strong><small>Commercial backbone</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>7</strong><small>Connected domains</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Plant</strong><small>Cross-module hinge</small></div>
+      <em>Sales first · Procurement · Planning · Warehouse · Transport · Finance · Maintenance</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
-    <p><strong>Memory rule:</strong> COMPANY CODE = financial owner · SALES ORGANIZATION = who sells · DISTRIBUTION CHANNEL = how we sell · DIVISION = what product line · SALES AREA = commercial context · PLANT = where supply comes from · SHIPPING POINT = who executes outbound shipping.</p>
+    <p><strong>Memory rule:</strong> COMPANY CODE = financial owner · SALES ORGANIZATION = who sells · PURCHASING ORGANIZATION = who buys · PLANT = where logistics happens · STORAGE LOCATION = where stock is separated · MRP AREA = what is planned independently · WAREHOUSE NUMBER = who manages the warehouse · SHIPPING POINT = who executes outbound shipping.</p>
     <p><strong>Lead rule:</strong> before changing master data, pricing, ATP, shipping, or code, prove that the organizational combination itself is valid.</p>
   </section>
 
@@ -102,6 +127,274 @@ source_links:
     </div>
 
     <p class="ecg-caption"><strong>Do not collapse the layers.</strong> A Sales Organization is not a Plant. A Plant is not a Shipping Point. A Sales Area is not a legal entity. Each object has a different owner and purpose.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="cross-module-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Cross-module map</p>
+      <h2>One enterprise structure, several module views.</h2>
+      <p>SAP does not create a separate company for every module. The same Company Code and Plant are reused across processes, while each module adds only the organizational objects it needs.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Cross-module SAP S/4HANA organizational structure map">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Domain</th><th>Main organizational objects</th><th>Main assignment question</th><th>Why Sales cares</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Sales</strong></td><td>Sales Organization, Distribution Channel, Division, Sales Area, Sales Office, Sales Group</td><td>Who sells what, through which route?</td><td>Defines the commercial context for customer data, pricing, orders, reporting, and authorizations.</td></tr>
+          <tr><td><strong>Finance / Controlling</strong></td><td>Company Code, Controlling Area, Operating Concern</td><td>Who owns the legal posting, cost accounting, and profitability view?</td><td>Revenue, receivables, COGS, intercompany flows, and profitability ultimately cross these boundaries.</td></tr>
+          <tr><td><strong>Procurement / Inventory</strong></td><td>Purchasing Organization, Purchasing Group, Plant, Storage Location</td><td>Who buys, for which Plant, and where is stock managed?</td><td>Replenishment, third-party, stock transfer, returns, and supply exceptions depend on these assignments.</td></tr>
+          <tr><td><strong>MRP / Production / Quality</strong></td><td>Plant, MRP Area; QM is mainly Plant-dependent</td><td>At which level is supply planned, produced, and quality-controlled?</td><td>A confirmed Sales requirement can become planned demand, production, external procurement, or quality-restricted stock.</td></tr>
+          <tr><td><strong>EWM</strong></td><td>Plant + Storage Location, ERP Warehouse Number, EWM Warehouse Number, Storage Type, Activity Area</td><td>Which warehouse manages the stock and where inside the warehouse is work executed?</td><td>Delivery execution can move from SD shipping into warehouse tasks, picking, staging, packing, and goods issue.</td></tr>
+          <tr><td><strong>Transportation</strong></td><td>Company organization, Purchasing Organization, Purchasing Group; deployment-specific TM org model</td><td>Who procures and settles freight?</td><td>Freight planning and settlement can add another organizational responsibility after delivery planning.</td></tr>
+          <tr><td><strong>Asset Management</strong></td><td>Maintenance Plant, Maintenance Planning Plant, Planner Group, Maintenance Work Center</td><td>Where is the asset installed and where is maintenance planned?</td><td>Usually indirect for Sales, but critical when the Plant is also a production or service site whose availability affects fulfillment.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <p><strong>The central hinge is Plant.</strong> Sales uses the delivering Plant, Procurement buys for Plants, Inventory stores stock in Plant/Storage Location, MRP plans inside a Plant, QM stores material quality data at Plant level, EWM maps Plant/Storage Location into a Warehouse Number, and Asset Management can use the same Plant as a maintenance location.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="procurement-inventory-structure" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">MM / Procurement / Inventory</p>
+      <h2>Purchasing adds a second commercial responsibility: who buys.</h2>
+      <p>Sales Organization answers who sells. Purchasing Organization answers who negotiates and procures materials or services. Both can meet at the same Plant.</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header><div><span>MM1</span><small>purchasing</small></div><h3>Purchasing Organization ↔ Plant</h3><p class="ecg-question">Who is allowed to procure for this Plant?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>The Plant assignment is mandatory. One Purchasing Organization can serve several Plants, and one Plant can work with several Purchasing Organizations.</p></div>
+          <div><h4>Runtime effect</h4><p>Purchasing master data, contracts, info records, conditions, supplier data, source determination, and purchase documents are read in this organizational context.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>MM2</span><small>legal</small></div><h3>Purchasing Organization → Company Code</h3><p class="ecg-question">Is purchasing local to one legal entity or centralized across companies?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Plant-specific / cross-plant</h4><p>If the Purchasing Organization is assigned to a Company Code, its Plants must belong to that Company Code.</p></div>
+          <div><h4>Cross-company purchasing</h4><p>For cross-company purchasing, the Purchasing Organization is not assigned to one Company Code; Plants from different Company Codes can be assigned to it.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>MM3</span><small>buyer</small></div><h3>Purchasing Group</h3><p class="ecg-question">Who is the buyer or buyer team?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Important exception</h4><p>A Purchasing Group is created at client level and is not structurally assigned to one Purchasing Organization or Plant.</p></div>
+          <div><h4>Design meaning</h4><p>Do not draw it as a mandatory child node under Purchasing Organization. It is a responsibility key used across purchasing processes and master data.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>IM</span><small>stock</small></div><h3>Plant → Storage Location</h3><p class="ecg-question">Where is stock logically separated inside the Plant?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>Storage Location belongs to a Plant. Inventory quantity and physical inventory can be managed at Plant/Storage Location level.</p></div>
+          <div><h4>Sales effect</h4><p>A Sales Order normally starts higher at Plant level, but picking, warehouse execution, returns, stock transfers, and goods movements often need the Storage Location.</p></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+      <p><strong>Memory contrast:</strong> Sales Organization owns the customer-facing sale. Purchasing Organization owns supplier-facing procurement. Plant is where those two flows can meet.</p>
+      <a href="/labs/enterprise-context/procurement/">Open Procurement deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="planning-production-quality" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">PP / MRP / QM</p>
+      <h2>Plant remains the base, but planning can be more granular.</h2>
+      <p>Production and Quality reuse the logistics Plant instead of creating a Sales-like organizational chain. MRP adds the MRP Area when supply must be planned independently inside the Plant.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Plant</h3>
+        <p>Plant is the central logistics unit for production, procurement, maintenance, and materials planning. Product planning and many production parameters are Plant-specific.</p>
+      </div>
+      <div>
+        <h3>MRP Area</h3>
+        <p>MRP Area is the independent planning level in SAP S/4HANA. It cannot span Plants. A Plant MRP Area exists for each Plant; separate MRP Areas can also cover one or more Storage Locations or a subcontractor.</p>
+      </div>
+      <div>
+        <h3>Quality Management</h3>
+        <p>QM material data is managed at Plant level. Inspection setup and Plant-specific inspection plans mean that the same product can have different quality behavior in different Plants.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">manufacturing</span>
+      <p><strong>Sales connection:</strong> a Sales demand can be confirmed at one Plant, planned in an MRP Area, produced or procured there, and then blocked or released by Quality. The Sales Area did not change, but the supply state did.</p>
+      <a href="/labs/enterprise-context/production/">Open Production <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ewm-structure" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">EWM / Warehouse execution</p>
+      <h2>Storage Location is not the physical warehouse.</h2>
+      <p>This distinction is important. Inventory Management uses Plant and Storage Location to identify stock. EWM adds the warehouse structure used to execute physical warehouse work.</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header><div><span>WM1</span><small>integration</small></div><h3>Plant + Storage Location → ERP Warehouse Number</h3><p class="ecg-question">Which warehouse-management solution controls this stock?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>A Plant/Storage Location combination is linked to an ERP Warehouse Number when warehouse management is used. One Warehouse Number can be connected to several Plant/Storage Location combinations.</p></div>
+          <div><h4>Why it matters</h4><p>This assignment decides whether stock stays in Inventory Management only or is handed to a warehouse-management solution such as embedded or decentralized EWM.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>WM2</span><small>EWM</small></div><h3>ERP Warehouse Number → EWM Warehouse Number</h3><p class="ecg-question">Which EWM warehouse executes the work?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Boundary</h4><p>The ERP warehouse number is three characters; the EWM Warehouse Number is a separate four-character warehouse object. The integration maps the ERP warehouse context to EWM.</p></div>
+          <div><h4>Execution</h4><p>Inside EWM, Warehouse Number is the highest warehouse level. Storage Types, Storage Sections, Storage Bins, and Activity Areas describe the internal warehouse structure.</p></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Storage Location</h3><p>Logical Inventory Management separation of stock inside a Plant. It does not describe racks, doors, or bins.</p></div>
+      <div><h3>Storage Type / Bin</h3><p>EWM physical or logical warehouse subdivisions. A Storage Bin is the smallest addressable warehouse location.</p></div>
+      <div><h3>Activity Area</h3><p>Logical grouping of bins for warehouse activities such as picking or putaway. It can cross Storage Types.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warehouse</span>
+      <p><strong>Diagnostic rule:</strong> if ERP says stock exists but picking fails, separate the ERP stock identity (Plant/Storage Location) from the EWM execution identity (Warehouse Number, stock type, Storage Type, Activity Area, Bin).</p>
+      <a href="/labs/enterprise-context/ewm/">Open EWM deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="tm-structure" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transportation Management</p>
+      <h2>Freight adds its own organizational responsibility.</h2>
+      <p>Transportation Management can reuse enterprise structure values, but its organizational objects are not always technically the same objects as MM or SD. The exact model depends on deployment.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Company organization</h3>
+        <p>In SAP S/4HANA Cloud Public Edition TM, the company organization corresponds to the ERP Company Code and is used for charging and invoicing.</p>
+      </div>
+      <div>
+        <h3>Purchasing Organization</h3>
+        <p>TM uses a Purchasing Organization for freight procurement. It negotiates freight agreements and is used in freight documents for charge calculation and settlement.</p>
+      </div>
+      <div>
+        <h3>Purchasing Group</h3>
+        <p>TM uses a Purchasing Group below its Purchasing Organization for transportation purchasing responsibility.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+      <p><strong>Deployment boundary:</strong> in Public Edition TM these organizational units are technically different from the MM objects but are automatically replicated from the enterprise structure. Private Edition and older standalone TM models can expose additional organizational-model concepts, so do not copy one deployment's setup blindly into another.</p>
+      <a href="/labs/enterprise-context/transportation-management/">Open Transportation Management <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="finance-controlling-structure" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">FI / CO / Profitability</p>
+      <h2>Legal ownership and management accounting are different boundaries.</h2>
+      <p>Company Code owns external accounting. Controlling Area owns internal cost accounting. Operating Concern sits above them when profitability analysis needs a common market view.</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header><div><span>FI</span><small>external</small></div><h3>Company Code</h3><p class="ecg-question">Where are legal financial statements produced?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Role</h4><p>Independent accounting entity for external reporting. Sales Organizations and Plants are connected to this financial boundary through enterprise-structure assignments.</p></div>
+          <div><h4>Sales effect</h4><p>Customer receivables, revenue, taxes, COGS, and intercompany postings eventually use Company Code context.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>CO</span><small>internal</small></div><h3>Company Code → Controlling Area</h3><p class="ecg-question">Which companies share the same cost-accounting boundary?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>One Controlling Area can contain one or several Company Codes. This enables cross-company cost accounting when the required accounting prerequisites are aligned.</p></div>
+          <div><h4>Plant consequence</h4><p>Because Plant belongs to a Company Code, the Plant also inherits the relevant Controlling Area relationship for cost flows.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>PA</span><small>profitability</small></div><h3>Controlling Area → Operating Concern</h3><p class="ecg-question">At which level do we analyze profitability across market segments?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Role</h4><p>Operating Concern is the organizational level for profitability analysis. It can combine profitability information from one or more Controlling Areas.</p></div>
+          <div><h4>Sales connection</h4><p>Sales characteristics such as customer, product, region, division, and organizational fields can flow into profitability analysis without becoming new Sales organizational units.</p></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+      <p><strong>Do not confuse reporting objects with enterprise structure.</strong> Cost Centers and Profit Centers are essential management-accounting master/account-assignment objects, but they solve a different problem from Company Code, Sales Organization, or Plant.</p>
+      <a href="/labs/enterprise-context/finance-logistics/">Open Finance / Logistics integration <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="asset-management-structure" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Asset Management</p>
+      <h2>The same Plant can also be a maintenance boundary.</h2>
+      <p>Asset Management usually starts from Plants that already exist for Logistics, then adds maintenance-specific responsibility.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Maintenance Plant</h3>
+        <p>The Plant where the technical objects are installed. It represents the operating location from a maintenance perspective.</p>
+      </div>
+      <div>
+        <h3>Maintenance Planning Plant</h3>
+        <p>The Plant where maintenance requirements are planned. One Planning Plant can plan for its own Maintenance Plant or for other assigned Maintenance Plants.</p>
+      </div>
+      <div>
+        <h3>Planner Group / Work Center</h3>
+        <p>Planner Groups organize maintenance planning responsibility. Maintenance Work Centers represent the teams or capacity that perform the work and are assigned to Maintenance Plants.</p>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Why it belongs on this page:</strong> when a production Plant has maintenance downtime, the effect can move through capacity, production, ATP, delivery, and finally the customer promise.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="cross-module-assignment-checks" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Cross-module assignment checks</p>
+      <h2>Trace the chain before changing configuration.</h2>
+      <p>A Lead should be able to follow one business event across organizational boundaries without mixing ownership.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Cross-module SAP organizational assignment checks">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Business question</th><th>Assignment to verify</th><th>Typical consequence</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Who legally owns the sale?</td><td>Sales Organization → Company Code</td><td>Revenue, receivables, tax, intercompany boundary.</td></tr>
+          <tr><td>Who can supply the order?</td><td>Distribution Chain ↔ Plant</td><td>Plant proposal, ATP, sourcing, shipping.</td></tr>
+          <tr><td>Who can procure for the Plant?</td><td>Purchasing Organization ↔ Plant</td><td>Supplier data, conditions, source determination, PO creation.</td></tr>
+          <tr><td>Where is stock logically held?</td><td>Plant → Storage Location</td><td>Inventory, picking source, returns, stock transfer.</td></tr>
+          <tr><td>Where is the material planned?</td><td>Plant / Storage Location → MRP Area</td><td>Shortage calculation, planned orders, purchase requisitions.</td></tr>
+          <tr><td>Which warehouse executes the work?</td><td>Plant + Storage Location → Warehouse Number</td><td>Warehouse tasks, picking, staging, stock types, bins.</td></tr>
+          <tr><td>Who ships the delivery?</td><td>Plant ↔ Shipping Point + determination inputs</td><td>Delivery execution and scheduling context.</td></tr>
+          <tr><td>Who procures and settles freight?</td><td>TM Company/Purchasing Organization/Purchasing Group</td><td>Freight agreement, charge calculation, settlement.</td></tr>
+          <tr><td>Where are costs managed?</td><td>Company Code → Controlling Area</td><td>Cost allocation and cross-company management accounting.</td></tr>
+          <tr><td>Where is maintenance planned?</td><td>Maintenance Plant → Maintenance Planning Plant</td><td>Maintenance planning responsibility and possible supply-capacity impact.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="core-units" data-reveal>
@@ -362,6 +655,36 @@ source_links:
             <td><strong>Shipping Point determination</strong></td>
             <td>Logistics Execution → Shipping → Basic Shipping Functions → Shipping Point and Goods Receiving Point Determination → Assign Shipping Points</td>
             <td>Which Shipping Point is proposed for Shipping Condition + Loading Group + Plant.</td>
+          </tr>
+          <tr>
+            <td><strong>Company Code → Controlling Area</strong></td>
+            <td>Enterprise Structure → Assignment → Controlling → Assign Company Code to Controlling Area</td>
+            <td>Which internal cost-accounting boundary contains the legal entity.</td>
+          </tr>
+          <tr>
+            <td><strong>Purchasing Organization → Company Code</strong></td>
+            <td>Enterprise Structure → Assignment → Materials Management → Assign Purchasing Organization to Company Code</td>
+            <td>Optional legal ownership for plant-specific or cross-plant purchasing; leave unassigned for cross-company purchasing.</td>
+          </tr>
+          <tr>
+            <td><strong>Purchasing Organization ↔ Plant</strong></td>
+            <td>Enterprise Structure → Assignment → Materials Management → Assign Purchasing Organization to Plant</td>
+            <td>Mandatory relationship defining which Purchasing Organizations can procure for the Plant.</td>
+          </tr>
+          <tr>
+            <td><strong>Plant + Storage Location → Warehouse Number</strong></td>
+            <td>Logistics Execution / Warehouse Management integration settings</td>
+            <td>Which warehouse-management solution executes stock handling for that ERP stock segment.</td>
+          </tr>
+          <tr>
+            <td><strong>MRP Area within Plant</strong></td>
+            <td>Production → Material Requirements Planning → Master Data → MRP Areas</td>
+            <td>Which Plant, Storage Locations, or subcontractor stock is planned independently.</td>
+          </tr>
+          <tr>
+            <td><strong>Maintenance Planning Plant → Maintenance Plant</strong></td>
+            <td>Asset Management → Organizational Functions → Maintenance Planning Plant</td>
+            <td>Where maintenance requirements for a Maintenance Plant are planned.</td>
           </tr>
           <tr>
             <td><strong>Sales Office → Sales Area</strong></td>
@@ -628,6 +951,11 @@ source_links:
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Which customer, product, relationship, condition, and logistics data is stored at each organizational scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/procurement/"><span>MM</span><strong>Procurement</strong><small>Purchasing Organization, Plant, supplier, source-of-supply, and purchasing-process ownership.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Plant and Storage Location stock identity, goods movements, and inventory consequences.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Extended Warehouse Management</strong><small>Warehouse Number, stock mapping, Storage Types, Activity Areas, bins, and execution ownership.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/transportation-management/"><span>TM</span><strong>Transportation Management</strong><small>Freight organization, planning, execution, charge calculation, and settlement boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/"><span>FI</span><strong>Finance / Logistics Integration</strong><small>Company Code, accounting hand-offs, costs, revenue, and intercompany consequences.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing</strong><small>How Sales Area, customer, document, access sequences, condition records, and formulas become a calculated price.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>How Plant and supply context affect the customer promise.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping &amp; Scheduling</strong><small>How Plant, shipping condition, loading group, route, calendars, and lead times drive execution.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
