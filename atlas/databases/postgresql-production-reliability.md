@@ -135,11 +135,11 @@ related:
     <h2>Sources</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, chapters 7–10 and Appendix B.</li>
-      <li><a href="https://www.postgresql.org/docs/current/monitoring.html">PostgreSQL: Monitoring Database Activity</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/auth-pg-hba-conf.html">PostgreSQL: The pg_hba.conf File</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/perm-functions.html">PostgreSQL: Function Security</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/backup.html">PostgreSQL: Backup and Restore</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/continuous-archiving.html">PostgreSQL: Continuous Archiving and Point-in-Time Recovery</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/monitoring.html">PostgreSQL: Monitoring Database Activity</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/auth-pg-hba-conf.html">PostgreSQL: The pg_hba.conf File</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/perm-functions.html">PostgreSQL: Function Security</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/backup.html">PostgreSQL: Backup and Restore</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/continuous-archiving.html">PostgreSQL: Continuous Archiving and Point-in-Time Recovery</a></li>
       <li><a href="https://www.postgresql.org/docs/release/">PostgreSQL: Release Notes</a></li>
     </ul>
   </div>
