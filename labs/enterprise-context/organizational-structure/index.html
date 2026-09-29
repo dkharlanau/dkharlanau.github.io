@@ -1,0 +1,575 @@
+---
+layout: default
+title: "SAP Organizational Structure in Sales — Assignments and Runtime Impact"
+description: "A practical SAP S/4HANA Sales organizational-structure guide focused on Sales Area design, enterprise-structure assignments, Plant and Shipping Point links, intercompany boundaries, pricing, master-data scope, runtime impact, and diagnostics."
+permalink: /labs/enterprise-context/organizational-structure/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - organizational-structure
+  - enterprise-structure
+  - sales-area
+  - sales-organization
+  - distribution-channel
+  - division
+  - plant
+  - shipping-point
+  - intercompany
+  - assessment
+source_links:
+  - title: "Identifying Organizational Units in SAP S/4HANA Sales"
+    url: "https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/identifying-organizational-units-in-sap-s-4hana-sales_ddb48d1e-1f57-46bd-8d13-d8e4ef6d0560"
+  - title: "Using Organizational Units and Master Data in SAP S/4HANA Sales"
+    url: "https://learning.sap.com/courses/executing-basic-erp-processes-with-sap-s-4hana/using-organizational-units-and-master-data-in-sap-s-4hana-sales"
+  - title: "Setting Up the Enterprise Structure in Sales and Distribution"
+    url: "https://learning.sap.com/courses/fundamental-customizing-in-sap-s-4hana-sales/setting-up-the-enterprise-structure-in-sales-and-distribution"
+  - title: "Plant"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/bc6b9325fedd4344a84412b2195064fa/f18abd534f22b44ce10000000a174cb4.html"
+  - title: "Shipping Points"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/5d1bbf53d25ab64ce10000000a174cb4.html"
+  - title: "Intercompany Business Processing"
+    url: "https://help.sap.com/docs/SAP_ERP/a2d139d094f04ad6812f613fa64640d4/e170b65334e6b74ce10000000a174cb4.html"
+  - title: "Introducing the Condition Technique"
+    url: "https://learning.sap.com/courses/configuring-pricing-in-sap-s-4hana-sales/introducing-the-condition-technique_dce0f313-dee6-470e-8851-3f1773cb5d45"
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/sales-processes/">Sales</a></li>
+    <li aria-current="page">Organizational Structure</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Sales / Enterprise Structure</p>
+      <h1>Organizational structure is a network of assignments, not a hierarchy to memorize.</h1>
+      <p>The useful question is not only “Which SAP organizational units exist?” We need to know which combinations are valid, which data is stored at each level, which unit owns the next process step, and what breaks when one assignment is missing or wrong.</p>
+      <a class="research-canvas__button" href="#assignment-map">Start with the assignment map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Organizational structure study inventory">
+      <p>Study inventory</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>10</strong><small>Core units and keys</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>10</strong><small>Assignments to trace</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>8</strong><small>Diagnostic checks</small></div>
+      <em>Sales first · Finance and Logistics boundaries included</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Memory rule:</strong> COMPANY CODE = financial owner · SALES ORGANIZATION = who sells · DISTRIBUTION CHANNEL = how we sell · DIVISION = what product line · SALES AREA = commercial context · PLANT = where supply comes from · SHIPPING POINT = who executes outbound shipping.</p>
+    <p><strong>Lead rule:</strong> before changing master data, pricing, ATP, shipping, or code, prove that the organizational combination itself is valid.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="mental-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Read the structure as three connected layers.</h2>
+      <p>The same order crosses a financial boundary, a commercial context, and a fulfillment context. SAP keeps these layers separate because they answer different business questions.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>1. Financial ownership</h3>
+        <p><strong>Company Code</strong> is the accounting boundary. A Sales Organization is assigned to one Company Code. This connects the commercial transaction to the legal entity that owns receivables and revenue posting.</p>
+      </div>
+      <div>
+        <h3>2. Commercial context</h3>
+        <p><strong>Sales Organization + Distribution Channel + Division</strong> form the Sales Area. This tells us who sells, through which route, and for which product line.</p>
+      </div>
+      <div>
+        <h3>3. Fulfillment execution</h3>
+        <p><strong>Plant</strong> is the logistics and supply node. <strong>Shipping Point</strong> is the outbound execution unit. These units connect the order to stock, ATP, delivery creation, picking, goods issue, warehouse, and transport processes.</p>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Do not collapse the layers.</strong> A Sales Organization is not a Plant. A Plant is not a Shipping Point. A Sales Area is not a legal entity. Each object has a different owner and purpose.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="core-units" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Key components</p>
+      <h2>Know what each unit owns before you learn the assignments.</h2>
+      <p>This is the Sales view of the enterprise structure. Finance and Logistics units are included because Sales depends on them at runtime.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP Sales organizational units and roles">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Element</th>
+            <th>Links to</th>
+            <th>What it means</th>
+            <th>Why Sales cares</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Company Code</strong></td>
+            <td>Sales Organization, Plant</td>
+            <td>Legal entity and independent accounting unit. It is the smallest unit for which complete statutory financial statements can be produced.</td>
+            <td>Every Sales Organization belongs to one Company Code. A Plant also belongs to one Company Code, so Sales and fulfillment can be checked against legal ownership.</td>
+          </tr>
+          <tr>
+            <td><strong>Sales Organization</strong></td>
+            <td>Company Code, Distribution Channel, Division</td>
+            <td>Central Sales organizational unit. It is responsible for selling goods and services, negotiating sales conditions, and commercial responsibility such as product liability and rights of recourse.</td>
+            <td>All Sales and Distribution documents are assigned to a Sales Organization. It is a major key for pricing, master data, authorizations, reporting, and integration.</td>
+          </tr>
+          <tr>
+            <td><strong>Distribution Channel</strong></td>
+            <td>Sales Organization</td>
+            <td>Route to market: for example direct sales, wholesale, retail, or another channel.</td>
+            <td>The same seller can use different prices, customer data, product data, or process rules depending on how the customer is served.</td>
+          </tr>
+          <tr>
+            <td><strong>Division</strong></td>
+            <td>Sales Organization</td>
+            <td>Product or service line used in Sales.</td>
+            <td>It completes the Sales Area and can separate responsibility, customer agreements, pricing, and reporting by product line.</td>
+          </tr>
+          <tr>
+            <td><strong>Distribution Chain</strong></td>
+            <td>Sales Organization + Distribution Channel</td>
+            <td>The two-part commercial combination used to connect Sales to product sales data and delivering Plants.</td>
+            <td>Plants are assigned to this level. This is one of the most important bridges from commercial design to logistics.</td>
+          </tr>
+          <tr>
+            <td><strong>Sales Area</strong></td>
+            <td>Sales Organization + Distribution Channel + Division</td>
+            <td>The core commercial context: who sells, how, and what.</td>
+            <td>Customer sales data is maintained for a Sales Area. Sales employees can be authorized for one or more Sales Areas. The Sales Area is also an input into pricing-procedure determination.</td>
+          </tr>
+          <tr>
+            <td><strong>Plant</strong></td>
+            <td>Company Code, Distribution Chain, Shipping Point</td>
+            <td>Central logistics unit for production, planning, procurement, distribution, or service provision.</td>
+            <td>The delivering Plant is a major input for availability, stock, sourcing, shipping-point determination, fulfillment, and intercompany boundaries.</td>
+          </tr>
+          <tr>
+            <td><strong>Storage Location</strong></td>
+            <td>Plant</td>
+            <td>Subdivision of stock inside a Plant.</td>
+            <td>It becomes relevant in inventory, warehouse, picking, and goods-movement execution. It is not part of the Sales Area.</td>
+          </tr>
+          <tr>
+            <td><strong>Shipping Point</strong></td>
+            <td>Plant</td>
+            <td>Highest-level Sales shipping organizational unit. Each outbound delivery is processed by one Shipping Point.</td>
+            <td>It defines the outbound shipping execution context. In the standard determination model, Plant, shipping condition, and loading group are key inputs.</td>
+          </tr>
+          <tr>
+            <td><strong>Sales Office / Sales Group</strong></td>
+            <td>Sales Area / Sales Office</td>
+            <td>Responsibility overlays for regional offices and sales teams.</td>
+            <td>They support responsibility, reporting, selection, and authorization without changing the core Sales Area.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assignment-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assignment map</p>
+      <h2>The assignments are the real architecture.</h2>
+      <p>A Lead should be able to trace the valid path from financial ownership to commercial scope and then to fulfillment execution.</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header><div><span>01</span><small>finance</small></div><h3>Sales Organization → Company Code</h3><p class="ecg-question">Which accounting entity owns the selling unit?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>Each Sales Organization is assigned to exactly one Company Code. One Company Code can have several Sales Organizations.</p></div>
+          <div><h4>Why it matters</h4><p>This anchors Sales to financial ownership. Do not create a new Company Code only because Sales needs another market or reporting view.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>02</span><small>channel</small></div><h3>Distribution Channel ↔ Sales Organization</h3><p class="ecg-question">Which routes to market can this seller use?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>A Sales Organization can use several Distribution Channels, and the same Distribution Channel can be assigned to several Sales Organizations.</p></div>
+          <div><h4>Why it matters</h4><p>The pair becomes the Distribution Chain. It scopes product sales data and connects the selling route to possible delivering Plants.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>03</span><small>division</small></div><h3>Division ↔ Sales Organization</h3><p class="ecg-question">Which product lines can this seller represent?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>Several Divisions can be assigned to one Sales Organization. A Division can also be used by several Sales Organizations.</p></div>
+          <div><h4>Why it matters</h4><p>Division completes the Sales Area. Use it for a durable Sales-level product responsibility, not as a random reporting tag.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>04</span><small>commercial</small></div><h3>Sales Organization + Channel + Division → Sales Area</h3><p class="ecg-question">Which seller, route, and product-line combinations are valid?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>The three-part combination defines a Sales Area. It is the central commercial context for Sales processing.</p></div>
+          <div><h4>Why it matters</h4><p>Every additional Sales Area can create more customer-data scope, pricing scope, authorizations, interfaces, reporting combinations, testing, and support work.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>05</span><small>ownership</small></div><h3>Plant → Company Code</h3><p class="ecg-question">Which legal entity owns the logistics location?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>Each Plant belongs to one Company Code. One Company Code can own several Plants.</p></div>
+          <div><h4>Why it matters</h4><p>If the selling Sales Organization and delivering Plant belong to different Company Codes, the process crosses a legal boundary and intercompany logic becomes relevant.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>06</span><small>fulfillment</small></div><h3>Distribution Chain ↔ Plant</h3><p class="ecg-question">Which Plants may deliver for this Sales Organization and Channel?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>A Plant can serve several Distribution Chains, and a Distribution Chain can use several Plants. Plants can belong to different Company Codes.</p></div>
+          <div><h4>Why it matters</h4><p>A master record can propose a Plant, but the enterprise structure must still allow that Plant for the selling Distribution Chain.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>07</span><small>shipping</small></div><h3>Plant ↔ Shipping Point</h3><p class="ecg-question">Which shipping units can execute outbound work for the Plant?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>A Plant can have several Shipping Points. A Shipping Point can also serve more than one Plant when the operating model supports it.</p></div>
+          <div><h4>Why it matters</h4><p>The final Shipping Point is determined later from logistics inputs. Do not treat Plant and Shipping Point as the same organizational object.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>08</span><small>stock</small></div><h3>Plant → Storage Location</h3><p class="ecg-question">Where inside the Plant is stock managed?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>Storage Locations exist inside a Plant and subdivide its stock.</p></div>
+          <div><h4>Why it matters</h4><p>The Sales Area does not own Storage Locations. Their role appears later in Inventory Management, picking, warehouse execution, and goods movements.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>09</span><small>office</small></div><h3>Sales Office ↔ Sales Area</h3><p class="ecg-question">Which regional office is responsible in this commercial context?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>Sales Offices can be assigned to Sales Areas.</p></div>
+          <div><h4>Why it matters</h4><p>This adds responsibility and reporting structure without creating another Sales Organization or Sales Area.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>10</span><small>team</small></div><h3>Sales Group → Sales Office</h3><p class="ecg-question">Which sales team works under the office responsibility?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Rule</h4><p>Sales Groups represent teams of sales employees and fit below the Sales Office responsibility layer.</p></div>
+          <div><h4>Why it matters</h4><p>A people reorganization should normally be cheaper than redesigning the legal, commercial, or fulfillment structure.</p></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assignment-matrix" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment matrix</p>
+      <h2>For each assignment, know the process consequence.</h2>
+      <p>The assignment matters because it changes which data can be read, which process can continue, or which legal boundary is crossed.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP Sales organizational assignments and runtime consequences">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Assignment</th>
+            <th>Purpose</th>
+            <th>If missing or wrong</th>
+            <th>Reason next</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Sales Org → Company Code</strong></td><td>Connect selling responsibility to financial ownership.</td><td>Sales and accounting context does not match the intended legal entity.</td><td><a href="/labs/enterprise-context/billing/">Billing</a> and <a href="/labs/enterprise-context/finance-logistics/">Finance / Logistics</a>.</td></tr>
+          <tr><td><strong>Channel → Sales Org</strong></td><td>Allow a route to market for the seller.</td><td>The Distribution Chain is not valid for the intended business path.</td><td><a href="/labs/enterprise-context/master-data/">Master Data</a> and <a href="/labs/enterprise-context/pricing/">Pricing</a>.</td></tr>
+          <tr><td><strong>Division → Sales Org</strong></td><td>Allow a product responsibility area for the seller.</td><td>The required Sales Area cannot be built as designed.</td><td>Customer sales-area data and product/division design.</td></tr>
+          <tr><td><strong>Sales Org + Channel + Division → Sales Area</strong></td><td>Create a valid commercial context.</td><td>Customer Sales Area data, authorizations, pricing context, or document processing can be wrong.</td><td><a href="/labs/enterprise-context/business-partner/">Business Partner</a>.</td></tr>
+          <tr><td><strong>Plant → Company Code</strong></td><td>Set legal ownership of the logistics location.</td><td>A Plant change can silently move fulfillment into another Company Code.</td><td><a href="/labs/enterprise-context/sales-processes/#sd-ico">Intercompany Sales</a>.</td></tr>
+          <tr><td><strong>Distribution Chain ↔ Plant</strong></td><td>Allow a Plant to deliver for a seller and channel.</td><td>A proposed Plant can be invalid for the commercial route.</td><td><a href="/labs/enterprise-context/atp/">ATP</a>, <a href="/labs/enterprise-context/shipping/">Shipping</a>, and master-data provenance.</td></tr>
+          <tr><td><strong>Plant ↔ Shipping Point</strong></td><td>Define which shipping units may execute outbound processing.</td><td>Shipping-point determination can fail or return an unexpected execution unit.</td><td><a href="/labs/enterprise-context/shipping/">Shipping</a>.</td></tr>
+          <tr><td><strong>Plant → Storage Location</strong></td><td>Subdivide stock inside the Plant.</td><td>Inventory and warehouse execution can be inconsistent even when the Sales Area is correct.</td><td><a href="/labs/enterprise-context/inventory-management/">Inventory Management</a> and <a href="/labs/enterprise-context/ewm/">EWM</a>.</td></tr>
+          <tr><td><strong>Sales Office ↔ Sales Area</strong></td><td>Add regional responsibility.</td><td>Responsibility, reporting, or authorization design can be wrong without invalidating the Sales Area itself.</td><td>Responsibility and authorization model.</td></tr>
+          <tr><td><strong>Sales Group → Sales Office</strong></td><td>Represent the sales team.</td><td>Team ownership or reporting can be wrong while the order remains commercially valid.</td><td>Sales responsibility model.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-area-runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales Area at runtime</p>
+      <h2>Sales Area is more than a header field.</h2>
+      <p>The Sales Area is a major context key. It decides which customer data is valid and participates in pricing, authorizations, reporting, and process control.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Customer master scope</h3>
+        <p>Customer Sales Area data can contain payment terms, Incoterms, shipping conditions, customer pricing procedure, account-assignment fields, delivery controls, price groups, and other Sales defaults.</p>
+      </div>
+      <div>
+        <h3>Authorization scope</h3>
+        <p>SAP Learning describes Sales Area as the context used to control who can sell, how, and what. Sales employees can be authorized for one or more Sales Areas.</p>
+      </div>
+      <div>
+        <h3>Document context</h3>
+        <p>Sales and Distribution documents are assigned to a Sales Organization. The Sales Area provides the wider commercial context that starts in the sales document and remains relevant as the process moves to delivery and billing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-link" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales Area → Pricing</p>
+      <h2>Sales Area helps select the pricing procedure, but it is not the only key.</h2>
+      <p>This distinction is easy to miss in an interview. Sales Area provides the organizational part of pricing-procedure determination; document and customer pricing procedures complete the key.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
+      <p><strong>Pricing Procedure Determination:</strong> Sales Area + Document Pricing Procedure + Customer Pricing Procedure → Pricing Procedure.</p>
+      <p>The Document Pricing Procedure comes from the sales document type. The Customer Pricing Procedure is maintained in customer/BP Sales Area data.</p>
+      <a href="/labs/enterprise-context/pricing/">Open Pricing deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+
+    <p class="ecg-caption"><strong>Assessment wording:</strong> “Sales Area is one of the determination inputs. I would not say Sales Area alone determines the pricing procedure.”</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="plant-hinge" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">The fulfillment hinge</p>
+      <h2>Plant is where Sales turns into Logistics.</h2>
+      <p>Many problems that look like ATP, shipping, delivery, or intercompany problems start one step earlier: the wrong Plant was proposed, or the right Plant is not valid for the Distribution Chain.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fork_right</span>
+      <p><strong>Typical Plant proposal sequence:</strong> Customer-Material information record → Ship-to Party master data → Product master data. A user can also enter a Plant manually where the process allows it.</p>
+      <p><strong>Then validate the structure:</strong> the Plant still has to be allowed for the Sales Organization + Distribution Channel combination.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Availability</h3><p>The delivering Plant provides the logistics context for stock and availability. A Plant change can change the supply picture even when customer and product stay the same.</p></div>
+      <div><h3>Shipping</h3><p>The Plant is an input into Shipping Point determination. In the standard model, shipping condition and loading group are the other main inputs.</p></div>
+      <div><h3>Legal boundary</h3><p>If the Sales Organization belongs to Company Code A and the Plant belongs to Company Code B, the process crosses company-code ownership and intercompany processing becomes relevant.</p></div>
+    </div>
+
+    <p class="ecg-caption"><strong>Diagnostic shortcut:</strong> if the final Shipping Point or confirmation looks wrong, inspect Plant provenance first. The wrong downstream result can be only the visible consequence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="shipping-point" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Shipping Point</p>
+      <h2>Plant says where supply is; Shipping Point says who executes outbound shipping.</h2>
+      <p>These objects are linked, but they are not the same. A Plant can need several shipping responsibilities, for example parcel, truck, rail, or different loading areas.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+      <p><strong>Standard determination memory:</strong> Plant + Shipping Condition + Loading Group → Shipping Point.</p>
+      <p><strong>Where the inputs usually come from:</strong> Plant from item/master-data logic, Shipping Condition from the customer/BP sales data or document context, and Loading Group from the product/material master.</p>
+      <a href="/labs/enterprise-context/shipping/">Open Shipping deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="intercompany-boundary" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Intercompany boundary</p>
+      <h2>A Plant in another Company Code changes more than logistics.</h2>
+      <p>This is a high-value Lead point. The selling company can create the customer order while a Plant owned by another company code delivers the goods. That creates an intercompany relationship between the legal entities.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Selling company</h3>
+        <p>The Sales Organization belongs to its Company Code and owns the external customer relationship.</p>
+      </div>
+      <div>
+        <h3>Delivering company</h3>
+        <p>The Plant belongs to another Company Code and physically fulfills the order.</p>
+      </div>
+      <div>
+        <h3>Internal commercial flow</h3>
+        <p>In intercompany sales processing, the delivering company bills the selling company with an intercompany billing document. The exact orchestration depends on the intercompany process variant.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Do not overstate the rule:</strong> “Plant in another Company Code” is the signal to check intercompany design. It is safer than saying that any manual cross-company Plant entry automatically creates the complete internal billing flow in every S/4HANA deployment and process variant.</p>
+      <a href="/labs/enterprise-context/sales-processes/#sd-ico">Open Intercompany process <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="common-master-data" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Reduce maintenance</p>
+      <h2>More organizational combinations do not always require duplicated master data.</h2>
+      <p>Classic Sales Customizing supports common Distribution Channels and common Divisions so selected master data and condition data can be shared instead of maintained repeatedly.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Common Distribution Channel</h3>
+        <p>Useful when several channels need separate process or reporting context but can reuse selected customer, product, or condition data from a reference channel.</p>
+      </div>
+      <div>
+        <h3>Common Division</h3>
+        <p>Useful when several Divisions exist in the organizational model but some master data can be maintained once against a reference Division.</p>
+      </div>
+      <div>
+        <h3>Lead trade-off</h3>
+        <p>Sharing reduces maintenance, but it also creates dependency. Before reusing data, confirm that the channels or divisions really follow the same commercial policy.</p>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Deployment note:</strong> classic SPRO paths are most relevant to S/4HANA on-premise and Private Edition. Public Cloud configuration uses configuration activities and can expose a different setup path.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="data-vs-structure" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Keep the layers separate</p>
+      <h2>Organizational structure, master data, determination, and runtime data are different things.</h2>
+      <p>This distinction prevents many weak diagnostic answers.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Organizational structure master data configuration and runtime comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Example</th><th>Layer</th><th>Question it answers</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Sales Organization 1010</strong></td><td>Organizational unit</td><td>Who owns the commercial selling responsibility?</td></tr>
+          <tr><td><strong>1010 / 10 / 00</strong></td><td>Sales Area / enterprise-structure combination</td><td>Which seller + channel + division combination is valid?</td></tr>
+          <tr><td><strong>Customer payment terms for 1010 / 10 / 00</strong></td><td>Master data</td><td>Which reusable customer rule applies in this Sales Area?</td></tr>
+          <tr><td><strong>Product delivering Plant</strong></td><td>Master data</td><td>Which Plant should normally be proposed?</td></tr>
+          <tr><td><strong>1010 / 10 ↔ Plant 1710</strong></td><td>Enterprise-structure assignment</td><td>Is this Plant allowed to deliver for this Distribution Chain?</td></tr>
+          <tr><td><strong>Plant + shipping condition + loading group → Shipping Point</strong></td><td>Determination configuration</td><td>Which outbound unit should execute shipping?</td></tr>
+          <tr><td><strong>Sales Order item Plant = 1710</strong></td><td>Runtime transaction data</td><td>Which Plant was actually selected for this item?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="design-decisions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead design decisions</p>
+      <h2>Every new organizational unit creates operating cost.</h2>
+      <p>Enterprise structure decisions shape master data, pricing, authorizations, integrations, reporting, testing, and support long after go-live. Create a new unit only when it represents a real and durable business boundary.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>New Sales Organization?</h3><p>Use it for a stable commercial selling responsibility that needs its own organizational ownership and Company Code assignment. Do not use it only to get another report column.</p></div>
+      <div><h3>New Distribution Channel?</h3><p>Use it when the route to market needs a durable difference in data, pricing, responsibility, process behavior, authorizations, or reporting.</p></div>
+      <div><h3>New Division?</h3><p>Use it when a product or service line needs a stable Sales-level distinction. Do not replace Product Hierarchy with dozens of Divisions.</p></div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>New Plant?</h3><p>Use it for a real production, inventory, procurement, planning, service, valuation, location, or legal requirement. Plant is not a reporting dimension.</p></div>
+      <div><h3>New Shipping Point?</h3><p>Use it when outbound execution needs another operational responsibility, location, loading method, schedule, or capacity model.</p></div>
+      <div><h3>Reuse data?</h3><p>If the organizational distinction is real but the commercial policy is shared, evaluate common master-data settings instead of copying the same records into every combination.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="diagnostic-playbook" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostic playbook</p>
+      <h2>When an organizational problem appears, check in this order.</h2>
+      <p>Find the first invalid context. Do not repair the final field before you know why SAP arrived there.</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>document</small></div><h3>Capture the actual Sales Area</h3><p class="ecg-question">Which Sales Organization, Channel, and Division are on the document?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><p>Header values, source document, interface payload, user entry, and copy/reference behavior.</p></div><div><h4>Reason</h4><p>If the Sales Area is wrong, downstream master-data lookups can be correct for the wrong context.</p></div></div></article>
+
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>structure</small></div><h3>Verify the Sales Area combination</h3><p class="ecg-question">Is the seller + channel + division combination valid?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><p>Sales Organization–Channel assignment, Sales Organization–Division assignment, and the configured Sales Area.</p></div><div><h4>Reason</h4><p>This proves the commercial path before you inspect customer-specific data.</p></div></div></article>
+
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>customer</small></div><h3>Check BP/customer data at the same Sales Area</h3><p class="ecg-question">Does the customer have the required data in this context?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><p>Shipping condition, payment terms, Incoterms, customer pricing procedure, account-assignment data, and other relevant Sales Area fields.</p></div><div><h4>Reason</h4><p>“The customer exists” is not enough. Sales data can be missing for the current Sales Area.</p></div></div></article>
+
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>product</small></div><h3>Check product data at Distribution Chain and Plant level</h3><p class="ecg-question">Is the product extended to the organizational scopes required by this process?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><p>Sales Organization + Distribution Channel data, Plant data, loading group, delivering Plant proposals, and status fields.</p></div><div><h4>Reason</h4><p>A product can exist globally and still be unusable in this commercial or logistics context.</p></div></div></article>
+
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>plant</small></div><h3>Trace Plant provenance</h3><p class="ecg-question">Why did this Plant appear?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><p>Customer-Material record, Ship-to Party, Product master, manual entry, enhancement, or interface logic.</p></div><div><h4>Reason</h4><p>Do not change the final Plant until you know which source won.</p></div></div></article>
+
+      <article class="ecg-determination-detail"><header><div><span>06</span><small>assignment</small></div><h3>Validate Distribution Chain ↔ Plant</h3><p class="ecg-question">Is this Plant allowed to fulfill for this seller and channel?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><p>Enterprise-structure assignment and Plant Company Code.</p></div><div><h4>Reason</h4><p>This separates a bad master-data proposal from an invalid enterprise-structure combination.</p></div></div></article>
+
+      <article class="ecg-determination-detail"><header><div><span>07</span><small>shipping</small></div><h3>Reconstruct Shipping Point determination</h3><p class="ecg-question">Which input is wrong: Plant, shipping condition, or loading group?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><p>Actual item Plant, customer/document shipping condition, product loading group, and allowed Shipping Point.</p></div><div><h4>Reason</h4><p>The final Shipping Point is an output. Diagnose the inputs first.</p></div></div></article>
+
+      <article class="ecg-determination-detail"><header><div><span>08</span><small>legal</small></div><h3>Check the Company Code boundary</h3><p class="ecg-question">Does the selected Plant belong to another Company Code?</p></header><div class="ecg-decision-columns"><div><h4>Check</h4><p>Sales Organization Company Code, Plant Company Code, process variant, intercompany settings, and billing relationship.</p></div><div><h4>Reason</h4><p>A fulfillment choice can become an accounting and intercompany design issue.</p></div></div></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead-answer" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment answer</p>
+      <h2>A strong answer explains assignments, not only definitions.</h2>
+      <p>Use this structure for a 60–90 second spoken answer.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>Answer:</strong> In SAP S/4HANA Sales, I see the organizational structure in three layers. Company Code is the financial owner. Sales Organization, Distribution Channel, and Division build the Sales Area, which is the commercial context for customer data, authorizations, pricing inputs, and sales processing. The Distribution Chain then connects Sales to possible delivering Plants. The Plant gives us the supply and availability context, while the Shipping Point owns outbound execution. The important part is the assignments: Sales Org to Company Code, Channel and Division to Sales Org, Plant to Company Code, Distribution Chain to Plant, and Plant to Shipping Point. If the Sales Organization and delivering Plant belong to different Company Codes, I check the intercompany process because the fulfillment crosses a legal boundary.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead-questions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead questions</p>
+      <h2>Questions to ask before changing the structure.</h2>
+      <p>These questions move the discussion from Customizing to business architecture.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>What business boundary are we representing?</h3><p>Legal entity, selling responsibility, route to market, product line, supply location, or shipping execution?</p></div>
+      <div><h3>Which master data will multiply?</h3><p>Customer Sales Area data, product Distribution Chain data, pricing records, output rules, tax data, partner data, or integrations?</p></div>
+      <div><h3>Which process variants appear?</h3><p>Will a new assignment introduce intercompany fulfillment, another Plant, another shipping flow, or another billing relationship?</p></div>
+      <div><h3>What is the reporting requirement?</h3><p>Can analytics, Sales Office, Product Hierarchy, or another reporting dimension solve it without creating a new core organizational unit?</p></div>
+      <div><h3>Who owns maintenance?</h3><p>Who creates and governs the new organizational data and the related BP/product/condition records?</p></div>
+      <div><h3>What is the regression surface?</h3><p>Which pricing, ATP, delivery, billing, tax, accounting, authorization, interface, and output scenarios must be retested?</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="related" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Continue the reasoning</p>
+      <h2>Open the owner page for the next layer.</h2>
+      <p>Organizational structure gives the context. These pages explain what the process does with that context.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Which customer, product, relationship, condition, and logistics data is stored at each organizational scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing</strong><small>How Sales Area, customer, document, access sequences, condition records, and formulas become a calculated price.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>How Plant and supply context affect the customer promise.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping &amp; Scheduling</strong><small>How Plant, shipping condition, loading group, route, calendars, and lead times drive execution.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/sales-processes/"><span>SD</span><strong>Sales Process Atlas</strong><small>See how standard, intercompany, third-party, consignment, returns, and other processes change the organizational boundary.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary evidence</p>
+      <h2>Sources used to check the factual layer.</h2>
+      <p>The explanations and memory models above are independently written. SAP sources below verify the product concepts and assignment rules.</p>
+    </header>
+    <div class="ecg-source-list">
+      {% for source in page.source_links %}
+      <article>
+        <span>SAP · primary source</span>
+        <h3><a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.title }}</a></h3>
+        <p>Use this source to verify the SAP definition or behavior described on this page.</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
