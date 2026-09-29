@@ -1015,6 +1015,19 @@ special_pricing_patterns:
     - code: "L"
       behavior: "Like A, but keep the least favorable condition."
 
+  integration_boundary:
+    title: "SD pricing outside the classic sales-document flow"
+    memory: "The pricing engine can be reused by another billing architecture."
+    behavior: >-
+      Convergent Invoicing can call SD pricing for billing-plan items and consumption items.
+      In SAP S/4HANA 2025 FPS01, the pricing procedure is assigned per sales organization in
+      posting area 8200; SAP provides examples such as CI1001/CI1701 with PST0, PST1, and PST2.
+    lead_check: >-
+      Treat this as an integration boundary, not as ordinary sales-document copy control:
+      first identify which process invokes pricing and which component owns the billable item lifecycle.
+    source_refs:
+      - SRC-SAP-PRICING-CONVERGENT-INVOICING
+
   tax_boundary:
     memory: "Tax is a pricing element, but tax ownership is broader than SD pricing."
     behavior: >-
