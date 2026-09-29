@@ -111,9 +111,9 @@ related:
     <h2>Sources</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, especially chapters 1, 6, 7, and 11.</li>
-      <li><a href="https://www.postgresql.org/docs/current/using-explain.html">PostgreSQL: Using EXPLAIN</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/routine-vacuuming.html">PostgreSQL: Routine Vacuuming</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/monitoring.html">PostgreSQL: Monitoring Database Activity</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/using-explain.html">PostgreSQL: Using EXPLAIN</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/routine-vacuuming.html">PostgreSQL: Routine Vacuuming</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/monitoring.html">PostgreSQL: Monitoring Database Activity</a></li>
       <li><a href="https://www.postgresql.org/docs/18/release-18.html">PostgreSQL 18 release notes</a></li>
     </ul>
   </div>
