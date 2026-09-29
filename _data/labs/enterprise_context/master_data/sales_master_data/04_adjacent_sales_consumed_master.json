@@ -1,1 +1,1100 @@
-{"group":"04_adjacent_sales_consumed_master","title":"Adjacent master data Sales consumes","summary":"Credit, units, batches, BOMs and configuration data owned beyond core Sales but read by Sales and fulfillment.","entities":[{"code":"MD.SD.CREDIT","title":"Credit Master Data","entity_class":"business_master","memory_hook":"The sales order sees a customer; credit management sees a risk account inside a credit segment.","business_question":"Which credit account, segment, limit, risk class and check policy context should evaluate this exposure?","scope":"SAP Credit Management uses Business Partner credit roles/profile/segment data. It is adjacent to SD customer master but directly controls whether sales documents can proceed.","key_dimensions":["business partner / credit account","credit segment","validity"],"high_value_attributes":[{"name":"BP role UKM000","why":"Makes credit-management data available for the business partner."},{"name":"credit limit and validity","why":"Defines segment-level exposure capacity."},{"name":"risk class","why":"Can drive check-rule/risk policy."},{"name":"check rule","why":"Controls which credit checks apply."}],"consumed_by":["SAP Credit Management credit check"],"writes_or_influences":["credit decision","document block/release context"],"precedence":["Free credit limit alone does not prove a pass; the check rule may contain other checks and the credit account can differ from the sold-to party."],"maintenance":{"modern":["Maintain Business Partner / credit management apps"],"classic":["BP"],"note":"Keep SD trigger/config separate from credit master/risk data."},"technical_refs":{"tables":["UKMBP_CMS","UKMBP_CMS_SGM (classic orientation)"],"related":["deep_dive: /labs/enterprise-context/credit/"]},"failure_signals":["order blocked with apparently free limit","wrong credit segment","unexpected credit account/payer","limit expired","manual release used to hide master-data issue"],"lead_questions":["Which credit account and segment were actually checked?","Which check rule ran?","Is the issue exposure lifecycle, master data, or SD trigger configuration?"],"relations":[{"type":"specializes","target":"MD.SD.BP","why":"credit data is maintained for a business partner/credit account"},{"type":"feeds","target":"MEC.SD.CREDIT","why":"credit mechanism consumes profile/segment/risk data"}],"source_refs":["SRC-SDMD-CREDIT"]},{"code":"MD.SD.UOM","title":"Units of Measure and Quantity Constraints","entity_class":"logistics_adjacent_master","memory_hook":"A quantity without its unit is just a number waiting to become an incident.","business_question":"In which unit is the product sold, converted, rounded, delivered, and priced?","scope":"Product master unit-of-measure and sales quantity data are consumed across order entry, pricing, ATP, delivery, and interfaces.","key_dimensions":["product","base UoM","alternative UoM","sales UoM","distribution chain"],"high_value_attributes":[{"name":"base and alternative units / conversion","why":"Foundation for quantity translation."},{"name":"sales unit","why":"Default sales-document unit."},{"name":"minimum order quantity","why":"Commercial constraint."},{"name":"delivery unit / minimum delivery quantity","why":"Fulfillment quantity constraint."},{"name":"rounding profile","why":"Can adjust order-proposal quantities."}],"consumed_by":["sales order quantity processing","pricing","ATP","delivery","EDI/API integrations"],"writes_or_influences":["order quantity interpretation","condition-scale interpretation","confirmed/delivered quantity conversions"],"precedence":["The document may allow a different sales unit depending on product settings; interfaces must not assume base UoM equals sales UoM."],"maintenance":{"modern":["Manage Product Master Data"],"classic":["MM02"],"note":"Owned in product master, separated here because its cross-process blast radius deserves its own graph node."},"technical_refs":{"tables":["MARM","MVKE"],"released_cds":["Product Sales Data"]},"failure_signals":["price appears wrong only for one unit","quantity multiplied/divided incorrectly in interface","delivery unit violation","ATP appears inconsistent because compared quantities use different units"],"lead_questions":["What is the base unit versus sales unit?","Which conversion factor was used?","Does the condition record price per the same unit?"],"relations":[{"type":"specializes","target":"MD.SD.PRODUCT","why":"unit data belongs to product master"},{"type":"feeds","target":"MEC.SD.PRICE","why":"price conditions can depend on unit"},{"type":"feeds","target":"MEC.SD.ATP","why":"availability/confirmation quantities require consistent units"}],"source_refs":["SRC-SDMD-PRODUCT-SALES-DATA","SRC-SDMD-PRODUCT-AREAS"]},{"code":"MD.SD.BATCH","title":"Batch Master and Classification","entity_class":"logistics_adjacent_master","memory_hook":"Sales promises a product; delivery may need to prove which exact lot satisfied the promise.","business_question":"Which batch is eligible, available, and preferred for this delivery context?","scope":"Batch master/classification is not Sales-owned master data, but Sales and delivery can consume batch-managed-product settings and characteristics through batch determination.","key_dimensions":["product","plant","batch","classification characteristics","shelf-life/status where relevant"],"high_value_attributes":[{"name":"batch-management requirement","why":"Makes exact-lot handling part of execution."},{"name":"batch characteristics/classification","why":"Selection criteria can use business/quality attributes."},{"name":"batch status/availability","why":"A technically matching batch may still be unusable."}],"consumed_by":["batch determination","delivery/warehouse execution","traceability"],"writes_or_influences":["selected batch","delivery eligibility","traceability evidence"],"precedence":["Product master activates batch relevance; determination configuration and strategy choose among eligible batch master data."],"maintenance":{"modern":["batch management apps depending on deployment"],"classic":["MSC1N","MSC2N","MSC3N"],"note":"Warehouse execution may own the final selection depending on architecture."},"technical_refs":{"tables":["MCH1","MCHA","MCHB (classic orientation)"],"related":["mechanism: MEC.SD.BATCH"]},"failure_signals":["no batch found despite stock","wrong batch characteristic selected","manual batch always required","delivery fails after sales order looked valid"],"lead_questions":["Is this a product-master relevance issue, a batch-master eligibility issue, or a search-strategy issue?","Where is batch determination executed in this architecture?"],"relations":[{"type":"references","target":"MD.SD.PRODUCT","why":"batches belong to batch-managed products"},{"type":"feeds","target":"MEC.SD.BATCH","why":"eligible batch master/classification data feed batch determination"}],"source_refs":["SRC-SDMD-BATCH-DETERMINATION"]},{"code":"MD.SD.BOM","title":"Sales BOM / Product Structure","entity_class":"logistics_adjacent_master","memory_hook":"One commercial item can explode into many operational items.","business_question":"When a structured product is sold, which components become sales subitems and where does pricing/quantity control live?","scope":"Bills of material are cross-application master data. Sales BOM processing can expose header/component structures whose behavior is then governed by item-category and pricing setup.","key_dimensions":["header product","BOM usage","plant/validity where applicable","components","quantities"],"high_value_attributes":[{"name":"header/component relation","why":"Defines the product structure."},{"name":"component quantity","why":"Controls explosion quantities."},{"name":"item category in BOM/component context","why":"Influences how components are interpreted downstream."}],"consumed_by":["sales BOM explosion","item category determination","pricing depending on ERLA/LUMF-style design","delivery/ATP for components depending on process"],"writes_or_influences":["sales order subitem structure","component quantities","pricing/fulfillment responsibility"],"precedence":["BOM master data defines structure; Sales item-category design decides whether header or components carry commercial/logistics behavior."],"maintenance":{"modern":["Manage Bills of Material / deployment-specific apps"],"classic":["CS01","CS02","CS03"],"note":"Exact sales behavior depends on product/item-category configuration, not BOM structure alone."},"technical_refs":{"tables":["STKO","STPO (classic orientation)"],"related":["process_refs: SD.BOM.ERLA","process_refs: SD.BOM.LUMF"]},"failure_signals":["BOM does not explode","wrong component quantity","price sits at wrong level","delivery relevant level differs from expectation"],"lead_questions":["Is the issue BOM structure or Sales item-category control?","Which level owns pricing and delivery?","Is the BOM valid for the relevant context/date?"],"relations":[{"type":"references","target":"MD.SD.PRODUCT","why":"header and components are products/materials"},{"type":"determines_input_for","target":"MEC.SD.ICAT","why":"subitem/higher-level context participates in item-category determination"}],"source_refs":["SRC-SDMD-SALES-BOM"]},{"code":"MD.SD.VC","title":"Configurable Product and Classification Context","entity_class":"logistics_adjacent_master","memory_hook":"A configurable material is not one product with many descriptions; it is a product whose chosen characteristics become process data.","business_question":"Which characteristics, allowed values, dependencies, and configuration result define the exact sellable variant?","scope":"Variant configuration/classification data is broader than SD master data but becomes decisive for configurable sales items, BOM/routing selection, pricing, procurement and production.","key_dimensions":["configurable product","class/characteristics","configuration profile/model","dependency rules","chosen characteristic values"],"high_value_attributes":[{"name":"characteristics and value domains","why":"Define what can be configured."},{"name":"dependencies/constraints","why":"Prevent invalid combinations and derive values."},{"name":"configuration profile/model linkage","why":"Connects the product to configuration behavior."},{"name":"pricing-relevant characteristics","why":"Can feed variant-condition pricing designs."}],"consumed_by":["sales item configuration","pricing","BOM/routing selection","MTO/procurement/production integration"],"writes_or_influences":["configuration instance","derived components/operations","variant price","fulfillment feasibility"],"precedence":["Separate product master, configuration model, chosen runtime configuration, and downstream production data; calling all of it 'material master' destroys the diagnostic path."],"maintenance":{"modern":["Advanced Variant Configuration / classification tools depending on deployment"],"classic":["CU41/CU42/CU43 and classification transactions are classic orientation"],"note":"AVC versus classic LO-VC boundaries are release/deployment topics and should remain explicit."},"technical_refs":{"related":["process_refs: SD.MTO.VC","process_refs: SD.TPO.VC"]},"failure_signals":["invalid combination accepted/rejected","wrong BOM selected","variant surcharge missing","configuration lost during copy/returns"],"lead_questions":["Are we debugging master model data or the runtime configuration instance?","Is this AVC or classic LO-VC?","Which downstream object consumes the characteristic value?"],"relations":[{"type":"references","target":"MD.SD.PRODUCT","why":"configuration model is attached to a configurable product"},{"type":"feeds","target":"MEC.SD.PRICE","why":"configuration can affect pricing"},{"type":"determines_input_for","target":"MEC.SD.ATP","why":"configured requirements can affect fulfillment/availability context"}],"source_refs":["SRC-SDMD-AVC","SRC-SDMD-VC-CHARACTERISTICS"]}]}
+{
+  "group": "04_adjacent_sales_consumed_master",
+  "title": "Adjacent logistics and procurement master data",
+  "summary": "Credit, units, classification, batches, serial identity, product structure, configuration and source-of-supply data owned beyond core Sales but consumed across logistics.",
+  "entities": [
+    {
+      "code": "MD.SD.CREDIT",
+      "title": "Credit Master Data",
+      "entity_class": "business_master",
+      "memory_hook": "The sales order sees a customer; credit management sees a risk account inside a credit segment.",
+      "business_question": "Which credit account, segment, limit, risk class and check policy context should evaluate this exposure?",
+      "scope": "SAP Credit Management uses Business Partner credit roles/profile/segment data. It is adjacent to SD customer master but directly controls whether sales documents can proceed.",
+      "key_dimensions": [
+        "business partner / credit account",
+        "credit segment",
+        "validity"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "BP role UKM000",
+          "why": "Makes credit-management data available for the business partner."
+        },
+        {
+          "name": "credit limit and validity",
+          "why": "Defines segment-level exposure capacity."
+        },
+        {
+          "name": "risk class",
+          "why": "Can drive check-rule/risk policy."
+        },
+        {
+          "name": "check rule",
+          "why": "Controls which credit checks apply."
+        }
+      ],
+      "consumed_by": [
+        "SAP Credit Management credit check"
+      ],
+      "writes_or_influences": [
+        "credit decision",
+        "document block/release context"
+      ],
+      "precedence": [
+        "Free credit limit alone does not prove a pass; the check rule may contain other checks and the credit account can differ from the sold-to party."
+      ],
+      "maintenance": {
+        "modern": [
+          "Maintain Business Partner / credit management apps"
+        ],
+        "classic": [
+          "BP"
+        ],
+        "note": "Keep SD trigger/config separate from credit master/risk data."
+      },
+      "technical_refs": {
+        "tables": [
+          "UKMBP_CMS",
+          "UKMBP_CMS_SGM (classic orientation)"
+        ],
+        "related": [
+          "deep_dive: /labs/enterprise-context/credit/"
+        ]
+      },
+      "failure_signals": [
+        "order blocked with apparently free limit",
+        "wrong credit segment",
+        "unexpected credit account/payer",
+        "limit expired",
+        "manual release used to hide master-data issue"
+      ],
+      "lead_questions": [
+        "Which credit account and segment were actually checked?",
+        "Which check rule ran?",
+        "Is the issue exposure lifecycle, master data, or SD trigger configuration?"
+      ],
+      "relations": [
+        {
+          "type": "specializes",
+          "target": "MD.SD.BP",
+          "why": "credit data is maintained for a business partner/credit account"
+        },
+        {
+          "type": "feeds",
+          "target": "MEC.SD.CREDIT",
+          "why": "credit mechanism consumes profile/segment/risk data"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-CREDIT"
+      ]
+    },
+    {
+      "code": "MD.SD.UOM",
+      "title": "Units of Measure and Quantity Constraints",
+      "entity_class": "logistics_adjacent_master",
+      "memory_hook": "A quantity without its unit is just a number waiting to become an incident.",
+      "business_question": "In which unit is the product sold, converted, rounded, delivered, and priced?",
+      "scope": "Product master unit-of-measure and sales quantity data are consumed across order entry, pricing, ATP, delivery, and interfaces.",
+      "key_dimensions": [
+        "product",
+        "base UoM",
+        "alternative UoM",
+        "sales UoM",
+        "distribution chain"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "base and alternative units / conversion",
+          "why": "Foundation for quantity translation."
+        },
+        {
+          "name": "sales unit",
+          "why": "Default sales-document unit."
+        },
+        {
+          "name": "minimum order quantity",
+          "why": "Commercial constraint."
+        },
+        {
+          "name": "delivery unit / minimum delivery quantity",
+          "why": "Fulfillment quantity constraint."
+        },
+        {
+          "name": "rounding profile",
+          "why": "Can adjust order-proposal quantities."
+        }
+      ],
+      "consumed_by": [
+        "sales order quantity processing",
+        "pricing",
+        "ATP",
+        "delivery",
+        "EDI/API integrations"
+      ],
+      "writes_or_influences": [
+        "order quantity interpretation",
+        "condition-scale interpretation",
+        "confirmed/delivered quantity conversions"
+      ],
+      "precedence": [
+        "The document may allow a different sales unit depending on product settings; interfaces must not assume base UoM equals sales UoM."
+      ],
+      "maintenance": {
+        "modern": [
+          "Manage Product Master Data"
+        ],
+        "classic": [
+          "MM02"
+        ],
+        "note": "Owned in product master, separated here because its cross-process blast radius deserves its own graph node."
+      },
+      "technical_refs": {
+        "tables": [
+          "MARM",
+          "MVKE"
+        ],
+        "released_cds": [
+          "Product Sales Data"
+        ]
+      },
+      "failure_signals": [
+        "price appears wrong only for one unit",
+        "quantity multiplied/divided incorrectly in interface",
+        "delivery unit violation",
+        "ATP appears inconsistent because compared quantities use different units"
+      ],
+      "lead_questions": [
+        "What is the base unit versus sales unit?",
+        "Which conversion factor was used?",
+        "Does the condition record price per the same unit?"
+      ],
+      "relations": [
+        {
+          "type": "specializes",
+          "target": "MD.SD.PRODUCT",
+          "why": "unit data belongs to product master"
+        },
+        {
+          "type": "feeds",
+          "target": "MEC.SD.PRICE",
+          "why": "price conditions can depend on unit"
+        },
+        {
+          "type": "feeds",
+          "target": "MEC.SD.ATP",
+          "why": "availability/confirmation quantities require consistent units"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-PRODUCT-SALES-DATA",
+        "SRC-SDMD-PRODUCT-AREAS"
+      ]
+    },
+    {
+      "code": "MD.SD.BATCH",
+      "title": "Batch Master",
+      "entity_class": "logistics_adjacent_master",
+      "memory_hook": "Sales promises a product; delivery may need to prove which exact lot satisfied the promise.",
+      "business_question": "Which batch is eligible, available, and preferred for this delivery context?",
+      "scope": "Batch master data is not Sales-owned, but Sales, delivery and warehouse execution can consume batch-managed-product settings, batch status and classification through batch determination.",
+      "key_dimensions": [
+        "product",
+        "plant",
+        "batch",
+        "classification characteristics",
+        "shelf-life/status where relevant"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "batch-management requirement",
+          "why": "Makes exact-lot handling part of execution."
+        },
+        {
+          "name": "batch characteristics/classification",
+          "why": "Selection criteria can use business/quality attributes."
+        },
+        {
+          "name": "batch status/availability",
+          "why": "A technically matching batch may still be unusable."
+        }
+      ],
+      "consumed_by": [
+        "batch determination",
+        "delivery/warehouse execution",
+        "traceability"
+      ],
+      "writes_or_influences": [
+        "selected batch",
+        "delivery eligibility",
+        "traceability evidence"
+      ],
+      "precedence": [
+        "Product master activates batch relevance; determination configuration and strategy choose among eligible batch master data."
+      ],
+      "maintenance": {
+        "modern": [
+          "batch management apps depending on deployment"
+        ],
+        "classic": [
+          "MSC1N",
+          "MSC2N",
+          "MSC3N"
+        ],
+        "note": "Warehouse execution may own the final selection depending on architecture."
+      },
+      "technical_refs": {
+        "tables": [
+          "MCH1",
+          "MCHA",
+          "MCHB (classic orientation)"
+        ],
+        "related": [
+          "mechanism: MEC.SD.BATCH"
+        ]
+      },
+      "failure_signals": [
+        "no batch found despite stock",
+        "wrong batch characteristic selected",
+        "manual batch always required",
+        "delivery fails after sales order looked valid"
+      ],
+      "lead_questions": [
+        "Is this a product-master relevance issue, a batch-master eligibility issue, or a search-strategy issue?",
+        "Where is batch determination executed in this architecture?"
+      ],
+      "relations": [
+        {
+          "type": "references",
+          "target": "MD.SD.PRODUCT",
+          "why": "batches belong to batch-managed products"
+        },
+        {
+          "type": "feeds",
+          "target": "MEC.SD.BATCH",
+          "why": "eligible batch master/classification data feed batch determination"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.CLASSIFICATION",
+          "why": "batch characteristics are maintained through the classification framework"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-BATCH-DETERMINATION"
+      ]
+    },
+    {
+      "code": "MD.SD.BOM",
+      "title": "Sales BOM / Product Structure",
+      "entity_class": "logistics_adjacent_master",
+      "memory_hook": "One commercial item can explode into many operational items.",
+      "business_question": "When a structured product is sold, which components become sales subitems and where does pricing/quantity control live?",
+      "scope": "Bills of material are cross-application master data. Sales BOM processing can expose header/component structures whose behavior is then governed by item-category and pricing setup.",
+      "key_dimensions": [
+        "header product",
+        "BOM usage",
+        "plant/validity where applicable",
+        "components",
+        "quantities"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "header/component relation",
+          "why": "Defines the product structure."
+        },
+        {
+          "name": "component quantity",
+          "why": "Controls explosion quantities."
+        },
+        {
+          "name": "item category in BOM/component context",
+          "why": "Influences how components are interpreted downstream."
+        }
+      ],
+      "consumed_by": [
+        "sales BOM explosion",
+        "item category determination",
+        "pricing depending on ERLA/LUMF-style design",
+        "delivery/ATP for components depending on process"
+      ],
+      "writes_or_influences": [
+        "sales order subitem structure",
+        "component quantities",
+        "pricing/fulfillment responsibility"
+      ],
+      "precedence": [
+        "BOM master data defines structure; Sales item-category design decides whether header or components carry commercial/logistics behavior."
+      ],
+      "maintenance": {
+        "modern": [
+          "Manage Bills of Material / deployment-specific apps"
+        ],
+        "classic": [
+          "CS01",
+          "CS02",
+          "CS03"
+        ],
+        "note": "Exact sales behavior depends on product/item-category configuration, not BOM structure alone."
+      },
+      "technical_refs": {
+        "tables": [
+          "STKO",
+          "STPO (classic orientation)"
+        ],
+        "related": [
+          "process_refs: SD.BOM.ERLA",
+          "process_refs: SD.BOM.LUMF"
+        ]
+      },
+      "failure_signals": [
+        "BOM does not explode",
+        "wrong component quantity",
+        "price sits at wrong level",
+        "delivery relevant level differs from expectation"
+      ],
+      "lead_questions": [
+        "Is the issue BOM structure or Sales item-category control?",
+        "Which level owns pricing and delivery?",
+        "Is the BOM valid for the relevant context/date?"
+      ],
+      "relations": [
+        {
+          "type": "references",
+          "target": "MD.SD.PRODUCT",
+          "why": "header and components are products/materials"
+        },
+        {
+          "type": "determines_input_for",
+          "target": "MEC.SD.ICAT",
+          "why": "subitem/higher-level context participates in item-category determination"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-SALES-BOM"
+      ]
+    },
+    {
+      "code": "MD.SD.VC",
+      "title": "Variant Configuration Context",
+      "entity_class": "logistics_adjacent_master",
+      "memory_hook": "A configurable material is not one product with many descriptions; it is a product whose chosen characteristics become process data.",
+      "business_question": "Which characteristics, allowed values, dependencies, and configuration result define the exact sellable variant?",
+      "scope": "Variant configuration data is broader than SD master data but becomes decisive for configurable sales items, BOM/routing selection, pricing, procurement and production. It can reuse classification characteristics and classes while adding configuration profiles and dependency logic.",
+      "key_dimensions": [
+        "configurable product",
+        "class/characteristics",
+        "configuration profile/model",
+        "dependency rules",
+        "chosen characteristic values"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "characteristics and value domains",
+          "why": "Define what can be configured."
+        },
+        {
+          "name": "dependencies/constraints",
+          "why": "Prevent invalid combinations and derive values."
+        },
+        {
+          "name": "configuration profile/model linkage",
+          "why": "Connects the product to configuration behavior."
+        },
+        {
+          "name": "pricing-relevant characteristics",
+          "why": "Can feed variant-condition pricing designs."
+        }
+      ],
+      "consumed_by": [
+        "sales item configuration",
+        "pricing",
+        "BOM/routing selection",
+        "MTO/procurement/production integration"
+      ],
+      "writes_or_influences": [
+        "configuration instance",
+        "derived components/operations",
+        "variant price",
+        "fulfillment feasibility"
+      ],
+      "precedence": [
+        "Separate product master, configuration model, chosen runtime configuration, and downstream production data; calling all of it 'material master' destroys the diagnostic path."
+      ],
+      "maintenance": {
+        "modern": [
+          "Advanced Variant Configuration / classification tools depending on deployment"
+        ],
+        "classic": [
+          "CU41/CU42/CU43 and classification transactions are classic orientation"
+        ],
+        "note": "AVC versus classic LO-VC boundaries are release/deployment topics and should remain explicit."
+      },
+      "technical_refs": {
+        "related": [
+          "process_refs: SD.MTO.VC",
+          "process_refs: SD.TPO.VC"
+        ]
+      },
+      "failure_signals": [
+        "invalid combination accepted/rejected",
+        "wrong BOM selected",
+        "variant surcharge missing",
+        "configuration lost during copy/returns"
+      ],
+      "lead_questions": [
+        "Are we debugging master model data or the runtime configuration instance?",
+        "Is this AVC or classic LO-VC?",
+        "Which downstream object consumes the characteristic value?"
+      ],
+      "relations": [
+        {
+          "type": "references",
+          "target": "MD.SD.PRODUCT",
+          "why": "configuration model is attached to a configurable product"
+        },
+        {
+          "type": "feeds",
+          "target": "MEC.SD.PRICE",
+          "why": "configuration can affect pricing"
+        },
+        {
+          "type": "determines_input_for",
+          "target": "MEC.SD.ATP",
+          "why": "configured requirements can affect fulfillment/availability context"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.CLASSIFICATION",
+          "why": "variant configuration can reuse classification characteristics and classes"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-AVC",
+        "SRC-SDMD-VC-CHARACTERISTICS"
+      ]
+    },
+    {
+      "code": "MD.SD.CLASSIFICATION",
+      "title": "Classification",
+      "entity_class": "logistics_adjacent_master",
+      "memory_hook": "Classification gives different logistics objects one reusable language of characteristics and values.",
+      "business_question": "Which class and characteristic values describe this object, and which process actually consumes those values?",
+      "scope": "SAP Classification is a cross-application framework. Materials, batches, equipment and other supported objects can be classified. Sales and logistics consume the values only when a process, determination or configuration model is designed to read them.",
+      "key_dimensions": [
+        "class type",
+        "class",
+        "characteristic",
+        "classified object",
+        "characteristic value"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "class type",
+          "why": "Defines the technical object category and classification context."
+        },
+        {
+          "name": "characteristic data type and allowed values",
+          "why": "Controls which values can be assigned consistently."
+        },
+        {
+          "name": "class assignment",
+          "why": "Connects an object to a reusable classification structure."
+        },
+        {
+          "name": "characteristic valuation",
+          "why": "Stores the actual business value for the classified object."
+        }
+      ],
+      "consumed_by": [
+        "product and object search",
+        "batch classification and determination",
+        "variant configuration",
+        "equipment and serial-linked scenarios where used",
+        "analytics and integration mappings"
+      ],
+      "writes_or_influences": [
+        "selection criteria",
+        "eligibility rules",
+        "configuration inputs",
+        "classification-based interface attributes"
+      ],
+      "precedence": [
+        "Characteristics and classes define the reusable model; the classified object carries the actual valuation.",
+        "Classification does not trigger a business decision by itself. A process, dependency, search strategy or integration must read the value."
+      ],
+      "maintenance": {
+        "modern": [
+          "Classification apps and object-specific maintenance depending on deployment"
+        ],
+        "classic": [
+          "CT04",
+          "CL01 / CL02 / CL03",
+          "CL20N / CL24N"
+        ],
+        "note": "Classic transactions are orientation for on-premise/private-cloud landscapes; app availability varies by edition."
+      },
+      "technical_refs": {
+        "tables": [
+          "CABN",
+          "CAWN",
+          "KLAH",
+          "KSML",
+          "KSSK",
+          "AUSP (classic orientation)"
+        ],
+        "related": [
+          "MD.SD.PRODUCT",
+          "MD.SD.BATCH",
+          "MD.SD.VC"
+        ]
+      },
+      "failure_signals": [
+        "correct object exists but the expected characteristic is missing",
+        "batch search ignores an expected value",
+        "variant dependency receives the wrong characteristic value",
+        "integration maps a display text instead of a stable characteristic/value key"
+      ],
+      "lead_questions": [
+        "Is the problem in the characteristic definition, the class assignment, or the object valuation?",
+        "Which class type applies to this object?",
+        "Which runtime mechanism reads this characteristic?"
+      ],
+      "relations": [
+        {
+          "type": "references",
+          "target": "MD.SD.PRODUCT",
+          "why": "materials/products can be classified"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.BATCH",
+          "why": "batch classification can provide batch-selection characteristics"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.VC",
+          "why": "variant configuration can reuse characteristics and classes"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-CLASSIFICATION"
+      ]
+    },
+    {
+      "code": "MD.SD.SERIAL",
+      "title": "Serial Number",
+      "entity_class": "logistics_adjacent_master",
+      "memory_hook": "A batch identifies a lot; a serial number identifies one exact physical unit.",
+      "business_question": "Which individual unit moved, where is it now, and which document proves that movement?",
+      "scope": "Serial-number management adds individual identity below the material level. The material master serial-number profile controls where serial numbers are required or allowed, while runtime documents record the concrete serial assignments.",
+      "key_dimensions": [
+        "product/material",
+        "serial number",
+        "plant or stock context",
+        "status",
+        "equipment reference where used"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "serial number profile",
+          "why": "Controls when serial-number procedures apply to the material."
+        },
+        {
+          "name": "material + serial identity",
+          "why": "Distinguishes one physical unit from another."
+        },
+        {
+          "name": "system and user status",
+          "why": "Shows whether the unit can participate in relevant business steps."
+        },
+        {
+          "name": "stock/location context",
+          "why": "Supports unit-level traceability."
+        },
+        {
+          "name": "equipment link",
+          "why": "Extends the identity into maintenance/service scenarios when equipment is created or linked."
+        }
+      ],
+      "consumed_by": [
+        "goods receipt and goods issue",
+        "inbound and outbound delivery",
+        "inventory and handling-unit processes",
+        "service and warranty scenarios",
+        "traceability and audit"
+      ],
+      "writes_or_influences": [
+        "individual-unit trace",
+        "document serial assignment",
+        "status and location history context"
+      ],
+      "precedence": [
+        "The product/material master controls serial-number relevance through the serial-number profile.",
+        "The serial master identifies the unit; the business document proves where that serial number was used in a concrete transaction.",
+        "Equipment adds technical-object lifecycle data and should not be confused with the serial number itself."
+      ],
+      "maintenance": {
+        "modern": [
+          "Serial-number and material apps depending on deployment"
+        ],
+        "classic": [
+          "IQ01",
+          "IQ02",
+          "IQ03"
+        ],
+        "note": "The exact creation point can be manual or process-driven. Do not assume every serial number is created before the logistics document."
+      },
+      "technical_refs": {
+        "tables": [
+          "EQUI",
+          "OBJK (classic technical orientation)"
+        ],
+        "related": [
+          "MD.SD.PRODUCT",
+          "Delivery",
+          "Inventory Management"
+        ]
+      },
+      "failure_signals": [
+        "delivery requires serial numbers unexpectedly",
+        "goods movement rejects a serial assignment",
+        "same physical unit appears under the wrong material context",
+        "traceability stops at batch level when unit-level proof is required"
+      ],
+      "lead_questions": [
+        "Which serial-number profile is active for the material?",
+        "At which process step should the serial number be entered or created?",
+        "Is the defect master identity, document assignment, status, or equipment linkage?"
+      ],
+      "relations": [
+        {
+          "type": "references",
+          "target": "MD.SD.PRODUCT",
+          "why": "serial-number procedures are controlled from the material/product context"
+        },
+        {
+          "type": "validated_in",
+          "target": "DOC.LE.DELIVERY.HEADER",
+          "why": "delivery execution can require and validate concrete serial assignments"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-SERIAL-NUMBERS"
+      ]
+    },
+    {
+      "code": "MD.SD.SUPPLIER",
+      "title": "Business Partner / Supplier",
+      "entity_class": "business_master",
+      "memory_hook": "The Business Partner is the identity; the supplier roles and purchasing data define how that party supplies us.",
+      "business_question": "Who supplies the material or service, and under which company-code and purchasing-organization rules?",
+      "scope": "In SAP S/4HANA, supplier master data is maintained through Business Partner integration. General identity is shared, while supplier company-code and purchasing-organization views carry procurement-specific data.",
+      "key_dimensions": [
+        "business partner",
+        "supplier role",
+        "company code",
+        "purchasing organization",
+        "plant or supplier subrange where used"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "supplier purchasing organization data",
+          "why": "Controls purchasing-specific defaults and responsibilities."
+        },
+        {
+          "name": "order currency and Incoterms",
+          "why": "Provide commercial defaults for procurement."
+        },
+        {
+          "name": "payment terms",
+          "why": "Connect purchasing and invoice/payment context."
+        },
+        {
+          "name": "partner functions",
+          "why": "Allow ordering address, goods supplier and invoicing party responsibilities to differ."
+        }
+      ],
+      "consumed_by": [
+        "source determination",
+        "purchase requisition and purchase order",
+        "goods receipt context",
+        "invoice verification",
+        "supplier integration"
+      ],
+      "writes_or_influences": [
+        "supplier proposal",
+        "purchasing defaults",
+        "commercial terms",
+        "procurement partner context"
+      ],
+      "precedence": [
+        "General BP identity, company-code data and purchasing-organization data have different scopes.",
+        "A Purchasing Info Record can add more specific supplier × material data without replacing the supplier master."
+      ],
+      "maintenance": {
+        "modern": [
+          "Maintain Business Partner",
+          "Manage Supplier Master Data depending on deployment"
+        ],
+        "classic": [
+          "BP"
+        ],
+        "note": "Use BP roles and purchasing views in S/4HANA; classic vendor tables remain useful technical orientation in many private-cloud/on-premise systems."
+      },
+      "technical_refs": {
+        "tables": [
+          "BUT000",
+          "LFA1",
+          "LFB1",
+          "LFM1 (classic orientation)"
+        ],
+        "related": [
+          "MD.SD.PIR",
+          "Procure-to-Pay"
+        ]
+      },
+      "failure_signals": [
+        "supplier exists but cannot be used by the purchasing organization",
+        "wrong ordering or invoicing partner",
+        "unexpected payment or Incoterms default",
+        "source determination finds data for another supplier context"
+      ],
+      "lead_questions": [
+        "Is the issue general BP identity, company-code data, or purchasing-organization data?",
+        "Which supplier role and purchasing organization are active?",
+        "Is a more specific supplier-material record overriding the generic default?"
+      ],
+      "relations": [
+        {
+          "type": "specializes",
+          "target": "MD.SD.BP",
+          "why": "supplier is another Business Partner role and business context"
+        },
+        {
+          "type": "used_by",
+          "target": "MD.SD.PIR",
+          "why": "purchasing info records specialize the supplier-material relationship"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-SUPPLIER"
+      ]
+    },
+    {
+      "code": "MD.SD.PIR",
+      "title": "Purchasing Info Record",
+      "entity_class": "relationship_record",
+      "memory_hook": "The supplier says who can supply; the Purchasing Info Record says how this supplier supplies this material.",
+      "business_question": "Under which purchasing-organization and plant context can this supplier provide this material, with which commercial and delivery data?",
+      "scope": "A Purchasing Info Record stores reusable supplier-material purchasing data. It is more specific than either the supplier or material alone and can contain purchasing conditions, delivery data and quantity defaults.",
+      "key_dimensions": [
+        "supplier",
+        "material/product",
+        "purchasing organization",
+        "plant where applicable",
+        "info record category"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "purchasing conditions and price",
+          "why": "Provide reusable commercial data for purchasing."
+        },
+        {
+          "name": "planned delivery time",
+          "why": "Influences procurement lead-time expectations."
+        },
+        {
+          "name": "order unit and conversion",
+          "why": "Controls how the supplier-material relationship is ordered."
+        },
+        {
+          "name": "quantity and delivery tolerances",
+          "why": "Define acceptable procurement variation."
+        },
+        {
+          "name": "confirmation / invoice-related indicators where maintained",
+          "why": "Can shape downstream execution and invoice handling."
+        }
+      ],
+      "consumed_by": [
+        "source determination",
+        "MRP-generated purchasing proposals",
+        "purchase requisition",
+        "purchase order defaulting and pricing"
+      ],
+      "writes_or_influences": [
+        "source-of-supply evidence",
+        "PO commercial defaults",
+        "delivery lead time",
+        "order-unit behavior"
+      ],
+      "precedence": [
+        "Treat the info record as supplier × material specificity, not as a duplicate supplier or material master.",
+        "Source List, Quota Arrangement and outline agreements can change which source is selected; the info record mainly describes the reusable relationship."
+      ],
+      "maintenance": {
+        "modern": [
+          "Manage Purchasing Info Records"
+        ],
+        "classic": [
+          "ME11",
+          "ME12",
+          "ME13"
+        ],
+        "note": "Available fields and apps vary by deployment and procurement scenario."
+      },
+      "technical_refs": {
+        "tables": [
+          "EINA",
+          "EINE (classic orientation)"
+        ],
+        "related": [
+          "MD.SD.SUPPLIER",
+          "MD.SD.PRODUCT",
+          "MD.SD.SOURCELIST"
+        ]
+      },
+      "failure_signals": [
+        "source exists but PO defaults are wrong",
+        "planned delivery time differs by supplier for the same material",
+        "purchasing price is missing only for one supplier-material pair",
+        "wrong order unit or tolerance appears in purchasing"
+      ],
+      "lead_questions": [
+        "Is the defect generic supplier data, generic material data, or the supplier-material relationship?",
+        "Which purchasing organization and plant are in scope?",
+        "Is the system using an info record, outline agreement, or another source?"
+      ],
+      "relations": [
+        {
+          "type": "references",
+          "target": "MD.SD.SUPPLIER",
+          "why": "supplier side of the purchasing relationship"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.PRODUCT",
+          "why": "material/product side of the purchasing relationship"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-PIR"
+      ]
+    },
+    {
+      "code": "MD.SD.SOURCELIST",
+      "title": "Source List",
+      "entity_class": "logistics_adjacent_master",
+      "memory_hook": "The Source List answers which sources are valid, fixed, or blocked for this material and plant during this period.",
+      "business_question": "Which source of supply is allowed, blocked, or fixed for this material and plant on the requirement date?",
+      "scope": "Source List records control valid sources of supply by material, plant and validity. A record can reference a supplier, supplying plant, purchasing info record or outline-agreement context, depending on the scenario.",
+      "key_dimensions": [
+        "material/product",
+        "plant",
+        "valid-from / valid-to",
+        "source of supply",
+        "MRP/source-assignment indicators"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "validity period",
+          "why": "Makes source eligibility time-dependent."
+        },
+        {
+          "name": "fixed source indicator",
+          "why": "Can make one source the preferred/fixed assignment."
+        },
+        {
+          "name": "blocked source indicator",
+          "why": "Explicitly prevents a source from being selected."
+        },
+        {
+          "name": "MRP sourcing control",
+          "why": "Controls whether the source list participates in planning/source assignment."
+        },
+        {
+          "name": "supplier / supplying plant / outline agreement reference",
+          "why": "Identifies the concrete source context."
+        }
+      ],
+      "consumed_by": [
+        "source determination",
+        "MRP",
+        "purchase requisition source assignment",
+        "purchase order source determination",
+        "stock-transfer sourcing where applicable"
+      ],
+      "writes_or_influences": [
+        "eligible source set",
+        "fixed source",
+        "blocked source",
+        "automatic source assignment"
+      ],
+      "precedence": [
+        "A valid source list record does not replace Supplier or Purchasing Info Record data; it controls source eligibility.",
+        "Quota Arrangement answers a different question: how requirements should be allocated among sources. Outline agreements are procurement documents, not another master-data object."
+      ],
+      "maintenance": {
+        "modern": [
+          "Manage Source Lists / released APIs depending on deployment"
+        ],
+        "classic": [
+          "ME01",
+          "ME02",
+          "ME03"
+        ],
+        "note": "Use validity dates and source type together; a technically existing supplier is not automatically a valid source."
+      },
+      "technical_refs": {
+        "tables": [
+          "EORD (classic orientation)"
+        ],
+        "related": [
+          "MD.SD.SUPPLIER",
+          "MD.SD.PIR",
+          "MD.SD.QUOTA"
+        ]
+      },
+      "failure_signals": [
+        "MRP cannot assign a supplier although one exists",
+        "unexpected supplier becomes fixed",
+        "valid source is blocked by date or source-list flag",
+        "source determination differs between plants"
+      ],
+      "lead_questions": [
+        "Is a source list required for this material/plant?",
+        "Which record is valid on the requirement date?",
+        "Is the source fixed, blocked, or only one candidate among several?"
+      ],
+      "relations": [
+        {
+          "type": "references",
+          "target": "MD.SD.PRODUCT",
+          "why": "source lists are maintained for material/plant context"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.SUPPLIER",
+          "why": "external source-list records can identify suppliers"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.PIR",
+          "why": "source assignment can be linked to purchasing-info-record context"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-SOURCE-LIST"
+      ]
+    },
+    {
+      "code": "MD.SD.QUOTA",
+      "title": "Quota Arrangement",
+      "entity_class": "logistics_adjacent_master",
+      "memory_hook": "Source List says which sources may be used; Quota Arrangement controls how demand is allocated across eligible sources.",
+      "business_question": "How should requirements for this material and plant be distributed among available sources over the validity period?",
+      "scope": "Quota Arrangement is a reusable sourcing-control object for material/plant requirements. SAP documentation also describes it as a purchasing document. In this catalogue it stays in the adjacent sourcing layer rather than being presented as customer/material-style business master data.",
+      "key_dimensions": [
+        "material/product",
+        "plant",
+        "valid-from / valid-to",
+        "source items",
+        "quota and allocation quantities"
+      ],
+      "high_value_attributes": [
+        {
+          "name": "quota",
+          "why": "Defines the relative share assigned to a source."
+        },
+        {
+          "name": "allocated quantity",
+          "why": "Feeds quota rating and reflects how much a source has already received."
+        },
+        {
+          "name": "base quantity",
+          "why": "Can influence initial quota calculation."
+        },
+        {
+          "name": "minimum quantity for split quota",
+          "why": "Controls when splitting logic can apply in supported scenarios."
+        },
+        {
+          "name": "source type",
+          "why": "Allows external procurement, supplying plant or other supported source contexts."
+        }
+      ],
+      "consumed_by": [
+        "source determination",
+        "MRP",
+        "purchase requisition source allocation",
+        "procurement planning"
+      ],
+      "writes_or_influences": [
+        "source allocation",
+        "quota rating",
+        "distribution of requirements over time"
+      ],
+      "precedence": [
+        "Quota Arrangement does not make an invalid source valid; source eligibility and the detailed source data still need to be correct.",
+        "A quota normally allocates requirements across sources over time; it should not be explained as simply splitting every individual requisition line."
+      ],
+      "maintenance": {
+        "modern": [
+          "Manage Quota Arrangements"
+        ],
+        "classic": [
+          "MEQ1",
+          "MEQ2",
+          "MEQ3"
+        ],
+        "note": "Check quota-arrangement usage and the target sourcing process before expecting the quota to affect MRP or requisitions."
+      },
+      "technical_refs": {
+        "tables": [
+          "EQUK",
+          "EQUP (classic orientation)"
+        ],
+        "apis": [
+          "API_PUR_QUOTA_ARRANGEMENT_SRV"
+        ],
+        "related": [
+          "MD.SD.PRODUCT",
+          "MD.SD.SUPPLIER",
+          "MD.SD.SOURCELIST"
+        ]
+      },
+      "failure_signals": [
+        "requirements concentrate on one supplier unexpectedly",
+        "quota percentages look correct but source assignment does not follow them",
+        "allocation differs after historical quantities change",
+        "quota exists but is outside the validity period or not active for the intended process"
+      ],
+      "lead_questions": [
+        "Is the quota arrangement valid for the requirement date and plant?",
+        "Which applications are configured to use it?",
+        "What are the current allocated quantities and quota ratings?"
+      ],
+      "relations": [
+        {
+          "type": "references",
+          "target": "MD.SD.PRODUCT",
+          "why": "quota arrangements are maintained for material/plant demand"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.SUPPLIER",
+          "why": "external quota items can allocate demand to suppliers"
+        },
+        {
+          "type": "references",
+          "target": "MD.SD.SOURCELIST",
+          "why": "source eligibility and quota allocation are complementary sourcing controls"
+        }
+      ],
+      "source_refs": [
+        "SRC-SDMD-QUOTA"
+      ]
+    }
+  ]
+}
