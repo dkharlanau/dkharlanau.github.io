@@ -1,18 +1,21 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Sales BOM / Product Structure"
-description: "A practical deep dive into Sales BOM / Product Structure in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+title: "SAP S/4HANA Sales BOM — Configuration, Processing & Diagnostics"
+description: "A practical SAP Lead guide to Sales BOMs in S/4HANA: ERLA and LUMF processing, BOM explosion, item categories, variant configuration, ATP, order BOMs, integration and troubleshooting."
 permalink: /labs/enterprise-context/master-data/sales-bom/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
+  - sap-pp
   - master-data
+  - sales-bom
+  - variant-configuration
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -29,79 +32,580 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.BOM</p>
-      <h1>Sales BOM / Product Structure</h1>
-      <p>A Sales BOM allows a sellable header product to explode into components in the sales document. The commercial behavior depends heavily on whether pricing and logistics are controlled at header or component level.</p>
+      <h1>Sales BOM: structure is only half of the design</h1>
+      <p>A Sales BOM lets one sellable header product represent a structure of components in a sales document. The BOM answers which components belong to the product. Sales configuration decides which level carries price, availability, delivery, billing and requirements.</p>
+      <p>This distinction is the key to both implementation and troubleshooting. A correct BOM can still behave incorrectly in Sales, and a correct item-category design cannot repair a BOM that selected the wrong structure.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.BOM</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>logistics adjacent master</strong><small>Data class</small></div>
-      <em>Header product, BOM usage, plant/validity, components and quantities.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Structure</strong><small>BOM header + components</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Explosion</strong><small>Usage + application + scope</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Behavior</strong><small>Item + schedule-line control</small></div>
+      <em>First prove what exploded. Then prove which level owns the business process.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The BOM owns the structure; item categories own the Sales behavior of that structure.</h2>
+      <h2>Four control layers turn a product structure into Sales behavior.</h2>
+      <p>Do not treat “Sales BOM” as one setting. At runtime, several independent control layers work together.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Header product, BOM usage, plant/validity, components and quantities.</p>
-    </div>
+
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>BOM usage, header material, components, component quantities, alternative BOM, validity and plant context where relevant.</p>
+        <h3>1. Product master</h3>
+        <p>The header material carries an item category group such as <code>ERLA</code> or <code>LUMF</code>. This is an important input to Sales item-category determination.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>The BOM defines product structure. Item-category determination and pricing relevance are configuration, so the same structure can produce different sales behavior under different item-category settings.</p>
+        <h3>2. BOM master data</h3>
+        <p>The material BOM defines components, quantities, validity, plant context, alternative BOM and BOM usage. In classic standard Sales BOM processing, usage <code>5</code> represents Sales and Distribution.</p>
       </div>
+      <div>
+        <h3>3. Explosion control</h3>
+        <p>BOM usage, BOM application, validity, alternative selection, structure scope and, for configurable products, configuration-profile filters decide which structure can be exploded.</p>
+      </div>
+      <div>
+        <h3>4. Sales controls</h3>
+        <p>The resulting header and subitem categories control pricing, delivery relevance, schedule lines, requirements, billing behavior and other Sales functions.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Lead rule:</strong> ask two separate questions. <strong>What structure did SAP select?</strong> Then ask <strong>which document level owns the commercial and logistics process?</strong> Mixing these questions creates most Sales BOM troubleshooting mistakes.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="setup" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration chain</p>
+      <h2>Configure the chain from material to document, not isolated transactions.</h2>
+      <p>The exact UI depends on deployment. The transaction codes below are useful classic S/4HANA on-premise or private-edition references; do not assume the same maintenance path in Public Cloud.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Choose the business model</h4><p>Decide whether the customer buys one assembled product, a kit of separate components, or a hybrid where pricing and logistics live at different levels. This decision comes before the SAP codes.</p></div>
+      <div><span>02</span><h4>Maintain the header material</h4><p>Set the Sales item category group that represents the intended processing model. Classic examples are <code>ERLA</code> for header-level processing and <code>LUMF</code> for component-level processing.</p></div>
+      <div><span>03</span><h4>Create the material BOM</h4><p>In classic GUI, <code>CS01</code> creates the material BOM. Maintain material, plant where relevant, BOM usage, validity, alternative BOM, components and quantities. Standard Sales BOM examples commonly use BOM usage <code>5</code>.</p></div>
+      <div><span>04</span><h4>Check item-category determination</h4><p>In classic SD, item categories are defined in <code>VOV7</code> and determined through <code>VOV4</code>. For subitems, the higher-level item category is an important determination input.</p></div>
+      <div><span>05</span><h4>Enable the required structure scope</h4><p>The main item category must allow the required BOM or configuration structure. Do not memorize one structure-scope code as universal: the relevant value depends on the scenario and release.</p></div>
+      <div><span>06</span><h4>Add variant-configuration controls when needed</h4><p>For configurable materials, the configuration profile adds another control plane: process type, single- or multi-level explosion, BOM application and filters. A standard Sales Order SET profile commonly uses Sales Order processing and application <code>SD01</code>.</p></div>
+      <div><span>07</span><h4>Prove the result in a sales order</h4><p>Enter the header product and inspect the hierarchy, selected item categories, schedule lines, pricing, confirmations and delivery relevance. The document result is the proof that the configuration chain works together.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Processing models</p>
+      <h2>ERLA and LUMF answer a business ownership question.</h2>
+      <p>The useful way to remember the models is not the code itself. Remember where the sale is valued and where the goods are executed.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Sales BOM processing model comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Business meaning</th>
+            <th>Pricing owner</th>
+            <th>Logistics / inventory owner</th>
+            <th>Common standard item categories</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>ERLA</code></td>
+            <td>Header-level processing. Typical when the customer buys one assembled or commercially indivisible product.</td>
+            <td>Header</td>
+            <td>Header</td>
+            <td><code>TAQ</code> header, <code>TAE</code> subitems in standard examples</td>
+          </tr>
+          <tr>
+            <td><code>LUMF</code></td>
+            <td>Component-level processing. Typical when the header is a kit label and the physical components are the real sales items.</td>
+            <td>Components</td>
+            <td>Components</td>
+            <td><code>TAP</code> header, <code>TAN</code> subitems in standard examples</td>
+          </tr>
+          <tr>
+            <td><code>CPFH</code></td>
+            <td>Hybrid sales-kit model: total price at header, logistics at component level.</td>
+            <td>Header</td>
+            <td>Components</td>
+            <td>Current S/4HANA Cloud sales-kit scope; verify availability and categories in the target release</td>
+          </tr>
+          <tr>
+            <td><code>DISH</code></td>
+            <td>Hybrid sales-kit model: logistics at header, price carried by components.</td>
+            <td>Components</td>
+            <td>Header</td>
+            <td>Current S/4HANA Cloud sales-kit scope; verify availability and categories in the target release</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">cloud</span>
+      <p><strong>Release boundary:</strong> <code>ERLA</code> and <code>LUMF</code> are the classic core models. Current SAP S/4HANA Cloud sales-kit documentation also describes <code>CPFH</code> and <code>DISH</code>. Treat the hybrid models as release- and scope-dependent, not as a guarantee for every landscape.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ERLA vs. LUMF</p>
+      <h2>The same BOM can support very different commercial behavior.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>ERLA: sell one product</h3>
+        <p>The header is the commercial and logistics object. It carries the price and standard delivery processing. The exploded components explain the structure but are normally not independently priced or delivered.</p>
+        <p><strong>Example:</strong> a pre-assembled workstation sold as one SKU. The customer buys one workstation even though the internal structure contains a monitor, keyboard and other parts.</p>
+      </div>
+      <div>
+        <h3>LUMF: sell the kit components</h3>
+        <p>The header is mainly structural. Pricing and delivery processing take place on the component subitems. Standard processing can create a delivery group so the components are coordinated and the latest component date becomes relevant to the group.</p>
+        <p><strong>Example:</strong> a promotional kit where the physical items can also be sold independently and must be picked and delivered as components.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Do not overlearn schedule-line codes:</strong> examples may show categories such as <code>CP</code> or <code>CT</code>, but a schedule-line category is determined separately from the BOM item category. MRP type and SD schedule-line configuration matter. Prove the schedule line in the document instead of treating it as an intrinsic property of ERLA or LUMF.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>Explosion answers “which components?”; Sales control answers “which level matters?”</h2>
-      <p>When the sellable header is entered, the valid Sales BOM can explode into component subitems. The BOM explains the product structure and quantities. Item-category and process configuration then decide whether commercial value, delivery relevance, and other Sales behavior live mainly on the header, the components, or both.</p>
+      <p class="research-canvas__eyebrow">Sales-order runtime</p>
+      <h2>Read the explosion as a determination chain.</h2>
+      <p>A Sales BOM problem becomes easier when you follow the same order in which the system needs the information.</p>
     </header>
+
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Prove the BOM context</h4><p>Start with header product, plant or usage context, validity, and the BOM alternative that should apply to the Sales item.</p></div>
-      <div><span>02</span><h4>Check the explosion</h4><p>Compare the expected component structure and quantities with the subitems actually created in the document.</p></div>
-      <div><span>03</span><h4>Read item categories</h4><p>Identify the header and component item categories created by the explosion. This is where the product structure becomes Sales behavior.</p></div>
-      <div><span>04</span><h4>Locate commercial and logistics control</h4><p>Prove which level is pricing-relevant, delivery-relevant, or otherwise active before changing the BOM structure.</p></div>
-      <div><span>05</span><h4>Continue downstream</h4><p>If the structure and item categories are correct, diagnose pricing, ATP, delivery, or billing at the level that actually owns that process.</p></div>
+      <div><span>01</span><h4>Enter the header product</h4><p>The sales order first receives the material, sales area, plant context and sales-document type that drive later determination.</p></div>
+      <div><span>02</span><h4>Determine the main item category</h4><p>The header material's item category group participates in item-category determination. This is where the ERLA/LUMF processing model starts to become document behavior.</p></div>
+      <div><span>03</span><h4>Select a valid BOM</h4><p>The system needs a BOM that is valid for the relevant material, plant/application context, date, usage, status and alternative-selection rules.</p></div>
+      <div><span>04</span><h4>Explode the allowed structure</h4><p>The BOM application, structure scope and any configuration-profile filters decide what is copied into the sales document and how deep the explosion goes.</p></div>
+      <div><span>05</span><h4>Determine subitem categories</h4><p>Each copied component receives Sales behavior through item-category determination. For subitems, the relationship to the higher-level item is part of the logic.</p></div>
+      <div><span>06</span><h4>Run downstream functions at the active level</h4><p>Pricing, schedule lines, requirements, ATP, delivery and billing now act on the header or components according to the resulting document controls.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Wrong components and wrong component behavior are different failures.</h2>
+      <h2>First classify the failure: structure or behavior.</h2>
+      <p>This is the fastest diagnostic split. Do not change BOM master data when the structure is correct but Sales behavior is wrong.</p>
     </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>A. BOM does not explode, or components are wrong</h3>
+        <p>Start with the structure-selection path: header material, plant context, valid-from date, BOM usage, BOM status, alternative BOM, lot-size or selection rules, BOM application, structure scope and configuration-profile filters.</p>
+      </div>
+      <div>
+        <h3>B. Components are correct, but price or delivery is wrong</h3>
+        <p>Move away from BOM maintenance. Inspect main and subitem categories, pricing relevance, schedule lines, requirements, delivery relevance, billing relevance and copy-control consequences.</p>
+      </div>
+    </div>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Prove the header control</h4><p>Check the material item category group and the actual main item category created in the sales order.</p></div>
+      <div><span>02</span><h4>Prove a valid BOM candidate</h4><p>Confirm material, plant/application context, usage, validity, status and alternative. If SAP has no eligible BOM, there is nothing to explode.</p></div>
+      <div><span>03</span><h4>Prove the explosion application</h4><p>Check which BOM application is active and which BOM usages it searches in which priority. A technically valid BOM can still be the wrong candidate for Sales.</p></div>
+      <div><span>04</span><h4>Prove structure scope and filters</h4><p>For configurable products, verify the configuration profile, explosion depth and filters. A filter can intentionally remove components from the document.</p></div>
+      <div><span>05</span><h4>Prove Sales relevance</h4><p>In Sales Order SET processing, only BOM items relevant to Sales are copied as sales-order subitems. Do not assume every BOM item must appear.</p></div>
+      <div><span>06</span><h4>Prove the resulting item controls</h4><p>When the hierarchy is correct, inspect the actual item and schedule-line categories before changing master data. They explain most pricing, ATP and delivery differences.</p></div>
+    </div>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>If components are missing or wrong, start with BOM usage, validity, plant context, alternative, and component quantities. If the structure is correct but pricing or delivery relevance is wrong, inspect the resulting item categories and their controls. Editing the BOM cannot repair a Sales-control problem when the explosion itself is correct.</p>
+      <p><strong>Common trap:</strong> “the BOM is there in CS03” does not prove that Sales can use it. The real proof is that the sales-order application finds the correct valid BOM and that the selected item category permits the intended explosion.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">BOM application</p>
+      <h2>Usage says where a BOM may be used; application controls how the consumer searches.</h2>
+      <p>This distinction becomes especially important in variant configuration. The active application can define a priority of BOM usages. The first valid BOM found may not be the BOM you expected from a Sales-only view.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>BOM usage</h3>
+        <p>A property of the BOM that defines its intended application area. In classic standard processing, usage <code>5</code> is Sales and Distribution.</p>
+      </div>
+      <div>
+        <h3>BOM application</h3>
+        <p>A runtime control used by the consuming process. It can define which usages are searched and in which priority. For configurable Sales processing, <code>SD01</code> is a common standard application.</p>
+      </div>
+      <div>
+        <h3>Configuration-profile filter</h3>
+        <p>A configurable-material profile can restrict which BOM items are relevant for the configuration and Sales process. The master BOM may contain more items than the sales order should show.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">priority_high</span>
+      <p><strong>Diagnostic implication:</strong> if an application searches another usage first, SAP can select that BOM before the Sales BOM. The existence of usage <code>5</code> alone does not guarantee it will win the search.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configurable materials</p>
+      <h2>Sales Order SET adds configuration logic to normal Sales BOM logic.</h2>
+      <p>For LO-VC or Advanced Variant Configuration scenarios, the configuration profile controls more than characteristics. It also controls when and how the BOM is exploded.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define Sales Order processing</h4><p>Use a configuration profile designed for Sales Order processing. Standard SET processing can use application <code>SD01</code>.</p></div>
+      <div><span>02</span><h4>Choose explosion depth</h4><p>Single-level processing exposes only the first BOM level. Multi-level processing can continue into subordinate configurable assemblies when their profiles allow it.</p></div>
+      <div><span>03</span><h4>Mark the Sales-relevant BOM items</h4><p>SET processing copies only Sales-relevant BOM items into the sales order. The BOM can therefore contain technical components that remain outside the Sales document.</p></div>
+      <div><span>04</span><h4>Align item-category behavior</h4><p>If component-level requirements transfer and pricing are required, the configurable header must use a processing model that creates the needed sales-relevant subitems. Standard SET examples use item category group <code>0004</code>.</p></div>
+      <div><span>05</span><h4>Test configuration and logistics together</h4><p>A configuration can be logically complete but still fail later because a selected component has no confirmation, wrong plant, wrong item category or missing delivery relevance.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">layers</span>
+      <p><strong>Keep two “multi-level” concepts separate:</strong> normal SD structure explosion is controlled through Sales item-category structure settings, while configurable-material explosion also depends on configuration profiles, applications and filters. In a complex product, both layers can matter.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Single vs. multi-level</p>
+      <h2>Choose explosion depth from the business document you need.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Single-level explosion</h3>
+        <p>The sales order receives the first level below the entered material. A subordinate assembly can still have its own BOM, but that deeper structure is not automatically shown by a single-level Sales explosion.</p>
+      </div>
+      <div>
+        <h3>Multi-level explosion</h3>
+        <p>The structure can continue into lower assemblies. This gives Sales more visibility and control but also creates more document items, more determination points and more opportunities for inconsistent master data.</p>
+      </div>
+      <div>
+        <h3>Lead trade-off</h3>
+        <p>Do not explode more levels only because SAP can. Show a lower level in Sales only when Sales, pricing, requirements, ATP, delivery, configuration or customer communication needs that level as a real document object.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ATP, requirements and delivery</p>
+      <h2>The BOM does not perform ATP; it creates the items on which ATP can act.</h2>
+      <p>Availability behavior follows the active document level. Start from the item and schedule line that transfers requirements and is relevant for logistics, then continue into the ATP or aATP design.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>ERLA</h3>
+        <p>The header is the normal inventory and delivery object. Diagnose its schedule line, requirements transfer, checking group/rule and confirmation. The subitems are usually structural information rather than independent ATP objects.</p>
+      </div>
+      <div>
+        <h3>LUMF</h3>
+        <p>The components are the logistics objects. Availability can therefore differ by component. Delivery-group logic can coordinate dates so the kit is not promised as if each component were an unrelated sale.</p>
+      </div>
+      <div>
+        <h3>Configurable SET</h3>
+        <p>Requirements are meaningful only for the sales-relevant lower-level items created by the configuration. An incomplete or inconsistent configuration can prevent the expected requirements from reaching planning.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">inventory</span>
+      <p><strong>Do not infer the goods-movement type from ERLA or LUMF alone.</strong> Standard sell-from-stock outbound delivery often uses movement type <code>601</code>, but movement type is a downstream logistics result and can differ by process. Prove the delivery item, schedule line and movement configuration.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Pricing and billing</p>
+      <h2>Pricing level and billing level are related, but they are not the same setting.</h2>
+      <p>The processing model tells you where pricing normally lives. Billing still depends on item-category billing relevance, delivery or order-related billing design, copy control and document flow.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Pricing evidence</h3>
+        <p>Check which items carry condition records and net value. In ERLA this is normally the main item; in LUMF it is normally the components.</p>
+      </div>
+      <div>
+        <h3>Billing evidence</h3>
+        <p>Check billing relevance and the actual billing-document items. Do not assume that every visible subitem in the order becomes an invoice line.</p>
+      </div>
+      <div>
+        <h3>Finance consequence</h3>
+        <p>Revenue and cost postings follow the billing and goods-movement documents, not the visual hierarchy of the sales order. A Lead traces document flow before discussing account determination.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales BOM vs. Order BOM</p>
+      <h2>Reusable product structure and customer-specific structure are different master-data decisions.</h2>
+      <p>An Order BOM should not be described as just another Sales BOM alternative. It is tied to a specific sales order item and exists so one customer-specific structure can change without changing the reusable material BOM.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Sales BOM and Order BOM comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Sales BOM / material BOM used in Sales</th>
+            <th>Order BOM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Reuse</td>
+            <td>Reusable master structure for many sales documents.</td>
+            <td>Specific to one sales order item.</td>
+          </tr>
+          <tr>
+            <td>Identity</td>
+            <td>Material BOM context such as material, plant, usage, alternative and validity.</td>
+            <td>Uniquely linked by sales order, sales order item and material.</td>
+          </tr>
+          <tr>
+            <td>Why use it?</td>
+            <td>Sell a standard kit, set or structured product.</td>
+            <td>Change the structure for one customer/order without changing the global material BOM.</td>
+          </tr>
+          <tr>
+            <td>Variant configuration</td>
+            <td>Can explode directly in the sales order in SET-style processing when configured.</td>
+            <td>In Order BOM processing, the header can be configured in Sales while detailed BOM processing is handled as an order-specific structure.</td>
+          </tr>
+          <tr>
+            <td>Classic maintenance</td>
+            <td><code>CS01</code>/<code>CS02</code>/<code>CS03</code> are common material-BOM transactions.</td>
+            <td>Classic Order BOM maintenance is available from the Order BOM functions; exact transactions and apps depend on deployment and release.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">engineering</span>
+      <p><strong>Architecture rule:</strong> if a customer-specific change must survive into MRP, procurement or production without changing the standard product definition, evaluate Order BOM rather than cloning a new global material BOM for every order.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration boundary</p>
+      <h2>Do not let an interface create the structure twice.</h2>
+      <p>When an external channel, CPQ solution or integration creates a sales document, decide whether SAP should derive the BOM hierarchy or whether the incoming document already owns the component structure.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define the structural owner</h4><p>If SAP owns the product structure, send the header product and the configuration inputs required for SAP to determine the correct components.</p></div>
+      <div><span>02</span><h4>Avoid duplicate explosion</h4><p>If a preceding document already contains an authoritative hierarchy, test reference creation carefully so follow-on processing does not recreate the same subitems a second time.</p></div>
+      <div><span>03</span><h4>Preserve parent-child identity</h4><p>Integration mappings must preserve higher-level item relationships, quantities and configuration references. A flat list of materials is not equivalent to a BOM hierarchy.</p></div>
+      <div><span>04</span><h4>Prefer released interfaces</h4><p>For Order BOM integration, SAP provides a released Order Bills of Material OData service in current S/4HANA on-premise documentation. Prefer released APIs over designing new integrations around unreleased or legacy function modules.</p></div>
+      <div><span>05</span><h4>Reconcile the result</h4><p>After creation, compare the expected hierarchy with the actual sales document or Order BOM. The interface response alone does not prove that downstream pricing and logistics behavior is correct.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Implementation test set</p>
+      <h2>Test decisions, not only a successful VA01 save.</h2>
+      <p>A useful regression pack changes one control at a time and proves which layer owns the result.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Sales BOM implementation test scenarios">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>What to vary</th>
+            <th>What to prove</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ERLA baseline</td>
+            <td>Standard valid BOM</td>
+            <td>Header price and logistics behavior; components visible only as intended.</td>
+          </tr>
+          <tr>
+            <td>LUMF baseline</td>
+            <td>Same type of structure, component-level processing</td>
+            <td>Component pricing, schedule lines, confirmations and delivery-group behavior.</td>
+          </tr>
+          <tr>
+            <td>Validity switch</td>
+            <td>Requested date across a BOM validity boundary</td>
+            <td>The expected BOM alternative or version becomes effective.</td>
+          </tr>
+          <tr>
+            <td>Missing Sales relevance</td>
+            <td>One SET component not relevant to Sales</td>
+            <td>The technical BOM can contain the component while the sales order intentionally omits it.</td>
+          </tr>
+          <tr>
+            <td>Partial availability</td>
+            <td>One LUMF component short of stock</td>
+            <td>Component confirmation and delivery-group date behavior are understood.</td>
+          </tr>
+          <tr>
+            <td>Multi-level configurable structure</td>
+            <td>Subordinate configurable assembly</td>
+            <td>Explosion depth follows configuration profiles and only intended Sales items become document subitems.</td>
+          </tr>
+          <tr>
+            <td>Order-specific change</td>
+            <td>One customer needs a different component</td>
+            <td>The Order BOM changes the order-specific structure without changing the reusable material BOM.</td>
+          </tr>
+          <tr>
+            <td>Interface creation</td>
+            <td>Header-only derivation vs. referenced hierarchy</td>
+            <td>No duplicate subitems and parent-child relationships survive the integration.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead design decisions</p>
+      <h2>Ask these questions before choosing the SAP setup.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>What does the customer buy?</h3>
+        <p>One commercial product, separate components, or a bundle where price and physical execution live at different levels?</p>
+      </div>
+      <div>
+        <h3>What must ATP promise?</h3>
+        <p>Availability of one header object or simultaneous availability of several components? This choice affects requirements and delivery coordination.</p>
+      </div>
+      <div>
+        <h3>What must the invoice show?</h3>
+        <p>One bundle price, component prices, or both for information? Pricing design should match the commercial contract and billing output.</p>
+      </div>
+      <div>
+        <h3>Who owns structure changes?</h3>
+        <p>Product engineering for all future orders, Sales for a reusable kit, or engineering/configuration for one specific customer order?</p>
+      </div>
+      <div>
+        <h3>How deep must Sales see?</h3>
+        <p>Every technical component does not need to become a sales-order item. Expose only levels that Sales or downstream execution must control.</p>
+      </div>
+      <div>
+        <h3>Which deployment are we designing for?</h3>
+        <p>Classic GUI transactions, Cloud configuration activities, released APIs and supported kit variants differ by S/4HANA deployment and release.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Structure first; Sales control second.</h2>
+      <h2>Explain the ownership chain, not a list of transaction codes.</h2>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> A Sales BOM defines the product structure behind a sellable header. When the header is entered, the valid BOM can explode into components. I separate that structure from Sales control: item-category determination decides how the header and subitems behave and where pricing or delivery relevance lives. If components are wrong, I diagnose BOM validity and structure; if the components are correct but their commercial behavior is wrong, I move to item categories.</p>
+      <p><strong>60-second answer:</strong> A Sales BOM separates product structure from Sales processing. The BOM defines the components and quantities. In the material master, the item category group such as ERLA or LUMF helps determine how the structure behaves in the sales order. ERLA normally means pricing and logistics at header level; LUMF moves them to the components. The explosion itself depends on a valid BOM plus usage, application, structure scope and, for configurable products, the configuration profile. If a BOM does not explode, I first prove BOM selection and explosion control. If it explodes correctly but pricing, ATP or delivery is wrong, I move to item categories and schedule lines instead of changing the BOM.</p>
     </div>
-    <nav class="ecg-context-links" aria-label="Related master-data pages">
-      <span>Continue</span>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Follow-up: ERLA vs. LUMF?</h3>
+        <p>Answer with ownership: ERLA = header commercial/logistics object; LUMF = component commercial/logistics objects.</p>
+      </div>
+      <div>
+        <h3>Follow-up: BOM exists but no explosion?</h3>
+        <p>Prove effective BOM, usage/application priority, item category structure scope and configuration-profile filters.</p>
+      </div>
+      <div>
+        <h3>Follow-up: Sales BOM vs. Order BOM?</h3>
+        <p>Sales BOM is reusable product structure. Order BOM is a sales-order-specific structure for one customer requirement.</p>
+      </div>
+      <div>
+        <h3>Follow-up: where is ATP?</h3>
+        <p>ATP follows the active logistics items and their schedule lines. The BOM creates structure; it does not replace ATP logic.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary evidence</p>
+      <h2>Sources used to verify the factual layer.</h2>
+      <p>The explanations above are independently written. The links below establish product behavior and release boundaries; project configuration must still be verified in the target system.</p>
+    </header>
+
+    <div class="ecg-source-list">
+      <article>
+        <span>SAP Help Portal · SAP S/4HANA 2025 FPS01</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/5d66b65334e6b54ce10000000a174cb4.html" rel="noopener noreferrer">Bills of Material in Sales Documents</a></h3>
+        <p>Core Sales BOM behavior, including ERLA and LUMF processing and the role of BOM usage for Sales.</p>
+        <small>Checked 2026-09-29.</small>
+      </article>
+      <article>
+        <span>SAP Help Portal · Variant Configuration</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/a73402f511734e6eac56063e631bf24e/351db853dcfcb44ce10000000a174cb4.html" rel="noopener noreferrer">Process: Sales Order</a></h3>
+        <p>Sales Order SET processing, Sales relevance of BOM items, explosion depth and configuration-profile prerequisites.</p>
+        <small>Checked 2026-09-29.</small>
+      </article>
+      <article>
+        <span>SAP Help Portal · Variant Configuration</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/a73402f511734e6eac56063e631bf24e/2f1db853dcfcb44ce10000000a174cb4.html" rel="noopener noreferrer">Single-Level BOM Explosion</a></h3>
+        <p>Boundary between first-level and deeper configurable-material explosion.</p>
+        <small>Checked 2026-09-29.</small>
+      </article>
+      <article>
+        <span>SAP Help Portal · SAP S/4HANA Cloud Best Practices 2608</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD_BEST_PRACTICES/c0c45109928241b098c1f305c48c22df/843e7581398749d7a8a18cd00b462b76.html?locale=en-US&amp;state=PRODUCTION&amp;version=2608" rel="noopener noreferrer">Sales Order Processing for Sales Kits</a></h3>
+        <p>Current Cloud scope describing ERLA, LUMF and the hybrid CPFH and DISH sales-kit models.</p>
+        <small>Checked 2026-09-29.</small>
+      </article>
+      <article>
+        <span>SAP Help Portal · Order BOMs · SAP S/4HANA 2025 FPS01</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af7b53c5551645ef806bdca5d990bac5/33caba538c95b54ce10000000a174cb4.html" rel="noopener noreferrer">Order BOM</a></h3>
+        <p>Definition, identity and use of a sales-order-specific BOM without changing the material BOM.</p>
+        <small>Checked 2026-09-29.</small>
+      </article>
+      <article>
+        <span>SAP Help Portal · APIs for Product Lifecycle Management</span>
+        <h3><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9f047b05da4545ca8f9ebfc22acefd06/02d11a1c68bd451d91182e1e6ee5fb25.html" rel="noopener noreferrer">Order Bills of Material API</a></h3>
+        <p>Released OData service boundary for Order BOM integration in current S/4HANA on-premise documentation.</p>
+        <small>Checked 2026-09-29.</small>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Continue</p>
+      <h2>Follow the behavior into the owning process.</h2>
+    </header>
+    <nav class="ecg-context-links" aria-label="Related Sales BOM pages">
+      <span>Deep dives</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
+      <a href="/labs/enterprise-context/master-data/variant-configuration/">Variant Configuration</a>
+      <a href="/labs/enterprise-context/atp/">ATP / aATP</a>
       <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/labs/enterprise-context/shipping/">Shipping and delivery</a>
+      <a href="/labs/enterprise-context/billing/">Billing</a>
     </nav>
   </section>
 </div>
