@@ -625,7 +625,7 @@
           "origin": "sales document"
         }
       ],
-      "determination": "The incompletion procedure defines which fields are checked for the relevant sales-document context and how missing data affects status. The incompletion log records missing data; depending on configuration and the missing field, further processing such as copying, delivery or billing can be blocked even when the document itself can be saved.",
+      "determination": "The incompletion procedure defines which fields are checked for the relevant document object. Each field entry is assigned a status group, and that status group decides which business status becomes incomplete when the value is missing. The runtime log records the missing-field evidence; the configured status consequence can then restrict follow-on processing even when the document itself can be saved.",
       "outputs": [
         "incompletion log entries",
         "completeness status",
@@ -643,9 +643,20 @@
         "MEC.SD.BILL"
       ],
       "configuration_surfaces": [
-        "Define incompletion procedures",
-        "Assign incompletion procedures to sales document types and item categories",
-        "Define fields and status groups relevant for further processing"
+        "Define status groups and the affected completeness dimensions",
+        "Define incompletion procedures and their field entries",
+        "Assign procedures to the relevant sales document, item, schedule-line, partner, or delivery object"
+      ],
+      "classic_transactions": [
+        "OVA0",
+        "OVA2",
+        "VUA2",
+        "VUP2",
+        "VUE2",
+        "VUA4",
+        "VUPA",
+        "VUC2",
+        "V.02"
       ],
       "failure_modes": [
         {
