@@ -10,7 +10,7 @@ process_family: "Order-to-Cash"
 process_step: "Price Sales Document"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-09-26"
+updated_at: "2026-09-29"
 verified_at: null
 
 thesis: >-
@@ -87,6 +87,62 @@ boundary:
     - "SAP S/4HANA 2025 FPS01 where cited"
     - "SAP S/4HANA Cloud 2602/2608 where cited for key-user extensibility"
     - "classic SD enhancement patterns where SAP documents them"
+
+
+procedure_determination:
+  formula: "Sales area + document pricing procedure + customer pricing procedure → pricing procedure"
+  mental_model: >-
+    Treat this as a routing decision, not as a price calculation. Before SAP searches
+    for PR00, discounts, freight, or any other condition record, it first decides which
+    pricing procedure owns the document.
+  keys:
+    - id: "sales-area"
+      title: "Sales area"
+      source: "Sales organization + distribution channel + division from the document context."
+      memory_question: "Where are we selling?"
+      why_it_matters: >-
+        The same customer can enter a different pricing design in another sales area.
+    - id: "document-pricing-procedure"
+      title: "Document pricing procedure"
+      source: "Assigned through the sales document type or other document-type configuration."
+      memory_question: "What kind of commercial document is this?"
+      why_it_matters: >-
+        An order, return, credit-related process, or another document context can deliberately
+        route into a different pricing procedure.
+    - id: "customer-pricing-procedure"
+      title: "Customer pricing procedure"
+      source: "Sold-to party customer master / Business Partner sales-area data."
+      memory_question: "How is this customer group meant to be priced?"
+      why_it_matters: >-
+        It lets customers with different commercial treatment use different pricing procedures
+        without creating a new sales document type for every customer group.
+  output: >-
+    Customizing maps the five runtime fields — sales organization, distribution channel,
+    division, document pricing procedure, and customer pricing procedure — to one pricing procedure.
+  diagnostic_sequence:
+    - "Prove the pricing procedure that the document actually uses."
+    - "Write down the five determination inputs from the failing document."
+    - "Compare them with a working document before changing configuration."
+    - "Check the pricing-procedure determination entry for that exact combination."
+    - "Only after the procedure is correct, continue to condition type, access sequence, and condition record."
+  practical_notes:
+    - title: "Classic / Private Edition"
+      body: >-
+        OVKK is the classic direct transaction for pricing-procedure determination.
+        V/08 opens pricing-procedure control. Read the document type and customer sales-area
+        data as input sources; do not start with condition maintenance.
+    - title: "Public Cloud"
+      body: >-
+        Use the configuration activity Set Pricing Procedure Determination. SAP's current
+        configuration example exposes the same core columns: Sales Org., Distribution Channel,
+        Division, Document Pricing Procedure, Customer Pricing Procedure, and Pricing Procedure.
+  lead_shortcut: >-
+    Wrong procedure means every downstream pricing check can be perfectly executed against the
+    wrong rule set. If the procedure is wrong, stop there. Do not fix it with another condition record.
+  source_refs:
+    - SRC-SAP-PRICING-PROCEDURE-DETERMINATION
+    - SRC-SAP-PRICING-LEARNING-CONDITION-TECHNIQUE
+    - SRC-SAP-PRICING-PROCEDURES
 
 memory_model:
   title: "Seven questions I use in pricing"
