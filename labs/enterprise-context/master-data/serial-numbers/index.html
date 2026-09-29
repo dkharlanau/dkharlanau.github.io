@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "SAP Serial Numbers — Individual Unit Traceability"
-description: "A practical SAP S/4HANA guide to Serial Number Management: serial-number profile, material and serial identity, delivery and goods-movement use, equipment linkage, diagnostics, and traceability."
+title: "SAP S/4HANA Serial Numbers — Profiles, Logistics Flow, EWM and Equipment"
+description: "A practical SAP S/4HANA guide to Serial Number Management: identity, OIS2 profiles and procedures, MM/SD/PP/EWM flow, equipment linkage, APIs, diagnostics, and Lead-level design decisions."
 permalink: /labs/enterprise-context/master-data/serial-numbers/
-status: draft
+status: needs_verification
 verified: false
 robots: noindex,follow
 sitemap: false
@@ -77,6 +77,65 @@ tags:
     </div>
   </section>
 
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration</p>
+      <h2>The Serial Number Profile is the control center.</h2>
+      <p>In classic S/4HANA configuration, a four-character Serial Number Profile is defined in <code>OIS2</code> and assigned to the material at plant level. In the classic material master, the plant-level profile is represented by <code>MARC-SERNP</code>. Public Cloud uses configuration activities and Fiori product apps instead of assuming the same GUI path.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Decide the control point</h4><p>Goods receipt, production, sales order, delivery, warehouse movement, return, service, or several of these. Start from the business need, not from the transaction.</p></div>
+      <div><span>02</span><h4>Define the profile</h4><p>Set the general rules for serial-number existence, stock consistency, automatic number creation, equipment requirement, and equipment category where equipment integration is needed.</p></div>
+      <div><span>03</span><h4>Add serialization procedures</h4><p>Each procedure represents a business operation. The usage then tells SAP whether serial entry is inactive, optional, obligatory, or automatic where supported.</p></div>
+      <div><span>04</span><h4>Assign the profile to the material</h4><p>The assignment is plant-specific. The same product can therefore be serialized in one plant and not in another, subject to the logistics design and transfer constraints.</p></div>
+      <div><span>05</span><h4>Align EWM if used</h4><p>ERP/LE and EWM serialization must be compatible. Decide whether the warehouse needs document-level, warehouse-level, or exact bin-level serial tracking.</p></div>
+      <div><span>06</span><h4>Test the full lifecycle</h4><p>Test inbound, internal movement, outbound, return, production, and service handoffs. A profile that works at goods receipt can still fail later at picking or PGI.</p></div>
+    </div>
+
+    <h3>Serial Number Usage</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Serial number usage values">
+      <table class="study-table__table">
+        <thead><tr><th>Usage</th><th>Meaning</th><th>Practical interpretation</th></tr></thead>
+        <tbody>
+          <tr><td><code>01</code></td><td>None</td><td>The procedure does not require serial-number assignment.</td></tr>
+          <tr><td><code>02</code></td><td>Optional</td><td>Serial numbers may be entered, but this step does not require full assignment.</td></tr>
+          <tr><td><code>03</code></td><td>Obligatory</td><td>The relevant quantity must be covered by serial numbers before the controlled step can complete.</td></tr>
+          <tr><td><code>04</code></td><td>Automatic</td><td>The system can generate serial numbers automatically for procedures that support this mode.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">priority_high</span>
+      <p><strong>Important:</strong> the procedure and the usage are different concepts. <code>MMSL</code> answers “which business operation?”, while <code>03 Obligatory</code> answers “how strict is serial assignment in this operation?”.</p>
+    </div>
+
+    <h3>Common procedures worth knowing</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Common SAP serializing procedures">
+      <table class="study-table__table">
+        <thead><tr><th>Procedure</th><th>Business use</th><th>Lead question</th></tr></thead>
+        <tbody>
+          <tr><td><code>MMSL</code></td><td>Goods receipts, goods issues, stock transfers and related inventory movements</td><td>Must the exact units be known when stock changes?</td></tr>
+          <tr><td><code>POSL</code></td><td>Purchase-order serialization</td><td>Do we need the supplier or manufacturer serial already in purchasing?</td></tr>
+          <tr><td><code>SDAU</code></td><td>Sales order, inquiry and quotation</td><td>Is a specific unit part of the commercial promise?</td></tr>
+          <tr><td><code>SDLS</code></td><td>Delivery serialization</td><td>Should the physical unit be selected during delivery execution?</td></tr>
+          <tr><td><code>SDCC</code></td><td>Delivery completeness check</td><td>Must the delivery be serial-complete before the next step?</td></tr>
+          <tr><td><code>SDCR</code> / <code>SDRE</code></td><td>Returns-related serialization</td><td>Do we need to prove that the returned unit is the one we supplied?</td></tr>
+          <tr><td><code>PPAU</code> / <code>PPRL</code></td><td>Production and refurbishment order processing / release</td><td>When should a manufactured unit receive its identity?</td></tr>
+          <tr><td><code>HUSL</code></td><td>Handling Unit serialization</td><td>Must unit identity remain consistent with HU assignment?</td></tr>
+          <tr><td><code>QMSL</code></td><td>Quality inspection context</td><td>Does quality need evidence against the individual unit?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Design rule:</strong> do not copy one “standard profile” to every product. A low-value component, a medical device, an industrial pump, and a serviceable machine can need very different serialization depth. Every mandatory scan adds control and operating cost.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
@@ -92,27 +151,164 @@ tags:
     </div>
   </section>
 
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead diagnosis</p>
-      <h2>Find the owning layer before changing data.</h2>
-      <p>Most serial-number incidents are not solved by changing the serial master first. The defect can be product setup, document assignment, status, stock context, or equipment integration.</p>
+      <p class="research-canvas__eyebrow">Procurement and Inventory Management</p>
+      <h2>At goods receipt, quantity becomes individual pieces.</h2>
+      <p>If serialization is obligatory, receiving quantity 10 is not complete until ten individual units are identified. This is the cleanest way to separate quantity management from unit identity.</p>
     </header>
-    <div class="ecg-diagnostic">
-      <div><h4>Start here</h4><p>Check material → serial-number profile → process procedure → document assignment → status/location → follow-on document.</p></div>
-      <div><h4>Do not jump here</h4><p>Do not treat a serial number as another batch field. Batch and serial management can coexist, but they provide different levels of identity.</p></div>
-    </div>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>Assessment answer:</strong> “Serial numbers provide individual-unit traceability. The material serial-number profile controls where they are used, while the concrete document records the serial assignment. I separate serial identity from batch identity and equipment lifecycle.”</p>
+    <div class="ecg-decision-columns">
+      <div><h3>External serial</h3><p>Use the supplier or manufacturer identifier when the physical product already carries the authoritative serial number.</p></div>
+      <div><h3>Internal serial</h3><p>SAP can generate internal serial numbers when the company owns the numbering scheme. Supported extensibility can generate controlled custom patterns.</p></div>
+      <div><h3>Stock consistency</h3><p>The profile can check whether the recorded serial-number stock situation is consistent with the material movement, helping prevent impossible unit movements.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references</h2></header>
+    <header>
+      <p class="research-canvas__eyebrow">Sales and Shipping</p>
+      <h2>Order-time and delivery-time serial selection solve different problems.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Serial in Sales Order</h3><p>Use this when the customer is buying a specific physical unit and the identity is already known, for example a used asset, demo device, or reserved machine.</p></div>
+      <div><h3>Serial in Delivery</h3><p>Use this when Sales promises product and quantity while warehouse execution selects the actual physical pieces.</p></div>
+      <div><h3>PGI control</h3><p>Before Post Goods Issue, the delivery quantity and assigned serials must satisfy the configured completeness and serialization rules.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+      <p><strong>Integration boundary:</strong> when an upstream S/4 delivery already carries serial numbers, EWM cannot simply substitute different physical units without respecting the serial-number handoff. The document identity and the physical pick must stay aligned.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Production</p>
+      <h2>Choose when a manufactured unit receives its identity.</h2>
+      <p>Depending on the manufacturing scenario, serial numbers can be required or generated around order release, production execution, assembly, or finished-goods receipt. The right point is the earliest moment when the business can reliably preserve the identity through scrap, rework, and rescheduling.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</span>
+      <p><strong>Trade-off:</strong> earlier serial assignment gives stronger traceability but creates more handling when the planned unit is scrapped, replaced, or reworked before it becomes the final product.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">EWM</p>
+      <h2>EWM controls how deeply the unit is tracked inside the warehouse.</h2>
+      <p>“Serialized” is not a single warehouse setting. The serial-number requirement defines how much location detail EWM must preserve.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="EWM serial number requirement levels">
+      <table class="study-table__table">
+        <thead><tr><th>Requirement</th><th>What EWM knows</th><th>Operational consequence</th><th>Typical fit</th></tr></thead>
+        <tbody>
+          <tr><td><code>A</code> — Document Item</td><td>Serials on relevant inbound/outbound documents</td><td>No continuous exact internal location tracking</td><td>Returns validation or customer traceability</td></tr>
+          <tr><td><code>B</code> — Warehouse Number</td><td>Which serialized units are inside the warehouse</td><td>Serial capture at GR/GI, not every internal move</td><td>Warehouse-level unit visibility</td></tr>
+          <tr><td><code>C</code> — Inventory Management</td><td>Exact stock/bin context of each unit</td><td>Every relevant warehouse movement becomes serial-aware</td><td>High-value or regulated units</td></tr>
+          <tr><td><code>D</code> — No Requirement</td><td>No EWM serial requirement for this warehouse</td><td>The product can still be serialized elsewhere</td><td>Warehouse-specific exception</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warehouse</span>
+      <p><strong>Trade-off:</strong> A → B → C gives more traceability but also more scanning, validation, and exception handling. Choose the lowest level that still meets the business control.</p>
+    </div>
+
+    <p>From SAP S/4HANA 2020, harmonized serial number profiles can be used for embedded and S/4HANA-based decentralized EWM. Changing serialization for products that already have warehouse stock or open warehouse documents needs controlled migration; it is not a casual master-data change.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Serial Number and Equipment</p>
+      <h2>Create Equipment only when the unit needs a technical lifecycle.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Serial only</h3><p>Enough when the main requirement is logistics traceability: receive, move, ship, return, and prove document history.</p></div>
+      <div><h3>Serial + Equipment</h3><p>Use when the individual unit becomes a maintainable technical object with maintenance orders, installation history, technical location, warranty, or service lifecycle.</p></div>
+      <div><h3>Synchronization</h3><p>The profile controls equipment requirements and serialization level. Some designs synchronize serial and equipment identifiers; others keep separate identifiers linked to the same unit.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">build</span>
+      <p><strong>Lead decision:</strong> do not create Equipment for every serialized product by default. Equipment adds lifecycle capability, but also master-data governance and maintenance responsibility.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transactions, data and APIs</p>
+      <h2>Know the operating surfaces, but explain the object first.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Serial number transactions apps and APIs">
+      <table class="study-table__table">
+        <thead><tr><th>Surface</th><th>Purpose</th><th>Boundary</th></tr></thead>
+        <tbody>
+          <tr><td><code>OIS2</code></td><td>Define Serial Number Profiles and procedures</td><td>Classic/private/on-premise configuration; Public Cloud uses configuration activities.</td></tr>
+          <tr><td><code>MM02 / MM03</code></td><td>Assign or inspect the plant-level serial-number profile</td><td>Classic GUI; cloud scenarios use product apps.</td></tr>
+          <tr><td><code>IQ01 / IQ02 / IQ03</code></td><td>Create, change, and display material serial-number records</td><td>Useful for master/history investigation in classic landscapes.</td></tr>
+          <tr><td><code>IQ09</code></td><td>List serial numbers</td><td>Useful for support and inventory investigation.</td></tr>
+          <tr><td><code>MIGO</code></td><td>Goods receipt / goods issue serialization</td><td>Runtime quantity plus individual-unit capture.</td></tr>
+          <tr><td><code>VL02N</code></td><td>Delivery processing and serial assignment in classic SD/LE</td><td>Execution may instead occur through Fiori or EWM.</td></tr>
+          <tr><td><code>API_MATERIALSERIALNUMBER</code></td><td>Create, read, and update material serial numbers through OData V4</td><td>Use the released API where it fits the integration requirement.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>For reporting or integration, do not treat one table as “the serial-number table”. Serial history is distributed across the object list and document-specific structures. SAP documents <code>OBJK</code> together with serial-document tables such as <code>SER01</code> for deliveries, <code>SER03</code> for goods movements, <code>SER05</code> for production orders, and <code>SER07</code> for physical inventory. For new integrations, prefer released CDS views and APIs over fragile direct-table logic where possible.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead diagnosis</p>
+      <h2>Start from the failed checkpoint, not from OIS2.</h2>
+      <p>Serial-number incidents often look like profile problems but are actually identity, status, document-handoff, or warehouse-state problems.</p>
+    </header>
+
+    <div class="ecg-diagnostic">
+      <div><h4>“Serial number is required”</h4><p>Check material/profile → active procedure → usage → concrete movement or delivery context. Do not change the profile until you know which rule made this step mandatory.</p></div>
+      <div><h4>“Serial already exists / cannot be received”</h4><p>Display the serial and its history. Prove whether it is already in stock, assigned to another open document, delivered, installed, or otherwise in a conflicting status.</p></div>
+      <div><h4>Delivery cannot PGI</h4><p>Compare delivery quantity with assigned serials, then inspect delivery serialization/completeness rules and the serials returned from warehouse execution.</p></div>
+      <div><h4>EWM serial mismatch</h4><p>Check ERP/LE and EWM profile compatibility, the active A/B/C/D requirement, whether the serial was copied from the upstream delivery, and where EWM requires capture.</p></div>
+      <div><h4>Serial exists but stock is wrong</h4><p>Separate master existence from stock state. Trace the latest material or warehouse movement and serial history before attempting a master-data correction.</p></div>
+      <div><h4>Profile change is blocked</h4><p>For EWM-managed stock, inspect warehouse stock, open warehouse tasks, and open delivery documents. Serialization changes can require stock migration or profile repair.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p><strong>Diagnostic sequence:</strong> material/profile → procedure/usage → document quantity → assigned serials → serial status/history → stock/warehouse location → upstream/downstream integration.</p>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second assessment answer:</strong> “A serial number identifies one physical unit of a material. I control serialization through a Serial Number Profile assigned at plant level. The profile defines the business procedures — for example goods movements, delivery, or production — and for each procedure whether serial numbers are none, optional, obligatory, or automatic. Then I decide where the unit identity must be captured: at GR, production, delivery, warehouse movement, return, or service. If EWM is used, I also choose the warehouse tracking depth: document item, warehouse level, or exact inventory/bin level. Equipment is a separate decision and is needed when the unit requires a maintenance or service lifecycle.”</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Batch vs Serial?</h3><p>Batch identifies one lot shared by many pieces. Serial number identifies one individual piece. A material can use both.</p></div>
+      <div><h3>Serial vs Equipment?</h3><p>Serial number provides logistics identity. Equipment provides a technical object for maintenance and service lifecycle.</p></div>
+      <div><h3>Why not EWM level C everywhere?</h3><p>Because every relevant internal movement becomes serial-aware. Extra traceability must justify scanning and exception-handling cost.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary SAP references</h2>
+      <p>Classic transactions are useful for private/on-premise assessment work. Public Cloud configuration and app surfaces can differ, so deployment boundaries remain explicit.</p>
+    </header>
     <ul>
-      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/3d8cbf53f106b44ce10000000a174cb4.html?locale=en-US&state=PRODUCTION&version=2025.001">SAP Help — Entering and Selecting Serial Numbers</a></li>
+      <li><a href="https://learning.sap.com/courses/optimizing-advanced-logistics-and-analytics-in-sap-s-4hana-cloud-public-edition/exploring-serial-number-management-bll-_ef017eae-3db5-4b9e-a53d-7843f4ac73b6">SAP Learning — Exploring Serial Number Management</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/9f0eb753128eb44ce10000000a174cb4.html">SAP Help — Serial Number Master Record</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_ERP/611aa90786d3433b8e1f9be5ddb6a8c1/db0eb753128eb44ce10000000a174cb4.html">SAP Help — Serialization Business Procedures</a></li>
+      <li><a href="https://learning.sap.com/courses/advanced-customizing-in-sap-s-4hana-ewm/using-serial-numbers">SAP Learning — Using Serial Numbers in EWM</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9a02a02d849d4b38a7320d94a71d2a22/b6116dbbcff74afd851343ca65c54d3c.html">SAP Help — Material Serial Number API</a></li>
+      <li><a href="https://help.sap.com/docs/sap_s4hana_cloud/32da8359c8ee4e8b8e8c5e15cacba5aa/7e0eb753128eb44ce10000000a174cb4.html">SAP Help — Serial Number History</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/20f4d8b2420544f7a5e41471c5bf5dac.html">SAP Help — Extensibility for Serial Number Creation</a></li>
     </ul>
+
     <nav class="ecg-context-links" aria-label="Serial Numbers related pages">
       <span>Related</span>
       <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
