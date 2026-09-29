@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP S/4HANA Customer Master Data"
-description: "A focused SAP S/4HANA Customer master-data page covering Business Partner customer roles, sales-area and company-code scope, high-leverage fields, runtime use, and diagnostics."
+description: "SAP S/4HANA Customer master data for Lead assessment: Business Partner roles, customer scopes, CVI, account groups, partner functions, key fields, tables, APIs, lifecycle, runtime use, and diagnostics."
 permalink: /labs/enterprise-context/master-data/customer/
 status: draft
 verified: false
@@ -14,6 +14,7 @@ tags:
   - sap-sd
   - customer-master
   - business-partner
+  - cvi
   - master-data
 ---
 
@@ -32,64 +33,496 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP S/4HANA / Sales / Customer Master Data</p>
       <h1>Customer</h1>
-      <p>In S/4HANA, Customer is not an isolated master object. It is a Business Partner extended with customer roles and organizational views. For Sales, the key layer is the customer role with sales-area data. For Finance, company-code data matters. The same business partner can therefore support several business processes without duplicating the identity.</p>
-      <a class="research-canvas__button" href="#customer-scope">See the data layers <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p>In SAP S/4HANA, the customer is managed through the Business Partner framework. The Business Partner gives us one identity. Customer roles add the application-specific data needed by Sales and Finance. The important Lead question is therefore not only “which customer field is wrong?”, but “which role, organizational scope, relationship, configuration rule, or runtime document owns this value?”</p>
+      <a class="research-canvas__button" href="#customer-scope">Build the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Assessment anchor</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>FLCU01</strong><small>Customer — Sales</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>FLCU00</strong><small>Customer — FI</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>000000</strong><small>General Business Partner</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>FLCU01</strong><small>Customer — Sales</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>FLCU00</strong><small>Customer — FI</small></div>
       <em>Identity → role → organizational view → runtime consumer.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" id="customer-scope" data-reveal>
-    <header><p class="research-canvas__eyebrow">Data model</p><h2>Separate the customer identity from the organizational views.</h2></header>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>One identity, several application views.</h2>
+      <p>A customer record is easier to understand when we separate identity from process-specific extensions. General Business Partner data is shared. Customer roles expose Sales and Accounting views. CVI keeps the Business Partner and customer application objects synchronized.</p>
+    </header>
     <div class="ecg-decision-columns">
-      <div><h3>Business Partner</h3><p>Shared identity, name, addresses, communication data and relationships. This is the cross-application identity anchor.</p></div>
-      <div><h3>Sales Area</h3><p>Sales Organization + Distribution Channel + Division. This is where Sales-specific customer behavior is maintained.</p></div>
-      <div><h3>Company Code</h3><p>Accounting-specific customer data used by FI-AR, such as reconciliation and payment-related settings.</p></div>
+      <div>
+        <h3>Business Partner</h3>
+        <p>Shared identity such as name, addresses, communication data, tax identifiers, bank details, industries and relationships. The BP category describes whether the partner is a person, organization or group.</p>
+      </div>
+      <div>
+        <h3>Sales customer</h3>
+        <p>Role <code>FLCU01</code>. Sales-area data is maintained for Sales Organization + Distribution Channel + Division and controls order, shipping and billing defaults.</p>
+      </div>
+      <div>
+        <h3>FI customer</h3>
+        <p>Role <code>FLCU00</code>. Company-code data controls Accounts Receivable behavior such as reconciliation account, payment processing and dunning.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Lead rule:</strong> do not treat BP and customer as two independent masters. The BP is the central identity; customer views are application extensions synchronized through Customer/Vendor Integration (CVI).</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">High-leverage fields</p><h2>Know the fields that change Sales behavior.</h2></header>
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important customer master-data fields">
+  <section class="research-canvas__inventory" id="create-customer" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Creation flow</p>
+      <h2>Create the identity first, then extend the scopes the process needs.</h2>
+      <p>The exact screen differs by deployment and app, but the logical sequence is stable.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Choose BP category and grouping</h4><p>Category defines the identity type. Grouping controls the BP number range and is part of the numbering design.</p></div>
+      <div><span>02</span><h4>Create the Business Partner</h4><p>Maintain the shared identity: name, address, communication, tax and other general data.</p></div>
+      <div><span>03</span><h4>Add customer roles</h4><p>Add <code>FLCU01</code> for Sales data, <code>FLCU00</code> for FI-AR data, or both when the customer participates in the complete Order-to-Cash process.</p></div>
+      <div><span>04</span><h4>Maintain organizational views</h4><p>Create the required sales areas and company-code segments. A customer can exist globally but still be unusable in one sales area or company code.</p></div>
+      <div><span>05</span><h4>Maintain partner relationships</h4><p>Confirm sold-to, ship-to, bill-to and payer relationships, plus any additional partner functions required by the active procedure.</p></div>
+      <div><span>06</span><h4>Save and prove synchronization</h4><p>Check that CVI created or updated the customer-side records and that the customer works in the intended process, not only that the BP screen saved.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">info</span>
+      <p><strong>S/4HANA boundary:</strong> transaction <code>BP</code> and supported Fiori apps are the main maintenance entry points. Classic transactions such as <code>XD01</code>, <code>VD01</code> and <code>FD01</code> belong to older ERP or compatible private/on-premise operating models and should not be presented as the universal S/4HANA method.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="data-layers" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Data layers</p>
+      <h2>Know the scope before you change a value.</h2>
+      <p>The same customer number can carry values at different organizational levels. A Lead should first identify the level that owns the behavior.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Customer master data layers">
       <table class="study-table__table">
-        <thead><tr><th>Area</th><th>Examples</th><th>Typical effect</th></tr></thead>
+        <thead>
+          <tr><th>Layer</th><th>Scope</th><th>Typical data</th><th>What it affects</th><th>Diagnostic anchor</th></tr>
+        </thead>
         <tbody>
-          <tr><td>Pricing</td><td>Customer pricing procedure, price list, customer pricing group</td><td>Condition access and pricing procedure context</td></tr>
-          <tr><td>Shipping</td><td>Shipping condition, delivery priority, complete/partial delivery settings</td><td>Shipping-point/route context and delivery behavior</td></tr>
-          <tr><td>Billing / FI</td><td>Payment terms, Incoterms, account assignment group</td><td>Billing defaults and account-determination input</td></tr>
-          <tr><td>Tax</td><td>Customer tax classification</td><td>Tax-determination input</td></tr>
-          <tr><td>Partners</td><td>Ship-to, bill-to, payer and other partner assignments</td><td>Partner determination and downstream document partners</td></tr>
+          <tr>
+            <th scope="row">Business Partner general</th>
+            <td>Client / shared identity</td>
+            <td>Name, addresses, communication, tax numbers, bank details, industry, relationships</td>
+            <td>Identity, search, communication, address use and cross-application reuse</td>
+            <td><code>BUT000</code>, <code>BUT020</code>, address services</td>
+          </tr>
+          <tr>
+            <th scope="row">Customer general</th>
+            <td>Customer-wide</td>
+            <td>Customer account group, central blocks, customer-specific general attributes</td>
+            <td>Customer application behavior shared across organizational units</td>
+            <td><code>KNA1</code>, <code>CVI_CUST_LINK</code></td>
+          </tr>
+          <tr>
+            <th scope="row">Company code</th>
+            <td>Per company code</td>
+            <td>Reconciliation account, payment methods, payment terms, dunning, tolerance and accounting controls</td>
+            <td>FI-AR posting, clearing, dunning and payment processing</td>
+            <td><code>KNB1</code> and related FI customer data</td>
+          </tr>
+          <tr>
+            <th scope="row">Sales area</th>
+            <td>Sales Org + Distribution Channel + Division</td>
+            <td>Sales, shipping, billing, tax and partner settings</td>
+            <td>Order entry, pricing context, delivery behavior, billing defaults and partner determination</td>
+            <td><code>KNVV</code>, <code>KNVP</code>, <code>KNVI</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ecg-caption">A common incident pattern is “the BP exists, but the process still fails.” Usually the missing piece is an organizational extension: the exact sales area for Sales or the exact company code for FI.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-fields" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">High-leverage Sales fields</p>
+      <h2>Customer master data behaves like process configuration.</h2>
+      <p>These fields are not administrative decoration. They influence determinations, defaults, blocks and downstream document behavior.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important customer sales area fields">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Area</th><th>High-value fields</th><th>Typical consequence</th><th>Lead question</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Sales</th>
+            <td>Customer group, sales office, sales group, currency, price list, customer pricing procedure</td>
+            <td>Commercial segmentation, reporting, pricing context and pricing-procedure determination</td>
+            <td>Is the wrong commercial result caused by customer master data, a pricing condition, or the pricing procedure?</td>
+          </tr>
+          <tr>
+            <th scope="row">Shipping</th>
+            <td>Shipping condition, delivering plant, delivery priority, complete/partial delivery rules, order combination</td>
+            <td>Shipping-point and route context, source defaults, delivery creation and consolidation behavior</td>
+            <td>Which value is copied from the customer, and which rule combines it with material or plant data?</td>
+          </tr>
+          <tr>
+            <th scope="row">Billing</th>
+            <td>Payment terms, Incoterms, customer account assignment group, billing blocks and relevant billing defaults</td>
+            <td>Billing document defaults, commercial terms and revenue account determination inputs</td>
+            <td>Is the value coming from the relevant partner master, the sales document, a reference document or configuration?</td>
+          </tr>
+          <tr>
+            <th scope="row">Tax</th>
+            <td>Customer tax classifications by departure country and tax category</td>
+            <td>Tax determination during pricing</td>
+            <td>Do not change a tax value before proving the departure country, material tax data and active tax procedure.</td>
+          </tr>
+          <tr>
+            <th scope="row">Partners</th>
+            <td>Sold-to, ship-to, bill-to, payer and additional partner assignments</td>
+            <td>Delivery destination, invoice recipient, payer context, output and downstream ownership</td>
+            <td>Which exact partner function is wrong in the document?</td>
+          </tr>
+          <tr>
+            <th scope="row">Status / blocks</th>
+            <td>Order, delivery, billing and sales-support blocks</td>
+            <td>Prevents selected processing for all or selected sales areas</td>
+            <td>Is this a master-data block, a document block, a credit block or a process-status problem?</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Lead diagnosis</p><h2>Start from the wrong document value, then prove the source.</h2></header>
-    <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Identify the symptom</h4><p>Wrong payer, shipping condition, payment term, pricing key, tax classification, or block are different problems.</p></div>
-      <div><span>02</span><h4>Check the exact role and scope</h4><p>Confirm BP, customer role, sales area or company code used by the process.</p></div>
-      <div><span>03</span><h4>Check more specific layers</h4><p>Partner relationships, customer-material data, hierarchy or document overrides can be more specific than a generic customer default.</p></div>
-      <div><span>04</span><h4>Trace the consumer</h4><p>Separate the maintained value from the configuration that interprets it.</p></div>
+  <section class="research-canvas__inventory" id="grouping-account-group-cvi" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Control model</p>
+      <h2>BP grouping, customer account group and CVI solve different problems.</h2>
+      <p>They are often mixed together in interview answers. Keep the three responsibilities separate.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>BP grouping</h3>
+        <p>Controls Business Partner numbering and the assigned BP number range. It is chosen when the BP is created and is not a field we should expect to change casually later.</p>
+      </div>
+      <div>
+        <h3>Customer account group</h3>
+        <p>Controls customer-side field status, customer number range and important SD behavior such as the partner-determination procedure assigned to the customer type.</p>
+      </div>
+      <div>
+        <h3>CVI mapping</h3>
+        <p>Connects the BP model with the customer application model. It maps BP groupings and customer account groups and synchronizes the linked objects.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">link</span>
+      <p><strong>Numbering decision:</strong> the BP number and customer number can be designed to match or to use different ranges. The important point is that CVI mapping is explicit and integrations do not assume equality when the landscape does not guarantee it.</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Assessment recall</p><h2>Customer is a BP capability, not a second identity.</h2></header>
+  <section class="research-canvas__inventory" id="partner-functions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Partner relationships</p>
+      <h2>“Customer” is not one runtime role.</h2>
+      <p>Sales documents resolve partner functions. The same legal customer can order, receive, be invoiced and pay through different partner records.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Core customer partner functions">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Role</th><th>Business question</th><th>Typical downstream effect</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Sold-to party</th><td>Who places the order?</td><td>Primary sales relationship, sales-area context and many commercial defaults.</td></tr>
+          <tr><th scope="row">Ship-to party</th><td>Who receives the goods?</td><td>Delivery address, receiving context, route and logistics-relevant data.</td></tr>
+          <tr><th scope="row">Bill-to party</th><td>Who receives the invoice?</td><td>Billing address and invoice communication context.</td></tr>
+          <tr><th scope="row">Payer</th><td>Who settles the receivable?</td><td>Payment-oriented billing and Accounts Receivable context.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ecg-caption">The standard four roles are common, but mandatory status and additional functions are controlled by partner determination. See the dedicated <a href="/labs/enterprise-context/master-data/partner-functions/">Partner Functions</a> page for the full control chain and internal function codes.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime</p>
+      <h2>Master data proposes behavior; the document becomes runtime truth.</h2>
+      <p>A sales order does not simply “read the customer.” It resolves partners, reads scope-specific master data, combines it with configuration and may copy values into the document. After that, reference documents, interfaces or permitted manual changes can produce a result different from the current master.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Resolve the sales area</h4><p>The sold-to party must be extended to the required Sales Organization, Distribution Channel and Division.</p></div>
+      <div><span>02</span><h4>Resolve partners</h4><p>Partner determination supplies ship-to, bill-to, payer and any additional roles required by the procedure.</p></div>
+      <div><span>03</span><h4>Read commercial defaults</h4><p>Pricing, tax, shipping and billing fields are read from the relevant master-data scope and combined with other determination inputs.</p></div>
+      <div><span>04</span><h4>Run cross-process checks</h4><p>Availability, credit, delivery blocks, material settings and other controls can stop the process even when the customer master itself is valid.</p></div>
+      <div><span>05</span><h4>Store document values</h4><p>The document now carries partners and copied values. Troubleshooting must compare the document result with the master and the rule that produced it.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="credit-boundary" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Cross-process boundary</p>
+      <h2>Credit Management is related to the customer, but it is not the same master-data layer.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">credit_score</span>
+      <p>In SAP Credit Management, credit-relevant master data belongs to Business Partner role <code>UKM000</code>. The credit profile and credit-segment data hold fields such as risk class, check rule and credit limit. If an order is blocked by credit, checking only <code>KNVV</code> or the customer sales-area screen is not enough. Follow the credit-management object and the credit segment.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Credit related pages">
+      <span>Credit</span>
+      <a href="/labs/enterprise-context/master-data/credit-master-data/">Credit Master Data</a>
+      <a href="/labs/enterprise-context/credit/">Credit Management process</a>
+    </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="specificity" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Specificity</p>
+      <h2>The generic customer record is not always the most specific source.</h2>
+      <p>When a document value looks wrong, first check whether another master-data relationship intentionally overrides or specializes the generic customer default.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Multiple addresses</h3>
+        <p>Modern S/4HANA scenarios can use several BP addresses and, where activated, address-dependent customer Sales data. Do not create a new customer only because one customer has several receiving locations without first checking the address and partner model.</p>
+      </div>
+      <div>
+        <h3>Customer hierarchy</h3>
+        <p>A hierarchy is a separate relationship structure used for scenarios such as hierarchy pricing, reporting or commercial control. It does not replace the sales-area customer record.</p>
+      </div>
+      <div>
+        <h3>Customer-material record</h3>
+        <p>Customer-specific product numbers, descriptions and selected sales defaults can be more specific than generic customer or material data.</p>
+      </div>
+    </div>
+    <nav class="ecg-context-links" aria-label="Specific customer master data pages">
+      <span>More specific</span>
+      <a href="/labs/enterprise-context/master-data/bp-addresses/">BP Addresses</a>
+      <a href="/labs/enterprise-context/master-data/customer-hierarchy/">Customer Hierarchy</a>
+      <a href="/labs/enterprise-context/master-data/customer-material/">Customer Material</a>
+    </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="tables" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Technical anchors</p>
+      <h2>Use tables to prove the data model, not as an integration contract.</h2>
+      <p>These tables remain useful for diagnostics in private-cloud and on-premise investigations. New integrations should use released APIs and CDS views instead of direct table updates.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Customer and Business Partner tables">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Object</th><th>Technical anchor</th><th>What to verify</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Business Partner header</th><td><code>BUT000</code></td><td>BP identity, category and central BP attributes.</td></tr>
+          <tr><th scope="row">BP addresses</th><td><code>BUT020</code> + address services</td><td>Address assignments and the address identity used by the BP.</td></tr>
+          <tr><th scope="row">BP ↔ Customer link</th><td><code>CVI_CUST_LINK</code></td><td>Which Business Partner is linked to which customer number.</td></tr>
+          <tr><th scope="row">Customer general</th><td><code>KNA1</code></td><td>Customer-wide application data.</td></tr>
+          <tr><th scope="row">Company code</th><td><code>KNB1</code></td><td>FI customer extension for the exact company code.</td></tr>
+          <tr><th scope="row">Sales area</th><td><code>KNVV</code></td><td>Sales, shipping and billing data for the exact sales area.</td></tr>
+          <tr><th scope="row">Partner functions</th><td><code>KNVP</code></td><td>Customer sales partner assignments by sales area and partner counter.</td></tr>
+          <tr><th scope="row">Tax classifications</th><td><code>KNVI</code></td><td>Customer tax classifications used by tax determination.</td></tr>
+          <tr><th scope="row">Bank data</th><td><code>KNBK</code> / BP bank data</td><td>Legacy customer-side bank representation and synchronized BP bank details.</td></tr>
+          <tr><th scope="row">Contact persons</th><td><code>KNVK</code> / BP relationships</td><td>Classic customer contact-person data versus the BP relationship model.</td></tr>
+          <tr><th scope="row">Customer hierarchy</th><td><code>KNVH</code></td><td>Hierarchy relationships and validity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="api" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration</p>
+      <h2>Integrate through released Business Partner and customer interfaces.</h2>
+      <p>The Business Partner API exposes the object by business scope rather than forcing an integration to understand internal table joins.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Business Partner customer API entities">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>API entity</th><th>Purpose</th><th>Typical integration use</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><code>A_BusinessPartner</code></th><td>General BP identity</td><td>Create or read the central partner object.</td></tr>
+          <tr><th scope="row"><code>A_Customer</code></th><td>Customer general data</td><td>Customer-side general extension.</td></tr>
+          <tr><th scope="row"><code>A_CustomerCompany</code></th><td>Company-code customer data</td><td>FI-AR extension for one or more company codes.</td></tr>
+          <tr><th scope="row"><code>A_CustomerSalesArea</code></th><td>Sales-area customer data</td><td>Sales, shipping and billing extension for the required sales areas.</td></tr>
+          <tr><th scope="row"><code>A_CustomerSalesAreaTax</code></th><td>Sales-area tax data</td><td>Customer tax classifications by sales-area context and tax category.</td></tr>
+          <tr><th scope="row"><code>A_CustSalesPartnerFunc</code></th><td>Customer sales partner functions</td><td>Maintain or read partner relationships used by Sales.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">api</span>
+      <p><strong>Architecture rule:</strong> do not build a new interface by updating <code>KNA1</code>, <code>KNVV</code> or <code>KNVP</code> directly. Use released APIs, supported replication services or the integration mechanism approved for the deployment. Legacy ALE/IDoc patterns such as <code>DEBMAS</code> can still exist in older landscapes, but they are a landscape decision, not the default integration design for every S/4HANA system.</p>
+    </div>
+    <nav class="ecg-context-links" aria-label="Customer integration pages">
+      <span>Integration</span>
+      <a href="/labs/enterprise-context/integrations/business-partner-api/">Business Partner API</a>
+      <a href="/labs/enterprise-context/integrations/">Integration catalogue</a>
+    </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="lifecycle" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lifecycle and control</p>
+      <h2>Blocking is not one global switch.</h2>
+      <p>Different blocks protect different parts of the process. The right scope matters.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Sales-area blocks</h3>
+        <p>Order, delivery, billing and sales-support blocks can stop selected Sales activities for one sales area or more broadly, depending on maintenance and configuration.</p>
+      </div>
+      <div>
+        <h3>Company-code block</h3>
+        <p>Posting blocks control FI activity. Do not confuse an FI posting block with a Sales order or delivery block.</p>
+      </div>
+      <div>
+        <h3>End of purpose</h3>
+        <p>Data lifecycle, blocking and deletion must also respect retention, open business and data-protection rules. Modern S/4HANA provides BP/customer blocking processes and apps for this lifecycle.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">block</span>
+      <p><strong>Support habit:</strong> when a process is blocked, identify the exact block type and scope before removing it. A block can be intentional control, not bad master data.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="cvi-diagnostics" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostics</p>
+      <h2>Start from the symptom and prove the failing layer.</h2>
+      <p>Customer-master incidents are often solved faster when we separate BP identity, customer scope, partner relationship, CVI synchronization and the downstream process.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Customer master diagnostic patterns">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Symptom</th><th>Likely boundary</th><th>First evidence to check</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Customer exists but order cannot use the sales area</th>
+            <td>Sales extension</td>
+            <td>Does role <code>FLCU01</code> contain the exact Sales Organization + Distribution Channel + Division? Check the corresponding sales-area customer data.</td>
+          </tr>
+          <tr>
+            <th scope="row">FI posting cannot use the customer in a company code</th>
+            <td>FI customer extension</td>
+            <td>Does role <code>FLCU00</code> contain the company-code segment and required accounting fields such as the reconciliation account?</td>
+          </tr>
+          <tr>
+            <th scope="row">BP saves but customer synchronization fails</th>
+            <td>CVI</td>
+            <td>Check BP grouping ↔ customer account-group mapping, number ranges, mandatory fields and the CVI postprocessing log. In supported private/on-premise scenarios, <code>MDS_PPO2</code> is a key postprocessing transaction.</td>
+          </tr>
+          <tr>
+            <th scope="row">Wrong ship-to, bill-to or payer</th>
+            <td>Partner relationship / partner determination</td>
+            <td>Compare the partner stored in the document with the customer sales partner assignment and the active partner procedure.</td>
+          </tr>
+          <tr>
+            <th scope="row">Wrong price or tax</th>
+            <td>Determination chain</td>
+            <td>Identify which customer field is only an input and then trace the pricing or tax determination that consumes it.</td>
+          </tr>
+          <tr>
+            <th scope="row">Order is credit blocked</th>
+            <td>SAP Credit Management</td>
+            <td>Check BP role <code>UKM000</code>, credit profile, credit segment, exposure and the active credit check instead of treating it as an ordinary sales-area master-data issue.</td>
+          </tr>
+          <tr>
+            <th scope="row">Interface has BP number but expects customer number</th>
+            <td>Identity mapping / CVI</td>
+            <td>Check the BP-to-customer link and whether the numbering design guarantees equal numbers. Do not infer equality from one environment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="design-decisions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead decisions</p>
+      <h2>Good customer design reduces duplicate identities and hidden exceptions.</h2>
+      <p>There is no single correct pattern for every landscape. These are the decisions worth making explicitly.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>One customer or several ship-to parties?</h3>
+        <p>Use separate partner records when business ownership, logistics, tax, reporting or integration requires a distinct partner identity. Use address capabilities when the difference is only location and the deployment supports the required address-dependent behavior.</p>
+      </div>
+      <div>
+        <h3>Same BP and customer number?</h3>
+        <p>Matching numbers simplify search and integration. Different numbers can preserve legacy numbering or governance. Either design works only when CVI mapping and interfaces handle it deliberately.</p>
+      </div>
+      <div>
+        <h3>Customer and supplier on one BP?</h3>
+        <p>If the same legal partner plays both roles, one BP can carry customer and supplier roles. Do not merge different legal or operational parties only to reduce master-data count.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Answer with layers, ownership and proof.</h2>
+    </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> In S/4HANA I start with the Business Partner identity and then check the customer roles and organizational views. FLCU01 carries Sales customer data by sales area; FLCU00 carries customer accounting data by company code. For a Sales issue I name the exact sales-area field, verify whether a more specific relationship record overrides the generic value, and then trace the determination that consumes it.</p>
+      <p><strong>60-second answer:</strong> In S/4HANA I treat the customer as a Business Partner with customer roles, not as a separate identity. General BP data is shared. <code>FLCU01</code> carries Sales customer data by sales area, and <code>FLCU00</code> carries FI customer data by company code. CVI maps the BP model to the customer application model. In a Sales issue I first identify the exact partner function and sales area, then check the customer field that should supply the value, the configuration that interprets it, and finally the value stored in the document. Credit is a separate BP role, <code>UKM000</code>, so I do not mix ordinary customer master data with credit master data.</p>
     </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Likely follow-up: BP grouping vs account group?</h3>
+        <p>Grouping belongs to Business Partner numbering. The customer account group controls customer-side number range, field status and related customer behavior. CVI maps the two models.</p>
+      </div>
+      <div>
+        <h3>Likely follow-up: why can a valid BP fail in Sales?</h3>
+        <p>The BP can exist without the required <code>FLCU01</code> sales-area extension, partner assignments, or mandatory Sales data for the exact organizational scope.</p>
+      </div>
+      <div>
+        <h3>Likely follow-up: where do you troubleshoot?</h3>
+        <p>Start with the failing document and scope, then verify BP/customer data, partner relationships, CVI status, determination logic and downstream process controls.</p>
+      </div>
+    </div>
+
     <nav class="ecg-context-links" aria-label="Customer related pages">
-      <span>Related</span>
-      <a href="/labs/enterprise-context/master-data/business-partner/">Business Partner deep dive</a>
+      <span>Continue</span>
+      <a href="/labs/enterprise-context/master-data/business-partner/">Business Partner</a>
       <a href="/labs/enterprise-context/master-data/partner-functions/">Partner Functions</a>
-      <a href="/labs/enterprise-context/master-data/customer-material/">Customer Material</a>
+      <a href="/labs/enterprise-context/master-data/bp-addresses/">BP Addresses</a>
+      <a href="/labs/enterprise-context/master-data/credit-master-data/">Credit Master Data</a>
+      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
       <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
     </nav>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP reference points</p>
+      <h2>Primary sources used for the product boundaries on this page.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Business Partner roles</h3>
+        <p><a href="https://learning.sap.com/courses/configuring-master-data-in-sap-s-4hana-cloud-private-edition-retail/business-partners-3">SAP Learning — Business Partners</a> explains the general BP, <code>FLCU00</code> and <code>FLCU01</code> customer data layers.</p>
+      </div>
+      <div>
+        <h3>Customer creation</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9905622a5c1f49ba84e9076fc83a9c2c/eda80453348d2851e10000000a44538d.html">SAP Help — Creating a Customer Master Record</a> describes creating customer data through Business Partner customer roles.</p>
+      </div>
+      <div>
+        <h3>Business Partner API</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/3c916ef10fc240c9afc594b346ffaf77/cfb5c8a12cd44100a9ea939ce6a23118.html">SAP Help — Create Business Partner Data</a> lists released API entities for BP, customer company code, sales area, tax and partner functions.</p>
+      </div>
+      <div>
+        <h3>Sales-area model</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/c0c54048d35849128be8e872df5bea6d/784b14a35438498797ff8a6920079644.html">SAP Help — Customer Sales Area</a> documents the released customer sales-area view and its organizational keys.</p>
+      </div>
+      <div>
+        <h3>Number-range mapping</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/59cad331c9034fd490ca4b2b2314e4b3/3c2f54f8ee714e9b9714df555011b24d.html">SAP Help — BP / Customer Number Range Settings</a> documents BP groupings, customer account groups and CVI linkage.</p>
+      </div>
+      <div>
+        <h3>Blocking</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/516f5feff9b348d1b84cb202aef8717d.html">SAP Help — Blocking Business Partner, Customer and Supplier Master Data</a> covers modern blocking and end-of-purpose processing.</p>
+      </div>
+    </div>
   </section>
 </div>
