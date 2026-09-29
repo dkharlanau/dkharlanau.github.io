@@ -29,8 +29,8 @@ related:
 
 <section class="section atlas-hero atlas-hero--focus">
   <p class="eyebrow">Knowledge Atlas</p>
-  <h1>Find the SAP context before choosing the fix.</h1>
-  <p class="lead">Reviewed public pages for SAP operations, process analysis, master data, integration, and controlled automation. Start with the observable problem, then follow the related process, data, and ownership checks.</p>
+  <h1>Find the system context before choosing the fix.</h1>
+  <p class="lead">Reviewed public pages for SAP operations, database engineering, process analysis, master data, integration, and controlled automation. Start with the observable problem, then follow the related process, data, technology, and ownership checks.</p>
   <div class="atlas-hero__actions">
     <a class="button button--primary" href="#atlas-task-paths">Start with a problem</a>
     <a class="button" href="/atlas/concepts/">Browse concepts</a>
