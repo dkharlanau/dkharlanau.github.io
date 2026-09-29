@@ -3,7 +3,7 @@
 Project-specific guidance for AI coding and research agents working in this public GitHub Pages repository.
 Use this file as the main entry point. Open deeper docs only when the task needs them.
 
-**Last updated:** 2026-09-25. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
+**Last updated:** 2026-09-29. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
 
 ## Repository Purpose
 
@@ -210,14 +210,17 @@ navigation rows, spacing, borders, or reusable visual patterns, read
 docs/ui-agent-workflow.md, docs/ui-component-catalog.md, and
 config/ui-components.json before editing CSS.
 
+Reuse-first rule: before introducing a new renderer, diagram library, graph model, or reusable visual component, inspect both the site's registered components and the relevant public sibling repositories under `dkharlanau`. For relationship, process, lineage, architecture, mapping, or dependency work, the first candidates are `visual-workbench`, `data-relationship-map`, `transformation-graph`, `process-as-code`, `mapping-as-code`, `enterprise-change-graph`, and `enterprise-architecture-composer`. Reuse a semantic contract, projection, adapter, renderer, or generated artifact when it fits; do not create a second source of truth or copy a whole engine into the site without a concrete need.
+
 Use this loop:
 
 1. Name the reader task: read, compare, navigate, verify, answer, trace, or remember.
 2. Select a registered stable or domain component by intent. Inspect its reference route and owner files.
-3. Diagnose whether the failure is typography, density, layout, affordance, boundary, cascade, or wrong content shape.
-4. Change the smallest correct owner layer. Do not fix a shared-component problem with a route-local override.
-5. If the reusable contract changes, update CSS/include + registry + catalog in the same commit.
-6. Run python3 scripts/validate_ui_components.py, build the site, and let visual smoke and accessibility checks verify the rendered output.
+3. When the task involves a visual model or reusable behavior, inspect the relevant sibling repositories before inventing a new implementation. Record what was inspected and why the chosen reuse boundary is appropriate.
+4. Diagnose whether the failure is typography, density, layout, affordance, boundary, cascade, or wrong content shape.
+5. Change the smallest correct owner layer. Do not fix a shared-component problem with a route-local override.
+6. If the reusable contract changes, update CSS/include + registry + catalog in the same commit.
+7. Run `python3 scripts/validate_ui_components.py`, build the site, then inspect the affected rendered route at desktop and mobile sizes. Use the visual smoke tooling or equivalent browser screenshots and check the actual page, not only source code.
 
 New components begin as candidate. They need a semantic name, owner layer, real route,
 responsive behavior, accessibility behavior, registry entry, and catalog entry before
