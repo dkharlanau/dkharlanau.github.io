@@ -1,10 +1,10 @@
 ---
 author: "Dzmitryi Kharlanau"
 layout: default
-title: "Knowledge Atlas — SAP, Operations, Data, Automation, and AI Support Concepts"
-description: "Curated Knowledge Atlas for business, SAP, operations, data, automation, and AI-assisted support concepts."
+title: "Knowledge Atlas — SAP, Databases, Operations, Data, Automation, and AI"
+description: "Curated Knowledge Atlas for business systems, SAP, database engineering, operations, data, automation, and AI-assisted support."
 permalink: /atlas/
-last_modified_at: 2026-09-05
+last_modified_at: 2026-09-29
 status: reviewed
 verified: true
 tags:
@@ -12,6 +12,7 @@ tags:
   - diagnostics
   - ai-operations
   - data-quality
+  - databases
   - automation
 related:
   - /atlas/concepts/order-to-cash/
@@ -99,6 +100,13 @@ related:
       <h2>Data Quality</h2>
       <p>Master data, quality signals, governance failure modes, and operational data problems.</p>
       <span class="link-arrow">Open data quality</span>
+    </a>
+    <a class="atlas-card" href="/atlas/databases/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">storage</span>
+      <h2>Databases</h2>
+      <p>Database engineering through PostgreSQL: SQL semantics, modeling, access paths, MVCC, performance, recovery, and production operations.</p>
+      <span class="atlas-pill">Working · review pending</span>
+      <span class="link-arrow">Open databases</span>
     </a>
     <a class="atlas-card" href="/atlas/automation/">
       <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">precision_manufacturing</span>
