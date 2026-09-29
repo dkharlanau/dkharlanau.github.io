@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -123,14 +123,16 @@ tags:
             <span>Business question</span>
           </div>
 
+          {% assign cmir_entities = group.entities | where: "code", "MD.SD.CMIR" %}
+          {% assign cmir_entity = cmir_entities | first %}
           {% for entity in group.entities %}
+          {% unless entity.code == "MD.SD.CMIR" %}
           {% assign entity_detail_href = "/labs/enterprise-context/master-data/" %}
           {% assign entity_detail_label = entity.title %}
           {% case entity.code %}
             {% when "MD.SD.BP" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/business-partner/" %}
             {% when "MD.SD.ADDRESS" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/bp-addresses/" %}
             {% when "MD.SD.PRODUCT" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/product/" %}
-            {% when "MD.SD.CMIR" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/customer-material/" %}
             {% when "MD.SD.PARTNERREL" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/partner-functions/" %}
             {% when "MD.SD.CUSTHIER" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/customer-hierarchy/" %}
             {% when "MD.SD.PRODHIER" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/product-hierarchy/" %}
@@ -147,6 +149,39 @@ tags:
             {% when "MD.SD.BOM" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/sales-bom/" %}
             {% when "MD.SD.VC" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/variant-configuration/" %}
           {% endcase %}
+
+          {% if entity.code == "MD.SD.PRODUCT" and cmir_entity %}
+          <article class="ecg-master-catalog__row">
+            <div class="ecg-master-catalog__object">
+              <div><code>{{ entity.code }}</code> <span aria-hidden="true">+</span> <code>{{ cmir_entity.code }}</code></div>
+              <h4>Product / Material + Customer Material</h4>
+              <span class="ecg-master-catalog__type">{{ entity.entity_class | replace: "_", " " }} + {{ cmir_entity.entity_class | replace: "_", " " }}</span>
+              <a class="ecg-master-catalog__learn" href="/labs/enterprise-context/master-data/product/">
+                Read: Product / Material
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+              </a>
+              <a class="ecg-master-catalog__learn" href="/labs/enterprise-context/master-data/customer-material/">
+                Read: Customer Material
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+              </a>
+            </div>
+            <div class="ecg-master-catalog__cell">
+              <strong>Key / scope</strong>
+              <p><strong>Base product:</strong> {{ entity.key_dimensions | join: " · " }}</p>
+              <p><strong>Customer-specific layer:</strong> {{ cmir_entity.key_dimensions | join: " · " }}</p>
+            </div>
+            <div class="ecg-master-catalog__cell">
+              <strong>Used by</strong>
+              <p><strong>Base product:</strong> {{ entity.consumed_by | join: " · " }}</p>
+              <p><strong>Customer-specific layer:</strong> {{ cmir_entity.consumed_by | join: " · " }}</p>
+            </div>
+            <div class="ecg-master-catalog__cell ecg-master-catalog__cell--purpose">
+              <strong>Business question</strong>
+              <p>What is being sold, how does the product behave by default, and does this customer-product relationship refine the product number, text, delivery, or other supported defaults?</p>
+              <p><strong>Mental model:</strong> Product defines the reusable default. Customer Material is the more specific customer-product layer where SAP supports an override or refinement.</p>
+            </div>
+          </article>
+          {% else %}
           <article class="ecg-master-catalog__row">
             <div class="ecg-master-catalog__object">
               <code>{{ entity.code }}</code>
@@ -170,6 +205,8 @@ tags:
               <p>{{ entity.business_question }}</p>
             </div>
           </article>
+          {% endif %}
+          {% endunless %}
           {% endfor %}
         </div>
       </div>
