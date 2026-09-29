@@ -1,17 +1,21 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Configurable Product and Classification Context"
-description: "A practical deep dive into Configurable Product and Classification Context in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+title: "SAP Variant Configuration — Configurable Products & Material Variants"
+description: "A practical SAP Lead guide to Variant Configuration in S/4HANA: KMAT, class type 300, characteristics, configuration profiles, dependencies, super BOM and routing, variant pricing, material variants, AVC vs LO-VC, planning, integration and diagnostics."
 permalink: /labs/enterprise-context/master-data/variant-configuration/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
+  - sap-pp
+  - sap-mm
+  - variant-configuration
+  - advanced-variant-configuration
   - master-data
 ---
 
@@ -21,87 +25,528 @@ tags:
     <li><a href="/labs/">Labs</a></li>
     <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
     <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
-    <li aria-current="page">Configurable Product and Classification Context</li>
+    <li aria-current="page">Variant Configuration</li>
   </ol>
 </nav>
 
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.VC</p>
-      <h1>Configurable Product and Classification Context</h1>
-      <p>Variant Configuration turns a generic configurable product into a specific sellable variant by capturing characteristic values and applying dependencies. It connects Sales with product structure, pricing, production and procurement.</p>
+      <p class="research-canvas__eyebrow">SAP Sales / Logistics / Master Data / MD.SD.VC</p>
+      <h1>Variant Configuration</h1>
+      <p>Variant Configuration lets one configurable product represent many valid product combinations. The customer chooses or receives characteristic values, the model checks the rules, and SAP turns the configuration into executable consequences: price, BOM components, routing operations, planning, procurement and production.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.VC</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>logistics adjacent master</strong><small>Data class</small></div>
-      <em>Configurable product, classes, characteristics, configuration profile/model and selected values.</em>
+      <div class="research-canvas__signal-line"><span>02</span><strong>cross-process product model</strong><small>Data class</small></div>
+      <em>Configurable product, class type 300, characteristics, profile, dependencies, product structure and configuration instances.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The model defines what can be configured; the Sales item stores the chosen configuration instance.</h2>
+      <h2>Separate the product model, the configuration instance and the execution result.</h2>
+      <p>This separation is the fastest way to understand Variant Configuration and to diagnose it. The reusable model says what is possible. A sales order or other business object stores one concrete configuration. Downstream processes consume that configuration and turn it into components, operations, requirements and prices.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Configurable product, classes, characteristics, configuration profile/model and selected values.</p>
-    </div>
+
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Configurable-material indicator, configuration profile, classes, characteristics, allowed values, object dependencies and selected characteristic values.</p>
+        <h3>1. Product model</h3>
+        <p>The configurable product, variant class, characteristics, allowed values, dependencies, variant tables, configuration profile, super BOM and super routing define the solution space.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>Characteristics and model content are master/configuration data of the VC model; the sales document stores the actual configuration instance chosen for the item.</p>
+        <h3>2. Configuration instance</h3>
+        <p>A sales order item, material variant or another business object stores the values selected or derived for one concrete configuration.</p>
+      </div>
+      <div>
+        <h3>3. Execution result</h3>
+        <p>BOM explosion, routing selection, pricing, planning, procurement and production use the configuration to decide what must happen.</p>
       </div>
     </div>
-  </section>
 
-  <section class="research-canvas__inventory" id="runtime" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>Characteristic choices become an executable product definition for this Sales item.</h2>
-      <p>During order entry the user or interface supplies characteristic values for a configurable product. The configuration model checks allowed values and dependencies and creates a configuration instance on the item. That instance can then influence product structure, pricing, production, procurement, and other downstream decisions.</p>
-    </header>
-    <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Start with the configurable product</h4><p>Confirm the product and the active configuration model or profile expected for the Sales item.</p></div>
-      <div><span>02</span><h4>Read the instance</h4><p>Inspect the characteristic values actually stored on the item, not only the reusable class or model definition.</p></div>
-      <div><span>03</span><h4>Check completeness and dependencies</h4><p>Find missing, inconsistent, defaulted, or dependency-driven values before debugging a downstream result.</p></div>
-      <div><span>04</span><h4>Trace the derived result</h4><p>Follow how the configuration instance influences BOM, routing, pricing, procurement, or make-to-order logic for this item.</p></div>
-      <div><span>05</span><h4>Keep model and execution separate</h4><p>If the configuration is correct but production, procurement, or pricing is wrong, move to the downstream mechanism that consumes the selected variant.</p></div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Lead rule:</strong> if the configuration instance is correct but the component, operation, price or requirement is wrong, do not change characteristics blindly. Move to the downstream mechanism that consumes the configuration.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Debug the Sales configuration instance before the downstream consequence.</h2>
+      <p class="research-canvas__eyebrow">Core model</p>
+      <h2>The model is a stack of objects, not one “KMAT setting”.</h2>
+      <p>A configurable material is only the entry point. The business result comes from the objects connected to it.</p>
     </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Object</th>
+            <th>What it answers</th>
+            <th>Typical maintenance in classic/on-premise</th>
+            <th>Lead check</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Configurable material</td>
+            <td>Which product is being configured?</td>
+            <td><code>MM01 / MM02</code>, usually material type <code>KMAT</code> or another configurable material type</td>
+            <td>Confirm the configurable indicator and the organizational views used by Sales and planning.</td>
+          </tr>
+          <tr>
+            <td>Characteristic</td>
+            <td>Which feature can vary?</td>
+            <td><code>CT04</code></td>
+            <td>Use stable business semantics. Do not create a new characteristic for every screen requirement.</td>
+          </tr>
+          <tr>
+            <td>Variant class</td>
+            <td>Which characteristics describe this configurable object?</td>
+            <td><code>CL01 / CL02</code>, class type <code>300</code></td>
+            <td>Keep technical and commercial characteristics understandable and governed.</td>
+          </tr>
+          <tr>
+            <td>Configuration profile</td>
+            <td>How should this object be configured?</td>
+            <td><code>CU41 / CU42 / CU43</code>, PMEVC</td>
+            <td>Check process, BOM explosion, class assignment, engine mode and profile priority.</td>
+          </tr>
+          <tr>
+            <td>Object dependency</td>
+            <td>Which combinations, values, components and operations are valid?</td>
+            <td><code>CU01 / CU02</code>, PMEVC</td>
+            <td>Prefer reusable global logic when the rule is shared; local logic is easier to create but easier to duplicate.</td>
+          </tr>
+          <tr>
+            <td>Super BOM</td>
+            <td>Which components can appear in any valid variant?</td>
+            <td><code>CS01 / CS02</code></td>
+            <td>Selection conditions should explain why a component is selected, not hide unexplained product logic.</td>
+          </tr>
+          <tr>
+            <td>Super routing / task list</td>
+            <td>Which operations can be required to build the variants?</td>
+            <td><code>CA01 / CA02</code></td>
+            <td>Check operation selection separately from BOM selection.</td>
+          </tr>
+          <tr>
+            <td>Material variant</td>
+            <td>Is one frequent configuration important enough to have its own stockable material?</td>
+            <td>Material master linked to the configurable material and pre-valuated with characteristic values</td>
+            <td>Use variants for repeatable stocked combinations, not as a substitute for a clean configuration model.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="ecg-caption">Classic transaction names are useful for on-premise and Private Edition assessment discussions. Public Cloud and newer AVC scenarios use app-based tooling, so always separate the concept from the UI used to maintain it.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="setup" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Implementation path</p>
+      <h2>Build the model in an order that keeps responsibility clear.</h2>
+      <p>Starting with dependencies before the product semantics are stable usually creates a model that is difficult to test and maintain.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Create the configurable product</h4><p>Set the material as configurable and maintain the Sales, plant and planning views required by the target process. Standard <code>KMAT</code> is common, but other material types can be configurable when the material type and classification settings allow it.</p></div>
+      <div><span>02</span><h4>Design characteristics</h4><p>Create characteristics with clear values, ranges and units. Decide which values are entered by the user, defaulted, derived or hidden from the commercial UI.</p></div>
+      <div><span>03</span><h4>Create the variant class</h4><p>Group the characteristics in class type <code>300</code> and assign the configurable material. The class describes the configuration vocabulary.</p></div>
+      <div><span>04</span><h4>Create the configuration profile</h4><p>Assign the class and define how configuration should run: engine mode, process, BOM explosion, profile priority and other scenario-specific settings.</p></div>
+      <div><span>05</span><h4>Build the product structure</h4><p>Create a super BOM and, where production needs it, a super routing. Include all variant and non-variant components or operations that can be required.</p></div>
+      <div><span>06</span><h4>Add dependencies</h4><p>Restrict impossible choices, derive values and select the correct components or operations. Keep rules explainable and avoid duplicating the same business rule in many local objects.</p></div>
+      <div><span>07</span><h4>Add pricing and planning behavior</h4><p>Map configuration values to variant condition keys where price changes by option, and select the planning strategy and requirements behavior that fit MTO, MTS or procurement.</p></div>
+      <div><span>08</span><h4>Simulate before business use</h4><p>Test valid and invalid combinations, BOM and routing results, pricing, material-variant matching and downstream planning. Classic LO-VC can use tools such as <code>CU50</code>; AVC provides its own simulation environment.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Dependencies</p>
+      <h2>Use the dependency type that matches the business rule.</h2>
+      <p>The dependency language is powerful, but model quality depends on keeping each rule in the right place.</p>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Purpose</th>
+            <th>Simple example</th>
+            <th>Design note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Precondition</td>
+            <td>Controls whether a characteristic or value is available.</td>
+            <td>Show <em>Battery Capacity</em> only when <em>Drive = Electric</em>.</td>
+            <td>Good for narrowing the user choice space.</td>
+          </tr>
+          <tr>
+            <td>Selection condition</td>
+            <td>Selects an object that is required for the configuration.</td>
+            <td>Select the electric motor BOM item when <em>Drive = Electric</em>.</td>
+            <td>Common on BOM items and routing operations.</td>
+          </tr>
+          <tr>
+            <td>Procedure</td>
+            <td>Derives or changes values in a defined processing sequence.</td>
+            <td>Derive voltage from market and drive type.</td>
+            <td>Order matters. A procedure is imperative logic, so keep its side effects visible.</td>
+          </tr>
+          <tr>
+            <td>Constraint</td>
+            <td>Defines relationships between several characteristics or objects and keeps the configuration consistent.</td>
+            <td>Allowed engine, gearbox and axle combinations must be solved together.</td>
+            <td>Especially important in AVC, where the constraint engine can rule out impossible values early.</td>
+          </tr>
+          <tr>
+            <td>Action</td>
+            <td>Legacy derivation mechanism in classic LO-VC.</td>
+            <td>Infer one value after another value is selected.</td>
+            <td>SAP documents actions as obsolete. Prefer procedures or constraints for new model design.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Start with the configuration instance stored on the Sales item and compare it with the expected characteristic values. Resolve missing or inconsistent values and dependency results first. Then verify the BOM, routing, pricing, production, or procurement result derived from that instance. If the instance is correct, the root cause belongs downstream rather than in Variant Configuration itself.</p>
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Global vs local:</strong> a global dependency can be reused and governed centrally. A local dependency belongs to one object. Use local logic for a truly local rule, not because it is faster to create during a workshop.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Super BOM and routing</p>
+      <h2>The configuration is only useful when it produces the right product structure.</h2>
+      <p>A super BOM contains components used by all variants and components used only by some variants. A super routing follows the same idea for operations. Object dependencies turn the full superset into the structure needed for one configuration.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Interactive configuration</h4><p>The customer or sales user selects the product values.</p></div>
+      <div><span>02</span><h4>High-level rules</h4><p>Preconditions, procedures and constraints validate or derive characteristic values.</p></div>
+      <div><span>03</span><h4>BOM explosion</h4><p>Selection conditions determine which variant components survive the explosion.</p></div>
+      <div><span>04</span><h4>Routing selection</h4><p>Operations and resources required by the chosen variant are selected.</p></div>
+      <div><span>05</span><h4>Planning and execution</h4><p>MRP and production consume the selected structure according to the planning scenario.</p></div>
+    </div>
+
+    <p class="ecg-caption">Do not confuse high-level interactive configuration with low-level background configuration. In planning and production, SAP can explode BOMs and routings again using the configuration values transferred from the originating requirement.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales and pricing</p>
+      <h2>The sales order stores a configuration instance; pricing can react to selected options.</h2>
+      <p>When a configurable product is entered in a sales order, the configuration UI collects characteristic values and runs the model. The item then carries the configuration instance used by pricing and later logistics processes.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Variant condition key</h3>
+        <p>A characteristic value can trigger a variant condition key. That key connects configuration with condition technique.</p>
+      </div>
+      <div>
+        <h3>Variant pricing</h3>
+        <p>Classic standard condition types include <code>VA00</code> for an absolute amount and <code>VA01</code> for a percentage surcharge or discount. Condition records still depend on Sales organization, distribution channel, material and the variant key.</p>
+      </div>
+      <div>
+        <h3>Keep pricing ownership clear</h3>
+        <p>Use configuration to express which option exists. Use pricing to express its commercial value. Avoid calculating commercial price directly inside dependency logic when condition technique can own it cleanly.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">payments</span>
+      <p><strong>Diagnostic split:</strong> if the characteristic value is wrong, stay in the VC model. If the variant key is correct but the amount is wrong, move to pricing procedure, condition records and pricing date/context.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Planning patterns</p>
+      <h2>Variant Configuration does not force one planning strategy.</h2>
+      <p>The planning setup must follow the business model. A common classic make-to-order pattern uses item category group <code>0002</code> and strategy group <code>25</code>, but these are scenario values, not universal VC requirements.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Make to Order</h3>
+        <p>The sales-order configuration creates demand for that customer-specific product. MRP and production use the configuration to select components and operations.</p>
+      </div>
+      <div>
+        <h3>Make to Stock</h3>
+        <p>Frequent configurations can be represented by material variants, planned and produced before the customer order, then sold from stock.</p>
+      </div>
+      <div>
+        <h3>External procurement</h3>
+        <p>A configured requirement can also lead to procurement when the product or components are externally sourced. The exact transfer of configuration into purchasing depends on the process design.</p>
+      </div>
+      <div>
+        <h3>Engineer to Order</h3>
+        <p>Complex scenarios can use order-specific engineering and order BOM concepts when the standard model is not enough. Treat this as an engineering process, not only a configuration-screen extension.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Assessment trap:</strong> <code>ERLA</code> belongs to Sales BOM header-level processing. It is not a generic requirement for every configurable material. Likewise, availability check values and requirements classes depend on the chosen planning and fulfillment design.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Material variants</p>
+      <h2>A material variant is a reusable stocked configuration, not another name for the sales-order instance.</h2>
+      <p>A material variant has its own material master and is linked to the configurable material. Its characteristic values describe one preconfigured combination that can be manufactured and stocked repeatedly.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>When it helps</h3>
+        <p>Use a material variant when the same configuration is ordered often enough that forecasting, stock, ATP, procurement and reporting benefit from a dedicated material number.</p>
+      </div>
+      <div>
+        <h3>Variant matching</h3>
+        <p>During configuration, SAP can search for material variants that match the selected values. Full matching can support replacement of the configurable product in the sales order according to scenario settings.</p>
+      </div>
+      <div>
+        <h3>BOM and routing</h3>
+        <p>A variant can have its own BOM and routing or use the configurable material's structures, with the configuration selecting the correct items and operations.</p>
+      </div>
+      <div>
+        <h3>Model change</h3>
+        <p>When characteristics or dependencies change, existing material variants must be reviewed or updated. Do not assume that old variants or existing orders will automatically adopt the new model result.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      <p><strong>Design trade-off:</strong> too few material variants push every order through dynamic configuration and MTO. Too many variants create material-master, stock, planning and lifecycle overhead. Create a variant when repeatability has business value, not because a combination is technically possible.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">AVC vs classic LO-VC</p>
+      <h2>They share the product-model idea, but the configuration engines are not identical.</h2>
+      <p>SAP S/4HANA supports classic Variant Configuration and Advanced Variant Configuration. AVC is the current advanced configurator for integrated product configuration across Sales, planning, production and engineering. Existing LO-VC models should be compared, not assumed to behave identically after switching engines.</p>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Classic LO-VC</th>
+            <th>Advanced Variant Configuration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Core idea</td>
+            <td>Configurable material, class, characteristics, profile, dependencies, BOM/routing and configuration instances.</td>
+            <td>Same business model family, with a newer high-level engine and stronger constraint-solving behavior.</td>
+          </tr>
+          <tr>
+            <td>Dependency behavior</td>
+            <td>Procedural processing order is important; actions also exist as obsolete legacy dependencies.</td>
+            <td>Preconditions, selection conditions, procedures and constraints are the main dependency types; the engine can exclude impossible values predictively.</td>
+          </tr>
+          <tr>
+            <td>User experience</td>
+            <td>Classic characteristic-value assignment and GUI-oriented tools are common.</td>
+            <td>Reusable Fiori configuration UI and modern simulation/modeling tools are available.</td>
+          </tr>
+          <tr>
+            <td>Multi-level models</td>
+            <td>Supported with profile and scenario rules.</td>
+            <td>Supports single-level and multi-level variant configuration models, but integration restrictions still depend on the process.</td>
+          </tr>
+          <tr>
+            <td>Transition</td>
+            <td>Existing productive behavior is the baseline.</td>
+            <td>Use SAP comparison and transition tooling to identify differences before conversion. Material-variant switching is irreversible after successful conversion, so test before changing productive objects.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+      <p><strong>Lead decision:</strong> a migration project is not “change the profile to AVC”. Compare actual sales orders, material variants, purchasing and production configurations against the new engine, then resolve semantic differences before rollout.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration boundary</p>
+      <h2>An external configurator needs a versioned product model, not only a material number.</h2>
+      <p>When product configuration runs outside the S/4HANA transaction — for example through SAP Variant Configuration and Pricing or a commerce/CPQ channel — model replication and version control become part of the architecture.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Model in S/4HANA</h4><p>Maintain the configurable product, classes, characteristics, dependencies, BOMs and profiles in their owning product-model environment.</p></div>
+      <div><span>02</span><h4>Create a knowledge base / runtime version where required</h4><p>SAP Variant Configuration and Pricing cannot simply read live S/4HANA master data during every remote configuration call. Relevant model data is packaged and replicated as runtime content.</p></div>
+      <div><span>03</span><h4>Keep identifiers stable</h4><p>External channels should exchange stable product, characteristic and value identifiers rather than UI labels that can be translated or renamed.</p></div>
+      <div><span>04</span><h4>Control model version</h4><p>A quote created against one model version must not silently be reinterpreted against a later incompatible model. Effectivity and release governance matter.</p></div>
+      <div><span>05</span><h4>Trace configuration and pricing separately</h4><p>When an external order is wrong, prove which values the configurator produced and which price conditions were returned before debugging S/4HANA order processing.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">End-to-end runtime</p>
+      <h2>For MTO, trace one configuration from Sales to production and delivery.</h2>
+      <p>This is the assessment-level flow to remember. The exact document types and planning details depend on the scenario.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Sales enters the configurable product</h4><p>The order item starts from the KMAT or another configurable product and its active profile.</p></div>
+      <div><span>02</span><h4>User and rules complete the configuration</h4><p>Values are selected, defaulted or derived. Preconditions and constraints prevent invalid combinations.</p></div>
+      <div><span>03</span><h4>Pricing evaluates the commercial result</h4><p>Variant condition keys can add surcharges or discounts for selected options.</p></div>
+      <div><span>04</span><h4>Demand reaches planning</h4><p>The requirements class, strategy and schedule-line logic determine how the sales requirement enters planning.</p></div>
+      <div><span>05</span><h4>MRP explodes the selected structure</h4><p>The transferred configuration controls the required BOM components and routing operations during low-level configuration.</p></div>
+      <div><span>06</span><h4>Production or procurement executes</h4><p>The selected product structure drives supply creation according to the make/buy design.</p></div>
+      <div><span>07</span><h4>Delivery and billing follow the material flow</h4><p>Once the configured demand is supplied and available, normal fulfillment controls take over.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostics</p>
+      <h2>Start with the first wrong layer and stop changing unrelated objects.</h2>
+    </header>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Symptom</th>
+            <th>First checks</th>
+            <th>Likely owner if configuration is correct</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Value is missing or cannot be selected</td>
+            <td>Characteristic definition, precondition, constraint, default or effectivity</td>
+            <td>VC model</td>
+          </tr>
+          <tr>
+            <td>Configuration is inconsistent</td>
+            <td>Conflicting user values, procedures, constraints and dependencies across levels</td>
+            <td>VC model / product engineering</td>
+          </tr>
+          <tr>
+            <td>Wrong BOM component</td>
+            <td>Configuration instance, BOM validity, selection condition, BOM application and low-level explosion</td>
+            <td>BOM / dependency / planning</td>
+          </tr>
+          <tr>
+            <td>Wrong routing operation</td>
+            <td>Selected values, task-list validity and operation dependencies</td>
+            <td>PP routing / dependency</td>
+          </tr>
+          <tr>
+            <td>Wrong variant surcharge</td>
+            <td>Characteristic value, variant condition key, pricing procedure and condition record</td>
+            <td>Pricing when the key is correct</td>
+          </tr>
+          <tr>
+            <td>Material variant not found</td>
+            <td>Variant valuation, full vs partial matching settings, excluded characteristics and engine/profile</td>
+            <td>Material variant / matching settings</td>
+          </tr>
+          <tr>
+            <td>MRP or production ignores the expected configuration</td>
+            <td>Requirement source, strategy/requirements class, configuration transfer, low-level explosion and production master data</td>
+            <td>PP/MRP after the instance is proven correct</td>
+          </tr>
+          <tr>
+            <td>LO-VC and AVC results differ</td>
+            <td>Run engine comparison on real existing configurations and review unsupported or differently evaluated model logic</td>
+            <td>Transition design, not a random master-data fix</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment traps</p>
+      <h2>Five shortcuts create weak answers.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>“KMAT means Variant Configuration”</h3>
+        <p>KMAT is the standard configurable material type, but configurability is an object behavior. Other material types can be configurable when the relevant settings allow it.</p>
+      </div>
+      <div>
+        <h3>“Strategy 25 is mandatory”</h3>
+        <p>Strategy 25 is a classic MTO strategy for configurable materials. The correct strategy depends on whether the business is MTO, MTS, procurement-led or another scenario.</p>
+      </div>
+      <div>
+        <h3>“All dependencies are the same”</h3>
+        <p>Preconditions restrict choices, selection conditions select objects, procedures derive values and constraints solve relationships. The type communicates the intent.</p>
+      </div>
+      <div>
+        <h3>“A material variant is the sales-order configuration”</h3>
+        <p>The order configuration belongs to one document item. A material variant is a reusable material master representing one stocked configuration.</p>
+      </div>
+      <div>
+        <h3>“AVC is LO-VC with a new screen”</h3>
+        <p>The engine behavior is different enough that SAP provides comparison and transition tools. Test actual configurations before switching productive models.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Reusable model → item instance → downstream consequence.</h2>
+      <h2>Model → instance → explosion → execution.</h2>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Variant Configuration separates a reusable product model from the configuration instance stored on one Sales item. The model defines characteristics, allowed values, and dependencies; the item stores the customer's selected or derived values. I validate that instance first, then trace the resulting BOM, pricing, production, or procurement behavior. If the instance is correct, I move to the downstream process instead of changing the configuration model.</p>
+      <p><strong>60-second answer:</strong> Variant Configuration lets one configurable product represent many valid combinations. I model the product with class type 300, characteristics, a configuration profile, dependencies, a super BOM and, where needed, a super routing. The sales order stores one configuration instance. That instance can drive variant pricing and is transferred to planning, where BOM components and operations are selected for production or procurement. Frequent configurations can become material variants and be stocked. For diagnosis I first prove the item configuration, then move to the consuming layer: BOM, routing, pricing, MRP or integration. In S/4HANA I also separate classic LO-VC from AVC because the engine behavior and tooling are not identical.</p>
     </div>
-    <nav class="ecg-context-links" aria-label="Related master-data pages">
-      <span>Continue</span>
-      <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
-    </nav>
   </section>
+
+  <section class="research-canvas__inventory" id="evidence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>Current SAP documentation behind the model.</h2>
+      <p>The page remains a working Lab and is not promoted to verified status. These primary sources were used to correct release-sensitive points and the LO-VC / AVC boundary.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/c00eb753128eb44ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SRC</span><strong>Configurable Material</strong><small>SAP S/4HANA · material, super BOM and task list</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/a73402f511734e6eac56063e631bf24e/f062b6531de6b64ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SRC</span><strong>Creating a Configuration Profile</strong><small>SAP S/4HANA 2025 FPS01 · LO-VC</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/36802406aebb4b96b1598246e1d316ee/76276945f5d24a119ff4aeaca6ded355.html" target="_blank" rel="noopener"><span>SRC</span><strong>Advanced Variant Configuration</strong><small>SAP S/4HANA 2025 FPS01 · AVC capabilities</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/36802406aebb4b96b1598246e1d316ee/345026495c524716ba74e5f202e737cd.html" target="_blank" rel="noopener"><span>SRC</span><strong>AVC Glossary</strong><small>SAP S/4HANA 2025 FPS01 · dependencies, super BOM, material variants</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/eedc1019283a438a8b73fdde490abc4f/4823bf53d25ab64ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SRC</span><strong>Make-to-Order Production with Configuration (25)</strong><small>SAP S/4HANA · strategy 25 as a specific MTO pattern</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/36802406aebb4b96b1598246e1d316ee/ef94e78f37504212a938251321f41fca.html" target="_blank" rel="noopener"><span>SRC</span><strong>Variant Matching in the Sales Order</strong><small>SAP S/4HANA 2025 FPS01 · material variant replacement</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/36802406aebb4b96b1598246e1d316ee/09c2fc16295a448ba24d0191e1d7eb4f.html" target="_blank" rel="noopener"><span>SRC</span><strong>Compare Engines</strong><small>SAP S/4HANA 2025 FPS01 · LO-VC to AVC comparison</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/a73402f511734e6eac56063e631bf24e/d561b6531de6b64ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SRC</span><strong>Knowledge Base</strong><small>SAP S/4HANA 2025 FPS01 · runtime model for external configuration services</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
+  </section>
+
+  <nav class="ecg-context-links" aria-label="Related SAP Enterprise pages">
+    <span>Continue</span>
+    <a href="/labs/enterprise-context/master-data/">Master Data</a>
+    <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
+    <a href="/labs/enterprise-context/master-data/sales-bom/">Sales BOM</a>
+    <a href="/labs/enterprise-context/master-data/pricing-condition-record/">Pricing Condition Record</a>
+    <a href="/labs/enterprise-context/production/">Production</a>
+    <a href="/labs/enterprise-context/sales-order/">Sales Order</a>
+  </nav>
 </div>
