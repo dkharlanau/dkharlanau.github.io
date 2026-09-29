@@ -69,6 +69,12 @@ source_links:
     url: "https://learning.sap.com/courses/customizing-core-settings-in-financial-accounting-in-sap-s4hana/managing-organizational-units-in-financial-accounting-fi"
   - title: "Asset Management Organizational Units"
     url: "https://learning.sap.com/courses/sap-s-4hana-cloud-public-edition-asset-management-configuration/configuring-organizational-units_abbc49c1-a9af-44e9-8db0-e38ef76d396f"
+  - title: "SAP Credit Management and Credit Segments"
+    url: "https://learning.sap.com/courses/functions-innovations-in-sap-s-4hana-sales/working-with-sap-credit-management_d6b177ee-a8bb-4b77-80dc-87c04a9dd3f1"
+  - title: "SAP S/4HANA Service Organizational Structure"
+    url: "https://learning.sap.com/courses/identifying-business-processes-in-sap-s4hana-service/describing-and-displaying-the-organizational-structure_d619e400-617f-40bf-9ed9-d0dd40f8cf62"
+  - title: "Project System Organizational Structure"
+    url: "https://learning.sap.com/courses/project-financials-control-in-sap-s-4hana/creating-project-structures-1"
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -92,9 +98,9 @@ source_links:
     <div class="research-canvas__signal" aria-label="Organizational structure study inventory">
       <p>Study inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Sales</strong><small>Commercial backbone</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>7</strong><small>Connected domains</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>8</strong><small>Connected domains</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>Plant</strong><small>Cross-module hinge</small></div>
-      <em>Sales first · Procurement · Planning · Warehouse · Transport · Finance · Maintenance</em>
+      <em>Sales first · Procurement · Planning · Warehouse · Transport · Finance · Credit · Maintenance</em>
     </div>
   </header>
 
@@ -149,6 +155,7 @@ source_links:
           <tr><td><strong>MRP / Production / Quality</strong></td><td>Plant, MRP Area; QM is mainly Plant-dependent</td><td>At which level is supply planned, produced, and quality-controlled?</td><td>A confirmed Sales requirement can become planned demand, production, external procurement, or quality-restricted stock.</td></tr>
           <tr><td><strong>EWM</strong></td><td>Plant + Storage Location, ERP Warehouse Number, EWM Warehouse Number, Storage Type, Activity Area</td><td>Which warehouse manages the stock and where inside the warehouse is work executed?</td><td>Delivery execution can move from SD shipping into warehouse tasks, picking, staging, packing, and goods issue.</td></tr>
           <tr><td><strong>Transportation</strong></td><td>Company organization, Purchasing Organization, Purchasing Group; deployment-specific TM org model</td><td>Who procures and settles freight?</td><td>Freight planning and settlement can add another organizational responsibility after delivery planning.</td></tr>
+          <tr><td><strong>Credit Management</strong></td><td>Credit Segment; integration with Company Code / Sales Area through credit-control settings</td><td>Where is customer credit assigned and controlled?</td><td>Orders and deliveries can be checked, blocked, or released against the credit segment and credit account.</td></tr>
           <tr><td><strong>Asset Management</strong></td><td>Maintenance Plant, Maintenance Planning Plant, Planner Group, Maintenance Work Center</td><td>Where is the asset installed and where is maintenance planned?</td><td>Usually indirect for Sales, but critical when the Plant is also a production or service site whose availability affects fulfillment.</td></tr>
         </tbody>
       </table>
@@ -344,6 +351,36 @@ source_links:
     </div>
   </section>
 
+
+  <section class="research-canvas__inventory" id="credit-service-projects" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Credit, Service and Projects</p>
+      <h2>Some areas add an organizational layer; others reuse the existing one.</h2>
+      <p>This is useful for architecture discussions because not every SAP application creates another enterprise-structure hierarchy.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Credit Management</h3>
+        <p><strong>Credit Segment</strong> is an organizational unit in SAP Credit Management used for credit assignment and control. A business partner can have different limits and credit data by segment. Sales documents receive a credit segment during credit processing, so organizational changes can affect exposure and blocks.</p>
+      </div>
+      <div>
+        <h3>SAP S/4HANA Service</h3>
+        <p>Service integrates the SD structure with a service-specific organizational model. A <strong>Service Organization</strong> can represent service responsibility; integration maps this responsibility back into logistics concepts such as the maintenance planning plant where required.</p>
+      </div>
+      <div>
+        <h3>Project System</h3>
+        <p>Project System does not need a separate enterprise structure of its own. Projects reuse organizational units from Finance, Controlling, Sales, Purchasing, Production, and Plant logistics. This is a good example of SAP integration by reuse rather than duplication.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">credit_score</span>
+      <p><strong>Sales Lead point:</strong> when an order is credit blocked, the Sales Area may be correct. The problem can sit in the Credit Segment, credit account, exposure, or the mapping that derives the credit context.</p>
+      <a href="/labs/enterprise-context/credit/">Open Credit Management <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="asset-management-structure" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Asset Management</p>
@@ -390,6 +427,7 @@ source_links:
           <tr><td>Which warehouse executes the work?</td><td>Plant + Storage Location → Warehouse Number</td><td>Warehouse tasks, picking, staging, stock types, bins.</td></tr>
           <tr><td>Who ships the delivery?</td><td>Plant ↔ Shipping Point + determination inputs</td><td>Delivery execution and scheduling context.</td></tr>
           <tr><td>Who procures and settles freight?</td><td>TM Company/Purchasing Organization/Purchasing Group</td><td>Freight agreement, charge calculation, settlement.</td></tr>
+          <tr><td>Where is customer credit controlled?</td><td>Credit Segment and its integration mapping</td><td>Credit exposure, order/delivery blocks, release responsibility.</td></tr>
           <tr><td>Where are costs managed?</td><td>Company Code → Controlling Area</td><td>Cost allocation and cross-company management accounting.</td></tr>
           <tr><td>Where is maintenance planned?</td><td>Maintenance Plant → Maintenance Planning Plant</td><td>Maintenance planning responsibility and possible supply-capacity impact.</td></tr>
         </tbody>
@@ -956,6 +994,7 @@ source_links:
       <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Extended Warehouse Management</strong><small>Warehouse Number, stock mapping, Storage Types, Activity Areas, bins, and execution ownership.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/transportation-management/"><span>TM</span><strong>Transportation Management</strong><small>Freight organization, planning, execution, charge calculation, and settlement boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/finance-logistics/"><span>FI</span><strong>Finance / Logistics Integration</strong><small>Company Code, accounting hand-offs, costs, revenue, and intercompany consequences.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/credit/"><span>CR</span><strong>Credit Management</strong><small>Credit Segment, exposure, checks, blocks, release, and Sales integration.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing</strong><small>How Sales Area, customer, document, access sequences, condition records, and formulas become a calculated price.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>How Plant and supply context affect the customer promise.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping &amp; Scheduling</strong><small>How Plant, shipping condition, loading group, route, calendars, and lead times drive execution.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
