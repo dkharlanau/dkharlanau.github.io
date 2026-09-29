@@ -1,18 +1,28 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Customer Hierarchy"
-description: "A practical deep dive into Customer Hierarchy in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+description: "A practical deep dive into SAP Customer Hierarchy: KNVH, validity, parent relationships, pricing relevance, runtime determination, deployment differences and diagnostics."
 permalink: /labs/enterprise-context/master-data/customer-hierarchy/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
   - master-data
+  - customer-hierarchy
+source_links:
+  - title: "Customer Hierarchies in Sales"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/2c556c5beb0546cbbf01f16f8e41befc.html"
+  - title: "Calling Up Customer Hierarchy Maintenance"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6b8ac95360267214e10000000a174cb4.html"
+  - title: "SAP KBA 2882156 — Understanding customer hierarchy levels in KNVH"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/2882156"
+  - title: "SAP KBA 3772339 — Pricing and rebate relevance in customer hierarchy"
+    url: "https://userapps.support.sap.com/sap/support/knowledge/en/3772339"
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -30,77 +40,355 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.CUSTHIER</p>
       <h1>Customer Hierarchy</h1>
-      <p>A customer hierarchy represents commercial relationships above the individual sold-to customer. It can model groups, headquarters and subsidiaries so that pricing or reporting can work with a parent structure without changing the legal customer identity used in the order.</p>
-      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p>A sold-to party can be one legal customer and still belong to a much larger commercial structure. Customer hierarchy adds that structure: head office, regional group, subsidiary, store or another parent-child model. Sales can then use the hierarchy for pricing and analytics without replacing the customer identity in the order.</p>
+      <a class="research-canvas__button" href="#knvh">Read KNVH as a relationship <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.CUSTHIER</strong><small>Catalogue ID</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>relationship record</strong><small>Data class</small></div>
-      <em>Hierarchy type, sales area, parent/child nodes, validity and pricing relevance.</em>
+      <div class="research-canvas__signal-line"><span>03</span><strong>KNVH</strong><small>Classic technical anchor</small></div>
+      <em>Hierarchy type + sales area + validity + child → parent relationship.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The hierarchy adds commercial context above the sold-to; it does not replace the sold-to.</h2>
+      <h2>Think of a customer hierarchy as a time-valid edge, not as a customer attribute.</h2>
+      <p>The useful mental model is <strong>child customer → parent customer</strong>, valid for one hierarchy type, one sales-area context and one period. The customer master tells us who the customer is. The hierarchy tells us where that customer sits in a commercial tree.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Hierarchy type, sales area, parent/child nodes, validity and pricing relevance.</p>
-    </div>
+
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Hierarchy type, higher-level and lower-level customer nodes, validity dates, sales area and pricing relevance.</p>
+        <h3>Identity stays stable</h3>
+        <p>The sold-to, ship-to, bill-to and payer remain normal customer roles. A hierarchy node does not replace those document partners.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>The hierarchy is reusable master data. Whether pricing searches it is determined by pricing condition technique and the fields available in the relevant access sequence.</p>
+        <h3>The relationship is contextual</h3>
+        <p>The same customer can have different hierarchy meaning by hierarchy type, sales area and validity period.</p>
       </div>
+      <div>
+        <h3>A consumer is required</h3>
+        <p>A correct hierarchy has no automatic price effect. Pricing, analytics or another process must explicitly consume the hierarchy.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Memory rule:</strong> hierarchy answers “where does this customer belong?”, while partner determination answers “which party performs which role in this document?”. These are related concepts, but they are not the same mechanism.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="knvh" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classic technical model</p>
+      <h2>KNVH stores customer hierarchy assignments in classic S/4HANA and ERP-oriented models.</h2>
+      <p>For private-cloud and on-premise diagnostics, <code>KNVH</code> is the central technical table to inspect. Do not treat it as a universal integration contract: current SAP S/4HANA Cloud uses a newer hierarchy framework and released applications/interfaces should be preferred there.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">database</span>
+      <p><strong>Read one KNVH row as a relationship:</strong> customer <code>KUNNR</code>, in hierarchy type <code>HITYP</code> and sales area <code>VKORG/VTWEG/SPART</code>, is assigned from <code>DATAB</code> to a higher-level customer <code>HKUNNR</code> until <code>DATBI</code>.</p>
+    </div>
+
+    <h3>Primary key: why these fields matter</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="KNVH primary key fields">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Field</th>
+            <th scope="col">Meaning</th>
+            <th scope="col">Diagnostic question</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>MANDT</code></td>
+            <td>Client</td>
+            <td>Are we checking the correct SAP client?</td>
+          </tr>
+          <tr>
+            <td><code>HITYP</code></td>
+            <td>Customer hierarchy type</td>
+            <td>Are we looking at the hierarchy used by this sales process?</td>
+          </tr>
+          <tr>
+            <td><code>KUNNR</code></td>
+            <td>Customer / lower-level node</td>
+            <td>Is this the sold-to or hierarchy node we are actually tracing?</td>
+          </tr>
+          <tr>
+            <td><code>VKORG</code></td>
+            <td>Sales organization</td>
+            <td>Does it match the document sales area?</td>
+          </tr>
+          <tr>
+            <td><code>VTWEG</code></td>
+            <td>Distribution channel</td>
+            <td>Could a reference/common channel change the effective context?</td>
+          </tr>
+          <tr>
+            <td><code>SPART</code></td>
+            <td>Division</td>
+            <td>Does the hierarchy assignment exist for the effective division?</td>
+          </tr>
+          <tr>
+            <td><code>DATAB</code></td>
+            <td>Valid-from date</td>
+            <td>Which version of the relationship was active for the document date?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Why is <code>DATAB</code> part of the key?</strong> Because hierarchy membership is time-dependent. The same customer can move to another parent later without deleting the historical relationship. That is why “the hierarchy looks correct today” is not enough when diagnosing an old order.</p>
+
+    <h3>Fields that explain the relationship</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important KNVH relationship fields">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Field</th>
+            <th scope="col">What it tells us</th>
+            <th scope="col">What to watch</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>DATBI</code></td>
+            <td>Valid-to date</td>
+            <td>The row may exist but be outside the sales-document date.</td>
+          </tr>
+          <tr>
+            <td><code>HKUNNR</code></td>
+            <td>Higher-level customer</td>
+            <td>This is the parent pointer that lets us walk upward through the tree.</td>
+          </tr>
+          <tr>
+            <td><code>HVKORG / HVTWEG / HSPART</code></td>
+            <td>Higher-level sales area</td>
+            <td>Do not assume the parent relationship is sales-area neutral.</td>
+          </tr>
+          <tr>
+            <td><code>PRFRE</code></td>
+            <td>Relevant for price determination</td>
+            <td>The relationship can exist while the node is not relevant for pricing.</td>
+          </tr>
+          <tr>
+            <td><code>BOKRE</code></td>
+            <td>Rebate-relevant indicator in the classic model</td>
+            <td>Useful in classic rebate/settlement-related scenarios; validate the target solution and release.</td>
+          </tr>
+          <tr>
+            <td><code>HZUOR</code></td>
+            <td>Assignment to hierarchy</td>
+            <td>Do not read it as a live calculated “current depth” without checking the SAP behavior.</td>
+          </tr>
+          <tr>
+            <td><code>GRPNO</code></td>
+            <td>Copy routine number</td>
+            <td>Technical control detail; usually not the first field to investigate in a pricing incident.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Two easy traps</p>
+      <h2>Do not turn copied indicators into the hierarchy model.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3><code>HZUOR</code> is not “the node level”</h3>
+        <p>SAP KBA 2882156 exists specifically because <code>KNVH-HZUOR</code> may not update to show the current hierarchy level after maintenance. Treat the parent links and validity as stronger evidence of the actual tree. Do not assume <code>KNA1-HZUOR</code> and <code>KNVH-HZUOR</code> are two perfectly synchronized depth counters.</p>
+      </div>
+      <div>
+        <h3>Pricing relevance starts outside KNVH</h3>
+        <p>In classic hierarchy processing, pricing relevance in <code>KNVH-PRFRE</code> is connected to the customer sales-area setting <code>KNVV-PRFRE</code>. If the hierarchy exists but pricing relevance is missing, check the customer sales data and hierarchy maintenance before changing the pricing procedure.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Lead habit:</strong> first prove the structural relationship, then prove relevance, then prove the consuming rule. A single flag is not enough evidence for the whole chain.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>A parent relationship matters only when a consuming rule uses it.</h2>
-      <p>The order still has its normal customer roles. A valid customer hierarchy can add a higher-level commercial context that pricing or analytics may consume. The hierarchy therefore has two separate questions: is the customer in the expected hierarchy for this date and sales area, and does the downstream rule actually use that hierarchy?</p>
+      <h2>A hierarchy becomes business behavior only when Sales resolves it and a consumer uses it.</h2>
+      <p>Current SAP documentation describes hierarchy determination from the sold-to party, sales area and document date. That is the right diagnostic order: document context first, hierarchy second, pricing or analytics third.</p>
     </header>
+
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Start from the sold-to</h4><p>Use the customer, sales area, and document date from the actual Sales document. Do not begin from a parent node in isolation.</p></div>
-      <div><span>02</span><h4>Resolve the valid hierarchy</h4><p>Check the hierarchy type, parent/child assignment, and validity that apply to this customer at that time.</p></div>
-      <div><span>03</span><h4>Find the consumer</h4><p>For pricing, prove that the relevant access sequence contains the hierarchy field and that the runtime node reaches the expected condition key. For analytics, prove which hierarchy level is used for grouping.</p></div>
-      <div><span>04</span><h4>Keep identities separate</h4><p>A hierarchy-based discount or report grouping does not change the sold-to, ship-to, bill-to, or payer identity stored in the order.</p></div>
+      <div><span>01</span><h4>Start from the document</h4><p>Capture sold-to, sales organization, distribution channel, division and the relevant document date. Do not start from a parent node in isolation.</p></div>
+      <div><span>02</span><h4>Resolve the valid chain</h4><p>Find the active hierarchy type and follow the child-to-parent assignments that were valid at that time.</p></div>
+      <div><span>03</span><h4>Check relevance</h4><p>For pricing, prove that the node is pricing-relevant. For another consumer, identify its own relevance rules instead of assuming pricing logic applies everywhere.</p></div>
+      <div><span>04</span><h4>Prove the consumer</h4><p>Inspect the pricing access, analytical hierarchy or downstream logic that actually reads the hierarchy. A valid tree alone changes nothing.</p></div>
+      <div><span>05</span><h4>Verify the document result</h4><p>Check the hierarchy data carried into the sales document and the condition result that was actually determined.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Pricing boundary</p>
+      <h2>Classic KNVH knowledge and the newer Cloud hierarchy framework are related, but not identical.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Private cloud / on-premise orientation</h3>
+        <p><code>KNVH</code>, classic hierarchy maintenance and traditional customer hierarchy partner/pricing concepts remain important diagnostic references. Use <code>SE16H</code>/<code>SE16</code> for data inspection and <code>SE11</code> for DDIC structure where those tools are available.</p>
+      </div>
+      <div>
+        <h3>Current Public Cloud orientation</h3>
+        <p>SAP documents <strong>Manage Customer Hierarchies</strong> and dedicated pricing fields such as <code>CUST_HIER_ROOT_NODE</code>, <code>CUST_HIER_NODE_VALUE</code> and <code>CUST_HIER_NODE_TYPE</code>. Released apps, APIs and CDS views are the safer contract; do not design a cloud integration around direct KNVH access.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">payments</span>
+      <p><strong>Pricing question:</strong> which hierarchy field does the active condition access read, in which direction, and how many hierarchy levels may it evaluate? The answer is configuration-dependent.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Beyond pricing</p>
+      <h2>Hierarchy can also affect analytics and billing convergence.</h2>
+      <p>Hierarchy is not only a discount mechanism. SAP also supports analytical roll-ups by hierarchy. In current Sales behavior, hierarchy information can be copied into billing context, and differing hierarchy assignments or versions can become relevant to billing-document split behavior.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Analytics</h3>
+        <p>A report can aggregate sales below a parent node. The reporting question is therefore not “what is the sold-to?” but “which hierarchy and level should own the roll-up?”.</p>
+      </div>
+      <div>
+        <h3>Billing</h3>
+        <p>If otherwise similar sales documents carry different hierarchy assignments or versions, do not investigate billing split only through payer, terms or billing type. Hierarchy context can be part of the split evidence.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Technical map</p>
+      <h2>Know which table answers which question.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Customer hierarchy related SAP tables">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Object</th>
+            <th scope="col">Question it answers</th>
+            <th scope="col">Do not confuse it with</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>KNA1</code></td>
+            <td>Who is the customer at general-data level?</td>
+            <td>The hierarchy relationship itself.</td>
+          </tr>
+          <tr>
+            <td><code>KNVV</code></td>
+            <td>How does the customer behave in this sales area?</td>
+            <td>The child-to-parent hierarchy edge.</td>
+          </tr>
+          <tr>
+            <td><code>KNVH</code></td>
+            <td>Which customer/node belongs under which parent, for which hierarchy type, sales area and validity?</td>
+            <td>Normal partner-function assignments.</td>
+          </tr>
+          <tr>
+            <td><code>KNVP</code></td>
+            <td>Which partner functions are maintained for customer sales data?</td>
+            <td>Hierarchy storage.</td>
+          </tr>
+          <tr>
+            <td><code>VBAK / VBPA</code></td>
+            <td>What customer and partner context was stored in the actual sales document?</td>
+            <td>Current master data after the document was created.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>A correct hierarchy can still have zero pricing effect.</h2>
+      <h2>When a hierarchy discount is missing, diagnose the chain in this order.</h2>
     </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Freeze the document context</h4><p>Record sold-to, sales area and document date from the failing order.</p></div>
+      <div><span>02</span><h4>Prove the hierarchy row</h4><p>Check the correct hierarchy type and a valid KNVH assignment or the released hierarchy app for that deployment.</p></div>
+      <div><span>03</span><h4>Walk the parent chain</h4><p>Follow <code>KUNNR → HKUNNR</code> until the expected commercial parent is reached. Check validity at every step.</p></div>
+      <div><span>04</span><h4>Check pricing relevance</h4><p>Verify the relevant node and customer sales-area settings. A visible hierarchy node can still be irrelevant for price determination.</p></div>
+      <div><span>05</span><h4>Trace the pricing access</h4><p>Prove that the active condition technique actually evaluates a hierarchy key and reaches the expected node/condition record.</p></div>
+      <div><span>06</span><h4>Prove the result</h4><p>Compare the hierarchy stored in the document with the pricing condition analysis. Change master data or configuration only after the failing layer is known.</p></div>
+    </div>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>First prove the customer's valid hierarchy assignment for the document date and sales area. Then prove that the pricing access actually uses the hierarchy field and reaches the expected node. If the relationship is correct but the access never reads it, changing hierarchy master data will not repair the price.</p>
+      <p><strong>Fast split:</strong> wrong parent or wrong validity = master-data problem. Correct hierarchy but no hierarchy access = pricing design problem. Correct access but no condition record = pricing master-data problem. Correct order but unexpected invoice grouping = inspect hierarchy-related billing split evidence.</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Separate customer identity from hierarchy context.</h2>
+      <h2>Separate identity, relationship, relevance and consumption.</h2>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Customer Hierarchy models a commercial structure above the individual sold-to, for example a parent group with subsidiaries. It does not replace the customer roles in the order. I first prove the valid hierarchy type, sales area, date, and parent relationship. Then I check the consumer: pricing needs an access that actually uses the hierarchy field, while analytics needs a defined grouping level. A valid hierarchy by itself does not guarantee any pricing effect.</p>
+      <p><strong>60-second answer:</strong> Customer Hierarchy models a commercial parent-child structure above the sold-to. In classic S/4HANA or ERP-oriented systems, KNVH is the main technical table: its key contains hierarchy type, customer, sales area and valid-from date, while HKUNNR points to the higher-level customer. The hierarchy is time-dependent, so I diagnose it using the order date, not only today's master data. Then I separate three questions: is the relationship correct, is the node relevant for pricing, and does the active pricing access actually consume the hierarchy? I also keep the deployment boundary clear because current Public Cloud uses the newer hierarchy framework and released hierarchy fields rather than direct table access.</p>
     </div>
+
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/master-data/business-partner/">Business Partner</a>
+      <a href="/labs/enterprise-context/master-data/partner-functions/">Partner Functions</a>
       <a href="/labs/enterprise-context/pricing/">Pricing engine</a>
     </nav>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>Use product documentation for behavior and KNVH as a technical diagnostic reference.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>SAP Help — Customer Hierarchies in Sales</h3>
+        <p>Current hierarchy determination, pricing use, document behavior, analytics and billing context.</p>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/f86dc2eb1f8b48c880a7607213104b27/2c556c5beb0546cbbf01f16f8e41befc.html">Open SAP Help</a></p>
+      </div>
+      <div>
+        <h3>SAP Help — Classic hierarchy maintenance</h3>
+        <p>On-premise orientation for hierarchy type, customer and validity-driven maintenance.</p>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6b8ac95360267214e10000000a174cb4.html">Open SAP Help</a></p>
+      </div>
+      <div>
+        <h3>SAP KBA 2882156</h3>
+        <p>Explains the behavior of hierarchy levels and <code>KNVH-HZUOR</code> in classic hierarchy maintenance.</p>
+        <p><a href="https://userapps.support.sap.com/sap/support/knowledge/en/2882156">Open KBA preview</a></p>
+      </div>
+      <div>
+        <h3>SAP KBA 3772339</h3>
+        <p>Useful when pricing/rebate relevance flags are not set as expected in customer hierarchy maintenance.</p>
+        <p><a href="https://userapps.support.sap.com/sap/support/knowledge/en/3772339">Open KBA preview</a></p>
+      </div>
+    </div>
   </section>
 </div>
