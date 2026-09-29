@@ -1,0 +1,107 @@
+---
+layout: default
+title: "SAP Quota Arrangement — Source Allocation Across Requirements"
+description: "A practical SAP S/4HANA guide to Quota Arrangements: material and plant key, validity, quota, allocated quantity, quota rating, source types, MRP/source determination, and diagnostics."
+permalink: /labs/enterprise-context/master-data/quota-arrangement/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-mm
+  - procurement
+  - quota-arrangement
+  - source-determination
+  - mrp
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">SAP Enterprise</a></li><li><a href="/labs/enterprise-context/master-data/">Master Data</a></li><li aria-current="page">Quota Arrangement</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Procurement / Source Allocation</p>
+      <h1>Quota Arrangement: how demand is distributed across sources.</h1>
+      <p>When several sources are available, the business may not want one supplier to receive all demand. Quota Arrangement provides time-dependent rules for allocating material requirements across sources.</p>
+      <a class="research-canvas__button" href="#mental-model">Start with the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Boundary:</strong> SAP documentation can describe Quota Arrangement as a purchasing document and as sourcing administration data. In this catalogue it stays in the adjacent sourcing layer. It is not the same kind of business master as Customer, Supplier, or Material.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="mental-model" data-reveal>
+    <header><p class="research-canvas__eyebrow">Mental model</p><h2>Eligibility and allocation are different decisions.</h2><p>Source List helps answer whether a source may be used. Quota Arrangement helps answer how requirements should be allocated among sources over time.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Material + plant</h3><p>Defines the requirement population.</p></div>
+      <div><h3>Validity</h3><p>Defines the period in which the quota applies.</p></div>
+      <div><h3>Quota item</h3><p>Represents one source in the arrangement.</p></div>
+      <div><h3>Quota and allocated quantity</h3><p>Drive the source allocation and rating logic over time.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Key and scope</p><h2>Know the key before you debug the value.</h2><p>The same value can be correct in one sourcing context and wrong in another.</p></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Quota Arrangement key fields and process effects">
+      <table class="study-table__table">
+        <thead><tr><th>Field or dimension</th><th>Why it matters</th><th>Typical process effect</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Material / plant</strong></td><td>Core quota-arrangement key.</td><td>Keeps allocation specific to the supply context.</td></tr>
+          <tr><td><strong>Validity period</strong></td><td>Time boundary for the arrangement.</td><td>Prevents an old allocation policy from affecting new requirements.</td></tr>
+          <tr><td><strong>Source type</strong></td><td>Supplier, supplying plant, or another supported source context.</td><td>Connects allocation to the actual source.</td></tr>
+          <tr><td><strong>Quota</strong></td><td>Relative share for the source.</td><td>Influences how future requirements are assigned.</td></tr>
+          <tr><td><strong>Allocated quantity</strong></td><td>Quantity already assigned to the source.</td><td>Affects quota rating and the next source decision.</td></tr>
+          <tr><td><strong>Minimum split quantity / related controls</strong></td><td>Scenario-specific split behavior where supported.</td><td>Prevents impractical splitting of small requirements.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime use</p><h2>Quota is dynamic because history matters.</h2><p>The next source can depend not only on the configured quota but also on quantities already allocated. A simple 60/40 explanation is incomplete without current allocation state.</p></header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Requirement</h4><p>Start with material, plant, date, quantity, and procurement process.</p></div>
+      <div><span>02</span><h4>Validity</h4><p>Find the active quota arrangement and items.</p></div>
+      <div><span>03</span><h4>Eligibility</h4><p>Confirm that the referenced sources are usable in the sourcing context.</p></div>
+      <div><span>04</span><h4>Rating</h4><p>Check quota, allocated or base quantities, and source type.</p></div>
+      <div><span>05</span><h4>Assignment</h4><p>Verify which source received the requirement and why.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead diagnosis</p><h2>Find the owning layer before changing data.</h2><p>If a quota looks correct but assignment is wrong, the missing evidence is often validity, quota usage, source eligibility, or current allocated quantity.</p></header>
+    <div class="ecg-diagnostic">
+      <div><h4>Start here</h4><p>Check material + plant → validity → quota items → source eligibility → allocated/base quantities → quota rating → assigned source.</p></div>
+      <div><h4>Do not jump here</h4><p>Do not explain quota as a static percentage split of every purchase requisition line. The sourcing logic works across requirements and current allocation state.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>Assessment answer:</strong> “Quota Arrangement allocates material requirements among sources over a validity period. I separate it from source eligibility, then check quota usage, allocated quantities, quota rating, and the final source assignment.”</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references</h2></header>
+    <ul>
+      <li><a href="https://help.sap.com/docs/PRODUCT_ID/af9ef57f504840d2b81be8667206d485/c4e187576b49ab76e10000000a441470.html">SAP Help — Manage Quota Arrangements</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91af7f8d3acd47da90d33aaacfcd0d59/4aa0343345884bd2bf7195f1072d9679.html">SAP Help — Quota Arrangement API</a></li>
+    </ul>
+    <nav class="ecg-context-links" aria-label="Quota Arrangement related pages">
+      <span>Related</span>
+      <a href="/labs/enterprise-context/master-data/source-list/">Source List</a>
+      <a href="/labs/enterprise-context/master-data/purchasing-info-record/">Purchasing Info Record</a>
+      <a href="/labs/enterprise-context/master-data/supplier/">Supplier</a>
+      <a href="/labs/enterprise-context/procurement/">Procurement</a>
+      <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
+    </nav>
+  </section>
+</div>
