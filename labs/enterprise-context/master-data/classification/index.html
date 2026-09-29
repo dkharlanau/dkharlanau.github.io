@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP Classification — Classes, Characteristics and Runtime Use"
-description: "A practical SAP S/4HANA guide to Classification: class types, classes, characteristics, valuations, material and batch use, variant configuration, diagnostics, and integration boundaries."
+title: "SAP S/4HANA Classification in Logistics — Classes, Characteristics and Runtime Use"
+description: "A practical SAP S/4HANA guide to Classification in logistics: characteristics, classes, class types, object assignments, search, material and batch classification, variant configuration, purchasing release strategy, ALE, and Lead-level diagnostics."
 permalink: /labs/enterprise-context/master-data/classification/
 status: draft
 verified: false
@@ -16,6 +16,8 @@ tags:
   - characteristics
   - batch-management
   - variant-configuration
+  - purchasing
+  - logistics
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -31,46 +33,242 @@ tags:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Cross-Application / Master Data</p>
-      <h1>Classification: one language for many objects.</h1>
-      <p>Classification gives products, batches, equipment and other supported objects a reusable structure of characteristics and values. The important question is not only where the value is stored, but which process reads it.</p>
+      <p class="research-canvas__eyebrow">SAP Cross-Application / Logistics Master Data</p>
+      <h1>Classification: reusable attributes across logistics objects.</h1>
+      <p>Classification lets SAP describe materials, batches, equipment, documents and other supported objects with structured characteristics. It gives many applications one reusable attribute model instead of adding a dedicated field for every business property.</p>
       <a class="research-canvas__button" href="#mental-model">Start with the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Boundary:</strong> A class or characteristic does not decide anything by itself. Classification describes an object. Batch determination, variant configuration, search, analytics, or an integration must explicitly consume that description.</p>
+    <p><strong>Boundary:</strong> Classification describes an object. It does not decide business behavior on its own. A search, batch strategy, release strategy, variant model, report, interface, or other consumer must explicitly read the class or characteristic values.</p>
   </section>
 
   <section class="research-canvas__inventory" id="mental-model" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>Separate the model from the valuation.</h2>
-      <p>Think in three layers: characteristic definition, class structure, and the value assigned to a concrete object. Mixing these layers makes diagnosis slow.</p>
+      <h2>Separate definition, structure, assignment, and valuation.</h2>
+      <p>Most Classification problems become easier when these layers are checked separately.</p>
     </header>
     <div class="ecg-decision-columns">
-      <div><h3>Characteristic</h3><p>Defines the attribute: data type, format, value range, units, and allowed values.</p></div>
-      <div><h3>Class</h3><p>Groups characteristics into a reusable structure for one class type.</p></div>
-      <div><h3>Object valuation</h3><p>Assigns concrete characteristic values to a material, batch, equipment object, or another supported object.</p></div>
+      <div><h3>Characteristic</h3><p>Defines one attribute: data type, length, units, allowed values, value ranges and other controls. Example: COLOR, VOLTAGE or VISCOSITY.</p></div>
+      <div><h3>Class</h3><p>Groups related characteristics into a reusable model. A class always belongs to a class type.</p></div>
+      <div><h3>Object assignment</h3><p>Connects a material, batch, equipment object or another supported object to the class.</p></div>
+      <div><h3>Valuation</h3><p>Stores the actual characteristic values for the classified object, for example COLOR = BLACK or POTENCY = 98.7%.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Key and scope</p>
-      <h2>Know the key before you debug the value.</h2>
-      <p>The same value can be correct in one object or organizational context and wrong in another.</p>
+      <p class="research-canvas__eyebrow">Core objects</p>
+      <h2>The class type is the first design decision.</h2>
+      <p>The class type defines the classification context and which object types can participate. Do not reuse a class only because its characteristics look similar.</p>
     </header>
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Classification key fields and process effects">
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important SAP Classification class types">
       <table class="study-table__table">
-        <thead><tr><th>Field or dimension</th><th>Why it matters</th><th>Typical process effect</th></tr></thead>
+        <thead><tr><th>Class type</th><th>Typical object or purpose</th><th>Why it matters</th></tr></thead>
         <tbody>
-          <tr><td><strong>Class type</strong></td><td>Defines the object category and classification context.</td><td>Controls which objects can be assigned and how classification is interpreted.</td></tr>
-          <tr><td><strong>Class</strong></td><td>Reusable grouping of characteristics.</td><td>Creates a stable structure shared by many objects.</td></tr>
-          <tr><td><strong>Characteristic</strong></td><td>Defines the attribute and allowed values.</td><td>Provides searchable and reusable business meaning.</td></tr>
-          <tr><td><strong>Object assignment</strong></td><td>Connects an object to the class.</td><td>Makes the classification structure available for that object.</td></tr>
-          <tr><td><strong>Characteristic value</strong></td><td>The actual value on the classified object.</td><td>Can drive search, batch selection, configuration, analytics, or interface mapping.</td></tr>
+          <tr><td><code>001</code></td><td>Material</td><td>General material classification for search, grouping, engineering attributes, reporting and integration.</td></tr>
+          <tr><td><code>022</code></td><td>Batch at plant level</td><td>Relevant when the system design uses plant-level batch uniqueness.</td></tr>
+          <tr><td><code>023</code></td><td>Batch / material context</td><td>Widely used for batch classification when batch identity is material- or client-level. Supports the material-to-batch object hierarchy.</td></tr>
+          <tr><td><code>017</code></td><td>Document</td><td>Can classify document information records with structured attributes.</td></tr>
+          <tr><td><code>032</code></td><td>Purchasing release strategy</td><td>Characteristics represent document values used to determine a release strategy.</td></tr>
+          <tr><td><code>049</code></td><td>Permit selection</td><td>Supports classification-based permit determination in maintenance scenarios.</td></tr>
+          <tr><td><code>300</code></td><td>Variant class</td><td>Standard class type for Variant Configuration. Characteristics describe the selectable product configuration.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Lead rule:</strong> class type is not a cosmetic category. It controls object behavior, allowed object types and special functions. Changing class-type design later can affect interfaces, searches, configuration models and historical valuations.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration and maintenance</p>
+      <h2>Build the model from the characteristic upward.</h2>
+      <p>A clean setup separates reusable attribute definitions from classes and object-specific values.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define the characteristic</h4><p>Use <code>CT04</code>. Choose the data type, length, decimal places, unit of measure, single or multiple values, allowed values, intervals and descriptions.</p></div>
+      <div><span>02</span><h4>Create the class</h4><p>Use <code>CL01</code>/<code>CL02</code> and select the correct class type. Add the characteristics that describe the object family.</p></div>
+      <div><span>03</span><h4>Assign the object</h4><p>Classify the object through its application UI or with classification transactions such as <code>CL20N</code>/<code>CL24N</code>, depending on object and scenario.</p></div>
+      <div><span>04</span><h4>Maintain values</h4><p>Enter the actual characteristic values for the object. Validate that required values, ranges and units match the business definition.</p></div>
+      <div><span>05</span><h4>Search and consume</h4><p>Use <code>CL30N</code> or the consuming process to prove that the object can be found and that the expected runtime mechanism reads the classification.</p></div>
+    </div>
+
+    <h3>Characteristic design choices</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Characteristic design choices">
+      <table class="study-table__table">
+        <thead><tr><th>Setting</th><th>Design question</th><th>Common risk</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Data type</strong></td><td>Is the value numeric, character, date, time, currency, or another supported type?</td><td>Using free text for a value that should be validated makes search and integration unreliable.</td></tr>
+          <tr><td><strong>Allowed values</strong></td><td>Should users select from a controlled catalogue?</td><td>Variants such as <code>Black</code>, <code>BLACK</code> and <code>Blk</code> create semantic duplicates.</td></tr>
+          <tr><td><strong>Interval</strong></td><td>Is a range valid, for example viscosity 5000–12000?</td><td>Ranges can become inconsistent with downstream batch or configuration logic when changed without impact analysis.</td></tr>
+          <tr><td><strong>Multiple values</strong></td><td>Can one object legitimately have several values?</td><td>Enabling multiple values where the process expects one can create ambiguous selection results.</td></tr>
+          <tr><td><strong>Unit</strong></td><td>Does the number require a unit such as V, mm, kg or %?</td><td>A numeric value without controlled unit semantics is easy to misinterpret in interfaces and search.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Search behavior</p>
+      <h2>Classification is also a search model.</h2>
+      <p>A major benefit is finding an object by business attributes when the exact material or object number is unknown.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Same characteristic</h3><p>When several permitted values are selected for one characteristic, the search normally treats them as alternatives: value A <strong>OR</strong> value B.</p></div>
+      <div><h3>Different characteristics</h3><p>Criteria across different characteristics narrow the result together: characteristic X <strong>AND</strong> characteristic Y.</p></div>
+      <div><h3>Result layout</h3><p><code>CL30N</code> can be adjusted for practical object search. Class-specific and user-specific layouts help expose the characteristics that matter to the user.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">search</span>
+      <p><strong>Example:</strong> an engineer needs an existing component with MATERIAL = STAINLESS STEEL, DIAMETER = 20 mm and VOLTAGE = 24 V. Classification can find suitable materials without knowing the material number first, helping reduce duplicate master-data creation.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Class hierarchies</p>
+      <h2>Use hierarchy for reusable structure, not for arbitrary folders.</h2>
+      <p>Classes can be arranged in hierarchical structures. Characteristics assigned higher in the hierarchy can be inherited by subordinate classes, which helps avoid repeating the same definitions in every class.</p>
+    </header>
+    <div class="ecg-diagnostic">
+      <div><h4>Good use</h4><p>A parent class defines attributes common to all industrial motors, while child classes add attributes for AC and DC motor families.</p></div>
+      <div><h4>Risk</h4><p>A very deep hierarchy becomes hard to govern. Before adding another level, ask whether the distinction belongs in class structure, a characteristic value, product hierarchy, or another master-data object.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Material Classification</p>
+      <h2>Use class type 001 when materials need searchable reusable attributes.</h2>
+      <p>Material classification is useful when the normal product description is not enough for search, engineering reuse, reporting, integration mapping, or business grouping.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Engineering search</h3><p>Find an existing material for a BOM by dimensions, material grade, voltage, pressure class or another technical property.</p></div>
+      <div><h3>Commercial grouping</h3><p>Expose attributes used for catalogue navigation, product selection or downstream analytics without creating dedicated fields for every property.</p></div>
+      <div><h3>Integration mapping</h3><p>Send controlled attributes to PLM, PIM, commerce, warehouse or external product services where Classification is part of the agreed data contract.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Batch Classification</p>
+      <h2>A batch is often selected by what it contains, not only by its batch number.</h2>
+      <p>Batch characteristics can hold values such as potency, country of origin, production date, quality grade, concentration or other lot-specific properties. Batch determination can then use those values as selection criteria.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Create batch characteristics</h4><p>Define the lot attributes and controlled values.</p></div>
+      <div><span>02</span><h4>Build the batch class</h4><p>Use the batch class type relevant to the configured batch level, commonly <code>023</code> or <code>022</code>.</p></div>
+      <div><span>03</span><h4>Classify the material and/or batch</h4><p>Maintain values at the correct object level. Class type 023 supports a material-to-batch object hierarchy.</p></div>
+      <div><span>04</span><h4>Consume in determination</h4><p>A batch search strategy can use characteristic values to identify batches that satisfy the business requirement.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">science</span>
+      <p><strong>Important:</strong> batch classification and batch determination are different layers. Classification stores the attributes. The batch determination strategy decides which attributes are used for selection and how candidate batches are sorted.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Variant Configuration</p>
+      <h2>Class type 300 turns characteristics into selectable product options.</h2>
+      <p>In Variant Configuration, the class is not only used for search. It becomes part of the configuration model. A configurable material is linked to a variant class, and the characteristics describe the options available during configuration.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Classification view</h3><p>A characteristic is simply an attribute of an object.</p></div>
+      <div><h3>Variant Configuration view</h3><p>The same characteristic concept participates in configuration logic, dependencies and product structure.</p></div>
+      <div><h3>Lead implication</h3><p>Do not change a shared characteristic casually. A seemingly harmless value change can affect sales configuration, BOM selection, pricing dependencies or production planning.</p></div>
+    </div>
+    <nav class="ecg-context-links" aria-label="Variant configuration detail">
+      <span>Deep dive</span>
+      <a href="/labs/enterprise-context/master-data/variant-configuration/">Variant Configuration</a>
+    </nav>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Purchasing Release Strategy</p>
+      <h2>Classification can select an approval strategy.</h2>
+      <p>In the classic release procedure with classification, purchasing document values are passed to the Classification system. If they match the characteristic conditions of a release strategy, SAP assigns that strategy.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Communication structure</h4><p>Relevant purchasing document fields are exposed to the release-classification model.</p></div>
+      <div><span>02</span><h4>Characteristics</h4><p>Characteristics represent fields such as document value, purchasing group, plant or other supported release criteria.</p></div>
+      <div><span>03</span><h4>Class</h4><p>The release class groups the characteristics, typically in class type <code>032</code>.</p></div>
+      <div><span>04</span><h4>Strategy values</h4><p>Each release strategy carries the characteristic values or ranges that define when it should be selected.</p></div>
+      <div><span>05</span><h4>Runtime determination</h4><p>When the document is created or changed, SAP compares its values with the strategy conditions and determines the matching release strategy.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">approval</span>
+      <p><strong>Diagnostic point:</strong> if the wrong strategy is selected, do not start with workflow. First prove the document values, characteristic mapping and classification values that determine the strategy. Workflow processes the approval after strategy determination.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration</p>
+      <h2>Classification is master data with its own replication dependencies.</h2>
+      <p>When classes and characteristic values are consumed outside the originating system, transport or master-data replication must include the whole dependency chain.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Classification integration objects">
+      <table class="study-table__table">
+        <thead><tr><th>Object</th><th>Common ALE message type</th><th>What to verify</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Characteristics</strong></td><td><code>CHRMAS</code></td><td>The characteristic definition exists before dependent classifications are consumed.</td></tr>
+          <tr><td><strong>Classes</strong></td><td><code>CLSMAS</code></td><td>Class type, class and assigned characteristics are aligned between systems.</td></tr>
+          <tr><td><strong>Object classification</strong></td><td><code>CLFMAS</code></td><td>The target object exists and the class assignment / valuation is replicated consistently.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+      <p><strong>Integration rule:</strong> sending only an object value is not enough if the receiving system does not have the same characteristic and class semantics. Treat characteristic definition, class structure and object valuation as one dependency chain.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Other logistics uses</p>
+      <h2>The same engine appears in several business contexts.</h2>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Other SAP Classification logistics uses">
+      <table class="study-table__table">
+        <thead><tr><th>Scenario</th><th>How Classification is used</th><th>Lead question</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Equipment / technical objects</strong></td><td>Add structured technical attributes that are not practical as dedicated master-data fields.</td><td>Does maintenance or service actually consume the characteristic, or is it only descriptive?</td></tr>
+          <tr><td><strong>Document Management</strong></td><td>Classify document info records for search and structured document metadata.</td><td>Is the attribute owned by the document or by the product/equipment referenced by the document?</td></tr>
+          <tr><td><strong>Permits</strong></td><td>Classification conditions can support permit selection in maintenance processing.</td><td>Which technical or process values determine the permit requirement?</td></tr>
+          <tr><td><strong>Yard / transportation-unit extensions</strong></td><td>Classification can provide additional process-specific attributes where the application supports it.</td><td>Is Classification the supported extension mechanism for the exact Yard Logistics object and release?</td></tr>
+          <tr><td><strong>International Trade</strong></td><td>Product classification functions support commodity-code assignment and reclassification processes.</td><td>Do not confuse the general CA-CL class model with trade-specific product classification objects and apps.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transactions and tools</p>
+      <h2>Know the maintenance path, but diagnose by object flow.</h2>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP Classification transactions">
+      <table class="study-table__table">
+        <thead><tr><th>Transaction / UI</th><th>Purpose</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td><code>CT04</code></td><td>Maintain characteristics</td><td>Data type, values, ranges, units and characteristic control.</td></tr>
+          <tr><td><code>CL01</code> / <code>CL02</code> / <code>CL03</code></td><td>Create / change / display class</td><td>Class type, assigned characteristics and class structure.</td></tr>
+          <tr><td><code>CL20N</code></td><td>Object assignment</td><td>Assign objects to classes and maintain classification in an object-oriented view.</td></tr>
+          <tr><td><code>CL24N</code></td><td>Class assignment</td><td>Maintain or review objects assigned to a class.</td></tr>
+          <tr><td><code>CL30N</code></td><td>Find objects in classes</td><td>Search by characteristic values and compare candidates.</td></tr>
+          <tr><td><strong>Product / object apps</strong></td><td>Application-specific maintenance</td><td>S/4HANA and Fiori processes may expose classification directly in the Product Master or other object-specific apps.</td></tr>
         </tbody>
       </table>
     </div>
@@ -79,31 +277,60 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>Classification becomes useful only when another process consumes it.</h2>
-      <p>The same characteristic can support several purposes, but the consuming mechanism owns the business decision.</p>
+      <h2>Trace the value from definition to consumer.</h2>
+      <p>When a result is wrong, prove each link in order instead of changing global classification master data immediately.</p>
     </header>
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Define</h4><p>Create a characteristic with the correct type and allowed values.</p></div>
-      <div><span>02</span><h4>Structure</h4><p>Assign characteristics to a class of the correct class type.</p></div>
-      <div><span>03</span><h4>Classify</h4><p>Assign the class to the object and maintain its values.</p></div>
-      <div><span>04</span><h4>Consume</h4><p>A search strategy, batch determination, variant model, report, or interface reads the values.</p></div>
-      <div><span>05</span><h4>Prove</h4><p>Check the runtime result and trace it back to the exact characteristic and object valuation.</p></div>
+      <div><span>01</span><h4>Class type</h4><p>Is the object classified in the correct class type?</p></div>
+      <div><span>02</span><h4>Characteristic</h4><p>Is the characteristic definition correct: type, units, values and restrictions?</p></div>
+      <div><span>03</span><h4>Class</h4><p>Is the characteristic actually assigned to the class used by this object?</p></div>
+      <div><span>04</span><h4>Object assignment</h4><p>Is the exact material, batch, equipment or document assigned to the expected class?</p></div>
+      <div><span>05</span><h4>Valuation</h4><p>Does the object carry the expected value, including units and multiple-value behavior?</p></div>
+      <div><span>06</span><h4>Consumer</h4><p>Does the search, batch strategy, release logic, configuration model or interface read that exact characteristic?</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead diagnosis</p>
-      <h2>Find the owning layer before changing data.</h2>
-      <p>A missing characteristic in a logistics result can be a model problem, an assignment problem, a wrong value, or a consumer that never reads Classification.</p>
+      <p class="research-canvas__eyebrow">Common failure patterns</p>
+      <h2>Classification errors are often semantic, not technical.</h2>
     </header>
-    <div class="ecg-diagnostic">
-      <div><h4>Start here</h4><p>Prove class type → class → characteristic → object assignment → actual valuation → consuming mechanism.</p></div>
-      <div><h4>Do not jump here</h4><p>Do not change a characteristic globally because one order or batch behaves incorrectly. First prove that the runtime process reads it.</p></div>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Common SAP Classification issues">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>Likely cause</th><th>What to check first</th></tr></thead>
+        <tbody>
+          <tr><td>Object cannot be found in <code>CL30N</code></td><td>Wrong class type, missing assignment, wrong valuation or overly restrictive search criteria</td><td>Class type → class assignment → actual values.</td></tr>
+          <tr><td>Batch is not selected</td><td>Batch characteristic is missing or the determination strategy searches for another characteristic/value</td><td>Batch valuation and selection class/search strategy separately.</td></tr>
+          <tr><td>Release strategy not determined</td><td>Document values do not match strategy classification or field mapping is wrong</td><td>Runtime purchasing values before workflow configuration.</td></tr>
+          <tr><td>Variant options disappear</td><td>Characteristic or class change conflicts with dependencies or configuration model</td><td>Class type 300 model and dependency usage before changing master data.</td></tr>
+          <tr><td>Interface receives blank attribute</td><td>Source object is not classified, wrong class type is read, or replication did not include classification</td><td>Object valuation plus outbound mapping and replication object.</td></tr>
+          <tr><td>Users create near-duplicate characteristics</td><td>No naming/value governance</td><td>Characteristic catalogue ownership and reuse rules.</td></tr>
+        </tbody>
+      </table>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Design decisions</p>
+      <h2>Use Classification when the attribute should be reusable and searchable.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Good fit</h3><p>Many objects need the same attribute model, users search by those attributes, or several applications consume the values.</p></div>
+      <div><h3>Questionable fit</h3><p>A value is really a transactional result, a one-off note, or a dedicated standard field already owns the meaning.</p></div>
+      <div><h3>Governance need</h3><p>Define ownership, naming, value catalogue, units, reuse rules and change impact. Classification can become a second uncontrolled data dictionary if every team creates its own characteristics.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment</p>
+      <h2>Answer from model to runtime.</h2>
+      <p>A Lead-level answer should explain both what Classification stores and how another logistics process consumes it.</p>
+    </header>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>Assessment answer:</strong> “Classification is cross-application master data. Characteristics define attributes, classes group them, and objects carry valuations. I check the class type and object valuation first, then the mechanism that consumes the value.”</p>
+      <p><strong>Assessment answer:</strong> “SAP Classification is a cross-application attribute model. I define characteristics in CT04, group them in a class of the correct class type, assign the class to an object, and maintain valuations. Then a consumer such as object search, batch determination, Variant Configuration or a purchasing release strategy uses those values. For troubleshooting I trace class type → characteristic → class → object assignment → valuation → consuming logic.”</p>
     </div>
   </section>
 
@@ -111,12 +338,16 @@ tags:
     <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references</h2></header>
     <ul>
       <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/36802406aebb4b96b1598246e1d316ee/febcd7531a4d414de10000000a174cb4.html">SAP Help — Classification (CA-CL)</a></li>
+      <li><a href="https://help.sap.com/docs/BS_CA/875f0532320a4a41aa627bb6e79df8ea/b4d4e4535dd4414de10000000a174cb4.html">SAP Help — Classification Object Hierarchy</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/36802406aebb4b96b1598246e1d316ee/e54d0702049e4bc5adfeb424a2837ff7.html">SAP Help — Defining Variant Classes</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/af9ef57f504840d2b81be8667206d485/4e80b65334e6b54ce10000000a174cb4.html">SAP Help — Operation of Release Procedure with Classification</a></li>
     </ul>
     <nav class="ecg-context-links" aria-label="Classification related pages">
       <span>Related</span>
-      <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
+      <a href="/labs/enterprise-context/master-data/material/">Product / Material</a>
       <a href="/labs/enterprise-context/master-data/batch-master/">Batch Master</a>
       <a href="/labs/enterprise-context/master-data/variant-configuration/">Variant Configuration</a>
+      <a href="/labs/enterprise-context/master-data/equipment/">Equipment</a>
       <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
     </nav>
   </section>
