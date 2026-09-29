@@ -1,0 +1,37 @@
+---
+layout: default
+title: "SAP EWM Warehouse Product Master Data"
+description: "A concise SAP EWM warehouse-product master-data guide covering warehouse-number-specific product settings and their effect on putaway, picking, replenishment and execution."
+permalink: /labs/enterprise-context/master-data/warehouse-product/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+tags: [sap-s4hana, sap-ewm, warehouse-product, master-data, logistics]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">SAP Enterprise</a></li><li><a href="/labs/enterprise-context/master-data/">Master Data</a></li><li aria-current="page">Warehouse Product</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP S/4HANA / EWM / Warehouse Product</p>
+      <h1>Warehouse Product</h1>
+      <p>The generic material/product describes what the product is. EWM adds warehouse-specific product data that controls how the product should behave inside a warehouse. This is the layer to inspect when Sales and Inventory data look correct but putaway, picking, replenishment or warehouse-task behavior is still wrong.</p>
+    </div>
+    <div class="research-canvas__signal"><p>Diagnostic split</p><div class="research-canvas__signal-line"><span>01</span><strong>Product</strong><small>Enterprise default</small></div><div class="research-canvas__signal-line"><span>02</span><strong>Warehouse</strong><small>EWM behavior</small></div><em>Same product, different warehouse execution context.</em></div>
+  </header>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime use</p><h2>Warehouse-specific data becomes important only after the process reaches EWM.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Putaway</h3><p>Warehouse product settings can participate in storage-type and putaway behavior together with EWM configuration.</p></div>
+      <div><h3>Stock removal</h3><p>Picking and removal behavior can depend on warehouse-specific product attributes and process settings.</p></div>
+      <div><h3>Replenishment and handling</h3><p>Warehouse-level parameters can support replenishment, packaging, handling and execution rules.</p></div>
+    </div>
+    <div class="research-canvas__boundary"><span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span><p><strong>Lead diagnostic:</strong> if the same product behaves differently by warehouse, compare warehouse-specific product data before changing the global material master.</p></div>
+    <nav class="ecg-context-links" aria-label="Warehouse Product related pages"><span>Related</span><a href="/labs/enterprise-context/master-data/material/">Material</a><a href="/labs/enterprise-context/ewm/">EWM</a><a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a></nav>
+  </section>
+</div>
