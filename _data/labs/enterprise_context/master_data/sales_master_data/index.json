@@ -1,12 +1,12 @@
 {
   "id": "INDEX-SD-MASTER-DATA",
   "title": "SAP S/4HANA Sales Master Data Graph",
-  "version": "0.2.0",
-  "updated_at": "2026-09-23",
+  "version": "0.3.0",
+  "updated_at": "2026-09-29",
   "status": "draft",
   "verified": false,
   "summary": {
-    "entity_count": 19,
+    "entity_count": 20,
     "groups": 4,
     "behavior_profiles": 8,
     "design_goal": "Explain Sales behavior through the data, relationships, conditions, organizational context, and runtime events that mechanisms read.",
@@ -156,6 +156,15 @@
         "MD.SD.PRODUCT",
         "DOC.SD.SALES_ORDER.ITEM"
       ]
+    },
+    {
+      "question": "Classification-based search or selection is wrong",
+      "path": [
+        "MD.SD.CLASS",
+        "MD.SD.PRODUCT",
+        "MD.SD.BATCH",
+        "MD.SD.VC"
+      ]
     }
   ],
   "boundary_notes": [
@@ -197,8 +206,8 @@
     "Empties/full-products behavior remains an industry extension until beverage or deposit logistics has its own model."
   ],
   "coverage_audit": {
-    "reviewed_at": "2026-09-23",
-    "conclusion": "Core Sales master data coverage is broad. Remaining gaps are mainly specialized commercial-agreement, recommendation, compliance, and industry layers rather than missing universal Sales master objects.",
+    "reviewed_at": "2026-09-29",
+    "conclusion": "Core Sales master data coverage is broad. Cross-application Classification is now modeled separately from Batch and Variant Configuration so attribute data and consuming mechanisms remain distinct. Remaining gaps are mainly specialized commercial-agreement, recommendation, compliance, and industry layers rather than missing universal Sales master objects.",
     "core_covered": [
       "Business Partner / Customer",
       "Business Partner multiple addresses and address usage",
@@ -217,7 +226,8 @@
     "adjacent_covered": [
       "Credit master data",
       "Units of measure and quantity constraints",
-      "Batch and classification",
+      "Cross-application Classification",
+      "Batch master and batch classification",
       "Sales BOM / product structure",
       "Variant configuration context"
     ],
