@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -76,6 +76,136 @@ tags:
     <p class="ecg-caption"><strong>Lead check:</strong> state the expected blast radius before changing a product field.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="gtin-ean" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">GTIN / EAN / UPC</p>
+      <h2>A barcode number identifies a product in a specific unit of measure.</h2>
+      <p>SAP still uses the historical terms EAN and UPC in many fields and configuration activities. In GS1 terminology, the broader term is GTIN. Common formats are GTIN-8, GTIN-12 (UPC), GTIN-13 (EAN) and GTIN-14 for higher packaging levels. The final digit is a check digit. Do not design the solution around the assumption that every code has 13 digits.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+      <p><strong>Core rule:</strong> the GTIN belongs to a product and unit of measure. One piece, one box of 10 pieces and one pallet are different trade items and normally require different GTINs. The UoM conversion therefore matters as much as the barcode itself.</p>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="GTIN EAN UPC concepts in SAP S/4HANA">
+      <table class="study-table__table">
+        <thead><tr><th>Concept</th><th>What it means</th><th>Why it matters in SAP</th></tr></thead>
+        <tbody>
+          <tr><td>GTIN</td><td>Global Trade Item Number. The current umbrella term for globally standardized trade-item identifiers.</td><td>Used to identify the product and packaging level across sales, procurement, warehouse, retail and interfaces.</td></tr>
+          <tr><td>EAN</td><td>Common name for GTIN-13 and a historical SAP term.</td><td>Still appears in field labels, table fields and Customizing names.</td></tr>
+          <tr><td>UPC</td><td>Common name for GTIN-12, widely used in North America.</td><td>SAP can validate it through the assigned EAN/UPC category.</td></tr>
+          <tr><td>EAN category</td><td>Defines rules such as number assignment, length, check-digit logic and allowed format.</td><td>The category tells SAP how the identifier must be created and validated.</td></tr>
+          <tr><td>Main EAN / GTIN</td><td>The primary identifier for one unit of measure.</td><td>Only one identifier is the main one for that UoM. It is the value normally exposed in the UoM record.</td></tr>
+          <tr><td>Additional EANs / GTINs</td><td>Alternative identifiers for the same product and UoM.</td><td>Useful when the same trade item can be scanned with more than one valid code, for example after packaging or vendor changes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ean-maintenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Maintenance and data model</p>
+      <h2>Maintain the identifier at the same packaging level that it represents.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Base unit</h3>
+        <p>The identifier shown in Basic Data belongs to the base unit of measure. For packaging details and other UoMs, use Additional Data → Units of Measure.</p>
+      </div>
+      <div>
+        <h3>Alternative units</h3>
+        <p>For each alternative UoM, maintain the conversion to the base UoM first, then assign the correct GTIN. Example: 1 CAR = 12 PC. The carton GTIN must describe the carton, not one piece.</p>
+      </div>
+      <div>
+        <h3>Multiple identifiers</h3>
+        <p>If one UoM needs several valid identifiers, use Additional EANs and define which one is the main GTIN for that UoM.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">table_view</span>
+      <p><strong>Technical recall:</strong> the main UoM-level EAN/UPC is associated with the material UoM data in <code>MARM</code>. Additional identifiers are held in <code>MEAN</code>. For troubleshooting, always compare the material number, UoM, GTIN and main-GTIN indicator together instead of checking the barcode alone.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ean-configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration</p>
+      <h2>EAN category controls how SAP accepts or generates the number.</h2>
+      <p>Configuration sits under Material Master settings for International Article Numbers. The exact menu wording differs between S/4HANA editions, but the design questions are stable.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Decide the ownership model</h4><p>For externally governed GS1 numbers, users or interfaces supply the GTIN. For internal company numbering, SAP can generate numbers from an internal range where the category allows it.</p></div>
+      <div><span>02</span><h4>Define the category</h4><p>Configure the expected length and format, internal or external assignment, check-digit algorithm and other category rules.</p></div>
+      <div><span>03</span><h4>Maintain number ranges where needed</h4><p>Internal assignment requires an appropriate number range. External assignment validates the entered number instead of inventing a new external identity.</p></div>
+      <div><span>04</span><h4>Maintain product and UoM data</h4><p>Create the UoM conversion and packaging dimensions, then maintain the main and any additional GTINs.</p></div>
+      <div><span>05</span><h4>Test the consumers</h4><p>Test scanning, interfaces, sales, procurement and warehouse processes that read the identifier. Master-data save success does not prove that every downstream system receives the correct GTIN and UoM.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ean-runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime behavior</p>
+      <h2>The GTIN resolves identity; normal logistics logic continues after that.</h2>
+      <p>A scanner or interface can provide a GTIN instead of an internal material number. The application resolves the product and relevant UoM, then the normal process continues: quantity conversion, item processing, ATP, delivery, warehouse execution, billing or procurement rules are applied according to the document and organizational context.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Sales</h3><p>GTIN can be used to identify the ordered product or packaging level. It does not replace item category, pricing, ATP or plant determination; it gives those processes the correct product and UoM context.</p></div>
+      <div><h3>Warehouse / EWM</h3><p>RF and barcode-driven steps can use main or additional GTINs to validate the product during goods receipt, picking, packing and physical inventory.</p></div>
+      <div><h3>Procurement / Retail</h3><p>Supplier and retail scenarios may need several product identifiers. Keep the distinction between the generic product GTIN and supplier-specific or customer-specific relationship data.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ean-integration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration</p>
+      <h2>Most GTIN incidents are mapping incidents, not barcode incidents.</h2>
+      <p>S/4HANA APIs expose product UoM identifiers together with the alternative UoM, GTIN category and main-GTIN indicator. Material-master IDoc integrations can also transfer UoM-level and additional identifiers. The integration contract must preserve both the identifier and the UoM context.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <p><strong>Interface rule:</strong> never map only <code>GTIN → material</code> when packaging level matters. Map <code>GTIN → material + UoM</code>, preserve leading zeroes where the target format requires them, and decide explicitly whether additional GTINs are in scope.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ean-failures" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure patterns</p>
+      <h2>Common problems are easy to miss because the barcode itself can look valid.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Common GTIN and EAN problems">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>Likely cause</th><th>Lead check</th></tr></thead>
+        <tbody>
+          <tr><td>Scan finds the product but quantity is wrong</td><td>Wrong UoM conversion or GTIN assigned to the wrong packaging level</td><td>Compare GTIN, UoM, numerator/denominator and physical pack size</td></tr>
+          <tr><td>Valid external GTIN is rejected</td><td>Wrong EAN category, length rule or check-digit logic</td><td>Check the category before changing the product number</td></tr>
+          <tr><td>One system finds the barcode, another does not</td><td>Additional GTINs were not distributed or target mapping only accepts the main GTIN</td><td>Compare source and target identifiers by UoM</td></tr>
+          <tr><td>Wrong product is returned</td><td>Duplicate or incorrectly reused identifier</td><td>Treat GTIN uniqueness as a data-quality control, not only a technical validation</td></tr>
+          <tr><td>Barcode changed after repackaging</td><td>Packaging identity changed but old and new GTIN lifecycle was not governed</td><td>Decide whether the new code is an additional identifier or a genuinely new trade item</td></tr>
+          <tr><td>Customer sends its own product code</td><td>Customer-specific code is being confused with a global trade-item identifier</td><td>Use customer-material or integration mapping when the identifier is relationship-specific</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ean-lead-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Explain GTIN as identity + packaging + integration.</h2>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In S/4HANA, EAN/UPC is the historical SAP name for a trade-item identifier; today I normally speak about GTIN. The important point is that the identifier belongs to a product and a unit of measure. Each packaging level can have its own GTIN, and one UoM can also have additional GTINs with one main identifier. The EAN category controls validation and number assignment. In an incident I check GTIN, UoM conversion, main versus additional identifier and the interface mapping. I do not treat a customer-specific product code as a generic GTIN, because that would turn a relationship-specific exception into shared product master data.</p>
+    </div>
+    <p class="ecg-caption"><strong>Lead phrase:</strong> GTIN identifies the trade item; it does not replace the SD or logistics determination logic that runs after product identification.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
@@ -114,6 +244,7 @@ tags:
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
+      <a href="/labs/enterprise-context/master-data/units-of-measure/">Units of Measure</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
       <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
     </nav>
