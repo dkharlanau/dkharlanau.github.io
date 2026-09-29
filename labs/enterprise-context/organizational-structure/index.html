@@ -77,6 +77,16 @@ source_links:
     url: "https://learning.sap.com/courses/project-financials-control-in-sap-s-4hana/creating-project-structures-1"
   - title: "HCM Enterprise Structure"
     url: "https://learning.sap.com/courses/business-processes-in-sap-hcm-on-s-4hana/analyzing-hcm-structures"
+  - title: "Organizational Units in Procurement"
+    url: "https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/identifying-the-organizational-units-in-procurement"
+  - title: "Valuation Areas in Materials Management"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/determining-the-relevance-of-company-codes-and-valuation-areas"
+  - title: "Automatic Account Determination in Materials Management"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/describing-automatic-account-determination"
+  - title: "Manufacturing Organizational Structure"
+    url: "https://learning.sap.com/courses/configuring-sap-s-4hana-cloud-public-edition-manufacturing-production-planning/analyzing-manufacturing-organizational-structure-and-master-data_e3818cf3-6696-45cf-a502-f6f221ed4d2d"
+  - title: "Defining the EWM Warehouse"
+    url: "https://learning.sap.com/courses/basic-customizing-in-sap-s-4hana-ewm/defining-the-warehouse"
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -193,6 +203,40 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="org-unit-vs-control-object" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Object classification</p>
+      <h2>Not every important SAP object is an organizational unit.</h2>
+      <p>This distinction matters in design workshops and assessments. Some objects define enterprise boundaries. Others are master data, responsibility keys, planning objects, or determination inputs that operate inside those boundaries.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP organizational units versus master and control objects">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Object</th><th>What it is</th><th>Where it belongs</th><th>Do not confuse it with</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Company Code</strong></td><td>Organizational unit</td><td>FI / legal accounting</td><td>Company, Profit Center, or Controlling Area.</td></tr>
+          <tr><td><strong>Sales Organization</strong></td><td>Organizational unit</td><td>SD commercial responsibility</td><td>Sales Office or a reporting region.</td></tr>
+          <tr><td><strong>Purchasing Organization</strong></td><td>Organizational unit</td><td>MM procurement responsibility</td><td>Purchasing Group, which is a buyer-responsibility key and has no mandatory enterprise-structure assignment.</td></tr>
+          <tr><td><strong>Plant</strong></td><td>Organizational unit</td><td>Cross-module Logistics</td><td>Storage Location, Warehouse Number, Shipping Point, or Work Center.</td></tr>
+          <tr><td><strong>Storage Location</strong></td><td>Organizational unit below Plant</td><td>Inventory Management</td><td>EWM Storage Type or Storage Bin.</td></tr>
+          <tr><td><strong>Warehouse Number</strong></td><td>Warehouse organizational / structural unit</td><td>EWM / warehouse management</td><td>Plant or Storage Location. Warehouse execution is a separate layer.</td></tr>
+          <tr><td><strong>MRP Area</strong></td><td>Planning organizational level</td><td>MRP</td><td>Plant. It refines planning scope but cannot span Plants.</td></tr>
+          <tr><td><strong>Work Center</strong></td><td>Master data / capacity and execution object</td><td>PP / PM</td><td>An enterprise-structure unit. It is assigned to a Plant and carries capacity, scheduling, costing, and responsibility data.</td></tr>
+          <tr><td><strong>Production Version</strong></td><td>Master data / production-selection object</td><td>PP</td><td>An organizational unit. It selects a valid BOM + routing/recipe combination for production.</td></tr>
+          <tr><td><strong>Cost Center / Profit Center</strong></td><td>CO master / account-assignment objects</td><td>Management accounting</td><td>Company Code or Controlling Area. They explain responsibility and profitability, not legal ownership.</td></tr>
+          <tr><td><strong>Credit Segment</strong></td><td>Credit Management organizational unit</td><td>FSCM Credit Management</td><td>Sales Area. Credit control is related to Sales but has its own segmentation.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Lead rule:</strong> before proposing a new organizational unit, ask whether the requirement is really a legal boundary, responsibility boundary, logistics location, planning scope, or only a reporting/master-data distinction. Choosing the wrong layer multiplies data and configuration unnecessarily.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="procurement-inventory-structure" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">MM / Procurement / Inventory</p>
@@ -242,6 +286,14 @@ source_links:
       </article>
     </div>
 
+    <article class="ecg-determination-detail">
+      <header><div><span>MM5</span><small>valuation</small></div><h3>Valuation Area</h3><p class="ecg-question">At which organizational level is material stock valuated?</p></header>
+      <div class="ecg-decision-columns">
+        <div><h4>Meaning</h4><p>The Valuation Area is the organizational level at which material stock value and valuation data are managed. Depending on system design it can correspond to a Plant or Company Code; in SAP S/4HANA Cloud Public Edition, each Plant is a Valuation Area.</p></div>
+        <div><h4>Why it matters</h4><p>A goods movement is not only a quantity event. Plant and Valuation Area help SAP derive the Company Code, valuation grouping, and G/L-account context used by automatic account determination.</p></div>
+      </div>
+    </article>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
       <p><strong>Memory contrast:</strong> Sales Organization owns the customer-facing sale. Purchasing Organization owns supplier-facing procurement. Plant is where those two flows can meet.</p>
@@ -268,6 +320,21 @@ source_links:
       <div>
         <h3>Quality Management</h3>
         <p>QM material data is managed at Plant level. Inspection setup and Plant-specific inspection plans mean that the same product can have different quality behavior in different Plants.</p>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Work Center</h3>
+        <p>A Work Center is assigned to a Plant and represents where or by whom an operation is executed. It carries capacity, scheduling, costing, and responsibility data. It is important operationally, but it is master data rather than another enterprise-structure level.</p>
+      </div>
+      <div>
+        <h3>Production Version</h3>
+        <p>A Production Version selects the valid manufacturing method for a material in a Plant, typically linking a BOM with a routing or recipe. If Sales demand reaches the correct Plant but production selects the wrong version, the organizational structure can be correct while execution is still wrong.</p>
+      </div>
+      <div>
+        <h3>QM Planner Group / Inspection Plan</h3>
+        <p>QM adds responsibility and inspection master data inside the Plant context. The Plant is the important organizational level; planner groups and inspection plans organize work and specifications rather than create a new legal or logistics boundary.</p>
       </div>
     </div>
 
@@ -471,6 +538,30 @@ source_links:
           <tr><td>Where is maintenance planned?</td><td>Maintenance Plant → Maintenance Planning Plant</td><td>Maintenance planning responsibility and possible supply-capacity impact.</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="end-to-end-organization-trace" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">End-to-end example</p>
+      <h2>Follow one Sales Order through the organizational boundaries.</h2>
+      <p>This is the fastest way to make the structure practical. Each step answers a different ownership question; the same transaction can cross several modules without changing its customer-facing Sales Area.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Commercial context</h4><p><strong>Sales Area</strong> identifies who sells, through which Distribution Channel, and for which Division. BP and product Sales data are read in this context.</p></div>
+      <div><span>02</span><h4>Legal owner</h4><p><strong>Sales Organization → Company Code</strong> identifies the selling legal entity that owns the customer receivable and revenue side.</p></div>
+      <div><span>03</span><h4>Supply node</h4><p><strong>Distribution Chain ↔ Plant</strong> validates where the item can be supplied. The Plant becomes the hinge for ATP, procurement, production, inventory, quality, and shipping.</p></div>
+      <div><span>04</span><h4>Plan or procure</h4><p><strong>MRP Area</strong> can refine where supply is planned. If external procurement is needed, <strong>Purchasing Organization ↔ Plant</strong> defines who can procure for that Plant.</p></div>
+      <div><span>05</span><h4>Produce and inspect</h4><p><strong>Plant</strong> remains the organizational base. Work Centers, Production Versions, and QM inspection data control execution inside that Plant rather than creating another enterprise hierarchy.</p></div>
+      <div><span>06</span><h4>Stock and warehouse</h4><p><strong>Plant + Storage Location</strong> identifies ERP stock. If warehouse-managed, the assignment continues to a <strong>Warehouse Number</strong>, where EWM controls tasks, bins, activity areas, staging, and picking.</p></div>
+      <div><span>07</span><h4>Outbound execution</h4><p><strong>Plant + Shipping Condition + Loading Group</strong> determines the <strong>Shipping Point</strong>. This is the shipping execution responsibility for the delivery.</p></div>
+      <div><span>08</span><h4>Transport and settlement</h4><p>TM can add freight-procurement responsibility. Billing and goods movements then post back through <strong>Company Code</strong>, valuation, account assignment, and Controlling context.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <p><strong>Memory model:</strong> SELL → OWN → SUPPLY → PLAN/BUY → MAKE/CHECK → STORE → SHIP → ACCOUNT. The organizational structure tells us who owns each transition; master data and configuration tell SAP how to execute it.</p>
     </div>
   </section>
 
@@ -1030,6 +1121,8 @@ source_links:
       <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Which customer, product, relationship, condition, and logistics data is stored at each organizational scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/procurement/"><span>MM</span><strong>Procurement</strong><small>Purchasing Organization, Plant, supplier, source-of-supply, and purchasing-process ownership.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Plant and Storage Location stock identity, goods movements, and inventory consequences.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production</strong><small>Plant, MRP, Work Centers, production master data, manufacturing execution, and supply consequences.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/quality-management/"><span>QM</span><strong>Quality Management</strong><small>Plant-level inspection setup, inspection lots, quality decisions, and stock consequences.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Extended Warehouse Management</strong><small>Warehouse Number, stock mapping, Storage Types, Activity Areas, bins, and execution ownership.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/transportation-management/"><span>TM</span><strong>Transportation Management</strong><small>Freight organization, planning, execution, charge calculation, and settlement boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/finance-logistics/"><span>FI</span><strong>Finance / Logistics Integration</strong><small>Company Code, accounting hand-offs, costs, revenue, and intercompany consequences.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
