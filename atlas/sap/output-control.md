@@ -91,7 +91,7 @@ related:
       </table>
     </div>
 
-    <p>For Sales documents, the active framework can depend on system version and configuration. Existing documents can also keep the framework that was active when they were created. So the first diagnostic question is simple: <strong>what framework owns this exact document?</strong></p>
+    <p>Do not assume the framework from the system name. Check the document. Existing documents can keep the framework that was active when they were created.</p>
 
     <h2>Open it in SAP</h2>
     <div class="oc-tool-grid">
@@ -160,95 +160,86 @@ related:
       <strong>Channel = EMAIL</strong>
     </div>
 
-    <p>Specific rules should normally come before broad fallback rules. Several rules can match, especially for receiver and channel determination, so the <strong>Exclusive</strong> behavior matters when only one result is wanted.</p>
+    <p>Put specific rules before fallback rules. More than one row can match, so use <strong>Exclusive</strong> when only one result should survive.</p>
 
-    <h2>Practical extension: use a new field to decide whether output should be sent</h2>
-    <p>Assume the business asks for a new checkbox on the sales document:</p>
+    <h2>Add a Z field to Output Control</h2>
+    <p>Typical case: the business adds <code>Suppress Order Confirmation</code>. If it is set, the order confirmation must not go out.</p>
 
-    <div class="oc-scenario">
-      <p><strong>Requirement</strong></p>
-      <p>“If <code>Suppress Order Confirmation</code> is selected, do not send the order confirmation.”</p>
-    </div>
-
-    <p>This is a good Output Control extension because the new field represents a clear business fact and the output rule only needs to consume it.</p>
-
-    <h3>Target design</h3>
     <div class="oc-flow oc-flow--large">
-      <span>Custom field</span><b>→</b>
-      <span>Expose to Output Parameter Determination</span><b>→</b>
-      <span>Refresh OPD context</span><b>→</b>
+      <span>Field exists</span><b>→</b>
+      <span>Expose it to OPD</span><b>→</b>
+      <span>Refresh OPD</span><b>→</b>
       <span>Add condition column</span><b>→</b>
-      <span>Output Relevance = false</span>
+      <span>Use it in the rule</span>
     </div>
 
-    <h3>Step 1 — create the field in the right business context</h3>
-    <p>For an extensibility-enabled Sales scenario, create the field in <strong>Custom Fields</strong> using the business context <strong>Sales: Sales Document</strong>. A field such as <code>YY1_SUPPRESS_OUTPUT</code> can be a simple Boolean/checkbox.</p>
+    <h3>1. First find the OPD data source</h3>
+    <p>Open <code>OPD</code>, choose the application object, then use <strong>Get Technical Details for Condition Parameters of Application</strong>. This tells you which CDS view feeds the decision table and whether it can be extended.</p>
 
-    <p>The important part is not the name. The important part is the <strong>business context</strong>. A field created in the wrong context will not magically become available to Output Control.</p>
-
-    <h3>Step 2 — enable it for Output Parameter Determination</h3>
-    <p>Enable the field for the Sales output parameter data source <strong>Output Parameter Determination for Sales</strong> (<code>C_SALESORDEROMPARAMDET</code>), then publish it.</p>
-
-    <div class="oc-callout">
-      <strong>Why this matters</strong>
-      <p>BRFplus does not read every field in the sales document. The application exposes a controlled set of condition parameters. Extensibility adds your field to that contract.</p>
-    </div>
-
-    <h3>Step 3 — refresh the condition parameters in OPD</h3>
-    <ol>
-      <li>Open <strong>Output Parameter Determination</strong> / <code>OPD</code>.</li>
-      <li>Choose <strong>Sales Document</strong> in <em>Show Rules for</em>.</li>
-      <li>Refresh <strong>Condition Parameters of Application</strong>.</li>
-      <li>Confirm the refresh.</li>
-    </ol>
-
-    <p>This refresh is easy to miss. If the field was published correctly but does not appear in the decision table, check this step before debugging anything deeper.</p>
-
-    <h3>Step 4 — add the field as a decision-table column</h3>
-    <ol>
-      <li>Choose the determination step you want to control. For “send / do not send”, start with <strong>Output Relevance</strong>.</li>
-      <li>Switch the decision table to edit mode.</li>
-      <li>Open <strong>Table Settings</strong>.</li>
-      <li>Choose <strong>Insert Column → From Context Data Objects</strong>.</li>
-      <li>Select the custom field.</li>
-      <li>Maintain the rule and activate the table.</li>
-    </ol>
-
-    <h3>Step 5 — make the rule obvious</h3>
-    <div class="table-wrap" role="region" aria-label="Custom Output Relevance rule" tabindex="0">
+    <div class="table-wrap" role="region" aria-label="Output Parameter Determination data sources" tabindex="0">
       <table>
         <thead>
-          <tr><th>Output Type</th><th>Suppress Order Confirmation</th><th>Output Relevance</th></tr>
+          <tr><th>Object</th><th>Example OPD data source</th></tr>
         </thead>
         <tbody>
-          <tr><td>ORDER_CONFIRMATION</td><td><strong>Yes</strong></td><td><strong>False</strong></td></tr>
-          <tr><td>ORDER_CONFIRMATION</td><td>blank / No</td><td>True</td></tr>
+          <tr><td>Sales document</td><td><code>C_SALESORDEROMPARAMDET</code></td></tr>
+          <tr><td>Billing document</td><td><code>C_BILLINGDOCUMENTOMPARAMDET</code></td></tr>
+          <tr><td>Outbound delivery</td><td><code>V_LE_DLV_OM_PARAM</code></td></tr>
         </tbody>
       </table>
     </div>
 
-    <p>Now the business rule can be read without code: <strong>if suppression is selected, the output is not relevant.</strong></p>
+    <p class="oc-inline-note">If the OPD right-click menu is missing in Fiori, check the Launchpad display setting. Touch-optimized mode can hide that context menu.</p>
 
-    <h3>Step 6 — test the full runtime, not only the table</h3>
-    <ol>
-      <li>Create or change a test sales order.</li>
-      <li>Set the custom field.</li>
-      <li>Save the document.</li>
-      <li>Check the output item and its status.</li>
-      <li>Repeat with the field cleared.</li>
-      <li>Confirm that only the relevance decision changes; receiver, channel, and form should remain stable unless another rule intentionally changes them.</li>
-    </ol>
+    <h3>2. Create and expose the field</h3>
+    <p>Use the <strong>Custom Fields</strong> app (<code>F1481</code>) and choose the correct business context: Sales Document, Billing Document, Delivery, and so on. Then enable the field for the relevant Output Parameter Determination data source under <strong>UIs and Reports</strong> and publish it.</p>
 
-    <h2>If the new field does not appear in OPD</h2>
-    <div class="oc-checklist">
-      <div><strong>1</strong><span>Correct business context?</span></div>
-      <div><strong>2</strong><span>Usage enabled for Output Parameter Determination?</span></div>
-      <div><strong>3</strong><span>Field published?</span></div>
-      <div><strong>4</strong><span>Condition Parameters of Application refreshed?</span></div>
-      <div><strong>5</strong><span>Correct business application and determination step?</span></div>
+    <div class="oc-callout">
+      <strong>The important part</strong>
+      <p>Creating a field is not enough. OPD can only use data that is exposed through its application condition structure.</p>
     </div>
 
-    <p>In current SAP Sales extensibility, SAP documents this flow for sales and billing output. The binding refresh is performed in each system; it is not simply transported as part of the rule table.</p>
+    <h3>3. Refresh OPD</h3>
+    <p>Back in <code>OPD</code>, choose the application object and run <strong>Refresh Condition Parameters of Application</strong>. After that, edit the decision table:</p>
+    <p><strong>Table Settings → Insert Column → From Context Data Objects → Condition Parameters of Application</strong></p>
+
+    <p>For a simple “send / do not send” rule, use the field in <strong>Output Relevance</strong>:</p>
+
+    <div class="table-wrap" role="region" aria-label="Output Relevance example" tabindex="0">
+      <table>
+        <thead>
+          <tr><th>Suppress output</th><th>Output Relevance</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Yes</td><td><strong>False</strong></td></tr>
+          <tr><td>No / blank</td><td>True</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Field is visible, but the rule still does not work?</h3>
+    <p>Then stop looking at BRFplus. Check the data.</p>
+
+    <div class="oc-checklist">
+      <div><strong>1</strong><span>Does the field have a value in the business document?</span></div>
+      <div><strong>2</strong><span>Is that value available in the underlying CDS view?</span></div>
+      <div><strong>3</strong><span>Was OPD refreshed after the field was published?</span></div>
+      <div><strong>4</strong><span>Is the field used in the correct determination step?</span></div>
+      <div><strong>5</strong><span>Did a broader rule match first?</span></div>
+    </div>
+
+    <p>A frequent trap: an output BAdI can make a field available for a form or output structure, but that does not automatically mean the value is persisted and available to OPD. The decision table needs the value in its own data source at determination time.</p>
+
+    <h3>Private Edition / on-prem: when key-user extensibility is not enough</h3>
+    <p>If the required field cannot be exposed through the standard extensibility contract, this becomes an ABAP task. The usual path is to extend the consumption CDS used by OPD and, where needed, populate the value in the application runtime logic. Keep that as the exception, not the default.</p>
+
+    <div class="oc-callout oc-callout--strong">
+      <strong>Lead rule</strong>
+      <p>Before asking for code, prove three things: the field exists, the OPD CDS can expose it, and the value is really there at runtime.</p>
+    </div>
+
+    <h3>Change impact</h3>
+    <p>Adding a new condition column does not automatically restrict old rules. Existing rows normally stay blank in that column, which behaves like “any value”. Review fallback rules after the change.</p>
 
     <h2>Where should custom logic live?</h2>
     <p>A Lead should not solve every output requirement in BRFplus. Choose the extension layer based on the kind of problem.</p>
@@ -275,7 +266,7 @@ related:
       <p>Let OPD decide. Let the application provide facts. Let forms render. Let channels deliver. When one layer starts doing another layer’s job, Output Control becomes difficult to explain and even harder to support.</p>
     </div>
 
-    <h2>Output Relevance is more powerful than it looks</h2>
+    <h2>Output Relevance = the gate</h2>
     <p>Output Relevance is the clean gate between “we know how to send this” and “we are allowed to send this”. It is a strong place for rules such as:</p>
     <ul>
       <li>do not send while a sales order is blocked;</li>
