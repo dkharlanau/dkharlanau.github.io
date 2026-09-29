@@ -478,10 +478,11 @@
       "code": "MD.SD.CLASSIFICATION",
       "title": "Classification",
       "entity_class": "logistics_adjacent_master",
-      "memory_hook": "Classification gives different logistics objects one reusable language of characteristics and values.",
-      "business_question": "Which class and characteristic values describe this object, and which process actually consumes those values?",
-      "scope": "SAP Classification is a cross-application framework. Materials, batches, equipment and other supported objects can be classified. Sales and logistics consume the values only when a process, determination or configuration model is designed to read them.",
+      "memory_hook": "Classification turns reusable attributes into a shared search and selection language across logistics.",
+      "business_question": "Which structured characteristics describe this object, which class and class type own them, and which process consumes the values?",
+      "scope": "SAP Classification (CA-CL) is a cross-application framework for characteristics, classes, object assignments and characteristic values. Materials, batches, documents, technical objects and other supported objects can use it. Logistics processes consume classification only when their search, selection or configuration logic is designed to read the values.",
       "key_dimensions": [
+        "object type",
         "class type",
         "class",
         "characteristic",
@@ -490,49 +491,58 @@
       ],
       "high_value_attributes": [
         {
-          "name": "class type",
-          "why": "Defines the technical object category and classification context."
+          "name": "characteristic definition",
+          "why": "Controls data type, unit, allowed values, intervals and other value rules."
         },
         {
-          "name": "characteristic data type and allowed values",
-          "why": "Controls which values can be assigned consistently."
+          "name": "class and class type",
+          "why": "Groups characteristics and connects the model to an object category or special business function."
         },
         {
-          "name": "class assignment",
-          "why": "Connects an object to a reusable classification structure."
+          "name": "class hierarchy",
+          "why": "Can create structured search paths and inherited characteristics where the class type supports them."
+        },
+        {
+          "name": "object assignment",
+          "why": "Connects the concrete material, batch, document or technical object to the reusable class."
         },
         {
           "name": "characteristic valuation",
-          "why": "Stores the actual business value for the classified object."
+          "why": "Provides the structured facts that object search and downstream selection logic can consume."
         }
       ],
       "consumed_by": [
         "product and object search",
-        "batch classification and determination",
+        "batch classification and batch determination",
+        "classification-based purchasing release procedure",
         "variant configuration",
-        "equipment and serial-linked scenarios where used",
+        "technical-object and document search",
         "analytics and integration mappings"
       ],
       "writes_or_influences": [
+        "object searchability",
         "selection criteria",
-        "eligibility rules",
+        "batch eligibility inputs",
+        "release-strategy input",
         "configuration inputs",
         "classification-based interface attributes"
       ],
       "precedence": [
         "Characteristics and classes define the reusable model; the classified object carries the actual valuation.",
-        "Classification does not trigger a business decision by itself. A process, dependency, search strategy or integration must read the value."
+        "Classification describes the object. A search strategy, batch strategy, release procedure, configuration model or integration still owns the runtime decision.",
+        "Classification and Variant Configuration are different layers even though Variant Configuration reuses classification concepts."
       ],
       "maintenance": {
         "modern": [
-          "Classification apps and object-specific maintenance depending on deployment"
+          "classification and object-specific maintenance apps depending on deployment"
         ],
         "classic": [
           "CT04",
           "CL01 / CL02 / CL03",
-          "CL20N / CL24N"
+          "CL20N / CL24N",
+          "CL30N"
         ],
-        "note": "Classic transactions are orientation for on-premise/private-cloud landscapes; app availability varies by edition."
+        "note": "Classic GUI transactions and some class-type examples are especially relevant to SAP S/4HANA on-premise/private-edition landscapes. Confirm the deployment before prescribing a maintenance path."
       },
       "technical_refs": {
         "tables": [
@@ -544,41 +554,51 @@
           "AUSP (classic orientation)"
         ],
         "related": [
+          "deep_dive: /labs/enterprise-context/master-data/classification/",
           "MD.SD.PRODUCT",
           "MD.SD.BATCH",
           "MD.SD.VC"
         ]
       },
       "failure_signals": [
-        "correct object exists but the expected characteristic is missing",
-        "batch search ignores an expected value",
-        "variant dependency receives the wrong characteristic value",
+        "object cannot be found by expected characteristic values",
+        "wrong or missing class assignment",
+        "characteristic value is missing or outside the allowed domain",
+        "batch determination misses stock because classification criteria do not match",
+        "classification-based purchasing release strategy is not found",
+        "Variant Configuration behavior is blamed on ordinary classification data without checking the configuration model",
         "integration maps a display text instead of a stable characteristic/value key"
       ],
       "lead_questions": [
-        "Is the problem in the characteristic definition, the class assignment, or the object valuation?",
-        "Which class type applies to this object?",
-        "Which runtime mechanism reads this characteristic?"
+        "Which object and class type are actually used at runtime?",
+        "Is the problem in the characteristic definition, class structure, object assignment, valuation, or downstream selection logic?",
+        "Which runtime mechanism reads this characteristic?",
+        "Are we debugging Classification data or Variant Configuration behavior?"
       ],
       "relations": [
         {
           "type": "references",
           "target": "MD.SD.PRODUCT",
-          "why": "materials/products can be classified"
+          "why": "materials and products are common classification objects"
         },
         {
           "type": "references",
           "target": "MD.SD.BATCH",
-          "why": "batch classification can provide batch-selection characteristics"
+          "why": "batch classification provides values used by batch-selection scenarios"
         },
         {
           "type": "references",
           "target": "MD.SD.VC",
-          "why": "variant configuration can reuse characteristics and classes"
+          "why": "Variant Configuration reuses classes and characteristics but adds configuration-specific rules"
         }
       ],
       "source_refs": [
-        "SRC-SDMD-CLASSIFICATION"
+        "SRC-SDMD-CLASSIFICATION",
+        "SRC-SDMD-CLASS-HIERARCHY",
+        "SRC-SDMD-MATERIAL-CLASSIFICATION",
+        "SRC-SDMD-BATCH-OBJECT-HIERARCHY",
+        "SRC-SDMD-RELEASE-CLASSIFICATION",
+        "SRC-SDMD-VC-CLASSIFICATION-BOUNDARY"
       ]
     },
     {
