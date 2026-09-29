@@ -1,18 +1,21 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Material Determination Record"
-description: "A practical deep dive into Material Determination Record in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+description: "A practical SAP S/4HANA Sales guide to Material Determination: condition records, configuration, substitution reasons, ATP product selection, diagnostics, deployment differences and Lead-level design choices."
 permalink: /labs/enterprise-context/master-data/material-determination/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
   - master-data
+  - material-determination
+  - product-substitution
+  - condition-technique
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -30,92 +33,491 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.MATDET</p>
       <h1>Material Determination Record</h1>
-      <p>Material determination lets Sales replace a requested product with another product according to maintained substitution rules. Typical uses include successor products, customer-specific replacements or controlled substitutions during product transitions.</p>
+      <p>Material determination lets Sales translate a material entered by a user or interface into another product according to maintained rules. The simple case is a direct replacement. The more interesting case is product selection: SAP can evaluate several alternatives, use availability, and build the Sales item structure from the result.</p>
       <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
       <p>Object profile</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.MATDET</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>condition record</strong><small>Data class</small></div>
-      <em>Condition type/key, requested material, validity and substitution reason.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>VB11 / VB12 / VB13</strong><small>Maintain record</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>condition technique</strong><small>Search model</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>requested → substitute</strong><small>Business rule</small></div>
+      <em>The record stores the mapping. Configuration decides how SAP finds it and what happens after it is found.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The record owns the substitution mapping; configuration owns how SAP finds and applies it.</h2>
+      <h2>Think in three layers: search, record, behavior.</h2>
+      <p>Most material-determination incidents become easier once these layers are separated. A valid condition record cannot help if SAP never reaches its key. A correct access can still return the wrong business result if the substitution reason or product-selection settings do not match the requirement.</p>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Condition type/key, requested material, validity and substitution reason.</p>
-    </div>
+
     <div class="ecg-decision-columns">
       <div>
-        <h3>Important data</h3>
-        <p>Requested material, substitute material, condition key, validity dates, substitution reason and context fields configured in the condition table.</p>
+        <h3>1. Determination engine</h3>
+        <p>The procedure, determination type, access sequence and condition tables decide which keys SAP will search and in which order.</p>
       </div>
       <div>
-        <h3>Configuration boundary</h3>
-        <p>The record says which substitution is valid. The determination procedure, condition type, access sequence and substitution-reason behavior are configuration.</p>
+        <h3>2. Condition record</h3>
+        <p>The record contains the entered material, substitute material or alternatives, validity, substitution reason and the business dimensions defined by the condition table.</p>
       </div>
+      <div>
+        <h3>3. Runtime behavior</h3>
+        <p>The substitution reason and product-selection design decide whether SAP replaces directly, asks the user, checks alternatives with ATP, creates subitems, or can redetermine the product later.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Lead rule:</strong> do not start by creating another VB11 record. First prove that the document uses the expected procedure and that the access sequence reaches the key you intend to maintain.</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" id="lead-decision" data-reveal>
+  <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead decision</p>
-      <h2>A substitution changes more than the product number.</h2>
-      <p>Once the requested product is replaced, later Sales decisions can see a different product context. The design must therefore consider the full downstream effect, not only whether substitution is technically possible.</p>
+      <p class="research-canvas__eyebrow">Where it fits</p>
+      <h2>The same mechanism can solve very different business problems.</h2>
     </header>
+
     <div class="ecg-decision-columns">
-      <div><h3>Commercial meaning</h3><p>Confirm that the substitute is acceptable for the customer, contract, description, unit, and commercial expectation.</p></div>
-      <div><h3>Execution impact</h3><p>Check the consequences for pricing, availability, plant and shipping behavior, batch or configuration needs, and later document flow where relevant.</p></div>
-      <div><h3>Trade-off</h3><p>Automatic substitution can protect service, but it can also hide product changes that require customer communication or different downstream handling.</p></div>
+      <div>
+        <h3>Identifier translation</h3>
+        <p>A customer, scanner or upstream process enters an external identifier and Sales resolves it to the internal material used for order processing.</p>
+      </div>
+      <div>
+        <h3>Product transition</h3>
+        <p>An old or discontinued product points to its successor. This is useful during controlled phase-out, but the business still needs rules for pricing, communication and open orders.</p>
+      </div>
+      <div>
+        <h3>Seasonal or promotional replacement</h3>
+        <p>A normal product can be replaced for a defined period by promotional or seasonal packaging. Validity dates become part of the commercial rule.</p>
+      </div>
+      <div>
+        <h3>Availability-driven selection</h3>
+        <p>Several alternatives can be maintained in priority order and evaluated with availability. This is not just a master-data lookup; ATP and item structure become part of the result.</p>
+      </div>
     </div>
-    <p class="ecg-caption"><strong>Lead check:</strong> prove which decisions must follow the requested product and which must follow the substituted product.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">swap_horiz</span>
+      <p><strong>Do not confuse mechanisms:</strong> Customer-Material Info maps customer-specific product identity, Item Proposal helps users enter a basket, Listing/Exclusion controls eligibility, Cross-Selling suggests related products, and Material Determination changes the requested product according to a substitution rule.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Record anatomy</p>
+      <h2>A good record is more than “old material → new material.”</h2>
+      <p>VB11 stores the business rule that the determination engine will consume. The exact key depends on the condition table, so the same entered material can have a different substitute for another customer, Sales organization, channel or other configured context.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Determination type</h3>
+        <p>Selects the material-determination logic whose access sequence will search for the record. Delivered identifiers depend on deployment and release, so do not treat one key such as A001 or Y001 as universal.</p>
+      </div>
+      <div>
+        <h3>Validity</h3>
+        <p>Valid-from and valid-to dates control when the mapping can be used. For classic product selection, the requested delivery date is an important runtime date for the validity check.</p>
+      </div>
+      <div>
+        <h3>Material entered</h3>
+        <p>The product or identifier entered in the Sales document. This is the source side of the substitution rule.</p>
+      </div>
+      <div>
+        <h3>Substitute material</h3>
+        <p>The product SAP should use or propose. A record can contain several alternatives, and their maintained sequence is meaningful.</p>
+      </div>
+      <div>
+        <h3>Unit of measure</h3>
+        <p>Some substitution scenarios need a target unit of measure as part of the mapping. Treat UoM conversion as business behavior, not a display detail.</p>
+      </div>
+      <div>
+        <h3>Substitution reason</h3>
+        <p>The reason is a control object. It can influence messages, user selection, printing of the entered product, item structure and later redetermination behavior depending on the scenario.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">format_list_numbered</span>
+      <p><strong>Useful design trick:</strong> in availability-driven product selection, the original material can be maintained as the first alternative. SAP can try to confirm the requested product first and only move to substitutes when it cannot cover the demand.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration chain</p>
+      <h2>The condition record works only inside the condition-technique chain.</h2>
+      <p>The classic/private/on-premise configuration follows the same pattern as other SD determination techniques. The important assessment point is the ownership of each object, not memorizing transaction codes without the dependency between them.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>OV26 — Field catalog</h4><p>Defines which fields are available for material-determination keys. Classic extensibility can add customer fields when the standard catalog is not enough.</p></div>
+      <div><span>02</span><h4>OV16 — Condition tables</h4><p>Build the key combination, for example entered material only or a more specific customer/Sales-context/material key.</p></div>
+      <div><span>03</span><h4>OV11 — Access sequences</h4><p>Define which condition tables are searched and in which order. Put specific business rules before deliberate fallback rules.</p></div>
+      <div><span>04</span><h4>OV12 — Determination types</h4><p>Assign the access sequence to the material-determination type. This object connects the business determination to the search path.</p></div>
+      <div><span>05</span><h4>OV13 — Procedures</h4><p>Group one or more determination types into the procedure that a Sales document can use.</p></div>
+      <div><span>06</span><h4>OV14 — Assign procedure</h4><p>Assign the material-determination procedure to the relevant Sales document type. Without the assignment, the expected determination is not triggered for that document type.</p></div>
+      <div><span>07</span><h4>OVRQ — Substitution reasons</h4><p>Configure how the found alternative should behave. This is where a simple mapping becomes a user message, a manual choice, automatic product selection or later redetermination behavior.</p></div>
+      <div><span>08</span><h4>VB11 — Maintain records</h4><p>Create the actual requested-to-substitute mapping, validity and alternatives. VB12 changes it and VB13 displays it.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Key-design trade-off:</strong> a customer-specific key gives precise control but multiplies master-data volume. A broad entered-material key is easier to maintain but can substitute the product in business contexts where the replacement is not allowed. Use the smallest key that still protects the real business rule.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>The requested product can change before later Sales decisions use it.</h2>
-      <p>When a material is entered, the material-determination procedure can search for a valid substitution and then apply the configured substitution behavior. The important distinction is between the maintained mapping and the engine around it: procedure, condition type, access sequence, condition table, and substitution reason decide how the record becomes document behavior.</p>
+      <p class="research-canvas__eyebrow">Runtime</p>
+      <h2>The same record framework can lead to three different user experiences.</h2>
+      <p>When a product is entered, SAP first has to reach a valid material-determination record. What happens next depends on the substitution reason and the configured product-selection behavior.</p>
     </header>
+
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Start from the requested product</h4><p>Capture the material the user or interface actually entered, together with the document date and Sales context.</p></div>
-      <div><span>02</span><h4>Follow the search</h4><p>Identify the active determination procedure, condition type, access sequence, and runtime key. This tells you which condition records SAP can reach.</p></div>
-      <div><span>03</span><h4>Prove the valid mapping</h4><p>Check the requested material, substitute, validity, and other key fields in the record that was found—or prove that no valid record exists.</p></div>
-      <div><span>04</span><h4>Read the substitution behavior</h4><p>Check the substitution reason and resulting item structure. The same mapping can have different business effects when configuration changes how the alternative is introduced.</p></div>
-      <div><span>05</span><h4>Continue downstream</h4><p>Only after the substitution is clear should you explain later item-category, pricing, ATP, delivery, or billing effects for the resulting Sales item.</p></div>
+      <div><span>01</span><h4>Capture the entered product and context</h4><p>Start from what the user or interface actually entered, the Sales document type, Sales area, customer context and requested delivery date.</p></div>
+      <div><span>02</span><h4>Determine the procedure and type</h4><p>Read the procedure assigned to the Sales document type, then the determination type and its access sequence.</p></div>
+      <div><span>03</span><h4>Build the runtime key</h4><p>For each access, SAP fills the condition-table fields from the document. If a required field is empty or different, an apparently correct VB11 record will never match.</p></div>
+      <div><span>04</span><h4>Find a valid record</h4><p>Check key fields, determination type, validity and the alternatives stored in the record. Do not use today’s date as the only validity test in product-selection scenarios.</p></div>
+      <div><span>05</span><h4>Apply substitution behavior</h4><p>SAP can replace directly, present alternatives for selection, or evaluate alternatives through product-selection logic and availability.</p></div>
+      <div><span>06</span><h4>Continue with the resulting Sales item</h4><p>Pricing, ATP, item category, plant, shipping, batch and later delivery behavior must be explained from the material and item structure that actually result from substitution.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Three runtime patterns</p>
+      <h2>“Material substitution” does not always mean the same document structure.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Direct replacement</h3>
+        <p>The entered material resolves to another product and order processing continues with the substitute. This is the cleanest model for identifier translation or a controlled successor product where user choice is not required.</p>
+      </div>
+      <div>
+        <h3>Manual selection</h3>
+        <p>SAP can display available alternatives and let the user choose. This fits cases where substitution needs commercial judgment rather than a silent automatic decision.</p>
+      </div>
+      <div>
+        <h3>Automatic product selection</h3>
+        <p>SAP can evaluate alternatives in sequence and use availability to cover the requested quantity. In classic product selection, the result can be represented with a main item and subitems for confirmed alternatives.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      <p><strong>Example:</strong> an order requests 350 pieces. Alternative A confirms 100, B confirms 200 and C confirms 50. Product selection can split the confirmed requirement across those alternatives. This is why the troubleshooting question is not only “which substitute was found?” but also “how was the requested quantity covered?”</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Substitution reason</p>
+      <h2>Do not reduce OVRQ to a four-field cheat sheet.</h2>
+      <p>The familiar Entry, Warning, Strategy and Outcome controls are useful, but their exact meaning depends on the substitution scenario. A strong answer explains the business effect instead of assuming that the same value means the same item structure everywhere.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Entry</h3>
+        <p>Controls whether the material originally entered remains visible or printable in relevant outputs. This matters when the customer must see what was requested even though another material is delivered.</p>
+      </div>
+      <div>
+        <h3>Warning / Strategy</h3>
+        <p>These settings influence user interaction and manual versus automatic behavior. For classic automatic ATP-based product selection, SAP documents additional restrictions on these fields, so do not copy a manual-selection setup into automatic product selection without checking the scenario.</p>
+      </div>
+      <div>
+        <h3>Outcome</h3>
+        <p>Outcome is especially easy to misremember. In classic automatic product selection, outcome variants can control whether a new product selection is allowed again during delivery processing; they are not simply a generic “replace item versus create subitem” switch.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Assessment trap:</strong> if someone asks what Outcome A or B means, first anchor the answer to the process variant and release. The safe Lead answer is to explain the effect you need — user choice, ATP selection, item structure, printing, or delivery redetermination — and then map that effect to the configured reason in the target system.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Validity and time</p>
+      <h2>The condition record can be valid today and still be invalid for the order.</h2>
+      <p>In classic product selection, SAP compares the substitution rule with the requested delivery date. Forward scheduling can also move the relevant date. This matters for product launches, phase-outs and promotions where several mappings exist across adjacent validity periods.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Support mistake</h3>
+        <p>“The VB11 record is valid today, so SAP should use it.” That is not enough evidence. Check the order’s requested delivery date and the actual dates used by the product-selection process.</p>
+      </div>
+      <div>
+        <h3>Design consequence</h3>
+        <p>A time-based replacement is part of order-promising behavior. If the requested date changes, the substitute can change even though the user entered the same source material.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Later redetermination</p>
+      <h2>The substitute selected in the order is not always the final product decision.</h2>
+      <p>Classic product selection can be re-evaluated later. Rescheduling can revisit Sales orders that contain product selection, and some substitution-reason outcomes allow a new product selection in the delivery. This is powerful for service level, but dangerous if the business believes the first substitute is already a customer commitment.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Rescheduling</h3>
+        <p>Transaction <strong>V_V2</strong> can re-evaluate requirements. Changed availability or changed substitution settings can therefore produce a different result from the one seen when the order was created.</p>
+      </div>
+      <div>
+        <h3>Delivery redetermination</h3>
+        <p>Depending on the substitution reason and outcome, product selection can be allowed again in delivery processing. Diagnose this before calling an order-to-delivery material change a copy-control defect.</p>
+      </div>
+      <div>
+        <h3>Business promise</h3>
+        <p>If the customer must receive the exact alternative confirmed at order time, define how that promise is protected. Flexibility and commitment stability are different business goals.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Interactions</p>
+      <h2>Substitution changes the context for later determinations.</h2>
+      <p>Material determination is early in the Sales item flow. Once the resulting product or subitem structure is known, the downstream rules must be evaluated for that result rather than for the identifier originally typed by the user.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Pricing</h3>
+        <p>Decide whether the commercial price should follow the entered product, the substitute, a contract reference, or another pricing key. Do not assume this is solved by material determination itself.</p>
+      </div>
+      <div>
+        <h3>ATP / aATP</h3>
+        <p>Classic automatic product selection can use availability to evaluate alternatives. Advanced ATP also has its own product-substitution capabilities, which must be designed separately.</p>
+      </div>
+      <div>
+        <h3>Plant and shipping</h3>
+        <p>A substitute can have different plant determination, loading group, transportation group, shipping point or route consequences. The replacement can therefore change the logistical promise.</p>
+      </div>
+      <div>
+        <h3>Batch determination</h3>
+        <p>When both functions are relevant, check their processing sequence. SAP documents product substitution before automatic batch determination for the selected quantity in the classic scenario.</p>
+      </div>
+      <div>
+        <h3>Texts and outputs</h3>
+        <p>Decide whether the customer should see the entered material, the substitute, or both. The substitution reason can participate in this behavior, but output design must match the commercial policy.</p>
+      </div>
+      <div>
+        <h3>Billing and document flow</h3>
+        <p>Confirm which item becomes delivery- and billing-relevant and how the original request remains traceable. Product-selection subitems make this more important than in a simple direct replacement.</p>
+      </div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Find whether the failure is search, record, or substitution behavior.</h2>
+      <h2>Use the first failed decision, not the final symptom.</h2>
     </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Nothing happens after material entry</h3>
+        <p>Start with Sales document type and the OV14 procedure assignment. Then prove the active determination type. Do not inspect alternatives before proving that determination actually runs.</p>
+      </div>
+      <div>
+        <h3>Expected access is not executed</h3>
+        <p>Inspect the access sequence and condition-table fields. Compare the real runtime key with the key combination used in VB11.</p>
+      </div>
+      <div>
+        <h3>Access runs but finds no record</h3>
+        <p>Check determination type, all key values, requested delivery date, validity, source material and any customer or Sales-context dimensions.</p>
+      </div>
+      <div>
+        <h3>Wrong alternative wins</h3>
+        <p>Check the sequence of alternatives, the original-product entry if used, availability and the substitution reason. Priority is data, not an informal expectation.</p>
+      </div>
+      <div>
+        <h3>Order and delivery use different products</h3>
+        <p>Check the substitution reason outcome and whether new product selection is permitted in delivery. Then check whether availability changed after order creation.</p>
+      </div>
+      <div>
+        <h3>Product changes after rescheduling</h3>
+        <p>Check V_V2 behavior, current substitution settings and current availability. The new result may be expected redetermination rather than data corruption.</p>
+      </div>
+    </div>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Start with the originally requested material, document date, and Sales context. If SAP never reaches the expected key, the problem is in procedure or access logic. If the key is reached but no valid mapping is found, inspect the condition record. If the alternative is found but the document structure is unexpected, inspect the substitution reason and its configured behavior. ATP or item-category effects come later in the chain.</p>
+      <p><strong>Best support tool:</strong> switch on the Material Determination Analysis before entering the item. The analysis shows accesses and substitution decisions for the current transaction. It is temporary analysis data, so it is not a retrospective log you can open later for an already saved order.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Material Determination vs aATP</p>
+      <h2>Do not merge classic SD substitution with aATP Product Substitution.</h2>
+      <p>Both can answer “what can we sell instead?”, but they belong to different decision models. This distinction is increasingly important in S/4HANA designs.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Classic SD Material Determination</h3>
+        <p>Condition-technique driven. Strong fit for commercial replacement rules, identifier translation, time-based substitutions and classic automatic product selection. The Sales document procedure and substitution reason are central controls.</p>
+      </div>
+      <div>
+        <h3>aATP Product Substitution</h3>
+        <p>Part of advanced order promising. It can model substitution chains and advanced alternatives in the confirmation process, and can work together with location alternatives depending on the aATP design.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fork_right</span>
+      <p><strong>Lead decision:</strong> if the rule is “customer enters old SKU, always sell successor SKU,” start from Material Determination. If the rule is “during advanced confirmation, search product and location alternatives according to supply policy,” evaluate aATP substitution. Do not implement the same business decision twice in both layers.</p>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">link</span>
+      <p><strong>About substitution chains:</strong> do not memorize “A → B → C is not supported” as a universal S/4HANA rule. Chain behavior is feature-specific. Current aATP documentation explicitly supports product-substitution chains, while other Sales scenarios can have different restrictions.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Deployment boundary</p>
+      <h2>The concept is stable; delivered identifiers and configuration access are not.</h2>
+      <p>Material determination exists across current S/4HANA deployment models, but the way you configure and maintain it is not identical. Keep the conceptual chain stable and verify the concrete app, delivered keys and extensibility model in the target edition.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Private Edition / on-premise</h3>
+        <p>Classic GUI transactions such as OV16, OV11, OV12, OV13, OV14, OVRQ and VB11/VB12/VB13 remain useful technical anchors. Current S/4HANA on-premise documentation still describes this condition-technique model.</p>
+      </div>
+      <div>
+        <h3>Public Cloud</h3>
+        <p>Use the released apps and configuration activities for the cloud scope. Current Public Cloud documentation uses delivered identifiers such as <strong>Y001</strong> for a standard material-determination type in its example scope, so do not assume a classic <strong>A001</strong> key is universal.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">cloud</span>
+      <p><strong>Assessment answer:</strong> explain the business and determination model first. Mention transaction codes only after you state the deployment boundary. That shows you understand S/4HANA rather than memorizing an ECC customizing path.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transactions & technical anchors</p>
+      <h2>A compact support map.</h2>
+      <p>The customizing transactions below are classic/private/on-premise anchors. Cloud projects should map the same concepts to their released configuration activities and apps.</p>
+    </header>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Transaction</th><th>Purpose</th><th>What to prove</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>VB11</strong></td><td>Create Material Determination record</td><td>Key, validity, entered material, substitute, reason and alternatives</td></tr>
+          <tr><td><strong>VB12</strong></td><td>Change Material Determination record</td><td>Whether an existing rule was changed or reprioritized</td></tr>
+          <tr><td><strong>VB13</strong></td><td>Display Material Determination record</td><td>Current maintained rule without changing it</td></tr>
+          <tr><td><strong>OV26</strong></td><td>Field catalog</td><td>Whether the required key fields can participate in determination</td></tr>
+          <tr><td><strong>OV16</strong></td><td>Condition tables</td><td>The actual business key combination</td></tr>
+          <tr><td><strong>OV11</strong></td><td>Access sequences</td><td>Search order and fallback logic</td></tr>
+          <tr><td><strong>OV12</strong></td><td>Material-determination types</td><td>Which access sequence is used</td></tr>
+          <tr><td><strong>OV13</strong></td><td>Material-determination procedures</td><td>Which determination types belong to the procedure</td></tr>
+          <tr><td><strong>OV14</strong></td><td>Assign procedure to Sales document type</td><td>Whether material determination is active for the document type</td></tr>
+          <tr><td><strong>OVRQ</strong></td><td>Substitution reasons</td><td>User interaction, printing, product-selection and redetermination behavior</td></tr>
+          <tr><td><strong>VA01 / VA02</strong></td><td>Create / change Sales order</td><td>Actual runtime result in document context</td></tr>
+          <tr><td><strong>V_V2</strong></td><td>Rescheduling</td><td>Whether product selection is re-evaluated after availability or rule changes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead design checks</p>
+      <h2>Before configuration, answer the operating questions.</h2>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>What business decision is being automated?</h4><p>Identifier translation, successor product, promotion, shortage protection and supply substitution have different ownership and downstream risks.</p></div>
+      <div><span>02</span><h4>Who is allowed to decide the substitute?</h4><p>The system, the order-entry user, Sales operations or supply policy? This determines whether silent, manual or availability-driven behavior is appropriate.</p></div>
+      <div><span>03</span><h4>What date controls the rule?</h4><p>Define whether the replacement follows requested delivery date, a launch date, phase-out date or another business milestone. Then test boundary dates explicitly.</p></div>
+      <div><span>04</span><h4>Can the substitute change later?</h4><p>Decide whether rescheduling or delivery may redetermine the product. If not, protect the commitment intentionally instead of assuming SAP will keep the first result.</p></div>
+      <div><span>05</span><h4>Which downstream rules follow the substitute?</h4><p>Check pricing, plant, ATP, shipping, batch, outputs, delivery and billing. A technically correct substitution can still be a bad end-to-end design.</p></div>
+      <div><span>06</span><h4>Is classic SD or aATP the real owner?</h4><p>Put the decision in one layer. Duplicate substitution logic creates conflicting answers and difficult production diagnostics.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Separate the mapping from the determination engine.</h2>
+      <h2>Explain the engine, the record and the downstream effect.</h2>
     </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> Material determination is Sales substitution based on condition technique. The record contains the requested-to-alternative product mapping for a defined key and validity. Configuration decides how SAP searches for that record and how the substitution reason changes the sales item. I diagnose it in three layers: did SAP execute the expected access, did it find a valid mapping, and did the substitution behavior create the expected item structure? Only then do I move downstream to pricing, ATP, delivery, or billing.</p>
+      <p><strong>90-second answer:</strong> Material Determination in SAP Sales is a condition-technique mechanism that converts an entered material into another material or a set of alternatives. I separate it into three layers. First, configuration: condition table, access sequence, determination type and procedure decide how SAP searches, and the procedure must be assigned to the Sales document type. Second, the VB11 condition record contains the entered material, substitute or alternative materials, validity and substitution reason. Third, runtime behavior: the substitution reason can drive direct replacement, manual selection or automatic product selection with ATP and subitems. In support I first prove the active procedure and access, then the runtime key and validity, then the substitution reason and alternative sequence. I also check the requested delivery date, because validity is not simply “is the record valid today?”. Finally, I separate classic SD Material Determination from aATP Product Substitution, because aATP owns a different advanced-confirmation decision model.</p>
     </div>
-    <nav class="ecg-context-links" aria-label="Related master-data pages">
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Strong follow-up</h3>
+        <p>If the record exists but nothing happens, I do not create another record. I prove OV14, the determination type, the access sequence and the runtime key first.</p>
+      </div>
+      <div>
+        <h3>Strong support point</h3>
+        <p>I activate Material Determination Analysis before item entry because the analysis is transaction-local and cannot simply be opened later as a historical log.</p>
+      </div>
+      <div>
+        <h3>Strong architecture point</h3>
+        <p>If the requirement is driven by advanced supply confirmation and substitution chains, I evaluate aATP rather than forcing all substitution logic into classic SD condition records.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Source anchors</p>
+      <h2>Primary SAP references used for the model above.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Material Determination</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/3614994254bf4625aeb761c6ca05dd73.html">SAP Help — Material Determination</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/e4753da6a9e542c095c46ab287a3793e.html">SAP Help — Create Material Determination Records</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/078ac95360267214e10000000a174cb4.html">SAP Help — Setting Up the Condition Technique</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/a223c4530b29b44ce10000000a174cb4.html">SAP Help — Assigning Procedures to Sales Document Types</a></p>
+      </div>
+      <div>
+        <h3>Product Selection & diagnostics</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/ea66b65334e6b54ce10000000a174cb4.html">SAP Help — Selecting Products During Document Processing</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/ed66b65334e6b54ce10000000a174cb4.html">SAP Help — Material Determination Analysis</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/f889c95360267214e10000000a174cb4.html">SAP Help — Special Functions in Product Selection</a></p>
+      </div>
+      <div>
+        <h3>Cloud & aATP boundary</h3>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/e4753da6a9e542c095c46ab287a3793e.html">SAP Help — Material Determination Records in S/4HANA Cloud</a><br>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/5d394381bcd241688536583520faf7ca.html">SAP Help — Key Concepts in aATP Product Substitutions</a></p>
+      </div>
+    </div>
+
+    <nav class="ecg-context-links" aria-label="Related master-data and Sales pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
+      <a href="/labs/enterprise-context/master-data/customer-material/">Customer-Material Info</a>
+      <a href="/labs/enterprise-context/master-data/item-proposal/">Item Proposal</a>
+      <a href="/labs/enterprise-context/master-data/listing-exclusion/">Listing / Exclusion</a>
       <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/labs/enterprise-context/atp/">ATP / aATP</a>
     </nav>
   </section>
 </div>
