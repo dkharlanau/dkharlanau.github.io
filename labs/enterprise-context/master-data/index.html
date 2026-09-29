@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Sales Master Data — Core Catalogue and Runtime Use"
-description: "A practical SAP S/4HANA Sales master-data catalogue covering Business Partner, product, customer-material, partner relationships, hierarchies, texts, pricing conditions, material determination, listing and exclusion, free goods, cross-selling, credit, units, batches, BOMs, and variant configuration."
+description: "A practical SAP S/4HANA Sales master-data catalogue covering Business Partner, product, customer-material, partner relationships, hierarchies, texts, pricing conditions, material determination, listing and exclusion, free goods, cross-selling, credit, units, classification, batches, BOMs, and variant configuration."
 permalink: /labs/enterprise-context/master-data/
 status: draft
 verified: false
@@ -145,6 +145,7 @@ tags:
             {% when "MD.SD.CROSS" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/cross-selling/" %}
             {% when "MD.SD.CREDIT" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/credit-master-data/" %}
             {% when "MD.SD.UOM" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/units-of-measure/" %}
+            {% when "MD.SD.CLASS" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/classification/" %}
             {% when "MD.SD.BATCH" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/batch-master/" %}
             {% when "MD.SD.BOM" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/sales-bom/" %}
             {% when "MD.SD.VC" %}{% assign entity_detail_href = "/labs/enterprise-context/master-data/variant-configuration/" %}
@@ -323,7 +324,7 @@ tags:
       <div>
         <span>01</span>
         <h4>Order entry</h4>
-        <p>Business Partner, partner functions, addresses, Product, Customer Material, Item Proposal, Listing / Exclusion, Material Determination, Cross-Selling, Sales BOM, and Variant Configuration.</p>
+        <p>Business Partner, partner functions, addresses, Product, Customer Material, Item Proposal, Listing / Exclusion, Material Determination, Cross-Selling, Classification where product attributes are consumed, Sales BOM, and Variant Configuration.</p>
       </div>
       <div>
         <span>02</span>
@@ -333,7 +334,7 @@ tags:
       <div>
         <span>03</span>
         <h4>ATP and shipping</h4>
-        <p>Product sales/plant data, Customer Material, ship-to/address data, units of measure, availability and loading fields, plus Batch data where relevant.</p>
+        <p>Product sales/plant data, Customer Material, ship-to/address data, units of measure, availability and loading fields, plus Classification and Batch data where attribute-based selection is relevant.</p>
       </div>
       <div>
         <span>04</span>
@@ -343,7 +344,7 @@ tags:
       <div>
         <span>05</span>
         <h4>Delivery</h4>
-        <p>Ship-to and address, Product/UoM data, loading and logistics fields, Batch master/classification, and document partners carried into execution.</p>
+        <p>Ship-to and address, Product/UoM data, loading and logistics fields, Classification, Batch master data, and document partners carried into execution.</p>
       </div>
       <div>
         <span>06</span>
@@ -424,6 +425,7 @@ tags:
       <a href="/labs/enterprise-context/master-data/item-proposal/">Item Proposal</a>
       <a href="/labs/enterprise-context/master-data/listing-exclusion/">Listing / Exclusion</a>
       <a href="/labs/enterprise-context/master-data/cross-selling/">Cross-Selling</a>
+      <a href="/labs/enterprise-context/master-data/classification/">Classification</a>
       <a href="/labs/enterprise-context/organizational-structure/">SAP Organizational Structure</a>
       <a href="/labs/enterprise-context/sales-processes/master-data/">Full source-backed reference graph</a>
     </nav>
