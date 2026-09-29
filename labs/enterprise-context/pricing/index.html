@@ -325,6 +325,48 @@ source_links:
     </div>
   </section>
 
+
+  <section class="research-canvas__inventory" id="pricing-special-patterns" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Special pricing patterns</p>
+      <h2>Special cases are easier when we ask what changed in the normal chain.</h2>
+      <p>{{ graph.special_pricing_patterns.thesis }}</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      {% for pattern in graph.special_pricing_patterns.patterns %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><small>pattern</small></div>
+          <h3>{{ pattern.title }}</h3>
+        </header>
+        <p><strong>Memory:</strong> {{ pattern.memory }}</p>
+        <p>{{ pattern.changes }}</p>
+        {% if pattern.examples %}<p><strong>Examples:</strong> {{ pattern.examples }}</p>{% endif %}
+        <p><strong>Boundary:</strong> {{ pattern.boundary }}</p>
+        <p><strong>First check:</strong> {{ pattern.first_check }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <h3>Condition exclusion: seven useful comparison methods</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP condition exclusion comparison methods">
+      <table class="study-table__table">
+        <thead><tr><th>Method</th><th>What SAP keeps</th></tr></thead>
+        <tbody>
+          {% for method in graph.special_pricing_patterns.exclusion_methods %}
+          <tr><th scope="row">{{ method.code }}</th><td>{{ method.behavior }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">percent</span>
+      <p><strong>Tax boundary:</strong> {{ graph.special_pricing_patterns.tax_boundary.memory }} {{ graph.special_pricing_patterns.tax_boundary.behavior }} <strong>Lead check:</strong> {{ graph.special_pricing_patterns.tax_boundary.first_check }}</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="pricing-anatomy" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">One condition, one reasoning chain</p>
