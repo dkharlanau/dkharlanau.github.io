@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,7 +19,7 @@ tags:
   - billing
   - extensibility
   - troubleshooting
-last_reviewed: 2026-09-26
+last_reviewed: 2026-09-29
 publication_wave: "logistics-search-wave-01"
 review_method: "SAP S/4HANA 2025 FPS01 + SAP S/4HANA Cloud Public Edition 2608 + legacy pricing enhancement cross-check + full editorial pass"
 search_intent: "SAP SD pricing procedure, condition technique and pricing troubleshooting"
@@ -177,6 +177,59 @@ source_links:
       <h2>The system first chooses a procedure, then works through its conditions.</h2>
       <p>Current SAP documentation describes pricing procedure determination from the sales area, the customer pricing procedure, and the document pricing procedure. The resulting pricing procedure defines the condition types that can participate and the sequence in which they are processed.</p>
     </header>
+
+    <div class="ecg-determination-list" id="pricing-procedure-determination">
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>01</span><small>procedure</small></div>
+          <h3>How SAP finds the pricing procedure</h3>
+        </header>
+
+        <p><strong>{{ graph.procedure_determination.formula }}</strong></p>
+        <p>{{ graph.procedure_determination.mental_model }}</p>
+
+        <div class="ecg-rail" aria-label="Pricing procedure determination formula">
+          <div class="ecg-rail__branch">
+            <span class="ecg-node ecg-node--input">Sales area</span><span class="ecg-arrow" aria-hidden="true">+</span>
+            <span class="ecg-node ecg-node--input">Document PP</span><span class="ecg-arrow" aria-hidden="true">+</span>
+            <span class="ecg-node ecg-node--input">Customer PP</span><span class="ecg-arrow" aria-hidden="true">→</span>
+            <span class="ecg-node ecg-node--output">Pricing procedure</span>
+          </div>
+        </div>
+
+        <div class="ecg-decision-columns">
+          {% for key in graph.procedure_determination.keys %}
+          <div>
+            <h3>{{ key.title }}</h3>
+            <p>{{ key.source }}</p>
+            <p><strong>Memory shortcut:</strong> {{ key.memory_question }}</p>
+            <p>{{ key.why_it_matters }}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        <p><strong>What SAP really matches:</strong> {{ graph.procedure_determination.output }}</p>
+        <p class="ecg-caption">The memory questions are learning shortcuts, not SAP field definitions. Their job is to make the five-key determination easy to reconstruct under pressure.</p>
+      </article>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <div>
+        <p><strong>Wrong procedure? Do not open condition maintenance first.</strong> {{ graph.procedure_determination.lead_shortcut }}</p>
+        <ol>
+          {% for step in graph.procedure_determination.diagnostic_sequence %}
+          <li>{{ step }}</li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      {% for note in graph.procedure_determination.practical_notes %}
+      <div><h3>{{ note.title }}</h3><p>{{ note.body }}</p></div>
+      {% endfor %}
+    </div>
 
     <div class="ecg-rail" aria-label="Sales pricing determination chain">
       <div class="ecg-rail__branch">
