@@ -1,0 +1,125 @@
+---
+layout: default
+title: "SAP Supplier Master Data — Business Partner and Purchasing Context"
+description: "A practical SAP S/4HANA guide to Supplier master data: Business Partner roles, company-code and purchasing-organization views, partner functions, purchasing defaults, diagnostics, and source-of-supply boundaries."
+permalink: /labs/enterprise-context/master-data/supplier/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-mm
+  - procurement
+  - supplier
+  - business-partner
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Supplier</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Procurement / Business Partner</p>
+      <h1>Supplier master: identity first, purchasing context second.</h1>
+      <p>In S/4HANA, supplier master data is built on Business Partner. The same business identity can be a customer, a supplier, or both. Procurement behavior then depends on supplier roles and the purchasing and company-code views maintained for that context.</p>
+      <a class="research-canvas__button" href="#mental-model">Start with the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Boundary:</strong> Do not use “vendor master” as one undifferentiated bucket. General BP data, supplier company-code data, purchasing-organization data, and supplier-material data have different keys and owners.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="mental-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>One Business Partner can have several business roles.</h2>
+      <p>The useful diagnostic question is not “Does the supplier exist?” but “Does the supplier exist in the role and organizational scope that this procurement process needs?”</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Business Partner</h3><p>Global identity, name, address, communication, and common relationship context.</p></div>
+      <div><h3>Supplier role</h3><p>Makes the BP usable as a supplier in the relevant S/4HANA business context.</p></div>
+      <div><h3>Company code</h3><p>Adds accounting and payment context.</p></div>
+      <div><h3>Purchasing organization</h3><p>Adds purchasing-specific defaults and partner data.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Key and scope</p>
+      <h2>Know the key before you debug the value.</h2>
+      <p>The same value can be correct in one object or organizational context and wrong in another.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier key fields and process effects">
+      <table class="study-table__table">
+        <thead><tr><th>Field or dimension</th><th>Why it matters</th><th>Typical process effect</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Business Partner / supplier role</strong></td><td>Defines the legal/business identity and supplier capability.</td><td>Allows procurement processes to use the BP as a supplier.</td></tr>
+          <tr><td><strong>Company code</strong></td><td>Accounting-specific supplier data.</td><td>Connects supplier transactions to AP and payment context.</td></tr>
+          <tr><td><strong>Purchasing organization</strong></td><td>Procurement-specific data and defaults.</td><td>Controls commercial and purchasing behavior by organization.</td></tr>
+          <tr><td><strong>Partner functions</strong></td><td>Ordering address, goods supplier, invoicing party, and similar roles.</td><td>Allows different parties to perform different procurement roles.</td></tr>
+          <tr><td><strong>Commercial defaults</strong></td><td>Order currency, Incoterms, payment-related defaults where maintained.</td><td>Flows into purchasing documents unless a more specific source supplies another value.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime use</p>
+      <h2>Supplier data enters Procure-to-Pay at several boundaries.</h2>
+      <p>Source determination, purchasing documents, goods receipt, invoice verification, and payment do not all read the same supplier view.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Source</h4><p>Determine whether this supplier is a valid candidate for the material and plant.</p></div>
+      <div><span>02</span><h4>Purchase</h4><p>Read purchasing-organization defaults and supplier-material specifics.</p></div>
+      <div><span>03</span><h4>Receive</h4><p>Use supplier and delivery context during goods receipt and inbound processing.</p></div>
+      <div><span>04</span><h4>Invoice</h4><p>Use supplier accounting and invoice partner context.</p></div>
+      <div><span>05</span><h4>Pay</h4><p>Hand off to company-code and payment data in Finance.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead diagnosis</p>
+      <h2>Find the owning layer before changing data.</h2>
+      <p>A supplier can be globally valid and still fail in one purchasing organization, company code, source list, or supplier-material relationship.</p>
+    </header>
+    <div class="ecg-diagnostic">
+      <div><h4>Start here</h4><p>Prove BP identity → supplier role → company code → purchasing organization → partner function → supplier-material/source data.</p></div>
+      <div><h4>Do not jump here</h4><p>Do not create duplicate suppliers to solve a missing organizational view. Fix the missing role or scope after confirming governance and identity.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>Assessment answer:</strong> “Supplier master data in S/4HANA is Business Partner based. I separate general identity, company-code data and purchasing-organization data, then check the more specific supplier-material and source-of-supply records.”</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references</h2></header>
+    <ul>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/776fbd534f22b44ce10000000a174cb4.html">SAP Help — Business Partner Master Data Structure</a></li>
+    </ul>
+    <nav class="ecg-context-links" aria-label="Supplier related pages">
+      <span>Related</span>
+      <a href="/labs/enterprise-context/master-data/business-partner/">Business Partner / Customer</a>
+      <a href="/labs/enterprise-context/master-data/purchasing-info-record/">Purchasing Info Record</a>
+      <a href="/labs/enterprise-context/master-data/source-list/">Source List</a>
+      <a href="/labs/enterprise-context/procurement/">Procurement</a>
+      <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
+    </nav>
+  </section>
+</div>
