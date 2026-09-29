@@ -115,8 +115,13 @@ related:
         <p>Monitoring, security, backups, PITR, high availability, upgrades, and migration boundaries.</p>
         <span class="link-arrow">Read operations guide</span>
       </a>
+      <a class="atlas-card" href="/atlas/databases/postgresql-antipattern-field-guide/">
+        <h3>7. Anti-pattern field guide</h3>
+        <p>A fast diagnostic matrix: tempting shortcut, hidden failure mode, safer direction, and the evidence that should decide.</p>
+        <span class="link-arrow">Open the field guide</span>
+      </a>
       <a class="atlas-card" href="/atlas/databases/postgresql-troubled-database-playbook/">
-        <h3>7. Taking over a troubled database</h3>
+        <h3>8. Taking over a troubled database</h3>
         <p>A practical sequence for inheriting a system with unknown debt without turning the assessment into random tuning.</p>
         <span class="link-arrow">Open the playbook</span>
       </a>
