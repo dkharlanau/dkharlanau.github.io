@@ -1,0 +1,412 @@
+---
+layout: default
+title: "SAP S/4HANA Dangerous Goods Management — Product Compliance, Classification and Value-Chain Checks"
+description: "A practical SAP S/4HANA guide to Dangerous Goods Management: Product Compliance versus classic EHS-DGP, unpackaged and packaged classification, regulations, transport permissibility, mixed loading, Sales, Purchasing, Delivery, TM, output, configuration and Lead-level diagnostics."
+permalink: /labs/enterprise-context/master-data/dangerous-goods/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - dangerous-goods
+  - product-compliance
+  - ehs
+  - sales
+  - procurement
+  - shipping
+  - transportation-management
+  - master-data
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Dangerous Goods</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Product Compliance / Logistics</p>
+      <h1>Dangerous Goods: classify once, control transport across the value chain.</h1>
+      <p>Dangerous Goods Management connects regulatory classification with logistics execution. The key question is not only whether a product is dangerous. SAP must also know which regulation applies, whether the classification is released, how the product is packaged, where it moves, and by which mode of transport.</p>
+      <a class="research-canvas__button" href="#mental-model">Start with the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <div>
+      <p><strong>Important architecture boundary:</strong> SAP S/4HANA documentation contains both the classic <code>EHS-DGP</code> Dangerous Goods Management model and the newer Dangerous Goods capability in <strong>SAP S/4HANA for Product Compliance</strong>. They solve related transport-compliance problems, but their data model, apps and configuration are not the same.</p>
+      <p>For an assessment, first state which model and deployment you mean. Do not mix a classic material DG indicator profile and check schema with Product Compliance assessment/status logic as if they were one configuration path.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="mental-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Trace six decisions from product to document.</h2>
+      <p>A dangerous-goods block normally becomes understandable when these decisions are checked in order.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Relevance</h4><p>Is the product relevant for Product Compliance or, in the classic model, relevant for dangerous-goods checks?</p></div>
+      <div><span>02</span><h4>Regulation</h4><p>Which dangerous-goods regulation and version apply to the countries, route and mode of transport?</p></div>
+      <div><span>03</span><h4>Classification</h4><p>Is a released classification available, including the UN-number data and transport permission required by the regulation?</p></div>
+      <div><span>04</span><h4>Packaging</h4><p>Is the product represented as a valid packaged dangerous good or supported enclosure, with the required packaging data?</p></div>
+      <div><span>05</span><h4>Runtime check</h4><p>Does the business document pass transport permissibility and, where supported, mixed-loading checks?</p></div>
+      <div><span>06</span><h4>Execution and output</h4><p>Can the document continue, and does the required dangerous-goods description reach forms, transport documents, EDI or downstream systems?</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Lead rule:</strong> “The material is dangerous” is not enough to explain a block. The runtime result depends on regulatory scope, classification release, packaging, route/countries, mode of transport, document configuration and the exact process step.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Two SAP models</p>
+      <h2>Separate Product Compliance from classic EHS-DGP.</h2>
+      <p>Both models can appear in S/4HANA landscapes. Their concepts overlap, but the operating model differs.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Product Compliance and classic EHS-DGP comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Area</th><th>S/4HANA for Product Compliance</th><th>Classic Dangerous Goods Management</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Main idea</strong></td><td>Compliance-relevant product is assessed against activated dangerous-goods compliance requirements. Released assessments are consumed by value-chain checks.</td><td>Dangerous-goods basic data is maintained or filled into the dangerous-goods master and checked through configured DG check schemas.</td></tr>
+          <tr><td><strong>Product trigger</strong></td><td>Compliance relevance, compliance view and assigned compliance purposes.</td><td>Dangerous-goods indicator profile in the material master can mark the material as relevant for checks.</td></tr>
+          <tr><td><strong>Classification workflow</strong></td><td>Fiori-based worklists and apps for unpackaged and packaged dangerous goods, with released regulation-specific classifications.</td><td>Specification / dangerous-goods master processes, filling, phrase data and engineering-change-controlled records.</td></tr>
+          <tr><td><strong>Runtime logic</strong></td><td>Transport permissibility and, in supported processes, mixed-loading checks with item/header compliance status.</td><td>Check schemas contain check methods that evaluate logistics documents against DG master data.</td></tr>
+          <tr><td><strong>Typical integration</strong></td><td>Purchasing, Sales, outbound Delivery and Transportation Management.</td><td>Sales, shipping and shipment processing in the classic EH&amp;S integration model.</td></tr>
+          <tr><td><strong>What not to do</strong></td><td>Do not assume classic transaction/configuration names apply to Cloud Public Edition or to the Product Compliance data model.</td><td>Do not describe Product Compliance requests, compliance purposes and packaged/unpackaged compliance views as classic EHS-DGP objects.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="product-compliance-data" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Product Compliance data model</p>
+      <h2>The runtime document consumes released compliance decisions.</h2>
+      <p>The useful way to learn the data is by its role in the decision chain.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Dangerous goods Product Compliance data model">
+      <table class="study-table__table">
+        <thead><tr><th>Object / concept</th><th>What it means</th><th>Why runtime needs it</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Compliance-relevant product</strong></td><td>Product for which Product Compliance processes must run.</td><td>Without relevance, the expected assessment and logistics checks may not be triggered.</td></tr>
+          <tr><td><strong>Compliance view</strong></td><td>Compliance representation of the product. Dangerous Goods distinguishes unpackaged and packaged contexts.</td><td>Separates substance/basic classification from the transport-ready packaged product.</td></tr>
+          <tr><td><strong>Compliance purpose</strong></td><td>Defines why compliance is required and groups the applicable compliance requirements.</td><td>Connects business usage to the regulations that must be assessed.</td></tr>
+          <tr><td><strong>Compliance requirement</strong></td><td>Represents a regulation or regulatory requirement, including versions.</td><td>Provides the legal content against which the product is classified.</td></tr>
+          <tr><td><strong>Dangerous-goods classification</strong></td><td>Regulation-specific assessment of whether the product is dangerous and, if so, the relevant UN-number data, labels, special provisions and transport permission.</td><td>Supplies the decision data for transport permissibility and document output.</td></tr>
+          <tr><td><strong>Packaged classification</strong></td><td>Adds enclosure- and packaging-specific information to the basic classification.</td><td>Dangerous goods normally cannot be transported as an unpackaged product; transport needs a compliant package or enclosure.</td></tr>
+          <tr><td><strong>Generated DG description</strong></td><td>Regulation-specific transport description produced from the classification data.</td><td>Used on logistics and transport output where the regulation requires it.</td></tr>
+          <tr><td><strong>Compliance status</strong></td><td>Result of the runtime check at item and, depending on process, header level.</td><td>Controls whether processing continues, continues with warning/restriction, or is blocked.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classification process</p>
+      <h2>Classify the substance first, then the transport package.</h2>
+      <p>This sequence is one of the most important Product Compliance concepts.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Activate regulatory scope</h4><p>Make the required dangerous-goods compliance requirements available and active for the business scope.</p></div>
+      <div><span>02</span><h4>Create compliance context</h4><p>Mark the product compliance-relevant and assign the required compliance view and compliance purposes.</p></div>
+      <div><span>03</span><h4>Classify unpackaged product</h4><p>For each applicable regulation version, decide whether the product is a dangerous good. If yes, select the relevant UN-number data set and maintain required regulation-specific information.</p></div>
+      <div><span>04</span><h4>Release basic classification</h4><p>Check the generated dangerous-goods description and release the classification. Only released classification data should drive follow-on logistics processes.</p></div>
+      <div><span>05</span><h4>Classify packaged product</h4><p>After the basic classification is released, classify the related packaged product. Maintain enclosure variant, packaging details and any regulation- or mode-specific data.</p></div>
+      <div><span>06</span><h4>Consume in logistics</h4><p>Sales, Purchasing, Delivery or TM determines the applicable regulation and checks whether transport is allowed for the concrete document context.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      <p><strong>Why packaging matters:</strong> SAP documents that an unpackaged product classified as dangerous goods is not allowed to be transported. A valid packaging or enclosure context is therefore not a cosmetic detail; it is part of transport eligibility.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="regulation-determination" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Regulation determination</p>
+      <h2>The same product can have different transport answers.</h2>
+      <p>A dangerous-goods classification is regulation-specific. Road, rail, sea and air transport can require different regulatory data or permission.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Countries and regions</h3><p>Departure, destination and relevant transit countries help determine which regulation applies.</p></div>
+      <div><h3>Mode / shipping type</h3><p>Road, rail, sea or air changes the regulation context. In supported S/4HANA releases, the shipping type in a sales document can contribute to regulation determination.</p></div>
+      <div><h3>Regulation version</h3><p>Classification is versioned. A regulatory update can create a reassessment need even when the product itself has not changed.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">alt_route</span>
+      <p><strong>Assessment example:</strong> a packaged solvent may be transportable from Germany to France by road under the released road classification, but the same product planned for ocean transport can require an IMDG-specific classification and different packaging or marking data. “Same material” does not mean “same transport result”.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="value-chain-checks" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Value-chain checks</p>
+      <h2>Know which process checks what.</h2>
+      <p>Product Compliance carries the regulatory decision into the business document. The exact check set is process-specific.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Dangerous goods checks by business process">
+      <table class="study-table__table">
+        <thead><tr><th>Process</th><th>Typical document</th><th>Dangerous-goods behavior</th><th>Lead question</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Sales</strong></td><td>Quotation, sales order, order without charge, contract, scheduling agreement</td><td>Transport permissibility and mixed-loading checks can run for compliance-relevant products. Results can warn or block depending on check result and configuration.</td><td>What route/countries/mode were determined, and is a released classification available for that scope?</td></tr>
+          <tr><td><strong>Purchasing</strong></td><td>Purchase order / stock-transfer scenarios where Product Compliance is integrated</td><td>Transport permissibility is integrated. Product Compliance statuses are exposed at item and header level; mixed loading is not the standard purchasing check.</td><td>Is the transport restriction a supplier/product problem, a route/mode problem, or missing compliance data?</td></tr>
+          <tr><td><strong>Delivery</strong></td><td>Outbound delivery</td><td>Transport permissibility and mixed-loading checks can run again with execution data. A delivery can be blocked even if earlier commercial processing succeeded.</td><td>What changed between order and delivery: route, quantity, packaging, countries, mode or classification validity?</td></tr>
+          <tr><td><strong>Transportation Management</strong></td><td>Freight Unit, Freight Order, Freight Booking</td><td>Transport permissibility and mixed-loading checks evaluate transport execution context.</td><td>Does the selected transport plan create a regulation or incompatibility that did not exist in the sales-order context?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Two main runtime checks</p>
+      <h2>Transport permission and mixed loading solve different problems.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Transport permissibility</h3>
+        <p>Checks whether the product may be transported in the determined regulatory context. Missing released assessment, forbidden transport or unsupported product/package context can prevent further processing.</p>
+      </div>
+      <div>
+        <h3>Mixed loading</h3>
+        <p>Checks whether dangerous goods can be transported together in the same transport context. The system compares relevant products for regulatory incompatibilities. Availability and reaction depend on process, regulation and configuration.</p>
+      </div>
+      <div>
+        <h3>Status aggregation</h3>
+        <p>Item results are reflected in document-level status. A document can therefore be fully allowed, restricted/warning, partially blocked or blocked depending on the affected items and process.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Do not overgeneralize:</strong> mixed loading is not simply “another transport-permission rule”. It evaluates combinations of products. It is also not integrated in every process in the same way; for example, SAP documents purchasing integration around transport permissibility rather than the full mixed-loading check.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Product Compliance setup</p>
+      <h2>Configuration should answer where checks run and how they react.</h2>
+      <p>Exact configuration activities vary by S/4HANA edition and release. The design questions are stable.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Dangerous Goods Product Compliance setup decisions">
+      <table class="study-table__table">
+        <thead><tr><th>Decision</th><th>What to configure or maintain</th><th>Failure if wrong</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Business feature / scope</strong></td><td>Activate Product Compliance integration and the required dangerous-goods business scope for the deployment.</td><td>Apps, status fields or document checks are not available where expected.</td></tr>
+          <tr><td><strong>Regulatory foundation</strong></td><td>Activate the required dangerous-goods compliance requirements and versions.</td><td>Product cannot be assessed for the transport regulation that the process needs.</td></tr>
+          <tr><td><strong>Product relevance</strong></td><td>Set compliance relevance and maintain the compliance view / purposes.</td><td>No assessment request or no relevant logistics check is triggered.</td></tr>
+          <tr><td><strong>Check behavior</strong></td><td>Define how value-chain checks react to missing compliance data and which document types are excluded from integration where the deployment supports these settings.</td><td>Documents are blocked too broadly, or a process bypasses compliance unexpectedly.</td></tr>
+          <tr><td><strong>Mixed loading</strong></td><td>Enable the mixed-loading behavior for supported regulations/processes and define warning/error reaction where configurable.</td><td>Incompatible products are not detected, or users receive unexpected document blocks.</td></tr>
+          <tr><td><strong>Transport context</strong></td><td>Ensure country/region, transit-country and mode/shipping-type information can be determined from the logistics process.</td><td>The wrong regulation is checked or no valid assessment can be selected.</td></tr>
+          <tr><td><strong>Output</strong></td><td>Configure forms/output to consume the generated dangerous-goods descriptions and required regulatory data.</td><td>Document is legally transportable in SAP but transport paperwork is incomplete.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="classic-ehs-dgp" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classic EHS-DGP</p>
+      <h2>The classic model is driven by DG master data and check schemas.</h2>
+      <p>This section is intentionally separate from Product Compliance. It is relevant in landscapes that still use the classic Dangerous Goods Management component.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Mark material relevance</h4><p>Define dangerous-goods indicator profiles and assign the relevant profile to the material, traditionally in Basic Data 2. Customizing decides whether only materials marked relevant are checked.</p></div>
+      <div><span>02</span><h4>Maintain DG master data</h4><p>Dangerous-goods basic data can be maintained in specification management and filled into the dangerous-goods master. Engineering change management supports time-dependent versions.</p></div>
+      <div><span>03</span><h4>Determine document context</h4><p>Sales/shipping checks use logistics context such as sales organization, document type, ship-to, shipping point, route and the relevant document date.</p></div>
+      <div><span>04</span><h4>Assign check schema</h4><p>Customizing determines which dangerous-goods check schema runs for the business context.</p></div>
+      <div><span>05</span><h4>Run check methods</h4><p>The schema executes check methods against the dangerous-goods master. The classic completeness check must be positioned first in the schema.</p></div>
+      <div><span>06</span><h4>React and log</h4><p>The complete reaction of the schema controls messages and whether the user can save. The check log is the first evidence source for diagnosis.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">history</span>
+      <p><strong>Useful distinction:</strong> “DG indicator profile + dangerous-goods master + check schema” is the classic mental model. “Compliance relevance + compliance requirements + released assessment + Product Compliance status” is the newer Product Compliance mental model.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="apps-tools" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Apps and tools</p>
+      <h2>Use the UI that belongs to the implementation model.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Dangerous Goods apps and transactions">
+      <table class="study-table__table">
+        <thead><tr><th>App / transaction</th><th>Model</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><strong>My Unpackaged Dangerous Goods</strong></td><td>Product Compliance</td><td>Worklist and starting point for products that require basic dangerous-goods classification.</td></tr>
+          <tr><td><strong>Classify Unpackaged Dangerous Good</strong></td><td>Product Compliance</td><td>Overview of applicable regulation versions and basic classification status.</td></tr>
+          <tr><td><strong>Dangerous Good – Classification Details for an Unpackaged Product</strong></td><td>Product Compliance</td><td>Maintain regulation-specific UN-number data, transport permission and release the classification.</td></tr>
+          <tr><td><strong>My Packaged Dangerous Goods</strong></td><td>Product Compliance</td><td>Worklist for packaged dangerous goods and related classification requests.</td></tr>
+          <tr><td><strong>Classify Packaged Dangerous Good</strong></td><td>Product Compliance</td><td>Maintain enclosure and packaging-specific classification data.</td></tr>
+          <tr><td><strong>Compliance Request from Logistics</strong></td><td>Product Compliance</td><td>Process requests triggered from logistics/product context and hand them over for assessment.</td></tr>
+          <tr><td><code>VA01</code> / <code>VA02</code></td><td>Classic / on-premise Sales UI context</td><td>Sales documents can trigger configured classic dangerous-goods checks. Do not present these transactions as the universal Product Compliance maintenance UI.</td></tr>
+          <tr><td><code>MM02</code></td><td>Classic EHS-DGP</td><td>Traditional place to maintain the material DG indicator profile in Basic Data 2.</td></tr>
+          <tr><td><strong>Dangerous Goods Master maintenance</strong></td><td>Classic EHS-DGP</td><td>Maintain or review classic dangerous-goods master records and validity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="output" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Output and integration</p>
+      <h2>A passed check is not the end of compliance.</h2>
+      <p>The transport chain still needs correct regulatory data on documents and interfaces.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Document text</h3><p>Product Compliance can generate dangerous-goods descriptions from regulation-specific classification rules and use them in Sales and logistics output.</p></div>
+      <div><h3>Forms</h3><p>Standard form templates can include dangerous-goods information. The exact template and trigger depend on the business document and deployment.</p></div>
+      <div><h3>EDI / APIs</h3><p>Dangerous-goods information can be provided to downstream processes electronically. Treat regulatory data as part of the integration contract, not as decorative text.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">description</span>
+      <p><strong>Lead check:</strong> prove both decisions: “SAP allowed the transport” and “the required transport data was sent or printed correctly.” A green compliance status does not prove that the carrier received the correct description, labels or EDI content.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="diagnostics" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostics</p>
+      <h2>Do not change configuration before you know which decision failed.</h2>
+      <p>Start with the document evidence and narrow the problem to data, regulatory determination, packaging, configuration or integration.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Dangerous Goods diagnostic patterns">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>Plausible causes</th><th>Evidence to check first</th></tr></thead>
+        <tbody>
+          <tr><td>Sales order is blocked after adding a product</td><td>Missing released classification, forbidden transport, wrong regulation determination, missing packaged classification, mixed-loading conflict</td><td>Item DG status / check log → product compliance data → countries and mode → packaging.</td></tr>
+          <tr><td>Order was accepted but outbound delivery is blocked</td><td>Execution context changed: route, transit country, shipping type, quantity/package data or classification validity</td><td>Compare order and delivery transport context before changing master data.</td></tr>
+          <tr><td>Purchase order shows dangerous-goods restriction</td><td>Transport is not permitted for the determined country/mode, or required assessment is missing</td><td>PO item/header Product Compliance status and the exact assessment used.</td></tr>
+          <tr><td>TM freight document cannot continue</td><td>Transport plan selected a different mode/regulation, or products are incompatible for mixed loading</td><td>Freight Unit / Order / Booking compliance status, mode and product-pair incompatibility.</td></tr>
+          <tr><td>DG description is missing from output</td><td>Classification description not released, wrong regulation determined, output form not consuming DG data, output trigger condition missing</td><td>Generated description → determined regulation → form/output configuration.</td></tr>
+          <tr><td>Same product works in one country but fails in another</td><td>Different regulatory requirement, version, transport permission or country-specific assessment gap</td><td>Compare applicable compliance requirements and released versions; do not copy a classification blindly.</td></tr>
+          <tr><td>Classic DG check says master data is incomplete</td><td>No route, no DG master record, invalid date/version, wrong indicator profile or missing check-schema prerequisite</td><td>Classic DG check log and completeness check before custom code or schema changes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Identify the engine</h4><p>Product Compliance or classic EHS-DGP? Confirm edition/release before using transactions or IMG paths.</p></div>
+      <div><span>02</span><h4>Read the status/log</h4><p>Find the exact item and check that failed. Avoid diagnosing from the generic document block alone.</p></div>
+      <div><span>03</span><h4>Verify compliance data</h4><p>Check relevance, compliance view, released regulation-specific classification and packaged-product assignment.</p></div>
+      <div><span>04</span><h4>Verify transport context</h4><p>Departure, destination, transit, mode/shipping type, route and relevant date.</p></div>
+      <div><span>05</span><h4>Verify configuration</h4><p>Document inclusion/exclusion, check behavior, mixed-loading activation, classic check schema where applicable.</p></div>
+      <div><span>06</span><h4>Prove the fix</h4><p>Recheck the same scenario and then the downstream document. Confirm output/interface data, not only the absence of a block.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="design-decisions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead design decisions</p>
+      <h2>Dangerous Goods is an operating model, not only a configuration task.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Scope ownership</h3><p>Who decides which products, countries, regulations and transport modes are compliance-relevant? Product stewardship and logistics need one controlled ownership model.</p></div>
+      <div><h3>Release discipline</h3><p>Who can release classifications, and how are regulatory updates reassessed? A technically complete record is not enough without controlled approval and validity.</p></div>
+      <div><h3>Exception policy</h3><p>Which warnings can users accept, which failures must hard-block, and which document types may be excluded? Make the business-risk decision explicit.</p></div>
+      <div><h3>Packaging model</h3><p>Does the product/package model represent how goods are really shipped? Wrong package semantics can make a valid substance classification unusable in execution.</p></div>
+      <div><h3>Integration contract</h3><p>Which DG fields must reach TM, carrier interfaces, EDI, warehouse output and forms? Define ownership of mapping and monitoring.</p></div>
+      <div><h3>Change impact</h3><p>A new regulation version can affect many products and open logistics documents. Plan reassessment, monitoring and operational follow-up before the effective date.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Common confusions</p>
+      <h2>Keep the neighboring concepts separate.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Dangerous Goods common confusions">
+      <table class="study-table__table">
+        <thead><tr><th>Do not confuse</th><th>Difference</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Dangerous Goods vs hazardous substance / SDS</strong></td><td>Dangerous Goods focuses on transport compliance. Hazard communication and safety-data-sheet obligations are related Product Compliance areas but are not the same decision.</td></tr>
+          <tr><td><strong>DG classification vs SAP Classification</strong></td><td>A dangerous-goods classification is a regulatory transport assessment. SAP CA-CL classes and characteristics are a generic cross-application attribute model.</td></tr>
+          <tr><td><strong>Route determination vs regulation determination</strong></td><td>SD/TM determines logistics route/context; Product Compliance uses transport context to identify the regulatory checks that apply.</td></tr>
+          <tr><td><strong>Transport permission vs ATP</strong></td><td>ATP answers whether/when supply can be confirmed. DG transport permission answers whether the product may legally move in the defined transport context.</td></tr>
+          <tr><td><strong>Packaged product vs packaging material</strong></td><td>The packaged dangerous-good classification represents the product in a compliant transport enclosure. A packaging material master alone does not replace that regulatory classification.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment</p>
+      <h2>Explain the decision chain, then the architecture boundary.</h2>
+      <p>A Lead answer should show that you understand both compliance master data and runtime logistics.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> “In S/4HANA Product Compliance, Dangerous Goods is not just a flag on the material. We mark the product compliance-relevant, assign the required compliance purposes and regulations, classify the unpackaged product, release the regulation-specific basic classification, and then classify the packaged product. During Sales, Purchasing, Delivery and TM, SAP determines the transport context and runs dangerous-goods checks. Transport permissibility verifies whether the product may move under the applicable regulation; Sales, Delivery and TM can also use mixed-loading checks. If assessment data is missing or transport is forbidden, the process can be blocked. For troubleshooting I identify whether the landscape uses Product Compliance or classic EHS-DGP, read the item status/check log, then trace product relevance → released classification → packaging → country/mode/route → check configuration → output.”</p>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div><h4>Follow-up: why can order pass and delivery fail?</h4><p>Because the execution document can have a more concrete or changed route, transit country, mode, packaging or regulatory-validity context. Re-checking downstream is intentional.</p></div>
+      <div><h4>Follow-up: what is the classic difference?</h4><p>Classic EHS-DGP uses a dangerous-goods master, material DG indicator profiles and configured check schemas. Product Compliance uses compliance relevance, compliance requirements, released assessments and value-chain compliance statuses.</p></div>
+      <div><h4>Follow-up: why unpackaged then packaged?</h4><p>The basic classification belongs to the substance/product without packaging. Transport eligibility also depends on a compliant enclosure, so the packaged product adds transport-specific packaging data.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary SAP references</h2>
+    </header>
+    <ul>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/35751be3d6ee423197492574e016a512/b726909e8d9e4869b3e6d021b2c98238.html">SAP Help — Product Compliance: Dangerous Goods Checks</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/35751be3d6ee423197492574e016a512/4e405407fc8146cfa66e26fa3ee2054b.html">SAP Help — Dangerous Goods Check in Sales Processes</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/35751be3d6ee423197492574e016a512/b28cabe5624147a2a4fd537c17d69762.html">SAP Help — Dangerous Goods Check in Delivery Processes</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/35751be3d6ee423197492574e016a512/608a77c39533406fab9667351469e1cb.html">SAP Help — Dangerous Goods Check in Transportation Management</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/55fd8e27dc894726b70e5de65fe07382.html">SAP Help — Product Compliance in Purchase Orders</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/6540a57e42314b5a8c208bca283e29e6/003341b2f3954b7f9e10a728a7ccfa6e.html">SAP Help — How to Classify Unpackaged Dangerous Goods</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/6540a57e42314b5a8c208bca283e29e6/ea09d5359ae74df49fabc60f66fb62cc.html">SAP Help — How to Classify Packaged Dangerous Goods</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/6540a57e42314b5a8c208bca283e29e6/148a9e6a7abf4abd8573fad30116ee8e.html">SAP Help — Compliance Request from Logistics</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/2fd59f821b7d4ecd9b93fc0441b8c95e/4d91eb32c94c40a9e10000000a15822b.html">SAP Help — Classic EHS-DGP Dangerous Goods Checks in Sales Documents</a></li>
+    </ul>
+
+    <nav class="ecg-context-links" aria-label="Dangerous Goods related pages">
+      <span>Related</span>
+      <a href="/labs/enterprise-context/master-data/material/">Product / Material</a>
+      <a href="/labs/enterprise-context/shipping/">Shipping</a>
+      <a href="/labs/enterprise-context/procurement/">Procurement</a>
+      <a href="/labs/enterprise-context/transportation-management/">Transportation Management</a>
+      <a href="/labs/enterprise-context/master-data/classification/">Classification</a>
+      <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
+    </nav>
+  </section>
+</div>
