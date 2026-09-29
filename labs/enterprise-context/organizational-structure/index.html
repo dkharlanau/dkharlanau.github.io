@@ -136,6 +136,30 @@ source_links:
   </section>
 
 
+
+  <section class="research-canvas__inventory" id="enterprise-top-levels" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Top-level structure</p>
+      <h2>Start above Sales: Client, Company, Controlling and profitability.</h2>
+      <p>These levels explain why two Sales Organizations or Plants can share some data but still belong to different legal or management-accounting boundaries.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP S/4HANA top-level organizational units">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Level</th><th>Meaning</th><th>Typical relationship</th><th>Lead note</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Client</strong></td><td>Highest technical and organizational level in an SAP system; client-specific master, Customizing, and transaction data is separated here.</td><td>Contains Company Codes and the other organizational units.</td><td>Do not use another Client just to separate ordinary business units. Client separation is a much stronger system/data boundary.</td></tr>
+          <tr><td><strong>Company</strong></td><td>Optional FI consolidation unit used to group one or more Company Codes.</td><td>Company → one or more Company Codes.</td><td>Company and Company Code are not synonyms. Day-to-day legal accounting happens at Company Code level.</td></tr>
+          <tr><td><strong>Operating Concern</strong></td><td>Profitability-analysis level for a common market and profitability view.</td><td>Can combine one or more Controlling Areas.</td><td>Useful for CO-PA / Margin Analysis; it is not the owner of a Sales Order.</td></tr>
+          <tr><td><strong>Controlling Area</strong></td><td>Closed management-accounting boundary for costs and revenues.</td><td>Controlling Area → one or more Company Codes.</td><td>Cross-company allocations require the Company Codes to be in the same Controlling Area and to meet the accounting prerequisites.</td></tr>
+          <tr><td><strong>Company Code</strong></td><td>Independent legal accounting unit for statutory financial statements.</td><td>Owns Plants and Sales Organizations; assigned to a Controlling Area.</td><td>This is the key legal boundary that turns a logistics design into an accounting and intercompany design.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="cross-module-map" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Cross-module map</p>
@@ -196,6 +220,14 @@ source_links:
         <div class="ecg-decision-columns">
           <div><h4>Important exception</h4><p>A Purchasing Group is created at client level and is not structurally assigned to one Purchasing Organization or Plant.</p></div>
           <div><h4>Design meaning</h4><p>Do not draw it as a mandatory child node under Purchasing Organization. It is a responsibility key used across purchasing processes and master data.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>MM4</span><small>determination</small></div><h3>Standard and Reference Purchasing Organizations</h3><p class="ecg-question">How do we reuse purchasing conditions or determine a Purchasing Organization automatically?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Standard Purchasing Organization</h4><p>Can be assigned to a Plant for processes where SAP must determine a Purchasing Organization automatically, for example selected stock-transfer, consignment, pipeline, or automatic-order scenarios.</p></div>
+          <div><h4>Reference Purchasing Organization</h4><p>Allows purchasing conditions and contracts to be referenced across Purchasing Organizations. Use it to reduce duplicate maintenance when the commercial policy is genuinely shared.</p></div>
         </div>
       </article>
 
