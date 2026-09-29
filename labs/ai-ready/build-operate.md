@@ -108,11 +108,11 @@ Token cost is only one part of AI cost. A workflow becomes expensive when it mak
 
 The useful unit is therefore **cost per successful task**, not price per million tokens.
 
-\`\`\`text
+```text
 cost per successful task
   = total model + tool + retrieval + infrastructure spend
     / number of outcomes that pass the quality gate
-\`\`\`
+```
 
 This changes the optimization question. A cheaper model that creates more retries or more rejected answers can make the final task more expensive. A larger model can sometimes be cheaper if it solves the task in one call instead of five. Measure the full path.
 
@@ -162,7 +162,7 @@ Prompt caching deserves special attention because it can fail silently. A long s
 
 A safer request shape is:
 
-\`\`\`text
+```text
 stable provider / system instructions
 stable tool definitions
 stable reference rules
@@ -170,7 +170,7 @@ stable reference rules
 user-specific context
 current timestamp or request metadata
 new user input
-\`\`\`
+```
 
 The exact cache rules are provider- and model-specific. The design principle is stable: put shared content before changing content, preserve ordering where possible, and monitor reported cache usage instead of assuming reuse happened.
 
