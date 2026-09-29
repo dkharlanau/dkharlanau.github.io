@@ -138,10 +138,10 @@ WHERE c.state IS NOT NULL
     <h2>Sources</h2>
     <ul>
       <li>Jimmy Angelakos, <em>PostgreSQL Mistakes and How to Avoid Them</em>, chapter 2 and Appendix B.</li>
-      <li><a href="https://www.postgresql.org/docs/current/functions-subquery.html">PostgreSQL: Subquery Expressions</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/queries-with.html">PostgreSQL: WITH Queries</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/indexes-expressional.html">PostgreSQL: Indexes on Expressions</a></li>
-      <li><a href="https://www.postgresql.org/docs/current/using-explain.html">PostgreSQL: Using EXPLAIN</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/functions-subquery.html">PostgreSQL: Subquery Expressions</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/queries-with.html">PostgreSQL: WITH Queries</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/indexes-expressional.html">PostgreSQL: Indexes on Expressions</a></li>
+      <li><a href="https://www.postgresql.org/docs/18/using-explain.html">PostgreSQL: Using EXPLAIN</a></li>
     </ul>
   </div>
 
