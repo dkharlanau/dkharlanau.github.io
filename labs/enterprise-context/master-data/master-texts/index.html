@@ -1,18 +1,15 @@
 ---
 layout: default
-title: "SAP Sales Master Data — Master Text Sources"
-description: "A practical deep dive into Master Text Sources in SAP S/4HANA Sales: scope, important fields, runtime behavior, configuration boundaries, diagnostics and assessment recall."
+title: "SAP S/4HANA Sales Text Control"
+description: "Practical SAP S/4HANA Sales Text Control: VOTXN, text procedures, access sequences, copy modes, mandatory texts, VOFM and BAdI extensions."
 permalink: /labs/enterprise-context/master-data/master-texts/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags:
   - sap-s4hana
   - sap-sd
-  - master-data
+  - text-control
+  - text-determination
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -21,87 +18,234 @@ tags:
     <li><a href="/labs/">Labs</a></li>
     <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
     <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
-    <li aria-current="page">Master Text Sources</li>
+    <li aria-current="page">Text Control</li>
   </ol>
 </nav>
 
-<div class="research-canvas context-graph">
+<div class="research-canvas context-graph text-control-page">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Sales / Master Data / MD.SD.TEXT</p>
-      <h1>Master Text Sources</h1>
-      <p>Texts in sales documents are often copied from reusable sources rather than typed manually. Customer, product and other master records can hold language-dependent texts that are selected and copied according to text-determination rules.</p>
-      <a class="research-canvas__button" href="#runtime">Follow the runtime path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">SAP Sales / Text Control</p>
+      <h1>Text Control</h1>
+      <p>Text Control is a search-and-transfer engine. SAP decides <strong>which text is needed</strong>, <strong>where to find it</strong>, and <strong>how to move it</strong> into the sales document.</p>
+      <a class="research-canvas__button" href="#runtime">Follow the runtime <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
-      <p>Object profile</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>MD.SD.TEXT</strong><small>Catalogue ID</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>content master</strong><small>Data class</small></div>
-      <em>Text object, text ID, language, master object and sales-area context where relevant.</em>
+      <p>Fast recall</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>VOTXN</strong><small>Main customizing</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>SO10</strong><small>Standard texts</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>VOFM</strong><small>Classic routines</small></div>
+      <em>Text type → procedure → access sequence → source → transfer mode.</em>
     </div>
   </header>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>The master stores content; text determination decides where the document gets it.</h2>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Do not memorize text screens. Memorize the decision chain.</h2>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">database</span>
-      <p><strong>Scope:</strong> Text object, text ID, language, master object and sales-area context where relevant.</p>
-    </div>
-    <div class="ecg-decision-columns">
-      <div>
-        <h3>Important data</h3>
-        <p>Text object, text ID, language, source master key, sales-area context and text content.</p>
-      </div>
-      <div>
-        <h3>Configuration boundary</h3>
-        <p>The text itself is maintained data. The text determination procedure, access sequence and copy behavior are configuration.</p>
-      </div>
-    </div>
-  </section>
 
-  <section class="research-canvas__inventory" id="runtime" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>A reusable text becomes a document snapshot through a search and copy decision.</h2>
-      <p>At Sales, delivery, or billing creation, text determination can search configured sources for a specific text ID and language. When a source is found, its content can be copied into the business document. From that point, follow-on text behavior depends on later text and copy rules rather than on the source master alone.</p>
-    </header>
-    <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Name the missing text</h4><p>Start with the exact text ID, document level, language, and document where the content is wrong or missing.</p></div>
-      <div><span>02</span><h4>Read the source content</h4><p>Check the relevant customer, product, or other master source and prove that the required language and text actually exist.</p></div>
-      <div><span>03</span><h4>Follow text determination</h4><p>Trace the active text procedure and source sequence to see whether SAP reaches the expected master text.</p></div>
-      <div><span>04</span><h4>Compare the document copy</h4><p>Verify the text stored in the document. Once copied, the document can have its own text state and later changes to master content may not explain it.</p></div>
-      <div><span>05</span><h4>Trace follow-on inheritance</h4><p>If the source document is correct but delivery, billing, or output is wrong, move to copy and downstream text rules.</p></div>
+    <div class="tc-flow" aria-label="Text Control determination flow">
+      <span>Text type</span><b>→</b>
+      <span>Procedure</span><b>→</b>
+      <span>Access sequence</span><b>→</b>
+      <span>Source</span><b>→</b>
+      <span>Copy mode</span><b>→</b>
+      <span>Document text</span>
+    </div>
+
+    <div class="tc-highlight">
+      <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+      <p><strong>The source stores content. Text determination decides if, where and how SAP reads it.</strong></p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Troubleshooting</p>
-      <h2>Separate source content, source selection, and document inheritance.</h2>
+      <p class="research-canvas__eyebrow">Transactions</p>
+      <h2>Four places worth remembering.</h2>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p>Identify the exact text ID and language first. If the source master text is wrong, fix content. If the source is correct but the document text is missing, trace text determination. If the Sales document is correct but a follow-on document or output is wrong, inspect copy and downstream text rules. These are three different ownership layers.</p>
+
+    <div class="tc-tcodes">
+      <div><code>VOTXN</code><strong>Text Control</strong><p>Text types, procedures, access sequences and assignments.</p></div>
+      <div><code>SO10</code><strong>Standard Texts</strong><p>Reusable text objects that can be read through an access sequence.</p></div>
+      <div><code>VOFM</code><strong>Classic routines</strong><p>Custom copying requirements and data-transfer logic in classic/private-edition scenarios.</p></div>
+      <div><code>SM31</code><strong>V_TVUVF</strong><p>Special incompleteness maintenance for mandatory-text checks.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime</p>
+      <h2>When a text is missing, walk the same path SAP walks.</h2>
+      <p>Start with the exact text ID and document level. Then prove the source, the search logic and the transfer behavior.</p>
+    </header>
+
+    <div class="tc-runtime">
+      <div><span>01</span><strong>Name the text</strong><p>Header or item? Which text ID? Which language?</p></div>
+      <div><span>02</span><strong>Check the source</strong><p>Customer, material, preceding document, SO10 or another configured source.</p></div>
+      <div><span>03</span><strong>Trace VOTXN</strong><p>Procedure → access sequence → source order → language rule.</p></div>
+      <div><span>04</span><strong>Check transfer mode</strong><p>Copy, reference or dynamic read?</p></div>
+      <div><span>05</span><strong>Follow the document chain</strong><p>If the order is correct but delivery or billing is wrong, move downstream.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transfer modes</p>
+      <h2>Copy and reference are not the same thing.</h2>
+    </header>
+
+    <div class="tc-modes">
+      <div><code>A</code><strong>Copy</strong><p>Independent snapshot. Later source changes do not update the target.</p></div>
+      <div><code>B</code><strong>Reference</strong><p>Target points to the source. Editing the target breaks the reference.</p></div>
+      <div><code>C</code><strong>Dynamic read</strong><p>Read from the template at runtime. No text or reference is stored.</p></div>
+      <div><code>blank</code><strong>Not defined</strong><p>Initial state, normally when no access sequence is assigned.</p></div>
+    </div>
+
+    <div class="tc-highlight tc-highlight--soft">
+      <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+      <p><strong>Assessment trap:</strong> if a copied text does not change after the master text changed, that can be correct. A copy is a snapshot.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Access sequence</p>
+      <h2>SAP searches sources in order and stops at the first successful hit.</h2>
+      <p>An access can point to a preceding document, customer master, material context or standard text. Each step can also use its own language rule.</p>
+    </header>
+
+    <div class="tc-access-example">
+      <span>1</span><strong>Preceding sales document</strong>
+      <i>→</i>
+      <span>2</span><strong>Customer sales-area text</strong>
+      <i>→</i>
+      <span>3</span><strong>Standard text from SO10</strong>
+    </div>
+
+    <div class="tc-mini-grid">
+      <div><strong>Language options</strong><p>All languages, fixed language, partner-function language or sales-organization language.</p></div>
+      <div><strong>Standard text</strong><p>Use text object <code>TEXT</code> with a suitable text ID to read a reusable SO10 text.</p></div>
+      <div><strong>Multilingual content</strong><p>One text type can hold several language versions. You do not need a new text type per language.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Procedure assignment</p>
+      <h2>The document context decides which text procedure runs.</h2>
+    </header>
+
+    <div class="table-wrap tc-table" role="region" aria-label="Text determination procedure assignment matrix" tabindex="0">
+      <table>
+        <thead>
+          <tr><th>Text object</th><th>Procedure assigned by</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Customer master</td><td><strong>Account group</strong></td></tr>
+          <tr><td>Sales document header</td><td><strong>Sales document type</strong></td></tr>
+          <tr><td>Sales document item</td><td><strong>Item category</strong></td></tr>
+          <tr><td>Delivery header</td><td><strong>Delivery type</strong></td></tr>
+          <tr><td>Delivery item</td><td><strong>Item category</strong></td></tr>
+          <tr><td>Billing header</td><td><strong>Billing type</strong></td></tr>
+          <tr><td>Billing item</td><td><strong>Billing type</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mandatory texts</p>
+      <h2>A text can also control document completeness.</h2>
+      <p>The procedure can mark a text as mandatory or display it during copy. If required text is missing, SAP can flag the document as incomplete.</p>
+    </header>
+
+    <div class="tc-highlight tc-highlight--warning">
+      <span class="material-symbols-outlined" aria-hidden="true">error</span>
+      <p>For the special hard-coded incompleteness procedures <strong>50</strong> and <strong>51</strong>, maintenance is done through view <code>V_TVUVF</code> in <code>SM31</code>. SAP Note 385982 covers this behavior.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Enhancements</p>
+      <h2>Two extension hooks: should we copy, and what should we copy?</h2>
+    </header>
+
+    <div class="tc-extension-grid">
+      <div>
+        <span class="tc-label">Gate</span>
+        <h3>Copying Requirement</h3>
+        <p>Decides whether an access is allowed to copy text at all.</p>
+        <div class="tc-rule"><code>IF</code> DocType = TA + Country = DE <code>THEN</code> allow copy</div>
+      </div>
+      <div>
+        <span class="tc-label">Substitute</span>
+        <h3>Data Transfer</h3>
+        <p>Changes the source or content returned by text determination.</p>
+        <div class="tc-rule">Build SO10 name → read alternative standard text</div>
+      </div>
+    </div>
+
+    <div class="tc-platforms">
+      <div>
+        <strong>Private Edition / on-prem</strong>
+        <p>Classic enhancement uses <code>VOFM</code>. Customer routines traditionally use the 50–99 namespace.</p>
+      </div>
+      <div>
+        <strong>S/4HANA Cloud</strong>
+        <p>Use BAdIs such as <em>Copying Requirement in Text Determination</em> and <em>Data Transfer in Text Determination</em>. Register the routine, map the enhancement ID, then assign it to the access.</p>
+      </div>
+    </div>
+
+    <div class="tc-highlight">
+      <span class="material-symbols-outlined" aria-hidden="true">code</span>
+      <p>Cloud BAdI-based routine numbers use the <strong>3000000–3009999</strong> range. In the classic approach, sample routine <strong>91</strong> shows how a dynamic SO10 text name can be built from the material.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration trap</p>
+      <h2>IDoc text segments can change normal text determination.</h2>
+    </header>
+
+    <div class="tc-highlight tc-highlight--warning">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <p>For IDocs such as <code>ORDERS</code>, <code>ORDCHG</code> and <code>REQOTE</code>, empty <code>E1EDKT2</code> or <code>E1EDPT2</code> text segments can suppress normal text determination. When EDI behaves differently from VA01, check the payload before changing customizing.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">S/4HANA notes</p>
+      <h2>Small details that are useful to remember.</h2>
+    </header>
+
+    <div class="tc-mini-grid">
+      <div><strong>TX08 Comments</strong><p>Available in S/4HANA 2023 for sales-document header and item text procedures.</p></div>
+      <div><strong>Central setup</strong><p><code>VOTXN</code> is the practical entry point. In newer IMG structures, the activity is consolidated as <em>Set Up Text Determination</em>.</p></div>
+      <div><strong>Display on copy</strong><p>The procedure can show copied text to the user for review and can also participate in the incompleteness check.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment recall</p>
-      <h2>Content → source selection → document copy → inheritance.</h2>
+      <h2>One minute is enough if the model is clear.</h2>
     </header>
-    <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> For Sales texts I separate content from determination. Master data stores reusable text by object, text ID, language, and context. Text determination decides which source is read and copied into the document. After the copy, follow-on documents and output can use their own text and copy rules. So I diagnose a missing text in order: source content, source selection, document snapshot, then inheritance.</p>
+
+    <div class="tc-answer">
+      <p>Text Control in SAP SD determines <strong>which text type</strong> is needed, <strong>which sources</strong> SAP searches, and <strong>how the text is transferred</strong>. I start in <code>VOTXN</code>: procedure, access sequence, source and language. Then I check the transfer mode — copy, reference or dynamic read. Procedures are assigned by document context such as sales document type or item category. For custom behavior, a copying requirement decides whether text should flow, while a data-transfer routine can change the source. In classic systems this can use <code>VOFM</code>; in Cloud the equivalent is BAdI-based.</p>
     </div>
+
     <nav class="ecg-context-links" aria-label="Related master-data pages">
       <span>Continue</span>
       <a href="/labs/enterprise-context/master-data/">Master-data catalogue</a>
-      <a href="/labs/enterprise-context/sales-processes/master-data/">Source-backed reference graph</a>
-      <a href="/labs/enterprise-context/sales-order/">Sales Order decisions</a>
+      <a href="/atlas/sap/output-control/">Output Control</a>
+      <a href="/labs/assessment/sales/">Sales assessment</a>
     </nav>
   </section>
 </div>
