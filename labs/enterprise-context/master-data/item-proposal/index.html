@@ -161,6 +161,86 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Procedure determination</p>
+      <h2>The DPP procedure is selected from business context, not from the customer alone.</h2>
+      <p>The customer procedure and document procedure are only part of the key. Procedure determination can also use the Sales organization, distribution channel, division, Sales office and Sales group. This gives the design a useful level of control: the same sold-to party can receive different proposal behavior in another channel, order type or Sales organization.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Customer procedure</h4><p>Read <strong>KNVV-PVKSM</strong> from the customer Sales-area data. This classifies the customer for Dynamic Product Proposal.</p></div>
+      <div><span>02</span><h4>Document procedure</h4><p>Read the Product Proposal document procedure assigned to the Sales document type. An order and a quotation do not have to behave in the same way.</p></div>
+      <div><span>03</span><h4>Organizational context</h4><p>Sales area is the main context, with Sales office and Sales group available for more specific determination where the business needs it.</p></div>
+      <div><span>04</span><h4>Resolve the DPP procedure</h4><p>The matching determination entry points to the Product Proposal procedure that contains the actual accesses and source-processing logic.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Support shortcut:</strong> if DPP works for one customer or order type but not another, compare the complete procedure-determination key before debugging the source functions. Many “missing proposal” incidents are determination mismatches rather than missing history.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Access sequence internals</p>
+      <h2>Think of the access sequence as a proposal pipeline.</h2>
+      <p>Each access says where SAP should get candidate products and which function should process that source. The sequence matters because the same material can be found more than once. SAP keeps the proposal result coherent and the displayed source reflects the first source that determined the material according to the configured access sequence.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Order history</h3>
+        <p><strong>SD_DPP_HISTORY</strong><br>Reads prepared purchasing history and proposes products the customer bought before. A common design is to limit the history horizon so very old purchases do not dominate current behavior.</p>
+      </div>
+      <div>
+        <h3>Static Item Proposal</h3>
+        <p><strong>SD_DPP_PRODUCT_PROPOSAL</strong><br>Pulls materials from maintained Item Proposal documents and makes the controlled basket one source inside the dynamic framework.</p>
+      </div>
+      <div>
+        <h3>Customer-Material Info</h3>
+        <p><strong>SD_DPP_CUSTOMER_MATERIAL_INFO</strong><br>Uses customer-specific material relationships as proposal candidates.</p>
+      </div>
+      <div>
+        <h3>Listing</h3>
+        <p><strong>SD_DPP_LISTING</strong><br>Adds products allowed by listing logic. This can be useful when the commercial assortment itself should feed the proposal.</p>
+      </div>
+      <div>
+        <h3>Exclusion</h3>
+        <p><strong>SD_DPP_EXCLUSION</strong><br>Removes or identifies products excluded for the customer. Treat this as assortment control, not as a VA51 basket.</p>
+      </div>
+      <div>
+        <h3>Cross-selling / read layer</h3>
+        <p><strong>SD_DPP_CROSS_SELLING</strong> and <strong>SD_DPP_READ</strong> are additional standard building blocks. Their presence is a reminder that DPP can orchestrate several existing Sales mechanisms rather than owning every source itself.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+      <p><strong>Diagnostic habit:</strong> inspect the proposal line's <strong>Source</strong> before opening configuration. If a material exists in both order history and listing, the source shown is driven by access order. That immediately tells you which branch of the pipeline to investigate first.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">History generation</p>
+      <h2>Order-history DPP is prepared data, not a live scan of every old order.</h2>
+      <p>For history-based proposals, background processing can generate and persist Product Proposal data in <strong>VBPK</strong> and <strong>VBPV</strong>. Transaction <strong>SDPV</strong> and report <strong>SDPVGEN</strong> are the operational tools typically used to generate this data and schedule recurring refreshes.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define the background procedure</h4><p>Decide which history/source accesses should be calculated outside VA01 and which selection logic controls the result.</p></div>
+      <div><span>02</span><h4>Generate proposal data</h4><p>Run SDPV or schedule <strong>SDPVGEN</strong> with a controlled variant. The accesses execute and their result is stored for later online use.</p></div>
+      <div><span>03</span><h4>Store history result</h4><p><strong>VBPK</strong> contains header-level Product Proposal data; <strong>VBPV</strong> contains the material and quantity-level result used by the proposal framework.</p></div>
+      <div><span>04</span><h4>Read fast during order entry</h4><p>VA01 can consume the prepared result instead of performing every expensive history read while the user is waiting.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+      <p><strong>Operational consequence:</strong> background DPP introduces data freshness as an explicit SLA. When users say “the proposal is wrong,” check the generation timestamp and job variant before changing customizing. The logic may be correct while the stored proposal is simply stale.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Important runtime nuance</p>
       <h2>A dynamic proposal line is not yet a fully processed Sales item.</h2>
       <p>For Dynamic Product Proposal, SAP can display proposal rows before standard item-level processing is executed. Pricing, availability, incompletion and similar checks are triggered when an order quantity is entered and the material becomes a real document item with an item number.</p>
@@ -375,7 +455,8 @@ tags:
         <h3>Dynamic / Intelligent</h3>
         <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/f25e586c6d94475299a7d552cff94656.html">SAP Help — Dynamic Product Proposal</a><br>
         <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/50bd87ba35004f6280a820b20ddd1f02.html">SAP Help — Intelligent Product Proposal</a><br>
-        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/73122fae9acf4206a29b3ce0932d72d2.html">SAP Help — Intelligent Product Proposal API</a></p>
+        <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/73122fae9acf4206a29b3ce0932d72d2.html">SAP Help — Intelligent Product Proposal API</a><br>
+        <a href="https://community.sap.com/t5/technology-blog-posts-by-members/sd-dynamic-product-proposal/ba-p/14040406">SAP Community — SD Dynamic Product Proposal walkthrough</a></p>
       </div>
     </div>
 
