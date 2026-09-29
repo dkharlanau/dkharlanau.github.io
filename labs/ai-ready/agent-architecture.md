@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-22
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags: [ai, agents, workflow, orchestration, tools, approval]
 ---
@@ -84,7 +84,7 @@ The investigative part may be adaptive. The write path should usually be much mo
 
 Without explicit limits, an agent can continue searching long after the useful information has stopped increasing. That increases cost and latency and may also increase risk.
 
-Useful limits include maximum steps, tool calls, wall-clock time, model or token cost, retries, parallel workers, and the set of tools the agent may call. Data scope matters just as much: an agent that can read every repository or every customer record has a much larger failure surface than one that can read only the current workspace.
+Useful limits include maximum steps, tool calls, wall-clock time, model or token cost, retries, parallel workers, and the set of tools the agent may call. [Token economics](/labs/ai-ready/build-operate/#token-economics) gives the cost-control view: measure cost per successful task, not only tokens per call. Data scope matters just as much: an agent that can read every repository or every customer record has a much larger failure surface than one that can read only the current workspace.
 
 The run also needs explicit stop states. `resolved` is only one of them. `insufficient_evidence`, `permission_denied`, `approval_required`, `tool_failure`, and `budget_exhausted` are legitimate outcomes. A reliable system is allowed to stop without pretending it solved the task.
 
@@ -121,4 +121,4 @@ More autonomy should solve a real uncertainty. Otherwise it is only more moving 
 - [OpenAI — A practical guide to building AI agents](https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/)
 - [Anthropic — Building Effective AI Agents](https://www.anthropic.com/engineering/building-effective-agents)
 
-Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [System Boundaries](/labs/ai-ready/system-boundaries/) · [Agent with Approval Lab](/labs/ai-ready/labs/agent-approval/)
+Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [System Boundaries](/labs/ai-ready/system-boundaries/) · [Token Economics](/labs/ai-ready/build-operate/#token-economics) · [Agent with Approval Lab](/labs/ai-ready/labs/agent-approval/)
