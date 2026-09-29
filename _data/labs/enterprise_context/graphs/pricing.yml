@@ -139,8 +139,16 @@ procedure_determination:
   lead_shortcut: >-
     Wrong procedure means every downstream pricing check can be perfectly executed against the
     wrong rule set. If the procedure is wrong, stop there. Do not fix it with another condition record.
+  example_title: "Same product, different procedure"
+  example: >-
+    Customer 1000 buys Material A in sales area 1010/10/00. A normal order can carry one
+    document pricing procedure, while a return or another document type can carry another.
+    The sold-to party can also have a different customer pricing procedure in its sales-area data.
+    Either change can route the document to a different pricing procedure even though the material
+    and condition records did not change. That is why procedure determination comes before VK11-style thinking.
   source_refs:
     - SRC-SAP-PRICING-PROCEDURE-DETERMINATION
+    - SRC-SAP-PRICING-CLASSIC-OVKK
     - SRC-SAP-PRICING-LEARNING-CONDITION-TECHNIQUE
     - SRC-SAP-PRICING-PROCEDURES
 
@@ -694,6 +702,7 @@ source_refs:
   - SRC-SAP-PRICING-CONDITION-TECHNIQUE
   - SRC-SAP-PRICING-PROCEDURES
   - SRC-SAP-PRICING-PROCEDURE-DETERMINATION
+  - SRC-SAP-PRICING-CLASSIC-OVKK
   - SRC-SAP-PRICING-ANALYSIS
   - SRC-SAP-PRICING-CONDITION-EXCLUSION
   - SRC-SAP-PRICING-CUSTOM-FIELDS-MANAGE-PRICES
