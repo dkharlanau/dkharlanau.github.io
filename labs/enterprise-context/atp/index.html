@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-25
+last_modified_at: 2026-09-29
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -25,7 +25,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-09-23
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP Help Portal 2025 FPS01 + existing source registry + page-level editorial review"
+review_method: "SAP Help Portal 2025 FPS01 + source registry cross-check + page-level editorial review"
 search_intent: "SAP ATP vs aATP availability check product confirmation"
 # ai-discovery-managed:start
 structured_data:
@@ -79,6 +79,14 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/02a4a457ef816b10e10000000a441470.html"
   - title: "Extensibility in Backorder Processing"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/9b3e8891f11e414883d322e515b4845d.html"
+  - title: "Supply Creation-Based Confirmation (SBC) in PP/DS"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f899ce30af9044299d573ea30b533f1c/4c56297de7c33a0de10000000a42189c.html"
+  - title: "Supply Assignment (ARun)"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d335e3418f4348ffbae9f11888a62cc7.html"
+  - title: "Central Functions and Review Availability Check Result"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/cd7c1f2a690348158ef8c0e6debe0537.html"
+  - title: "Service Operations for Advanced ATP Check"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/15f9e51998a945cc82545cb6b4dbe5c2/6f3c65ca74114e8988a0a6d357b51a80.html"
 # ai-discovery-managed:end
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.atp %}
@@ -241,6 +249,28 @@ source_links:
     <p class="ecg-caption"><strong>Memory rule:</strong> Public Edition already runs the aATP code line. Basic versus Advanced is mainly a capability and licensing boundary. Private Edition and on-premise add an activation decision as well.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="atp-configuration-chain" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration chain</p>
+      <h2>Configure the promise in layers. Do not start from the feature name.</h2>
+      <p>{{ atp_cfg.configuration_playbook.principle }}</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for layer in atp_cfg.configuration_playbook.layers %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{{ forloop.index }}</span><small>control layer</small></div>
+          <h3>{{ layer.title }}</h3>
+          <p class="ecg-question">{{ layer.business_question }}</p>
+        </header>
+        <ul>{% for control in layer.controls %}<li>{{ control }}</li>{% endfor %}</ul>
+        <p><strong>If this layer is wrong:</strong> {{ layer.failure_pattern }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>Lead rule:</strong> prove requirement relevance, date and scope before tuning PAL, Supply Protection, BOP, ABC or supply creation. An advanced feature cannot repair a requirement that entered the wrong basic availability context.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="pac-confirmation-flow" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">PAC in plain English</p>
@@ -352,6 +382,16 @@ source_links:
         <h3>Release for Delivery</h3>
         <p>Which due sales orders should receive limited material before the process moves into delivery execution?</p>
       </article>
+      <article class="ecg-view-card">
+        <span>SBC</span>
+        <h3>Supply Creation-Based Confirmation</h3>
+        <p>If available supply is not enough, can PP/DS create feasible new supply and return a reliable confirmation date?</p>
+      </article>
+      <article class="ecg-view-card">
+        <span>RACR</span>
+        <h3>Review Availability Check Result</h3>
+        <p>What calculation path, alternatives and confirmations produced the result, and what can be reviewed before changing it?</p>
+      </article>
     </div>
   </section>
 
@@ -411,6 +451,83 @@ source_links:
       <div><h3>Variant</h3><p>{{ atp_bop.segment_variant_model.variant.purpose }}</p><p class="ecg-question">{{ atp_bop.segment_variant_model.variant.lead_question }}</p></div>
     </div>
     <p class="ecg-caption"><strong>Strategy guardrail:</strong> {{ atp_bop.strategy_model.guardrail }}</p>
+    <div class="ecg-view-grid">
+      {% for strategy in atp_bop.strategy_model.processing_strategies %}
+      <article class="ecg-view-card">
+        <span>{{ strategy.code }}</span>
+        <h3>{{ strategy.intent }}</h3>
+        <p>{{ strategy.behavior }}</p>
+        <p><strong>Trade-off:</strong> {{ strategy.downside }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">pause_circle</span>
+      <p><strong>Skip is different:</strong> {{ atp_bop.strategy_model.skip_handling.behavior }} Do not memorize only the early five-strategy model; current SAP documentation also includes Improve, while Skip is used to keep a requirement outside the recheck.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sbc-planning-boundary" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ATP meets Production Planning</p>
+      <h2>SBC can turn a shortage into a planning question instead of an immediate rejection.</h2>
+      <p>{{ graph.replenishment_and_reconfirmation.lead_contrast }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>{{ graph.replenishment_and_reconfirmation.mrp_path.title }}</h3>
+        <ol>{% for step in graph.replenishment_and_reconfirmation.mrp_path.steps %}<li>{{ step }}</li>{% endfor %}</ol>
+      </div>
+      <div>
+        <h3>{{ graph.replenishment_and_reconfirmation.sbc_path.title }}</h3>
+        <ol>{% for step in graph.replenishment_and_reconfirmation.sbc_path.steps %}<li>{{ step }}</li>{% endfor %}</ol>
+      </div>
+      <div>
+        <h3>Design boundary</h3>
+        <p>{{ graph.replenishment_and_reconfirmation.sbc_path.edition_boundary }}</p>
+        <p>SBC is not a promise against imaginary stock. PP/DS must be able to create and date a feasible supply proposal, using the configured planning, component and capacity logic.</p>
+      </div>
+    </div>
+    <p class="ecg-caption"><strong>Assessment contrast:</strong> normal MRP can create later receipts and leave an existing order waiting for reconfirmation. SBC brings supply creation into the availability interaction itself.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="aatp-operate-integrate" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Operate, integrate, extend</p>
+      <h2>A Lead needs evidence paths, not only configuration paths.</h2>
+      <p>The useful question after “what is configured?” is “how will we prove the result, expose it to another system, and troubleshoot it without guessing?”</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>RACR</h3>
+        <p>Use Review Availability Check Result to inspect the availability result and the calculation path. In supported edit contexts it can also help refine confirmations. It is the first place to understand the result before adding custom logic.</p>
+      </div>
+      <div>
+        <h3>OData availability checks</h3>
+        <p>The Advanced ATP Check API provides supported service operations for external availability simulations. Treat the request context as part of the contract: product, plant, quantity, check method and release-specific capability all matter.</p>
+      </div>
+      <div>
+        <h3>Application logs</h3>
+        <p>Enable detailed logging for a concrete diagnostic question, with a retention policy. SAP S/4HANA 2025 also adds deeper ABC trace analysis through the ATP application log. Permanent trace-level logging is not an observability strategy.</p>
+      </div>
+      <div>
+        <h3>Supply Assignment (ARun)</h3>
+        <p>ARun assigns specific supply to requirements and can be executed from BOP among other paths. It is a specialized assignment capability, not the default explanation for every SD ATP result.</p>
+      </div>
+      <div>
+        <h3>BAdIs before legacy exits</h3>
+        <p>For modern aATP, start from the documented extensibility points for BOP, ABC and related functions. Older ERP availability-check or product-allocation exits belong to a classic-system boundary and should not be copied into an S/4HANA design by default.</p>
+      </div>
+      <div>
+        <h3>Proof after change</h3>
+        <p>Re-run one reproducible requirement and compare the confirmed quantity/date, calculation path and downstream document behavior. A technically successful save is not evidence that the promise policy is correct.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">history</span>
+    <p><strong>Release guardrail:</strong> do not memorize early aATP restrictions as permanent architecture. Current releases include Improve in BOP, broader ABC substitution and recheck behavior, Supply Protection integration with BOP/PAL, and SBC combinations with PP/DS. Verify the target edition and release before using an old checklist.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -487,7 +604,7 @@ source_links:
     <header>
       <p class="research-canvas__eyebrow">Primary sources</p>
       <h2>The capability model is checked against SAP documentation.</h2>
-      <p>The source registry tracks current SAP S/4HANA documentation for PAC, scope and scheduling, Product Allocation, Supply Protection, Backorder Processing, Alternative-Based Confirmation, Release for Delivery and related extensibility. Release-sensitive behavior should still be checked against the target system release before design decisions are made.</p>
+      <p>The source registry tracks current SAP S/4HANA documentation for PAC, scope and scheduling, Product Allocation, Supply Protection, Backorder Processing, Alternative-Based Confirmation, Release for Delivery, SBC/PP/DS, Supply Assignment, RACR, APIs and related extensibility. Release-sensitive behavior should still be checked against the target system release before design decisions are made.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
