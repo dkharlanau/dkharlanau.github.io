@@ -1,7 +1,7 @@
 # PROJECT_MAP.md
 
 Compact map of `dkharlanau.github.io`.
-Last updated: 2026-08-18.
+Last updated: 2026-09-29.
 
 ## Product Architecture
 
@@ -39,7 +39,8 @@ Business AI graph and data work must use `_data/labs/business_ai/contract.yml`, 
 | Section | Path | Role |
 |---|---|---|
 | Knowledge hub | `knowledge/index.md` | Routes users to the correct knowledge maturity and format |
-| Atlas | `atlas/` | Curated concepts, diagnostics, SAP notes, maps, data quality, automation, AI operations |
+| Atlas | `atlas/` | Curated concepts, diagnostics, SAP notes, database engineering, maps, data quality, automation, AI operations |
+| Database engineering | `atlas/databases/` | PostgreSQL-first mental models, SQL and schema patterns, access paths, MVCC, performance, reliability, and recovery playbooks |
 | Scenarios | `scenarios/` | Business pain mapped to process context and diagnostic workflow |
 | Research | `research/` | Briefs, comparisons, watchlists, working evidence |
 | Journal | `_blog/`, `blog/` | Long-form analysis |
