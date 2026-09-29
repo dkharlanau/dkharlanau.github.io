@@ -1,0 +1,124 @@
+---
+layout: default
+title: "SAP Serial Numbers — Individual Unit Traceability"
+description: "A practical SAP S/4HANA guide to Serial Number Management: serial-number profile, material and serial identity, delivery and goods-movement use, equipment linkage, diagnostics, and traceability."
+permalink: /labs/enterprise-context/master-data/serial-numbers/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-09-29
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - serial-number
+  - traceability
+  - inventory-management
+  - master-data
+  - logistics
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">SAP Enterprise</a></li>
+    <li><a href="/labs/enterprise-context/master-data/">Master Data</a></li>
+    <li aria-current="page">Serial Numbers</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Logistics / Traceability</p>
+      <h1>Serial numbers: identity below the material level.</h1>
+      <p>Material identifies the product. Batch identifies a lot. Serial number identifies one exact physical unit. This distinction matters when the business needs unit-level traceability, service history, warranty, or controlled goods movements.</p>
+      <a class="research-canvas__button" href="#mental-model">Start with the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Boundary:</strong> The material master controls serial-number relevance through the serial-number profile. The serial master identifies the unit. A delivery, goods movement, or service document proves where that unit participated in a transaction.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="mental-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Do not confuse product, batch, serial number, and equipment.</h2>
+      <p>These objects answer different questions. A Lead should know which identity owns which part of the lifecycle.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Material / Product</h3><p>What type of thing is this, and which serial-number procedures apply?</p></div>
+      <div><h3>Serial Number</h3><p>Which individual unit is this?</p></div>
+      <div><h3>Batch</h3><p>Which production or procurement lot did it come from, when batch management is also used?</p></div>
+      <div><h3>Equipment</h3><p>Which technical object has maintenance or service lifecycle data, when equipment is created or linked?</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Key and scope</p>
+      <h2>Know the key before you debug the value.</h2>
+      <p>The same value can be correct in one object or organizational context and wrong in another.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Serial Numbers key fields and process effects">
+      <table class="study-table__table">
+        <thead><tr><th>Field or dimension</th><th>Why it matters</th><th>Typical process effect</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Serial-number profile</strong></td><td>Material-level control for serial-number procedures.</td><td>Determines where serial entry is required, optional, or not relevant.</td></tr>
+          <tr><td><strong>Material + serial number</strong></td><td>Core individual identity.</td><td>Separates one physical unit from another.</td></tr>
+          <tr><td><strong>Status</strong></td><td>Shows allowed or completed lifecycle states.</td><td>Can block or permit follow-on processing.</td></tr>
+          <tr><td><strong>Stock / location context</strong></td><td>Where the individual object is held or moved.</td><td>Supports unit-level inventory and traceability analysis.</td></tr>
+          <tr><td><strong>Equipment link</strong></td><td>Connects serial identity to a technical object where used.</td><td>Extends logistics identity into maintenance and service history.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime use</p>
+      <h2>Trace the exact unit through the document flow.</h2>
+      <p>The creation and entry point varies by process. Follow the material profile and the actual document where the serial was assigned.</p>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Profile</h4><p>Check the material serial-number profile and the procedure relevant to the process.</p></div>
+      <div><span>02</span><h4>Document</h4><p>Identify the goods movement, delivery, receipt, or service step that requires the serial.</p></div>
+      <div><span>03</span><h4>Assignment</h4><p>Check which serial number was entered or generated for the material.</p></div>
+      <div><span>04</span><h4>Status</h4><p>Verify that the serial status allows the intended movement or follow-on step.</p></div>
+      <div><span>05</span><h4>Trace</h4><p>Follow the serial across documents instead of stopping at material or batch level.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead diagnosis</p>
+      <h2>Find the owning layer before changing data.</h2>
+      <p>Most serial-number incidents are not solved by changing the serial master first. The defect can be product setup, document assignment, status, stock context, or equipment integration.</p>
+    </header>
+    <div class="ecg-diagnostic">
+      <div><h4>Start here</h4><p>Check material → serial-number profile → process procedure → document assignment → status/location → follow-on document.</p></div>
+      <div><h4>Do not jump here</h4><p>Do not treat a serial number as another batch field. Batch and serial management can coexist, but they provide different levels of identity.</p></div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>Assessment answer:</strong> “Serial numbers provide individual-unit traceability. The material serial-number profile controls where they are used, while the concrete document records the serial assignment. I separate serial identity from batch identity and equipment lifecycle.”</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references</h2></header>
+    <ul>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/3d8cbf53f106b44ce10000000a174cb4.html?locale=en-US&state=PRODUCTION&version=2025.001">SAP Help — Entering and Selecting Serial Numbers</a></li>
+    </ul>
+    <nav class="ecg-context-links" aria-label="Serial Numbers related pages">
+      <span>Related</span>
+      <a href="/labs/enterprise-context/master-data/product/">Product / Material</a>
+      <a href="/labs/enterprise-context/master-data/batch-master/">Batch Master</a>
+      <a href="/labs/enterprise-context/inventory-management/">Inventory Management</a>
+      <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
+    </nav>
+  </section>
+</div>
