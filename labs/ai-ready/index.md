@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-09-29
 hide_global_cta: true
 tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
 last_reviewed: 2026-08-16
@@ -96,7 +96,7 @@ semantic_links:
       <a href="/labs/ai-ready/agent-architecture/"><span>04</span><strong>Agent Architecture</strong><small>Workflow, router, bounded tool loop, workers, budgets, termination, approval.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/ai-ready/evals-reliability/"><span>05</span><strong>Evals and Reliability</strong><small>Golden cases, deterministic graders, model graders, trajectory tests, regressions.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/ai-ready/security-governance/"><span>06</span><strong>Security and Governance</strong><small>Prompt injection, least privilege, secrets, sensitive data, approvals, audit.</small><i class="material-symbols-outlined" aria-hidden="true">shield</i></a>
-      <a href="/labs/ai-ready/build-operate/"><span>07</span><strong>Build and Operate</strong><small>Versions, deployment, traces, budgets, retries, degraded modes, rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
+      <a href="/labs/ai-ready/build-operate/"><span>07</span><strong>Build and Operate</strong><small>Versions, deployment, traces, budgets, token economics, retries, degraded modes, rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
     </div>
   </section>
 
@@ -109,6 +109,7 @@ semantic_links:
       <a href="/labs/ai-ready/agent-architecture/"><span>WF</span><strong>Known sequence → workflow</strong><small>Keep fixed steps fixed. Put the model only where interpretation is useful.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/labs/ai-ready/agent-architecture/"><span>AG</span><strong>Unknown next step → bounded agent</strong><small>Add hard budgets, allowed tools, stop states, and traces.</small><i class="material-symbols-outlined" aria-hidden="true">sync</i></a>
       <a href="/labs/ai-ready/evals-reliability/"><span>FT</span><strong>Behavior gap → prompt/schema/eval first</strong><small>Fine-tune only after a stable measured gap remains.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      <a href="/labs/ai-ready/build-operate/#token-economics"><span>COST</span><strong>Growing spend → optimize task economics</strong><small>Measure cost per successful task, then reduce wasted calls, repeated context, excess output, retries, and unnecessary premium-model use.</small><i class="material-symbols-outlined" aria-hidden="true">payments</i></a>
     </div>
   </section>
 
