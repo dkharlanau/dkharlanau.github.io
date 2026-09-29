@@ -835,6 +835,15 @@ assessment_drills:
       - "Compare custom pricing fields at runtime."
       - "Check billing-side enhancement and pricing/copy design."
 
+  - title: "SD reads Purchasing condition records"
+    prompt: "Sales must reuse a purchase-price condition record maintained in Purchasing. How do you design and diagnose it?"
+    expected_reasoning:
+      - "Keep the Sales condition in the SD pricing procedure."
+      - "Use Reference Condition Type and Reference Application M to point the search to the Purchasing record source."
+      - "Ensure the relevant access sequences have a common condition table and the reference record exists."
+      - "Do not maintain a second placeholder Sales record unless a target-system-specific design explicitly requires it."
+      - "Diagnose the SD condition step and the referenced MM record source separately."
+
   - title: "Lead design question"
     prompt: "Business asks for another special pricing rule. Do you add a routine?"
     expected_reasoning:
@@ -844,6 +853,11 @@ assessment_drills:
       - "Assess reuse across order, billing, returns, APIs, and future clean-core constraints."
 
 source_refs:
+  - SRC-SAP-PRICING-REFERENCE-CONDITIONS
+  - SRC-SAP-PRICING-COPY-CONDITION-RECORDS
+  - SRC-SAP-PRICING-CONDITION-UPDATE
+  - SRC-SAP-PRICING-MODULAR-PROCEDURES
+  - SRC-SAP-PRICING-ACCESS-LEVELS
   - SRC-SAP-PRICING-CONDITION-TECHNIQUE
   - SRC-SAP-PRICING-PROCEDURES
   - SRC-SAP-PRICING-PROCEDURE-DETERMINATION
