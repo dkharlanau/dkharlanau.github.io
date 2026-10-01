@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP ATP and aATP — Product Availability, Prioritization and Reconfirmation"
-description: "A practical SAP S/4HANA guide to ATP and advanced ATP: Product Availability Check, scope, Product Allocation, Supply Protection, Backorder Processing, Alternative-Based Confirmation and Release for Delivery."
+description: "A practical SAP S/4HANA guide to classic ATP and advanced ATP: control chain, scope of check, confirmations, Product Allocation, Supply Protection, Backorder Processing, alternatives and troubleshooting."
 permalink: /labs/enterprise-context/atp/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-29
+last_modified_at: 2026-10-01
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -309,6 +309,97 @@ source_links:
     </div>
   </section>
 
+
+  <section class="research-canvas__inventory" id="classic-atp-control-chain" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classic ATP control chain</p>
+      <h2>Do not memorize one false sequence. Several controls meet at the availability check.</h2>
+      <p>In classic SD availability checking, requirement relevance and scope come from different places. The requirement type points to a requirements class. The requirements class provides global controls for availability checking and transfer of requirements. The sales schedule line can apply finer control. Separately, the material-plant checking group combines with the business-process checking rule to define the scope of check.</p>
+    </header>
+
+    <div class="ecg-rail" aria-label="Classic ATP control model">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Sales item</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Requirement type</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Requirements class</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Schedule-line fine control</span>
+      </div>
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Material + plant</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Checking group</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Checking rule</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Scope of check</span>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Requirements type and class</h3>
+        <p>The requirements type identifies the requirements class. The class controls planning behavior and the global switches for availability checking and transfer of requirements. If the class does not permit the check, a schedule line cannot make ATP active by itself.</p>
+      </div>
+      <div>
+        <h3>Schedule line category</h3>
+        <p>The schedule line is the sales-document fine-control layer. It can switch availability checking or transfer of requirements off for a sales process when the requirements class allows them. It also carries execution behavior such as delivery relevance and movement control.</p>
+      </div>
+      <div>
+        <h3>Checking group and checking rule</h3>
+        <p>The checking group comes from the material-plant availability-check setting. The checking rule represents the business context. Their combination selects the scope that decides which stocks, receipts, issues and requirements count.</p>
+      </div>
+      <div>
+        <h3>Transfer of requirements</h3>
+        <p>ATP and MRP are connected but not identical. Transfer of requirements makes sales demand visible to planning. When it is missing or intentionally switched off, planning evidence can differ from what a consultant expects from a normal stock-sales process.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Assessment shortcut:</strong> explain the two branches separately. Requirement type → requirements class → schedule-line fine control answers <em>whether this sales requirement is relevant</em>. Checking group + checking rule → scope of check answers <em>what supply and demand the check can see</em>.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="classic-atp-worked-example" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Worked example</p>
+      <h2>The same physical stock can produce three different promises.</h2>
+      <p>This simplified example isolates the scope of check. Assume one plant, no allocation or protection, normal partial confirmation, 100 units of usable stock, an earlier sales requirement for 80 units, a new order for 60 units on day 5, and a purchase-order receipt of 50 units on day 10.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="ATP scope worked example">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Scope assumption</th>
+            <th scope="col">ATP logic</th>
+            <th scope="col">Confirmation result</th>
+            <th scope="col">Lead interpretation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Sales requirements + purchase orders included</th>
+            <td>100 − 80 = 20 available on day 5. The +50 receipt becomes available on day 10.</td>
+            <td>20 on day 5, then 40 on day 10.</td>
+            <td>The promise follows the time-phased supply-and-demand picture.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchase orders excluded</th>
+            <td>The earlier demand still leaves only 20. The future +50 receipt is invisible to this check.</td>
+            <td>20 on day 5; the remaining 40 stays unconfirmed until another valid supply source or recheck exists.</td>
+            <td>A real purchase order does not help if the configured scope does not count it.</td>
+          </tr>
+          <tr>
+            <th scope="row">Existing sales requirements excluded</th>
+            <td>The check sees the 100 physical units without subtracting the earlier 80-unit sales demand.</td>
+            <td>The new 60 can appear confirmable immediately.</td>
+            <td>This can create an over-confirmation risk because committed demand is missing from the ATP picture.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="ecg-caption"><strong>Use the example correctly:</strong> it explains scope behavior, not every delivery-option or scheduling variant. In a real case, also prove the requirement date, partial-delivery behavior, replenishment/check-horizon settings, and any active aATP policy.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="atp-check-level" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Check level</p>
@@ -557,6 +648,65 @@ source_links:
     </div>
 
     <p class="ecg-caption">The diagnosis becomes useful when it names the exact branch: <strong>date, scope, competing demand, allocation, protection, alternative logic, or later reconfirmation.</strong></p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="atp-technical-evidence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Technical evidence</p>
+      <h2>Use each diagnostic view for the question it can actually answer.</h2>
+      <p>Classic GUI tools remain useful in S/4HANA Private Edition and on-premise environments, but they are not one universal interface for every deployment. Public Edition uses supported Fiori apps and APIs instead of assuming the same transaction set.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="ATP diagnostic evidence by tool">
+      <table class="study-table__table">
+        <thead>
+          <tr>
+            <th scope="col">Evidence</th>
+            <th scope="col">Best question</th>
+            <th scope="col">What to inspect</th>
+            <th scope="col">Boundary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Sales order schedule lines</th>
+            <td>What did SAP promise to this item?</td>
+            <td>Requested quantity/date versus confirmed quantity/date, schedule-line split, plant and requirement context.</td>
+            <td>This is the document result. It does not explain the full supply-and-demand calculation by itself.</td>
+          </tr>
+          <tr>
+            <th scope="row">CO09 / ATP quantities</th>
+            <td>Where does cumulative availability change by date?</td>
+            <td>Stock, receipts, issues and requirements for the material/plant under the relevant check context.</td>
+            <td>Common classic GUI evidence for Private Edition/on-premise. Interpret it with the actual scope of check.</td>
+          </tr>
+          <tr>
+            <th scope="row">MD04 / stock-requirements list</th>
+            <td>What does planning see?</td>
+            <td>MRP receipts, requirements, dates and sequence of planning elements.</td>
+            <td>MD04 is planning evidence, not a substitute for ATP. A scope-of-check rule can make ATP see a different set of elements.</td>
+          </tr>
+          <tr>
+            <th scope="row">VBEP and requirement structures</th>
+            <td>Which document quantities and dates were stored?</td>
+            <td>Schedule-line category, requested and confirmed quantities, and requirement dates for technical tracing.</td>
+            <td>Useful for diagnosis in classic/private technical contexts. For integrations, prefer released APIs or CDS interfaces over direct table coupling.</td>
+          </tr>
+          <tr>
+            <th scope="row">RACR / BOP logs and aATP apps</th>
+            <td>Why did an advanced confirmation or later redistribution happen?</td>
+            <td>Calculation path, alternatives, BOP selection/priority, changed confirmation and application logs.</td>
+            <td>Use these when aATP is active; do not explain an advanced-policy result only with classic stock views.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p><strong>Diagnostic rule:</strong> sales order schedule lines prove the promise, CO09 explains classic ATP availability, MD04 explains planning, and BOP/RACR evidence explains advanced reprocessing. A strong incident analysis compares them instead of treating any one screen as the complete truth.</p>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
