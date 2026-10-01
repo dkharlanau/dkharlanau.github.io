@@ -31,14 +31,6 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8d6fb6531de6b64ce10000000a174cb4.html"
   - title: "Non-Deductible Input Tax"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/14d1d1538cdf4608e10000000a174cb4.html"
----
-
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <ol>
-    <li><a href="/">Home</a></li>
-    <li><a href="/labs/">Labs</a></li>
-    <li><a href="/labs/enterprise-context/">Enterprise Context</a></li>
-    <li><a href="/labs/enterprise-context/procurement/">Procurement</a></
 last_reviewed: 2026-10-01
 publication_wave: "logistics-search-wave-01"
 review_method: "SAP primary sources + factual review + editorial rewrite"
@@ -60,7 +52,15 @@ semantic_links:
   - type: "related_topic"
     title: "SAP Sales Pricing Engine — Enterprise Context Lab"
     url: "/labs/enterprise-context/pricing/"
-# ai-discovery-managed:endli>
+# ai-discovery-managed:end
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">Enterprise Context</a></li>
+    <li><a href="/labs/enterprise-context/procurement/">Procurement</a></li>
     <li aria-current="page">Tax Code Determination</li>
   </ol>
 </nav>
