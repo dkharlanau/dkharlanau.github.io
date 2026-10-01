@@ -5,7 +5,7 @@ domain: "SAP S/4HANA Settlement Management"
 process_family: "Rebate and Subsequent Settlement"
 status: researching
 created_at: "2026-08-15"
-updated_at: "2026-09-24"
+updated_at: "2026-10-01"
 verified_at: "2026-08-25"
 
 summary: >-
@@ -214,6 +214,15 @@ sales:
   title: "Sales CCM — Customer Rebates"
   purpose: >-
     Manage rebate agreements with customers when the final commercial amount depends on accumulated eligible sales. The typical basis is customer billing data, not the sales order alone.
+  integration_notes:
+    - title: "SD accruals at billing"
+      explanation: "When the scenario is configured for SD accruals, the expected rebate cost can be recognized with billing. Settlement happens later; the billing accrual is only the estimate."
+    - title: "Periodic delta accruals"
+      explanation: "A delta accrual run recalculates the total expected accrual from accumulated business volume, compares it with what is already posted, and posts only the difference."
+    - title: "External sales agent"
+      explanation: "For external commission scenarios, the ES partner function can connect the sales and billing documents to the relevant sales agent so the commission is attributed to the right partner."
+    - title: "Settlement and FI"
+      explanation: "At partial or final settlement, CCM calculates the amount from accumulated business volume and contract conditions, creates the settlement document, and transfers the financial result to FI."
   partner_side: "Customer"
   business_volume_sources:
     - "Customer billing / invoice data for standard sales rebate scenarios"
@@ -288,6 +297,15 @@ procurement:
   title: "Procurement CCM — Supplier Rebates"
   purpose: >-
     Manage rebate agreements with suppliers when the economic benefit depends on accumulated purchasing activity. Standard scenarios can calculate business volume from goods receipts or supplier invoices, depending on the condition contract type.
+  integration_notes:
+    - title: "Normal P2P execution"
+      explanation: "Purchase orders, goods receipts, and supplier invoices continue in the standard MM process. CCM reads the configured source instead of changing the basic procurement flow."
+    - title: "Goods-receipt accrual timing"
+      explanation: "In PO-based scenarios, accruals can be recognized at goods receipt. Depending on the condition design, this can affect the moving average price when the receipt is posted."
+    - title: "Settlement-only accrual logic"
+      explanation: "If the condition is relevant only for later settlement, delta accruals can post the required G/L accrual without changing the material moving average price."
+    - title: "Settlement options"
+      explanation: "Settlement reverses the relevant accruals. Manual settlement documents can also be used for controlled corrections, and some processes can group settlement results before the FI transfer."
   partner_side: "Supplier"
   business_volume_sources:
     - "Goods receipts related to purchase orders"
