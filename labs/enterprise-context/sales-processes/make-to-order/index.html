@@ -1,0 +1,121 @@
+---
+layout: default
+title: "SAP Make-to-Order — Sales, Production and Sales Order Stock"
+description: "A practical SAP S/4HANA Make-to-Order guide covering requirements control, sales order stock, production integration, costing, configuration and troubleshooting."
+permalink: /labs/enterprise-context/sales-processes/make-to-order/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-10-01
+hide_global_cta: true
+sales_process_atlas: true
+tags: [sap, s4hana, sales, sd, pp, make-to-order, sales-order-stock, production]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Make-to-Order</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Special fulfillment / SD + PP + CO</p>
+      <h1>The sales order does not consume finished stock. It creates the reason to produce.</h1>
+      <p>Make-to-Order links customer demand to production and, in common designs, to sales-order-specific stock. The central control is not one item category. It is the requirements type and requirements class that connect Sales to planning, stock assignment, valuation and costing.</p>
+      <a class="research-canvas__button" href="#flow">Open the process <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="MTO memory">
+      <p>Memory model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Demand</strong><small>Sales order</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Supply</strong><small>Production / procurement</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>E</strong><small>Sales order stock</small></div>
+      <em>Valuated and non-valuated variants exist. Do not assume every MTO design posts costs the same way.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" id="assessment-recall" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment recall</p><h2>Start from the demand-to-supply link.</h2></header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In Make-to-Order, the customer sales order creates an individual requirement instead of being fulfilled from anonymous finished-goods stock. The requirements type and requirements class control how this demand is planned, whether sales order stock is used, how that stock is valuated, and whether costs and revenues are collected on the sales order item. Production or procurement creates the supply for that order. After goods receipt, the stock is available for the same sales order, then normal delivery, goods issue, and billing follow. If MTO fails, I check requirements determination before I check the production order.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="flow" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Synthetic example</p>
+      <h2>C1000 orders a customer-specific machine from DE01.</h2>
+      <p>Material M-500 is not built for anonymous warehouse stock. The order in sales organization DE10 creates the individual demand. Plant DE11 plans and produces the machine for this order.</p>
+    </header>
+    <div class="spa-flow" aria-label="Make to order flow">
+      <span>Sales order</span><i aria-hidden="true">→</i>
+      <span>Individual requirement</span><i aria-hidden="true">→</i>
+      <span>MRP / planned order</span><i aria-hidden="true">→</i>
+      <span>Production order</span><i aria-hidden="true">→</i>
+      <span>GR to sales order stock E</span><i aria-hidden="true">→</i>
+      <span>Delivery → PGI → F2</span>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+      <p><strong>Core consequence:</strong> sales order stock with special stock indicator <code>E</code> belongs to a specific sales order item. Another customer order should not silently consume it as ordinary unrestricted stock.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration map</p>
+      <h2>Requirements control is the center of MTO.</h2>
+      <p>Strategy group 20 is a common standard Make-to-Order strategy, but the exact design can differ. For assessment and troubleshooting, explain the control chain instead of treating one strategy key as the process definition.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="MTO configuration map">
+      <table class="study-table__table">
+        <thead><tr><th>Control</th><th>What it decides</th><th>Typical evidence</th><th>Failure pattern</th></tr></thead>
+        <tbody>
+          <tr><th>Material planning strategy</th><td>Whether sales demand is planned individually and how MRP reacts.</td><td>Strategy group / MRP group in material master.</td><td>Order exists but no expected supply proposal is created.</td></tr>
+          <tr><th>Requirements type determination</th><td>Which requirements class controls the sales item.</td><td>Requirements type on the sales order item and its determination inputs.</td><td>Wrong stock or costing behavior even though item category looks correct.</td></tr>
+          <tr><th>Requirements class</th><td>Special stock, valuation, account assignment, costing and planning behavior.</td><td>Special stock indicator <code>E</code>; valuation and consumption controls.</td><td>Goods receipt goes to the wrong stock segment or costs post to the wrong object.</td></tr>
+          <tr><th>Schedule line / transfer of requirements</th><td>Whether and how the sales demand is transferred to planning.</td><td>Schedule line category, ATP/TOR settings, dates and quantities.</td><td>No MRP demand or wrong confirmed quantity.</td></tr>
+          <tr><th>Production master data</th><td>How DE11 can actually build the product.</td><td>BOM, routing/recipe, work center/resources, production version where used.</td><td>MRP creates demand but production cannot create or release an order.</td></tr>
+          <tr><th>Costing design</th><td>Whether stock is valuated separately and whether costs/revenues collect on the sales order item.</td><td>Requirements class, costing variant, settlement / results-analysis setup where used.</td><td>Operational flow works but margin or WIP reporting is wrong.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="variants" data-reveal>
+    <header><p class="research-canvas__eyebrow">Important variants</p><h2>MTO is a family, not one fixed accounting model.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Valuated sales order stock</h3><p>Stock quantity and value can be managed specifically for the sales order. SAP supports separate valuation with reference to the sales document.</p></div>
+      <div><h3>Non-valuated sales order stock</h3><p>Quantity remains sales-order-specific while cost collection follows the sales-order cost object design.</p></div>
+      <div><h3>Variant Configuration</h3><p>The configured sales item can drive characteristics into production. Keep configuration logic separate from the basic MTO stock and requirements logic.</p></div>
+      <div><h3>External procurement</h3><p>An MTO item can still procure components or even the finished item externally. That does not automatically make it a third-party customer shipment.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="troubleshooting" data-reveal>
+    <header><p class="research-canvas__eyebrow">Troubleshooting</p><h2>Read the chain from sales demand to usable supply.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="MTO troubleshooting">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>First checks</th></tr></thead>
+        <tbody>
+          <tr><th>No planned order / production proposal</th><td>Plant, requirements type/class, strategy group, transfer of requirements, MRP run and planning file.</td></tr>
+          <tr><th>Production exists but GR is ordinary stock</th><td>Sales order assignment on the production/procurement object, requirements class, special stock indicator E.</td></tr>
+          <tr><th>Sales delivery cannot see finished stock</th><td>GR quantity in the correct sales order stock, order/item assignment, batch/serial status, delivery due date.</td></tr>
+          <tr><th>ATP behaves like make-to-stock</th><td>Availability context and special-stock requirement segment; do not change ATP before proving the requirements model.</td></tr>
+          <tr><th>Costs or margin are wrong</th><td>Valuation indicator, consumption posting, sales-order costing, settlement and account assignment.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="extension-readiness" data-reveal>
+    <header><p class="research-canvas__eyebrow">Extension readiness</p><h2>Keep custom logic outside the core demand signal when possible.</h2></header>
+    <p>Good extension candidates are additional configuration data, custom fields carried from the sales order into production, external configuration services, or side-by-side orchestration. Avoid replacing standard requirements determination with opaque code unless the business rule truly cannot be modeled in standard planning and classification.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary references</p><h2>Use SAP Help to inspect the exact MTO variant.</h2></header>
+    <p><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/2bba750d1e124e1ea2a039bb1cd9b6c5/4523bf53d25ab64ce10000000a174cb4.html">Make-to-Order Production (20)</a> · <a href="https://help.sap.com/docs/SUPPORT_CONTENT/ficontrolling/3361881737.html">Make-to-Order Scenario — Sales Order Stock</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/6362bd534f22b44ce10000000a174cb4.html">Sales Order Stock</a>.</p>
+  </section>
+</div>
