@@ -1,0 +1,134 @@
+---
+layout: default
+title: "SAP Rush Order and Cash Sales — Immediate Sales Processes"
+description: "A compact SAP S/4HANA guide comparing rush orders and cash sales with delivery timing, billing, accounting, configuration and troubleshooting."
+permalink: /labs/enterprise-context/sales-processes/immediate-sales/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-10-01
+hide_global_cta: true
+sales_process_atlas: true
+tags: [sap, s4hana, sales, sd, rush-order, cash-sales, billing]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Rush Order &amp; Cash Sales</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Special sales / immediate execution</p>
+      <h1>Rush Order accelerates delivery. Cash Sales accelerates payment.</h1>
+      <p>Both processes are fast, but they optimize different business events. Rush order keeps normal customer receivables and later invoicing. Cash sales assumes immediate payment and uses a different billing and accounting model.</p>
+      <a class="research-canvas__button" href="#comparison">Compare the two flows <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Immediate sales memory">
+      <p>Memory model</p>
+      <div class="research-canvas__signal-line"><span>Rush</span><strong>Now</strong><small>Delivery</small></div>
+      <div class="research-canvas__signal-line"><span>Cash</span><strong>Now</strong><small>Payment</small></div>
+      <em>Fast delivery and immediate payment are different controls.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" id="comparison" data-reveal>
+    <header><p class="research-canvas__eyebrow">Fast comparison</p><h2>Use one question: what must happen immediately?</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Rush order versus cash sales">
+      <table class="study-table__table">
+        <thead><tr><th>Dimension</th><th>Rush Order</th><th>Cash Sales</th></tr></thead>
+        <tbody>
+          <tr><th>Immediate event</th><td>Delivery creation / same-day fulfillment</td><td>Payment and cash-sale receipt, with immediate delivery processing</td></tr>
+          <tr><th>SAP standard sales document type</th><td><code>SO</code> in current standard documentation</td><td><code>BV</code></td></tr>
+          <tr><th>Customer invoice</th><td>Created later, normally delivery-related</td><td>Cash invoice/receipt can be printed from the order; accounting billing is order-related later</td></tr>
+          <tr><th>Receivable</th><td>Normal customer AR process</td><td>Amount posts to a cash account rather than normal customer receivable</td></tr>
+          <tr><th>Typical use</th><td>Customer needs the goods immediately but pays under normal terms</td><td>Customer orders, pays, and usually takes the goods immediately</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ecg-caption"><strong>Code caution:</strong> many training systems or customers use a copied rush-order key such as <code>RO</code>. SAP standard documentation uses <code>SO</code>. In an assessment, explain the behavior first and treat the document key as system-specific evidence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="rush" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Rush Order</p>
+      <h2>C1000 needs P-100 today, but normal billing still applies.</h2>
+      <p>The order is designed to create or trigger the delivery immediately. Warehouse execution and PGI happen quickly, while the invoice follows the delivery later.</p>
+    </header>
+    <div class="spa-flow" aria-label="Rush order flow">
+      <span>Rush sales order</span><i aria-hidden="true">→</i>
+      <span>Immediate delivery</span><i aria-hidden="true">→</i>
+      <span>Pick / PGI</span><i aria-hidden="true">→</i>
+      <span>Delivery-related invoice</span><i aria-hidden="true">→</i>
+      <span>Customer AR</span>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="cash" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Cash Sales</p>
+      <h2>The customer pays now, so the accounting model changes.</h2>
+      <p>In the classic standard process, order type <code>BV</code> uses immediate delivery type <code>BV</code>. The system can create the delivery in the background and print the cash-sale invoice/receipt from the order. The later order-related billing run posts the transaction to Financial Accounting without creating a normal open customer receivable.</p>
+    </header>
+    <div class="spa-flow" aria-label="Cash sales flow">
+      <span>BV cash sale</span><i aria-hidden="true">→</i>
+      <span>Immediate payment / receipt</span><i aria-hidden="true">→</i>
+      <span>BV delivery</span><i aria-hidden="true">→</i>
+      <span>PGI</span><i aria-hidden="true">→</i>
+      <span>Order-related billing / cash posting</span>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+      <p><strong>Subtle point:</strong> the customer can receive a printed cash-sale invoice immediately, while the accounting billing document is processed later. Do not confuse the printed receipt with the timing of the FI posting document.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header><p class="research-canvas__eyebrow">Configuration map</p><h2>Immediate delivery and immediate payment are configured in different places.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Rush and cash sales configuration">
+      <table class="study-table__table">
+        <thead><tr><th>Control</th><th>Rush Order</th><th>Cash Sales</th></tr></thead>
+        <tbody>
+          <tr><th>Sales document type</th><td>Immediate delivery behavior and delivery proposal.</td><td>BV process frame, immediate delivery and cash-sale controls.</td></tr>
+          <tr><th>Delivery</th><td>Delivery should be created immediately or be due immediately.</td><td>BV delivery is created in the background in the classic standard flow.</td></tr>
+          <tr><th>Shipping</th><td>Plant, shipping point, ATP and picking must support same-day execution.</td><td>Same, but picking relevance can depend on whether goods are handed over at counter or warehouse.</td></tr>
+          <tr><th>Billing</th><td>Normal delivery-related billing after PGI.</td><td>Order-related cash billing; printed receipt/output is separate from the later accounting billing document.</td></tr>
+          <tr><th>Accounting</th><td>Customer receivable and normal payment clearing.</td><td>Post to the configured cash account instead of normal customer AR.</td></tr>
+          <tr><th>Output</th><td>Normal order/delivery/billing output as required.</td><td>Classic standard uses cash-sale output such as RD03 for the immediate receipt.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pitfalls" data-reveal>
+    <header><p class="research-canvas__eyebrow">Pitfalls</p><h2>“Fast” is not a configuration requirement by itself.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Rush does not mean cash</h3><p>A rush customer can still have ordinary payment terms and AR.</p></div>
+      <div><h3>Cash does not bypass logistics</h3><p>Stock still has to be available, delivered and posted as goods issue.</p></div>
+      <div><h3>Immediate delivery needs clean master data</h3><p>A missing shipping point, ATP confirmation or delivery block defeats the whole purpose of the process.</p></div>
+      <div><h3>Printed receipt ≠ FI posting timing</h3><p>Cash-sale output can be immediate while order-related billing completes the accounting process later.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="troubleshooting" data-reveal>
+    <header><p class="research-canvas__eyebrow">Troubleshooting</p><h2>Start with the event that should have been immediate.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Immediate sales troubleshooting">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>First checks</th></tr></thead>
+        <tbody>
+          <tr><th>Rush order saves but no delivery appears</th><td>Immediate-delivery setting, delivery type, confirmed quantity, due date, shipping point, delivery block and incompletion.</td></tr>
+          <tr><th>Rush invoice is not due</th><td>Delivery/PGI status, billing relevance, delivery → billing copy control, billing date and block.</td></tr>
+          <tr><th>Cash receipt does not print</th><td>Output determination, device/channel, order completeness and cash-sale output setup.</td></tr>
+          <tr><th>Cash sale creates normal AR</th><td>Cash-sales accounting setup, billing type, account determination and payment/cash-account configuration.</td></tr>
+          <tr><th>Cash sale billing quantity differs from GI</th><td>Classic cash sales expects order quantity and GI quantity to align before billing; correct the operational quantity first.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary references</p><h2>Use SAP standard behavior as the baseline, then compare the customer system.</h2></header>
+    <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/1165b65334e6b54ce10000000a174cb4.html">Special Sales Orders</a> · <a href="https://help.sap.com/docs/SAP_ERP/78e0627c34ef43879d72718e21ea517b/1465b65334e6b54ce10000000a174cb4.html">Cash Sales</a> · <a href="https://help.sap.com/docs/PRODUCT_ID/7b24a64d9d0941bda1afa753263d9e39/c564b65334e6b54ce10000000a174cb4.html">Sales Document Types</a>.</p>
+  </section>
+</div>
