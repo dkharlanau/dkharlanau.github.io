@@ -23,6 +23,8 @@ related:
   - /atlas/diagnostics/sap-output-message-control-diagnostics/
   - /labs/enterprise-context/sales-order/
   - /labs/assessment/sales/
+robots: noindex,follow
+sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
