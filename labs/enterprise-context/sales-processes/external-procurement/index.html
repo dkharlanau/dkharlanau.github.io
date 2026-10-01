@@ -1,0 +1,141 @@
+---
+layout: default
+title: "SAP Sales with External Procurement — Third-Party and Individual Purchase Order"
+description: "A compact SAP S/4HANA comparison of third-party sales and individual purchase-order processing with TAS/TAB controls, purchasing integration, stock ownership and troubleshooting."
+permalink: /labs/enterprise-context/sales-processes/external-procurement/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-10-01
+hide_global_cta: true
+sales_process_atlas: true
+tags: [sap, s4hana, sales, sd, procurement, third-party, individual-purchase-order, mm]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">External Procurement</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Special fulfillment / SD + MM</p>
+      <h1>The supplier can ship to the customer or to you. That one choice changes the process.</h1>
+      <p>Third-party processing and individual purchase orders both create procurement from a sales order. The decisive difference is where the supplier sends the goods and whether your company ever owns physical stock before customer delivery.</p>
+      <a class="research-canvas__button" href="#comparison">Compare TAS and TAB <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="External procurement memory">
+      <p>Memory model</p>
+      <div class="research-canvas__signal-line"><span>TAS</span><strong>Direct</strong><small>Vendor → customer</small></div>
+      <div class="research-canvas__signal-line"><span>TAB</span><strong>Via us</strong><small>Vendor → plant → customer</small></div>
+      <em>Item and schedule-line keys shown here are common standard keys. Verify the active system.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" id="comparison" data-reveal>
+    <header><p class="research-canvas__eyebrow">Fast comparison</p><h2>Ask where the supplier delivers.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Third party versus individual purchase order">
+      <table class="study-table__table">
+        <thead><tr><th>Dimension</th><th>Third-Party Sales</th><th>Individual Purchase Order</th></tr></thead>
+        <tbody>
+          <tr><th>Supplier ships to</th><td>Customer C1000 directly</td><td>Our plant DE11</td></tr>
+          <tr><th>Own outbound delivery</th><td>No physical delivery from our plant</td><td>Yes, after goods receipt</td></tr>
+          <tr><th>Own stock</th><td>Never held as ordinary plant stock</td><td>Received as sales-order-specific stock</td></tr>
+          <tr><th>Common item category</th><td><code>TAS</code></td><td><code>TAB</code></td></tr>
+          <tr><th>Common schedule line</th><td><code>CS</code></td><td><code>CB</code></td></tr>
+          <tr><th>Procurement</th><td>PR → PO to external supplier</td><td>PR → PO to external supplier</td></tr>
+          <tr><th>Customer billing basis</th><td>Configured supplier-invoice or statistical-GR related quantity / order-related billing</td><td>Normal delivery-related billing after we ship to the customer</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="third-party" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Third-Party Sales</p>
+      <h2>Atlas Germany sells P-EXT, supplier V1000 ships directly to C1000.</h2>
+      <p>DE01 owns the customer relationship but does not execute the physical delivery. The sales order creates the procurement requirement, Purchasing buys from V1000, and the vendor ships to the customer.</p>
+    </header>
+    <div class="spa-flow" aria-label="Third party sales flow">
+      <span>Sales order / TAS</span><i aria-hidden="true">→</i>
+      <span>Purchase requisition</span><i aria-hidden="true">→</i>
+      <span>Purchase order to V1000</span><i aria-hidden="true">→</i>
+      <span>Vendor ships to C1000</span><i aria-hidden="true">→</i>
+      <span>Supplier invoice or statistical GR signal</span><i aria-hidden="true">→</i>
+      <span>Customer billing</span>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+      <p><strong>No SD outbound delivery from DE11.</strong> If your design requires the selling company to receive, pick, and ship the goods, you are no longer describing the classic third-party branch.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="individual-po" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Individual Purchase Order</p>
+      <h2>The same external supplier now delivers to our plant.</h2>
+      <p>C1000 orders a special product that DE01 does not stock. The sales order creates an order-specific procurement requirement. V1000 delivers to DE11. Goods are received with reference to the sales order and are reserved for that demand. DE01 then ships to the customer.</p>
+    </header>
+    <div class="spa-flow" aria-label="Individual purchase order flow">
+      <span>Sales order / TAB</span><i aria-hidden="true">→</i>
+      <span>Purchase requisition</span><i aria-hidden="true">→</i>
+      <span>Purchase order</span><i aria-hidden="true">→</i>
+      <span>GR 101 to sales order stock E</span><i aria-hidden="true">→</i>
+      <span>Outbound delivery</span><i aria-hidden="true">→</i>
+      <span>PGI + F2</span>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration map</p>
+      <h2>The schedule line is where Sales hands demand to Purchasing.</h2>
+      <p>For both branches, item-category determination defines the business role and schedule-line configuration controls the procurement connection, including purchase-requisition creation and purchasing document behavior.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="External procurement configuration">
+      <table class="study-table__table">
+        <thead><tr><th>Control</th><th>Third-party</th><th>Individual PO</th><th>Diagnostic question</th></tr></thead>
+        <tbody>
+          <tr><th>Item category</th><td><code>TAS</code> commonly used.</td><td><code>TAB</code> commonly used.</td><td>Did the sales item receive the correct business role?</td></tr>
+          <tr><th>Schedule line</th><td><code>CS</code> commonly creates the procurement requirement.</td><td><code>CB</code> commonly supports individual procurement.</td><td>Was a purchase requisition created, and with the expected account assignment?</td></tr>
+          <tr><th>Material control</th><td>Item category group / material setup can trigger third-party determination.</td><td>Material setup or permitted manual item-category change can trigger individual procurement.</td><td>Is the material designed for this branch, or are users forcing it manually?</td></tr>
+          <tr><th>Purchasing source</th><td>Supplier, source determination, info record / source list where used.</td><td>Same, but delivery is to our plant.</td><td>Can Purchasing convert the PR into the correct PO?</td></tr>
+          <tr><th>Stock</th><td>No normal own-stock fulfillment step.</td><td>Sales order stock with special stock indicator <code>E</code>.</td><td>After GR, is stock assigned to the correct sales order item?</td></tr>
+          <tr><th>Billing</th><td>Order-related and dependent on the configured procurement evidence.</td><td>Delivery-related after DE01 ships the goods.</td><td>Which business event should make the customer quantity billable?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pitfalls" data-reveal>
+    <header><p class="research-canvas__eyebrow">Pitfalls</p><h2>Most errors come from mixing the two physical flows.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Third-party is not “receive then ship”</h3><p>If a warehouse delivery from DE11 exists by design, check whether TAB / individual procurement is the real requirement.</p></div>
+      <div><h3>Billing relevance is configurable</h3><p>Do not memorize one billing-relevance letter without the process. First identify whether billing waits for supplier invoice data, statistical goods receipt, or another configured quantity signal.</p></div>
+      <div><h3>The PR is evidence</h3><p>If the sales order is correct but no purchase requisition appears, inspect schedule-line determination and procurement settings before blaming Purchasing.</p></div>
+      <div><h3>Sales-order stock is not free stock</h3><p>In individual procurement, received stock is assigned to the customer demand. Do not expect another sales order to consume it.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="troubleshooting" data-reveal>
+    <header><p class="research-canvas__eyebrow">Troubleshooting</p><h2>Follow the document chain in the order it should be created.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="External procurement troubleshooting">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>First checks</th></tr></thead>
+        <tbody>
+          <tr><th>No PR from sales order</th><td>Item category, schedule line, procurement indicator, material item-category group, plant.</td></tr>
+          <tr><th>PR exists but PO cannot be created</th><td>Supplier source, purchasing organization, purchasing data, account assignment, release strategy / workflow.</td></tr>
+          <tr><th>Third-party customer invoice not due</th><td>Configured billing relevance, supplier-invoice / statistical-GR evidence, order status, billing due list.</td></tr>
+          <tr><th>Individual PO delivery cannot be created</th><td>GR posted to correct sales order stock, available quantity, shipping point, delivery block, schedule-line due date.</td></tr>
+          <tr><th>Wrong quantity billed</th><td>Compare ordered, procured, received and billable quantities; then inspect copy control and billing quantity basis.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary references</p><h2>Use SAP Help to validate the active branch.</h2></header>
+    <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/dd06fb555bf76d55e10000000a4450e5.html">Third-Party Order Processing</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/4866b65334e6b54ce10000000a174cb4.html">Individual Purchase Orders</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/6362bd534f22b44ce10000000a174cb4.html">Sales Order Stock</a>.</p>
+  </section>
+</div>
