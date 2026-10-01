@@ -20,16 +20,6 @@ tags:
   - fi-integration
   - navs
   - input-tax
-semantic_links:
-  - type: "parent_topic"
-    title: "Procurement"
-    url: "/labs/enterprise-context/procurement/"
-  - type: "related_topic"
-    title: "SAP Tax in Sales & Procurement"
-    url: "/labs/enterprise-context/tax/"
-  - type: "integrates_with"
-    title: "FI/CO for Logistics"
-    url: "/labs/enterprise-context/finance-logistics/"
 source_links:
   - title: "Maintaining Condition Records in MM"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/fd6ad0531d8b4208e10000000a174cb4.html"
@@ -48,7 +38,29 @@ source_links:
     <li><a href="/">Home</a></li>
     <li><a href="/labs/">Labs</a></li>
     <li><a href="/labs/enterprise-context/">Enterprise Context</a></li>
-    <li><a href="/labs/enterprise-context/procurement/">Procurement</a></li>
+    <li><a href="/labs/enterprise-context/procurement/">Procurement</a></
+last_reviewed: 2026-10-01
+publication_wave: "logistics-search-wave-01"
+review_method: "SAP primary sources + factual review + editorial rewrite"
+search_intent: "SAP MM tax code determination in purchase orders and Logistics Invoice Verification"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "sap-procurement"
+ai_sidecar: "/ai/pages/labs--enterprise-context--procurement--tax-code-determination.json"
+entity_mentions:
+  - "sap-s4hana"
+semantic_links:
+  - type: "parent_context"
+    title: "Procurement Process & Decision Map — Enterprise Context Lab"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "integrates_with"
+    title: "FI/CO for Logistics — Enterprise Context Lab"
+    url: "/labs/enterprise-context/finance-logistics/"
+  - type: "related_topic"
+    title: "SAP Sales Pricing Engine — Enterprise Context Lab"
+    url: "/labs/enterprise-context/pricing/"
+# ai-discovery-managed:endli>
     <li aria-current="page">Tax Code Determination</li>
   </ol>
 </nav>
@@ -69,7 +81,7 @@ source_links:
       <p><strong>Assessment rule:</strong> do not treat tax code determination, tax calculation, and tax account determination as one configuration step.</p>
       <p><strong>Runtime chain:</strong> purchasing context → tax code → PO → supplier invoice → Logistics Invoice Verification → FI tax posting.</p>
     </div>
-    <a href="/labs/enterprise-context/tax/">Open the cross-domain tax map <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a href="/labs/enterprise-context/procurement/">Open the Procurement decision map <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="memory-model" data-reveal>
