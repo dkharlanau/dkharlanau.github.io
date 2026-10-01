@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-10-01
 hide_global_cta: true
 sales_mechanism_library: true
 tags:
@@ -154,6 +154,38 @@ tags:
       </article>
       {% endfor %}
     </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Classic copy control transaction map for SAP S/4HANA Private Edition and on-premise">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Reference direction</th><th scope="col">SAP GUI</th><th scope="col">Use it to reason about</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Sales → Sales</th><td><code>VTAA</code></td><td>Quotation, contract, returns, credit or debit request, and other sales-document reference flows.</td></tr>
+          <tr><th scope="row">Sales → Delivery</th><td><code>VTLA</code></td><td>Whether a sales document can create the target delivery and how header, item, quantity, and status data move across the boundary.</td></tr>
+          <tr><th scope="row">Sales → Billing</th><td><code>VTFA</code></td><td>Order-related billing and other flows where the sales document is the billing reference.</td></tr>
+          <tr><th scope="row">Delivery → Billing</th><td><code>VTFL</code></td><td>Delivery-related billing, including billing quantity, transferred data, and pricing behavior at invoice creation.</td></tr>
+          <tr><th scope="row">Billing → Billing</th><td><code>VTFF</code></td><td>Billing-to-billing reference flows where a billing document is the predecessor.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Billing quantity answers “how much?”</h3>
+        <p>It selects the quantity basis that the target billing item uses. The right setting depends on the process: ordered quantity, delivered quantity, goods-receipt-related quantity, or another supported basis.</p>
+      </div>
+      <div>
+        <h3>Pricing type answers “which value logic?”</h3>
+        <p>It controls whether pricing elements are copied, redetermined, or selectively refreshed in the target document. A correct condition record can still produce an unexpected invoice value if the copy-control pricing behavior requests redetermination.</p>
+      </div>
+      <div>
+        <h3>Copying requirement answers “is this reference allowed now?”</h3>
+        <p>Requirements are gates, not field mappings. Data-transfer routines move or derive data after the reference is allowed. Keep those responsibilities separate when debugging.</p>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Private Edition / on-premise note:</strong> the transaction codes above are a useful SAP GUI map. Do not memorize routine numbers as universal truth. Standard routines vary by source/target process and release, and customer routines can exist. Inspect the active source/target and item-category entry in the target system.</p>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">rule</span>
