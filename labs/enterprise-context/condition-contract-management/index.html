@@ -7,9 +7,9 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
-last_reviewed: 2026-09-24
-review_method: "SAP Help + current SAP Learning CCM/pricing course + supplied training material + editorial rewrite"
+last_modified_at: 2026-10-01
+last_reviewed: 2026-10-01
+review_method: "SAP Help + current SAP Learning CCM/pricing course + supplied SD/MM CCM integration material + editorial rewrite"
 search_intent: "SAP Condition Contract Management business volume accruals settlement rebates"
 hide_global_cta: true
 enterprise_context_graph: true
@@ -200,6 +200,39 @@ source_links:
       <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
       <p><strong>Key distinction:</strong> ordinary SD pricing prices the current sales or billing document. CCM conditions define an agreement whose final amount is settled later from accumulated business volume.</p>
       <a href="/labs/enterprise-context/pricing/">Open the Sales Pricing guide <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ccm-sd-mm-integration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SD and MM process integration</p>
+      <h2>CCM runs beside the logistics process. It does not replace it.</h2>
+      <p>Sales orders, deliveries, billing, purchase orders, goods receipts, and supplier invoices continue in their normal process. CCM reads the configured transactional evidence, builds business volume, updates accruals, and settles the commercial agreement later.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>SD: Order-to-Cash</h3>
+        <p><strong>1.</strong> Create and release the customer condition contract. <strong>2.</strong> Run sales order → delivery → billing as usual. <strong>3.</strong> Eligible billing data becomes business volume. <strong>4.</strong> Accruals can be recognized in billing or updated with a delta accrual run. <strong>5.</strong> Partial, final, or delta settlement creates the customer-side settlement result and FI follow-on.</p>
+      </div>
+      <div>
+        <h3>MM: Procure-to-Pay</h3>
+        <p><strong>1.</strong> Create the supplier condition contract. <strong>2.</strong> Run PO → goods receipt → supplier invoice as usual. <strong>3.</strong> The configured source determines which event contributes business volume. <strong>4.</strong> Accruals can be tied to goods receipt or updated periodically. <strong>5.</strong> Settlement creates the supplier-side result and FI posting.</p>
+      </div>
+      <div>
+        <h3>Accrual is not settlement</h3>
+        <p>An accrual estimates the expected rebate obligation or claim before the agreement is finally settled. A delta accrual run recalculates the expected total from current business volume and posts only the difference to what is already accrued.</p>
+      </div>
+      <div>
+        <h3>Corrections stay traceable</h3>
+        <p>Partial settlement handles an interim period. Final settlement closes a defined period. Delta settlement handles late postings or corrections after final settlement. The goal is a controlled document chain instead of manual duplicate postings.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Assessment rule:</strong> separate four questions: Which contract applies? Which transactions form business volume? How is the amount calculated? Which settlement document and FI posting are created?</p>
+      <a href="#ccm-assessment">Jump to assessment memory <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </section>
 
