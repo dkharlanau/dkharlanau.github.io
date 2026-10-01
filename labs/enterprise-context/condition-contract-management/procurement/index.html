@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-10-01
 hide_global_cta: true
 enterprise_context_graph: true
 tags: [sap-s4hana, sap-mm, settlement-management, condition-contract-management, supplier-rebates]
@@ -97,6 +97,19 @@ tags: [sap-s4hana, sap-mm, settlement-management, condition-contract-management,
     <div class="ecg-input-grid">
       {% for item in model.configuration_focus %}
       <article><span>CFG</span><p>{{ item }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="procurement-ccm-accruals" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Accruals and valuation</p>
+      <h2>Receipt-based and invoice-based rebates have different accounting timing.</h2>
+      <p>The process design must state which purchasing event creates business volume and when the expected rebate affects valuation or G/L accruals.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% for note in model.integration_notes %}
+      <div><h3>{{ note.title }}</h3><p>{{ note.explanation }}</p></div>
       {% endfor %}
     </div>
   </section>
