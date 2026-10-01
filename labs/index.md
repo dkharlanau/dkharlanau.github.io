@@ -16,6 +16,28 @@ tags:
   - assessment
   - interview
   - business-ai
+last_reviewed: 2026-10-01
+publication_wave: "public-framework-search-wave-04"
+review_method: "page-level editorial review"
+search_intent: "SAP enterprise labs for logistics integration AI interview and assessment preparation"
+# ai-discovery-managed:start
+structured_data:
+  type: CollectionPage
+primary_topic: "sap-enterprise"
+ai_sidecar: "/ai/pages/labs.json"
+entity_mentions:
+  - "sap-s4hana"
+semantic_links:
+  - type: "same_domain"
+    title: "SAP Enterprise — Enterprise Context Lab"
+    url: "/labs/enterprise-context/"
+  - type: "related_topic"
+    title: "SAP Sales Process Atlas — Standard, Special and Cross-Process Variants"
+    url: "/labs/enterprise-context/sales-processes/"
+  - type: "related_topic"
+    title: "Procurement Process & Decision Map — Enterprise Context Lab"
+    url: "/labs/enterprise-context/procurement/"
+# ai-discovery-managed:end
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
