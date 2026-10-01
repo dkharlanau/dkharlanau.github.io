@@ -1,0 +1,140 @@
+---
+layout: default
+title: "SAP Returns and Free-of-Charge Processes — Returns, FOC and Replacement"
+description: "A practical SAP S/4HANA guide to customer returns, free-of-charge delivery and free-of-charge subsequent delivery with configuration, stock effects, billing logic and troubleshooting."
+permalink: /labs/enterprise-context/sales-processes/returns-free-of-charge/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-10-01
+hide_global_cta: true
+sales_process_atlas: true
+tags: [sap, s4hana, sales, sd, returns, complaints, free-of-charge, credit-memo]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Returns &amp; Free of Charge</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">After-sales / complaints / replacement</p>
+      <h1>A complaint can reverse goods, reverse money, replace goods, or do more than one.</h1>
+      <p>Returns and free-of-charge processes are easier when you separate the physical question from the financial question. Is the customer sending goods back? Are we refunding money? Are we shipping a replacement? These decisions create different document flows.</p>
+      <a class="research-canvas__button" href="#decision-table">Choose the branch <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Returns memory">
+      <p>Memory model</p>
+      <div class="research-canvas__signal-line"><span>RE</span><strong>Return</strong><small>Goods come back</small></div>
+      <div class="research-canvas__signal-line"><span>FOC</span><strong>Free</strong><small>No customer charge</small></div>
+      <div class="research-canvas__signal-line"><span>REF</span><strong>Reference</strong><small>Replacement follows history</small></div>
+      <em>“Free” does not mean “no logistics or accounting impact.”</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" id="decision-table" data-reveal>
+    <header><p class="research-canvas__eyebrow">Business decision</p><h2>Choose the process from what must happen next.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Returns and free of charge decision table">
+      <table class="study-table__table">
+        <thead><tr><th>Customer situation</th><th>Process</th><th>Physical flow</th><th>Financial flow</th></tr></thead>
+        <tbody>
+          <tr><th>We want to send a sample or goodwill material</th><td>Free-of-Charge Delivery</td><td>Our plant → customer</td><td>No customer charge; exact billing/pro-forma behavior depends on item design.</td></tr>
+          <tr><th>Customer received too little / wrong quantity and needs a replacement</th><td>Free-of-Charge Subsequent Delivery</td><td>Our plant → customer again</td><td>No new customer charge; reference preserves complaint context.</td></tr>
+          <tr><th>Customer sends faulty goods back</th><td>Customer Return</td><td>Customer → our returns stock / inspection</td><td>Credit can follow after review.</td></tr>
+          <tr><th>Price was wrong but goods stay with customer</th><td>Credit / debit / invoice correction process</td><td>No reverse logistics</td><td>Financial correction only.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="free-of-charge" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Free-of-Charge Delivery</p>
+      <h2>C1000 receives a demo pack with no customer charge.</h2>
+      <p>In classic on-premise standard, <code>FD</code> is a standard sales document type for free-of-charge delivery. Newer content also provides item designs that can create a zero-value or pro-forma billing result. The business rule is more important than the key: the goods leave stock, but the customer is not charged.</p>
+    </header>
+    <div class="spa-flow" aria-label="Free of charge flow">
+      <span>FOC sales order</span><i aria-hidden="true">→</i>
+      <span>Availability check</span><i aria-hidden="true">→</i>
+      <span>Outbound delivery</span><i aria-hidden="true">→</i>
+      <span>Picking + PGI</span><i aria-hidden="true">→</i>
+      <span>No-charge / pro-forma outcome</span>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">payments</span>
+      <p><strong>Important:</strong> PGI still reduces inventory and can create a cost posting. “No customer price” is a commercial rule, not a promise that Finance sees nothing.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="subsequent-foc" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Free-of-Charge Subsequent Delivery</p>
+      <h2>The replacement should keep a reference to the original problem.</h2>
+      <p>A subsequent free-of-charge delivery is used when the customer should receive additional or replacement material without another charge. SAP complaints processing expects this branch to reference the earlier commercial document or return context.</p>
+    </header>
+    <div class="spa-flow" aria-label="Subsequent free of charge flow">
+      <span>Original order / return</span><i aria-hidden="true">→</i>
+      <span>Subsequent FOC document</span><i aria-hidden="true">→</i>
+      <span>Delivery</span><i aria-hidden="true">→</i>
+      <span>PGI</span><i aria-hidden="true">→</i>
+      <span>No new customer charge</span>
+    </div>
+    <p class="ecg-caption"><strong>Code caution:</strong> SAP standard document-type keys differ by release/content and customer copies. Current on-premise documentation lists <code>SD</code> as the standard subsequent-delivery type; many training or customer systems use copied keys. Learn the reference logic, not only the abbreviation.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="returns" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Customer Return</p>
+      <h2>Goods come back before the final disposition is known.</h2>
+      <p>For a classic return, a return sales document such as <code>RE</code> creates the reverse logistics flow. The received material can go to returns blocked stock, inspection, unrestricted stock, scrap, or another follow-up activity depending on the returns design.</p>
+    </header>
+    <div class="spa-flow" aria-label="Customer return flow">
+      <span>RE with reference</span><i aria-hidden="true">→</i>
+      <span>Return delivery</span><i aria-hidden="true">→</i>
+      <span>Goods receipt / inspection</span><i aria-hidden="true">→</i>
+      <span>Disposition</span><i aria-hidden="true">→</i>
+      <span>Credit or replacement</span>
+    </div>
+    <p class="ecg-caption"><strong>Movement examples:</strong> classic returns can use movement 651 into returns stock or 653 into unrestricted stock, depending on the configured return path. Advanced Returns Management adds a richer disposition tree, so do not treat one movement type as the definition of returns.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header><p class="research-canvas__eyebrow">Configuration map</p><h2>Reference control, stock disposition and approval are the critical layers.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Returns and free of charge configuration">
+      <table class="study-table__table">
+        <thead><tr><th>Control</th><th>What it changes</th><th>Typical diagnostic</th></tr></thead>
+        <tbody>
+          <tr><th>Sales document type</th><td>Defines return, free-of-charge, subsequent-delivery and complaint-level blocks/defaults.</td><td>If the whole process has the wrong follow-on behavior, start with the document type.</td></tr>
+          <tr><th>Item category / schedule line</th><td>Controls pricing/billing relevance, delivery relevance and stock movement.</td><td>If goods move incorrectly, trace schedule-line movement logic before billing.</td></tr>
+          <tr><th>Copy control</th><td>Defines which original order, delivery or billing document can be referenced and what data is copied.</td><td>Wrong quantity, reason, price or status after reference creation.</td></tr>
+          <tr><th>Delivery / billing blocks</th><td>Supports review before a complaint creates a delivery or credit.</td><td>Document is correct but follow-on processing is intentionally blocked.</td></tr>
+          <tr><th>Reason for rejection / return reason</th><td>Stops or classifies complaint items and supports analytics.</td><td>Rejected items still appear in the process flow but should not create the commercial effect.</td></tr>
+          <tr><th>Returns disposition</th><td>Decides unrestricted stock, blocked stock, inspection, scrap, supplier return or replacement path.</td><td>Do not credit automatically before the business disposition is known when policy requires inspection.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="troubleshooting" data-reveal>
+    <header><p class="research-canvas__eyebrow">Troubleshooting</p><h2>Separate physical recovery from financial correction.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Returns troubleshooting">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>First checks</th></tr></thead>
+        <tbody>
+          <tr><th>Return delivery cannot be created</th><td>Reference status, delivery block, return item relevance, shipping/receiving data, due date.</td></tr>
+          <tr><th>Returned stock lands in the wrong segment</th><td>Schedule-line category, movement type, return reason / follow-up activity, inspection setup.</td></tr>
+          <tr><th>Credit memo is blocked</th><td>Billing block on the complaint document, approval status, reference quantity and billing due state.</td></tr>
+          <tr><th>FOC item unexpectedly creates revenue</th><td>Pricing, item billing relevance, discount design, billing type and account determination.</td></tr>
+          <tr><th>Replacement loses complaint traceability</th><td>Create it with the intended reference and check copy control / document flow rather than creating an unrelated free order.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary references</p><h2>Use the complaints model to choose the correct branch.</h2></header>
+    <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/7765b65334e6b54ce10000000a174cb4.html">Complaints Processing</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/8965b65334e6b54ce10000000a174cb4.html">Free-of-Charge Subsequent Deliveries</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/ad65b65334e6b54ce10000000a174cb4.html">Blocking or Releasing Complaints</a>.</p>
+  </section>
+</div>
