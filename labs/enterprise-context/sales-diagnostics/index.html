@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-26
+last_modified_at: 2026-10-01
 hide_global_cta: true
 enterprise_context_graph: true
 tags: [sap-s4hana, sap-sd, sales, diagnostics, lead-consulting, jit, returns, billing, eto]
@@ -124,6 +124,77 @@ semantic_links:
       {% for item in graph.case_design_rules %}
       <article><span>RULE</span><h3>{{ item.rule }}</h3><p>{{ item.why }}</p></article>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-fast-triage" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Fast triage</p>
+      <h2>Start from the first evidence that can separate the causes.</h2>
+      <p>This table is a fast assessment and incident aid. It does not assign a root cause from the symptom alone. Each row tells you which state to inspect first and which owner becomes plausible only after that evidence is known.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP Sales fast diagnostic triage">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Symptom</th><th scope="col">First evidence</th><th scope="col">Next control to inspect</th><th scope="col">Likely owner after proof</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Wrong item category</th>
+            <td>Compare the determined category and the inputs on one good and one bad item.</td>
+            <td>Sales document type + material item category group + item usage + higher-level item. In Private Edition/on-premise, inspect <code>VOV4</code> only after the inputs are known.</td>
+            <td>Sales control or product/master data.</td>
+          </tr>
+          <tr>
+            <th scope="row">Wrong schedule line or fulfillment behavior</th>
+            <td>Item category, MRP type, determined schedule line, ATP/TOR flags, and movement type.</td>
+            <td>Item category + MRP type → schedule line. In Private Edition/on-premise, compare <code>VOV5</code> and <code>VOV6</code>.</td>
+            <td>Sales control, planning, or product master data.</td>
+          </tr>
+          <tr>
+            <th scope="row">ATP did not run or confirmed unexpectedly</th>
+            <td>Plant, requirement date, material checking context, schedule-line ATP relevance, and the active ATP policy.</td>
+            <td>Prove the context sent to ATP before changing the availability engine.</td>
+            <td>Sales-order derivation, master data, or ATP/aATP.</td>
+          </tr>
+          <tr>
+            <th scope="row">Order cannot create a delivery</th>
+            <td>Delivery-relevant schedule line, confirmed/due quantity and dates, shipping point, blocks, and incompletion.</td>
+            <td>If the order state is correct, inspect the Sales → Delivery reference boundary; in Private Edition/on-premise this includes <code>VTLA</code>.</td>
+            <td>Sales control or Shipping.</td>
+          </tr>
+          <tr>
+            <th scope="row">Delivery is complete but no invoice is created</th>
+            <td>Billing relevance, expected billing reference, billing date, block/status, due-list result, and billing creation log.</td>
+            <td>Only after eligibility is proven, inspect <code>VTFA</code> for order-related or <code>VTFL</code> for delivery-related billing in Private Edition/on-premise.</td>
+            <td>Billing or upstream source status.</td>
+          </tr>
+          <tr>
+            <th scope="row">Unexpected billing split</th>
+            <td>Compare header, payer/partner, date, currency, terms, and copied business data across the references.</td>
+            <td>Find the first split-relevant difference and trace where that value was created or transferred.</td>
+            <td>Billing copy logic or the upstream data owner.</td>
+          </tr>
+          <tr>
+            <th scope="row">Billing document exists but FI posting is missing</th>
+            <td>Accounting status, pricing/account-assignment completeness, tax/account context, and posting error.</td>
+            <td>Move to account determination only after the billing document is valid. In Private Edition/on-premise, <code>VKOA</code> is one relevant control for revenue-account determination.</td>
+            <td>Billing or FI/CO.</td>
+          </tr>
+          <tr>
+            <th scope="row">Invoice price differs from the order</th>
+            <td>Compare pricing conditions and identify whether billing copied or redetermined pricing.</td>
+            <td>Check the copy-control pricing type before changing the condition record.</td>
+            <td>Billing copy control or Pricing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p><strong>Lead habit:</strong> transaction codes are navigation aids after ownership is narrowed. They are not a substitute for evidence. A symptom visible in delivery or billing can still have its first wrong state in the order, master data, ATP, or an integration message.</p>
     </div>
   </section>
 
