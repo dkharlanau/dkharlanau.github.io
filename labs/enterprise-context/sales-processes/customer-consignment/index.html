@@ -1,0 +1,126 @@
+---
+layout: default
+title: "SAP Customer Consignment — Fill-Up, Issue, Pick-Up and Return"
+description: "A practical SAP S/4HANA customer consignment guide explaining ownership, special stock, order types, billing, configuration, process flow and troubleshooting."
+permalink: /labs/enterprise-context/sales-processes/customer-consignment/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-10-01
+hide_global_cta: true
+sales_process_atlas: true
+tags: [sap, s4hana, sales, sd, consignment, special-stock, billing]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Customer Consignment</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Special stock / customer site</p>
+      <h1>The goods can sit at the customer and still belong to you.</h1>
+      <p>Customer consignment separates physical location from ownership. Fill-up moves stock to the customer site without selling it. Issue transfers ownership and creates the commercial event. Pick-up and return reverse different parts of that cycle.</p>
+      <a class="research-canvas__button" href="#four-processes">Learn the four documents <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Consignment memory">
+      <p>Memory model</p>
+      <div class="research-canvas__signal-line"><span>KB</span><strong>Fill-up</strong><small>Move, do not sell</small></div>
+      <div class="research-canvas__signal-line"><span>KE</span><strong>Issue</strong><small>Sell from consignment</small></div>
+      <div class="research-canvas__signal-line"><span>KA/KR</span><strong>Reverse</strong><small>Pick-up / return</small></div>
+      <em>Stock location and legal ownership are separate questions.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__inventory" id="assessment-recall" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment recall</p><h2>Explain consignment with ownership, not document codes.</h2></header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In customer consignment, goods are physically stored at the customer but remain our property until the customer withdraws them. Fill-up moves stock into customer consignment special stock and normally has no billing. Consignment issue records the customer's withdrawal, transfers ownership, and is billing relevant. Consignment pick-up brings unused consignment stock back to our plant. Consignment return is different: it reverses a previous issue by moving returned goods back into consignment stock and can create the financial reversal. The key control is always the stock and ownership state before the document.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="four-processes" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Synthetic example</p>
+      <h2>Atlas Germany keeps 100 pieces of P-100 at customer C1000.</h2>
+      <p>C1000 wants immediate access to stock but pays only when it consumes the material. SAP keeps this stock separately for the customer, commonly using customer consignment special stock.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Customer consignment processes">
+      <table class="study-table__table">
+        <thead><tr><th>Process</th><th>Standard order type</th><th>Stock / ownership change</th><th>Billing</th><th>Use it when</th></tr></thead>
+        <tbody>
+          <tr><th>Consignment Fill-Up</th><td><code>KB</code></td><td>Own unrestricted stock → customer consignment stock. Ownership stays with DE01.</td><td>No customer invoice for the fill-up.</td><td>Place our stock at the customer site.</td></tr>
+          <tr><th>Consignment Issue</th><td><code>KE</code></td><td>Customer withdraws from consignment stock. Ownership transfers to the customer.</td><td>Yes, this is the sales event.</td><td>Customer reports consumption or withdrawal.</td></tr>
+          <tr><th>Consignment Pick-Up</th><td><code>KA</code></td><td>Unused consignment stock returns to our own plant stock.</td><td>No sale to reverse because ownership never changed.</td><td>Customer no longer needs the stock.</td></tr>
+          <tr><th>Consignment Return</th><td><code>KR</code></td><td>Goods already issued to the customer are returned into customer consignment stock.</td><td>Financial reversal / credit logic can apply.</td><td>Reverse a previous consignment issue.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration map</p>
+      <h2>Configure the stock state first, then the commercial state.</h2>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Consignment configuration">
+      <table class="study-table__table">
+        <thead><tr><th>Control</th><th>Why it matters</th><th>First check</th></tr></thead>
+        <tbody>
+          <tr><th>Sales document types KB / KE / KA / KR</th><td>Separate fill-up, consumption, retrieval, and return business meanings.</td><td>Is the user using the document that matches the ownership event?</td></tr>
+          <tr><th>Item and schedule-line categories</th><td>Control delivery relevance, special-stock movement and billing relevance for each branch.</td><td>If stock moves incorrectly, inspect schedule-line movement logic before billing.</td></tr>
+          <tr><th>Customer consignment special stock</th><td>Keeps quantity visible by customer while ownership stays with the supplier.</td><td>Check stock by customer before assuming material is missing.</td></tr>
+          <tr><th>Pricing and billing</th><td>Fill-up/pick-up are logistics events; issue is the main revenue event; return reverses the commercial event.</td><td>If a fill-up creates revenue, the process design is wrong.</td></tr>
+          <tr><th>Shipping point and delivery</th><td>Fill-up and physical returns/pick-up still use shipping execution.</td><td>Shipping condition + loading group + plant, delivery block, due date.</td></tr>
+          <tr><th>Partner / stock ownership data</th><td>The same material can exist as consignment stock for several customers.</td><td>Confirm the customer and plant on the special stock before a correction posting.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="document-flows" data-reveal>
+    <header><p class="research-canvas__eyebrow">Document flows</p><h2>Keep the four flows separate.</h2></header>
+    <h3>Fill-up</h3>
+    <div class="spa-flow"><span>KB order</span><i>→</i><span>Outbound delivery</span><i>→</i><span>PGI / stock transfer</span><i>→</i><span>Customer consignment stock</span></div>
+    <h3>Issue</h3>
+    <div class="spa-flow"><span>KE order</span><i>→</i><span>Withdrawal from consignment</span><i>→</i><span>Ownership transfer</span><i>→</i><span>Billing</span></div>
+    <h3>Pick-up</h3>
+    <div class="spa-flow"><span>KA order</span><i>→</i><span>Return delivery</span><i>→</i><span>Own plant stock</span><i>→</i><span>No sales invoice</span></div>
+    <h3>Return after issue</h3>
+    <div class="spa-flow"><span>KR order</span><i>→</i><span>Goods back to consignment</span><i>→</i><span>Commercial reversal</span></div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pitfalls" data-reveal>
+    <header><p class="research-canvas__eyebrow">Pitfalls</p><h2>The dangerous shortcut is “goods at customer = sold.”</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Fill-up is not revenue</h3><p>Physical movement alone does not transfer ownership. The stock remains ours until issue.</p></div>
+      <div><h3>Pick-up is not return</h3><p>Pick-up retrieves stock that was never sold. Return reverses stock that was already issued to the customer.</p></div>
+      <div><h3>Availability needs the right stock segment</h3><p>Do not compare customer consignment quantity with unrestricted plant stock and conclude that stock disappeared.</p></div>
+      <div><h3>Billing follows ownership</h3><p>When troubleshooting an invoice, first identify whether ownership actually transferred in the process.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="troubleshooting" data-reveal>
+    <header><p class="research-canvas__eyebrow">Troubleshooting</p><h2>Use stock state as the first evidence.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Consignment troubleshooting">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>First checks</th></tr></thead>
+        <tbody>
+          <tr><th>Fill-up delivery cannot post GI</th><td>Plant stock, delivery quantity, special-stock movement setup, shipping point and batch/serial status.</td></tr>
+          <tr><th>Consignment issue says no stock</th><td>Customer-specific consignment stock quantity, plant, material, batch and customer partner.</td></tr>
+          <tr><th>Issue is not billable</th><td>KE item billing relevance, pricing, billing block, copy control / due-list status.</td></tr>
+          <tr><th>Pick-up changes revenue</th><td>Wrong document/item category or custom pricing/billing logic. Pick-up should reverse the physical placement, not a sale that never happened.</td></tr>
+          <tr><th>Return posts to own stock instead of consignment</th><td>Check whether the business event is KR return or KA pick-up and inspect schedule-line movement logic.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary references</p><h2>Use the standard process names as your anchor.</h2></header>
+    <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/02084c34785749309d9dd5368b6a613a.html">Customer Consignment Process</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/e365b65334e6b54ce10000000a174cb4.html">Creating a Consignment Fill-Up</a>.</p>
+  </section>
+</div>
