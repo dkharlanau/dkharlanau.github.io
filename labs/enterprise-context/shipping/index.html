@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-26
+last_modified_at: 2026-10-01
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -175,6 +175,61 @@ source_links:
       {% endfor %}
     </div>
     <p class="ecg-caption">The delivery is the shared logistics pattern; the preceding document and process decide whether the business meaning is customer shipping, replenishment, subcontracting, supplier return, inbound receiving, or project fulfillment.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="shipping-private-edition-customizing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Private Edition / on-premise implementation map</p>
+      <h2>Delivery configuration should follow the execution owner.</h2>
+      <p>These SAP GUI transactions are useful when the assessment moves from process reasoning into classic Customizing. Start from the runtime result that is wrong. Do not change delivery configuration until you know whether the wrong state was already created in the sales order.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Shipping and delivery Customizing map for SAP S/4HANA Private Edition and on-premise">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Decision</th><th scope="col">SAP GUI</th><th scope="col">What it controls</th><th scope="col">Diagnostic boundary</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Delivery type</th>
+            <td><code>OVLK</code></td>
+            <td>Delivery-level processing frame, document category, number assignment, and delivery controls.</td>
+            <td>Use it when the delivery document as a whole follows the wrong process behavior.</td>
+          </tr>
+          <tr>
+            <th scope="row">Sales → Delivery copy control</th>
+            <td><code>VTLA</code></td>
+            <td>Whether the sales document can create the target delivery and how data is transferred across the reference boundary.</td>
+            <td>If the source order is correct but the delivery cannot be created or receives wrong copied data, inspect this boundary.</td>
+          </tr>
+          <tr>
+            <th scope="row">Delivery item category</th>
+            <td><code>OVLP</code></td>
+            <td>Delivery-item execution controls such as picking and storage-location-related behavior.</td>
+            <td>For an outbound delivery created from a sales order, the delivery item category is normally inherited from the order context. Do not assume every item issue is redetermined in Shipping.</td>
+          </tr>
+          <tr>
+            <th scope="row">Delivery item category determination</th>
+            <td><code>0184</code></td>
+            <td>Determination for cases where the item category cannot simply be copied, using delivery type, item category group, item usage, and higher-level item context.</td>
+            <td>Especially relevant for deliveries without an order reference or other flows that require delivery-side determination.</td>
+          </tr>
+          <tr>
+            <th scope="row">Shipping point assignment</th>
+            <td><code>OVL2</code></td>
+            <td>Shipping condition + loading group + delivering plant → shipping point.</td>
+            <td>Check all three inputs before changing the assignment. Different shipping points cannot remain in one outbound delivery.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">conversion_path</span>
+      <p><strong>Do not move the stock-movement decision downstream.</strong> For a normal sales-order item with schedule lines, the movement type used at goods issue comes from the sales schedule-line category. The delivery executes that decision. If PGI proposes the wrong movement, trace the order item and schedule line before treating <code>OVLP</code> as the owner.</p>
+    </div>
+
+    <p>Primary learning reference: <a href="https://learning.sap.com/courses/configuring-delivery-processing-in-sap-s-4hana-sales/controlling-delivery-documents">Controlling Delivery Documents in SAP S/4HANA Sales</a>.</p>
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
@@ -530,6 +585,7 @@ source_links:
       </div>
     </div>
     <p class="ecg-lead-lens"><strong>My rule:</strong> I first identify the exact process stage where the split happened. If the split was created in EWM or TM execution, changing SD does not fix the owning decision.</p>
+    <p class="ecg-caption"><strong>Do not confuse a delivery split with partial-delivery policy.</strong> Partial or complete delivery settings answer whether demand may be fulfilled across more than one delivery. Split logic answers whether items are compatible inside the same delivery document. For example, different shipping points create separate execution documents even when the business would prefer one shipment.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
