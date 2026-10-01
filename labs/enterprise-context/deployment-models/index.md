@@ -25,6 +25,9 @@ structured_data:
 primary_topic: "sap-s4hana"
 ai_sidecar: "/ai/pages/labs--enterprise-context--deployment-models.json"
 semantic_links:
+  - type: "parent_context"
+    title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
+    url: "/labs/"
   - type: "same_domain"
     title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
     url: "/labs/enterprise-context/performance/"
@@ -40,9 +43,6 @@ semantic_links:
   - type: "same_domain"
     title: "FI/CO for Logistics — Enterprise Context Lab"
     url: "/labs/enterprise-context/finance-logistics/"
-  - type: "same_domain"
-    title: "Cross-Process Logistics Capabilities — Enterprise Context Lab"
-    url: "/labs/enterprise-context/logistics-capabilities/"
 source_links:
   - title: "Offering Comparison"
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/b89b8b9026e1456bb2a1df7c0d59c937/1485d139460246d2a4b936c0bb0ca272.html"

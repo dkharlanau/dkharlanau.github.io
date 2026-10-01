@@ -34,15 +34,15 @@ semantic_links:
   - type: "same_domain"
     title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
     url: "/labs/enterprise-context/performance/"
+  - type: "parent_context"
+    title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
+    url: "/labs/"
   - type: "related_topic"
     title: "STO or Intercompany Sales? — SAP Logistics Decision Card"
     url: "/labs/enterprise-context/decisions/sto-vs-intercompany/"
   - type: "same_domain"
     title: "SAP S/4HANA Deployment Models — Enterprise Context Lab"
     url: "/labs/enterprise-context/deployment-models/"
-  - type: "integrates_with"
-    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
-    url: "/labs/enterprise-context/sales-processes/integrations/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

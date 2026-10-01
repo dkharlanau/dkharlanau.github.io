@@ -40,6 +40,9 @@ semantic_links:
   - type: "diagnose_with"
     title: "SAP Sales Diagnostic Casebook — Enterprise Context Lab"
     url: "/labs/enterprise-context/sales-diagnostics/"
+  - type: "parent_context"
+    title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
+    url: "/labs/"
 # ai-discovery-managed:end
 ---
 <link rel="stylesheet" href="/assets/css/interview-readiness.css" />

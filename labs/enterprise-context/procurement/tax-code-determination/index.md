@@ -46,15 +46,23 @@ semantic_links:
   - type: "parent_context"
     title: "Procurement Process & Decision Map — Enterprise Context Lab"
     url: "/labs/enterprise-context/procurement/"
-  - type: "integrates_with"
-    title: "FI/CO for Logistics — Enterprise Context Lab"
-    url: "/labs/enterprise-context/finance-logistics/"
   - type: "related_topic"
-    title: "SAP Sales Pricing Engine — Enterprise Context Lab"
-    url: "/labs/enterprise-context/pricing/"
+    title: "SAP Business Partner — Roles, CVI and Organizational Data"
+    url: "/labs/enterprise-context/business-partner/"
+  - type: "related_topic"
+    title: "SAP Decision Cards — Enterprise Context Lab"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "related_topic"
+    title: "Where Should Procurement Cost Ownership Live? — SAP Procurement Decision Card"
+    url: "/labs/enterprise-context/decisions/account-assignment-ownership/"
+  - type: "parent_context"
+    title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
+    url: "/labs/"
+  - type: "integrates_with"
+    title: "SAP DRF — Data Replication Framework"
+    url: "/labs/enterprise-context/integrations/drf/"
 # ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>

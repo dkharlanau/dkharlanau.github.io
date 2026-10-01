@@ -95,6 +95,9 @@ semantic_links:
   - type: "same_domain"
     title: "SAP S/4HANA 2025 Release Readiness Playbook"
     url: "/labs/enterprise-context/release-readiness/"
+  - type: "parent_context"
+    title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
+    url: "/labs/"
   - type: "same_domain"
     title: "SAP S/4HANA Deployment Models — Enterprise Context Lab"
     url: "/labs/enterprise-context/deployment-models/"
@@ -104,9 +107,6 @@ semantic_links:
   - type: "same_domain"
     title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
     url: "/labs/enterprise-context/development/"
-  - type: "integrates_with"
-    title: "SAP EWM — Warehouse Execution, Objects and Integration Boundaries"
-    url: "/labs/enterprise-context/ewm/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

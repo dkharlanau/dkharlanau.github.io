@@ -22,21 +22,32 @@ review_method: "page-level editorial review"
 search_intent: "SAP enterprise labs for logistics integration AI interview and assessment preparation"
 # ai-discovery-managed:start
 structured_data:
-  type: CollectionPage
+  type: TechArticle
 primary_topic: "sap-s4hana"
 ai_sidecar: "/ai/pages/labs.json"
 entity_mentions:
-  - "sap-s4hana"
+  - "business-ai"
 semantic_links:
-  - type: "related_topic"
-    title: "SAP Sales Process Atlas — Standard, Special and Cross-Process Variants"
-    url: "/labs/enterprise-context/sales-processes/"
-  - type: "related_topic"
-    title: "Procurement Process & Decision Map — Enterprise Context Lab"
-    url: "/labs/enterprise-context/procurement/"
+  - type: "deep_dive"
+    title: "SAP S/4HANA Deployment Models — Enterprise Context Lab"
+    url: "/labs/enterprise-context/deployment-models/"
+  - type: "deep_dive"
+    title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
+    url: "/labs/enterprise-context/development/"
+  - type: "deep_dive"
+    title: "SAP Performance and Technical Operations — Practical S/4HANA Troubleshooting"
+    url: "/labs/enterprise-context/performance/"
+  - type: "deep_dive"
+    title: "SAP S/4HANA 2025 Release Readiness Playbook"
+    url: "/labs/enterprise-context/release-readiness/"
+  - type: "deep_dive"
+    title: "SAP Testing Strategy for S/4HANA Delivery"
+    url: "/labs/enterprise-context/testing/"
+  - type: "deep_dive"
+    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
+    url: "/labs/enterprise-context/business-ai/"
 # ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li aria-current="page">Labs</li></ol>
 </nav>

@@ -105,6 +105,9 @@ semantic_links:
   - type: "same_domain"
     title: "SAP S/4HANA 2025 Release Readiness Playbook"
     url: "/labs/enterprise-context/release-readiness/"
+  - type: "parent_context"
+    title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
+    url: "/labs/"
   - type: "related_topic"
     title: "SAP AIF — Monitoring, Error Handling and Reprocessing"
     url: "/labs/enterprise-context/aif/"
@@ -114,9 +117,6 @@ semantic_links:
   - type: "same_domain"
     title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
     url: "/labs/enterprise-context/development/"
-  - type: "same_domain"
-    title: "FI/CO for Logistics — Enterprise Context Lab"
-    url: "/labs/enterprise-context/finance-logistics/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">

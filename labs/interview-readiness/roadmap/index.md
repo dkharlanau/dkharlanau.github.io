@@ -40,6 +40,9 @@ semantic_links:
   - type: "related_topic"
     title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
     url: "/labs/enterprise-context/development/"
+  - type: "parent_context"
+    title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
+    url: "/labs/"
 # ai-discovery-managed:end
 ---
 <link rel="stylesheet" href="/assets/css/interview-readiness.css" />
