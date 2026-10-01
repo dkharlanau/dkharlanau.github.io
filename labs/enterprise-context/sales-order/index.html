@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-29
+last_modified_at: 2026-10-01
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -184,6 +184,62 @@ source_links:
     </div>
 
     <p>A useful reading order is therefore <strong>document type → item category → schedule line category</strong>. It is a control hierarchy, not a claim that every runtime calculation happens in that exact sequence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="private-edition-customizing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Private Edition / on-premise implementation map</p>
+      <h2>The Customizing objects mirror the document layers.</h2>
+      <p>Use these SAP GUI transactions as an implementation reference for SAP S/4HANA Private Edition and on-premise. They are not a Public Edition configuration recipe. The useful mental model is still the same: first identify the document layer that owns the behavior, then inspect the rule that produced the runtime result.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Sales document Customizing map for SAP S/4HANA Private Edition and on-premise">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Decision</th><th scope="col">SAP GUI</th><th scope="col">What it controls</th><th scope="col">First check</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Sales document type</th>
+            <td><code>VOV8</code></td>
+            <td>Header process frame: document category, blocks, follow-on delivery or billing proposal, defaults, and document-level checks.</td>
+            <td>If the whole order type behaves incorrectly, verify the document type before changing item logic.</td>
+          </tr>
+          <tr>
+            <th scope="row">Item category</th>
+            <td><code>VOV7</code></td>
+            <td>Item role: pricing, billing relevance, schedule lines allowed, and item-level controls such as text, partner, and incompletion behavior.</td>
+            <td>If one item behaves differently from the rest of the order, verify its item category first.</td>
+          </tr>
+          <tr>
+            <th scope="row">Item category determination</th>
+            <td><code>VOV4</code></td>
+            <td>Sales document type + item category group + item usage + higher-level item category → item category.</td>
+            <td>Check the determination inputs before forcing another item category manually.</td>
+          </tr>
+          <tr>
+            <th scope="row">Schedule line category</th>
+            <td><code>VOV6</code></td>
+            <td>Execution behavior such as delivery relevance, requirements transfer, availability checking, movement type, and purchasing integration.</td>
+            <td>Use this layer when the item role is correct but fulfillment, planning, or stock movement behaves incorrectly.</td>
+          </tr>
+          <tr>
+            <th scope="row">Schedule line determination</th>
+            <td><code>VOV5</code></td>
+            <td>Item category + MRP type → schedule line category.</td>
+            <td>Verify the item category and MRP type before changing the determined schedule line.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Important boundary:</strong> for a normal material item with schedule lines, delivery relevance and the goods-movement type are controlled through the schedule-line category. The item-category delivery-relevance indicator is mainly relevant for items without schedule lines, such as text or value items. Do not move a delivery problem to the wrong control layer just because the symptom is visible in Shipping.</p>
+    </div>
+
+    <p class="ecg-caption"><strong>Assessment memory:</strong> document type frames the process; item-category determination gives the item its business role; schedule-line determination connects that role to fulfillment, planning, and inventory behavior.</p>
+    <p>Primary learning references: <a href="https://learning.sap.com/courses/fundamental-customizing-in-sap-s-4hana-sales/configuring-a-sales-document-type">Configuring a Sales Document Type</a> · <a href="https://learning.sap.com/courses/fundamental-customizing-in-sap-s-4hana-sales/configuring-schedule-line-categories">Configuring Schedule Line Categories</a>.</p>
   </section>
 
   <section class="research-canvas__inventory" id="partner-text-provenance" data-reveal>
