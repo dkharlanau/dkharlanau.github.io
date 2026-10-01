@@ -1,0 +1,161 @@
+---
+layout: default
+title: "SAP Intercompany Sales — Classical and Advanced Process Deep Dive"
+description: "A compact SAP S/4HANA intercompany sales guide with synthetic examples, configuration, document flow, pricing, billing, troubleshooting, and Advanced Intercompany Sales."
+permalink: /labs/enterprise-context/sales-processes/intercompany-sales/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-10-01
+hide_global_cta: true
+sales_process_atlas: true
+tags: [sap, s4hana, sales, sd, intercompany, billing, value-chain-monitoring]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Intercompany Sales</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Special process / cross-company fulfillment</p>
+      <h1>One customer sale can create two commercial relationships.</h1>
+      <p>Intercompany sales starts like a normal customer order, but the selling company and the delivering company are different legal entities. That creates two value flows: the external sale to the customer and the internal charge between group companies.</p>
+      <a class="research-canvas__button" href="#classical-flow">Open the process <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Intercompany process memory">
+      <p>Memory model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>External</strong><small>Customer invoice</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Internal</strong><small>Intercompany charge</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Plant</strong><small>Legal entity trigger</small></div>
+      <em>Synthetic examples only. Configuration keys can be copied or renamed in customer systems.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">fork_right</span>
+    <p><strong>Start with the legal boundary.</strong> If the sales organization sells for company code DE01 but the delivering plant belongs to FR01, the process is cross-company. Do not begin troubleshooting with billing. First prove the selling company, delivering plant, and company code of that plant.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment-recall" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment recall</p><h2>Explain classical and advanced intercompany as two designs for the same business problem.</h2></header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> In intercompany sales, one legal entity sells to the external customer and another group company delivers the goods. In the classical process, the customer order and delivery stay in the selling sales process, while intercompany billing creates the internal charge. The key controls are plant-to-sales-area assignments, the internal customer, intercompany pricing, billing type IV, and copy control. Advanced Intercompany Sales makes the internal supply relationship explicit with an intercompany purchase order, an intercompany sales order, valuated stock in transit, transfer-of-control dates, and Value Chain Monitoring. I choose the design based on release, accounting and stock-in-transit requirements, and the required level of orchestration.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="classical-flow" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classical intercompany sales</p>
+      <h2>Atlas Germany sells. Atlas France delivers.</h2>
+      <p><strong>Synthetic example:</strong> customer C1000 buys material P-100 from Atlas Germany (company code DE01, sales organization DE10). Stock is held in French plant FR11, which belongs to Atlas France (company code FR01).</p>
+    </header>
+
+    <div class="spa-flow" aria-label="Classical intercompany sales flow">
+      <span>Customer order in DE10</span><i aria-hidden="true">→</i>
+      <span>Delivering plant FR11</span><i aria-hidden="true">→</i>
+      <span>Outbound delivery</span><i aria-hidden="true">→</i>
+      <span>PGI in FR01</span><i aria-hidden="true">→</i>
+      <span>F2 customer invoice from DE01</span><i aria-hidden="true">→</i>
+      <span>IV intercompany invoice FR01 → DE01</span>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Customer relationship</h3><p>DE01 owns the external customer contract and invoices C1000.</p></div>
+      <div><h3>Physical fulfillment</h3><p>FR11 picks, ships, and posts goods issue. Inventory leaves FR01.</p></div>
+      <div><h3>Internal relationship</h3><p>FR01 charges DE01 using intercompany billing and an internal transfer price.</p></div>
+    </div>
+
+    <p class="ecg-caption"><strong>Simple value example:</strong> customer price = EUR 150, intercompany transfer price = EUR 120, inventory cost in FR01 = EUR 100. DE01 keeps EUR 30 margin before other costs; FR01 keeps EUR 20. The split is created by the internal transfer price, not by the customer invoice.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="classical-configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classical configuration</p>
+      <h2>Configuration connects the legal entities to one delivery.</h2>
+      <p>The exact menu labels can vary by release. The control logic is stable: authorize the plant for the selling sales area, define the delivering company's sales area for intercompany billing, create the internal partner, and connect billing and pricing.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Classical intercompany configuration">
+      <table class="study-table__table">
+        <thead><tr><th>Control</th><th>Typical Private Edition / on-premise setup</th><th>Why it matters</th><th>First diagnostic</th></tr></thead>
+        <tbody>
+          <tr><th>Delivering plant</th><td>Assign FR11 as a permitted delivering plant for DE10 / distribution channel.</td><td>The sales order must be allowed to use stock owned by another company code.</td><td>Compare sales org company code with plant company code.</td></tr>
+          <tr><th>Plant sales area for IC billing</th><td>Assign FR10 / 10 / 00 to FR11 for intercompany billing.</td><td>The system needs the delivering company's commercial context for the internal invoice.</td><td>If IV has wrong org data, check this before pricing.</td></tr>
+          <tr><th>Internal customer</th><td>Represent DE01 as a customer in FR01 and assign the internal customer to the selling sales organization.</td><td>FR01 needs a bill-to partner for the internal charge.</td><td>If no internal partner is found, verify BP roles and assignments.</td></tr>
+          <tr><th>Intercompany billing</th><td>Assign billing type <code>IV</code> to the relevant sales document type and maintain Delivery → IV copy control.</td><td>Customer billing and internal billing are separate follow-on documents.</td><td>If F2 exists but IV does not, check IV assignment and copy control.</td></tr>
+          <tr><th>Transfer price</th><td>Maintain <code>PI01</code> fixed amount or <code>PI02</code> percentage records in the intercompany pricing context.</td><td>The internal charge determines how margin is split between companies.</td><td>If IV value is zero or wrong, prove pricing procedure and condition record.</td></tr>
+          <tr><th>Accounting handoff</th><td>Classic setups commonly use output <code>RD04</code> for the intercompany invoice posting flow.</td><td>The internal billing document must reach the receiving company's AP process.</td><td>Do not debug FI before the IV document and output status are correct.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ecg-caption"><strong>Common technical map:</strong> OR → TAN → CP → LF → F2 + IV, with movement type 601 at PGI. These are standard-style keys, not a guarantee that a customer system uses the same codes.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="advanced-intercompany" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Advanced Intercompany Sales</p>
+      <h2>The internal supply leg becomes an explicit value chain.</h2>
+      <p>Advanced Intercompany Sales is available for SAP S/4HANA 2022 and later releases in the relevant deployment scope. SAP scope item 5D2 uses Value Chain Monitoring to orchestrate the internal purchase and sales relationship, internal billing, supplier invoice, and valuated stock-in-transit steps.</p>
+    </header>
+
+    <div class="spa-flow" aria-label="Advanced intercompany sales flow">
+      <span>Customer-facing sales order</span><i aria-hidden="true">→</i>
+      <span>Intercompany PO</span><i aria-hidden="true">→</i>
+      <span>Intercompany sales order</span><i aria-hidden="true">→</i>
+      <span>Outbound delivery</span><i aria-hidden="true">→</i>
+      <span>Transfer of control / VSiT</span><i aria-hidden="true">→</i>
+      <span>External + internal billing</span>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Classical versus advanced intercompany sales">
+      <table class="study-table__table">
+        <thead><tr><th>Question</th><th>Classical</th><th>Advanced</th></tr></thead>
+        <tbody>
+          <tr><th>Internal PO / SO visible?</th><td>No explicit internal PO/SO chain.</td><td>Yes. Internal purchase and sales documents are part of the value chain.</td></tr>
+          <tr><th>Stock in transit</th><td>Not modeled as the same controlled valuated chain.</td><td>Valuated stock-in-transit and transit-plant logic are core design elements.</td></tr>
+          <tr><th>Transfer of control</th><td>Usually not the central orchestration object.</td><td>Planned and actual transfer-of-control dates can trigger automated goods movements.</td></tr>
+          <tr><th>Monitoring</th><td>Document flow, billing due list, IDoc/output monitoring.</td><td><strong>Monitor Value Chains</strong> (<code>F4854</code>) and fulfillment issue analysis.</td></tr>
+          <tr><th>Main design question</th><td>Can we run the legal relationship with classic delivery + intercompany billing?</td><td>Do we need explicit internal procurement, ownership transfer, VSiT, and orchestrated monitoring?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="diagnostics" data-reveal>
+    <header><p class="research-canvas__eyebrow">Troubleshooting</p><h2>Find the first missing document, not the last visible error.</h2></header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Intercompany troubleshooting">
+      <table class="study-table__table">
+        <thead><tr><th>Symptom</th><th>First checks</th></tr></thead>
+        <tbody>
+          <tr><th>FR11 cannot be used in the order</th><td>Plant ↔ sales organization / distribution channel assignment, material extension to FR11, shipping point inputs.</td></tr>
+          <tr><th>Customer invoice exists, IV is missing</th><td>IV assignment to sales document type, LF → IV copy control, intercompany billing status.</td></tr>
+          <tr><th>IV has no transfer price</th><td>Intercompany pricing procedure, PI01 / PI02 condition record, condition key and validity.</td></tr>
+          <tr><th>Internal customer not found</th><td>BP role, company code and sales area extension, internal customer assignment.</td></tr>
+          <tr><th>Advanced PO or internal SO is missing</th><td>5D2 activation / configuration, purchasing organization assignment, internal supplier/customer master data, value-chain status.</td></tr>
+          <tr><th>VSiT movement does not post</th><td>Transfer-of-control dates, delivery status, background processing, Monitor Value Chains errors.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p><strong>Lead diagnostic order:</strong> legal boundary → delivering plant → master-data extensions → internal partner → pricing → delivery / PGI → customer billing → internal billing → FI. For Advanced Intercompany Sales, insert PO/SO orchestration, transfer-of-control dates, and Value Chain Monitoring before the billing checks.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="extension-readiness" data-reveal>
+    <header><p class="research-canvas__eyebrow">Extension readiness</p><h2>Extend only after the standard value chain is proven.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Pricing</h3><p>Use conditions first for transfer-price policy. Custom code should not hide a missing or badly designed pricing rule.</p></div>
+      <div><h3>Transfer of control</h3><p>Advanced processes provide extension points for customer-specific date logic. Keep the ownership rule auditable.</p></div>
+      <div><h3>Internal invoicing</h3><p>Advanced releases provide BAdIs around intercompany supplier-invoice behavior and mapping. Use them only for a clear business exception.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary references</p><h2>Read the SAP process definition after the memory model is clear.</h2></header>
+    <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/ed70b6535fe6b74ce10000000a174cb4.html">Prerequisites for Intercompany Business Processing</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e296651f454c4284ade361292c633d69/2d151f41948b4c5ab26b43106c7c83df.html">Monitor Value Chains</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f5d3e1005efd4e86acf9a65abf428082/61ed64e18de2454ea27b2e6cfa43335e.html">Transfer of Control Date Fields</a>.</p>
+  </section>
+</div>
