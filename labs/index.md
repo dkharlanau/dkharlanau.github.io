@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-29
+last_modified_at: 2026-10-01
 hide_global_cta: true
 tags:
   - sap
@@ -23,14 +23,11 @@ search_intent: "SAP enterprise labs for logistics integration AI interview and a
 # ai-discovery-managed:start
 structured_data:
   type: CollectionPage
-primary_topic: "sap-enterprise"
+primary_topic: "sap-s4hana"
 ai_sidecar: "/ai/pages/labs.json"
 entity_mentions:
   - "sap-s4hana"
 semantic_links:
-  - type: "same_domain"
-    title: "SAP Enterprise — Enterprise Context Lab"
-    url: "/labs/enterprise-context/"
   - type: "related_topic"
     title: "SAP Sales Process Atlas — Standard, Special and Cross-Process Variants"
     url: "/labs/enterprise-context/sales-processes/"
