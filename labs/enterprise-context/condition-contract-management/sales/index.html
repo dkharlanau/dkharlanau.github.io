@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-25
+last_modified_at: 2026-10-01
 hide_global_cta: true
 enterprise_context_graph: true
 tags: [sap-s4hana, sap-sd, settlement-management, condition-contract-management, sales-rebates]
@@ -88,6 +88,19 @@ tags: [sap-s4hana, sap-sd, settlement-management, condition-contract-management,
     <div class="ecg-input-grid">
       {% for item in model.configuration_focus %}
       <article><span>CFG</span><p>{{ item }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-ccm-accruals" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Accruals and commissions</p>
+      <h2>Billing can recognize the expected cost before customer settlement.</h2>
+      <p>The sales process stays operationally normal. CCM adds the agreement, business-volume, accrual, and later-settlement layer.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% for note in model.integration_notes %}
+      <div><h3>{{ note.title }}</h3><p>{{ note.explanation }}</p></div>
       {% endfor %}
     </div>
   </section>
