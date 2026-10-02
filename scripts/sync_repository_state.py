@@ -160,6 +160,7 @@ def main() -> int:
     print(f"Updated assessment count pages: {len(copy_changes)}")
 
     run("scripts/generate_enterprise_context_visuals.py")
+    run("scripts/generate_enterprise_context_process_contracts.py")
     run("scripts/validate_enterprise_context.py")
     run("scripts/knowledge_publication_loop.py")
     run("scripts/generate_assessment_candidates.py")
@@ -183,6 +184,7 @@ def main() -> int:
     run("scripts/generate_career_factory.py", "--check")
     run("scripts/generate_sap_lead_assessment_workbook.py", "--check")
     run("scripts/generate_enterprise_context_visuals.py", "--check")
+    run("scripts/generate_enterprise_context_process_contracts.py", "--check")
     run("scripts/validate_assessment_reasoning_coverage.py")
     run("scripts/validate_assessment_promotion_review_packet.py")
     run("scripts/validate_enterprise_context.py")
