@@ -3,6 +3,13 @@ from pathlib import Path
 
 import yaml
 
+from scripts.generate_enterprise_context_process_contracts import (
+    PROCUREMENT_ATLAS,
+    PROCUREMENT_P2P_OUTPUT,
+    build_p2p_contract,
+    load_yaml as load_process_atlas,
+    validate_contract,
+)
 from scripts.generate_enterprise_context_visuals import (
     PROCUREMENT_OUTPUT,
     PROCUREMENT_SOURCE,
@@ -80,3 +87,41 @@ def test_diagnostic_lab_supports_stable_case_deep_links():
     assert "cases.findIndex(item => item.id === requestedCase)" in page
     assert "url.searchParams.set('case', cases[index].id)" in page
     assert "window.history.replaceState" in page
+
+
+def test_procurement_p2p_process_contract_is_current():
+    expected = build_p2p_contract(load_process_atlas(PROCUREMENT_ATLAS))
+    actual = json.loads(PROCUREMENT_P2P_OUTPUT.read_text(encoding="utf-8"))
+    assert actual == expected
+
+
+def test_procurement_p2p_contract_has_resolved_process_references():
+    contract = json.loads(PROCUREMENT_P2P_OUTPUT.read_text(encoding="utf-8"))
+    validate_contract(contract)
+
+    assert contract["version"] == "0.2"
+    assert contract["process"]["id"] == "sap_procure_to_pay"
+    assert contract["extensions"]["dkharlanau"]["source_process_code"] == "MM.P2P"
+
+    step_ids = [step["id"] for step in contract["steps"]]
+    assert step_ids == [
+        "demand",
+        "purchase_requisition",
+        "source_determination",
+        "purchase_order",
+        "goods_receipt",
+        "supplier_invoice",
+        "payment",
+    ]
+    assert contract["process"]["start"] == step_ids[0]
+    assert [
+        transition["to"]
+        for step in contract["steps"]
+        for transition in step.get("transitions", [])
+    ] == step_ids[1:]
+
+
+def test_procurement_page_links_process_as_code_projection():
+    page = (ROOT / "labs/enterprise-context/procurement/index.html").read_text(encoding="utf-8")
+    assert "/labs/enterprise-context/data/procurement-p2p.process.json" in page
+    assert "Process as Code v0.2 projection" in page
