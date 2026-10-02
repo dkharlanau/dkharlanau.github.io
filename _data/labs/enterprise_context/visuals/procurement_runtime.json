@@ -1,0 +1,288 @@
+{
+  "visual": {
+    "version": 1,
+    "title": "Procure-to-Pay runtime decisions",
+    "description": "A semantic handoff view derived from the canonical procurement runtime pipeline. It shows where demand, purchasing, logistics execution and finance own the next decision.",
+    "kind": "handoff",
+    "direction": "right",
+    "theme": "paper",
+    "density": "balanced",
+    "groups": [
+      {
+        "id": "demand",
+        "label": "Business demand",
+        "order": 1,
+        "description": "Planning or requester context that creates the need to procure."
+      },
+      {
+        "id": "purchasing",
+        "label": "Purchasing",
+        "order": 2,
+        "description": "Item behavior, source, commercial terms, approval and supplier communication."
+      },
+      {
+        "id": "execution",
+        "label": "Logistics execution",
+        "order": 3,
+        "description": "Goods receipt or accepted service execution."
+      },
+      {
+        "id": "finance",
+        "label": "Finance",
+        "order": 4,
+        "description": "Account assignment, invoice verification and settlement."
+      }
+    ],
+    "nodes": [
+      {
+        "id": "demand",
+        "label": "Create or receive demand",
+        "type": "step",
+        "subtitle": "Business need",
+        "description": "What business requirement entered procurement?",
+        "owner": "Planning · Requester",
+        "group": "demand",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-DEMAND"
+        ]
+      },
+      {
+        "id": "item-type",
+        "label": "Determine procurement item behavior",
+        "type": "decision",
+        "subtitle": "Stock · consumption · service",
+        "description": "How must the item behave?",
+        "owner": "Purchasing",
+        "group": "purchasing",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-ITEM-CONTROL"
+        ]
+      },
+      {
+        "id": "source",
+        "label": "Determine valid source of supply",
+        "type": "decision",
+        "subtitle": "Valid source of supply",
+        "description": "Which source is proposed and why?",
+        "owner": "Purchasing",
+        "group": "purchasing",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-SOURCE"
+        ]
+      },
+      {
+        "id": "price",
+        "label": "Build commercial terms",
+        "type": "decision",
+        "subtitle": "Price + conditions",
+        "description": "How does the PO get price and conditions?",
+        "owner": "Purchasing",
+        "group": "purchasing",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-COMMERCIAL"
+        ]
+      },
+      {
+        "id": "account",
+        "label": "Resolve stock or consumption accounting",
+        "type": "decision",
+        "subtitle": "Stock or consumption value",
+        "description": "Where will the value be posted?",
+        "owner": "MM · FI/CO",
+        "group": "finance",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-ACCOUNT"
+        ]
+      },
+      {
+        "id": "approve",
+        "label": "Run approval",
+        "type": "checkpoint",
+        "subtitle": "Release control",
+        "description": "Who must approve and what happens after a change?",
+        "owner": "Workflow · Approver",
+        "group": "purchasing",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-APPROVE"
+        ]
+      },
+      {
+        "id": "order",
+        "label": "Create and release purchase order",
+        "type": "checkpoint",
+        "subtitle": "Purchase order",
+        "description": "What contractual instruction leaves procurement?",
+        "owner": "Purchasing",
+        "group": "purchasing",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-ORDER"
+        ]
+      },
+      {
+        "id": "output",
+        "label": "Send order to supplier",
+        "type": "data",
+        "subtitle": "Supplier communication",
+        "description": "Which recipient, channel, and form carry the PO?",
+        "owner": "Purchasing · Integration",
+        "group": "purchasing",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-OUTPUT"
+        ]
+      },
+      {
+        "id": "receive",
+        "label": "Post goods or service receipt",
+        "type": "checkpoint",
+        "subtitle": "Goods or service receipt",
+        "description": "What execution event occurred?",
+        "owner": "Inventory · Service",
+        "group": "execution",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-RECEIVE"
+        ]
+      },
+      {
+        "id": "invoice",
+        "label": "Verify supplier invoice",
+        "type": "checkpoint",
+        "subtitle": "Supplier invoice",
+        "description": "What does the invoice match and why is it blocked or posted?",
+        "owner": "Invoice Verification",
+        "group": "finance",
+        "status": "neutral",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-INVOICE"
+        ]
+      },
+      {
+        "id": "settle",
+        "label": "Reconcile financial settlement",
+        "type": "outcome",
+        "subtitle": "GR/IR + liability",
+        "description": "Did procurement and finance close the same business event?",
+        "owner": "FI / AP",
+        "group": "finance",
+        "status": "success",
+        "tags": [
+          "procurement-runtime",
+          "source:PUR-RUNTIME-SETTLE"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": "demand",
+        "to": "item-type",
+        "label": "Requirement",
+        "type": "flow"
+      },
+      {
+        "from": "item-type",
+        "to": "source",
+        "label": "Item behavior",
+        "type": "flow"
+      },
+      {
+        "from": "source",
+        "to": "price",
+        "label": "Source decision",
+        "type": "flow"
+      },
+      {
+        "from": "price",
+        "to": "account",
+        "label": "Commercial terms",
+        "type": "flow"
+      },
+      {
+        "from": "account",
+        "to": "approve",
+        "label": "Accounting context",
+        "type": "flow"
+      },
+      {
+        "from": "approve",
+        "to": "order",
+        "label": "Approved",
+        "type": "flow"
+      },
+      {
+        "from": "order",
+        "to": "output",
+        "label": "Released PO",
+        "type": "flow"
+      },
+      {
+        "from": "output",
+        "to": "receive",
+        "label": "Supplier execution",
+        "type": "data"
+      },
+      {
+        "from": "receive",
+        "to": "invoice",
+        "label": "Receipt history",
+        "type": "flow"
+      },
+      {
+        "from": "invoice",
+        "to": "settle",
+        "label": "Financial close",
+        "type": "flow"
+      }
+    ],
+    "views": [
+      {
+        "id": "executive",
+        "title": "Procurement business milestones",
+        "focus": "executive",
+        "kind": "process"
+      },
+      {
+        "id": "controls",
+        "title": "Procurement decisions and checkpoints",
+        "focus": "controls",
+        "kind": "checkpoint-flow"
+      },
+      {
+        "id": "purchasing-execution",
+        "title": "Purchasing to execution handoff",
+        "focus": "flow",
+        "kind": "handoff",
+        "includeGroups": [
+          "purchasing",
+          "execution"
+        ]
+      },
+      {
+        "id": "finance",
+        "title": "Procurement financial boundary",
+        "focus": "flow",
+        "kind": "handoff",
+        "includeGroups": [
+          "finance"
+        ]
+      }
+    ]
+  }
+}
