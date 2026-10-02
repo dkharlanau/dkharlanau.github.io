@@ -378,6 +378,10 @@ failure_modes:
     symptom: "PO looks complete but GR/IR remains open."
     first_checks: ["goods-receipt and invoice-receipt sequence", "quantities and values", "reversals", "final delivery/final invoice state", "price differences", "PO history"]
     avoid: "Do not clear GR/IR manually before reconciling the business documents."
+  - id: PUR-FAIL-AUTO-PO
+    symptom: "An approved purchase requisition with a source is not converted by the automatic PO run."
+    first_checks: ["Automatic PO indicator in material purchasing data", "Automatic PO indicator in supplier purchasing data", "assigned unique source", "PR approval and block status", "mandatory account-assignment and tax-relevant fields", "PO document type determination", "job selection and detailed log"]
+    avoid: "Do not treat ME59N as source determination; prove that the PR is fully ready for automatic conversion first."
   - id: PUR-FAIL-AUTO-MANUAL
     symptom: "Automated/API-created PO behaves differently from a manually created PO."
     first_checks: ["document type and purchasing organization", "supplier/source reference", "item and account categories", "conditions/reference document", "workflow status", "output and extension fields"]
