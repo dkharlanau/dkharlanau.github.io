@@ -228,6 +228,48 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="purchasing-controls" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Purchasing defaults and controls</p>
+      <h2>Supplier purchasing data does more than hold an address.</h2>
+      <p>The purchasing-organization segment provides defaults and control indicators that affect how the supplier can be used in procurement. Treat them as reusable process rules, not as values that belong to one purchase order only.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier purchasing defaults and control indicators">
+      <table class="study-table__table">
+        <thead><tr><th>Field / control</th><th>What it influences</th><th>Assessment point</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">PO currency</th><td>Default commercial currency for purchasing documents and related purchasing master data.</td><td>It is a purchasing-organization supplier default, not a universal BP attribute.</td></tr>
+          <tr><th scope="row">Payment terms / Incoterms</th><td>Defaults for purchasing documents and, where applicable, related purchasing records.</td><td>Always check the organizational level and the final value stored in the document.</td></tr>
+          <tr><th scope="row">GR-based Invoice Verification</th><td>Proposes supplier-specific invoice-verification behavior based on goods receipt.</td><td>The supplier master provides a default/control; the PO item and process context still matter.</td></tr>
+          <tr><th scope="row">Evaluated Receipt Settlement</th><td>Marks the supplier for ERS-capable procurement when the required process prerequisites are met.</td><td>ERS is an automated settlement design, not simply “invoice receipt without an invoice”.</td></tr>
+          <tr><th scope="row">Acknowledgment Requirement</th><td>Controls whether supplier acknowledgments/confirmations are expected by default.</td><td>Use it when confirmation is part of the operational control model.</td></tr>
+          <tr><th scope="row">Automatic Purchase Order</th><td>Supports automatic PO creation for supplier-related procurement when the other prerequisites are satisfied.</td><td>The indicator alone does not create a PO; source, material and process requirements still have to be valid.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Plant-specific data</h3>
+        <p>Selected purchasing data can be maintained more specifically for a plant. Use this only when the supplier really behaves differently for that plant.</p>
+      </div>
+      <div>
+        <h3>Supplier sub-range</h3>
+        <p>A supplier sub-range divides the supplier's product range into smaller parts. It can be assigned in a Purchasing Info Record or purchasing document item and can carry more specific supplier data.</p>
+      </div>
+      <div>
+        <h3>Partner functions</h3>
+        <p>Partner functions can also differ by purchasing context. For example, the invoicing party determined for a PO can be different from the supplier from which the goods were ordered.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+      <p><strong>Lead rule:</strong> choose the narrowest level where the supplier rule is true. Start with the purchasing organization; specialize by plant or supplier sub-range only when the business difference is real. More-specific master data gives precision but increases maintenance and troubleshooting complexity.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="one-time-supplier" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">One-time supplier / CpD</p>
@@ -308,7 +350,7 @@ tags:
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> “In S/4HANA, Business Partner is the leading object. For procurement I separate general BP identity, FI supplier data at company-code level and purchasing supplier data at purchasing-organization level. FLVN00 carries accounting context such as the reconciliation account; FLVN01 carries purchasing context such as order currency, Incoterms and partner functions. CVI synchronizes BP and supplier account structures. More specific supplier-material data belongs in the Purchasing Info Record. For occasional suppliers, a one-time CpD account can hold common defaults while supplier-specific address or bank data is entered in the document.”</p>
+      <p><strong>60-second answer:</strong> “In S/4HANA, Business Partner is the leading object. For procurement I separate general BP identity, FI supplier data at company-code level and purchasing supplier data at purchasing-organization level. FLVN00 carries accounting context such as the reconciliation account; FLVN01 carries purchasing context such as PO currency, Incoterms, partner functions and controls such as GR-based invoice verification, ERS, acknowledgment requirement and automatic PO. CVI synchronizes BP and supplier account structures. If the supplier behaves differently by plant or product range, selected data can be maintained more specifically. Supplier-material data belongs in the Purchasing Info Record. For occasional suppliers, a one-time supplier account holds common defaults while supplier-specific document data is entered during processing.”</p>
     </div>
 
     <div class="ecg-diagnostic">
@@ -335,6 +377,7 @@ tags:
       <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/806fbd534f22b44ce10000000a174cb4.html">SAP Help — Partner Functions</a></li>
       <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/f6a7ba538c95b54ce10000000a174cb4.html">SAP Help — One-Time Customers and One-Time Vendors</a></li>
       <li><a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/maintaining-business-partner-master-data">SAP Learning — Maintaining Business Partner Master Data</a></li>
+      <li><a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/creating-business-partners">SAP Learning — Creating Business Partners for Purchasing</a></li>
     </ul>
 
     <nav class="ecg-context-links" aria-label="Supplier related pages">
