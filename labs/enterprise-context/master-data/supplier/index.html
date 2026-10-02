@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "SAP Supplier Master Data — Business Partner and Purchasing Context"
-description: "A practical SAP S/4HANA guide to Supplier master data: Business Partner roles, company-code and purchasing-organization views, partner functions, purchasing defaults, diagnostics, and source-of-supply boundaries."
+title: "SAP Supplier Master Data — Business Partner, CVI and Procurement Context"
+description: "A practical SAP S/4HANA guide to supplier master data: Business Partner roles, CVI, company-code and purchasing-organization views, reconciliation account, partner functions, one-time suppliers, procurement defaults, and diagnostics."
 permalink: /labs/enterprise-context/master-data/supplier/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-29
+last_modified_at: 2026-10-02
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -15,6 +15,7 @@ tags:
   - procurement
   - supplier
   - business-partner
+  - cvi
   - master-data
 ---
 
@@ -31,93 +32,318 @@ tags:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP Procurement / Business Partner</p>
-      <h1>Supplier master: identity first, purchasing context second.</h1>
-      <p>In S/4HANA, supplier master data is built on Business Partner. The same business identity can be a customer, a supplier, or both. Procurement behavior then depends on supplier roles and the purchasing and company-code views maintained for that context.</p>
-      <a class="research-canvas__button" href="#mental-model">Start with the mental model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">SAP Procurement / Business Partner / FI-AP</p>
+      <h1>Supplier master data connects identity,<br />purchasing, and accounting.</h1>
+      <p>In SAP S/4HANA, the Business Partner is the leading object. Procurement then needs the correct supplier roles and organizational views. A supplier can exist globally and still be unusable for a purchase order, invoice, or payment because one required view is missing.</p>
+      <a class="research-canvas__button" href="#procurement-master-data-map">Start with the object map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Boundary:</strong> Do not use “vendor master” as one undifferentiated bucket. General BP data, supplier company-code data, purchasing-organization data, and supplier-material data have different keys and owners.</p>
+    <p><strong>Lead rule:</strong> do not debug “the vendor master” as one record. Separate Business Partner identity, FI supplier data at company-code level, purchasing data at purchasing-organization level, and supplier-material relationship data such as the Purchasing Info Record.</p>
   </section>
 
-  <section class="research-canvas__inventory" id="mental-model" data-reveal>
+  <section class="research-canvas__inventory" id="procurement-master-data-map" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Mental model</p>
-      <h2>One Business Partner can have several business roles.</h2>
-      <p>The useful diagnostic question is not “Does the supplier exist?” but “Does the supplier exist in the role and organizational scope that this procurement process needs?”</p>
+      <p class="research-canvas__eyebrow">Procurement master-data map</p>
+      <h2>Three master-data objects provide most PO defaults.</h2>
+      <p>When a purchasing document is created, SAP can propose data from reusable master records. This reduces manual entry, but the proposal source depends on the field and the procurement context.</p>
     </header>
+
     <div class="ecg-decision-columns">
-      <div><h3>Business Partner</h3><p>Global identity, name, address, communication, and common relationship context.</p></div>
-      <div><h3>Supplier role</h3><p>Makes the BP usable as a supplier in the relevant S/4HANA business context.</p></div>
-      <div><h3>Company code</h3><p>Adds accounting and payment context.</p></div>
-      <div><h3>Purchasing organization</h3><p>Adds purchasing-specific defaults and partner data.</p></div>
+      <div>
+        <h3>Supplier / Business Partner</h3>
+        <p>Identity, address, company-code accounting data, purchasing-organization data, partner functions, and commercial defaults.</p>
+        <p><strong>Typical PO inputs:</strong> supplier address, order currency, Incoterms, payment-related defaults, partner roles.</p>
+      </div>
+      <div>
+        <h3>Material / Product</h3>
+        <p>Reusable product data at client, plant, purchasing, accounting, and other organizational levels.</p>
+        <p><strong>Typical PO inputs:</strong> description, base/order units, material group, purchasing text, valuation and planning context.</p>
+      </div>
+      <div>
+        <h3>Purchasing Info Record</h3>
+        <p>Supplier-material relationship data, normally scoped by purchasing organization and, where relevant, plant.</p>
+        <p><strong>Typical PO inputs:</strong> price/conditions, planned delivery time, supplier material number, order unit and supplier-specific tolerances.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+      <p><strong>Document principle:</strong> master data proposes values into the purchasing document. After a value is copied, the document owns its current value. A later master-data change does not automatically mean every existing purchase order is rewritten.</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="bp-role-model" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Key and scope</p>
-      <h2>Know the key before you debug the value.</h2>
-      <p>The same value can be correct in one object or organizational context and wrong in another.</p>
+      <p class="research-canvas__eyebrow">Business Partner role model</p>
+      <h2>One identity, several process roles and scopes.</h2>
+      <p>The useful question is not only “Does the BP exist?” but “Does it have the supplier role and organizational data required by this process?”</p>
     </header>
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier key fields and process effects">
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Business Partner supplier roles and organizational levels">
       <table class="study-table__table">
-        <thead><tr><th>Field or dimension</th><th>Why it matters</th><th>Typical process effect</th></tr></thead>
+        <thead>
+          <tr><th>Layer</th><th>Typical BP role / scope</th><th>Examples of data</th><th>Used for</th></tr>
+        </thead>
         <tbody>
-          <tr><td><strong>Business Partner / supplier role</strong></td><td>Defines the legal/business identity and supplier capability.</td><td>Allows procurement processes to use the BP as a supplier.</td></tr>
-          <tr><td><strong>Company code</strong></td><td>Accounting-specific supplier data.</td><td>Connects supplier transactions to AP and payment context.</td></tr>
-          <tr><td><strong>Purchasing organization</strong></td><td>Procurement-specific data and defaults.</td><td>Controls commercial and purchasing behavior by organization.</td></tr>
-          <tr><td><strong>Partner functions</strong></td><td>Ordering address, goods supplier, invoicing party, and similar roles.</td><td>Allows different parties to perform different procurement roles.</td></tr>
-          <tr><td><strong>Commercial defaults</strong></td><td>Order currency, Incoterms, payment-related defaults where maintained.</td><td>Flows into purchasing documents unless a more specific source supplies another value.</td></tr>
+          <tr>
+            <td><strong>General Business Partner</strong></td>
+            <td>Role 000000 · client-wide identity</td>
+            <td>Name, addresses, communication, bank data and common BP attributes</td>
+            <td>Shared identity across customer, supplier and other roles</td>
+          </tr>
+          <tr>
+            <td><strong>FI Supplier</strong></td>
+            <td>FLVN00 · company code</td>
+            <td>Reconciliation account, payment methods/terms, correspondence and accounting controls</td>
+            <td>Invoice posting, AP subledger and payment processing</td>
+          </tr>
+          <tr>
+            <td><strong>Supplier / Purchasing</strong></td>
+            <td>FLVN01 · purchasing organization</td>
+            <td>Order currency, Incoterms, purchasing controls and partner functions</td>
+            <td>Purchase requisition source use, purchase orders and purchasing defaults</td>
+          </tr>
+          <tr>
+            <td><strong>Supplier-material relationship</strong></td>
+            <td>Purchasing Info Record</td>
+            <td>Supplier-specific price, planned delivery time, order unit, supplier material number</td>
+            <td>More specific defaults for one supplier-material relationship</td>
+          </tr>
         </tbody>
       </table>
     </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Typical failure</h4>
+        <p>The BP exists and looks correct, but the purchasing organization view is missing. The user can find the partner but cannot use it correctly in purchasing.</p>
+      </div>
+      <div>
+        <h4>Another failure</h4>
+        <p>The supplier is extended for purchasing but not for the required company code. A PO may be possible while invoice/payment processing fails later.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="cvi" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">CVI — Customer/Vendor Integration</p>
+      <h2>Business Partner is the leading object; supplier account data stays synchronized.</h2>
+      <p>SAP S/4HANA uses Customer/Vendor Integration to synchronize Business Partner data with the technical customer and supplier account structures used by applications such as Financial Accounting.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Choose BP grouping</h4><p>The grouping controls BP number assignment and is mapped to the relevant customer/supplier account-group design.</p></div>
+      <div><span>02</span><h4>Add supplier role</h4><p>Add the FI and/or purchasing supplier role required by the business process.</p></div>
+      <div><span>03</span><h4>Maintain organizational views</h4><p>Extend the supplier to the company code and purchasing organization that will use it.</p></div>
+      <div><span>04</span><h4>CVI synchronizes</h4><p>Configured mappings keep the BP and technical supplier account representation consistent.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Numbering nuance:</strong> the BP number and supplier account number are related through CVI number-range settings. They can be designed to be the same, but do not assume this without checking the grouping, account group, and number-range mapping.</p>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Configuration objects to remember</h4>
+        <p>BP grouping and number range · supplier account group and number range · CVI mapping and synchronization settings · field-control compatibility.</p>
+      </div>
+      <div>
+        <h4>Lead diagnosis</h4>
+        <p>If synchronization fails, check the first inconsistent field or mapping. Do not solve a CVI problem by creating a duplicate supplier identity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="reconciliation-account" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Company-code accounting data</p>
+      <h2>The reconciliation account connects the supplier subledger to the General Ledger.</h2>
+      <p>Each supplier account records liabilities at supplier level in Accounts Payable. The reconciliation account represents those supplier liabilities in the General Ledger.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Supplier subledger</h3>
+        <p>The supplier account contains the open items and balance for one supplier.</p>
+      </div>
+      <div>
+        <h3>Reconciliation account</h3>
+        <p>A G/L account maintained in the supplier company-code data. It groups the corresponding AP liabilities in the General Ledger.</p>
+      </div>
+      <div>
+        <h3>Automatic posting</h3>
+        <p>When an invoice posts to the supplier account, SAP also updates the assigned reconciliation account. The user normally posts to the supplier, not directly to that reconciliation account.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+      <p><strong>Assessment sentence:</strong> “The supplier is the AP subledger account. The reconciliation account is maintained in supplier company-code data and automatically represents the supplier liabilities in the G/L.”</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="partner-functions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Partner functions</p>
+      <h2>The company you order from does not have to perform every supplier role.</h2>
+      <p>Partner functions let procurement use different business partners for ordering, physical supply, invoicing, payment or other responsibilities.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier partner functions">
+      <table class="study-table__table">
+        <thead><tr><th>Partner function</th><th>Business meaning</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Ordering address</strong></td>
+            <td>Where the purchase order or purchasing communication is directed.</td>
+            <td>Orders go to a central sales office although the legal supplier is another entity.</td>
+          </tr>
+          <tr>
+            <td><strong>Goods Supplier</strong></td>
+            <td>The party that physically supplies the goods.</td>
+            <td>You order from Supplier A, but subsidiary S always delivers the goods.</td>
+          </tr>
+          <tr>
+            <td><strong>Invoicing Party</strong></td>
+            <td>The party that sends the supplier invoice.</td>
+            <td>You order from Supplier A, but headquarters C issues the invoice.</td>
+          </tr>
+          <tr>
+            <td><strong>Alternative payee / other roles</strong></td>
+            <td>A different party can receive payment or perform another configured procurement role.</td>
+            <td>The exact allowed roles depend on partner determination and account-group/customizing design.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">group_work</span>
+      <p><strong>Important:</strong> partner determination defines which roles are allowed or required. Supplier master data provides the partner assignments that can be proposed into purchasing documents.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="one-time-supplier" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">One-time supplier / CpD</p>
+      <h2>Use one collective supplier account when creating a permanent supplier is not justified.</h2>
+      <p>A one-time supplier is not “no master data”. SAP still uses a collective Business Partner/supplier master record, but transaction-specific identity details are entered during document processing.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Collective master</h3>
+        <p>A dedicated one-time account, commonly associated with CpD/CPD design, stores common values that can be shared across occasional suppliers.</p>
+      </div>
+      <div>
+        <h3>Document-specific data</h3>
+        <p>Name, address, bank details and other supplier-specific information can be entered when the purchase order or invoice is created.</p>
+      </div>
+      <div>
+        <h3>Why use it</h3>
+        <p>It avoids uncontrolled master-data growth for suppliers used only once or very rarely.</p>
+      </div>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Good use</h4>
+        <p>Low-frequency, low-reuse supplier where the business accepts controlled document-level maintenance.</p>
+      </div>
+      <div>
+        <h4>Governance risk</h4>
+        <p>Overuse reduces supplier-level history, analytics and controls. Repeated suppliers should normally move to governed permanent master data.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime-defaults" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Runtime use</p>
-      <h2>Supplier data enters Procure-to-Pay at several boundaries.</h2>
-      <p>Source determination, purchasing documents, goods receipt, invoice verification, and payment do not all read the same supplier view.</p>
+      <h2>Trace the default back to the most specific owning object.</h2>
+      <p>Procurement documents combine supplier, material, relationship data and configuration. A wrong PO value is not automatically a supplier-master problem.</p>
     </header>
+
     <div class="ecg-compact-sequence">
-      <div><span>01</span><h4>Source</h4><p>Determine whether this supplier is a valid candidate for the material and plant.</p></div>
-      <div><span>02</span><h4>Purchase</h4><p>Read purchasing-organization defaults and supplier-material specifics.</p></div>
-      <div><span>03</span><h4>Receive</h4><p>Use supplier and delivery context during goods receipt and inbound processing.</p></div>
-      <div><span>04</span><h4>Invoice</h4><p>Use supplier accounting and invoice partner context.</p></div>
-      <div><span>05</span><h4>Pay</h4><p>Hand off to company-code and payment data in Finance.</p></div>
+      <div><span>01</span><h4>Supplier selected</h4><p>Supplier identity, purchasing organization view, address and partner context become available.</p></div>
+      <div><span>02</span><h4>Material selected</h4><p>Material description, units, material group, purchasing text and plant-dependent controls can be proposed.</p></div>
+      <div><span>03</span><h4>Relationship found</h4><p>A valid Purchasing Info Record can provide supplier-material-specific conditions and logistics data.</p></div>
+      <div><span>04</span><h4>PO owns the result</h4><p>The purchasing document stores the final values that were determined, proposed or entered for this transaction.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p><strong>Debug sequence:</strong> field in PO → source and organizational scope → supplier role/view → material data → Purchasing Info Record → source determination / conditions → manual override. Change shared master data only after proving the wrong source.</p>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="creation-checklist" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead diagnosis</p>
-      <h2>Find the owning layer before changing data.</h2>
-      <p>A supplier can be globally valid and still fail in one purchasing organization, company code, source list, or supplier-material relationship.</p>
+      <p class="research-canvas__eyebrow">Create / extend supplier</p>
+      <h2>A practical sequence for implementation and support.</h2>
+      <p>The exact UI differs by deployment and app, but the logical data model stays the same.</p>
     </header>
-    <div class="ecg-diagnostic">
-      <div><h4>Start here</h4><p>Prove BP identity → supplier role → company code → purchasing organization → partner function → supplier-material/source data.</p></div>
-      <div><h4>Do not jump here</h4><p>Do not create duplicate suppliers to solve a missing organizational view. Fix the missing role or scope after confirming governance and identity.</p></div>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Identity</h4><p>Create or reuse the correct Business Partner. Check duplicates before creating a new legal identity.</p></div>
+      <div><span>02</span><h4>Grouping</h4><p>Select the BP grouping and verify number-range/CVI mapping to the intended supplier account group.</p></div>
+      <div><span>03</span><h4>FI role</h4><p>Add FLVN00 when AP processing is required and maintain company-code data including the reconciliation account.</p></div>
+      <div><span>04</span><h4>Purchasing role</h4><p>Add FLVN01 and extend to the required purchasing organization with purchasing defaults and partner functions.</p></div>
+      <div><span>05</span><h4>Relationship data</h4><p>Create Purchasing Info Record, source list or quota data only when the business process requires those more specific sourcing objects.</p></div>
+      <div><span>06</span><h4>Test end to end</h4><p>Create a PO, verify defaults and partners, then prove goods receipt, invoice receipt and AP posting behavior.</p></div>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment recall</p>
+      <h2>Answer supplier-master questions by layers.</h2>
+      <p>This structure is more useful than listing tables or transactions.</p>
+    </header>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>Assessment answer:</strong> “Supplier master data in S/4HANA is Business Partner based. I separate general identity, company-code data and purchasing-organization data, then check the more specific supplier-material and source-of-supply records.”</p>
+      <p><strong>60-second answer:</strong> “In S/4HANA, Business Partner is the leading object. For procurement I separate general BP identity, FI supplier data at company-code level and purchasing supplier data at purchasing-organization level. FLVN00 carries accounting context such as the reconciliation account; FLVN01 carries purchasing context such as order currency, Incoterms and partner functions. CVI synchronizes BP and supplier account structures. More specific supplier-material data belongs in the Purchasing Info Record. For occasional suppliers, a one-time CpD account can hold common defaults while supplier-specific address or bank data is entered in the document.”</p>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>If a PO cannot use a supplier</h4>
+        <p>Check BP identity → supplier role → purchasing organization extension → purchasing block/status → source-of-supply restrictions.</p>
+      </div>
+      <div>
+        <h4>If invoice posting fails</h4>
+        <p>Check invoicing party → company-code extension → reconciliation account → payment/tax/accounting data → document-specific invoice settings.</p>
+      </div>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references</h2></header>
+  <section class="research-canvas__inventory" id="evidence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary SAP references</h2>
+      <p>Release-sensitive product behavior is checked against current SAP Help and SAP Learning content.</p>
+    </header>
     <ul>
-      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/776fbd534f22b44ce10000000a174cb4.html">SAP Help — Business Partner Master Data Structure</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/25b46c8241fd4852bf7876d87bed8fd0.html">SAP Help — Business Partner Approach (Customer/Supplier Integration)</a></li>
+      <li><a href="https://learning.sap.com/courses/configuring-master-data-in-sap-s-4hana-cloud-private-edition-retail/business-partners-3">SAP Learning — Business Partners and supplier roles FLVN00 / FLVN01</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/806fbd534f22b44ce10000000a174cb4.html">SAP Help — Partner Functions</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/f6a7ba538c95b54ce10000000a174cb4.html">SAP Help — One-Time Customers and One-Time Vendors</a></li>
+      <li><a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/maintaining-business-partner-master-data">SAP Learning — Maintaining Business Partner Master Data</a></li>
     </ul>
+
     <nav class="ecg-context-links" aria-label="Supplier related pages">
       <span>Related</span>
       <a href="/labs/enterprise-context/master-data/business-partner/">Business Partner / Customer</a>
+      <a href="/labs/enterprise-context/master-data/material/">Material / Product</a>
       <a href="/labs/enterprise-context/master-data/purchasing-info-record/">Purchasing Info Record</a>
       <a href="/labs/enterprise-context/master-data/source-list/">Source List</a>
+      <a href="/labs/enterprise-context/master-data/quota-arrangement/">Quota Arrangement</a>
       <a href="/labs/enterprise-context/procurement/">Procurement</a>
       <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
     </nav>
