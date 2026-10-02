@@ -232,12 +232,42 @@ tags:
             <td>Can provide a reusable price basis for the purchase order.</td>
           </tr>
           <tr>
+            <td><strong>Automatic Sourcing</strong></td>
+            <td>Marks the info record as relevant for automatic source selection in the documented MRP search.</td>
+            <td>Acts as an MRP fallback after quota arrangement, source list and outline agreements have not supplied a source.</td>
+          </tr>
+          <tr>
             <td><strong>Texts</strong></td>
             <td>Supplier-material-specific purchasing information.</td>
             <td>Can be copied into purchasing documents according to text determination.</td>
           </tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="automatic-sourcing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Automatic sourcing</p>
+      <h2>The Auto.Srcg flag makes the PIR eligible; it does not make it the first source checked.</h2>
+      <p>In the documented MRP search, a Purchasing Info Record with Automatic Sourcing is the fallback after higher-priority sourcing objects have not resolved the requirement.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchasing Info Record automatic sourcing behavior">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">Behavior</th><th scope="col">Lead interpretation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Quota arrangement exists</th><td>MRP evaluates quota first.</td><td>The PIR can support the supplier relationship, but its Auto.Srcg flag does not override the quota.</td></tr>
+          <tr><th scope="row">MRP-relevant Source List exists</th><td>MRP checks the Source List before falling back to an automatically sourced PIR.</td><td>Eligibility and automatic-sourcing fallback are different controls.</td></tr>
+          <tr><th scope="row">Valid scheduling agreement or contract resolves the source</th><td>The outline agreement is selected before the PIR fallback.</td><td>Do not troubleshoot the PIR first when the PR points to an agreement.</td></tr>
+          <tr><th scope="row">Only Auto.Srcg PIR candidates remain</th><td>MRP can assign an eligible PIR and uses documented tie-break rules when several are marked.</td><td>Plant-specific PIRs have priority over purchasing-organization-level PIRs in this fallback logic.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+      <p><strong>Do not confuse two questions:</strong> source determination decides the supplier or agreement; price determination decides which conditions become the PO price. A PIR can contribute to both, but through different logic.</p>
     </div>
   </section>
 
@@ -496,6 +526,7 @@ tags:
       <li><a href="https://learning.sap.com/service/media/topic/a481e8b0-318e-4880-80a9-b1341b6a174c/S4500_26_en-US_media/S4500_26_en-US_images/S4500_U4_L3_002.png">SAP Learning — Purchasing Info Record organizational levels diagram</a></li>
       <li><a href="https://learning.sap.com/service/media/topic/d9eb1ec9-cdce-477f-89df-4e48c229c423/S4500_26_en-US_media/S4500_26_en-US_images/S4500_U4_L3_006.png">SAP Learning — Time-dependent and time-independent conditions diagram</a></li>
       <li><a href="https://learning.sap.com/service/media/topic/d9eb1ec9-cdce-477f-89df-4e48c229c423/S4500_26_en-US_media/S4500_26_en-US_images/S4500_U4_L3_007.png">SAP Learning — Purchasing calculation schema diagram</a></li>
+      <li><a href="https://learning.sap.com/courses/sourcing-in-sap-s4hana/outlining-source-determination">SAP Learning — Outlining Source Determination</a></li>
     </ul>
 
     <nav class="ecg-context-links" aria-label="Purchasing Info Record related pages">
