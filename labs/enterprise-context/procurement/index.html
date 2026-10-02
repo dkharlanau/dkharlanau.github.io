@@ -75,6 +75,14 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/781017ca64e446909d6cd6b0ee0ce021.html"
   - title: "Flexible Workflow for Purchase Orders"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/b33a97f3014f43c488ec798633824081.html"
+  - title: "Comparing Procurement Processes for Stock and Consumption"
+    url: "https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/comparing-procurement-processes-for-stock-and-consumption"
+  - title: "Creating a Purchase Requisition"
+    url: "https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/creating-a-purchase-requisition"
+  - title: "Creating a Purchase Order with Reference to a Purchase Requisition"
+    url: "https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/creating-a-purchase-order-with-reference-to-a-purchase-requisition"
+  - title: "Entering Valuated and Non-Valuated Goods Receipts"
+    url: "https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/entering-valuated-and-non-valuated-goods-receipts"
 # ai-discovery-managed:end
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.procurement %}
@@ -290,6 +298,192 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="stock-vs-consumption" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Stock vs direct consumption</p>
+      <h2>The key difference is where value should live after procurement.</h2>
+      <p>Stock procurement creates inventory first. Direct consumption procurement charges a known receiver such as a cost center, asset, order, or project. This one decision changes master-data requirements, account assignment, goods-receipt behavior, and FI postings.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Stock procurement and direct consumption comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Decision point</th><th scope="col">Procurement for stock</th><th scope="col">Direct consumption</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Material master</th>
+            <td>Required. The material must exist because SAP manages the stock quantity and usually its value.</td>
+            <td>Optional. You can buy with a material master or enter a short text, material group, and order unit manually.</td>
+          </tr>
+          <tr>
+            <th scope="row">Account assignment</th>
+            <td>No manual account assignment for normal valuated stock procurement. Stock account determination follows the material and valuation context.</td>
+            <td>Required for the consumption purpose. The PO identifies the account assignment category, receiver, and relevant consumption account.</td>
+          </tr>
+          <tr>
+            <th scope="row">Value at receipt</th>
+            <td>A valuated GR increases inventory value and normally posts against GR/IR.</td>
+            <td>A valuated GR charges the assigned object instead of ordinary stock. A non-valuated GR records receipt without posting cost at that moment.</td>
+          </tr>
+          <tr>
+            <th scope="row">Quantity and value update</th>
+            <td>Stock quantity and stock value are updated according to the material's inventory and valuation settings.</td>
+            <td>No stock-value update. Quantity may also stay outside inventory management, depending on the material type and process design.</td>
+          </tr>
+          <tr>
+            <th scope="row">Business meaning</th>
+            <td>“Receive an asset into inventory now; consume it later.”</td>
+            <td>“We already know what business object should carry the cost.”</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <div>
+        <p><strong>Assessment memory:</strong> stock procurement separates receipt from later consumption. Direct consumption decides the receiver during purchasing.</p>
+        <p>A stock material can also be purchased directly for consumption. The material type alone does not decide the business intent; the PO account assignment changes the value flow.</p>
+      </div>
+    </div>
+
+    <h3>Consumable material can exist with or without a material master.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Consumable material master options">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Option</th><th scope="col">Inventory behavior</th><th scope="col">Why use it</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">No material master</th>
+            <td>No reusable material record. Description, material group, and PO unit are entered in the purchasing document.</td>
+            <td>Useful for occasional consumables that do not justify a dedicated master record.</td>
+          </tr>
+          <tr>
+            <th scope="row">NLAG — Non-stock material</th>
+            <td>Standard S4500 example with no quantity-based or value-based inventory management.</td>
+            <td>Useful when the same consumable is purchased often and reusable purchasing data should be stored.</td>
+          </tr>
+          <tr>
+            <th scope="row">UNBW — Non-valuated material</th>
+            <td>Quantity can be managed, but inventory is not managed on a value basis.</td>
+            <td>Useful when physical stock should be visible even though financial stock valuation is not required.</td>
+          </tr>
+          <tr>
+            <th scope="row">Normal stock material + account assignment</th>
+            <td>The material normally supports stock management, but this PO item is procured for direct consumption.</td>
+            <td>Useful when a standard material is needed for a specific cost center, asset, project, sales-order context, or other receiver.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Configuration boundary:</strong> NLAG and UNBW are standard examples. Material types and their quantity/value update controls can be configured, so verify the target system before treating a material-type rule as universal.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="account-assignment-detail" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Account assignment</p>
+      <h2>The category says what receives the cost; the object identifies the receiver.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Cost center and asset account assignment examples">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Category</th><th scope="col">Required business object</th><th scope="col">G/L account behavior</th><th scope="col">Typical use</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">K — Cost center</th>
+            <td>Cost center</td>
+            <td>The consumption G/L account is required. Customizing can allow SAP to propose it automatically.</td>
+            <td>Office supplies, operating consumables, and other departmental costs.</td>
+          </tr>
+          <tr>
+            <th scope="row">A — Asset</th>
+            <td>Asset number</td>
+            <td>The G/L account is derived from the asset. In the standard learning scenario, the user does not enter it manually.</td>
+            <td>Capital purchases that should be posted to an asset.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>One PO item can be split across several receivers.</h3>
+    <p>Multiple account assignment is useful when one ordered quantity or value belongs to more than one cost object. The planned distribution can be defined by quantity, percentage, or amount.</p>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Multiple account assignment distribution methods">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Distribution basis</th><th scope="col">What the buyer defines</th><th scope="col">Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Quantity</th><td>Each receiver gets a defined quantity.</td><td>60 EA to Cost Center A and 40 EA to Cost Center B.</td></tr>
+          <tr><th scope="row">Percentage</th><td>Each receiver gets a percentage of the total.</td><td>70% to Operations and 30% to Engineering.</td></tr>
+          <tr><th scope="row">Amount</th><td>Each receiver gets a defined share of the PO value.</td><td>USD 7,000 to one project and USD 3,000 to another.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>If only part of the order is delivered or invoiced, SAP also needs a rule for distributing that partial value. The two standard learning patterns are <strong>proportional distribution</strong>, which follows the planned ratio, and <strong>progressive fill-up</strong>, which completes the first account assignment before moving to the next one.</p>
+    <p>The partial-invoice indicator can be defaulted from the account assignment category in Customizing. For a PO item with multiple account assignment and a valuated GR, this indicator can also influence how a partial GR value is distributed. Treat the exact behavior as configuration-dependent and verify the PO and account-assignment settings before troubleshooting the FI result.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="purchase-requisition-flow" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Purchase requisition → source → purchase order</p>
+      <h2>The requisition states the internal need. The purchase order must resolve the commercial commitment.</h2>
+    </header>
+
+    <p>A purchase requisition is an internal request for a material or service, quantity, and required date. It can be created manually by the requesting department or generated by another process. Standard examples include MRP, maintenance orders, production orders, and networks.</p>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>1. Requirement</h3>
+        <p>The PR records what is needed and when. It can later become an RFQ, purchase order, or outline agreement.</p>
+      </div>
+      <div>
+        <h3>2. Source of supply</h3>
+        <p>Purchasing determines where the requirement should be sourced. The source can be an external supplier or an internal supplying plant.</p>
+      </div>
+      <div>
+        <h3>3. Commitment</h3>
+        <p>The PO resolves supplier or supplying plant, price, account assignment, delivery terms, and the other values needed for execution.</p>
+      </div>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchase requisition conversion rules">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">PR situation</th><th scope="col">What happens during PO creation</th><th scope="col">Lead-level point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Account assignment category U — Unknown</th>
+            <td>The PR can keep the receiver open. In the current S4500 learning path, U is allowed in the PO only with Service and Limit item types; otherwise a valid account assignment must be entered before the PO can be completed.</td>
+            <td>Unknown is a temporary requirement state, not a license to leave normal consumption accounting unresolved.</td>
+          </tr>
+          <tr>
+            <th scope="row">Material master exists; no source assigned</th>
+            <td>If a supplier/material info record exists, SAP can propose its purchase price. If no info record exists, the buyer enters the price. The PR valuation price is not simply copied as the PO purchase price in this case.</td>
+            <td>Do not confuse PR valuation with the final commercial price source.</td>
+          </tr>
+          <tr>
+            <th scope="row">No material master and no source assigned</th>
+            <td>SAP can propose the valuation price from the PR as the PO purchase price. The buyer can change the proposal.</td>
+            <td>Without master-data price context, the PR estimate can become the starting point for the PO.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>External sources can be represented by purchasing info records and outline agreement items. These objects can provide both the supplier and commercial context. An internal plant can also be the source, which moves the process into stock transport rather than normal external procurement.</p>
+    <p><strong>Fiori recall:</strong> <em>Process Purchase Requisitions (V2)</em> is one standard app for processing requisition items, assigning a source of supply, and creating follow-on purchasing documents. App scope can vary by release and deployment.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Diagnostic rule:</strong> when the PO supplier or price looks wrong, first ask whether the PR already had a source. Then separate source determination from price determination. Fix the rule that produced the value instead of editing the PO output without evidence.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="purchasing-price" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Commercial terms</p>
@@ -332,6 +526,42 @@ source_links:
     <p>For a standard stock purchase, goods receipt records that the ordered material arrived and updates the relevant inventory and purchase-order history. For direct consumption, the same business event can post value to an assigned object instead of ordinary stock. Service procurement can introduce an acceptance or service-entry step. Special item categories intentionally change the baseline again.</p>
     <p>For the plain material process, post the goods receipt with reference to the purchase order. SAP proposes the open PO items, so receiving can check the material, delivered quantity, over- or underdelivery, and — when configured — shelf-life requirements. One PO item can produce several GR items when the delivery is split by batch or storage location.</p>
     <p>The posting automatically updates PO history. A material document proves the goods movement; if the receipt is valuated, SAP also creates an accounting document. The standard baseline movement type for a goods receipt against a PO is <strong>101</strong>.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Valuated and non-valuated goods receipt comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">PO / GR design</th><th scope="col">Quantity effect</th><th scope="col">Value effect at GR</th><th scope="col">Documents</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Stock material + valuated GR</th>
+            <td>Stock quantity increases.</td>
+            <td>Inventory value is updated and FI is posted, normally with stock against GR/IR.</td>
+            <td>Material document + accounting document.</td>
+          </tr>
+          <tr>
+            <th scope="row">Consumable item + valuated GR</th>
+            <td>The receipt is recorded for the PO item.</td>
+            <td>The value is charged to the assigned consumption or balance-sheet object rather than normal stock.</td>
+            <td>Material document + accounting document.</td>
+          </tr>
+          <tr>
+            <th scope="row">Consumable item + non-valuated GR</th>
+            <td>The receipt and PO history are updated.</td>
+            <td>No cost is posted by the GR. The invoice becomes the later value-posting event.</td>
+            <td>Material document; no FI document for the GR itself.</td>
+          </tr>
+          <tr>
+            <th scope="row">Consumable item with no GR planned</th>
+            <td>No goods-receipt event is posted.</td>
+            <td>Invoice verification is the first normal value-posting event for the purchase.</td>
+            <td>Invoice document + accounting document at IR.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The exact G/L accounts still depend on account assignment, valuation, and automatic account determination. Use the <a href="/labs/enterprise-context/procurement/material-valuation/">Material Valuation</a> deep dive when the assessment question moves from process design to the FI entries created by GR and IR.</p>
+
     <p>The movement type is not just a label. It is a three-character control key that influences quantity and value updates, field selection, stock or consumption behavior, and — together with other account-determination factors — which G/L accounts are affected.</p>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
