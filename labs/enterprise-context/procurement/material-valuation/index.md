@@ -32,7 +32,7 @@ source_links:
   - title: "Example: Material with MAP"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8860b6531de6b64ce10000000a174cb4.html"
   - title: "Example: Material with MAP Without Stock Coverage"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMI-SE/af9ef57f504840d2b81be8667206d485/6370b6531de6b64ce10000000a174cb4.html"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/6370b6531de6b64ce10000000a174cb4.html"
   - title: "Product Valuation"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/18fe3fab96864826bfa0be0de4f65b85/772bf4b02b4245d9912a2b04cd042643.html"
   - title: "WRX — GR/IR Clearing Account"
