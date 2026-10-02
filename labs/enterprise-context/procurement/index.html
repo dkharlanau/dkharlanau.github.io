@@ -47,6 +47,9 @@ semantic_links:
   - type: "deep_dive"
     title: "Tax Code Determination in Purchasing & Invoice Receipt — SAP S/4HANA MM"
     url: "/labs/enterprise-context/procurement/tax-code-determination/"
+  - type: "deep_dive"
+    title: "Material Valuation in Procurement — Standard Price, Moving Average Price and FI Postings"
+    url: "/labs/enterprise-context/procurement/material-valuation/"
   - type: "related_topic"
     title: "SAP AIF — Monitoring, Error Handling and Reprocessing"
     url: "/labs/enterprise-context/aif/"
@@ -353,6 +356,7 @@ source_links:
     <p>The reference model matters. Where goods-receipt-based invoice verification is active, the invoice is matched against the relevant goods receipts rather than only against the ordered quantity. Other procurement variants have different matching rules. Do not infer the intended invoice behavior from the existence of a PO alone.</p>
     <p>See SAP's current <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8d6fb6531de6b64ce10000000a174cb4.html" target="_blank" rel="noopener">Entering Invoices with Purchase Order Reference</a> documentation for the supported allocation choices in Logistics Invoice Verification.</p>
     <div class="research-route-list">
+      <a href="/labs/enterprise-context/procurement/material-valuation/"><span>MM/FI</span><strong>Material Valuation: Standard Price vs Moving Average Price</strong><small>Material and accounting documents, GR/IR, S vs V, price differences, stock coverage, and FI posting logic.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
       <a href="/labs/enterprise-context/procurement/tax-code-determination/"><span>MM</span><strong>Tax Code Determination in Purchasing & Invoice Receipt</strong><small>PO tax code, automatic determination, deductible vs non-deductible input tax, MIRO, FI posting, testing, and diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
     </div>
   </section>
@@ -404,7 +408,7 @@ source_links:
     </header>
     <p>In procurement scenarios where goods receipt and invoice receipt are both value-relevant, the two events can occur on different dates or for different quantities. GR/IR carries that temporary difference. An open balance can therefore mean that the complementary event has not happened yet, not that the account is broken.</p>
     <p>SAP's current GR/IR documentation makes the expectation explicit: if invoiced quantity is greater than received quantity, the system expects further goods receipts; if received quantity is greater than invoiced quantity, it expects further invoices. Manual clearing belongs to the case where the business has established that no further receipt or invoice will arrive.</p>
-    <p>This is where procurement hands the story to Finance. Continue with <a href="/labs/enterprise-context/finance-logistics/">FI/CO for Logistics</a> for valuation, G/L, GR/IR, and reconciliation, and with the <a href="/labs/enterprise-context/procurement/suppliers/">supplier payment cluster</a> once the question has moved from invoice liability to payment execution.</p>
+    <p>This is where procurement hands the story to Finance. Use the <a href="/labs/enterprise-context/procurement/material-valuation/">Material Valuation</a> deep dive for standard price, moving average price, stock coverage, and the FI postings at GR and IR. Continue with <a href="/labs/enterprise-context/finance-logistics/">FI/CO for Logistics</a> for wider valuation, G/L, GR/IR, and reconciliation, and with the <a href="/labs/enterprise-context/procurement/suppliers/">supplier payment cluster</a> once the question has moved from invoice liability to payment execution.</p>
     <p>SAP Help: <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/72256b54f94c8f4ce10000000a4450e5.html" target="_blank" rel="noopener">Clear GR/IR Clearing Account</a>.</p>
   </section>
 
