@@ -75,6 +75,12 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/781017ca64e446909d6cd6b0ee0ce021.html"
   - title: "Flexible Workflow for Purchase Orders"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/b33a97f3014f43c488ec798633824081.html"
+  - title: "Performing a Self-Service Process"
+    url: "https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/performing-a-self-service-process"
+  - title: "My Purchase Requisitions - New"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/af9ef57f504840d2b81be8667206d485/713eae2544204816b71a88caa89bd256.html"
+  - title: "Executing Goods Receipts and Service Entries"
+    url: "https://learning.sap.com/courses/sap-s-4hana-sourcing-procurement-innovations/executing-goods-receipts-and-service-entries_ad932248-adba-4966-8935-a520ff6cff53"
 # ai-discovery-managed:end
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.procurement %}
@@ -473,6 +479,106 @@ source_links:
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">rule</span>
       <p><strong>Diagnostic rule:</strong> when the PO supplier or price looks wrong, first ask whether the PR already had a source. Then separate source determination from price determination. Fix the rule that produced the value instead of editing the PO output without evidence.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="self-service-procurement" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Self-service procurement</p>
+      <h2>The requester can create demand and follow it without becoming the buyer.</h2>
+      <p>Self-service procurement gives employees a simple Fiori entry point for their own purchasing needs. The employee creates the purchase requisition and follows its status. Purchasing still owns the sourcing and purchase-order commitment unless the process is configured differently.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Create</h3>
+        <p><em>My Purchase Requisitions - New</em> lets an employee create a requisition from catalog content, material or service data, free text, or a limit item. Ordering the shopping cart creates the purchase requisition.</p>
+      </div>
+      <div>
+        <h3>Track</h3>
+        <p>The requester can see the requisition status and follow-on documents. Own requisitions can be edited or deleted only while their processing status still allows it.</p>
+      </div>
+      <div>
+        <h3>Receive</h3>
+        <p>After a purchase order exists and the material arrives, the requester can confirm the receipt. A return can also be started when delivered goods have an issue.</p>
+      </div>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Self-service purchase requisition item options">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Option</th><th scope="col">Use</th><th scope="col">Assessment point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Catalog / cross-content search</th>
+            <td>Select a predefined material or service from content available to the requester.</td>
+            <td>The catalog improves control and reduces free-text demand. The exact catalog solution is landscape-specific.</td>
+          </tr>
+          <tr>
+            <th scope="row">Create Item</th>
+            <td>Create a material, service, or free-text requisition item.</td>
+            <td>A material master is not required for every self-service request; free-text procurement is possible where the process allows it.</td>
+          </tr>
+          <tr>
+            <th scope="row">Create Limit Item</th>
+            <td>Request spend within a value limit when the exact material or service cannot be described completely in advance.</td>
+            <td>Do not confuse a limit item with normal quantity-based stock procurement.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Defaults reduce manual input, but they are still process data.</h3>
+    <p>User defaults can provide values such as plant, purchasing group, account assignment category, or cost center. A user can maintain selected defaults, and administrators can maintain defaults for several users with the <em>Default Settings for Users</em> app. In landscapes integrated with HR organizational structure, self-service procurement attributes can also be derived from the employee assignment.</p>
+    <p>The requester can also be changed when the app is used on behalf of another employee, for example when an assistant creates a requisition for a manager. The important control is the business requester, not only the person who entered the document.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">school</span>
+      <p><strong>Training boundary:</strong> the S4500 training landscape can use SAP Lean Catalog. Treat that as a course-specific catalog implementation, not as a rule that every S/4HANA self-service process uses the same catalog technology.</p>
+    </div>
+
+    <h3>Confirmation is a goods-receipt step, not a second procurement process.</h3>
+    <p>The dedicated <em>Confirm Receipt of Goods - New</em> app shows self-service material requisition items that are ready for requester confirmation. A purchase order must exist as a follow-on document, and the item must still have an open quantity to confirm. Current SAP Learning also covers requisitions created for the employee by another user.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Self-service goods receipt confirmation rules">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Rule</th><th scope="col">Meaning</th><th scope="col">Diagnostic check</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">PO follow-on document required</th>
+            <td>A requisition alone is not enough for confirmation.</td>
+            <td>If the item is missing, first check whether purchasing created the PO and whether the PR item is linked to it.</td>
+          </tr>
+          <tr>
+            <th scope="row">Open confirmation quantity</th>
+            <td>The item stays available until the PO quantity is confirmed or <em>Final Delivery</em> closes further receipt.</td>
+            <td>Check confirmed quantity and the Final Delivery indicator before investigating authorization or app issues.</td>
+          </tr>
+          <tr>
+            <th scope="row">Multiple PO schedule lines</th>
+            <td>The current learning scenario does not list PR items whose PO item has multiple schedule lines in this app.</td>
+            <td>Do not treat a missing item as a data defect until the PO schedule-line structure is checked.</td>
+          </tr>
+          <tr>
+            <th scope="row">Return after confirmation</th>
+            <td>The requester can start a return for received goods and provide the return quantity and reason.</td>
+            <td>Separate the original receipt from the return movement when tracing stock and material documents.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>When the requester confirms the receipt, SAP creates the goods-receipt business event and a material document. This is why self-service confirmation still belongs to the Inventory Management document flow. The Fiori app changes who performs the step and how it is presented; it does not create a separate accounting model.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <div>
+        <p><strong>Assessment memory:</strong> employee creates PR → Purchasing creates or processes the PO → employee confirms receipt after delivery → SAP creates the material document → return is possible if the delivered goods have an issue.</p>
+        <p><strong>Current app recall:</strong> <em>My Purchase Requisitions - New</em> is the self-service entry point; <em>Confirm Receipt of Goods - New</em> is the focused receipt-confirmation app. App scope can vary by deployment and release.</p>
+      </div>
     </div>
   </section>
 
