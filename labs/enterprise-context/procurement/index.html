@@ -22,7 +22,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-02
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning sourcing, procurement automation, and purchasing price-determination cross-check + S4500 process refresh"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning sourcing, procurement automation, purchasing price determination, contracts, and scheduling-agreement cross-check + S4500 process refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -295,7 +295,7 @@ source_links:
     <header>
       <p class="research-canvas__eyebrow">Outline agreements</p>
       <h2>Contract and scheduling agreement solve the same long-term sourcing problem in different ways.</h2>
-      <p>An outline agreement stores negotiated terms for a longer period. The main decision is how the operational demand will be called off: with purchase orders against a contract, or with dated schedule lines under a scheduling agreement.</p>
+      <p>An outline agreement stores negotiated terms for a longer period. The main design decision is how operational demand will be called off: by creating purchase orders against a contract, or by maintaining dated schedule lines under a scheduling agreement.</p>
     </header>
 
     <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Contract and scheduling agreement comparison">
@@ -306,18 +306,23 @@ source_links:
         <tbody>
           <tr>
             <th scope="row">Long-term commitment</th>
-            <td>Target quantity or target value is agreed for a validity period.</td>
-            <td>Total purchasing conditions are agreed for a validity period.</td>
+            <td>Uses a target quantity or target value for a validity period.</td>
+            <td>Uses a total quantity and purchasing conditions for a validity period.</td>
           </tr>
           <tr>
             <th scope="row">How demand is released</th>
             <td>Create a purchase order with reference to the contract. The PO is a contract release order.</td>
-            <td>Create delivery schedule lines with quantities and dates. Depending on the process, forecast or JIT releases can be sent to the supplier.</td>
+            <td>Create delivery schedule lines with quantities and dates. The supplier can receive the schedule directly or through explicit releases, depending on the document type.</td>
           </tr>
           <tr>
-            <th scope="row">Delivery dates in the agreement</th>
-            <td>The contract item does not define the exact quantity for a specific delivery date.</td>
-            <td>Schedule lines are the operational plan and contain required quantities and dates.</td>
+            <th scope="row">Delivery dates</th>
+            <td>The contract itself does not define the exact quantity for one delivery date.</td>
+            <td>Schedule lines are the operational delivery plan and contain the required quantities and dates.</td>
+          </tr>
+          <tr>
+            <th scope="row">MRP integration</th>
+            <td>MRP can assign the contract as a source, but the resulting requisition still has to become a release PO.</td>
+            <td>MRP can generate schedule lines directly, which removes the extra PO-conversion step.</td>
           </tr>
           <tr>
             <th scope="row">Best mental model</th>
@@ -329,20 +334,167 @@ source_links:
     </div>
 
     <h3>A contract controls releases, not one delivery.</h3>
-    <p>The contract header holds data that applies to the whole agreement, such as supplier, validity period, agreement type, and header conditions. Each item defines what is covered, for example material, target quantity or value, price, plant context, and texts. A contract item can also be used as a source of supply in a purchase requisition. When that requisition becomes a PO, the PO becomes a contract release order.</p>
-    <p>Release documentation is statistical data for the contract item. It shows the purchase orders that have consumed the agreement. This is the right place to reason about released quantity or value and remaining target instead of treating the contract itself as a delivery document.</p>
+    <p>The contract header holds data that applies to the whole agreement, such as supplier, validity period, agreement type, and header conditions. Each item defines what is covered. A contract item can also be used as a source of supply in a purchase requisition. When that requirement becomes a PO with contract reference, the PO is a contract release order.</p>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Quantity contract</h3>
+        <p>The main control is a target quantity. Release documentation lets the buyer compare the target with the quantity already released and the quantity still open.</p>
+      </div>
+      <div>
+        <h3>Value contract</h3>
+        <p>The main control is a target value. The buyer monitors how much value has already been released and how much remains available.</p>
+      </div>
+      <div>
+        <h3>Validity</h3>
+        <p>Quantity, value, and validity are checked when a release order is created. System messages can be configured as warnings or, where required, as blocking errors.</p>
+      </div>
+    </div>
+
+    <h3>Material-group contract items: M and W</h3>
+    <p>Contract-specific item categories <strong>M</strong> and <strong>W</strong> let Purchasing negotiate for a group of materials without fixing one material number in the contract. The difference is mainly whether the items share one price or need their price to be decided at release time.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Contract item categories M and W">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Item category</th><th scope="col">Use</th><th scope="col">What the contract stores</th><th scope="col">What is decided in the release PO</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">M — Material unknown</th>
+            <td>Quantity or value contract. Best when several similar materials have the same price.</td>
+            <td>Short text, material group, target quantity, order unit, and price, but no material number.</td>
+            <td>The exact material or description. A material master record can be used if its material group and PO unit match the contract item.</td>
+          </tr>
+          <tr>
+            <th scope="row">W — Material group</th>
+            <td>Value contract only. Best when materials belong to one material group but have different prices.</td>
+            <td>Material group and broad description of what the agreement covers.</td>
+            <td>The exact article, quantity, price, and material number when applicable. An info record can propose conditions. A free-text item needs a valid account assignment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__callout">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <div>
+        <strong>Assessment shortcut</strong>
+        <p><strong>M = same group, same price.</strong> <strong>W = same group, different prices.</strong> M works in quantity and value contracts; W works only in value contracts.</p>
+      </div>
+    </div>
+
+    <p>Header conditions can still apply to release orders. For example, a supplier-wide discount maintained at contract header level can be calculated automatically when the buyer creates a release PO.</p>
+
+    <h3>Scheduling agreements turn the agreement into a dated delivery plan.</h3>
+    <p>A scheduling agreement is always plant-specific. Its total quantity is split into schedule lines, each with a quantity and delivery date. Schedule lines can be entered manually, created with reference to a purchase requisition, or generated by MRP.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Scheduling agreement design rules">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Rule</th><th scope="col">What to remember</th><th scope="col">Why it matters</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Plant scope</th>
+            <td>A scheduling agreement is plant-specific.</td>
+            <td>The delivery plan belongs to one receiving plant rather than acting as a cross-plant umbrella agreement.</td>
+          </tr>
+          <tr>
+            <th scope="row">M and W</th>
+            <td>Item categories M and W are contract-specific and are not used in scheduling agreements.</td>
+            <td>A scheduling agreement needs a more concrete item basis for continuous delivery scheduling.</td>
+          </tr>
+          <tr>
+            <th scope="row">Conditions</th>
+            <td>Conditions can cover the full validity period or, with the appropriate document type, several time-dependent validity periods.</td>
+            <td>Long-running agreements can model commercial changes without creating a new agreement for every price period.</td>
+          </tr>
+          <tr>
+            <th scope="row">Central contract reference</th>
+            <td>If the scheduling agreement references a centrally agreed contract, the central contract remains the pricing authority.</td>
+            <td>Changing the local scheduling-agreement conditions would break the intended central-price control.</td>
+          </tr>
+          <tr>
+            <th scope="row">Subcontracting</th>
+            <td>Components to be provided can be maintained for the delivery dates.</td>
+            <td>The schedule controls not only the finished delivery but also the component timing needed for subcontracting.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <div>
+        <p><strong>Account-assignment boundary:</strong> the current SAP Learning contract-management lesson states that account assignment category <strong>U — Unknown</strong> is not allowed in scheduling agreements. Current SAP S/4HANA 2025 FPS01 Help for the <em>Manage Purchase Scheduling Agreements</em> app lists <strong>Unknown</strong> among the available account-assignment categories. Treat this as release and UI scope, not as a universal rule. For a course-based assessment, answer in the course scope; for a project, verify the target release and app.</p>
+      </div>
+    </div>
+
+    <h3>With or without release documentation</h3>
+    <p>The document type controls whether the scheduling agreement works with release documentation. The common learning examples are <strong>LP</strong> without release documentation and <strong>LPA</strong> with release documentation.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Scheduling agreements with and without release documentation">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Without release documentation</th><th scope="col">With release documentation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>The saved schedule lines are the supplier-facing delivery plan. Changes should be communicated quickly because the system does not keep the same detailed release history.</td>
+            <td>Schedule lines first act as the internal plan. The supplier is informed only when an explicit scheduling-agreement release is created.</td>
+          </tr>
+          <tr>
+            <td>Useful when the current schedule itself is the agreed message to the supplier.</td>
+            <td>Useful when Purchasing needs a traceable history of what was sent and when.</td>
+          </tr>
+          <tr>
+            <td>No separate forecast or JIT release is required for every transmission.</td>
+            <td>Releases can be created as forecast schedules or JIT schedules, depending on the process.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>MRP can remove the manual call-off step.</h3>
+    <p>Scheduling agreements are especially useful when demand is repetitive and transaction volume is high. In the SAP Learning scope, MRP can generate schedule lines automatically when the material and planning settings allow it. A source list is mainly needed to control priority when more than one valid scheduling agreement exists for the same material and plant. With MRP Live, a valid scheduling agreement source leads directly to schedule lines instead of an extra requisition-to-PO conversion step.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+      <div>
+        <p><strong>Delivery-date edge case:</strong> SAP Learning notes that a goods receipt before the schedule-line date is only possible when confirmations are used or the over-delivery tolerance is unlimited.</p>
+        <p><strong>Lead decision:</strong> use a contract when each call-off should remain a separate purchasing commitment. Use a scheduling agreement when stable, repeated demand benefits from one agreement plus a continuously updated delivery schedule.</p>
+      </div>
+    </div>
+
+    <h3>Maintenance and monitoring</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Scheduling agreement maintenance applications and transactions">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Task</th><th scope="col">Fiori / GUI reference</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Create, change, monitor, renew</th><td><em>Manage Purchase Scheduling Agreements</em> (F2179); classic GUI: ME31L / ME32L / ME33L.</td></tr>
+          <tr><th scope="row">Maintain schedule lines</th><td><em>Manage SA Delivery Schedule</em> or classic GUI ME38; display with ME39.</td></tr>
+          <tr><th scope="row">Stock transport scheduling agreement</th><td>Classic GUI ME37 where the process uses this document form.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Contract monitoring belongs to the same control model: check expiry, unused agreements, consumption, off-contract spend, and contract leakage. The detailed KPI definitions are in <a href="#procurement-analytics">Procurement analytics</a>.</p>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">hub</span>
       <div>
-        <p><strong>Terminology boundary:</strong> classic purchasing also uses the term <em>central contract</em> for a contract item without plant data, so it can be valid for plants of the purchasing organization. Do not confuse this with <em>Central Purchase Contracts</em> in SAP Central Procurement, where contracts are created in a hub and distributed to connected systems.</p>
+        <p><strong>Central-contract boundary:</strong> classic purchasing can use a centrally agreed contract that is valid across plants. Do not confuse that with a <em>Central Purchase Contract</em> in SAP Central Procurement, where the agreement is created in an SAP S/4HANA hub and distributed to connected systems.</p>
         <p><strong>Assessment shortcut:</strong> contract → release PO; scheduling agreement → schedule lines. Both are outline agreements.</p>
       </div>
     </div>
 
     <div class="research-route-list">
-      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/maintaining-a-purchasing-contract" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Maintaining a Purchasing Contract</strong><small>Contract structure, release orders, and release documentation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8ae073c0bcd544e8ae1ee973b5181485.html" target="_blank" rel="noopener"><span>SAP Help</span><strong>Manage Purchase Scheduling Agreements</strong><small>Schedule lines, releases, dates, quantities, and current S/4HANA purchasing behavior.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/sap-s-4hana-contract-management/using-contracts-for-material-groups" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Using Contracts for Material Groups</strong><small>Contract item categories M and W and their release-order behavior.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/sap-s-4hana-contract-management/introducing-scheduling-agreements-in-sap-s-4hana" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Introducing Scheduling Agreements in SAP S/4HANA</strong><small>Plant scope, schedule lines, release documentation, and automatic creation by MRP.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8ae073c0bcd544e8ae1ee973b5181485.html" target="_blank" rel="noopener"><span>SAP Help</span><strong>Manage Purchase Scheduling Agreements</strong><small>Current S/4HANA app behavior for schedule lines, releases, conditions, account assignment, and monitoring.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
 
