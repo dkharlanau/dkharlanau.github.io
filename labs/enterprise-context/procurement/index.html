@@ -22,7 +22,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-02
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning sourcing and procurement automation cross-check + S4500 process refresh"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning sourcing, procurement automation, and purchasing price-determination cross-check + S4500 process refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -907,11 +907,108 @@ source_links:
   <section class="research-canvas__inventory" id="purchasing-price" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Commercial terms</p>
-      <h2>The PO price belongs to a purchasing context.</h2>
+      <h2>Price determination is a condition-technique problem, not a single price field.</h2>
+      <p>A purchase-order price can depend on supplier, purchasing organization, reference document, purchasing conditions, order unit, quantity, scales, and validity date. The useful Lead question is therefore not only “What is the price?” but “Which pricing rule found this value, and why?”</p>
     </header>
-    <p>A purchase-order price can be influenced by the selected supplier, reference document, purchasing conditions, order unit, quantity scales, and validity date. Purchasing info records can hold conditions by order unit, and SAP can use those conditions during source determination and PO creation. Contracts and other purchasing documents can carry their own condition logic as well.</p>
-    <p>This matters when a supplier change and a price change appear together. The two results may have the same upstream cause, but they are still different decisions. First prove why the source was chosen. Then prove which condition record, reference, order unit, scale, and validity period produced the commercial value. A manual net-price overwrite can make the current PO look right while leaving the next PO wrong for exactly the same reason.</p>
-    <p>SAP's current <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMI-SE/af9ef57f504840d2b81be8667206d485/4e7fb65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener">Conditions in Info Records</a> documentation explicitly distinguishes the net price in the info record from the net price in the purchase order and describes conditions maintained for different order units.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchasing condition technique mental model">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Object</th><th scope="col">Job</th><th scope="col">Example question</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Condition record</th>
+            <td>Stores the maintained commercial value and, for time-dependent conditions, its validity and scales.</td>
+            <td>Which supplier/material record, contract condition, or general condition was valid on the pricing date?</td>
+          </tr>
+          <tr>
+            <th scope="row">Condition type</th>
+            <td>Defines what the condition means and how it behaves: price, discount, surcharge, calculation rule, sign, scale basis, and other controls.</td>
+            <td>Is this the gross price, a discount, freight, or another price element?</td>
+          </tr>
+          <tr>
+            <th scope="row">Access sequence</th>
+            <td>Defines where SAP searches, and in which order, for a valid condition record for a condition type.</td>
+            <td>Did SAP find a plant-specific agreement before a contract or purchasing info record?</td>
+          </tr>
+          <tr>
+            <th scope="row">Calculation schema</th>
+            <td>Orders the relevant condition types and controls how they contribute to subtotals, net price, and the final purchasing price.</td>
+            <td>Which conditions were allowed, in what sequence, and on which calculation base?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Standard recall:</strong> <strong>PB00</strong> is the standard quantity-dependent gross-price condition type used in the SAP Learning example. <strong>RM0000</strong> is the standard calculation schema for purchase-price determination in purchasing documents. In classic MM purchasing configuration, schema determination uses the schema groups of the purchasing organization and supplier. The supplier schema group is maintained in the purchasing-organization data of the Business Partner.</p>
+
+    <h3>Time dependency changes where the condition is maintained.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Time dependency of purchasing conditions">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Purchasing object</th><th scope="col">Condition behavior</th><th scope="col">Assessment point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Purchase order</th>
+            <td>Time-independent conditions.</td>
+            <td>The PO stores the commercial conditions for that document; it does not use a separate validity interval for its own conditions.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchasing info record</th>
+            <td>Time-dependent conditions.</td>
+            <td>Validity periods and scales can control which condition is proposed when a later PO is created.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchasing contract</th>
+            <td>Time-dependent conditions.</td>
+            <td>The agreement validity and condition validity belong to the longer-term source, not to one release PO.</td>
+          </tr>
+          <tr>
+            <th scope="row">Scheduling agreement / quotation</th>
+            <td>Check the product and document-type rules.</td>
+            <td>The current SAP Learning lesson explicitly calls out SAP ERP document-type control for scheduling agreements and quotations. Current S/4HANA Help documents scheduling-agreement conditions as time-dependent, so keep the release boundary visible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Time-dependent conditions can use validity periods, scales, and upper or lower limits. If such a condition is adopted into a PO and a manual PO change violates the maintained price range, SAP can issue an error. Time-dependent conditions themselves are not copied as independent validity records into the PO.</p>
+
+    <h3>Condition type settings explain many “wrong price” cases.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important purchasing condition type controls">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Control</th><th scope="col">What it changes</th><th scope="col">Useful recall</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Group condition</th><td>Allows a scale base to be evaluated across relevant document items instead of only one item.</td><td>The SAP Learning example states that this indicator is set for PB00.</td></tr>
+          <tr><th scope="row">Header / item condition</th><td>Controls whether the condition can be entered for the whole document, for one item, or both.</td><td>Header conditions apply across document items; item conditions apply to the selected item.</td></tr>
+          <tr><th scope="row">Condition class</th><td>Defines the business role of the condition.</td><td>Typical classes include price, surcharge, and discount.</td></tr>
+          <tr><th scope="row">Calculation rule</th><td>Defines how the amount is calculated.</td><td>The rule can use a fixed amount or a basis such as quantity or value.</td></tr>
+          <tr><th scope="row">Plus / minus sign</th><td>Controls whether the condition increases or reduces the price.</td><td>Use it to distinguish surcharge behavior from discount behavior.</td></tr>
+          <tr><th scope="row">Scale basis</th><td>Defines what drives the scale.</td><td>Depending on configuration, the scale can use quantity, value, weight, volume, or another supported basis.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>For general supplier conditions, SAP provides <em>Maintain Conditions for Supplier</em>; the classic SAP GUI path leads to transaction <strong>MEKE</strong>. For invoicing-party conditions, use <em>Maintain Conditions for Invoicing Party</em> or <strong>MEKJ</strong> in SAP GUI. These are general conditions; supplier-material purchasing conditions are commonly maintained through purchasing info records or outline agreements.</p>
+    <p><strong>Payment-term boundary:</strong> an info record does not hold an independent set of payment terms as purchasing conditions. The <em>No Cash Disc.</em> indicator can prevent a cash discount from being proposed for the material in the PO.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+      <div>
+        <p><strong>Diagnostic path for a wrong PO price:</strong> supplier and purchasing organization → schema groups → calculation schema → condition type → access sequence → condition record → validity date → order unit and scale → manual PO changes.</p>
+        <p>Do not repair the symptom with a manual net-price overwrite until this chain explains the value. Otherwise the next PO can reproduce the same defect.</p>
+      </div>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/analyzing-price-determination-basics" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Analyzing Price Determination Basics</strong><small>Conditions, time dependency, PB00, condition-type controls, and calculation schema RM0000.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/db7fb65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP Help</span><strong>Condition Technique</strong><small>Access sequences, standard condition types, supplementary conditions, and calculation-schema behavior.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/e47fb65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP Help</span><strong>Maintaining Conditions</strong><small>Time-dependent and time-independent condition maintenance by purchasing document type.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
