@@ -985,8 +985,8 @@ source_links:
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">school</span>
       <div>
-        <p><strong>Assessment traps:</strong> MRP normally creates planning/procurement proposals, not a finished supplier commitment. Automatic PO creation still needs the automatic-PO master-data indicators and a valid source. ERS does not mean “no invoice document”; it means the supplier does not submit the invoice and SAP creates it from PO and GR data.</p>
-        <p><strong>Failure path:</strong> no PR → check MRP data and shortage logic. PR without source → check source determination. PR not converted → check Automatic PO prerequisites and missing fields. ERS does not select the GR → check supplier/PO ERS indicators, GR-based invoice verification, tax, payment terms, and PO history.</p>
+        <p><strong>Assessment traps:</strong> MRP normally creates planning/procurement proposals, not a finished supplier commitment. Automatic PO creation still needs the automatic-PO master-data indicators and a valid source. ERS does not mean “no invoice document”; it means the supplier does not submit the invoice and SAP creates it from PO and GR data. The info-record <strong>No ERS</strong> indicator suppresses the proposal for that supplier/material relationship, but the PO default can still be changed by the user.</p>
+        <p><strong>Failure path:</strong> no PR → check MRP data and shortage logic. PR without source → check source determination. PR not converted → check Automatic PO prerequisites and missing fields. ERS does not select the GR → check supplier/PO ERS relevance, GR-based invoice verification, <strong>Estimated Price = off</strong>, tax, payment terms, PO-referenced GR history, and any <strong>No ERS</strong> default from the info record.</p>
       </div>
     </div>
 
@@ -994,6 +994,7 @@ source_links:
       <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/running-materials-requirements-planning" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Running Materials Requirements Planning</strong><small>MRP areas, planning procedures, lot sizing, scheduling, and automatic source determination.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/generating-purchase-orders-automatically" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Generating Purchase Orders Automatically</strong><small>Automatic conversion of sourced purchase requisitions into purchase orders.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/creating-invoices-automatically-using-evaluated-receipt-settlement" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Evaluated Receipt Settlement</strong><small>Automatic supplier invoice creation from purchase-order and goods-receipt data.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/invoice-verification-in-sap-s-4hana/performing-receipt-settlements" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Performing Receipt Settlements</strong><small>Detailed ERS prerequisites, document split, planned delivery costs, MRRL/MRDC, and background execution.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
 
