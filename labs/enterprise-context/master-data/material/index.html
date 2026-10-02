@@ -46,20 +46,25 @@ tags:
 
   <section class="research-canvas__inventory" id="material-views" data-reveal>
     <header><p class="research-canvas__eyebrow">Data model</p><h2>One material, many business views.</h2></header>
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important material master views">
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important material master views and organizational scope">
       <table class="study-table__table">
-        <thead><tr><th>View / scope</th><th>Important examples</th><th>Main consumers</th></tr></thead>
+        <thead><tr><th>View</th><th>Typical scope</th><th>High-value fields</th><th>Process use</th></tr></thead>
         <tbody>
-          <tr><td>Basic Data</td><td>Base UoM, material group, gross/net weight, configurable indicator</td><td>Cross-application identity and quantity handling</td></tr>
-          <tr><td>Sales</td><td>Item category group, sales unit, delivering plant, product hierarchy, pricing group, account assignment group</td><td>Sales order, pricing, shipping, billing</td></tr>
-          <tr><td>Purchasing</td><td>Order unit, purchasing group and plant-specific purchasing controls</td><td>Purchase requisition, purchase order and source determination context</td></tr>
-          <tr><td>Plant / MRP</td><td>MRP type, lot size, procurement type, strategy group, availability check</td><td>MRP, ATP/aATP, procurement and production</td></tr>
-          <tr><td>Plant / Shipping</td><td>Loading group, transportation-related fields</td><td>Shipping-point and route/scheduling context</td></tr>
-          <tr><td>Accounting / Valuation</td><td>Valuation class, price control and valuation data</td><td>Inventory valuation and account determination</td></tr>
-          <tr><td>International Trade Classification</td><td>Commodity code, customs tariff number, control class, numbering scheme, classification country and validity</td><td>Cross-border logistics, customs, trade compliance and Intrastat</td></tr>
-          <tr><td>Warehouse / EWM</td><td>Warehouse-specific product settings and handling controls where used</td><td>Putaway, picking, replenishment and warehouse execution</td></tr>
+          <tr><td><strong>Basic Data</strong></td><td>Client</td><td>Short text, base unit of measure, material group, weight, volume</td><td>Shared product identity and quantity handling</td></tr>
+          <tr><td><strong>Sales</strong></td><td>Sales organization / distribution channel, plus plant data where relevant</td><td>Sales unit, minimum order quantity, item category group, delivering plant, product hierarchy</td><td>Sales order, shipping, pricing context and billing</td></tr>
+          <tr><td><strong>Purchasing</strong></td><td>General and plant-dependent purchasing data</td><td>Purchasing group, purchase order unit, over/under-delivery tolerances, control indicators</td><td>Purchase requisition, purchase order and buyer responsibility</td></tr>
+          <tr><td><strong>MRP</strong></td><td>Plant</td><td>MRP type, safety stock, planned delivery time, lot size, procurement type</td><td>Requirement planning, external procurement and production planning</td></tr>
+          <tr><td><strong>Accounting</strong></td><td>Valuation area</td><td>Valuation class, price control, current valuation price, future/previous price</td><td>Stock valuation and automatic account determination</td></tr>
+          <tr><td><strong>Storage</strong></td><td>Plant / storage location</td><td>Unit of issue, storage conditions, packaging dimensions</td><td>Inventory and storage execution</td></tr>
+          <tr><td><strong>Forecasting</strong></td><td>Plant</td><td>Forecast model, forecast periods, consumption and forecast values</td><td>Consumption-based planning and demand prediction</td></tr>
+          <tr><td><strong>International Trade Classification</strong></td><td>Numbering scheme / country / validity</td><td>Commodity code, customs tariff number, control class</td><td>Customs, trade compliance and Intrastat</td></tr>
+          <tr><td><strong>Warehouse / EWM</strong></td><td>Warehouse product</td><td>Warehouse-specific product settings and handling controls where used</td><td>Putaway, picking, replenishment and warehouse execution</td></tr>
         </tbody>
       </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Maintenance status:</strong> SAP sets a letter when a user-department view exists. The key procurement codes are <code>E</code> = Purchasing, <code>B</code> = Accounting, <code>D</code> = MRP and <code>K</code> = Basic Data. A purchasing material needs status <code>E</code>; for valuated inventory, the required Accounting data must also exist. Use the extend-material function, including <code>MM50</code> in classic SAP GUI, to find materials that are missing a required view.</p>
     </div>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">info</span>
@@ -132,6 +137,30 @@ tags:
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">history</span>
       <p><strong>Audit point:</strong> material changes are written to change documents. For shared master data, check who changed the field, when it changed and which organizational level was affected before correcting production data.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="material-type-purchasing" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Material type</p>
+      <h2>Material type defines the allowed operating model.</h2>
+      <p>Material type does more than group materials. It controls number assignment, available views and fields, procurement options, quantity/value updates and the valuation classes that can be used.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Special material types relevant to purchasing">
+      <table class="study-table__table">
+        <thead><tr><th>Type</th><th>Stock / value behavior</th><th>Purchasing consequence</th></tr></thead>
+        <tbody>
+          <tr><td><strong>NLAG</strong><br>Non-stock material</td><td>Standard setup has no quantity update and no value update.</td><td>Goods receipt posts the ordered quantity to consumption, not to stock. An Accounting view can hold a valuation price for requisitions, but GR/IR does not update that price. Info records and contracts can still support source determination.</td></tr>
+          <tr><td><strong>UNBW</strong><br>Non-valuated material</td><td>Quantity is updated, but stock has no value. No Accounting data is maintained for the material type.</td><td>The PO item requires account assignment. Stock quantity can still be monitored. A purchase requisition needs a manually entered valuation price. Info records and contracts can still be used as sources.</td></tr>
+          <tr><td><strong>SERV</strong><br>Service material</td><td>Product Type Group <code>2</code>; delivered with fewer material-master departments and fields.</td><td>Provides a lean material-master model for services and is an alternative to separate service master data.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+      <p><strong>Customizing anchor:</strong> material-type attributes are defined in <code>OMS2</code>. Changing an existing material type is restricted; in classic SAP GUI the dedicated transaction is <code>MMAM</code>. Treat a material-type change as a controlled master-data decision, not as a quick fix for one purchasing document.</p>
     </div>
   </section>
 
@@ -231,7 +260,9 @@ tags:
         <thead><tr><th>Question</th><th>Strong answer</th></tr></thead>
         <tbody>
           <tr><td>Material exists, but PO says it is not maintained for the plant. What do you do?</td><td>Check whether the material is extended to the required plant and whether the required Purchasing/MRP/Accounting views exist. Do not create a second material.</td></tr>
+          <tr><td>Which maintenance status proves that Purchasing data exists?</td><td><code>E</code>. For valuated stock, the relevant Accounting data and status <code>B</code> must also exist.</td></tr>
           <tr><td>Can MM02 add a missing plant view?</td><td>No. Use the create/extend function, classically <code>MM01</code>, to add missing views or organizational levels. <code>MM02</code> changes data that already exists.</td></tr>
+          <tr><td>What is the difference between NLAG and UNBW?</td><td><strong>NLAG</strong> has neither quantity nor value update in the standard setup and is consumed at goods receipt. <strong>UNBW</strong> keeps stock quantity but no stock value, so purchasing requires account assignment.</td></tr>
           <tr><td>What is the difference between S and V?</td><td>S keeps inventory at a fixed standard price and posts variances separately. V recalculates the moving average from current stock value and quantity.</td></tr>
           <tr><td>Does valuation class equal the G/L account?</td><td>No. It groups materials for account determination. The G/L account is derived by automatic account determination using valuation and transaction inputs.</td></tr>
           <tr><td>Where should a supplier-specific material price be maintained?</td><td>Normally in purchasing relationship data such as the Purchasing Info Record, contract or condition records, not in the generic material master.</td></tr>
@@ -539,6 +570,11 @@ tags:
       <p>Release-sensitive details on apps, roles and AI-assisted proposals should still be checked in the target system release during implementation.</p>
     </header>
     <div class="ecg-decision-columns">
+      <div>
+        <h3>Purchasing material master</h3>
+        <p><a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/creating-material-master-records-for-purchasing">SAP Learning — Creating Material Master Records for Purchasing</a></p>
+        <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/bc6b9325fedd4344a84412b2195064fa/b414c453f57eb44ce10000000a174cb4.html">SAP Help — Maintenance Statuses</a></p>
+      </div>
       <div>
         <h3>Classification model</h3>
         <p><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/dfb1ceeb602c4a1dbde1171e3493209e/a373eb5758a01370e10000000a44147b.html">SAP Help — International Trade Classification</a></p>
