@@ -52,7 +52,8 @@ tags:
         <tbody>
           <tr><td>Basic Data</td><td>Base UoM, material group, gross/net weight, configurable indicator</td><td>Cross-application identity and quantity handling</td></tr>
           <tr><td>Sales</td><td>Item category group, sales unit, delivering plant, product hierarchy, pricing group, account assignment group</td><td>Sales order, pricing, shipping, billing</td></tr>
-          <tr><td>Purchasing</td><td>Order unit, purchasing group and plant-specific purchasing controls</td><td>Purchase requisition, purchase order and source determination context</td></tr>\n          <tr><td>Plant / MRP</td><td>MRP type, lot size, procurement type, strategy group, availability check</td><td>MRP, ATP/aATP, procurement and production</td></tr>
+          <tr><td>Purchasing</td><td>Order unit, purchasing group and plant-specific purchasing controls</td><td>Purchase requisition, purchase order and source determination context</td></tr>
+          <tr><td>Plant / MRP</td><td>MRP type, lot size, procurement type, strategy group, availability check</td><td>MRP, ATP/aATP, procurement and production</td></tr>
           <tr><td>Plant / Shipping</td><td>Loading group, transportation-related fields</td><td>Shipping-point and route/scheduling context</td></tr>
           <tr><td>Accounting / Valuation</td><td>Valuation class, price control and valuation data</td><td>Inventory valuation and account determination</td></tr>
           <tr><td>International Trade Classification</td><td>Commodity code, customs tariff number, control class, numbering scheme, classification country and validity</td><td>Cross-border logistics, customs, trade compliance and Intrastat</td></tr>
@@ -88,7 +89,7 @@ tags:
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-      <p><strong>Lead rule:</strong> separate generic material data from supplier-specific data. A material can have one base unit and valuation logic, but different suppliers can have different prices, planned delivery times, order units or supplier material numbers through purchasing master data such as the Purchasing Info Record.</p>
+      <p><strong>Lead rule:</strong> separate generic material data from supplier-specific data. The base unit is shared product data, while valuation is maintained for the valuation area. Different suppliers can still have different prices, planned delivery times, order units or supplier material numbers through purchasing master data such as the <a href="/labs/enterprise-context/master-data/purchasing-info-record/">Purchasing Info Record</a>.</p>
     </div>
   </section>
 
@@ -103,7 +104,7 @@ tags:
       <div><h3>Client level</h3><p>Contains data shared across the system, for example the material number, base unit and general description.</p></div>
       <div><h3>Plant level</h3><p>Contains plant-dependent planning, purchasing and logistics data. MRP and many procurement controls are maintained here.</p></div>
       <div><h3>Storage location</h3><p>Extends the material to the location where stock can be managed. Not every procurement scenario needs storage-location data at PO creation, but inventory execution may need it later.</p></div>
-      <div><h3>Valuation area</h3><p>Contains accounting and valuation data. Depending on system design, the valuation area is the plant or the company code.</p></div>
+      <div><h3>Valuation area</h3><p>Contains accounting and valuation data. Depending on system design, the valuation area is the plant or the company code. This is a fundamental Customizing decision and is difficult to reverse later.</p></div>
     </div>
 
     <div class="research-canvas__boundary">
@@ -524,6 +525,9 @@ tags:
       <a href="/labs/enterprise-context/master-data/classification/">Classification</a>
       <a href="/labs/enterprise-context/master-data/batch-master/">Batch Master</a>
       <a href="/labs/enterprise-context/master-data/serial-numbers/">Serial Numbers</a>
+      <a href="/labs/enterprise-context/master-data/purchasing-info-record/">Purchasing Info Record</a>
+      <a href="/labs/enterprise-context/master-data/supplier/">Supplier</a>
+      <a href="/labs/enterprise-context/master-data/source-list/">Source List</a>
       <a href="/labs/enterprise-context/master-data/">Master Data Catalogue</a>
     </nav>
   </section>
