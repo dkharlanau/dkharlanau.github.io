@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP S/4HANA Material Master Data"
-description: "A focused SAP S/4HANA Material master-data page covering sales, plant, MRP, units, classification, foreign trade, batch, serial, EWM and runtime logistics behavior."
+description: "SAP S/4HANA Material Master from a Lead perspective: procurement views, organizational levels, extension, purchasing defaults, valuation, price control, account determination, sales, planning and international trade."
 permalink: /labs/enterprise-context/master-data/material/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-29
+last_modified_at: 2026-10-02
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -52,7 +52,7 @@ tags:
         <tbody>
           <tr><td>Basic Data</td><td>Base UoM, material group, gross/net weight, configurable indicator</td><td>Cross-application identity and quantity handling</td></tr>
           <tr><td>Sales</td><td>Item category group, sales unit, delivering plant, product hierarchy, pricing group, account assignment group</td><td>Sales order, pricing, shipping, billing</td></tr>
-          <tr><td>Plant / MRP</td><td>MRP type, lot size, procurement type, strategy group, availability check</td><td>MRP, ATP/aATP, procurement and production</td></tr>
+          <tr><td>Purchasing</td><td>Order unit, purchasing group and plant-specific purchasing controls</td><td>Purchase requisition, purchase order and source determination context</td></tr>\n          <tr><td>Plant / MRP</td><td>MRP type, lot size, procurement type, strategy group, availability check</td><td>MRP, ATP/aATP, procurement and production</td></tr>
           <tr><td>Plant / Shipping</td><td>Loading group, transportation-related fields</td><td>Shipping-point and route/scheduling context</td></tr>
           <tr><td>Accounting / Valuation</td><td>Valuation class, price control and valuation data</td><td>Inventory valuation and account determination</td></tr>
           <tr><td>International Trade Classification</td><td>Commodity code, customs tariff number, control class, numbering scheme, classification country and validity</td><td>Cross-border logistics, customs, trade compliance and Intrastat</td></tr>
@@ -63,6 +63,179 @@ tags:
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">info</span>
       <p><strong>S/4HANA boundary:</strong> current International Trade classification is not just another editable field in a plant view. Product classification is maintained through its own numbering schemes, validity and classification apps. The product master can display the result, but the classification lifecycle has its own owner.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="procurement-material-master" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Procurement lens</p>
+      <h2>For Purchasing, the material master is a shared source of defaults and control.</h2>
+      <p>A buyer does not maintain all product data in the purchase order. SAP reads reusable values from the material master and combines them with supplier, purchasing info record, source determination and document data. The material master therefore controls the generic product side of procurement, while supplier-specific conditions belong to supplier-related master data.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Material master data used in procurement">
+      <table class="study-table__table">
+        <thead><tr><th>Area</th><th>Typical material data</th><th>Why Procurement uses it</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Basic Data</strong></td><td>Material description, base unit of measure, material group, weight and dimensions</td><td>Provides the common product identity and basic quantity data used in purchasing documents.</td></tr>
+          <tr><td><strong>Purchasing</strong></td><td>Order unit, purchasing group and plant-specific purchasing controls</td><td>Supports ordering defaults and buyer responsibility for the material at plant level.</td></tr>
+          <tr><td><strong>MRP</strong></td><td>MRP type, lot size, procurement type, planned delivery time and planning parameters</td><td>Controls how requirements are planned and whether external procurement is proposed.</td></tr>
+          <tr><td><strong>Plant / Storage</strong></td><td>Plant and storage-location extensions, inventory-relevant controls</td><td>The material must exist at the organizational level where stock and goods movements are processed.</td></tr>
+          <tr><td><strong>Accounting</strong></td><td>Valuation class, price control, standard or moving-average price</td><td>Controls stock valuation and contributes to automatic G/L account determination.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Lead rule:</strong> separate generic material data from supplier-specific data. A material can have one base unit and valuation logic, but different suppliers can have different prices, planned delivery times, order units or supplier material numbers through purchasing master data such as the Purchasing Info Record.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="material-org-levels" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Organizational levels</p>
+      <h2>The same material can exist globally but still be missing for the plant that wants to buy it.</h2>
+      <p>Material data is split by organizational level. This is why a material number can exist in the client and still fail in a purchasing, MRP, inventory or accounting process for a specific plant.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Client level</h3><p>Contains data shared across the system, for example the material number, base unit and general description.</p></div>
+      <div><h3>Plant level</h3><p>Contains plant-dependent planning, purchasing and logistics data. MRP and many procurement controls are maintained here.</p></div>
+      <div><h3>Storage location</h3><p>Extends the material to the location where stock can be managed. Not every procurement scenario needs storage-location data at PO creation, but inventory execution may need it later.</p></div>
+      <div><h3>Valuation area</h3><p>Contains accounting and valuation data. Depending on system design, the valuation area is the plant or the company code.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Assessment pattern:</strong> when a PO or goods movement says that the material is not maintained for an organizational level, do not recreate the material. First check whether the required view and plant, storage location or valuation-area extension exists.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="material-create-extend" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Create versus extend</p>
+      <h2>Creating the material and extending the material are different actions.</h2>
+      <p>In classic SAP GUI, <code>MM01</code> creates a material and also extends an existing material to new views or organizational levels. <code>MM02</code> changes data that already exists, and <code>MM03</code> displays it.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Choose material type</h4><p>The material type controls important behavior such as allowed views, number assignment, field selection and whether quantity/value updates are expected.</p></div>
+      <div><span>02</span><h4>Choose industry sector</h4><p>The industry sector also influences screen and field behavior. In the classic material master it is fixed after creation, so choose it correctly at the start.</p></div>
+      <div><span>03</span><h4>Select views</h4><p>Select only the business views needed for the process, for example Basic Data, Purchasing, MRP and Accounting.</p></div>
+      <div><span>04</span><h4>Select organization levels</h4><p>Enter the plant, storage location, sales area or valuation-area context required by the selected views.</p></div>
+      <div><span>05</span><h4>Maintain data</h4><p>SAP opens the selected screens in sequence. Mandatory fields depend on configuration and material type.</p></div>
+      <div><span>06</span><h4>Extend later</h4><p>If another plant or department starts using the same material, extend the existing material instead of creating a duplicate material number.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">history</span>
+      <p><strong>Audit point:</strong> material changes are written to change documents. For shared master data, check who changed the field, when it changed and which organizational level was affected before correcting production data.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="procurement-defaulting" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">PO defaulting</p>
+      <h2>The purchase order is assembled from several master-data sources.</h2>
+      <p>The material master is important, but it is not the only source. The final PO item is the result of material data, supplier data, purchasing relationships, source documents and purchasing configuration.</p>
+    </header>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Material master</h4><p>Provides generic product data such as description, material group, units and plant-specific controls.</p></div>
+      <div><span>02</span><h4>Supplier Business Partner</h4><p>Provides supplier identity, address and payment-related master data relevant to the purchasing relationship.</p></div>
+      <div><span>03</span><h4>Purchasing Info Record</h4><p>Can provide supplier-material-specific values such as price, planned delivery time, supplier material number and purchasing conditions.</p></div>
+      <div><span>04</span><h4>Reference document</h4><p>A purchase requisition, contract, quotation or previous purchasing document can supply additional values and reduce manual entry.</p></div>
+      <div><span>05</span><h4>PO and configuration</h4><p>Document type, purchasing organization, plant and Customizing interpret those defaults and determine the final purchasing behavior.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p><strong>Diagnostic shortcut:</strong> if the material description or base unit is wrong, start with the material. If only one supplier has the wrong price or supplier-specific value, start with the Purchasing Info Record or contract instead of changing the shared material.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="material-valuation" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Material valuation</p>
+      <h2>Valuation connects Procurement and Inventory Management to Financial Accounting.</h2>
+      <p>For a valuated stock material, SAP keeps stock quantity and stock value together. A goods movement changes logistics data and can create accounting postings at the same time. The basic relationship is <strong>stock value = stock quantity × valuation price</strong>, but the valuation price behaves differently depending on price control.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Standard price and moving average price comparison">
+      <table class="study-table__table">
+        <thead><tr><th>Price control</th><th>How stock is valued</th><th>What happens to differences</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>S — Standard price</strong></td>
+            <td>Inventory is kept at the fixed standard price from the material master.</td>
+            <td>Differences between procurement price and standard price are posted as price differences instead of continuously changing the inventory price.</td>
+            <td>Common where stable standard costing is required. It is often used for manufactured materials, but it is not limited to them.</td>
+          </tr>
+          <tr>
+            <td><strong>V — Moving average price</strong></td>
+            <td>Receipts update stock value and SAP recalculates the average price from total stock value divided by total stock quantity.</td>
+            <td>PO and invoice differences can update stock value and the moving average price when stock coverage allows it; otherwise differences can be posted separately.</td>
+            <td>Common for externally purchased materials whose procurement price changes. It is a design choice, not an automatic rule.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Simple MAP example</h4>
+        <p>Current stock: 10 EA with total value 1,000. New receipt: 10 EA with value 1,400. New stock is 20 EA with value 2,400, so the moving average price becomes 120 per EA.</p>
+      </div>
+      <div>
+        <h4>Why stock coverage matters</h4>
+        <p>If an invoice arrives after part of the stock has already been consumed, SAP cannot always put the full invoice difference back into the remaining stock without creating an unrealistic valuation. Part of the difference can therefore go to a price-difference account.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="valuation-class-account-determination" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Valuation class</p>
+      <h2>The valuation class groups materials for automatic account determination.</h2>
+      <p>The valuation class is maintained in the Accounting view. It allows many materials with the same accounting meaning to post to the same type of inventory account. The allowed valuation classes depend on configuration for the material type.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>What it does</h3><p>It tells automatic account determination which accounting group the material belongs to, for example raw materials, trading goods or finished goods.</p></div>
+      <div><h3>What it does not do</h3><p>The valuation class does not directly contain a G/L account number. It is one input into the account-determination logic.</p></div>
+      <div><h3>Inventory posting</h3><p>For stock postings, transaction key <code>BSX</code> is used in standard automatic account determination together with valuation-related settings.</p></div>
+      <div><h3>GR/IR clearing</h3><p>For a standard PO goods receipt, the offset normally goes through the GR/IR clearing logic, commonly represented by transaction key <code>WRX</code>.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+      <p><strong>Lead answer:</strong> “valuation class determines the stock account” is useful but incomplete. The final G/L account comes from automatic account determination using several inputs, including the transaction/event key, valuation grouping and valuation class. In classic configuration, the main account-determination transaction is <code>OBYC</code>.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="procurement-assessment-recall" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Procurement assessment recall</p>
+      <h2>Material Master: the answer in 60 seconds.</h2>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> The material master is a central logistics object used by Purchasing, Inventory Management, MRP and Finance. Its data is split into views and organizational levels. Basic data is shared, while Purchasing and MRP are mainly plant-dependent, and Accounting data is maintained for the valuation area. When I create a material, material type and industry sector control the available structure; later I extend the same material to additional views or plants instead of creating a duplicate. In procurement, the material provides generic defaults, while supplier-specific data normally comes from the supplier master, Purchasing Info Record, contracts or quotations. For stock valuation I check price control S or V and the valuation class. The valuation class is an input to automatic account determination, not a G/L account by itself.</p>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Material master procurement assessment questions">
+      <table class="study-table__table">
+        <thead><tr><th>Question</th><th>Strong answer</th></tr></thead>
+        <tbody>
+          <tr><td>Material exists, but PO says it is not maintained for the plant. What do you do?</td><td>Check whether the material is extended to the required plant and whether the required Purchasing/MRP/Accounting views exist. Do not create a second material.</td></tr>
+          <tr><td>Can MM02 add a missing plant view?</td><td>No. Use the create/extend function, classically <code>MM01</code>, to add missing views or organizational levels. <code>MM02</code> changes data that already exists.</td></tr>
+          <tr><td>What is the difference between S and V?</td><td>S keeps inventory at a fixed standard price and posts variances separately. V recalculates the moving average from current stock value and quantity.</td></tr>
+          <tr><td>Does valuation class equal the G/L account?</td><td>No. It groups materials for account determination. The G/L account is derived by automatic account determination using valuation and transaction inputs.</td></tr>
+          <tr><td>Where should a supplier-specific material price be maintained?</td><td>Normally in purchasing relationship data such as the Purchasing Info Record, contract or condition records, not in the generic material master.</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
