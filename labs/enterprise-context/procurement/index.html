@@ -75,6 +75,10 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/db7fb65334e6b54ce10000000a174cb4.html"
   - title: "Maintaining Conditions"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/e47fb65334e6b54ce10000000a174cb4.html"
+  - title: "Processing Assigned Purchase Requisitions"
+    url: "https://learning.sap.com/courses/purchasing-in-sap-s-4hana/processing-assigned-purchase-requisitions"
+  - title: "Posting a GR with Automatic Generation of a PO"
+    url: "https://learning.sap.com/courses/inventory-management-and-physical-inventory-in-sap-s-4hana/posting-a-gr-with-automatic-generation-of-a-po"
 # ai-discovery-managed:end
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.procurement %}
@@ -899,8 +903,8 @@ source_links:
       <p><strong>MRP sequence to remember:</strong> shortage → lot size → dates → source. By the time an automatically convertible PR is ready, quantity, date, source, and commercial data must be sufficiently complete for Purchasing.</p>
     </div>
 
-    <h3>2. Automatic PO creation needs a complete purchase requisition.</h3>
-    <p>A requisition can be converted automatically only when the system does not need a buyer to supply a missing decision. A valid source of supply must be assigned, and the source must provide enough information to determine the supplier and price.</p>
+    <h3>2. Automatic PR-to-PO conversion needs a complete purchase requisition.</h3>
+    <p>A requisition can be converted automatically only when the system does not need a buyer to supply a missing decision. A valid source of supply must be assigned, the supplier must be known, commercial data must be available, and the requisition must be ready for follow-on processing.</p>
 
     <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Automatic purchase order prerequisites">
       <table class="study-table__table">
@@ -908,19 +912,69 @@ source_links:
           <tr><th scope="col">Prerequisite</th><th scope="col">Why it matters</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Automatic PO indicator in material master</th><td>The material is allowed to participate in automatic purchase-order generation.</td></tr>
-          <tr><th scope="row">Automatic PO indicator in supplier master</th><td>The supplier is allowed for automatic purchase-order generation in the purchasing context.</td></tr>
-          <tr><th scope="row">Valid, unique assigned source</th><td>The PR already knows which supplier or outline-agreement source should be used. If the source is ambiguous, automatic conversion cannot finish the sourcing decision for the buyer.</td></tr>
+          <tr><th scope="row">Automatic PO indicator in material master</th><td>For a normal material-based PR, the plant-specific purchasing data must allow automatic PO generation.</td></tr>
+          <tr><th scope="row">Automatic PO indicator in supplier master</th><td>The supplier purchasing data for the relevant purchasing organization must allow automatic PO generation.</td></tr>
+          <tr><th scope="row">Valid, unique assigned source</th><td>The PR must already know which source should be used. Automatic PO creation is not a replacement for an unresolved sourcing decision.</td></tr>
+          <tr><th scope="row">Commercial data available</th><td>The assigned source must provide the data needed for the PO, such as supplier and price. An info record is common, but it is not universally mandatory when another valid purchasing reference provides the commercial context.</td></tr>
           <tr><th scope="row">PR approved / released</th><td>The requisition item must have completed the applicable approval workflow and be eligible for follow-on processing.</td></tr>
-          <tr><th scope="row">No missing manual entries</th><td>The conversion must not stop for data that still requires user input, such as an unresolved account assignment or a tax code needed for the designed ERS flow.</td></tr>
+          <tr><th scope="row">No missing manual entries</th><td>Account assignment, tax-relevant data, document defaults, and other mandatory fields must be complete enough for conversion without user input.</td></tr>
         </tbody>
       </table>
     </div>
 
-    <p><strong>Execution:</strong> ME59N can convert eligible PR items in classic SAP GUI scenarios. In SAP S/4HANA Cloud Public Edition, the scheduled Fiori route is <em>Schedule Purchasing Jobs - Advanced</em> (<strong>F4686</strong>) with the job template <em>Automatic Creation of Purchase Orders from Requisitions</em>. The job validates the Automatic PO flags, source uniqueness, mandatory fields, and approved PR status before it groups eligible items into purchase orders.</p>
-    <p><strong>Free-text exception:</strong> a PR item without a product/material master can still be converted automatically when the supplier allows Automatic PO creation and the requisition contains a valuation price that can be copied into the PO. For normal material-based automation, pricing is expected from the assigned source, typically an info record or an outline agreement.</p>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">difference</span>
+      <div>
+        <p><strong>Important distinction:</strong> a Purchasing Info Record is not a universal prerequisite for every PR-to-PO conversion. A contract or another valid purchasing reference can provide the commercial context. For the separate <em>PO-at-goods-receipt</em> mechanism described below, however, a valid supplier-material info record is required.</p>
+        <p><strong>Scheduling agreement boundary:</strong> ME59N does not generate delivery schedule lines against a scheduling agreement. These schedule lines are normally created through MRP or scheduling-agreement processing.</p>
+      </div>
+    </div>
 
-    <h3>3. ERS automates invoice creation after goods receipt.</h3>
+    <h3>How ME59N and the scheduled job behave.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="ME59N and scheduled automatic purchase order behavior">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Control</th><th scope="col">Behavior</th><th scope="col">Lead-level point</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Selection</th><td>The run selects open PR items by criteria such as purchasing organization, purchasing group, plant, material, requisition range, or dates.</td><td>A missing PO can be a selection problem even when the PR itself is valid.</td></tr>
+          <tr><th scope="row">Grouping</th><td>Eligible items can be consolidated, while settings can force separate POs, for example per plant or requisition. Scheduled-job grouping also considers purchasing organization, supplier, and purchasing group.</td><td>Do not memorize “one supplier = one PO”. Grouping is controlled by document compatibility and run parameters.</td></tr>
+          <tr><th scope="row">Faulty items</th><td>ME59N can omit faulty items and create a PO from valid items, or block the whole intended group when faulty items are not omitted.</td><td>One bad PR item can have either item-level or group-level impact depending on the run setting.</td></tr>
+          <tr><th scope="row">Test and log</th><td>ME59N provides Test Run and Detailed Log options. A saved variant can also be scheduled for recurring background processing.</td><td>Use a test run when setting up or changing selection and grouping rules; use the log to prove why an item was skipped.</td></tr>
+          <tr><th scope="row">Schedule lines</th><td>ME59N can combine requisitions that differ only by delivery date into one PO item with schedule lines when the relevant option is selected.</td><td>This is different from generating scheduling-agreement delivery schedule lines.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Execution surfaces:</strong> in classic SAP GUI scenarios, <strong>ME59N</strong> is the standard transaction for automatic creation of purchase orders from requisitions. On the Fiori launchpad, SAP also provides automatic-creation and scheduling options. In SAP S/4HANA Cloud Public Edition, use <em>Schedule Purchasing Jobs - Advanced</em> with the job template <em>Automatic Creation of Purchase Orders from Requisitions</em>. SAP documentation uses different app IDs in different scopes and releases, including F4686 and F1702, so use the app title and job template as the stable reference and verify the target system.</p>
+    <p><strong>Document type:</strong> automatic conversion must also resolve an allowed PO document type. In classic ME59N logic, SAP first looks for a suitable document type linked to the PR type and then uses configured defaults when several choices are possible.</p>
+    <p><strong>Free-text exception:</strong> a PR item without a product/material master can still be converted automatically when the supplier allows Automatic PO creation and the requisition contains a valuation price that can be copied into the PO. The missing material master means there is no material-level Automatic PO flag to check for that item.</p>
+    <p><strong>After creation:</strong> an automatically created PO can still require its own approval workflow before output is sent to the supplier. Automatic creation does not mean automatic approval.</p>
+
+    <h3>3. Automatic PO creation at goods receipt is a different mechanism.</h3>
+    <p>SAP can also generate a purchase order when goods arrive without an existing PO reference. This is an Inventory Management scenario, not ME59N and not PR conversion. The goods receipt and the new PO are created together when the required configuration and master data are complete.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Automatic purchase order at goods receipt prerequisites">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Area</th><th scope="col">Requirement</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Movement type</th><td>Automatic PO generation must be activated for a movement type that supports GR with PO reference, such as 101 or 161.</td></tr>
+          <tr><th scope="row">Plant purchasing organization</th><td>If several purchasing organizations are assigned to the plant, a standard purchasing organization must be defined.</td></tr>
+          <tr><th scope="row">PO document type</th><td>A default PO document type must be defined for the goods-receipt scenario; the classic Customizing reference uses transaction MB01 and is also relevant for MIGO.</td></tr>
+          <tr><th scope="row">Material</th><td>The delivered material must be valuated. This mechanism is for warehouse receipt, not direct consumption or GR blocked stock.</td></tr>
+          <tr><th scope="row">Purchasing Info Record</th><td>A supplier-material info record must exist for the supplier, material, and standard purchasing organization, with valid conditions or the documented last-PO reference.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Execution:</strong> use <em>Post Goods Movement</em> or transaction <strong>MIGO</strong>, enter the goods receipt data and supplier, and let SAP derive purchasing organization, purchasing group, delivery date, and price from the maintained master data and defaults.</p>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Assessment trap:</strong> “automatic PO” can mean two different processes. <strong>PR → PO</strong> starts from a released requisition and uses ME59N or a scheduled purchasing job. <strong>GR → PO</strong> starts from an unexpected warehouse receipt without a PO reference and needs movement-type configuration plus a valid info record.</p>
+    </div>
+
+    <h3>4. ERS automates invoice creation after goods receipt.</h3>
     <p>Evaluated Receipt Settlement (ERS) is a self-billing process. The supplier agrees not to send an invoice for the relevant purchase orders. SAP creates the supplier invoice from the purchase order and the related receipt data, and the supplier can receive a settlement message instead.</p>
     <p>The amount is based on four main inputs: the <strong>unsettled goods-receipt quantity</strong> from PO history, the <strong>PO price</strong>, the <strong>tax information</strong> in the PO item, and the <strong>payment terms</strong> in the PO header.</p>
 
@@ -993,6 +1047,8 @@ source_links:
     <div class="research-route-list">
       <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/running-materials-requirements-planning" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Running Materials Requirements Planning</strong><small>MRP areas, planning procedures, lot sizing, scheduling, and automatic source determination.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/generating-purchase-orders-automatically" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Generating Purchase Orders Automatically</strong><small>Automatic conversion of sourced purchase requisitions into purchase orders.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/processing-assigned-purchase-requisitions" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Processing Assigned Purchase Requisitions</strong><small>ME59N selection, grouping, faulty-item handling, schedule-line option, test run, and background scheduling.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/inventory-management-and-physical-inventory-in-sap-s-4hana/posting-a-gr-with-automatic-generation-of-a-po" target="_blank" rel="noopener"><span>SAP Learning</span><strong>GR with Automatic PO Generation</strong><small>Separate Inventory Management mechanism for generating a PO during goods receipt without an existing PO reference.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/creating-invoices-automatically-using-evaluated-receipt-settlement" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Evaluated Receipt Settlement</strong><small>Automatic supplier invoice creation from purchase-order and goods-receipt data.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://learning.sap.com/courses/invoice-verification-in-sap-s-4hana/performing-receipt-settlements" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Performing Receipt Settlements</strong><small>Detailed ERS prerequisites, document split, planned delivery costs, MRRL/MRDC, and background execution.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
