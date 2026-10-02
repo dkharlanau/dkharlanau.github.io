@@ -22,7 +22,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-02
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning S4500 process cross-check + editorial expansion"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning S4500 process cross-check + advanced procurement transaction refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -290,6 +290,62 @@ source_links:
     </div>
   </section>
 
+
+  <section class="research-canvas__inventory" id="outline-agreements" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Outline agreements</p>
+      <h2>Contract and scheduling agreement solve the same long-term sourcing problem in different ways.</h2>
+      <p>An outline agreement stores negotiated terms for a longer period. The main decision is how the operational demand will be called off: with purchase orders against a contract, or with dated schedule lines under a scheduling agreement.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Contract and scheduling agreement comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Decision point</th><th scope="col">Contract</th><th scope="col">Scheduling agreement</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Long-term commitment</th>
+            <td>Target quantity or target value is agreed for a validity period.</td>
+            <td>Total purchasing conditions are agreed for a validity period.</td>
+          </tr>
+          <tr>
+            <th scope="row">How demand is released</th>
+            <td>Create a purchase order with reference to the contract. The PO is a contract release order.</td>
+            <td>Create delivery schedule lines with quantities and dates. Depending on the process, forecast or JIT releases can be sent to the supplier.</td>
+          </tr>
+          <tr>
+            <th scope="row">Delivery dates in the agreement</th>
+            <td>The contract item does not define the exact quantity for a specific delivery date.</td>
+            <td>Schedule lines are the operational plan and contain required quantities and dates.</td>
+          </tr>
+          <tr>
+            <th scope="row">Best mental model</th>
+            <td>“Terms first, PO call-off later.”</td>
+            <td>“Terms plus a continuously maintained delivery schedule.”</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>A contract controls releases, not one delivery.</h3>
+    <p>The contract header holds data that applies to the whole agreement, such as supplier, validity period, agreement type, and header conditions. Each item defines what is covered, for example material, target quantity or value, price, plant context, and texts. A contract item can also be used as a source of supply in a purchase requisition. When that requisition becomes a PO, the PO becomes a contract release order.</p>
+    <p>Release documentation is statistical data for the contract item. It shows the purchase orders that have consumed the agreement. This is the right place to reason about released quantity or value and remaining target instead of treating the contract itself as a delivery document.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <div>
+        <p><strong>Terminology boundary:</strong> classic purchasing also uses the term <em>central contract</em> for a contract item without plant data, so it can be valid for plants of the purchasing organization. Do not confuse this with <em>Central Purchase Contracts</em> in SAP Central Procurement, where contracts are created in a hub and distributed to connected systems.</p>
+        <p><strong>Assessment shortcut:</strong> contract → release PO; scheduling agreement → schedule lines. Both are outline agreements.</p>
+      </div>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/maintaining-a-purchasing-contract" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Maintaining a Purchasing Contract</strong><small>Contract structure, release orders, and release documentation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8ae073c0bcd544e8ae1ee973b5181485.html" target="_blank" rel="noopener"><span>SAP Help</span><strong>Manage Purchase Scheduling Agreements</strong><small>Schedule lines, releases, dates, quantities, and current S/4HANA purchasing behavior.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="stock-vs-consumption" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Stock vs direct consumption</p>
@@ -473,6 +529,80 @@ source_links:
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">rule</span>
       <p><strong>Diagnostic rule:</strong> when the PO supplier or price looks wrong, first ask whether the PR already had a source. Then separate source determination from price determination. Fix the rule that produced the value instead of editing the PO output without evidence.</p>
+    </div>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="advanced-purchasing-transactions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Advanced purchasing transactions</p>
+      <h2>ME51N, ME21N, and ME59N are different interaction patterns around the same document flow.</h2>
+      <p>For assessment questions, explain the business object first and the transaction second. The transaction is the work surface; the requisition, source, reference, purchase order, and follow-on history are the process evidence.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Advanced purchasing transaction map">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Transaction</th><th scope="col">Purpose</th><th scope="col">What to remember</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">ME51N</th>
+            <td>Create a purchase requisition in the classic single-screen transaction.</td>
+            <td>Header, item overview, item detail, and document overview. The PR records the internal requirement and can already contain source and account-assignment information.</td>
+          </tr>
+          <tr>
+            <th scope="row">ME21N</th>
+            <td>Create a purchase order, including creation with reference to a PR, RFQ, contract, or other allowed predecessor.</td>
+            <td>Use <em>Adopt</em> or drag the selected predecessor item from the document overview. Double-click displays a PR or PO; it does not copy it.</td>
+          </tr>
+          <tr>
+            <th scope="row">ME59N</th>
+            <td>Convert eligible purchase requisitions to purchase orders automatically.</td>
+            <td>Selection and grouping rules decide which PR items become the same PO. Assigned contracts can be converted into contract release orders.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Reference creation preserves the document chain.</h3>
+    <p>Creating a PO with reference reduces manual entry and stores the predecessor relationship at item level. This is useful for diagnosis: if a quantity, source, or other value looks wrong, first check whether it came from the preceding document and then check whether the buyer changed it in the PO.</p>
+
+    <h3>ME59N grouping defines the failure blast radius.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="ME59N error handling">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Setting</th><th scope="col">Result</th><th scope="col">Lead interpretation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Exclude items with errors</th>
+            <td>Correct PR items can still be converted. Incorrect items are skipped and reported in the log.</td>
+            <td>Higher throughput, but failed requirements must be corrected and processed again.</td>
+          </tr>
+          <tr>
+            <th scope="row">Do not exclude items with errors</th>
+            <td>A PO group that contains an erroneous PR item may not be created. Other groups that are fully valid can still be created.</td>
+            <td>Use when the grouped items should remain together. One bad item can block the whole intended PO group.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Source-list requirement is a gate, not only a proposal.</h3>
+    <p>A material can be configured to require a source list. A plant can also require source lists in Customizing; then externally procured materials in that plant need valid source-list maintenance. A valid source-list record can point to a supplier, contract, scheduling agreement, or supplying plant and can also mark a source as fixed or blocked.</p>
+
+    <h3>Multiple account assignment behaves differently in PR and PO.</h3>
+    <p>In ME51N, if a requisition quantity is distributed equally across several account assignments, SAP can recalculate the equal quantities when the total requested quantity changes. In ME21N, a PO item with multiple account assignment does not provide the same automatic equal redistribution of ordered quantity. This is a small UI behavior with a practical consequence: copied account assignments still need a buyer check.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+      <p><strong>Templates:</strong> purchase requisitions and purchase orders can use user-specific or public templates. Public template maintenance requires the relevant authorization, including authorization object <code>M_TEMPLATE</code>. A template reduces entry work; it does not replace source determination, approval, or document checks.</p>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/creating-a-purchase-requisition-with-source-determination" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Purchase Requisition with Source Determination</strong><small>Source-list requirement, ME51N, account assignment, and templates.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/using-advanced-transaction-for-purchase-order-creation" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Advanced Purchase Order Creation</strong><small>ME21N reference processing and ME59N automatic PO generation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
 
@@ -680,6 +810,62 @@ source_links:
     </div>
   </section>
 
+
+
+  <section class="research-canvas__inventory" id="execution-transactions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Execution and verification tools</p>
+      <h2>MIGO proves a goods movement, MMBE proves the stock view, and MIRO processes the supplier invoice.</h2>
+      <p>These tools answer different questions. Using the right evidence prevents a common support mistake: checking one screen and assuming it proves the whole procure-to-pay chain.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="MIGO MMBE and MIRO comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Tool</th><th scope="col">Primary question</th><th scope="col">Evidence</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">MIGO</th>
+            <td>What goods movement should be posted, displayed, or reversed?</td>
+            <td>Material document, movement type, posting date, quantities, reference document, account assignment, and accounting document when the movement is valuated.</td>
+          </tr>
+          <tr>
+            <th scope="row">MMBE</th>
+            <td>Where is the current stock of one material?</td>
+            <td>Stock quantities by organizational level and stock type, with views for plant, storage location, batch, valuation type, and special stock where relevant.</td>
+          </tr>
+          <tr>
+            <th scope="row">MIRO</th>
+            <td>How should the supplier invoice be matched and posted?</td>
+            <td>Invoice header, PO or other allocation reference, proposed invoice items, quantity/value comparison, balance, invoice status, PO history, and the resulting FI liability.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>MIGO: choose the business action and the reference.</h3>
+    <p>MIGO is a single-screen goods-movement transaction. Depending on the chosen action, it can handle goods receipt, goods issue, return delivery, transfer posting, display, or cancellation. Its overview tree shows recently used documents; it is not a document search tool. Use the dedicated search function when you need to find a document.</p>
+
+    <h3>MMBE: stock state is not the same as purchasing history.</h3>
+    <p>MMBE gives a stock overview for one material across organizational levels and stock types. It is useful to confirm the inventory result after a movement. If the question is whether a specific PO item was received or invoiced, PO history and the follow-on documents remain the stronger evidence.</p>
+
+    <h3>MIRO: zero balance proves arithmetic, not the full business correctness.</h3>
+    <p>MIRO can process an invoice, credit memo, subsequent debit, or subsequent credit. With a PO reference, the system proposes relevant items and shows the balance and invoice status. A zero balance means the invoice is arithmetically balanced; tolerance checks can still influence whether the invoice is accepted normally or blocked for payment.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <div>
+        <p><strong>Exam trap:</strong> the <em>Booking OK</em> indicator in MIRO is not the same as the <em>OK</em> indicator in MIGO. In MIRO it marks an item as checked/processed and does not decide whether the item is considered when the invoice is posted.</p>
+        <p><strong>Lead habit:</strong> trace PO history and documents first; use transaction screens as evidence views, not as the process model.</p>
+      </div>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/using-the-advanced-transaction-for-goods-receipt" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Advanced Goods Receipt</strong><small>MIGO screen model, goods-movement actions, and MMBE stock overview.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/using-the-advanced-transaction-for-invoice-verification" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Advanced Invoice Verification</strong><small>MIRO entry, allocation, balance, PO history, and Booking OK behavior.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
+  </section>
 
   <section class="research-canvas__inventory" id="plain-p2p-memory" data-reveal>
     <header>
