@@ -22,7 +22,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-02
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning S4500 process cross-check + advanced procurement transaction refresh"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning sourcing and procurement automation cross-check + S4500 process refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -71,6 +71,10 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/de7fb65334e6b54ce10000000a174cb4.html"
   - title: "Conditions in Info Records"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/4e7fb65334e6b54ce10000000a174cb4.html"
+  - title: "Outlining Source Determination"
+    url: "https://learning.sap.com/courses/sourcing-in-sap-s4hana/outlining-source-determination"
+  - title: "Automatic Creation of Purchase Orders from Purchase Requisitions"
+    url: "https://learning.sap.com/courses/automating-procurement-processes/creating-purchase-orders-from-purchase-requisitions-automatically_b8ef4a72-74ae-4236-8f5f-a64a2ee52658"
   - title: "Flexible Workflow for Purchase Requisitions"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/781017ca64e446909d6cd6b0ee0ce021.html"
   - title: "Flexible Workflow for Purchase Orders"
@@ -533,6 +537,75 @@ source_links:
   </section>
 
 
+  <section class="research-canvas__inventory" id="source-determination" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Source determination</p>
+      <h2>First identify the runtime. MRP and a manual purchase requisition do not use exactly the same search logic.</h2>
+      <p>Source determination answers <strong>where the requirement should be supplied from</strong>. It is separate from price determination. A correct supplier does not prove that the price is correct, and a correct price does not prove that the right source was selected.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">alt_route</span>
+      <div>
+        <p><strong>Lead rule:</strong> do not memorize one universal sourcing hierarchy. First ask whether the source is being determined in MRP or outside MRP.</p>
+        <p>Current SAP Learning documents different search sequences for these two runtimes.</p>
+      </div>
+    </div>
+
+    <h3>Source determination in MRP</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="MRP source determination priority">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Priority</th><th scope="col">Source object</th><th scope="col">What to remember</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">1</th><td><strong>Quota arrangement</strong></td><td>Highest priority in the MRP search. The quota logic allocates requirements across suppliers or plants over time.</td></tr>
+          <tr><th scope="row">2</th><td><strong>Source list</strong></td><td>MRP considers valid source-list entries with MRP indicator 1 or 2.</td></tr>
+          <tr><th scope="row">3</th><td><strong>Scheduling agreement</strong></td><td>If several valid agreements exist, SAP applies documented tie-break rules, including active releases.</td></tr>
+          <tr><th scope="row">4</th><td><strong>Contract</strong></td><td>Plant-specific contracts have priority over cross-plant contracts; additional tie-break rules apply when several remain valid.</td></tr>
+          <tr><th scope="row">5</th><td><strong>Purchasing Info Record with Automatic Sourcing</strong></td><td>This is the fallback when no higher-priority sourcing object resolves the requirement.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">priority_high</span>
+      <p><strong>Important correction:</strong> Source List MRP indicator <strong>2</strong> does not mean “exclusive supplier”. It means the record is relevant to MRP and schedule lines are generated automatically. A <strong>Fixed</strong> source is controlled by a separate indicator.</p>
+    </div>
+
+    <h3>Source determination outside MRP</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Manual purchase requisition source determination priority">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Priority</th><th scope="col">Source object</th><th scope="col">How automatic assignment behaves</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">1</th><td><strong>Quota arrangement</strong></td><td>A valid quota arrangement is checked first and the source with the relevant quota result is assigned.</td></tr>
+          <tr><th scope="row">2</th><td><strong>Source list</strong></td><td>If one valid entry exists, it can be assigned. With several entries, a fixed source can resolve the choice.</td></tr>
+          <tr><th scope="row">3</th><td><strong>Outline agreement items</strong></td><td>A unique valid contract or scheduling-agreement item can be assigned automatically; otherwise the user may need to select a source.</td></tr>
+          <tr><th scope="row">4</th><td><strong>Purchasing Info Records</strong></td><td>A unique valid info record can be assigned automatically; several valid records can require user selection.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>If MRP cannot determine a source, it can still create a procurement proposal without one. That is different from automatic PO creation: the later conversion step needs a valid, unique source and all mandatory data to be complete.</p>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Source List</h3><p>Controls time-dependent source eligibility and can mark a source as fixed or blocked.</p><p><a href="/labs/enterprise-context/master-data/source-list/">Open Source List →</a></p></div>
+      <div><h3>Quota Arrangement</h3><p>Controls how requirements are allocated across several sources over time.</p><p><a href="/labs/enterprise-context/master-data/quota-arrangement/">Open Quota Arrangement →</a></p></div>
+      <div><h3>Purchasing Info Record</h3><p>Stores the supplier-material purchasing relationship, conditions, and the Automatic Sourcing flag used as an MRP fallback.</p><p><a href="/labs/enterprise-context/master-data/purchasing-info-record/">Open Purchasing Info Record →</a></p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <p><strong>Diagnostic path:</strong> requirement context → runtime (MRP or manual PR) → validity date → quota → source-list controls → outline agreements → info record → actual source stored in the PR. Only after the source is proved should you investigate purchasing conditions and PO price.</p>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/sourcing-in-sap-s4hana/outlining-source-determination" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Outlining Source Determination</strong><small>Current MRP and non-MRP search sequences, source-list MRP indicators, and tie-break rules.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="advanced-purchasing-transactions" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Advanced purchasing transactions</p>
@@ -672,13 +745,14 @@ source_links:
         <tbody>
           <tr><th scope="row">Automatic PO indicator in material master</th><td>The material is allowed to participate in automatic purchase-order generation.</td></tr>
           <tr><th scope="row">Automatic PO indicator in supplier master</th><td>The supplier is allowed for automatic purchase-order generation in the purchasing context.</td></tr>
-          <tr><th scope="row">Valid assigned source</th><td>The PR already knows which supplier or outline-agreement source should be used.</td></tr>
+          <tr><th scope="row">Valid, unique assigned source</th><td>The PR already knows which supplier or outline-agreement source should be used. If the source is ambiguous, automatic conversion cannot finish the sourcing decision for the buyer.</td></tr>
+          <tr><th scope="row">PR approved / released</th><td>The requisition item must have completed the applicable approval workflow and be eligible for follow-on processing.</td></tr>
           <tr><th scope="row">No missing manual entries</th><td>The conversion must not stop for data that still requires user input, such as an unresolved account assignment or a tax code needed for the designed ERS flow.</td></tr>
         </tbody>
       </table>
     </div>
 
-    <p><strong>Execution:</strong> ME59N / <em>Automatic Creation of Purchase Orders from Requisitions</em> can convert eligible PR items. The same automation can be scheduled with <em>Schedule Purchasing Jobs - Advanced</em> using the job template <em>Automatic Creation of Purchase Orders from Requisitions</em>. Grouping parameters decide which requisition items become one PO.</p>
+    <p><strong>Execution:</strong> ME59N can convert eligible PR items in classic SAP GUI scenarios. In SAP S/4HANA Cloud Public Edition, the scheduled Fiori route is <em>Schedule Purchasing Jobs - Advanced</em> (<strong>F4686</strong>) with the job template <em>Automatic Creation of Purchase Orders from Requisitions</em>. The job validates the Automatic PO flags, source uniqueness, mandatory fields, and approved PR status before it groups eligible items into purchase orders.</p>
 
     <h3>3. ERS automates invoice creation after goods receipt.</h3>
     <p>Evaluated Receipt Settlement is a self-billing process. The supplier agrees not to send an invoice for the relevant purchase orders. After goods receipt, SAP calculates the payable amount from the purchasing and receipt data and creates the supplier invoice automatically. A settlement message can be sent to the supplier.</p>
