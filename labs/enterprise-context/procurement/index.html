@@ -921,25 +921,66 @@ source_links:
     <p><strong>Free-text exception:</strong> a PR item without a product/material master can still be converted automatically when the supplier allows Automatic PO creation and the requisition contains a valuation price that can be copied into the PO. For normal material-based automation, pricing is expected from the assigned source, typically an info record or an outline agreement.</p>
 
     <h3>3. ERS automates invoice creation after goods receipt.</h3>
-    <p>Evaluated Receipt Settlement is a self-billing process. The supplier agrees not to send an invoice for the relevant purchase orders. After goods receipt, SAP calculates the payable amount from the purchasing and receipt data and creates the supplier invoice automatically. A settlement message can be sent to the supplier.</p>
+    <p>Evaluated Receipt Settlement (ERS) is a self-billing process. The supplier agrees not to send an invoice for the relevant purchase orders. SAP creates the supplier invoice from the purchase order and the related receipt data, and the supplier can receive a settlement message instead.</p>
+    <p>The amount is based on four main inputs: the <strong>unsettled goods-receipt quantity</strong> from PO history, the <strong>PO price</strong>, the <strong>tax information</strong> in the PO item, and the <strong>payment terms</strong> in the PO header.</p>
 
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Evaluated Receipt Settlement calculation and prerequisites">
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Evaluated Receipt Settlement prerequisites">
       <table class="study-table__table">
         <thead>
-          <tr><th scope="col">ERS input or prerequisite</th><th scope="col">Role</th></tr>
+          <tr><th scope="col">Control point</th><th scope="col">What must be true</th><th scope="col">Why ERS can fail</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Unsettled GR quantity</th><td>Defines the delivered quantity that still has to be settled. SAP reads it from PO history.</td></tr>
-          <tr><th scope="row">PO price</th><td>Provides the commercial value used for settlement.</td></tr>
-          <tr><th scope="row">Tax code</th><td>Provides the tax information required for the automatic invoice.</td></tr>
-          <tr><th scope="row">Payment terms</th><td>Come from the PO header and control the payment conditions of the created invoice.</td></tr>
-          <tr><th scope="row">Supplier ERS indicator</th><td>Allows evaluated receipt settlement for the supplier.</td></tr>
-          <tr><th scope="row">PO item: ERS + GR-based invoice verification</th><td>Connects settlement to the relevant goods receipts and enables the PO item for the designed ERS process.</td></tr>
+          <tr>
+            <th scope="row">Supplier master</th>
+            <td>The <strong>Evaluated Receipt Settlement</strong> indicator is set in the supplier purchasing-organization data.</td>
+            <td>Without supplier approval for ERS, the PO item is not prepared for automatic settlement.</td>
+          </tr>
+          <tr>
+            <th scope="row">PO header</th>
+            <td>A valid <strong>Terms of Payment</strong> key is present. In the classic configuration model, the key must support a default baseline-date rule.</td>
+            <td>The automatically created invoice needs complete payment conditions.</td>
+          </tr>
+          <tr>
+            <th scope="row">PO item</th>
+            <td>ERS relevance, <strong>GR-based invoice verification</strong>, and a valid <strong>tax code</strong> are available.</td>
+            <td>GR-based invoice verification links settlement to the individual receipt history instead of only to the PO quantity.</td>
+          </tr>
+          <tr>
+            <th scope="row">Estimated Price</th>
+            <td>The <strong>Estimated Price</strong> indicator is not set in the PO item.</td>
+            <td>ERS needs a firm purchasing price for automatic valuation.</td>
+          </tr>
+          <tr>
+            <th scope="row">Goods receipt</th>
+            <td>The GR is posted <strong>with reference to the purchase order</strong>.</td>
+            <td>ERS selects unsettled receipt quantities from PO history; an unrelated stock posting is not enough.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchasing info record</th>
+            <td>The <strong>No ERS</strong> indicator is not blocking the supplier/material relationship unless the user intentionally overrides that proposal.</td>
+            <td>This indicator can suppress ERS defaulting for one material even when ERS is active in the supplier master.</td>
+          </tr>
+          <tr>
+            <th scope="row">Settlement output</th>
+            <td>The required settlement-message/output settings exist for the deployment.</td>
+            <td>Classic Logistics Invoice Verification uses message determination; the exact output framework can differ by deployment and release.</td>
+          </tr>
         </tbody>
       </table>
     </div>
 
-    <p><strong>Execution:</strong> use <em>Create Evaluated Receipt Settlement</em> for an online run, or <em>Schedule Supplier Invoice Jobs - Advanced</em> for background execution. Test selection and document split rules before a productive run because one selection can create several invoice documents.</p>
+    <p><strong>Execution:</strong> use <em>Create Evaluated Receipt Settlement</em> for an online run or <em>Schedule Supplier Invoice Jobs - Advanced</em> (<strong>F1683</strong>) for scheduled processing. In classic backend processing, transaction <strong>MRRL</strong> is the ERS transaction and program <strong>RMMR1MRS</strong> can run the settlement in the background.</p>
+    <p><strong>Document split:</strong> ERS can create settlement documents per supplier, per purchase order, per PO item, or per delivery document / service entry sheet. Run a <strong>test selection</strong> first when changing selection or split logic; MRRL stores a settlement log that shows processed and rejected items.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+      <div>
+        <p><strong>Planned delivery costs:</strong> automatic settlement requires a separate Customizing decision for the company code, purchasing organization, and freight supplier. If only planned delivery costs are settled, use <em>Create Automatic Delivery Cost Settlement</em> or classic transaction <strong>MRDC</strong>; program <strong>RMMR1MDC</strong> is the background route.</p>
+        <p>If goods/service items and planned delivery costs are settled together, selection per delivery document is not available because planned delivery costs do not use GR-based invoice verification. The item tax code is also used for delivery-cost settlement.</p>
+      </div>
+    </div>
+
+    <p><strong>Lead rule:</strong> ERS works best when the supplier agreement is explicit, PO prices are current, and goods receipts are posted quickly and accurately. The automation removes supplier invoice entry; it does not remove the supplier invoice document, tax, payment, or reconciliation controls.</p>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">school</span>
