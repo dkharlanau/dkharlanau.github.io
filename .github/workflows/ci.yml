@@ -49,6 +49,9 @@ jobs:
       - name: Validate UI component contract
         run: python3 scripts/validate_ui_components.py
 
+      - name: Check Enterprise Context visual projections
+        run: python3 scripts/generate_enterprise_context_visuals.py --check
+
       - name: Materialize deterministic repository state for validation
         run: python3 scripts/sync_repository_state.py
 
