@@ -606,6 +606,116 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="automated-procurement" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Automated procurement</p>
+      <h2>Automate the handoffs only when every next document can be created without a missing decision.</h2>
+      <p>The useful end-to-end model is <strong>MRP → purchase requisition with source → automatic purchase order → goods receipt → evaluated receipt settlement</strong>. Each step removes manual work, but each step also needs stronger master data and clearer process rules.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">memory</span>
+      <div>
+        <p><strong>Automation chain:</strong> MRP finds the shortage and plans supply. Source determination assigns where to buy. Automatic PO creation converts an eligible requisition. Goods receipt proves the delivered quantity. ERS creates the supplier invoice from PO and GR data instead of waiting for a supplier invoice.</p>
+        <p><strong>Lead rule:</strong> automation does not remove decisions. It moves them into master data, source rules, document defaults, and scheduled jobs.</p>
+      </div>
+    </div>
+
+    <h3>1. MRP automates requirement determination.</h3>
+    <p>MRP monitors stock and requirements, calculates shortages, determines the procurement quantity, schedules the proposal, and can determine a source of supply. In SAP S/4HANA, the planning level is the <strong>MRP area</strong>. A plant always has a plant MRP area; additional MRP areas can represent storage locations or subcontractors.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="MRP automation comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Topic</th><th scope="col">What SAP decides</th><th scope="col">Assessment point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Net requirements</th>
+            <td>Whether available stock and fixed receipts are enough for the requirement.</td>
+            <td>A shortage is the trigger for a procurement proposal; MRP does not start with supplier selection.</td>
+          </tr>
+          <tr>
+            <th scope="row">Lot sizing</th>
+            <td>How much to procure, for example lot-for-lot, fixed lot size, or replenishment to maximum stock.</td>
+            <td>The shortage quantity and the procurement quantity can be different because the lot-sizing procedure controls the proposal.</td>
+          </tr>
+          <tr>
+            <th scope="row">Scheduling</th>
+            <td>When Purchasing must act, when the supplier should deliver, and when the material becomes available.</td>
+            <td>Purchasing processing time, planned delivery time, and goods-receipt processing time are important scheduling components.</td>
+          </tr>
+          <tr>
+            <th scope="row">Source determination</th>
+            <td>For external procurement, which valid source can supply the material.</td>
+            <td>Typical source objects are a purchasing info record, an outline agreement item, or a supplying plant.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>For externally procured material, procurement type <strong>F</strong> tells MRP to plan external supply. MRP Live creates delivery schedule lines when a valid scheduling agreement exists and otherwise creates purchase requisitions for externally procured material. In classic MRP, the planning setup can create a planned order or a purchase requisition; scheduling agreement schedule lines can also be generated directly when the process is configured for them.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">route</span>
+      <p><strong>MRP sequence to remember:</strong> shortage → lot size → dates → source. By the time an automatically convertible PR is ready, quantity, date, source, and commercial data must be sufficiently complete for Purchasing.</p>
+    </div>
+
+    <h3>2. Automatic PO creation needs a complete purchase requisition.</h3>
+    <p>A requisition can be converted automatically only when the system does not need a buyer to supply a missing decision. A valid source of supply must be assigned, and the source must provide enough information to determine the supplier and price.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Automatic purchase order prerequisites">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Prerequisite</th><th scope="col">Why it matters</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Automatic PO indicator in material master</th><td>The material is allowed to participate in automatic purchase-order generation.</td></tr>
+          <tr><th scope="row">Automatic PO indicator in supplier master</th><td>The supplier is allowed for automatic purchase-order generation in the purchasing context.</td></tr>
+          <tr><th scope="row">Valid assigned source</th><td>The PR already knows which supplier or outline-agreement source should be used.</td></tr>
+          <tr><th scope="row">No missing manual entries</th><td>The conversion must not stop for data that still requires user input, such as an unresolved account assignment or a tax code needed for the designed ERS flow.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Execution:</strong> ME59N / <em>Automatic Creation of Purchase Orders from Requisitions</em> can convert eligible PR items. The same automation can be scheduled with <em>Schedule Purchasing Jobs - Advanced</em> using the job template <em>Automatic Creation of Purchase Orders from Requisitions</em>. Grouping parameters decide which requisition items become one PO.</p>
+
+    <h3>3. ERS automates invoice creation after goods receipt.</h3>
+    <p>Evaluated Receipt Settlement is a self-billing process. The supplier agrees not to send an invoice for the relevant purchase orders. After goods receipt, SAP calculates the payable amount from the purchasing and receipt data and creates the supplier invoice automatically. A settlement message can be sent to the supplier.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Evaluated Receipt Settlement calculation and prerequisites">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">ERS input or prerequisite</th><th scope="col">Role</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Unsettled GR quantity</th><td>Defines the delivered quantity that still has to be settled. SAP reads it from PO history.</td></tr>
+          <tr><th scope="row">PO price</th><td>Provides the commercial value used for settlement.</td></tr>
+          <tr><th scope="row">Tax code</th><td>Provides the tax information required for the automatic invoice.</td></tr>
+          <tr><th scope="row">Payment terms</th><td>Come from the PO header and control the payment conditions of the created invoice.</td></tr>
+          <tr><th scope="row">Supplier ERS indicator</th><td>Allows evaluated receipt settlement for the supplier.</td></tr>
+          <tr><th scope="row">PO item: ERS + GR-based invoice verification</th><td>Connects settlement to the relevant goods receipts and enables the PO item for the designed ERS process.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Execution:</strong> use <em>Create Evaluated Receipt Settlement</em> for an online run, or <em>Schedule Supplier Invoice Jobs - Advanced</em> for background execution. Test selection and document split rules before a productive run because one selection can create several invoice documents.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">school</span>
+      <div>
+        <p><strong>Assessment traps:</strong> MRP normally creates planning/procurement proposals, not a finished supplier commitment. Automatic PO creation still needs the automatic-PO master-data indicators and a valid source. ERS does not mean “no invoice document”; it means the supplier does not submit the invoice and SAP creates it from PO and GR data.</p>
+        <p><strong>Failure path:</strong> no PR → check MRP data and shortage logic. PR without source → check source determination. PR not converted → check Automatic PO prerequisites and missing fields. ERS does not select the GR → check supplier/PO ERS indicators, GR-based invoice verification, tax, payment terms, and PO history.</p>
+      </div>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/running-materials-requirements-planning" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Running Materials Requirements Planning</strong><small>MRP areas, planning procedures, lot sizing, scheduling, and automatic source determination.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/generating-purchase-orders-automatically" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Generating Purchase Orders Automatically</strong><small>Automatic conversion of sourced purchase requisitions into purchase orders.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/creating-invoices-automatically-using-evaluated-receipt-settlement" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Evaluated Receipt Settlement</strong><small>Automatic supplier invoice creation from purchase-order and goods-receipt data.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="self-service-procurement" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Self-service procurement</p>
