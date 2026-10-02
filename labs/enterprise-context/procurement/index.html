@@ -729,6 +729,23 @@ source_links:
 
     <p>For externally procured material, procurement type <strong>F</strong> tells MRP to plan external supply. MRP Live creates delivery schedule lines when a valid scheduling agreement exists and otherwise creates purchase requisitions for externally procured material. In classic MRP, the planning setup can create a planned order or a purchase requisition; scheduling agreement schedule lines can also be generated directly when the process is configured for them.</p>
 
+    <h3>MRP 2 data controls important parts of the proposal.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="MRP 2 material master data relevant for procurement">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Field</th><th scope="col">Purpose in procurement planning</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Procurement Type</th><td><strong>F</strong> means external procurement for the plant; other values can route the requirement to in-house production or mixed sourcing.</td></tr>
+          <tr><th scope="row">Special Procurement</th><td>Refines the procurement model, for example subcontracting, consignment, or another configured special procurement path.</td></tr>
+          <tr><th scope="row">Planned Delivery Time</th><td>Contributes to procurement scheduling and the supplier delivery date calculation.</td></tr>
+          <tr><th scope="row">GR Processing Time</th><td>Adds the internal time needed after receipt before the material is available.</td></tr>
+          <tr><th scope="row">Safety Stock</th><td>Protects material availability by influencing when replenishment is required.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Supplier-specific delivery time can also be maintained in the Purchasing Info Record and/or contract. Keep the planning parameter and the supplier-specific relationship data separate when you diagnose a date problem.</p>
+
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">route</span>
       <p><strong>MRP sequence to remember:</strong> shortage → lot size → dates → source. By the time an automatically convertible PR is ready, quantity, date, source, and commercial data must be sufficiently complete for Purchasing.</p>
@@ -753,6 +770,7 @@ source_links:
     </div>
 
     <p><strong>Execution:</strong> ME59N can convert eligible PR items in classic SAP GUI scenarios. In SAP S/4HANA Cloud Public Edition, the scheduled Fiori route is <em>Schedule Purchasing Jobs - Advanced</em> (<strong>F4686</strong>) with the job template <em>Automatic Creation of Purchase Orders from Requisitions</em>. The job validates the Automatic PO flags, source uniqueness, mandatory fields, and approved PR status before it groups eligible items into purchase orders.</p>
+    <p><strong>Free-text exception:</strong> a PR item without a product/material master can still be converted automatically when the supplier allows Automatic PO creation and the requisition contains a valuation price that can be copied into the PO. For normal material-based automation, pricing is expected from the assigned source, typically an info record or an outline agreement.</p>
 
     <h3>3. ERS automates invoice creation after goods receipt.</h3>
     <p>Evaluated Receipt Settlement is a self-billing process. The supplier agrees not to send an invoice for the relevant purchase orders. After goods receipt, SAP calculates the payable amount from the purchasing and receipt data and creates the supplier invoice automatically. A settlement message can be sent to the supplier.</p>
