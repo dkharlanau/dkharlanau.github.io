@@ -46,6 +46,9 @@ semantic_links:
   - type: "parent_context"
     title: "Procurement Process & Decision Map — Enterprise Context Lab"
     url: "/labs/enterprise-context/procurement/"
+  - type: "same_domain"
+    title: "Material Valuation in Procurement — Standard Price, Moving Average Price and FI Postings"
+    url: "/labs/enterprise-context/procurement/material-valuation/"
   - type: "related_topic"
     title: "SAP Business Partner — Roles, CVI and Organizational Data"
     url: "/labs/enterprise-context/business-partner/"
@@ -58,9 +61,6 @@ semantic_links:
   - type: "parent_context"
     title: "Labs — SAP Enterprise, Assurance, AI, Interview and Assessment"
     url: "/labs/"
-  - type: "integrates_with"
-    title: "SAP DRF — Data Replication Framework"
-    url: "/labs/enterprise-context/integrations/drf/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">
