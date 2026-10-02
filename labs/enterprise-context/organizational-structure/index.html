@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-29
+last_modified_at: 2026-10-02
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -244,6 +244,22 @@ source_links:
       <p>Sales Organization answers who sells. Purchasing Organization answers who negotiates and procures materials or services. Both can meet at the same Plant.</p>
     </header>
 
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Procurement organizational units at a glance">
+      <table class="study-table__table">
+        <thead>
+          <tr><th>Unit</th><th>What it represents</th><th>Key / scope</th><th>Assessment cue</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Client</strong></td><td>Highest self-contained level in the SAP system. Client-level data applies across Company Codes and organizational units inside that client.</td><td>Three-digit numeric key.</td><td>Think system-wide business boundary, not an ordinary logistics location.</td></tr>
+          <tr><td><strong>Company Code</strong></td><td>Smallest external-accounting unit for which complete financial statements can be produced.</td><td>Four-character alphanumeric key, unique within the client.</td><td>Legal and accounting owner.</td></tr>
+          <tr><td><strong>Plant</strong></td><td>Logistics unit used by procurement, production, plant maintenance, inventory, and MRP.</td><td>Four-character alphanumeric key, unique in the client.</td><td>Where logistics happens and where procurement demand is consumed.</td></tr>
+          <tr><td><strong>Storage Location</strong></td><td>Logical stock subdivision inside a Plant. Quantity-based inventory and physical inventory are handled at this level.</td><td>Four-character alphanumeric key, unique within a Plant.</td><td>Where stock is separated inside the Plant.</td></tr>
+          <tr><td><strong>Purchasing Organization</strong></td><td>Unit that procures materials or services, negotiates purchasing conditions, and owns supplier-facing purchasing responsibility.</td><td>Plant assignment is mandatory. Company Code assignment is optional and controls whether purchasing is company-specific or cross-company.</td><td>Who buys?</td></tr>
+          <tr><td><strong>Purchasing Group</strong></td><td>Buyer or buyer team responsible for materials, material groups, or purchasing activities.</td><td>Not assigned to Plant, Purchasing Organization, or Company Code in enterprise structure.</td><td>Who is the responsible buyer/contact?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="ecg-determination-list">
       <article class="ecg-determination-detail">
         <header><div><span>MM1</span><small>purchasing</small></div><h3>Purchasing Organization ↔ Plant</h3><p class="ecg-question">Who is allowed to procure for this Plant?</p></header>
@@ -254,18 +270,21 @@ source_links:
       </article>
 
       <article class="ecg-determination-detail">
-        <header><div><span>MM2</span><small>legal</small></div><h3>Purchasing Organization → Company Code</h3><p class="ecg-question">Is purchasing local to one legal entity or centralized across companies?</p></header>
+        <header><div><span>MM2</span><small>legal</small></div><h3>Purchasing Organization → Company Code</h3><p class="ecg-question">Is purchasing local to one Plant, centralized inside one Company Code, or centralized across Company Codes?</p></header>
         <div class="ecg-decision-columns">
-          <div><h4>Plant-specific / cross-plant</h4><p>If the Purchasing Organization is assigned to a Company Code, its Plants must belong to that Company Code.</p></div>
-          <div><h4>Cross-company purchasing</h4><p>For cross-company purchasing, the Purchasing Organization is not assigned to one Company Code; Plants from different Company Codes can be assigned to it.</p></div>
+          <div><h4>Plant-specific</h4><p>Assign the Purchasing Organization to one Company Code and one Plant. The purchasing unit procures only for that Plant.</p></div>
+          <div><h4>Cross-plant</h4><p>Assign the Purchasing Organization to one Company Code and several Plants that belong to that Company Code. One purchasing unit serves several Plants.</p></div>
+          <div><h4>Cross-company-code</h4><p>Do not assign the Purchasing Organization to a Company Code. Assign Plants from different Company Codes directly to it.</p></div>
         </div>
+        <p class="ecg-caption"><strong>Critical rule:</strong> the Purchasing Organization ↔ Plant assignment is always required. A Purchasing Organization → Company Code assignment alone is never enough.</p>
       </article>
 
       <article class="ecg-determination-detail">
         <header><div><span>MM3</span><small>buyer</small></div><h3>Purchasing Group</h3><p class="ecg-question">Who is the buyer or buyer team?</p></header>
         <div class="ecg-decision-columns">
-          <div><h4>Important exception</h4><p>A Purchasing Group is created at client level and is not structurally assigned to one Purchasing Organization or Plant.</p></div>
-          <div><h4>Design meaning</h4><p>Do not draw it as a mandatory child node under Purchasing Organization. It is a responsibility key used across purchasing processes and master data.</p></div>
+          <div><h4>Responsibility</h4><p>The Purchasing Group selects and processes material requirements, can maintain purchasing-relevant data, supports evaluations by buyer responsibility, and acts as the operational contact for suppliers.</p></div>
+          <div><h4>Important exception</h4><p>A Purchasing Group is created at client level and is not structurally assigned to one Purchasing Organization, Plant, or Company Code.</p></div>
+          <div><h4>Design meaning</h4><p>Do not draw it as a mandatory child node under Purchasing Organization. It is a responsibility key that can be reused across organizational boundaries.</p></div>
         </div>
       </article>
 
@@ -297,6 +316,8 @@ source_links:
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
       <p><strong>Memory contrast:</strong> Sales Organization owns the customer-facing sale. Purchasing Organization owns supplier-facing procurement. Plant is where those two flows can meet.</p>
+      <p><strong>30-second procurement answer:</strong> Client is the highest SAP boundary. Company Code is the legal accounting unit. Plant is the logistics location, and Storage Location separates stock inside the Plant. Purchasing Organization negotiates and procures for assigned Plants. It can be plant-specific, cross-plant, or cross-company-code. Purchasing Group represents the responsible buyer and is not assigned in enterprise structure.</p>
+      <p><strong>Assessment trap:</strong> when a Purchasing Organization is assigned to a Company Code, all Plants assigned to it must belong to that Company Code. For cross-company-code purchasing, leave the Company Code assignment empty and assign the Plants directly.</p>
       <a href="/labs/enterprise-context/procurement/">Open Procurement deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </section>
