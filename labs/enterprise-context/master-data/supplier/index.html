@@ -189,34 +189,38 @@ tags:
 
   <section class="research-canvas__inventory" id="partner-functions" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Partner functions</p>
-      <h2>The company you order from does not have to perform every supplier role.</h2>
-      <p>Partner functions let procurement use different business partners for ordering, physical supply, invoicing, payment or other responsibilities.</p>
+      <p class="research-canvas__eyebrow">Partner functions in Purchasing</p>
+      <h2>The supplier on the PO does not have to perform every procurement role.</h2>
+      <p>Purchasing partner functions connect the main supplier with other Business Partners that perform specific tasks. For example, one company can receive the purchase order, another location can deliver the goods, and a group headquarters can send the invoice. Each alternative partner must have its own Business Partner master record.</p>
     </header>
 
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier partner functions">
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier partner functions in purchasing">
       <table class="study-table__table">
-        <thead><tr><th>Partner function</th><th>Business meaning</th><th>Example</th></tr></thead>
+        <thead><tr><th>Partner function</th><th>Business meaning</th><th>Example</th><th>Typical consequence</th></tr></thead>
         <tbody>
           <tr>
-            <td><strong>Ordering address</strong></td>
-            <td>Where the purchase order or purchasing communication is directed.</td>
-            <td>Orders go to a central sales office although the legal supplier is another entity.</td>
+            <th scope="row">Ordering Address</th>
+            <td>The partner that receives and processes the purchase order.</td>
+            <td>You buy from ABC Group, but South ABC handles the orders.</td>
+            <td>The PO communication is sent to the alternative ordering address.</td>
           </tr>
           <tr>
-            <td><strong>Goods Supplier</strong></td>
-            <td>The party that physically supplies the goods.</td>
-            <td>You order from Supplier A, but subsidiary S always delivers the goods.</td>
+            <th scope="row">Goods Supplier</th>
+            <td>The partner that physically delivers the goods and can receive returns.</td>
+            <td>ABC Group is the contractual supplier, but factory XYZ ships the material.</td>
+            <td>The goods-supplier address can be used for logistics and return-delivery processing.</td>
           </tr>
           <tr>
-            <td><strong>Invoicing Party</strong></td>
-            <td>The party that sends the supplier invoice.</td>
-            <td>You order from Supplier A, but headquarters C issues the invoice.</td>
+            <th scope="row">Invoicing Party</th>
+            <td>The partner that issues the supplier invoice.</td>
+            <td>You order from Supplier A, but headquarters C sends the invoice.</td>
+            <td>Invoice processing can determine the different invoicing party from the purchasing document.</td>
           </tr>
           <tr>
-            <td><strong>Alternative payee / other roles</strong></td>
-            <td>A different party can receive payment or perform another configured procurement role.</td>
-            <td>The exact allowed roles depend on partner determination and account-group/customizing design.</td>
+            <th scope="row">Alternative Payee / other configured roles</th>
+            <td>Another partner performs a payment or other configured procurement function.</td>
+            <td>The legal supplier and payment recipient are different according to the approved master-data design.</td>
+            <td>The exact behavior depends on partner-function, account-group and downstream FI configuration.</td>
           </tr>
         </tbody>
       </table>
@@ -224,7 +228,67 @@ tags:
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">group_work</span>
-      <p><strong>Important:</strong> partner determination defines which roles are allowed or required. Supplier master data provides the partner assignments that can be proposed into purchasing documents.</p>
+      <p><strong>Simple case:</strong> if the same supplier performs all procurement functions, you do not need to maintain alternative partner functions. Use partner determination only when the business relationship really contains different partners.</p>
+    </div>
+
+    <h3>Where partner assignments can be maintained</h3>
+    <p>Partner assignments can become more specific than the purchasing organization. The system can therefore use different partners for different plants or parts of the supplier's product range.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchasing partner function organizational levels">
+      <table class="study-table__table">
+        <thead><tr><th>Level</th><th>When it is useful</th><th>Lead note</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Purchasing organization</th><td>The partner is the same for all plants and supplier sub-ranges in the purchasing organization.</td><td>Use this as the broad default.</td></tr>
+          <tr><th scope="row">Purchasing organization / plant</th><td>A plant uses a different ordering address, goods supplier or other partner.</td><td>Use only when the physical or organizational relationship really differs by plant.</td></tr>
+          <tr><th scope="row">Purchasing organization / supplier sub-range</th><td>A part of the supplier's product range uses another partner.</td><td>The sub-range lets purchasing data follow the supplier's internal business structure.</td></tr>
+          <tr><th scope="row">Purchasing organization / plant / sub-range</th><td>The partner differs for one plant and one supplier sub-range.</td><td>This is the most specific level and adds the highest maintenance complexity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Partner determination configuration chain</h3>
+    <p>To understand why a partner is or is not determined, follow the configuration chain instead of checking only the supplier master.</p>
+
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Define the partner role</h4><p>Define or use the required purchasing partner function. The <strong>Unique</strong> indicator controls whether only one partner can be maintained for this function at an organizational level. Without it, several partners can be available and one of them can be marked as the default.</p></div>
+      <div><span>02</span><h4>Allow the role for the account group</h4><p>The account group of the alternative partner must allow that partner function. This controls which types of suppliers may perform which roles.</p></div>
+      <div><span>03</span><h4>Supplier partner schema</h4><p>A supplier partner schema defines which partner functions are valid in the supplier master. For each role, it can require the function or prevent changes after entry. Assigning this schema to an account group is optional; if a schema is assigned, the entered partner must be allowed by it.</p></div>
+      <div><span>04</span><h4>Purchasing-document partner schema</h4><p>If partners from the supplier master must be proposed into a purchasing document, the relevant document type needs a partner schema that contains these roles.</p></div>
+      <div><span>05</span><h4>Maintain the actual partner</h4><p>Maintain the alternative Business Partner at the correct purchasing organization, plant and/or supplier sub-range level.</p></div>
+      <div><span>06</span><h4>Prove the document result</h4><p>Create the purchasing document and check the partners that were actually determined. The document result is the runtime evidence.</p></div>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Partner schema control indicators in purchasing">
+      <table class="study-table__table">
+        <thead><tr><th>Indicator</th><th>Meaning</th><th>Assessment point</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Mandatory</th><td>The partner function must be present according to the schema.</td><td>If the required partner is missing, check both the schema and the master assignment.</td></tr>
+          <tr><th scope="row">No Change</th><td>The determined partner cannot be changed or deleted in the purchasing document.</td><td>This is stronger than a default. The document user cannot replace the adopted partner.</td></tr>
+          <tr><th scope="row">Higher Lvl</th><td>If no partner exists at plant or supplier-sub-range level, the system can search at purchasing-organization level.</td><td>This is the fallback rule from a specific level to the broader level.</td></tr>
+          <tr><th scope="row">End</th><td>Partner determination is delayed until the document is checked or saved instead of immediately after the supplier is entered.</td><td>This helps when the system needs item plant/sub-range information before choosing a partner.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div>
+        <h4>Single plant / sub-range</h4>
+        <p>With determination at the end, SAP can check whether all PO items use the same plant or supplier sub-range and then use the partner maintained at that more specific level.</p>
+      </div>
+      <div>
+        <h4>Several plants in one PO</h4>
+        <p>If PO items use different plants, partner determination falls back to purchasing-organization level. A header partner cannot represent several conflicting plant-specific partners at the same time.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Pricing trap:</strong> be careful with the <strong>End</strong> indicator for the Invoicing Party when discounts or surcharges depend on the invoicing party. Determining the partner only when the PO is saved or checked does not automatically trigger a new price determination.</p>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <p><strong>Assessment model:</strong> partner function definition → permissible role for account group → supplier partner schema → purchasing-document partner schema → partner maintained at the correct level → document result. If one link is missing, partner determination can fail even when the Business Partner itself exists.</p>
     </div>
   </section>
 
@@ -350,7 +414,7 @@ tags:
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>60-second answer:</strong> “In S/4HANA, Business Partner is the leading object. For procurement I separate general BP identity, FI supplier data at company-code level and purchasing supplier data at purchasing-organization level. FLVN00 carries accounting context such as the reconciliation account; FLVN01 carries purchasing context such as PO currency, Incoterms, partner functions and controls such as GR-based invoice verification, ERS, acknowledgment requirement and automatic PO. CVI synchronizes BP and supplier account structures. If the supplier behaves differently by plant or product range, selected data can be maintained more specifically. Supplier-material data belongs in the Purchasing Info Record. For occasional suppliers, a one-time supplier account holds common defaults while supplier-specific document data is entered during processing.”</p>
+      <p><strong>60-second answer:</strong> “In S/4HANA, Business Partner is the leading object. For procurement I separate general BP identity, FI supplier data at company-code level and purchasing supplier data at purchasing-organization level. FLVN00 carries accounting context; FLVN01 carries purchasing defaults, controls and partner functions. Alternative partners such as Ordering Address, Goods Supplier and Invoicing Party can be maintained at purchasing-organization, plant and supplier-sub-range levels. Partner determination is controlled by the partner role, account-group permissions, the supplier partner schema and the purchasing-document partner schema. Mandatory and No Change control the role itself; Higher Lvl controls fallback to purchasing-organization level; End controls when partner determination runs. CVI still synchronizes BP and supplier account structures, while supplier-material data belongs in the Purchasing Info Record.”</p>
     </div>
 
     <div class="ecg-diagnostic">
@@ -378,6 +442,7 @@ tags:
       <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/f6a7ba538c95b54ce10000000a174cb4.html">SAP Help — One-Time Customers and One-Time Vendors</a></li>
       <li><a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/maintaining-business-partner-master-data">SAP Learning — Maintaining Business Partner Master Data</a></li>
       <li><a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/creating-business-partners">SAP Learning — Creating Business Partners for Purchasing</a></li>
+      <li><a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/using-partner-functions-in-purchasing">SAP Learning — Using Partner Functions in Purchasing</a></li>
     </ul>
 
     <nav class="ecg-context-links" aria-label="Supplier related pages">
