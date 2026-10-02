@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-10-01
+last_modified_at: 2026-10-02
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -20,9 +20,9 @@ tags:
   - procure-to-pay
   - special-procurement
   - troubleshooting
-last_reviewed: 2026-09-26
+last_reviewed: 2026-10-02
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + full editorial rewrite"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning S4500 process cross-check + editorial expansion"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -150,6 +150,57 @@ source_links:
     <p>SAP's current <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/1e01361a8a0347f7a74ac399db546b20.html" target="_blank" rel="noopener">Create Purchase Requisition - Advanced</a> documentation describes the requisition as the object used to request materials, services, and limits with the required quantity, location, and timing. The exact user interface can differ by deployment and process, but the business distinction between internal requirement and purchasing commitment remains useful.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="purchase-order-anatomy" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Purchase order</p>
+      <h2>The PO turns a sourcing decision into one controlled commitment.</h2>
+      <p>A purchase order can be created with reference to a purchase requisition, quotation, contract, or existing purchase order, or it can be entered without a reference. The reference reduces manual entry, but the buyer still has to check the proposed values.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Reference</h3>
+        <p>Reference documents can carry requirement, source, quantity, dates, conditions, and other purchasing context into the PO. Use the reference chain when you need to explain where a PO value came from.</p>
+      </div>
+      <div>
+        <h3>Defaults</h3>
+        <p>Supplier data can propose the ordering address, payment terms, and Incoterms. Material data can propose the short text, order unit, and material group. A purchasing info record can propose a price.</p>
+      </div>
+      <div>
+        <h3>Source type</h3>
+        <p>An external supplier normally leads to a standard purchase order. If the supplying source is an internal plant, the process is a stock transport order rather than normal external procurement.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Organizational rule:</strong> one PO can contain items for different plants, but those plants must be valid for the purchasing organization in the PO header. The PO itself also has one company-code context. This is why cross-plant purchasing does not mean “any plant can be mixed into any PO.”</p>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchase order header and item structure">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Layer</th><th scope="col">Typical data</th><th scope="col">Lead check</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Header</th>
+            <td>Supplier, company code, purchasing organization, purchasing group, currency, payment and commercial context.</td>
+            <td>If the whole PO is wrong, check the header and organizational assignment before item-level configuration.</td>
+          </tr>
+          <tr>
+            <th scope="row">Item</th>
+            <td>Material or service, quantity, delivery date, plant, storage or delivery context, item category, account assignment, price conditions.</td>
+            <td>If only one item behaves differently, identify which item-level control changed the process.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Fiori:</strong> <em>Manage Purchase Orders</em> is the main app for creating, finding, monitoring, displaying, and changing purchase orders. Current SAP Learning also uses references such as contracts, info records, and existing purchase orders to reduce data entry. App scope and supported item categories can vary by release.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="source-determination" data-reveal>
     <span id="procurement-master-data" aria-hidden="true"></span>
     <span id="procurement-comparisons" aria-hidden="true"></span>
@@ -174,6 +225,65 @@ source_links:
     <p>The purchasing item category controls important process behavior. SAP documents, among other things, whether the item needs a material number, whether account assignment is required, whether it is managed as stock, and whether goods receipt and invoice receipt are expected. That is why the item category changes the later document flow rather than merely changing how the item is displayed.</p>
     <p>Account assignment answers a different question: where should the value be charged when the purchase is for consumption rather than ordinary valuated stock? Depending on the process, the receiver can be a cost center, order, project, asset, sales-order context, or another supported object. SAP also supports multiple account assignment for one purchasing item where the cost has to be distributed.</p>
     <p>Keep the two layers separate. A wrong cost center does not prove the source-of-supply logic is wrong. A correct account assignment does not prove the item has the intended receipt and invoice behavior.</p>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchasing item category comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Item category</th><th scope="col">Material / account assignment</th><th scope="col">GR</th><th scope="col">IR</th><th scope="col">Process reading</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Standard</th>
+            <td>Material is required for normal stock procurement; account assignment can be used for consumption.</td>
+            <td>Possible</td>
+            <td>Possible</td>
+            <td>Baseline external procurement.</td>
+          </tr>
+          <tr>
+            <th scope="row">Limit (B)</th>
+            <td>No material number. SAP Learning S4500 teaches account assignment as required, with “Unknown” possible where allowed.</td>
+            <td>No</td>
+            <td>Required</td>
+            <td>Value-limit procurement for consumables or unplanned services.</td>
+          </tr>
+          <tr>
+            <th scope="row">Consignment (K)</th>
+            <td>Material required; no account assignment at PO item.</td>
+            <td>Required, non-valuated</td>
+            <td>No normal PO invoice receipt</td>
+            <td>Supplier owns the stock until withdrawal; liability is created later when ownership changes.</td>
+          </tr>
+          <tr>
+            <th scope="row">Subcontracting (L)</th>
+            <td>Finished material plus components to be provided to the supplier.</td>
+            <td>Required</td>
+            <td>Possible</td>
+            <td>Receipt of the subcontracted product is linked to consumption of provided components.</td>
+          </tr>
+          <tr>
+            <th scope="row">Stock transfer (U)</th>
+            <td>Material required; supplying source is another plant.</td>
+            <td>Required</td>
+            <td>No supplier IR in the standard STO model</td>
+            <td>Internal replenishment, not ordinary supplier procurement.</td>
+          </tr>
+          <tr>
+            <th scope="row">Third-party (S)</th>
+            <td>Account assignment required; material number can be used.</td>
+            <td>Possible</td>
+            <td>Possible</td>
+            <td>Supplier delivers to a third party, often a customer-facing process.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Documentation watch — Limit:</strong> the current S4500 Learning lesson says account assignment is mandatory for item category B, while the SAP S/4HANA 2025 FPS01 Help item-category table currently says “account assignment not necessary.” The two SAP sources conflict. For S4500 recall, know the course wording; for a design or incident, verify the target release and actual system behavior before changing configuration.</p>
+    </div>
+
+    <p><strong>Contract-only categories:</strong> Material Unknown (M) is used when the material is not fixed in advance and can be used in quantity or value contracts. Material Group (W) groups materials with different prices and is used only in value contracts. They are not normal PO item categories.</p>
+    <p><strong>Manage Purchase Orders recall:</strong> the current SAP Learning lesson lists Standard, Consignment (K), Subcontracting (L), Third-party (S), and Enhanced Limit (E) for PO creation in the Fiori app. Treat app scope as release-sensitive.</p>
     <div class="research-route-list">
       <a href="https://help.sap.com/docs/PRODUCT_ID/af9ef57f504840d2b81be8667206d485/a37eb65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Item Category</strong><small>Standard purchasing-item behavior for stock, account assignment, goods receipt, and invoice receipt.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/b47db65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Entering Account Assignments</strong><small>Single and multiple account assignment for purchasing documents.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
@@ -199,6 +309,20 @@ source_links:
     <p>Keep document validity, approval, and supplier communication distinct. A PO can be structurally correct but still wait for approval. An approved PO can still have a communication problem. Conversely, receiving a supplier response does not prove that the accounting or receipt design of the item is correct.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="purchase-order-output" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Supplier communication</p>
+      <h2>Approval and output are different states.</h2>
+    </header>
+    <p>After the PO is created and approved, the supplier still needs the intended document version. Purchasing output can be issued immediately when the document is saved or processed later from an output queue or scheduled job. Channels depend on the active output framework and deployment; common forms include print, e-mail, EDI, or XML-based integration.</p>
+    <p>Header texts carry document-level information. Item texts describe a specific PO item. This matters in support because a correct PO value does not prove that the supplier received the correct output, language, text, channel, or version.</p>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">outgoing_mail</span>
+      <p><strong>Lead diagnostic split:</strong> first prove that the PO is valid and approved. Then prove output determination, recipient, channel, dispatch time, form/content, and processing status. Do not change purchasing data to repair an output problem.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="failure-modes" data-reveal>
     <span id="procurement-integration-map" aria-hidden="true"></span>
     <header>
@@ -206,6 +330,13 @@ source_links:
       <h2>Execution depends on what the item was designed to represent.</h2>
     </header>
     <p>For a standard stock purchase, goods receipt records that the ordered material arrived and updates the relevant inventory and purchase-order history. For direct consumption, the same business event can post value to an assigned object instead of ordinary stock. Service procurement can introduce an acceptance or service-entry step. Special item categories intentionally change the baseline again.</p>
+    <p>For the plain material process, post the goods receipt with reference to the purchase order. SAP proposes the open PO items, so receiving can check the material, delivered quantity, over- or underdelivery, and — when configured — shelf-life requirements. One PO item can produce several GR items when the delivery is split by batch or storage location.</p>
+    <p>The posting automatically updates PO history. A material document proves the goods movement; if the receipt is valuated, SAP also creates an accounting document. The standard baseline movement type for a goods receipt against a PO is <strong>101</strong>.</p>
+    <p>The movement type is not just a label. It is a three-character control key that influences quantity and value updates, field selection, stock or consumption behavior, and — together with other account-determination factors — which G/L accounts are affected.</p>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      <p><strong>Fiori baseline:</strong> use <em>Post Goods Receipt for Purchasing Document</em> (F0843) for the simple PO-referenced receipt. The reference is important because it connects receiving, Purchasing, invoice verification, and PO history to the same business event.</p>
+    </div>
     <p>SAP's standard item-category model makes this visible. Standard items can have both goods and invoice receipts. Stock-transfer items expect a goods receipt but no supplier invoice receipt. Consignment items receive supplier-owned stock without a normal PO invoice receipt at that point. Subcontracting adds the provided-component relationship to the receipt process. The useful question is therefore not “Why is there no GR or IR?” until the intended item category and process variant are known.</p>
     <p>If warehouse execution or quality inspection sits between physical arrival and unrestricted stock, continue with the <a href="/labs/enterprise-context/inventory-management/">Inventory Management</a>, <a href="/labs/enterprise-context/ewm/">EWM</a>, or <a href="/labs/enterprise-context/quality-management/">Quality Management</a> guide rather than forcing those details into the PO model.</p>
   </section>
@@ -216,10 +347,53 @@ source_links:
       <h2>Invoice verification compares a commercial claim with the purchasing history.</h2>
     </header>
     <p>The supplier invoice is a separate business event from receipt. With purchase-order reference, SAP can allocate an invoice to purchasing documents and, depending on the scenario, to related references such as delivery notes or service entry sheets. Quantity, value, tax, and tolerance checks determine whether the invoice can be posted cleanly or needs exception handling.</p>
+    <p>In the plain PO process, the user enters the supplier invoice header data such as gross amount, tax, invoice date, and supplier reference. With PO reference, SAP can propose the invoicing party, payment terms, material, open invoice quantity, and expected item amount from the PO and receipt history.</p>
+    <p>Posting creates the logistics invoice document and an accounting document and updates the purchasing history. Logistics Invoice Verification checks the commercial claim; it does <strong>not</strong> execute the supplier payment or manage the open liability after posting. Those tasks belong to Financial Accounting.</p>
+    <p>If price, quantity, or other configured variances exceed tolerance, SAP can still post the invoice but block it for payment, depending on the tolerance setup. This is an important distinction: “posted” and “payable” are not the same status.</p>
     <p>The reference model matters. Where goods-receipt-based invoice verification is active, the invoice is matched against the relevant goods receipts rather than only against the ordered quantity. Other procurement variants have different matching rules. Do not infer the intended invoice behavior from the existence of a PO alone.</p>
     <p>See SAP's current <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8d6fb6531de6b64ce10000000a174cb4.html" target="_blank" rel="noopener">Entering Invoices with Purchase Order Reference</a> documentation for the supported allocation choices in Logistics Invoice Verification.</p>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/procurement/tax-code-determination/"><span>MM</span><strong>Tax Code Determination in Purchasing & Invoice Receipt</strong><small>PO tax code, automatic determination, deductible vs non-deductible input tax, MIRO, FI posting, testing, and diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+    </div>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="plain-p2p-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Plain P2P memory model</p>
+      <h2>Three business events create three different document effects.</h2>
+      <p>This is the fastest baseline to recall in an assessment. Then explain the variant that changes it.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Plain procure to pay document and accounting effects">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Step</th><th scope="col">Main SAP document</th><th scope="col">Accounting effect</th><th scope="col">Fiori recall</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1. Purchase Order</th>
+            <td>Purchasing document / PO history starts</td>
+            <td>No normal FI accounting document from creating the PO itself.</td>
+            <td>Manage Purchase Orders</td>
+          </tr>
+          <tr>
+            <th scope="row">2. Goods Receipt</th>
+            <td>Material document; PO history updated</td>
+            <td>If valuated: accounting document, typically stock or consumption versus GR/IR.</td>
+            <td>Post Goods Receipt for Purchasing Document</td>
+          </tr>
+          <tr>
+            <th scope="row">3. Supplier Invoice</th>
+            <td>Logistics invoice document; PO history updated</td>
+            <td>Accounting document, typically GR/IR versus supplier liability, plus tax or price-difference effects where applicable.</td>
+            <td>Create Supplier Invoice</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <p><strong>Assessment answer:</strong> “PO commits, GR proves receipt, invoice proves the supplier claim. The PO normally has no FI posting. A valuated GR creates material and accounting documents, and invoice verification creates the invoice and FI liability. PO history ties the events together; GR/IR bridges timing between receipt and invoice.”</p>
     </div>
   </section>
 
