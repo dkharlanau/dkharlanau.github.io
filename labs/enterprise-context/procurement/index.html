@@ -1027,6 +1027,209 @@ source_links:
     <p>SAP Help: <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/72256b54f94c8f4ce10000000a4450e5.html" target="_blank" rel="noopener">Clear GR/IR Clearing Account</a>.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="procurement-analytics" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Procurement analytics</p>
+      <h2>KPIs show where spend, contracts, requisitions, and purchase orders need attention.</h2>
+      <p>Procurement analytics turns purchasing documents and accounting data into control signals. For assessment questions, do not only name the KPI. Explain what population it measures, what business risk it exposes, and what action a buyer should take next.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Spend and control</h3>
+        <p>Check where money is spent, whether purchasing uses purchase orders and contracts, and whether document values remain aligned.</p>
+      </div>
+      <div>
+        <h3>Contracts</h3>
+        <p>Check expiry, usage, leakage, and how much of a quantity or value contract has already been consumed.</p>
+      </div>
+      <div>
+        <h3>Execution</h3>
+        <p>Check requisition touch, cycle time, overdue purchase orders, delivery performance, and invoice-price variance.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__callout">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <div>
+        <strong>Assessment shortcut</strong>
+        <p><strong>Non-managed spend</strong> means spend without a purchase order. <strong>Off-contract spend</strong> means purchasing outside contract coverage. <strong>Contract leakage</strong> is more specific: a valid contract existed and could have been used, but the purchase order did not reference it.</p>
+      </div>
+    </div>
+
+    <h3>General purchasing KPIs</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="General purchasing analytics KPIs">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">KPI / app</th><th scope="col">What it shows</th><th scope="col">Lead interpretation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Purchase Group Activities</th>
+            <td>Completed purchasing documents for a purchasing group and category in a selected period, including purchase orders, requisitions, contracts, scheduling agreements, and goods receipts. It can also show goods-receipt count, total invoice amount, and PO net amount.</td>
+            <td>Use it as an activity and workload view for the purchasing group, then drill into the document type that creates the exception.</td>
+          </tr>
+          <tr>
+            <th scope="row">Off-Contract Spend</th>
+            <td>Spend related to purchases without a contract reference, normally analyzed over the previous year to date.</td>
+            <td>High values can indicate weak contract adoption or categories where negotiated agreements are not being used.</td>
+          </tr>
+          <tr>
+            <th scope="row">Non-Managed Spend</th>
+            <td>Amount paid to suppliers without a purchase-order reference compared with total supplier spend. The calculation is based on accounting documents.</td>
+            <td>This is a stronger control signal than off-contract spend because the purchase bypassed the PO layer itself.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchasing Spend</th>
+            <td>Purchasing spend by filters such as supplier, material group, purchasing group, supplier country, and purchasing organization.</td>
+            <td>Use it to locate where the spend is concentrated before asking why cost, risk, or sourcing performance differs.</td>
+          </tr>
+          <tr>
+            <th scope="row">Spend Variance</th>
+            <td>Purchase-order value, goods-receipt value, and invoice value by supplier or material, including the relationship between these values for selected filters.</td>
+            <td>Use it to find where commitment, receipt, and invoicing no longer tell the same commercial story.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Contract KPIs</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Contract purchasing analytics KPIs">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">KPI / app</th><th scope="col">What it shows</th><th scope="col">Assessment point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Contract Expiry</th>
+            <td>Contracts that expire in a selected time frame, including the number of contracts, target amount, and released amount.</td>
+            <td>Expiry is a continuity risk: renewal or replacement sourcing may be needed before operational call-offs are blocked.</td>
+          </tr>
+          <tr>
+            <th scope="row">Unused Contracts</th>
+            <td>Contracts not used during the previous year to date, with target and released amounts.</td>
+            <td>An unused contract can mean demand disappeared, the agreement is not adopted, or another source is being used.</td>
+          </tr>
+          <tr>
+            <th scope="row">Contract Leakage / Last 365 Days</th>
+            <td>Spend from purchase orders without a contract reference even though an existing contract could have been used.</td>
+            <td>Leakage asks not only “Was a contract referenced?” but “Was a relevant contract available?”</td>
+          </tr>
+          <tr>
+            <th scope="row">Quantity Contract Consumption</th>
+            <td>Consumption percentage for quantity contracts, including target quantity and released quantity.</td>
+            <td>Compare remaining quantity with expected demand and contract validity.</td>
+          </tr>
+          <tr>
+            <th scope="row">Value Contract Consumption</th>
+            <td>Consumption percentage for value contracts, including target amount and released amount.</td>
+            <td>Near-full consumption may require a new agreement, an extension, or a controlled stop to further releases.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Purchase requisition KPIs</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchase requisition analytics KPIs">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">KPI / app</th><th scope="col">What it shows</th><th scope="col">Assessment point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Purchase Requisition Average Approval Time</th>
+            <td>Average time in days from shopping-cart creation to purchase-order creation over the previous year to date.</td>
+            <td>Use it as a cycle-delay indicator and separate approval waiting time from later buyer processing where the analysis allows it.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchase Requisition Item Changes</th>
+            <td>Number of PR item changes, including price, quantity, purchasing group, supplier, and total item changes.</td>
+            <td>Frequent changes can point to poor request quality, unstable demand, or manual rework.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchase Requisition Item Types</th>
+            <td>Counts of material, free-text, and catalog items, including creation through classic GUI and SAP Fiori channels.</td>
+            <td>More catalog or governed material items normally provide stronger reuse and control than unmanaged free text.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchase Requisition-to-Order Cycle Time</th>
+            <td>Average number of days from shopping-cart creation until the purchase order is sent to the supplier.</td>
+            <td>This measures end-to-end conversion speed, not only one approval step.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchase Requisition Touch Rate</th>
+            <td>Share of requisition items processed as no touch, low touch, or high touch.</td>
+            <td><strong>No touch</strong>: automatic processing. <strong>Low touch</strong>: approval is needed, but no later PR or PO changes are required. <strong>High touch</strong>: manual changes are required after creation.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Purchase order KPIs</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchase order analytics KPIs">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">KPI / app</th><th scope="col">What it shows</th><th scope="col">Assessment point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Overdue Purchase Order Items</th>
+            <td>PO items with a delivery date in the past that are still not fully delivered.</td>
+            <td>Start with supplier, delivery date, open quantity, confirmation history, and business criticality.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchase Order Value</th>
+            <td>Current purchase-order value for a selected period and filters such as material, supplier, and plant.</td>
+            <td>Use it to understand commitment volume before drilling into supplier or category drivers.</td>
+          </tr>
+          <tr>
+            <th scope="row">Purchase Order Average Delivery Time Weighted</th>
+            <td>Weighted supplier delivery-time view based on historical purchase-order delivery performance.</td>
+            <td>Use historical lead-time behavior as evidence when checking planning parameters and supplier reliability.</td>
+          </tr>
+          <tr>
+            <th scope="row">Invoice Price Variance</th>
+            <td>Monthly trend of invoice-price variance over the previous year to date, based on the weighted material price KPI.</td>
+            <td>Variance can come from changed commercial terms, quantity or scale effects, master-data conditions, or incorrect invoicing. Trace the price source before correcting the invoice.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Procurement Overview app</h3>
+    <p>The <em>Procurement Overview</em> app is an operational cockpit. It places actionable cards on one page and ranks items so the buyer can move from an exception directly to the relevant purchasing app or object page.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Procurement Overview cards">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Card</th><th scope="col">What to watch</th><th scope="col">Typical drill-down</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Monitor Purchase Contracts</th><td>Expiring or nearly consumed contracts; priority considers time remaining, target value, and consumption.</td><td>Manage Contracts or the selected contract object page.</td></tr>
+          <tr><th scope="row">Monitor Purchase Requisition Items</th><td>Open PR items and unsourced items with delivery dates approaching; priority considers item value and time to delivery.</td><td>Manage Purchase Requisitions, filtered to the selected item.</td></tr>
+          <tr><th scope="row">Monitor Purchase Order Items</th><td>Overdue items and items in approval; priority considers overdue days and item value.</td><td>Monitor Purchase Order Items or the relevant PO item.</td></tr>
+          <tr><th scope="row">Monitor RFQs</th><td>Requests for quotation ordered by submission deadline.</td><td>Manage RFQs or the selected RFQ object page.</td></tr>
+          <tr><th scope="row">Purchasing Spend</th><td>Overall purchasing spend, with views such as supplier or material group.</td><td>Purchasing Spend KPI with the selected filter.</td></tr>
+          <tr><th scope="row">Non-Managed Spend</th><td>Invoice spend that is not associated with a purchase order.</td><td>Purchasing Spend analysis for the responsible supplier or material group.</td></tr>
+          <tr><th scope="row">Off-Contract Spend</th><td>Spend that is not associated with contract coverage.</td><td>Purchasing Spend analysis, usually filtered by supplier or material group.</td></tr>
+          <tr><th scope="row">Supplier Performance Monitoring</th><td>Supplier performance compared with purchasing spend, including supplier feedback score.</td><td>Supplier Evaluation KPI grouped by supplier.</td></tr>
+          <tr><th scope="row">Purchase Requisition Touch Rate</th><td>No-touch, low-touch, and high-touch proportions.</td><td>Purchase Requisition Touch Rate KPI for detailed sorting and analysis.</td></tr>
+          <tr><th scope="row">Purchase Requisition Item Types</th><td>Mix of catalog, material, free-text, and other requisition item types.</td><td>Purchase Requisition Item Types KPI.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__callout">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <div>
+        <strong>60-second lead answer</strong>
+        <p>“I group procurement KPIs by the decision they control. Spend KPIs show where money bypasses a PO or contract. Contract KPIs show expiry, usage, and leakage. Requisition KPIs show automation, rework, and cycle time. Purchase-order KPIs show delivery execution, commitment value, supplier lead-time performance, and invoice-price variance. The Procurement Overview app brings the most actionable exceptions into one cockpit and lets the buyer drill into the source document.”</p>
+      </div>
+    </div>
+
+    <p><strong>SAP Help path:</strong> SAP S/4HANA → Enterprise Business Applications → Sourcing and Procurement (Materials Management) → Procurement Analytics → Spend Visibility.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="synthetic-cases" data-reveal>
     <span id="procurement-assessment-path" aria-hidden="true"></span>
     <header>
