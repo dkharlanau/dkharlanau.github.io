@@ -1,0 +1,234 @@
+{
+  "version": "0.2",
+  "process": {
+    "id": "sap_procure_to_pay",
+    "name": "Standard Procure-to-Pay",
+    "description": "Buy stock or consumption material from an external supplier with controlled quantity, date, price, receipt, and invoice history.",
+    "owner": "p2p_process_owner",
+    "start": "demand",
+    "trigger": "A material or service requirement needs external procurement.",
+    "outcome": "Supplier liability is settled after controlled purchasing, receipt, and invoice processing.",
+    "tags": [
+      "sap",
+      "s4hana",
+      "mm",
+      "fi",
+      "p2p",
+      "enterprise-context"
+    ]
+  },
+  "roles": [
+    {
+      "id": "requester",
+      "name": "Requester / Planner"
+    },
+    {
+      "id": "buyer",
+      "name": "Buyer"
+    },
+    {
+      "id": "goods_receiver",
+      "name": "Goods Receiver"
+    },
+    {
+      "id": "accounts_payable",
+      "name": "Accounts Payable"
+    },
+    {
+      "id": "p2p_process_owner",
+      "name": "P2P Process Owner"
+    }
+  ],
+  "systems": [
+    {
+      "id": "sap_s4hana",
+      "name": "SAP S/4HANA"
+    }
+  ],
+  "objects": [
+    {
+      "id": "purchase_requisition",
+      "name": "Purchase Requisition"
+    },
+    {
+      "id": "purchase_order",
+      "name": "Purchase Order"
+    },
+    {
+      "id": "material_document",
+      "name": "Material Document"
+    },
+    {
+      "id": "supplier_invoice",
+      "name": "Supplier Invoice"
+    },
+    {
+      "id": "accounting_document",
+      "name": "Accounting Document"
+    }
+  ],
+  "controls": [
+    {
+      "id": "document_type",
+      "name": "Document type"
+    },
+    {
+      "id": "item_category",
+      "name": "Item category"
+    },
+    {
+      "id": "account_assignment",
+      "name": "Account assignment"
+    },
+    {
+      "id": "source_determination",
+      "name": "Source determination"
+    },
+    {
+      "id": "purchasing_conditions",
+      "name": "Purchasing conditions"
+    },
+    {
+      "id": "approval",
+      "name": "Approval"
+    },
+    {
+      "id": "gr_ir_settings",
+      "name": "GR/IR settings"
+    }
+  ],
+  "steps": [
+    {
+      "id": "demand",
+      "name": "Demand requires external procurement",
+      "type": "event",
+      "actor": "requester",
+      "system": "sap_s4hana",
+      "transitions": [
+        {
+          "to": "purchase_requisition"
+        }
+      ]
+    },
+    {
+      "id": "purchase_requisition",
+      "name": "Create purchase requisition",
+      "type": "user_task",
+      "actor": "requester",
+      "system": "sap_s4hana",
+      "objects": [
+        "purchase_requisition"
+      ],
+      "transitions": [
+        {
+          "to": "source_determination"
+        }
+      ]
+    },
+    {
+      "id": "source_determination",
+      "name": "Determine source of supply",
+      "type": "decision",
+      "actor": "buyer",
+      "system": "sap_s4hana",
+      "controls": [
+        "source_determination"
+      ],
+      "transitions": [
+        {
+          "to": "purchase_order"
+        }
+      ]
+    },
+    {
+      "id": "purchase_order",
+      "name": "Create and approve purchase order",
+      "type": "user_task",
+      "actor": "buyer",
+      "system": "sap_s4hana",
+      "objects": [
+        "purchase_order"
+      ],
+      "controls": [
+        "document_type",
+        "item_category",
+        "account_assignment",
+        "purchasing_conditions",
+        "approval"
+      ],
+      "transitions": [
+        {
+          "to": "goods_receipt"
+        }
+      ]
+    },
+    {
+      "id": "goods_receipt",
+      "name": "Post goods receipt",
+      "type": "user_task",
+      "actor": "goods_receiver",
+      "system": "sap_s4hana",
+      "objects": [
+        "material_document"
+      ],
+      "transitions": [
+        {
+          "to": "supplier_invoice"
+        }
+      ]
+    },
+    {
+      "id": "supplier_invoice",
+      "name": "Verify supplier invoice",
+      "type": "user_task",
+      "actor": "accounts_payable",
+      "system": "sap_s4hana",
+      "objects": [
+        "supplier_invoice",
+        "accounting_document"
+      ],
+      "controls": [
+        "gr_ir_settings"
+      ],
+      "transitions": [
+        {
+          "to": "payment"
+        }
+      ]
+    },
+    {
+      "id": "payment",
+      "name": "Settle supplier liability",
+      "type": "end",
+      "actor": "accounts_payable",
+      "system": "sap_s4hana",
+      "objects": [
+        "accounting_document"
+      ]
+    }
+  ],
+  "extensions": {
+    "sap": {
+      "process_area": "MM-FI",
+      "applications": [
+        "SAP S/4HANA"
+      ]
+    },
+    "dkharlanau": {
+      "source_process_code": "MM.P2P",
+      "source_atlas": "_data/labs/enterprise_context/processes/procurement_process_atlas.yml",
+      "memory_hook": "Need something, order it, receive it, match the invoice, pay it.",
+      "lead_questions": [
+        "Which step owns the first wrong value?",
+        "Is the item stock or direct consumption?",
+        "What exactly is matched during invoice verification?"
+      ],
+      "source_refs": [
+        "SRC-SAP-PUR-PR",
+        "SRC-SAP-PUR-PO",
+        "SRC-SAP-PUR-GR",
+        "SRC-SAP-PUR-INVOICE"
+      ]
+    }
+  }
+}

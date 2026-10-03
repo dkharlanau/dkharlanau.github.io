@@ -79,6 +79,7 @@ source_links:
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.procurement %}
 {% assign evidence = site.data.labs.enterprise_context.sources.procurement %}
+{% assign procurement_visual = site.data.labs.enterprise_context.visuals.procurement_runtime.visual %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Procurement</li></ol>
@@ -128,6 +129,28 @@ source_links:
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
       <p><strong>Fact vs assumption:</strong> “{{ graph.lead_decision_model.evidence_boundary.fact }}” is a fact. “{{ graph.lead_decision_model.evidence_boundary.assumption }}” is an assumption. {{ graph.lead_decision_model.evidence_boundary.proof }}</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime-ownership" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime ownership</p>
+      <h2>Follow the decision chain before changing the purchase order.</h2>
+      <p>This view is generated from the canonical procurement runtime pipeline. It keeps demand, purchasing, logistics execution, and finance in one sequence so a symptom can be traced to the first decision that diverged.</p>
+    </header>
+
+    {% include labs/semantic-lane-flow.html model=procurement_visual %}
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>How to use it:</strong> start from the visible symptom, move left until the last proven-correct state, then ask which owner can produce evidence for the next decision. Do not overwrite the PO before that boundary is clear.</p>
+    </div>
+
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/data/procurement-runtime-visual.json"><span>JSON</span><strong>Open the semantic visual model</strong><small>The same Visual Workbench-compatible nodes, ownership lanes, edges, and named views used by this page.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/enterprise-context/data/procurement-p2p.process.json"><span>PROCESS</span><strong>Open the governed P2P process contract</strong><small>A Process as Code v0.2 projection derived from the canonical MM.P2P Process Atlas entry for diff, impact, BPMN, RACI, and test-scope tooling.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/interview-readiness/diagnostic-lab/?case=po-ack"><span>CASE</span><strong>Diagnose a missing supplier acknowledgement</strong><small>Practice the ORDER → OUTPUT boundary with progressive evidence instead of jumping from a missing acknowledgement to a transport fix.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      <a href="/labs/assessment/practice-engine/"><span>ASSESS</span><strong>Practice the same reasoning under pressure</strong><small>Use the procurement and logistics track to test business goal, flow, decision logic, boundary, evidence, and trade-offs.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
     </div>
   </section>
 

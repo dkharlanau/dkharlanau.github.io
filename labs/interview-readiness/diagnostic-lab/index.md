@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-19
+last_modified_at: 2026-10-02
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -217,7 +217,21 @@ tags:
     metaRow.append(count,level); card.append(metaRow,p); evidence.appendChild(card);
   }
 
-  select.addEventListener('change', () => { index = Number(select.value) || 0; step = 0; renderCase(); });
+  const requestedCase = new URLSearchParams(window.location.search).get('case');
+  const requestedIndex = cases.findIndex(item => item.id === requestedCase);
+  if (requestedIndex >= 0) {
+    index = requestedIndex;
+    select.value = String(index);
+  }
+
+  select.addEventListener('change', () => {
+    index = Number(select.value) || 0;
+    step = 0;
+    const url = new URL(window.location.href);
+    url.searchParams.set('case', cases[index].id);
+    window.history.replaceState(null, '', url);
+    renderCase();
+  });
   reveal.addEventListener('click', () => { if (step < cases[index].evidence.length) { step += 1; renderCase(); } });
   reset.addEventListener('click', () => { step = 0; renderCase(); });
   renderCase();
