@@ -1,5 +1,8 @@
 # Editorial Design System
 
+SAP Enterprise author portraits use the picture frame as the sole clipping owner;
+the nested image has zero border radius so it cannot expose the frame background.
+
 The site's visual language: a calm editorial reading experience for long
 technical material. White background, dark text, one blue accent, generous
 whitespace, and typography that carries hierarchy instead of boxes.
