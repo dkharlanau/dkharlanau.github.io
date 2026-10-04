@@ -17,8 +17,10 @@ tools:
     docs_url: "https://dkharlanau.github.io/process-as-code/"
     source_url: "https://github.com/dkharlanau/process-as-code"
     quickstart: |
-      python -m pip install "git+https://github.com/dkharlanau/process-as-code.git"
-      process-code validate examples/order-to-cash.yaml
+      git clone --depth 1 https://github.com/dkharlanau/process-as-code.git
+      cd process-as-code
+      python -m pip install -e .
+      process-code validate examples/customer-creation.process.yaml --strict
     output: "Validated process contract, semantic diff, impact analysis, generated documentation, and governed agent context."
     next: "Decision Tables as Code or Interface as Code"
 
@@ -34,6 +36,8 @@ tools:
     docs_url: "https://dkharlanau.github.io/decision-tables-as-code/"
     source_url: "https://github.com/dkharlanau/decision-tables-as-code"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/decision-tables-as-code.git
+      cd decision-tables-as-code
       python -m pip install -e .
       dtac validate examples/order-routing.yaml
       dtac test examples/order-routing.yaml examples/order-routing.scenarios.yaml
@@ -52,8 +56,10 @@ tools:
     docs_url: "https://dkharlanau.github.io/interface-as-code/"
     source_url: "https://github.com/dkharlanau/interface-as-code"
     quickstart: |
-      pip install https://github.com/dkharlanau/interface-as-code/releases/download/v0.3.0/interface_as_code-0.3.0-py3-none-any.whl
-      iac validate examples/reference-landscape
+      git clone --depth 1 https://github.com/dkharlanau/interface-as-code.git
+      cd interface-as-code
+      python -m pip install -e .
+      interface-as-code validate examples/reference-landscape/
     output: "Validated interface inventory, governance findings, operational artifacts, and typed references to specialized contracts."
     next: "Mapping as Code"
 
@@ -69,6 +75,8 @@ tools:
     docs_url: "https://dkharlanau.github.io/mapping-as-code/"
     source_url: "https://github.com/dkharlanau/mapping-as-code"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/mapping-as-code.git
+      cd mapping-as-code
       python -m pip install -e .
       map-code validate examples/customer-master.yaml
       map-code score examples/customer-master.yaml
@@ -87,6 +95,8 @@ tools:
     docs_url: "https://dkharlanau.github.io/reconciliation-as-code/"
     source_url: "https://github.com/dkharlanau/reconciliation-as-code"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/reconciliation-as-code.git
+      cd reconciliation-as-code
       python -m pip install -e .
       rac run examples/customer-migration/reconciliation.yaml --evidence build/evidence.json --report build/evidence.md --no-fail-on-diff
     output: "Deterministic control result, differences, evidence JSON, and human-readable reconciliation report."
@@ -104,6 +114,8 @@ tools:
     docs_url: "https://github.com/dkharlanau/data-relationship-map#readme"
     source_url: "https://github.com/dkharlanau/data-relationship-map"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/data-relationship-map.git
+      cd data-relationship-map
       python -m pip install .
       data-relationship-map investigate examples/customer-chain.json --policy examples/identity-policy.json --focus AFS:4711 --json-output build/investigation.json --markdown build/investigation.md
     output: "Bounded identity path, lineage evidence, policy result, and portable investigation handoff."
@@ -121,6 +133,9 @@ tools:
     docs_url: "https://dkharlanau.github.io/transformation-graph/"
     source_url: "https://github.com/dkharlanau/transformation-graph"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/transformation-graph.git
+      cd transformation-graph
+      python -m pip install -e .
       transformation-graph build-project examples/project/transformation-project.yaml --output-dir build
       transformation-graph impact build/graph.yaml change.bp-model --depth 2
     output: "Project graph, impact paths, role and governance views, scorecards, and portable graph exports."
@@ -138,6 +153,8 @@ tools:
     docs_url: "https://dkharlanau.github.io/cutover-graph/"
     source_url: "https://github.com/dkharlanau/cutover-graph"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/cutover-graph.git
+      cd cutover-graph
       python -m pip install .
       cutover-graph control-room examples/timed-cutover-after.json --observed-at 2026-08-30T22:30:00Z --readiness-policy examples/readiness-policy.json --html build/control-room.html
     output: "Deterministic cutover state, dependency readiness, timing evidence, contingency status, and control-room report."
@@ -155,6 +172,9 @@ tools:
     docs_url: "https://github.com/dkharlanau/enterprise-architecture-composer#readme"
     source_url: "https://github.com/dkharlanau/enterprise-architecture-composer"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/enterprise-architecture-composer.git
+      cd enterprise-architecture-composer
+      npm ci
       node bin/eac.mjs report examples/scenarios/global-b2b-manufacturer.context.json --output /tmp/eac-review.md
     output: "Blueprint, integration decisions, findings, migration steps, dependency roadmap, and governed downstream handoffs."
     next: "Visual Workbench"
@@ -171,6 +191,8 @@ tools:
     docs_url: "https://github.com/dkharlanau/visual-workbench#readme"
     source_url: "https://github.com/dkharlanau/visual-workbench"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/visual-workbench.git
+      cd visual-workbench
       npm ci --ignore-scripts --no-audit --no-fund
       npm run build
       node dist/cli.js render examples/order-fulfillment-lanes.md --view executive --output /tmp/visual-workbench-proof.svg
@@ -189,6 +211,8 @@ tools:
     docs_url: "https://dkharlanau.github.io/sap-agentic-operations/docs/"
     source_url: "https://github.com/dkharlanau/sap-agentic-operations"
     quickstart: |
+      git clone --depth 1 https://github.com/dkharlanau/sap-agentic-operations.git
+      cd sap-agentic-operations
       python -m pip install .
       sao incident analyze examples/evidence-packs/customer-replication-missing-event --output /tmp/sao-30-second-proof
     output: "Evidence-backed diagnosis, missing evidence, safe next actions, blocked unsafe shortcuts, and business-level resolution condition."
