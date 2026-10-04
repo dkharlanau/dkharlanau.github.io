@@ -380,6 +380,18 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Deep dives</p>
+      <h2>Open the capability when the product boundary matters.</h2>
+      <p>The overview keeps the suite mental model compact. These pages go deeper into user navigation, governance, and AI-assisted process work.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/signavio/collaboration-hub/"><span>HUB</span><strong>Process Collaboration Hub</strong><small>Process landscapes, Published vs Preview, search, feedback, approvals, read confirmations, and cross-suite navigation.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/signavio/embedded-ai/"><span>AI</span><strong>Embedded AI in SAP Signavio</strong><small>Process Modeler, recommenders, Process Analyzer, insight descriptions, AI-assisted initiatives, licensing boundaries, and human review.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Five capability areas</p>
       <h2>Remember the suite by responsibility, not by logo.</h2>
     </header>
