@@ -26,7 +26,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <p>Current practice model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Assessment tracks</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>5</strong><small>Reasoning levels</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>82</strong><small>Structured practice cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>87</strong><small>Structured practice cases</small></div>
       <em>The vertical backlog is closed. The practice layer now adapts to scoring history.</em>
     </div>
   </header>
@@ -121,6 +121,13 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <div>
         <p><strong>MRP recall:</strong> VB = manual reorder point, VM = automatic reorder point, V1/V2 add external requirements, and R1/R2 are time-phased procedures. Reorder point = safety stock + expected demand during replenishment lead time.</p>
         <p><strong>MRP Live vs classic:</strong> MRP Live creates schedule lines for a valid scheduling agreement and purchase requisitions for other external procurement. Classic MRP keeps detailed creation controls and MRP Lists. Diagnose in sequence: shortage trigger → lot size → dates → proposal type → source → execution.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      <div>
+        <p><strong>Inventory recall:</strong> UNBW = quantity-managed but nonvaluated stock; NLAG = no stock quantity or stock value, so receipt goes directly to consumption. Split valuation keeps one material number but separates partial stocks by valuation type.</p>
+        <p><strong>Physical inventory:</strong> count the exact stock management unit, separate timing from real differences, and distinguish posting block from Freeze Book Inventory. Cycle counting increases frequency for selected materials; sampling is a statistical procedure, not a casual partial count. A new movement type is justified only after standard semantics, field selection, and account determination are proven insufficient.</p>
       </div>
     </div>
   </section>
