@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-29
+last_modified_at: 2026-10-04
 hide_global_cta: true
 tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
 last_reviewed: 2026-08-16
@@ -101,6 +101,75 @@ semantic_links:
       <a href="/labs/ai-ready/security-governance/"><span>06</span><strong>Security and Governance</strong><small>Prompt injection, least privilege, secrets, sensitive data, approvals, audit.</small><i class="material-symbols-outlined" aria-hidden="true">shield</i></a>
       <a href="/labs/ai-ready/build-operate/"><span>07</span><strong>Build and Operate</strong><small>Versions, deployment, traces, budgets, token economics, retries, degraded modes, rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
     </div>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="support-agent-production-pattern" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Case / AI support agent</p>
+      <h2>Design for resolution, not only for answers.</h2>
+      <p>A useful support agent must do more than retrieve text. It needs current context, controlled tools, clear stop conditions, safe escalation, and evidence that the issue was actually resolved.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">support_agent</span>
+      <div>
+        <p><strong>Case claim:</strong> the AssemblyAI video uses an 80% ticket-resolution result. Treat this as a case-specific outcome, not as a general target.</p>
+        <p><strong>Lead question:</strong> before accepting the number, define what <em>resolved</em> means, which ticket classes are in scope, when a human takes over, and how wrong actions or reopened tickets are counted.</p>
+      </div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Production pattern</h3>
+        <ol>
+          <li><strong>Understand the request.</strong> Classify intent, urgency, identity, and the business object involved.</li>
+          <li><strong>Retrieve approved knowledge.</strong> Use current product guidance, runbooks, policies, and solved cases as evidence.</li>
+          <li><strong>Read live facts through tools.</strong> Account status, order state, ticket history, or system evidence should come from the source system, not from model memory.</li>
+          <li><strong>Act through typed functions.</strong> Validate parameters, permissions, policy, retries, and idempotency before any side effect.</li>
+          <li><strong>Check the result.</strong> Confirm that the business state changed as expected instead of assuming a successful API response means the problem is solved.</li>
+          <li><strong>Escalate with context.</strong> When confidence, authority, or policy is insufficient, pass the evidence, attempted steps, and open question to a human.</li>
+          <li><strong>Evaluate the full trajectory.</strong> Measure answer quality, tool selection, action correctness, escalation quality, latency, cost, and final resolution.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>What changes for voice</h3>
+        <p>Voice adds an input-quality dependency before the model can reason or call a tool. Names, order IDs, email addresses, phone numbers, and codes must be captured correctly.</p>
+        <p>If the input entity is wrong, a correct tool call can still query the wrong object. The system therefore needs confirmation rules for important identifiers and a safe path when the value is uncertain.</p>
+        <p>Latency also becomes part of the experience. A long silent tool call can look like a failed call, so the interaction design needs an explicit transition or hold state while the lookup runs.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Failure modes a Lead should test</h3>
+      <table>
+        <thead><tr><th scope="col">Failure</th><th scope="col">What goes wrong</th><th scope="col">Control</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Wrong retrieval</th><td>The agent answers from stale or irrelevant knowledge.</td><td>Approved sources, metadata, retrieval evals, citations, and freshness rules.</td></tr>
+          <tr><th scope="row">Wrong entity</th><td>An ID, email, name, or code is misunderstood and the tool queries the wrong object.</td><td>Entity validation, read-back confirmation, schema checks, and safe retry.</td></tr>
+          <tr><th scope="row">Answer without action</th><td>The agent explains the policy but cannot complete the customer job.</td><td>Typed tools for the allowed action, with explicit authority boundaries.</td></tr>
+          <tr><th scope="row">Unsafe action</th><td>A plausible model decision triggers a side effect that policy or authorization should block.</td><td>Deterministic policy checks, least privilege, approval for high-risk actions, and audit logs.</td></tr>
+          <tr><th scope="row">Duplicate side effect</th><td>A retry creates the same refund, change, or update twice.</td><td>Idempotency keys, durable action state, and reconciliation.</td></tr>
+          <tr><th scope="row">Bad escalation</th><td>The human receives the ticket but must restart the investigation.</td><td>Transfer the summary, evidence, attempted actions, confidence gap, and next question.</td></tr>
+          <tr><th scope="row">Inflated resolution metric</th><td>The system counts deflection, abandonment, or temporary answers as success.</td><td>Define resolution before the pilot and track reopen rate, correction rate, CSAT, and human takeover.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Translate the pattern to SAP support</h3>
+        <p>For SAP operations, a safe first scope is not autonomous Customizing. The agent can retrieve approved runbooks, classify the incident, read allowed system evidence, compare a good and bad business object, propose the next diagnostic step, and prepare a handoff.</p>
+        <p>Examples include a blocked sales order, a failed IDoc, a PO/GR/IR mismatch, or a recurring master-data defect. The SAP system remains the owner of durable state and authorization. Material changes stay behind normal SAP controls and human accountability.</p>
+      </div>
+      <div>
+        <h3>Lead decision</h3>
+        <p>Use an agent when the next useful step depends on evidence discovered during the task. Keep a normal workflow when the sequence is already known. Keep exact policy, authorization, financial controls, and irreversible actions outside model discretion.</p>
+        <p>The architecture is complete only when we can explain the normal path, the failure path, the human takeover, and the evidence that proves the final business outcome.</p>
+      </div>
+    </div>
+
+    <p><strong>Case source:</strong> <a href="https://youtu.be/pyvRID_CZZU?si=jNbxDcPl9lMMhNnD" target="_blank" rel="noopener">AssemblyAI — “We Built an AI Support Agent That Resolves 80% of Tickets”</a>. Supporting technical reference: <a href="https://www.assemblyai.com/blog/build-ai-voice-agent-for-customer-support" target="_blank" rel="noopener">AssemblyAI — Build an AI voice agent for customer support that can look up orders</a>, published 30 Sep 2026. The 80% figure is kept as a case claim and is not used as a general benchmark.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
