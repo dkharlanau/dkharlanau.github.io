@@ -170,6 +170,16 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
         <p><a href="/labs/ai-ready/#support-agent-production-pattern">Open the support-agent production pattern →</a></p>
       </div>
     </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">route</span>
+      <div>
+        <p><strong>Agent-native interface recall:</strong> MCP gives an agent a standard channel to tools, but a large undifferentiated tool catalog is still a design problem. Prefer task-first discovery: identify the business goal, expose only the relevant tools and prerequisites, execute with bounded context, and keep large intermediate data outside the model context when possible.</p>
+        <p><strong>90-second Lead answer:</strong> I would not connect an agent to hundreds of SAP and enterprise tools and expect the model to discover the dependency graph from raw schemas. I would introduce a governed discovery layer that maps the task to a small capability set, explains prerequisites and ownership, then lets the agent execute the investigation step by step. For a blocked delivery, that may lead from SD document flow to EWM, TM, or integration evidence depending on the first wrong state. Human dashboards still remain useful for monitoring, approval, and exception review.</p>
+        <p><strong>Challenge question:</strong> “We already have MCP servers for every application. Why do we need anything else?” Answer: because protocol connectivity does not solve tool selection, prerequisites, cross-system planning, context overload, authorization, or business completion.</p>
+        <p><a href="/labs/ai-ready/tools-mcp/#design-the-tool-surface-for-the-agent">Open the agent-facing MCP design pattern →</a></p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__method" data-reveal>
