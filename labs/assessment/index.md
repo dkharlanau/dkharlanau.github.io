@@ -180,6 +180,16 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
         <p><a href="/labs/ai-ready/tools-mcp/#design-the-tool-surface-for-the-agent">Open the agent-facing MCP design pattern →</a></p>
       </div>
     </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+      <div>
+        <p><strong>AI SRE / closed-loop operations recall:</strong> observability tells us what changed; RCA must explain the causal chain. A production agent needs a live dependency model, multi-hop evidence search, an explicit autonomy boundary, and verification after any remediation.</p>
+        <p><strong>90-second Lead answer:</strong> I would separate incident automation into detect, diagnose, prepare, execute, and verify. The hardest part is usually not alert collection but finding the first causally consistent wrong state across several systems. In SAP, that may require tracing a business document through master data, configuration, integration, EWM, TM, or FI/CO. I would start with read-only evidence collection and diagnosis, then allow prepared remediation. Write execution stays behind SAP authorization and change controls until a narrow case is proven safe and reversible. The loop closes only when the business state is verified, not when a technical command returns success.</p>
+        <p><strong>Challenge question:</strong> “Our AI found the root cause because the error started after a deployment.” Answer: timing is useful evidence, but correlation alone is not proof. Show the dependency path, the first changed state, an alternative hypothesis that was ruled out, and the recovery evidence after the fix.</p>
+        <p><a href="/labs/ai-ready/agent-architecture/#closed-loop-operations-need-a-model-of-the-system">Open the closed-loop operations pattern →</a></p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__method" data-reveal>
