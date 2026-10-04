@@ -117,6 +117,14 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       </div>
     </div>
     <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+      <div>
+        <p><strong>Invoice Verification recall:</strong> first separate <strong>posting</strong> from <strong>payment</strong>. An invoice can post and still be blocked for payment. Then identify whether matching is PO-based, GR-based, or without PO reference.</p>
+        <p><strong>High-value contrasts:</strong> supplier-invoice <strong>Hold</strong> creates no FI update and no PO-history update; <strong>Park</strong> creates a parked FI document and updates PO history; <strong>Save as Complete</strong> must be postable and also reduces the PO commitment. For a price variance, standard price normally sends the variance to price differences, while moving average price can revalue stock when stock coverage exists. Clear GR/IR only after proving that no further GR or IR is expected.</p>
+        <p><a href="/labs/enterprise-context/procurement/#invoice-verification">Open the Invoice Verification control model →</a></p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">query_stats</span>
       <div>
         <p><strong>MRP recall:</strong> VB = manual reorder point, VM = automatic reorder point, V1/V2 add external requirements, and R1/R2 are time-phased procedures. Reorder point = safety stock + expected demand during replenishment lead time.</p>
