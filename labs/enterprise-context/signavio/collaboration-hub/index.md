@@ -394,6 +394,11 @@ tags:
         <p>Menu, entry diagram, search, notifications, Preview and Published views, editing, approvals, read confirmations, and Process Intelligence visibility.</p>
       </article>
       <article>
+        <span>SAP Learning · process architecture</span>
+        <h3><a href="https://learning.sap.com/courses/managing-business-processes-with-sap-signavio-solutions/explaining-process-architecture-and-lifecycle_eded7a9c-509a-4424-b275-b537550fe36d" rel="noopener noreferrer">Explaining Process Architecture and Lifecycle</a></h3>
+        <p>Value chains, process areas, end-to-end processes, subprocesses, alternative navigation maps, and the typical three-to-five-level architecture.</p>
+      </article>
+      <article>
         <span>SAP Help · Collaboration Hub user guide</span>
         <h3><a href="https://help.sap.com/doc/966865eb1a274bccadc05e0bded96694/SHIP/en-US/sap-signavio-process-collaboration-hub-user-guide-EN.pdf" rel="noopener noreferrer">SAP Signavio Process Collaboration Hub User Guide</a></h3>
         <p>Current product documentation, including Preview and Published view behavior.</p>
