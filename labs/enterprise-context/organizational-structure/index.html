@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-10-02
+last_modified_at: 2026-10-04
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -32,6 +32,10 @@ tags:
   - controlling
   - asset-management
   - assessment
+  - currencies
+  - unit-of-measurement
+  - factory-calendar
+  - material-ledger
 source_links:
   - title: "Identifying Organizational Units in SAP S/4HANA Sales"
     url: "https://learning.sap.com/courses/exploring-sap-s-4hana-sales-essentials/identifying-organizational-units-in-sap-s-4hana-sales_ddb48d1e-1f57-46bd-8d13-d8e4ef6d0560"
@@ -53,6 +57,16 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ee6ff9b281d8448f96b4fe6c89f2bdc8/3620136dffda4ad78a62a9fdd1d0bbc0.html"
   - title: "Sales Groups for Sales Office"
     url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/c0c54048d35849128be8e872df5bea6d/1a5a0c659c8a44f4a27e6312b56c8446.html"
+  - title: "Checking Countries and Currencies"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/checking-countries-and-currencies"
+  - title: "Defining Units of Measurement"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/defining-units-of-measurement"
+  - title: "Setting Up a Factory Calendar"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/setting-up-a-factory-calendar"
+  - title: "Defining and Assigning Plants"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/defining-and-assigning-plants"
+  - title: "Describing Material Ledger"
+    url: "https://learning.sap.com/courses/product-cost-planning-in-sap-s-4hana/describing-material-ledger"
   - title: "Enterprise Structure in SAP S/4HANA"
     url: "https://learning.sap.com/courses/exploring-end-to-end-business-processes-in-sap-business-suite/providing-a-general-definition-of-the-enterprise-structure-in-sap-s-4hana_caeaf054-4564-4e5b-8824-86ac6b03cf5b"
   - title: "Organizational Units in Materials Management"
@@ -147,7 +161,48 @@ source_links:
     <p class="ecg-caption"><strong>Do not collapse the layers.</strong> A Sales Organization is not a Plant. A Plant is not a Shipping Point. A Sales Area is not a legal entity. Each object has a different owner and purpose.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="mm-cross-functional-foundation" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">MM / Cross-functional Customizing</p>
+      <h2>Before document Customizing, check the shared settings that every logistics process uses.</h2>
+      <p>Many MM problems look local but are controlled by settings below the purchasing document. A Lead separates shared system foundations from enterprise structure, valuation, and process-specific Purchasing Customizing.</p>
+    </header>
 
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Shared foundation</h4><p>Country, currency, units of measure, and calendars define how values, quantities, dates, and regional checks behave.</p></div>
+      <div><span>02</span><h4>Enterprise structure</h4><p>Company Code, Purchasing Organization, Plant, and Storage Location define ownership and responsibility.</p></div>
+      <div><span>03</span><h4>Valuation readiness</h4><p>Valuation Area and Material Ledger connect logistics quantity movements to financial value.</p></div>
+      <div><span>04</span><h4>Process Customizing</h4><p>Document types, field selection, release, pricing, source determination, and inventory settings control the specific process.</p></div>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Country and currency</h3>
+        <p>Country settings influence regional formats and checks such as postal code, tax identifiers, language, date format, decimal notation, and address layout. Creating a new country is not ordinary project Customizing; check current SAP guidance first.</p>
+        <p><strong>Exchange-rate rule:</strong> rate type <strong>M</strong> is the standard average-rate type used for normal posting and clearing and is also the default reference for a foreign-currency PO when no manual or assigned alternative rate applies. Exchange-rate data is shared across Company Codes, while each document still has its own currency context.</p>
+        <p><strong>Lead caution:</strong> direct and indirect quotation are two ways to express the same currency relationship. Translation ratios and quotation settings are foundational; changing them after go-live can create inconsistencies.</p>
+      </div>
+      <div>
+        <h3>Units of measurement</h3>
+        <p>Units are central cross-application settings. Units that measure the same physical magnitude belong to one dimension, and standard SAP units are linked to SI-based conversion logic.</p>
+        <p>Do not change the internal keys delivered by SAP. Maintain language-dependent commercial and technical representations instead. For dimensionless units, material-specific conversion factors can be stored in the material master.</p>
+        <p><strong>Diagnostic question:</strong> if a PO, goods movement, or invoice shows a wrong quantity, first separate a document quantity problem from a UoM-conversion problem.</p>
+      </div>
+      <div>
+        <h3>Factory calendar versus planning calendar</h3>
+        <p>A Factory Calendar defines working days from a holiday calendar plus valid years and special rules. Its definition is <strong>client-independent</strong>, so a change can have a wider impact than one Plant or purchasing process.</p>
+        <p>A Planning Calendar is a separate, plant-specific planning object used for MRP cycles, scheduling, and selected scheduling-agreement scenarios. Changes to a Factory Calendar do <strong>not</strong> update Planning Calendars.</p>
+        <p><strong>Assessment trap:</strong> Factory Calendar special rules are not supplier-specific vacation calendars. Supplier shutdowns need another business-control approach.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      <p><strong>Memory model:</strong> Country controls regional rules · Currency controls value translation · UoM controls quantity translation · Factory Calendar controls working days · Planning Calendar controls planning cycles.</p>
+      <p><strong>Lead rule:</strong> do not change a shared global setting to fix one local purchasing symptom until you know its blast radius.</p>
+      <p><strong>Deployment boundary:</strong> classic transactions and IMG paths in SAP Learning apply mainly to S/4HANA Private Edition and on-premise-style configuration. Public Edition uses released configuration activities and apps, so verify the target deployment before quoting a transaction or menu path.</p>
+    </div>
+  </section>
 
   <section class="research-canvas__inventory" id="enterprise-top-levels" data-reveal>
     <header>
@@ -355,15 +410,17 @@ source_links:
       <article class="ecg-determination-detail">
         <header><div><span>MM4</span><small>determination</small></div><h3>Standard and Reference Purchasing Organizations</h3><p class="ecg-question">How do we reuse purchasing conditions or determine a Purchasing Organization automatically?</p></header>
         <div class="ecg-decision-columns">
-          <div><h4>Standard Purchasing Organization</h4><p>Can be assigned to a Plant for processes where SAP must determine a Purchasing Organization automatically, for example selected stock-transfer, consignment, pipeline, or automatic-order scenarios.</p></div>
-          <div><h4>Reference Purchasing Organization</h4><p>Allows purchasing conditions and contracts to be referenced across Purchasing Organizations. Use it to reduce duplicate maintenance when the commercial policy is genuinely shared.</p></div>
+          <div><h4>Standard Purchasing Organization</h4><p>Can be assigned to a Plant for processes where SAP must determine a Purchasing Organization automatically, including pipeline procurement, consignment, stock transfer, and automatic PO creation during goods receipt. If one Purchasing Organization serves the Plant and none of these scenarios needs automatic determination, this assignment is usually not required.</p></div>
+          <div><h4>Reference Purchasing Organization</h4><p>Allows local Purchasing Organizations to reuse centrally negotiated contracts and conditions. Using conditions from info records of the reference organization also requires the relevant price-determination settings.</p></div>
+          <div><h4>Scope consequence</h4><p>Each Purchasing Organization has its own purchasing data in the supplier Business Partner, purchasing conditions and info-record context, and its own evaluation/statistical scope. Centralizing the organization reduces duplicate commercial maintenance but increases the governance boundary.</p></div>
         </div>
       </article>
 
       <article class="ecg-determination-detail">
         <header><div><span>IM</span><small>stock</small></div><h3>Plant → Storage Location</h3><p class="ecg-question">Where is stock logically separated inside the Plant?</p></header>
         <div class="ecg-decision-columns">
-          <div><h4>Rule</h4><p>Storage Location belongs to a Plant. Inventory quantity and physical inventory can be managed at Plant/Storage Location level.</p></div>
+          <div><h4>Rule</h4><p>Storage Location belongs to a Plant. Its key must be unique inside that Plant, but the same key can be reused in another Plant. Inventory quantity and physical inventory can be managed at Plant/Storage Location level.</p></div>
+          <div><h4>Address and lifecycle</h4><p>A Storage Location can have its own delivery address instead of the Plant address. Customizing can also mark it as valid, deprecated, or no longer valid so input help and warnings support a controlled retirement.</p></div>
           <div><h4>Sales effect</h4><p>A Sales Order normally starts higher at Plant level, but picking, warehouse execution, returns, stock transfers, and goods movements often need the Storage Location.</p></div>
         </div>
       </article>
@@ -374,13 +431,23 @@ source_links:
       <div class="ecg-decision-columns">
         <div><h4>Meaning</h4><p>The Valuation Area is the organizational level at which material stock value and valuation data are managed. Depending on system design it can correspond to a Plant or Company Code; in SAP S/4HANA Cloud Public Edition, each Plant is a Valuation Area.</p></div>
         <div><h4>Why it matters</h4><p>A goods movement is not only a quantity event. Plant and Valuation Area help SAP derive the Company Code, valuation grouping, and G/L-account context used by automatic account determination.</p></div>
+        <div><h4>Design caution</h4><p>Valuation level is a foundational choice. Do not treat a productive valuation-level change like normal operational Customizing; it affects material valuation and financial integration.</p></div>
+      </div>
+    </article>
+
+    <article class="ecg-determination-detail">
+      <header><div><span>MM6</span><small>plant readiness</small></div><h3>A new Plant is not complete when the Plant key exists.</h3><p class="ecg-question">What must be checked before logistics transactions can rely on the new organizational unit?</p></header>
+      <div class="ecg-decision-columns">
+        <div><h4>Dependent settings</h4><p>Plant creation or copy must be followed by a check of Plant-dependent Customizing: assignments, inventory-management parameters, material-type quantity/value update settings, addresses, calendars, and the process settings that use the Plant as a key.</p></div>
+        <div><h4>Material Ledger</h4><p>Material Ledger is mandatory in SAP S/4HANA. For a new valuation area, confirm that Material Ledger is active and that the valuation area is set productive before relying on valuation. <strong>Actual Costing is a separate optional feature.</strong></p></div>
+        <div><h4>Implementation check</h4><p>In Private Edition/on-premise-style systems, the Plant copy/delete/check functions can validate dependent tables and help expose missing Plant-specific entries. The exact tools and menu paths depend on deployment and release.</p></div>
       </div>
     </article>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
       <p><strong>Memory contrast:</strong> Sales Organization owns the customer-facing sale. Purchasing Organization owns supplier-facing procurement. Plant is where those two flows can meet.</p>
-      <p><strong>30-second procurement answer:</strong> Client is the highest SAP boundary. Company Code is the legal accounting unit. Plant is the logistics location, and Storage Location separates stock inside the Plant. Purchasing Organization negotiates and procures for assigned Plants. It can be plant-specific, cross-plant, or cross-company-code. Purchasing Group represents the responsible buyer and is not assigned in enterprise structure.</p>
+      <p><strong>30-second procurement answer:</strong> Client is the highest SAP boundary. Company Code is the legal accounting unit. Plant is the logistics location, and Storage Location separates stock inside the Plant. Purchasing Organization negotiates and procures for assigned Plants. It can be plant-specific, cross-plant, or cross-company-code. Purchasing Group represents the responsible buyer and is not assigned in enterprise structure. Standard Purchasing Organization helps automatic determination; Reference Purchasing Organization helps reuse central contracts and conditions.</p>
       <p><strong>Assessment trap:</strong> when a Purchasing Organization is assigned to a Company Code, all Plants assigned to it must belong to that Company Code. For cross-company-code purchasing, leave the Company Code assignment empty and assign the Plants directly.</p>
       <a href="/labs/enterprise-context/procurement/">Open Procurement deep dive <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
