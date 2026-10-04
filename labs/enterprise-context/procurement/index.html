@@ -22,7 +22,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-04
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, PR assignment and conversion, procurement automation, supplier confirmations, Situation Handling, pricing, contracts, and scheduling-agreement cross-check + S4500/S4520 process refresh"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, PR assignment and conversion, procurement automation, supplier confirmations, Situation Handling, pricing, contracts, scheduling agreements, invoicing plans, blanket orders, subcontracting, and special purchasing functions cross-check + S4500/S4520 process refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -75,6 +75,14 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/db7fb65334e6b54ce10000000a174cb4.html"
   - title: "Maintaining Conditions"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/e47fb65334e6b54ce10000000a174cb4.html"
+  - title: "Using Invoicing Plans"
+    url: "https://learning.sap.com/courses/purchasing-in-sap-s-4hana/using-invoicing-plans"
+  - title: "Creating Blanket Purchase Orders"
+    url: "https://learning.sap.com/courses/purchasing-in-sap-s-4hana/creating-blanket-purchase-orders"
+  - title: "Working with Subcontracting"
+    url: "https://learning.sap.com/courses/purchasing-in-sap-s-4hana/working-with-subcontracting"
+  - title: "Deploying Additional Special Functions"
+    url: "https://learning.sap.com/courses/purchasing-in-sap-s-4hana/deploying-additional-special-functions"
 # ai-discovery-managed:end
 ---
 {% assign graph = site.data.labs.enterprise_context.graphs.procurement %}
@@ -635,6 +643,8 @@ source_links:
 
     <p>If only part of the order is delivered or invoiced, SAP also needs a rule for distributing that partial value. The two standard learning patterns are <strong>proportional distribution</strong>, which follows the planned ratio, and <strong>progressive fill-up</strong>, which completes the first account assignment before moving to the next one.</p>
     <p>The partial-invoice indicator can be defaulted from the account assignment category in Customizing. For a PO item with multiple account assignment and a valuated GR, this indicator can also influence how a partial GR value is distributed. Treat the exact behavior as configuration-dependent and verify the PO and account-assignment settings before troubleshooting the FI result.</p>
+    <p>For an account-assigned PO item, the buyer can also control whether goods receipt is <strong>valuated</strong>, <strong>non-valuated</strong>, or not expected. With a valuated GR, the commitment is reduced already at goods receipt. This timing matters when Finance or Controlling asks why commitment and actual values changed before the supplier invoice arrived.</p>
+    <p><strong>Extension boundary:</strong> BAdI <code>MB_ACCOUNTING_DISTRIBUTE</code> can change the distribution among account-assignment objects during goods receipt, but it cannot replace the account-assignment objects themselves. BAdI <code>MRM_DISTRIBUTION_MAA</code> supports customer-specific distribution logic during invoice verification. A subcontracting item with multiple account assignment requires a valuated goods receipt.</p>
   </section>
 
   <section class="research-canvas__inventory" id="purchase-requisition-flow" data-reveal>
@@ -905,7 +915,7 @@ source_links:
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
-      <p><strong>Templates:</strong> purchase requisitions and purchase orders can use user-specific or public templates. Public template maintenance requires the relevant authorization, including authorization object <code>M_TEMPLATE</code>. A template reduces entry work; it does not replace source determination, approval, or document checks.</p>
+      <p><strong>Templates:</strong> ME21N, ME22N, ME51N, and ME52N support user-specific and public templates. A user can save, load, or delete a template; when loading, the user can copy only item data or both header and item data. Public template maintenance requires the relevant authorization, including authorization object <code>M_TEMPLATE</code>. When a user master is copied, the user's private templates are copied as well. A template reduces entry work; it does not replace source determination, approval, or document checks.</p>
     </div>
 
     <div class="research-route-list">
@@ -1858,6 +1868,138 @@ source_links:
     <p>A buyer expects Supplier A for a material, but a requisition is converted with Supplier B and a higher PO price. It is tempting to repair both values directly in the PO. That produces a clean-looking document and weak evidence.</p>
     <p>Start with the requirement context: material, plant, purchasing organization, quantity, and date. If the source list makes Supplier B fixed for that validity period, the supplier result is explained. Now inspect the commercial context for B. If the purchasing info record has conditions for a different order unit or a current scale that produces the higher value, the price result is explained too.</p>
     <p>The important point is not the exact master-data combination. It is the separation of decisions. Source determination answers why B was selected. Price determination answers why B's commercial value was used. If the business expected A, fix the source rule or its validity. If B is correct but the price is wrong, fix the relevant purchasing condition or reference. Editing both outputs without proving either decision leaves the next requirement exposed to the same defect.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="specific-procurement-processes" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Specific procurement processes</p>
+      <h2>Change the baseline deliberately: invoice timing, quantity control, component ownership, or financial settlement.</h2>
+      <p>These processes are easier to remember when we ask which standard procurement event has changed. The PO still provides the commercial control point, but receipt, invoice timing, account assignment, or component flow can work differently.</p>
+    </header>
+
+    <h3>Invoicing plans: periodic versus partial</h3>
+    <p>An invoicing plan is part of a purchase order; it is not an independent purchasing document. It defines planned invoice dates independently of the actual goods receipt or service performance. You cannot request an invoicing plan in a purchase requisition, and the <em>Manage Purchase Orders</em> Fiori app does not create or edit invoicing plans.</p>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Periodic and partial invoicing plan comparison">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Plan</th><th scope="col">Best fit</th><th scope="col">Value logic</th><th scope="col">Assessment point</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Periodic</th>
+            <td>Recurring charges such as rent, leasing, or subscriptions.</td>
+            <td>The recurring amount is settled on the generated due dates.</td>
+            <td>Think <strong>repeat the charge by period</strong>, not split one project total into milestones.</td>
+          </tr>
+          <tr>
+            <th scope="row">Partial</th>
+            <td>Projects or other staged procurement.</td>
+            <td>The PO item total is split across dates by percentage (billing rule 1) or amount (billing rule 2).</td>
+            <td>Down-payment dates can be marked with billing rules 4 or 5; those dates are not automatically settled as normal invoice-plan items.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Partial-plan dates can also come from network invoicing or billing plans when payment is event-dependent. After an invoicing-plan type is assigned to the item, it cannot simply be changed to another plan type.</p>
+    <p><strong>Settlement:</strong> classic processing uses <strong>MRIS</strong>; Fiori provides <em>Create Invoicing Plan Settlement</em>. Periodic plan dates can be updated with <strong>MLRP</strong> or <em>Update Invoicing Plans – Purchase Order</em>. Credit-memo output for the classic process can be handled with <strong>MR90</strong>. Automatic settlement also depends on the relevant supplier, account-assignment, tax, and goods-receipt settings, so the plan date alone is not enough.</p>
+
+    <h3>Blanket and limit purchase orders: control value and validity instead of exact quantity.</h3>
+    <p>A blanket or limit item is useful for repeated low-value procurement when creating a separate quantity-based PO item for every transaction would cost more than it controls. The process normally has no goods receipt or service entry for each individual consumption; invoices are checked against the PO validity and value limits.</p>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Enhanced Limit and Blanket Item comparison">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Route</th><th scope="col">Document / item</th><th scope="col">Validity</th><th scope="col">Key control</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Manage Purchase Orders</th>
+            <td>NB Standard PO + item category <strong>E — Enhanced Limit</strong>.</td>
+            <td>Start and end of performance period at item schedule-line level.</td>
+            <td>Use the Limit Items area; the app determines category E.</td>
+          </tr>
+          <tr>
+            <th scope="row">Create Purchase Order – Advanced</th>
+            <td>FO Framework Order + item category <strong>B — Blanket Item</strong>; category E is also possible.</td>
+            <td>For the classic blanket order, validity is maintained at header level.</td>
+            <td>No material number, purchase-order quantity, or manually entered net price for the limit item.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">price_check</span>
+      <div>
+        <p><strong>Overall Limit</strong> is the hard commercial ceiling for invoice posting. If it is exceeded, SAP raises a warning or error according to Customizing.</p>
+        <p><strong>Expected Value</strong> is the expected supplier value. It can drive the release strategy and the Controlling commitment. Exceeding the expected value alone does not create the same limit message unless the overall limit is also exceeded.</p>
+        <p>Account assignment category <strong>U — Unknown</strong> can defer the final receiver until invoice entry. In that case, Controlling cannot create the normal commitment because the receiver is still unknown.</p>
+      </div>
+    </div>
+
+    <h3>Subcontracting: buy the finished result while providing components.</h3>
+    <p>Item category <strong>L — Subcontracting</strong> tells SAP that the supplier manufactures or processes the ordered material with components provided by the buying company. The ordered material itself does not need a material master, but the components that we provide do.</p>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>MRP prerequisites</h3>
+        <ul>
+          <li>Set the <strong>Subcontracting</strong> special procurement type in the material master MRP 2 view when MRP should create the subcontracting proposal.</li>
+          <li>Provide a valid subcontracting source: for example, a subcontracting info record or an outline-agreement item with category L. Use a source list or quota arrangement when several sources compete.</li>
+          <li>For automatic component determination, maintain a BOM, a matching production version, and the production version in the subcontracting info record at purchasing-organization/plant level.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Planning and execution</h3>
+        <ul>
+          <li>MRP explodes the BOM and creates dependent component requirements shown as <strong>SubReq</strong>.</li>
+          <li>MRP Live (<strong>MD01N</strong>) creates purchase requisitions for externally procured materials; classic MRP (<strong>MD01/MD03</strong>) can still create planned orders.</li>
+          <li>A supplier MRP area can separate component planning. <strong>ME2ON</strong> / the Subcontracting Cockpit helps monitor provided stock and requirements.</li>
+          <li>Goods receipt of the subcontracted material automatically posts consumption of the provided components. Proposed consumption can be corrected at GR or later.</li>
+        </ul>
+      </div>
+    </div>
+    <p><strong>Change behavior:</strong> changing the PO or schedule-line quantity changes component quantities proportionally unless <em>Fixed Quantity</em> is set. Changing the delivery date recalculates the component requirement date, but it does not select a new component structure; run a new BOM explosion when the BOM must be redetermined.</p>
+
+    <h3>Park, Hold, and Draft solve different document-state problems.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Park Hold and Draft comparison">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">State</th><th scope="col">What it allows</th><th scope="col">What it blocks</th><th scope="col">Important boundary</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Park</th>
+            <td>The purchasing document is complete from the MM perspective, but financial-management errors can remain.</td>
+            <td>No account commitment and no follow-on activity.</td>
+            <td>Can trigger completion workflow; classic templates include WS11000012 for PR and WS11000013 for PO.</td>
+          </tr>
+          <tr>
+            <th scope="row">Hold</th>
+            <td>The document can contain any kind of error or missing data.</td>
+            <td>No conversion or follow-on execution.</td>
+            <td>Not supported for blanket purchase orders.</td>
+          </tr>
+          <tr>
+            <th scope="row">Draft in Manage Purchase Orders</th>
+            <td>Resume or discard unfinished Fiori work.</td>
+            <td>It is not a released purchasing document and is not relevant for MRP.</td>
+            <td>The Fiori app uses draft instead of classic Park/Hold.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Classic Park/Hold must be activated at client level in Purchasing Customizing. The practical Lead question is not only “Can the user save?” but “Can this state create commitments or follow-on documents?”</p>
+
+    <h3>Down payments: Purchasing can plan them, but FI posts them.</h3>
+    <p>In the classic S/4HANA learning scope, the LOG_MMFI_P2P capability allows a PO to carry a down-payment percentage or amount and a due date at header or item level. <strong>ME2DP</strong> or the <em>Monitor Purchase Order Down Payments</em> app can monitor these obligations.</p>
+    <p><strong>Ownership boundary:</strong> down-payment requests and down payments are FI processes. They do not create MM documents, even though they appear separately in PO history. During Logistics Invoice Verification, the user can decide which existing down payments should be cleared against the invoice. Verify the exact activation and app scope in the target deployment before designing the process.</p>
+
+    <div class="research-canvas__callout">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <div>
+        <strong>60-second assessment answer</strong>
+        <p>“I compare special procurement with the normal PO → receipt → invoice flow. An invoicing plan changes invoice timing: periodic plans repeat a recurring charge, while partial plans split one PO value into stages. A blanket or limit PO replaces exact quantity control with validity and value limits. Subcontracting adds provided components and consumes them when the subcontracted product is received. Park and Hold control whether an incomplete document can progress; the Fiori Manage Purchase Orders app uses Draft instead. Down payments can be planned from the PO, but the request and payment are FI documents. I first identify which standard event changes, then choose the item category and control model.”</p>
+      </div>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/using-invoicing-plans" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Using Invoicing Plans</strong><small>Periodic and partial plans, settlement, date updates, and Customizing.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/creating-blanket-purchase-orders" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Creating Blanket Purchase Orders</strong><small>Limit items, Overall Limit, Expected Value, item categories E and B, and app differences.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/working-with-subcontracting" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Working with Subcontracting</strong><small>Item category L, provided components, MRP prerequisites, BOM explosion, and Subcontracting Cockpit.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/deploying-additional-special-functions" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Deploying Additional Special Functions</strong><small>Templates, Park/Hold, multiple account assignment, and down payments.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
