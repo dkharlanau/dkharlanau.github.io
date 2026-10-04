@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-22
+last_modified_at: 2026-10-04
 hide_global_cta: true
 tags: [ai, mcp, tools, api, authorization, integration]
 ---
@@ -118,6 +118,89 @@ MCP is a good fit when multiple AI clients need the same governed capabilities, 
 A direct tool remains a strong choice when only one application uses the capability and the backend API already gives us the right boundary. Adding MCP only to rename an existing function does not create useful architecture.
 
 We should therefore decide at two levels. First design the capability well. Then decide whether a shared protocol makes that capability easier to reuse and operate.
+
+
+## Design the tool surface for the agent
+
+MCP solves a protocol problem. It does not automatically make a large tool catalog easy for a model to use.
+
+A common failure mode is to expose hundreds of tools at once and place every schema into the model context. The model then has to spend attention on tools that are irrelevant to the current task, infer prerequisites between calls, and combine separate application models by itself.
+
+For large enterprise environments, a better pattern is **progressive tool discovery**:
+
+```text
+user goal
+ -> search / discover the relevant capability
+ -> return a small tool set and required prerequisites
+ -> execute the reads
+ -> keep large intermediate data outside the model context
+ -> load only the evidence needed for the next decision
+ -> propose or execute a controlled final action
+```
+
+This changes the design target. The interface is no longer only an API for developers. It is also a task surface for an agent.
+
+A good agent-facing capability should make five things easy to understand:
+
+1. **Purpose** — what business job the tool performs.
+2. **Prerequisites** — which identifier, connection, scope, or earlier lookup is required.
+3. **Authority** — whether the tool reads, prepares, approves, or commits a change.
+4. **Result shape** — whether the model receives compact evidence, a stable object ID, a page of results, or a file handle for larger data.
+5. **Next useful step** — which follow-up tools are valid when the result is incomplete.
+
+This matters because enterprise tasks are usually cross-system. An incident may begin in a chat message, continue through monitoring data, require a code or configuration check, and end with a ticket update or controlled change. If every server describes only itself, the model must reconstruct the dependency graph on every run.
+
+### Context is a budget
+
+Tool definitions, skills, retrieved data, conversation history, and instructions all compete for the same model context. More context is not automatically better.
+
+Use progressive disclosure where practical:
+
+- expose only the tool family relevant to the current task;
+- retrieve full schemas after the capability is selected;
+- return stable IDs instead of repeating large objects;
+- use pagination, files, or remote processing for large datasets;
+- summarize intermediate results only after deterministic filtering;
+- keep reusable dependency knowledge outside the prompt when the platform can discover it at runtime.
+
+This is not only a token-cost optimization. Smaller relevant context reduces tool confusion and makes the execution path easier to inspect.
+
+### Example: SAP incident investigation
+
+Consider a customer report: *“The outbound delivery is not progressing.”*
+
+A weak agent surface may expose hundreds of Sales, EWM, TM, integration, and support tools and expect the model to choose correctly.
+
+A stronger surface starts from the task:
+
+```text
+investigate outbound delivery
+ -> identify sales / delivery object
+ -> read document and status flow
+ -> if warehouse-owned: inspect EWM state
+ -> if message-owned: inspect IDoc / AIF / queue evidence
+ -> if transport-owned: inspect TM execution state
+ -> compare the first wrong state
+ -> prepare the next action or human handoff
+```
+
+The agent does not need every SAP capability in context. It needs the smallest relevant map of tools, ownership boundaries, and prerequisites for this case.
+
+The same rule applies to procurement, GR/IR, master-data replication, and integration recovery: **discover from the business task, not from the complete technical catalog**.
+
+### Human UI still has a job
+
+Agent-friendly design does not make every dashboard obsolete. Humans still need visual monitoring, pattern recognition, approval, exception review, audit, and operational control.
+
+The architectural shift is narrower: do not force an agent to imitate a human clicking through a visual interface when the underlying capability can be exposed as a governed, typed, discoverable operation.
+
+### Case evidence
+
+A 2026 Composio talk demonstrates this pattern with a cross-application debugging task. The agent first searches for the capabilities needed for Slack, Sentry, and Datadog, receives the relevant tools and dependency guidance, then executes the investigation. A second example keeps a large intermediate user-ID set outside the model context and processes it through a remote workbench before returning the useful result.
+
+Current Composio documentation describes Tool Router / session search as a way to find matching tools and workflow guidance, and Remote Workbench as a persistent sandbox for processing large remote files or repeated tool executions without pushing all data into chat context.
+
+Sources: [Composio — tool search API](https://docs.composio.dev/reference/api-reference/tool-router/postToolRouterSessionBySessionIdSearch) · [Composio — Remote Workbench](https://docs.composio.dev/toolkits/meta-tools/remote_workbench) · [Anthropic — Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol) · [Video case](https://youtu.be/YiFqcu9YA38?si=hOlfGA_uO1mAUsLr)
 
 ## What to test
 
