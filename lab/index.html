@@ -1,30 +1,125 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Labs moved</title>
-  <meta name="description" content="Compatibility route for the Labs workspace.">
-  <meta name="robots" content="noindex,follow">
-  <link rel="canonical" href="https://dkharlanau.github.io/labs/">
-  <meta property="og:title" content="Labs moved">
-  <meta property="og:description" content="Compatibility route for the Labs workspace.">
-  <meta property="og:url" content="https://dkharlanau.github.io/labs/">
-  <meta http-equiv="refresh" content="0; url=/labs/">
-</head>
-<body>
-  <a href="#main-content">Skip to content</a>
-  <header>
-    <nav aria-label="Compatibility navigation">
-      <a href="/labs/">Labs</a>
-    </nav>
+---
+layout: default
+title: "Enterprise Engineering Toolkit — SAP Lead, Integration and AI"
+description: "A connected set of executable tools for process, decisions, interfaces, mappings, reconciliation, transformation, cutover, architecture, visualization, and SAP operations."
+permalink: /lab/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-10-04
+hide_global_cta: true
+toolkit_page: true
+tags:
+  - sap
+  - enterprise-engineering
+  - integration
+  - architecture
+  - ai
+  - transformation
+structured_data:
+  type: TechArticle
+primary_topic: "enterprise-engineering"
+---
+{% assign toolkit = site.data.enterprise_engineering_toolkit %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li aria-current="page">Enterprise Engineering Toolkit</li></ol>
+</nav>
+
+<div class="toolkit-shell">
+  <header class="toolkit-hero">
+    <p class="toolkit-kicker">SAP Lead · Integration · AI</p>
+    <h1>Enterprise Engineering Toolkit</h1>
+    <p class="toolkit-lead">A connected set of executable tools for enterprise transformation work. Start with the engineering task, not with a repository.</p>
+    <p class="toolkit-rule"><strong>Process → Decision → Interface → Mapping → Reconciliation → Relationship → Transformation → Cutover → Architecture → Visual → Operations.</strong></p>
+    <div class="toolkit-actions" aria-label="Toolkit actions">
+      <a class="btn btn--primary" href="#tools">Open the tools</a>
+      <a class="btn btn--secondary" href="/lab/toolkit.json">Machine-readable manifest</a>
+      <a class="toolkit-text-link" href="/labs/">Open learning Labs</a>
+    </div>
   </header>
-  <main id="main-content">
-    <h1>Labs</h1>
-    <p>The workspace lives at <a href="/labs/">/labs/</a>. This route is kept so older references continue to work.</p>
-  </main>
-  <footer>
-    <p>Dzmitryi Kharlanau</p>
-  </footer>
-</body>
-</html>
+
+  <section class="toolkit-boundary" aria-labelledby="toolkit-boundary-title">
+    <h2 id="toolkit-boundary-title">One toolkit, clear ownership.</h2>
+    <p><strong>/lab/</strong> is the executable engineering surface. <strong>/labs/</strong> remains the learning and assessment space for SAP Enterprise, AI, interview preparation, and practice.</p>
+    <p>The source repositories remain independent so each contract can evolve and be tested on its own. This page is the product entry point that connects them.</p>
+  </section>
+
+  <nav class="toolkit-flow-wrap" aria-label="Enterprise engineering flow">
+    <ol class="toolkit-flow">
+      {% for tool in toolkit.tools %}
+      <li><a href="#{{ tool.id }}"><span>{{ tool.order }}</span><strong>{{ tool.stage }}</strong></a></li>
+      {% endfor %}
+    </ol>
+  </nav>
+
+  <section class="toolkit-intro" id="tools">
+    <p class="toolkit-kicker">Executable portfolio</p>
+    <h2>Each entry has a working path.</h2>
+    <p>Browser applications and generated control surfaces open directly. CLI-first tools include the shortest verified command path from the repository. GitHub source is secondary.</p>
+  </section>
+
+  <div class="toolkit-tools">
+    {% for tool in toolkit.tools %}
+    <article class="toolkit-tool" id="{{ tool.id }}">
+      <div class="toolkit-tool__index" aria-hidden="true">{{ tool.order }}</div>
+      <div class="toolkit-tool__body">
+        <header class="toolkit-tool__header">
+          <div>
+            <p class="toolkit-tool__stage">{{ tool.stage }}</p>
+            <h2>{{ tool.name }}</h2>
+          </div>
+          <span class="toolkit-tool__surface">{{ tool.surface }}</span>
+        </header>
+
+        <p class="toolkit-tool__purpose">{{ tool.purpose }}</p>
+
+        <dl class="toolkit-tool__facts">
+          <div><dt>Produces</dt><dd>{{ tool.output }}</dd></div>
+          <div><dt>Hands off to</dt><dd>{{ tool.next }}</dd></div>
+        </dl>
+
+        <div class="toolkit-tool__actions">
+          <a class="btn btn--primary" href="{{ tool.run_url }}" target="_blank" rel="noopener">{{ tool.run_label }}</a>
+          <a class="btn btn--secondary" href="{{ tool.docs_url }}" target="_blank" rel="noopener">Documentation</a>
+          <a class="toolkit-text-link" href="{{ tool.source_url }}" target="_blank" rel="noopener">Source</a>
+        </div>
+
+        <details class="toolkit-run">
+          <summary>Quick run</summary>
+          <div class="toolkit-run__body">
+            <div class="toolkit-run__bar">
+              <span>Reference command</span>
+              <button type="button" class="toolkit-copy" data-copy-target="cmd-{{ tool.id }}">Copy</button>
+            </div>
+            <pre><code id="cmd-{{ tool.id }}">{{ tool.quickstart | escape }}</code></pre>
+            <p>Use checked-in synthetic examples unless the repository guide says otherwise. Review repository prerequisites before using enterprise data.</p>
+          </div>
+        </details>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <section class="toolkit-sequence" aria-labelledby="toolkit-sequence-title">
+    <div>
+      <p class="toolkit-kicker">Lead-level use</p>
+      <h2 id="toolkit-sequence-title">Use the chain to answer one enterprise question end to end.</h2>
+    </div>
+    <ol>
+      <li><strong>Model the business process and decisions.</strong><span>Make process intent and decision logic reviewable before implementation detail takes over.</span></li>
+      <li><strong>Make integration and mapping explicit.</strong><span>Version interface ownership, delivery behavior, mapping rules, and operational controls.</span></li>
+      <li><strong>Prove data and transformation state.</strong><span>Reconcile source and target, trace identity and lineage, then materialize project dependencies.</span></li>
+      <li><strong>Control delivery and cutover.</strong><span>Connect readiness, timing, evidence, contingency, and architecture decisions instead of using disconnected spreadsheets.</span></li>
+      <li><strong>Render and operate the system.</strong><span>Generate business-readable views and diagnose SAP-heavy incidents from bounded evidence with explicit safety limits.</span></li>
+    </ol>
+  </section>
+
+  <section class="toolkit-positioning" aria-labelledby="toolkit-positioning-title">
+    <p class="toolkit-kicker">Positioning</p>
+    <h2 id="toolkit-positioning-title">What the toolkit demonstrates.</h2>
+    <p>It shows an SAP Lead approach built around process ownership, explicit decisions, integration contracts, governed data movement, traceable change, controlled cutover, explainable architecture, and evidence-first operations. AI can work on top of these structures because the structures are inspectable first.</p>
+    <p><a href="/labs/assessment/">Use the SAP Lead Assessment</a> to practice the same reasoning under case and review pressure.</p>
+  </section>
+</div>
