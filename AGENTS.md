@@ -45,7 +45,7 @@ Everything committed to this repository is public. Treat every file accordingly.
 - Global navigation is product-level. Do not add every new domain or collection to the header.
 - Keep established deep URLs stable. Prefer hubs, aliases, redirects, metadata, and graph links over mass directory moves.
 - `/labs/enterprise-context/` remains the stable physical route for the **SAP Enterprise** workspace. The UI may use the broader SAP Enterprise name.
-- `/lab/` is a compatibility alias for `/labs/`.
+- `/lab/` is the canonical **Enterprise Engineering Toolkit** launcher. Keep it task-oriented and executable: browser surfaces where available, reproducible quick runs for CLI-first tools, and GitHub source as a secondary route. `/labs/` remains the learning and assessment hub.
 - `/labs/reusable-data-procedures/` is a compatibility route; canonical content lives at `/reusable-data-procedures/`.
 - `/triz/`, `/ddd/`, and `/reusable-data-procedures/` are canonical framework routes and are grouped by `/frameworks/` without being physically moved.
 - A topic can belong to several domains. Do not duplicate source content to make the directory tree look like a graph.
