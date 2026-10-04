@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-10-02
+last_modified_at: 2026-10-04
 hide_global_cta: true
 tags:
   - sap-s4hana
@@ -49,18 +49,51 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="quota-rating" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Quota rating</p>
+      <h2>The next source is chosen from current allocation state, not from the quota percentage alone.</h2>
+      <p>Outside MRP splitting, SAP calculates a quota rating for every usable quota item and assigns the source with the lowest result.</p>
+    </header>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">functions</span>
+      <p><strong>Formula:</strong> Quota rating = (Quota-allocated quantity + Quota base quantity) / Quota.</p>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Quota rating calculation example">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Supplier</th><th scope="col">Quota</th><th scope="col">Allocated qty</th><th scope="col">Base qty</th><th scope="col">Quota rating</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">A</th><td>3</td><td>780</td><td>0</td><td>260</td></tr>
+          <tr><th scope="row">B</th><td>2</td><td>380</td><td>0</td><td><strong>190</strong></td></tr>
+          <tr><th scope="row">C</th><td>1</td><td>0</td><td>260</td><td>260</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Supplier B receives the next complete manual PR item because it has the lowest quota rating. After a 100-piece PR is saved, B's allocated quantity becomes 480 and its rating becomes 240.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">balance</span>
+      <p><strong>Equal ratings:</strong> when several sources have the same quota rating, SAP assigns the first quota item. It does not choose the source with the highest quota.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Key and scope</p><h2>Know the key before you debug the value.</h2><p>The same value can be correct in one sourcing context and wrong in another.</p></header>
     <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Quota Arrangement key fields and process effects">
       <table class="study-table__table">
         <thead><tr><th>Field or dimension</th><th>Why it matters</th><th>Typical process effect</th></tr></thead>
         <tbody>
-          <tr><td><strong>Material / plant</strong></td><td>Core quota-arrangement key.</td><td>Keeps allocation specific to the supply context.</td></tr>
-          <tr><td><strong>Validity period</strong></td><td>Time boundary for the arrangement.</td><td>Prevents an old allocation policy from affecting new requirements.</td></tr>
-          <tr><td><strong>Source type</strong></td><td>Supplier, supplying plant, or another supported source context.</td><td>Connects allocation to the actual source.</td></tr>
-          <tr><td><strong>Quota</strong></td><td>Relative share for the source.</td><td>Influences how future requirements are assigned.</td></tr>
-          <tr><td><strong>Allocated quantity</strong></td><td>Quantity already assigned to the source.</td><td>Affects quota rating and the next source decision.</td></tr>
-          <tr><td><strong>Minimum split quantity / related controls</strong></td><td>Scenario-specific split behavior where supported.</td><td>Prevents impractical splitting of small requirements.</td></tr>
+          <tr><td><strong>Material / plant</strong></td><td>Core Quota Arrangement key.</td><td>Keeps allocation specific to one material and plant.</td></tr>
+          <tr><td><strong>Validity period</strong></td><td>Time boundary for the arrangement.</td><td>The start date follows the current date or the end of the previous arrangement; the header defines the valid-to date.</td></tr>
+          <tr><td><strong>Procurement type / special procurement</strong></td><td>Defines in-house or external procurement and supported special forms.</td><td>Quota items can represent suppliers, production, production in another plant, consignment, subcontracting, or stock transfer.</td></tr>
+          <tr><td><strong>Supplier / supplying plant</strong></td><td>Identifies the source.</td><td>Use the supplier for external procurement or the supplying plant for stock transfer.</td></tr>
+          <tr><td><strong>Quota</strong></td><td>Relative share for the source.</td><td>Works with allocation history to determine the next source, or directly defines split proportions when splitting is active.</td></tr>
+          <tr><td><strong>Quota-allocated quantity</strong></td><td>Total requirement quantity assigned to the source since the arrangement started.</td><td>Updated automatically and recalculated when assigned objects are changed or deleted.</td></tr>
+          <tr><td><strong>Quota base quantity</strong></td><td>Manual adjustment to the allocation history.</td><td>Useful when a new source enters an existing arrangement or when current allocation is disproportionate.</td></tr>
+          <tr><td><strong>Split / lot-size controls</strong></td><td>Minimum split quantity, min/max lot size, 1x, and maximum quantity.</td><td>Controls how MRP divides requirements and when a source reaches its allocation limit.</td></tr>
         </tbody>
       </table>
     </div>
@@ -70,30 +103,87 @@ tags:
     <header><p class="research-canvas__eyebrow">Runtime use</p><h2>Quota is dynamic because history matters.</h2><p>The next source can depend not only on the configured quota but also on quantities already allocated. A simple 60/40 explanation is incomplete without current allocation state.</p></header>
     <div class="ecg-compact-sequence">
       <div><span>01</span><h4>Requirement</h4><p>Start with material, plant, date, quantity, and procurement process.</p></div>
-      <div><span>02</span><h4>Validity</h4><p>Find the active quota arrangement and items.</p></div>
+      <div><span>02</span><h4>Validity</h4><p>Find the active Quota Arrangement and items.</p></div>
       <div><span>03</span><h4>Eligibility</h4><p>Confirm that the referenced sources are usable in the sourcing context.</p></div>
-      <div><span>04</span><h4>Rating</h4><p>Check quota, allocated or base quantities, and source type.</p></div>
-      <div><span>05</span><h4>Assignment</h4><p>Verify which source received the requirement and why.</p></div>
+      <div><span>04</span><h4>Rating</h4><p>Check quota, allocated quantity, base quantity, maximum quantity, and source type.</p></div>
+      <div><span>05</span><h4>Assignment</h4><p>Verify which source received the requirement and how the allocated quantity changed.</p></div>
     </div>
+
+    <h3>Quota base quantity lets you correct the starting position.</h3>
+    <p>If a new supplier joins an arrangement after the other suppliers have already received large quantities, a zero base quantity would make the new supplier appear artificially under-used. Set or calculate a quota base quantity so the new source starts from a realistic rating.</p>
+    <p>In MEQ1, SAP provides individual and collective base-quantity calculations. Collective calculation is useful when the goal is to bring the current quota ratings to the same level before new requirements are assigned.</p>
   </section>
 
   <section class="research-canvas__inventory" id="source-determination-role" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Source determination role</p>
-      <h2>Quota Arrangement is the first sourcing check in MRP.</h2>
-      <p>When a valid quota arrangement exists, MRP evaluates it before Source List, scheduling agreements, contracts, or an automatically sourced Purchasing Info Record.</p>
+      <h2>Quota Arrangement is checked first, but manual PRs and MRP can use it differently.</h2>
+      <p>A valid Quota Arrangement has the highest source-determination priority. The key question is whether SAP should assign one complete requirement to one source or split the requirement during planning.</p>
     </header>
 
-    <div class="ecg-decision-columns">
-      <div><h3>Across requirements</h3><p>A quota of 60/40 describes allocation over a population of requirements and current allocation state. It does not mean that every purchase requisition item is physically split 60/40.</p></div>
-      <div><h3>Supplier source</h3><p>For a supplier quota item, the supplier-material purchasing relationship must be usable. Current SAP quota-maintenance guidance expects a Purchasing Info Record for a supplier source.</p></div>
-      <div><h3>Plant source</h3><p>An internal supplying plant follows its own material and plant relationship. Do not treat a Purchasing Info Record as a universal prerequisite for every quota source type.</p></div>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Quota Arrangement behavior outside MRP and in MRP">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Runtime</th><th scope="col">How the requirement is assigned</th><th scope="col">What drives the decision</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Manual PR / outside MRP</th><td>The complete PR item is assigned to one source.</td><td>Lowest quota rating; if ratings are equal, the first quota item.</td></tr>
+          <tr><th scope="row">MRP without splitting</th><td>The procurement proposal is assigned to one source.</td><td>Quota rating plus the normal quota-item limits and eligibility rules.</td></tr>
+          <tr><th scope="row">MRP with splitting</th><td>One requirement can be divided into several procurement proposals according to the quotas.</td><td>The splitting lot-sizing procedure and the quota proportions. During splitting, quota rating and current allocated quantity are not used to calculate the split.</td></tr>
+        </tbody>
+      </table>
     </div>
+
+    <p>Standard training uses lot-sizing procedure <strong>ES — lot-for-lot with splitting</strong> as the example. A minimum split quantity in the quota header prevents small requirements from being split. If the requirement is below that threshold, SAP assigns it to one source using the normal quota logic.</p>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">school</span>
-      <p><strong>Assessment memory:</strong> Source List answers “may I use this source?” Quota Arrangement answers “which source should receive the next requirement based on the allocation rule?” In MRP, quota is checked first.</p>
+      <p><strong>Assessment memory:</strong> a 70/30 quota does not mean every manual PR is split 70/30. Manual source determination gives the whole PR item to one source. A single requirement is divided only when MRP splitting is configured.</p>
     </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="planning-controls" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Planning controls</p>
+      <h2>Quota items can limit lot size, total allocation, and source priority.</h2>
+      <p>These fields are useful when a percentage alone is not enough to model capacity or commercial limits.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Quota Arrangement planning controls">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Control</th><th scope="col">Meaning</th><th scope="col">Runtime effect</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Minimum lot size</th><td>Smallest proposal quantity for the source.</td><td>Used in MRP. If the calculated quantity is smaller, SAP can raise it to the source minimum.</td></tr>
+          <tr><th scope="row">Maximum lot size</th><td>Largest quantity per procurement proposal for the source.</td><td>Used in MRP. A larger requirement can create several proposals for the same source.</td></tr>
+          <tr><th scope="row">1x</th><td>Allows the source to receive the configured maximum lot only once for the requirement.</td><td>The remaining quantity is routed to other sources instead of creating repeated maximum-size proposals for the same source.</td></tr>
+          <tr><th scope="row">Maximum quantity</th><td>Upper limit for the quota-allocated quantity.</td><td>Used both outside MRP and in MRP. A source is no longer proposed when the new assignment would meet or exceed the configured limit.</td></tr>
+          <tr><th scope="row">Priority / maximum release quantity</th><td>Lets a preferred source be consumed up to a controlled capacity before another source is used.</td><td>Useful, for example, when internal production should cover demand up to a monthly capacity and an external supplier should cover the excess.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">contract</span>
+      <p><strong>Contract control:</strong> if an outline agreement is MRP-relevant through the Source List, its target quantity can be copied conceptually into the quota item's maximum quantity. This adds an exhaustion check that the Source List alone does not perform.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="maintenance-tools" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Maintenance and simulation</p>
+      <h2>Use the quota tool to test the rule before you debug the purchase order.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Quota Arrangement maintenance tools">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Task</th><th scope="col">Fiori</th><th scope="col">SAP GUI</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Create / maintain</th><td><em>Manage Quota Arrangements</em></td><td>MEQ1</td></tr>
+          <tr><th scope="row">Simulate quota only</th><td>Use the available simulation functions in the maintenance context</td><td>MEQ1 → <em>Extras → Simulation → Quota Arrangement</em></td></tr>
+          <tr><th scope="row">Simulate full source determination</th><td>Use the sourcing applications for the target process</td><td>MEQ1 → <em>Extras → Simulation → Source of Supply</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The quota-only simulation checks the Quota Arrangement itself. The source-of-supply simulation also brings Source Lists, outline agreements, and Purchasing Info Records into the sourcing picture.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -104,7 +194,7 @@ tags:
     </div>
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>Assessment answer:</strong> “Quota Arrangement allocates material requirements among sources over a validity period. I separate it from source eligibility, then check quota usage, allocated quantities, quota rating, and the final source assignment.”</p>
+      <p><strong>Assessment answer:</strong> “Quota Arrangement distributes requirements among sources for a material and plant. Outside MRP, SAP calculates (allocated quantity + base quantity) / quota and assigns the source with the lowest quota rating. A manual PR item is assigned completely to one source. MRP can split one requirement only when a splitting lot-size procedure such as ES is active. Then I check min/max lot size, 1x, maximum quantity, and source eligibility before changing the quota.”</p>
     </div>
   </section>
 
@@ -114,6 +204,9 @@ tags:
       <li><a href="https://help.sap.com/docs/PRODUCT_ID/af9ef57f504840d2b81be8667206d485/c4e187576b49ab76e10000000a441470.html">SAP Help — Manage Quota Arrangements</a></li>
       <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91af7f8d3acd47da90d33aaacfcd0d59/4aa0343345884bd2bf7195f1072d9679.html">SAP Help — Quota Arrangement API</a></li>
       <li><a href="https://learning.sap.com/courses/sourcing-in-sap-s4hana/outlining-source-determination">SAP Learning — Outlining Source Determination</a></li>
+      <li><a href="https://learning.sap.com/courses/sourcing-in-sap-s4hana/introducing-quota-arrangements-in-sap-s-4hana">SAP Learning — Introducing Quota Arrangements in SAP S/4HANA</a></li>
+      <li><a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/controlling-source-determination-with-quota-arrangements-1">SAP Learning — Controlling Source Determination with Quota Arrangements</a></li>
+      <li><a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/executing-the-planning-run-with-quota-arrangements">SAP Learning — Executing the Planning Run with Quota Arrangements</a></li>
     </ul>
     <nav class="ecg-context-links" aria-label="Quota Arrangement related pages">
       <span>Related</span>
