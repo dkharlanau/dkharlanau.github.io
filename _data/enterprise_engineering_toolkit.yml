@@ -1,0 +1,195 @@
+name: "Enterprise Engineering Toolkit"
+version: "2026.10"
+hub_url: "https://dkharlanau.github.io/lab/"
+description: "A connected set of executable tools for process, decisions, integration, mapping, reconciliation, transformation, cutover, architecture, visualization, and SAP operations."
+principle: "Start from the engineering task. The repository is the implementation detail."
+
+tools:
+  - order: "01"
+    id: "process-as-code"
+    name: "Process as Code"
+    stage: "Process"
+    repo: "dkharlanau/process-as-code"
+    purpose: "Define process intent as a versioned contract, then validate changes, impact, policy, and agent context."
+    surface: "CLI + documentation"
+    run_label: "Open tool guide"
+    run_url: "https://dkharlanau.github.io/process-as-code/"
+    docs_url: "https://dkharlanau.github.io/process-as-code/"
+    source_url: "https://github.com/dkharlanau/process-as-code"
+    quickstart: |
+      python -m pip install "git+https://github.com/dkharlanau/process-as-code.git"
+      process-code validate examples/order-to-cash.yaml
+    output: "Validated process contract, semantic diff, impact analysis, generated documentation, and governed agent context."
+    next: "Decision Tables as Code or Interface as Code"
+
+  - order: "02"
+    id: "decision-tables-as-code"
+    name: "Decision Tables as Code"
+    stage: "Decision"
+    repo: "dkharlanau/decision-tables-as-code"
+    purpose: "Turn business rules into Git-native decision tables with validation, tests, coverage, semantic diff, and portable runtimes."
+    surface: "CLI + documentation"
+    run_label: "Open tool guide"
+    run_url: "https://dkharlanau.github.io/decision-tables-as-code/"
+    docs_url: "https://dkharlanau.github.io/decision-tables-as-code/"
+    source_url: "https://github.com/dkharlanau/decision-tables-as-code"
+    quickstart: |
+      python -m pip install -e .
+      dtac validate examples/order-routing.yaml
+      dtac test examples/order-routing.yaml examples/order-routing.scenarios.yaml
+    output: "Validated decision table, scenario test result, coverage evidence, and semantic change record."
+    next: "Interface as Code"
+
+  - order: "03"
+    id: "interface-as-code"
+    name: "Interface as Code"
+    stage: "Interface"
+    repo: "dkharlanau/interface-as-code"
+    purpose: "Define and govern enterprise integration contracts, ownership, operational expectations, and interface evidence."
+    surface: "CLI + documentation"
+    run_label: "Open tool guide"
+    run_url: "https://dkharlanau.github.io/interface-as-code/"
+    docs_url: "https://dkharlanau.github.io/interface-as-code/"
+    source_url: "https://github.com/dkharlanau/interface-as-code"
+    quickstart: |
+      pip install https://github.com/dkharlanau/interface-as-code/releases/download/v0.3.0/interface_as_code-0.3.0-py3-none-any.whl
+      iac validate examples/reference-landscape
+    output: "Validated interface inventory, governance findings, operational artifacts, and typed references to specialized contracts."
+    next: "Mapping as Code"
+
+  - order: "04"
+    id: "mapping-as-code"
+    name: "Mapping as Code"
+    stage: "Mapping"
+    repo: "dkharlanau/mapping-as-code"
+    purpose: "Convert mapping workbooks and structured files into governed contracts that can be reviewed, tested, traced, and reused."
+    surface: "CLI + documentation"
+    run_label: "Open tool guide"
+    run_url: "https://dkharlanau.github.io/mapping-as-code/"
+    docs_url: "https://dkharlanau.github.io/mapping-as-code/"
+    source_url: "https://github.com/dkharlanau/mapping-as-code"
+    quickstart: |
+      python -m pip install -e .
+      map-code validate examples/customer-master.yaml
+      map-code score examples/customer-master.yaml
+    output: "Validated mapping contract, quality score, semantic diff, lineage, and ecosystem projections."
+    next: "Reconciliation as Code"
+
+  - order: "05"
+    id: "reconciliation-as-code"
+    name: "Reconciliation as Code"
+    stage: "Reconciliation"
+    repo: "dkharlanau/reconciliation-as-code"
+    purpose: "Version deterministic migration and cross-system controls instead of rebuilding reconciliation spreadsheets for every cycle."
+    surface: "CLI + documentation"
+    run_label: "Open tool guide"
+    run_url: "https://dkharlanau.github.io/reconciliation-as-code/"
+    docs_url: "https://dkharlanau.github.io/reconciliation-as-code/"
+    source_url: "https://github.com/dkharlanau/reconciliation-as-code"
+    quickstart: |
+      python -m pip install -e .
+      rac run examples/customer-migration/reconciliation.yaml --evidence build/evidence.json --report build/evidence.md --no-fail-on-diff
+    output: "Deterministic control result, differences, evidence JSON, and human-readable reconciliation report."
+    next: "Data Relationship Map"
+
+  - order: "06"
+    id: "data-relationship-map"
+    name: "Data Relationship Map"
+    stage: "Relationship"
+    repo: "dkharlanau/data-relationship-map"
+    purpose: "Investigate cross-system identity and lineage from ordinary CSV or XLSX exports."
+    surface: "Browser report + CLI"
+    run_label: "Open live investigation"
+    run_url: "https://dkharlanau.github.io/data-relationship-map/demo/handoff/investigation.html"
+    docs_url: "https://github.com/dkharlanau/data-relationship-map#readme"
+    source_url: "https://github.com/dkharlanau/data-relationship-map"
+    quickstart: |
+      python -m pip install .
+      data-relationship-map investigate examples/customer-chain.json --policy examples/identity-policy.json --focus AFS:4711 --json-output build/investigation.json --markdown build/investigation.md
+    output: "Bounded identity path, lineage evidence, policy result, and portable investigation handoff."
+    next: "Transformation Graph"
+
+  - order: "07"
+    id: "transformation-graph"
+    name: "Transformation Graph"
+    stage: "Transformation"
+    repo: "dkharlanau/transformation-graph"
+    purpose: "Trace enterprise change across processes, systems, data, interfaces, mappings, tests, decisions, ownership, and evidence."
+    surface: "Browser explorer + CLI"
+    run_label: "Open graph explorer"
+    run_url: "https://dkharlanau.github.io/transformation-graph/explorer/"
+    docs_url: "https://dkharlanau.github.io/transformation-graph/"
+    source_url: "https://github.com/dkharlanau/transformation-graph"
+    quickstart: |
+      transformation-graph build-project examples/project/transformation-project.yaml --output-dir build
+      transformation-graph impact build/graph.yaml change.bp-model --depth 2
+    output: "Project graph, impact paths, role and governance views, scorecards, and portable graph exports."
+    next: "Cutover Graph"
+
+  - order: "08"
+    id: "cutover-graph"
+    name: "Cutover Graph"
+    stage: "Cutover"
+    repo: "dkharlanau/cutover-graph"
+    purpose: "Control dependencies, readiness, timing, checkpoints, contingency, risk, and verified evidence during cutover."
+    surface: "Browser control room + CLI"
+    run_label: "Open live control room"
+    run_url: "https://dkharlanau.github.io/cutover-graph/demo/control-room.html"
+    docs_url: "https://dkharlanau.github.io/cutover-graph/"
+    source_url: "https://github.com/dkharlanau/cutover-graph"
+    quickstart: |
+      python -m pip install .
+      cutover-graph control-room examples/timed-cutover-after.json --observed-at 2026-08-30T22:30:00Z --readiness-policy examples/readiness-policy.json --html build/control-room.html
+    output: "Deterministic cutover state, dependency readiness, timing evidence, contingency status, and control-room report."
+    next: "Enterprise Architecture Composer"
+
+  - order: "09"
+    id: "enterprise-architecture-composer"
+    name: "Enterprise Architecture Composer"
+    stage: "Architecture"
+    repo: "dkharlanau/enterprise-architecture-composer"
+    purpose: "Compose a target architecture from business context, current landscape, constraints, and NFRs with an inspectable decision trace."
+    surface: "Browser application + CLI"
+    run_label: "Launch browser app"
+    run_url: "https://dkharlanau.github.io/enterprise-architecture-composer/"
+    docs_url: "https://github.com/dkharlanau/enterprise-architecture-composer#readme"
+    source_url: "https://github.com/dkharlanau/enterprise-architecture-composer"
+    quickstart: |
+      node bin/eac.mjs report examples/scenarios/global-b2b-manufacturer.context.json --output /tmp/eac-review.md
+    output: "Blueprint, integration decisions, findings, migration steps, dependency roadmap, and governed downstream handoffs."
+    next: "Visual Workbench"
+
+  - order: "10"
+    id: "visual-workbench"
+    name: "Visual Workbench"
+    stage: "Visual"
+    repo: "dkharlanau/visual-workbench"
+    purpose: "Describe meaning once and generate consistent business views for process, handoff, data, controls, exceptions, plans, and dependencies."
+    surface: "Generated browser proof + CLI"
+    run_label: "Open generated gallery"
+    run_url: "https://dkharlanau.github.io/visual-workbench/"
+    docs_url: "https://github.com/dkharlanau/visual-workbench#readme"
+    source_url: "https://github.com/dkharlanau/visual-workbench"
+    quickstart: |
+      npm ci --ignore-scripts --no-audit --no-fund
+      npm run build
+      node dist/cli.js render examples/order-fulfillment-lanes.md --view executive --output /tmp/visual-workbench-proof.svg
+    output: "Deterministic SVG or standalone HTML generated from semantic source without manual coordinates."
+    next: "SAP Agentic Operations"
+
+  - order: "11"
+    id: "sap-agentic-operations"
+    name: "SAP Agentic Operations"
+    stage: "Operations"
+    repo: "dkharlanau/sap-agentic-operations"
+    purpose: "Diagnose and reconcile SAP-heavy operational incidents from bounded evidence, with safe recovery choices and explicit execution limits."
+    surface: "CLI + product documentation"
+    run_label: "Open practical toolkit"
+    run_url: "https://dkharlanau.github.io/sap-agentic-operations/"
+    docs_url: "https://dkharlanau.github.io/sap-agentic-operations/docs/"
+    source_url: "https://github.com/dkharlanau/sap-agentic-operations"
+    quickstart: |
+      python -m pip install .
+      sao incident analyze examples/evidence-packs/customer-replication-missing-event --output /tmp/sao-30-second-proof
+    output: "Evidence-backed diagnosis, missing evidence, safe next actions, blocked unsafe shortcuts, and business-level resolution condition."
+    next: "Feed operational evidence back into the engineering loop"
