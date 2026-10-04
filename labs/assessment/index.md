@@ -160,6 +160,16 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/enterprise-context/business-ai/"><span>SAP</span><strong>SAP Business AI Detail</strong><small>SAP-specific runtime, integration, grounding, governance, and agent boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
       <a href="/labs/enterprise-context/mdg/"><span>MDG</span><strong>Master Data Governance</strong><small>Ownership, governance process, deployment, interfaces, extensions, and logistics impact.</small><i class="material-symbols-outlined" aria-hidden="true">verified</i></a>
     </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">support_agent</span>
+      <div>
+        <p><strong>AI support agent recall:</strong> do not describe the design as “LLM + RAG”. A production agent needs approved knowledge, live facts through tools, deterministic policy checks, safe side effects, escalation with context, traces, and end-to-end evals.</p>
+        <p><strong>90-second Lead answer:</strong> I start from the support job and define what resolution means. I separate model reasoning from system authority: the model can classify, retrieve, summarize, and choose an allowed tool, while identity, permissions, exact policy, durable state, and high-risk actions stay in normal software. I test the full trajectory: correct evidence, correct tool, correct action, correct final state, and clean human handoff. For SAP support, I would begin with read-heavy triage and diagnostics, not autonomous configuration changes.</p>
+        <p><strong>Challenge question:</strong> “The agent resolves 80% of tickets.” Ask what counts as resolved, which ticket types are excluded, how reopened tickets and corrections are counted, what the human-takeover rate is, and whether the result was measured on live production traffic or only a test set.</p>
+        <p><a href="/labs/ai-ready/#support-agent-production-pattern">Open the support-agent production pattern →</a></p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__method" data-reveal>
