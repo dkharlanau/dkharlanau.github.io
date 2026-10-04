@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Inventory Management — Enterprise Context Lab"
-description: "A practical SAP S/4HANA Inventory Management guide to goods movements, stock state, movement types, reservations, physical inventory, valuation, and the EWM boundary."
+description: "A practical SAP S/4HANA Inventory Management guide to goods movements, stock state, valuation models, reservations, physical inventory, analytics, movement-type controls, and the EWM boundary."
 permalink: /labs/enterprise-context/inventory-management/
 status: reviewed
 verified: true
@@ -21,7 +21,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-04
 publication_wave: "logistics-search-wave-02"
-review_method: "SAP S/4HANA 2025 FPS01 primary sources + current SAP Learning Inventory Management course cross-check + page-level editorial review"
+review_method: "SAP S/4HANA 2025 FPS01 primary sources + current SAP Learning Inventory Management course cross-check covering valuation, physical inventory, analytics, and movement-type Customizing + page-level editorial review"
 search_intent: "SAP inventory management goods movements, stock types and ownership"
 # ai-discovery-managed:start
 structured_data:
@@ -247,6 +247,34 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="valuation-models" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Valuation models</p>
+      <h2>Quantity management and value management are separate design choices.</h2>
+      <p>Material type and valuation configuration determine whether SAP manages a material by quantity, value, both, or neither. Split valuation adds another dimension: one material can have several partial stocks with different values inside the same valuation area.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Inventory valuation models">
+      <table>
+        <thead><tr><th scope="col">Model</th><th scope="col">Quantity</th><th scope="col">Value</th><th scope="col">Lead interpretation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Normal valuated stock</th><td>Updated</td><td>Updated</td><td>Goods movements can change both physical stock and FI inventory value.</td></tr>
+          <tr><th scope="row">UNBW — nonvaluated material</th><td>Updated</td><td>Not updated</td><td>The material is still inventory by quantity, but no accounting data or stock value is maintained. Procurement therefore uses account assignment.</td></tr>
+          <tr><th scope="row">NLAG — non-stock material</th><td>Not updated as stock</td><td>Not updated as stock</td><td>The receipt is posted directly to consumption. The value goes to a consumption account and the account-assignment object.</td></tr>
+          <tr><th scope="row">Split valuation</th><td>Updated by partial stock</td><td>Updated by partial stock</td><td>One material is divided into valuation types so different sources, qualities, origins, or batches can carry different prices or valuation classes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>UNBW and NLAG are not the same shortcut</h3>
+    <p>For <strong>UNBW</strong>, quantity is managed but stock value is not. Other goods receipts, transfer postings, and goods issues do not create FI postings merely because the quantity changes. A goods issue for consumption can still update consumption statistics. For <strong>NLAG</strong>, SAP does not manage warehouse quantity or stock value at all; a PO receipt with account assignment posts the quantity to consumption and debits the assigned cost object.</p>
+    <p><strong>Assessment shortcut:</strong> UNBW = <em>stock without value</em>. NLAG = <em>no stock inventory</em>. Both require account assignment for procurement, but the inventory model is different.</p>
+
+    <h3>Split valuation: category defines the rule, type identifies the partial stock</h3>
+    <p>A <strong>valuation category</strong> defines why the stock is split, for example internal versus external procurement, country of origin, quality, or individual batch valuation. A <strong>valuation type</strong> is the concrete partial-stock value inside that category. Split valuation is activated in Customizing and configured through globally defined categories and types plus their local availability in the valuation area.</p>
+    <p>At material level, the valuation header record uses price control <strong>V</strong> because the total value is the aggregation of the partial stocks. Each valuation type then has its own accounting data and can use standard price or moving average price and its own valuation class. Every value-relevant GR, GI, invoice, or physical-inventory posting must address the affected partial stock.</p>
+    <p><strong>Design question:</strong> use split valuation only when one material identity must remain shared while different partial stocks need genuinely different valuation logic. If the business differences also require different planning, compliance, specification, or lifecycle behavior, separate material numbers may be the cleaner model.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">From event to document</p>
@@ -270,10 +298,92 @@ source_links:
   <section class="research-canvas__inventory" id="failures" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Physical inventory</p>
-      <h2>A count difference is evidence of a mismatch, not an explanation.</h2>
+      <h2>Count the stock management unit, not a vague material total.</h2>
+      <p>A physical inventory compares observed stock with the exact book-stock segment SAP manages. The control object is the physical inventory document; the process is complete only after the differences for its stock management units are posted.</p>
     </header>
-    <p>Physical inventory compares observed stock with book stock. The physical-inventory document controls the count scope; the count records what is physically present; difference processing compares that observation with the book quantity. Posting the difference adjusts the system stock and, where relevant, its financial value.</p>
-    <p>That closes the accounting and inventory control step, but it does not explain why the difference appeared. The cause may be timing, an unposted or duplicate movement, the wrong storage location, a picking or staging error, a unit-of-measure issue, damage, or another process defect. If the cause is still active, posting the difference only resets the starting point for the next mismatch.</p>
+    <p>A stock management unit is separated by <strong>material, plant and storage location, stock type, valuation type and batch, and special-stock context</strong>. A count at one storage location or stock type cannot prove the quantity in another. In warehouse-managed execution, the physical count can be organized at warehouse structures such as bins and quants instead of the ERP stock-unit level.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Physical inventory lifecycle">
+      <table>
+        <thead><tr><th scope="col">Stage</th><th scope="col">What SAP controls</th><th scope="col">Lead question</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1. Scope and document</th><td>Plant, storage location, stock type, special stock, planned count date, optional posting block or book-inventory freeze.</td><td>Are we counting the same stock unit that the discrepancy belongs to?</td></tr>
+          <tr><th scope="row">2. Count</th><td>Physical quantity and count date. Classic entry uses the Zero Count indicator for zero; Manage Physical Inventory Count accepts quantity 0 directly.</td><td>Is the count independent and tied to the correct unit, batch, valuation type, and date?</td></tr>
+          <tr><th scope="row">3. Difference analysis</th><td>Book quantity, counted quantity, quantity difference, and value difference.</td><td>Is the difference real, or explained by timing, a backdated movement, or wrong stock segmentation?</td></tr>
+          <tr><th scope="row">4. Recount</th><td>A new inventory document is created for the selected items; the original items become recount-controlled.</td><td>Is uncertainty in the count high enough to justify another observation before adjustment?</td></tr>
+          <tr><th scope="row">5. Difference posting</th><td>Book stock is corrected; own-stock differences create the corresponding inventory and FI effect.</td><td>Does the adjustment close control correctly without hiding the process cause?</td></tr>
+          <tr><th scope="row">6. Root-cause action</th><td>Outside the count posting itself: process, data, warehouse, unit, integration, or training correction.</td><td>What will prevent the same difference from recurring?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Posting block, freeze book inventory, and book adjustment solve different problems</h3>
+    <p>A <strong>posting block</strong> prevents goods movements for the stock management unit during the relevant inventory period. <strong>Freeze Book Inventory</strong> allows physical operations to continue while preserving the book quantity used for the count comparison. If a movement is later posted with a posting date before the count, the <strong>Adjust Book Inventory</strong> function can update the inventory document so timing does not become a false difference.</p>
+    <p>The count date also determines the relevant posting period. Difference tolerances can be controlled by user group. For valuated own stock, a shortage credits the stock account and posts the offset to inventory-difference expense; a surplus debits stock and uses the corresponding inventory-difference revenue side. The adjustment fixes the balance, but it still does not explain the cause.</p>
+
+    <h3>Choose an inventory procedure by control objective</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Physical inventory procedure comparison">
+      <table>
+        <thead><tr><th scope="col">Procedure</th><th scope="col">When it fits</th><th scope="col">Main control</th><th scope="col">Lead trade-off</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Annual / scheduled full inventory</th><td>Broad periodic control of required stock units.</td><td>Create, count, analyze, and post all required units.</td><td>Strong coverage, but potentially disruptive and labor-intensive.</td></tr>
+          <tr><th scope="row">Cycle counting</th><td>High-value or high-activity materials need more frequent control.</td><td>Plant-specific cycle-count indicator and frequency; ABC analysis can propose categories.</td><td>Moves effort toward risk and activity, but master data and scheduling discipline matter.</td></tr>
+          <tr><th scope="row">Inventory sampling</th><td>A statistically valid sample can represent a larger population.</td><td>Sampling profile, value classes, strata, random selection, update, and extrapolation.</td><td>Reduces counting effort, but the statistical design and auditor acceptance are part of the solution.</td></tr>
+          <tr><th scope="row">Ad hoc / simplified count</th><td>A focused count is needed without building a large batch process.</td><td>Fiori apps can create documents, enter counts, schedule mass jobs, and support scanning.</td><td>Operationally faster, but the same stock-unit and evidence rules still apply.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Cycle-counting memory:</strong> every stock unit is still inventoried at least once during the year; selected materials are counted more often. The cycle-count indicator is plant-specific and can be set manually or proposed by ABC analysis using consumption or requirements.</p>
+    <p><strong>Situation Handling:</strong> use exception routing when the risk is that a valid process remains unattended. SAP provides object-based and message-based situations. Inventory examples include overdue Stock Transport Order receipts and Physical Inventory Monitoring for overdue counts or excessive deviations. Situation Handling raises the right exception to the responsible team; it does not replace the inventory document, the count, or root-cause analysis.</p>
+
+    <p><strong>Diagnostic rule:</strong> posting the difference closes the inventory control step, not the investigation. Repeated differences should be segmented by material, location, stock type, shift, unit, batch, posting timing, EWM status, and user/process path until a repeatable cause is visible.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="inventory-evidence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence and control surfaces</p>
+      <h2>Use the report that answers the question you actually have.</h2>
+      <p>Inventory diagnostics become faster when stock state, planning state, documents, and accounting evidence are not mixed together.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Inventory reports and diagnostic questions">
+      <table>
+        <thead><tr><th scope="col">Question</th><th scope="col">Classic / Fiori evidence</th><th scope="col">What it proves</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">What material documents were posted?</th><td>MB51 / Display Material Document List</td><td>Movement history by material, plant, storage location, movement type, special stock, user, and dates.</td></tr>
+          <tr><th scope="row">What accounting documents came from this material?</th><td>MR51 / Accounting Document List for Materials</td><td>Financial evidence by material, company code, valuation area, dates, and document type.</td></tr>
+          <tr><th scope="row">Where is the current stock of one material?</th><td>MMBE / Display Stock Overview</td><td>Current stock across organizational levels, stock types, batch, and optional special stock.</td></tr>
+          <tr><th scope="row">What is the current MRP availability picture?</th><td>MD04</td><td>Current stock plus MRP elements such as reservations, purchase orders, and requisitions.</td></tr>
+          <tr><th scope="row">What does static vs dynamic availability show?</th><td>MB53 / Display Plant Stock Availability vs CO09 / Monitor Product Availability</td><td>Static physical availability versus dynamic ATP-style availability with checking logic.</td></tr>
+          <tr><th scope="row">Which materials have negative warehouse stock?</th><td>MB52 / Display Warehouse Stock</td><td>Multi-material quantity/value view with negative-stock filtering.</td></tr>
+          <tr><th scope="row">What was stock on a historical posting date?</th><td>MB5B / Stocks for Posting Date</td><td>Reconstructed quantities, values, receipts, issues, and underlying material documents for a date range.</td></tr>
+          <tr><th scope="row">What has left one plant but not arrived at another?</th><td>MB5T / Display Stock in Transit; MB5TD for key date</td><td>STO transit quantities and historical transit position.</td></tr>
+          <tr><th scope="row">What is still in valuated GR blocked stock?</th><td>MB5OA / Display Valuated GR Blocked Stock</td><td>Origin-acceptance quantities reconstructed from PO history.</td></tr>
+          <tr><th scope="row">What stock is with a subcontractor?</th><td>MBLB / Stocks at Subcontractor</td><td>Material and quantity held as subcontracting stock at the supplier.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Analytics should lead to an action</h3>
+    <p>Fiori overview pages expose recent material documents, overdue GR blocked stock, overdue stock in transit, stock value by stock type, and warehouse throughput as actionable cards. Stock analytical apps add current and historical views, slow/non-moving stock analysis, dead-stock analysis, and date-range movement analysis. A Lead should state the decision behind the KPI: expedite, recount, reverse, transfer, reduce stock, investigate process delay, or reconcile value.</p>
+
+    <h3>Periodic consistency checks</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Periodic inventory control reports">
+      <table>
+        <thead><tr><th scope="col">Control</th><th scope="col">Purpose</th><th scope="col">Failure signal</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">MB5U / Analyze Conversion Differences</th><td>Find rounding effects created when alternative units are converted to the base unit.</td><td>Repeated quantity noise can point to unsuitable UoM design or conversion precision.</td></tr>
+          <tr><th scope="row">MB5L / Display List of Stock Values</th><td>Compare material stock values with balances of the associated stock G/L accounts.</td><td>A difference can indicate manual postings to stock accounts, wrong account determination, or a transition between stock accounts that was not handled consistently.</td></tr>
+          <tr><th scope="row">MB5K / Check Stock Consistency</th><td>Check internal consistency of stock data at material or valuation-area level.</td><td>Use it as a control before inconsistencies grow into operational or financial problems.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Movement type is a control bundle, not only a three-digit label</h3>
+    <p>Movement type Customizing can control quantity and value update behavior, consumption, field selection, reasons, allowed transactions, stock determination, dynamic availability, shelf-life checks, storage-location creation, automatic PO creation at GR, and account grouping. If a new movement type is genuinely required, copy the closest standard behavior and its dependent entries rather than designing from a blank key.</p>
+    <p>Customer movement types should use the customer namespace such as <strong>9, X, Y, or Z</strong>. Copy the related reversal movement where applicable. Quantity strings and value strings are fixed SAP control mechanisms; they are not free-form logic to redesign. Account grouping can differentiate the G/L determination for otherwise related movement families.</p>
+    <p><strong>MIGO boundary:</strong> plant parameters, general MIGO field selection, movement-type-specific field selection, and transaction/reference settings are different configuration layers. A required field should be enforced in the layer that owns the business rule instead of by an unrelated custom movement type.</p>
+    <p><strong>Document identity:</strong> accounting-document number assignment, material/physical-inventory document number ranges, and reservation number assignment are separate controls. They help identify and audit documents; they do not change the business meaning of the underlying movement.</p>
   </section>
 
   <section class="research-canvas__inventory" id="lead-lens" data-reveal>
@@ -295,7 +405,7 @@ source_links:
     <header>
       <p class="research-canvas__eyebrow">Sources</p>
       <h2>Primary SAP documentation behind the baseline.</h2>
-      <p>The article is independently written. Product behavior was rechecked against current SAP S/4HANA 2025 FPS01 and SAP S/4HANA Cloud documentation. Detailed movement-type configuration, Material Ledger design, batch/serial configuration, and full EWM execution remain outside this page.</p>
+      <p>The article is independently written. Product behavior was rechecked against current SAP S/4HANA 2025 FPS01 documentation and the current SAP Learning Inventory Management course. Detailed Material Ledger design, batch/serial configuration, and full EWM execution remain outside this page.</p>
     </header>
     <div class="research-route-list">
       <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/742e46e570984d9aa74e468838f6e1ff.html" target="_blank" rel="noopener"><span>SAP</span><strong>Goods Movement</strong><small>SAP S/4HANA 2025 FPS01 · checked 2026-09-23</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
