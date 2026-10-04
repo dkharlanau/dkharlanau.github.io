@@ -168,6 +168,130 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="bpm" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business Process Management</p>
+      <h2>BPM is the management discipline around the process, not only the diagram.</h2>
+      <p>Business Process Management is an ongoing and iterative discipline for managing how work is designed, executed, measured, controlled, and improved. It combines people, responsibilities, process knowledge, operational evidence, and technology.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Business Process Management management cycle">
+      <table class="study-table__table">
+        <thead><tr><th>BPM activity</th><th>Lead question</th><th>Typical evidence</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Capture</strong></td><td>What process knowledge do we need before we design or change anything?</td><td>Interviews, workshops, process documents, event data, policies</td></tr>
+          <tr><td><strong>Design</strong></td><td>How should the process work, and where are the decisions and responsibilities?</td><td>Process model, roles, systems, decision points, controls</td></tr>
+          <tr><td><strong>Execute</strong></td><td>Who or what performs each step?</td><td>Employees, ERP transactions, workflows, integrations, automation</td></tr>
+          <tr><td><strong>Document</strong></td><td>Where is the current process knowledge maintained and published?</td><td>Process repository, procedures, linked policies, process portal</td></tr>
+          <tr><td><strong>Measure</strong></td><td>How do we know whether the process supports the business outcome?</td><td>Cycle time, cost, quality, service, risk, working-capital KPIs</td></tr>
+          <tr><td><strong>Monitor and control</strong></td><td>How do we detect deviation and decide what to do next?</td><td>Process monitoring, conformance checks, controls, alerts, review cycles</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+      <p><strong>BPM is a loop.</strong> Capture → design → execute → document → measure → monitor and control → improve. A process model that is never compared with execution evidence becomes documentation, not active process management.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">End-to-end management</p>
+      <h2>Optimize the customer outcome across departments, not one department at a time.</h2>
+      <p>End-to-end process management follows the business outcome across organizational boundaries. Sales, purchasing, production, logistics, finance, IT, and external partners can all contribute to one process result.</p>
+    </header>
+    <p>This changes the management question. Instead of asking whether every department is locally efficient, ask whether the full process delivers the intended result with acceptable cost, speed, quality, risk, and working capital.</p>
+    <div class="ecg-remember"><strong>Lead rule</strong><p>Local optimization can damage the end-to-end process. A shorter purchasing approval is not an improvement if it increases quality failures later. A warehouse utilization target is not useful if it creates delivery delay or excess inventory.</p></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Three levels of BPM</p>
+      <h2>Strategy, operations, and technology must point to the same process outcome.</h2>
+      <p>The SAP Learning lesson calls this a three-level focus of BPM. The important distinction is that <strong>BPM</strong> is the management discipline; <strong>BPMN</strong> is a process-modeling notation used inside that discipline.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Three levels of Business Process Management">
+      <table class="study-table__table">
+        <thead><tr><th>Level</th><th>Main concern</th><th>Lead responsibility</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Strategic</strong></td><td>Alignment of processes with company goals, customer needs, investment priorities, and market change</td><td>Connect process performance and transformation choices to business strategy</td></tr>
+          <tr><td><strong>Operational</strong></td><td>Concrete process execution: activities, decisions, roles, hand-offs, controls, and exceptions</td><td>Define ownership, remove friction, and keep the end-to-end flow workable</td></tr>
+          <tr><td><strong>Technical</strong></td><td>Systems and tools that support modeling, workflow, analytics, mining, monitoring, and automation</td><td>Choose technology that supports the process instead of forcing the process to fit the tool</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">BPM platform support</p>
+      <h2>Technology makes process management repeatable and scalable.</h2>
+      <p>A BPM platform can provide the shared structure that is difficult to maintain with disconnected diagrams, documents, spreadsheets, and individual knowledge.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Capabilities of a Business Process Management platform">
+      <table class="study-table__table">
+        <thead><tr><th>Capability</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Central object repository</strong></td><td>Reuse the same roles, systems, risks, controls, and business terms instead of redefining them in each model.</td></tr>
+          <tr><td><strong>Process structure and navigation</strong></td><td>Connect value chains, process groups, processes, and detailed models so users can find the right level.</td></tr>
+          <tr><td><strong>Reporting</strong></td><td>Aggregate process information across a selected scope rather than inspect diagrams one by one.</td></tr>
+          <tr><td><strong>Version control</strong></td><td>Track change history and restore or compare process versions when needed.</td></tr>
+          <tr><td><strong>As-Is / To-Be comparison</strong></td><td>Make the transformation gap explicit and review what is really changing.</td></tr>
+          <tr><td><strong>Collaboration and comments</strong></td><td>Collect feedback from process owners and participants around one process reference.</td></tr>
+          <tr><td><strong>Risks and controls</strong></td><td>Connect process steps to compliance and control requirements instead of managing them in isolation.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Software enables BPM; it does not replace management.</strong> Process ownership, decision rights, policy, data quality, change management, and accountability still need people and an operating model. Buying a modeling tool does not create process discipline by itself.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Where BPM helps</p>
+      <h2>Improvement, transparency, and implementation are three different jobs.</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Process improvement</h3>
+        <p>Find pain points, bottlenecks, redundant work, and the stakeholders who can change the process. Improvement should be selected deliberately because every process change has adoption cost and risk.</p>
+      </div>
+      <div>
+        <h3>Process transparency</h3>
+        <p>Make the process understandable and accessible. BPMN 2.0 can help show tasks, events, decisions, responsibilities, and flows in a shared notation.</p>
+      </div>
+      <div>
+        <h3>Process implementation</h3>
+        <p>Put the process into the enterprise structure, publish the approved version, train participants, and automate selected work where automation improves the end-to-end outcome.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">BPM benefits</p>
+      <h2>Benefits matter only when they can be traced to process behavior.</h2>
+      <p>These seven benefits are useful assessment anchors, but a Lead should connect each one to evidence rather than repeat the label.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Benefits of Business Process Management">
+      <table class="study-table__table">
+        <thead><tr><th>Benefit</th><th>What it means in practice</th><th>Possible measure</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Agility</strong></td><td>Understand which processes, roles, systems, and controls are affected by a business change.</td><td>Change lead time, impacted-process coverage</td></tr>
+          <tr><td><strong>Productivity</strong></td><td>Remove redundant steps, reduce manual work, and redesign bottlenecks.</td><td>Touches per case, throughput, productive time</td></tr>
+          <tr><td><strong>Efficiency and reduced risk</strong></td><td>Expose inefficient variants and missing or weak controls.</td><td>Cost per case, exception rate, control failures</td></tr>
+          <tr><td><strong>Compliance and transparency</strong></td><td>Make process responsibilities, controls, and evidence visible and maintainable.</td><td>Control coverage, audit findings, overdue reviews</td></tr>
+          <tr><td><strong>Employee satisfaction</strong></td><td>Reduce avoidable repetitive work and make process guidance easier to find.</td><td>Manual work, search time, support requests, employee feedback</td></tr>
+          <tr><td><strong>Measurability</strong></td><td>Compare end-to-end process performance with the expected result.</td><td>Cycle time, quality, SLA, first-pass rate, business outcome KPIs</td></tr>
+          <tr><td><strong>Technology integration</strong></td><td>Connect business process design with the applications and automation that execute it.</td><td>System hand-offs, automation rate, interface failure impact</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">SAP Signavio</p>
@@ -387,7 +511,11 @@ tags:
         <div class="ecg-remember"><strong>Answer shape</strong><p>Process Governance controls process-related workflows and lifecycle steps such as review and approval. Process Transformation Manager coordinates broader improvement initiatives, insights, objectives, tasks, and value cases.</p></div>
       </article>
       <article class="ecg-determination-detail">
-        <header><div><span>Q4</span><small>Lead</small></div><h3>How would you use Signavio in an S/4HANA transformation?</h3></header>
+        <header><div><span>Q4</span><small>BPM</small></div><h3>What are the three levels of BPM, and why do they matter?</h3></header>
+        <div class="ecg-remember"><strong>Answer shape</strong><p>Strategic BPM aligns processes with company goals. Operational BPM defines and improves how the work is actually performed. Technical BPM provides the systems, modeling, analytics, workflow, mining, and automation support. A strong design keeps all three aligned around one end-to-end business outcome.</p></div>
+      </article>
+      <article class="ecg-determination-detail">
+        <header><div><span>Q5</span><small>Lead</small></div><h3>How would you use Signavio in an S/4HANA transformation?</h3></header>
         <div class="ecg-remember"><strong>Answer shape</strong><p>Start from current-process evidence, agree process scope and target design, connect process decisions to implementation work, govern the process content, and measure the post-change outcome. Keep Signavio connected to ALM, architecture, and SAP application ownership instead of treating it as the system that owns every change.</p></div>
       </article>
     </div>
@@ -429,6 +557,11 @@ tags:
         <span>SAP Learning · process technology</span>
         <h3><a href="https://learning.sap.com/courses/analyzing-business-processes-with-sap-signavio-solutions/discovering-how-technology-supports-process" rel="noopener noreferrer">Discovering How Technology Supports Process</a></h3>
         <p>Shared understanding, execution visibility, alignment, and structured improvement.</p>
+      </article>
+      <article>
+        <span>SAP Learning · BPM foundations</span>
+        <h3><a href="https://learning.sap.com/courses/analyzing-business-processes-with-sap-signavio-solutions/defining-business-process-management_d232d29d-4311-408f-a85c-1f5460b74ed7" rel="noopener noreferrer">Defining Business Process Management</a></h3>
+        <p>BPM cycle, end-to-end focus, strategic/operational/technical levels, BPM platform support, and BPM benefits.</p>
       </article>
       <article>
         <span>SAP Learning · suite overview</span>
