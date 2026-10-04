@@ -22,7 +22,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-04
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, PR assignment and conversion, procurement automation, supplier confirmations, Situation Handling, pricing, contracts, scheduling agreements, invoicing plans, blanket orders, subcontracting, and special purchasing functions cross-check + S4500/S4520 process refresh"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, PR assignment and conversion, procurement automation, supplier confirmations, Situation Handling, pricing, contracts, scheduling agreements, invoicing plans, blanket orders, subcontracting, invoice verification, and special purchasing functions cross-check + S4500/S4515/S4520 process refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -1524,23 +1524,323 @@ source_links:
     <p>If warehouse execution or quality inspection sits between physical arrival and unrestricted stock, continue with the <a href="/labs/enterprise-context/inventory-management/">Inventory Management</a>, <a href="/labs/enterprise-context/ewm/">EWM</a>, or <a href="/labs/enterprise-context/quality-management/">Quality Management</a> guide rather than forcing those details into the PO model.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="invoice-verification" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Supplier invoice</p>
-      <h2>Invoice verification compares a commercial claim with the purchasing history.</h2>
+      <p class="research-canvas__eyebrow">Logistics Invoice Verification</p>
+      <h2>Invoice verification is a control decision, not only invoice entry.</h2>
+      <p>The supplier invoice is a commercial claim. SAP compares that claim with the purchasing history, applies tax and accounting rules, and decides whether the document can be posted and whether it can be paid without further review.</p>
     </header>
-    <p>The supplier invoice is a separate business event from receipt. With purchase-order reference, SAP can allocate an invoice to purchasing documents and, depending on the scenario, to related references such as delivery notes or service entry sheets. Quantity, value, tax, and tolerance checks determine whether the invoice can be posted cleanly or needs exception handling.</p>
-    <p>In the plain PO process, the user enters the supplier invoice header data such as gross amount, tax, invoice date, and supplier reference. With PO reference, SAP can propose the invoicing party, payment terms, material, open invoice quantity, and expected item amount from the PO and receipt history.</p>
-    <p>Posting creates the logistics invoice document and an accounting document and updates the purchasing history. Logistics Invoice Verification checks the commercial claim; it does <strong>not</strong> execute the supplier payment or manage the open liability after posting. Those tasks belong to Financial Accounting.</p>
-    <p>If price, quantity, or other configured variances exceed tolerance, SAP can still post the invoice but block it for payment, depending on the tolerance setup. This is an important distinction: “posted” and “payable” are not the same status.</p>
-    <p>The reference model matters. Where goods-receipt-based invoice verification is active, the invoice is matched against the relevant goods receipts rather than only against the ordered quantity. Other procurement variants have different matching rules. Do not infer the intended invoice behavior from the existence of a PO alone.</p>
-    <p>See SAP's current <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8d6fb6531de6b64ce10000000a174cb4.html" target="_blank" rel="noopener">Entering Invoices with Purchase Order Reference</a> documentation for the supported allocation choices in Logistics Invoice Verification.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> “I separate posting from payment. In Logistics Invoice Verification I first identify the reference model: PO-based, GR-based, or no PO reference. Then I compare quantity, price, tax, currency, account assignment, and delivery costs. Tolerances can allow posting while still blocking payment. I do not release a block until I know whether the PO, receipt, supplier invoice, or configuration is the real cause. Finally, I use PO history and GR/IR reconciliation to prove financial completion.”</p>
+    </div>
+
+    <h3>Start with the reference model.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Invoice verification reference model">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Model</th><th scope="col">What SAP matches</th><th scope="col">Lead-level consequence</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">PO-based invoice verification</th>
+            <td>The invoice item is based on the PO item and cumulative purchasing history.</td>
+            <td>Several partial receipts are not uniquely assigned to separate invoice items. Use the PO history to understand the total open quantity and value.</td>
+          </tr>
+          <tr>
+            <th scope="row">GR-based invoice verification</th>
+            <td>Each invoice item can be assigned to a specific goods-receipt item. Several partial GRs can therefore create several proposed invoice items.</td>
+            <td>The invoice and GR relationship is explicit in PO history. Do not treat one partial receipt as interchangeable with another after posting.</td>
+          </tr>
+          <tr>
+            <th scope="row">Without PO reference</th>
+            <td>There is no PO or GR history from which SAP can propose invoice items.</td>
+            <td>In the advanced app / MIRO, direct posting can be made to G/L, material, or asset when enabled. The Create Supplier Invoice app supports direct posting to G/L accounts.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>With PO reference, SAP can propose the invoicing party, payment terms, currency, items, quantities, and amounts from the purchasing history. The user still has to compare the proposal with the supplier document before posting.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">sync_problem</span>
+      <div>
+        <p><strong>GR reversal after invoice receipt:</strong> Customizing decides whether a GR can be reversed or returned after an invoice has already been posted for a GR-based item.</p>
+        <p>If the system allows it, use the correct subsequent-delivery relationship when replacing the returned or reversed quantity. Otherwise GR/IR can become inconsistent, especially when the invoice contained a price variance. If reversal is not allowed, cancel the invoice first and then reverse or return the GR.</p>
+      </div>
+    </div>
+
+    <h3>Hold, Park, Save as Complete, and Post have different financial meaning.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier invoice document statuses">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">State</th><th scope="col">Checks and documents</th><th scope="col">FI / PO-history effect</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Hold</th>
+            <td>Only minimal checks. An MM invoice document is saved with Hold status.</td>
+            <td>No information is transferred to FI and PO history is not updated.</td>
+            <td>Keep incomplete work when essential data is still missing.</td>
+          </tr>
+          <tr>
+            <th scope="row">Park</th>
+            <td>An MM invoice document is parked and an FI document is created as a parked document.</td>
+            <td>Information is transferred to FI and the invoice is visible in PO history.</td>
+            <td>Keep a document that needs further processing or approval.</td>
+          </tr>
+          <tr>
+            <th scope="row">Save as Complete</th>
+            <td>The document must be postable; account assignment is checked.</td>
+            <td>A parked FI document exists, PO history is updated, and the PO commitment is reduced.</td>
+            <td>Use when data entry is complete but posting still waits for workflow or another control.</td>
+          </tr>
+          <tr>
+            <th scope="row">Posted</th>
+            <td>The logistics invoice and accounting document are posted.</td>
+            <td>A supplier liability exists. The invoice can still carry a payment block.</td>
+            <td>Accounting entry is complete; payment eligibility is a separate question.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Assessment trap:</strong> these are supplier-invoice states. They are not the same as Park, Hold, or Draft for purchase requisitions and purchase orders.</p>
+    <p>A flexible workflow can approve invoices saved as complete. Start conditions can use factors such as company code, account assignment, PO reference, supplier release group, or invoice amount. Approvers act through <em>My Inbox</em>.</p>
+
+    <h3>A variance can be accepted for posting and still stop payment.</h3>
+    <p>Invoice tolerances are company-code controls. If a variance is inside the configured limits, the invoice is accepted without a block. If a lower limit is exceeded, SAP can issue a message but still allow posting without a payment block. If an upper limit is exceeded, posting can still be possible, but the invoice is automatically blocked for payment. A blocking reason on one invoice item blocks the whole invoice for payment.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Invoice verification tolerance keys">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Variance</th><th scope="col">Typical tolerance keys</th><th scope="col">Question to ask</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Quantity</th><td>DQ, DW</td><td>Does invoiced quantity match the open quantity supported by the receipt history?</td></tr>
+          <tr><th scope="row">Price</th><td>KW, PP, PS</td><td>Is the supplier price different from the valid PO price, and is the PO price estimated?</td></tr>
+          <tr><th scope="row">PO price quantity</th><td>BR, BW</td><td>Did the relationship between PO quantity and PO price unit change?</td></tr>
+          <tr><th scope="row">Date</th><td>ST</td><td>Did the invoice arrive before the planned delivery date, and is the weighted variance material?</td></tr>
+          <tr><th scope="row">Item amount</th><td>AN, AP</td><td>Should high-value items receive an additional payment-control block?</td></tr>
+          <tr><th scope="row">Small difference</th><td>BD</td><td>Is the difference small enough to accept automatically rather than investigate item by item?</td></tr>
+          <tr><th scope="row">Blanket PO / MAP</th><td>LA, LD / VP</td><td>Is the variance against a blanket-order control or an allowed moving-average-price change?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Customizing:</strong> tolerance limits are maintained in <strong>OMR6</strong>. Manual payment blocks can be defined with <strong>OMR9</strong>. Large-item checks use <strong>OMRH</strong>, <strong>OMRI</strong>, and tolerance keys AN/AP. Stochastic blocking is activated and parameterized with <strong>OMRF</strong> and <strong>OMRG</strong>.</p>
+    <p><strong>Lead rule:</strong> do not widen a tolerance because users see too many blocked invoices. First prove whether the recurring cause is PO pricing, receipt timing, units of measure, supplier billing, tax, or master data. A quieter queue is not evidence of a healthier control.</p>
+
+    <h3>Price variance is an MM/FI decision, so price control and stock coverage matter.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Price variance posting logic">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Material valuation</th><th scope="col">Invoice price variance</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Standard price</th>
+            <td>The invoice price differs from the PO price.</td>
+            <td>The variance is posted to a price-difference account; the standard price does not change.</td>
+          </tr>
+          <tr>
+            <th scope="row">Moving average price with stock coverage</th>
+            <td>Stock exists for the invoiced quantity.</td>
+            <td>The variance is posted to stock and changes the moving average price.</td>
+          </tr>
+          <tr>
+            <th scope="row">Moving average price with partial coverage</th>
+            <td>Only part of the invoiced quantity is still in stock.</td>
+            <td>The variance is split between stock and the price-difference account.</td>
+          </tr>
+          <tr>
+            <th scope="row">Moving average price without stock coverage</th>
+            <td>No relevant stock remains.</td>
+            <td>The variance is posted to the price-difference account.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>If invoice quantity is greater than received quantity, the delivered part and the not-yet-delivered part can create different postings. Read PO history and GR/IR together instead of treating the whole invoice variance as one price problem.</p>
+
+    <h3>Tax, payment terms, cash discount, and currency are separate control layers.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Invoice verification financial control layers">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Layer</th><th scope="col">Core rule</th><th scope="col">Important configuration</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Tax</th>
+            <td>Each invoice item needs a tax code. With PO reference, the PO item is the normal proposal source; company-code defaults can supply the header proposal.</td>
+            <td><strong>OMR2</strong> for Logistics Invoice Verification defaults; <strong>OBZT</strong> can control available/default tax codes for the advanced entry context.</td>
+          </tr>
+          <tr>
+            <th scope="row">Payment terms</th>
+            <td>For goods/service items with PO reference, terms are proposed from the first PO in the allocation. Without PO reference, supplier company-code data is the normal source.</td>
+            <td><strong>OBB8</strong> for payment terms; <strong>OBB9</strong> for installment-payment terms.</td>
+          </tr>
+          <tr>
+            <th scope="row">Cash discount</th>
+            <td>Gross posting recognizes the discount at payment. Net posting already reduces the stock/cost value at invoice posting and uses a cash-discount clearing account.</td>
+            <td>The FI document type controls gross versus net posting; the default document type is assigned in <strong>OMR4</strong>.</td>
+          </tr>
+          <tr>
+            <th scope="row">Foreign currency</th>
+            <td>A fixed PO exchange rate is used at GR and IR. Without a fixed rate, current rates can differ between GR and IR and create an exchange-rate difference.</td>
+            <td><strong>OMRW</strong> controls whether exchange-rate differences use a dedicated account or price-difference logic.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Account assignment controls where the invoice cost lands.</h3>
+    <p>For a PO item procured for consumption, the account assignment category controls whether GR and IR are allowed and which business object receives the cost. An account assignment can be changed during invoice verification only when the account-assignment category permits <em>AA Changeable at IR</em> in <strong>OME9</strong> and the PO item has a non-valuated GR or no GR.</p>
+    <p>For multiple account assignment, the <strong>Partial Invoice</strong> indicator decides how partial quantities and costs are distributed: proportionally according to the planned split or progressively by filling one account-assignment row before the next. For a valuated GR, BAdI <strong>MB_ACCOUNTING_DISTRIBUTE</strong> can redefine the distribution across existing account assignments, but it cannot replace the account-assignment category or the actual receiver objects.</p>
+
+    <h3>Planned and unplanned delivery costs have different evidence.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Planned and unplanned delivery cost comparison">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Cost type</th><th scope="col">Where it is known</th><th scope="col">Posting logic</th><th scope="col">Diagnostic evidence</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Planned delivery cost</th>
+            <td>Already represented in the PO by condition types; the freight or customs supplier can differ from the goods supplier.</td>
+            <td>It participates in material valuation at GR or charges the account-assignment object.</td>
+            <td>PO conditions, planned-delivery-cost history, supplier, and settlement document.</td>
+          </tr>
+          <tr>
+            <th scope="row">Unplanned delivery cost</th>
+            <td>Appears only during invoice entry.</td>
+            <td>It can be distributed to invoice items and treated as a price variance, or posted to a separate G/L account.</td>
+            <td>If distributed, it is not a separate PO-history line. If posted separately, automatic account determination uses transaction <strong>UPF</strong>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>An invoice containing only unplanned delivery costs can be posted with PO reference as a subsequent debit only after at least one invoice for the PO already exists.</p>
+
+    <h3>Choose correction, reduction, or acceptance deliberately.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Invoice correction decision table">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">Mechanism</th><th scope="col">What SAP does</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Supplier invoice is wrong, but the accepted part should be posted</th>
+            <td>Invoice reduction</td>
+            <td>Two accounting documents are created: the supplier invoice values and a credit memo for the reduction. The payable is reduced by the credit memo.</td>
+          </tr>
+          <tr>
+            <th scope="row">Small total difference is economically not worth researching</th>
+            <td>Total-based acceptance</td>
+            <td>The tolerated difference is posted automatically to an expense or revenue account.</td>
+          </tr>
+          <tr>
+            <th scope="row">Positive total difference should be reduced automatically</th>
+            <td>Total-based invoice reduction</td>
+            <td>Supplier-specific tolerances can create an automatic credit memo for the reduction amount.</td>
+          </tr>
+          <tr>
+            <th scope="row">Posted invoice is fundamentally wrong</th>
+            <td>Reversal</td>
+            <td>Canceling an invoice creates a credit memo; canceling a credit memo creates an invoice. A partial reversal requires a manually entered credit memo.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Supplier-specific acceptance and reduction tolerances are configured with <strong>OMRX</strong>. Stock coverage can change between the original invoice and its reversal, so the reversal does not always hit exactly the same material account as the original posting.</p>
+
+    <h3>Automation changes who creates the invoice, not the control objective.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Automatic invoice verification and settlement patterns">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Pattern</th><th scope="col">Trigger / basis</th><th scope="col">Classic route</th><th scope="col">Lead point</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Background invoice verification</th>
+            <td>A previously entered document is verified by a scheduled settlement run using the same core logic as online verification.</td>
+            <td>MIRA / background processing</td>
+            <td>Useful for mass data or when a receipt is expected later. Read the error log; do not assume retry will fix missing master or business data.</td>
+          </tr>
+          <tr>
+            <th scope="row">Evaluated Receipt Settlement</th>
+            <td>PO and unsettled receipt data; the supplier does not send the normal invoice.</td>
+            <td>MRRL / RMMR1MRS</td>
+            <td>Requires ERS master-data and PO prerequisites. It creates an invoice document automatically; it does not remove tax, liability, or reconciliation.</td>
+          </tr>
+          <tr>
+            <th scope="row">Supplier consignment settlement</th>
+            <td>Withdrawals from supplier-owned consignment stock.</td>
+            <td>MRKO</td>
+            <td>Settlement is based on withdrawal, not on a normal PO invoice reference.</td>
+          </tr>
+          <tr>
+            <th scope="row">Invoicing plan settlement</th>
+            <td>Due dates from the periodic or partial invoicing plan.</td>
+            <td>MRIS</td>
+            <td>The settlement basis is the PO invoicing plan, not a normal valuated GR.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Down payment, retention, contract reference, and prepayment cross MM/FI boundaries.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Special invoice verification functions">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Function</th><th scope="col">Boundary to remember</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">PO down payment</th><td>The request and payment are FI processes. During MIRO / advanced invoice entry, existing down payments for the PO can be selected for clearing.</td></tr>
+          <tr><th scope="row">Security retention</th><td>Retention has its own due-date, tax-treatment, and special-G/L controls. The invoice can therefore create a payable structure different from a normal supplier invoice.</td></tr>
+          <tr><th scope="row">Contract reference</th><td>Invoice verification can reference a contract directly or through a limit PO item. Contract history is updated; price-variance tolerance key <strong>PC</strong> can control blocking.</td></tr>
+          <tr><th scope="row">Prepayment</th><td>A parked or held MM invoice can create an FI prepayment before item-level invoice verification is complete. It has specific restrictions and its own clearing account logic, so it is not the same as an ordinary PO down payment.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>GR/IR should be cleared only after the process story is complete.</h3>
+    <p>An open GR/IR balance can be a valid timing difference. Before account maintenance, establish that no further goods receipt, invoice receipt, or delivery-cost settlement is expected for the PO item. Classic account maintenance uses <strong>MR11</strong>; an account-maintenance document appears in PO history and can be canceled with <strong>MR11SHOW</strong> if a later business event arrives.</p>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="S4HANA GR IR reconciliation applications">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">App</th><th scope="col">Purpose</th><th scope="col">Lead use</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Reconcile GR/IR Accounts — F3302</th><td>Creates a worklist of PO items with open GR/IR differences, shows smart facts and document history, and supports processing statuses, root causes, ownership, comments, and approved write-off.</td><td>Operational exception handling across Purchasing and Finance.</td></tr>
+          <tr><th scope="row">Monitor GR/IR Account Reconciliation — F3303</th><td>Shows KPI views for GR surplus, IR surplus, matching amounts, open FI items, workload, priority, and processing age.</td><td>Find where reconciliation risk is concentrated before drilling into individual items.</td></tr>
+          <tr><th scope="row">GR/IR Process Insights — F5796</th><td>Analyzes completed reconciliation activities, transitions, processors, priorities, root causes, and processing time.</td><td>Improve the reconciliation process, not only one open item.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Machine-learning proposals can support the Reconcile GR/IR Accounts process with suggested next steps, priority, and root cause. The SAP Learning content notes that this ML service requires a separate subscription license.</p>
+
+    <h3>Selected Customizing map for assessment and diagnostics.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Invoice verification customizing map">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Decision</th><th scope="col">Main Customizing / transaction</th><th scope="col">Use it when</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Tolerance limits</th><td>OMR6</td><td>Quantity, price, date, amount, small-difference, blanket-PO, or MAP tolerance behavior is wrong.</td></tr>
+          <tr><th scope="row">Supplier-specific tolerances</th><td>OMRX</td><td>Total-based acceptance or reduction must differ by supplier tolerance group.</td></tr>
+          <tr><th scope="row">Manual payment blocks</th><td>OMR9</td><td>The business needs controlled manual block reasons at invoice header level.</td></tr>
+          <tr><th scope="row">Amount / stochastic blocks</th><td>OMRH + OMRI / OMRF + OMRG</td><td>High-value or random control sampling is required.</td></tr>
+          <tr><th scope="row">Tax-code defaults</th><td>OMR2</td><td>Header or separate unplanned-delivery-cost tax defaults are wrong.</td></tr>
+          <tr><th scope="row">Exchange-rate differences</th><td>OMRW</td><td>Foreign-currency GR/IR differences should use a dedicated exchange-rate account or price-difference logic.</td></tr>
+          <tr><th scope="row">Automatic postings</th><td>OMR0</td><td>Invoice-verification automatic accounts such as UPF need review.</td></tr>
+          <tr><th scope="row">Accounting document type / number assignment</th><td>OMR4</td><td>The proposed FI document type, gross/net posting behavior, or number assignment is wrong.</td></tr>
+          <tr><th scope="row">MM invoice number range</th><td>OMRJ</td><td>The logistics invoice document number range needs maintenance.</td></tr>
+          <tr><th scope="row">Duplicate invoice check</th><td>OMRDC</td><td>The matching criteria for duplicate supplier invoices or credit memos need adjustment.</td></tr>
+          <tr><th scope="row">Account assignment change at IR</th><td>OME9</td><td>An account-assigned PO item should or should not allow account-assignment changes during invoice verification.</td></tr>
+          <tr><th scope="row">User posting tolerance</th><td>OMRB + OMRC</td><td>Maximum invoice amount or cash discount differs by invoice-verification user group.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ecg-diagnostic">
+      <div><h4>Invoice posted but cannot be paid.</h4><p>Do not diagnose this as a posting failure. Read the payment block and variance reason, then prove whether the supplier claim or the purchasing history is wrong.</p></div>
+      <div><h4>Three partial GRs exist for one PO item.</h4><p>If GR-based invoice verification is active, expect separate invoice-item references to the receipt history. Do not collapse the problem into one cumulative quantity before checking the reference model.</p></div>
+      <div><h4>Price variance hits different accounts in two materials.</h4><p>Check standard price versus moving average price and stock coverage before changing account determination.</p></div>
+      <div><h4>A GR must be reversed after invoice receipt.</h4><p>Check whether reversal is allowed for GR-based IV. If it is allowed, preserve the relationship to the original GR when the substitute delivery is posted; otherwise cancel the invoice first.</p></div>
+      <div><h4>The supplier billed 100 units, but only 70 are accepted.</h4><p>Decide whether the supplier invoice is wrong. Invoice reduction can post the accepted value plus an automatic credit memo instead of accepting a known overcharge.</p></div>
+      <div><h4>GR/IR has an old residual balance.</h4><p>First prove that no more GR, IR, or delivery-cost settlement is expected. Then use MR11 or the S/4HANA reconciliation workflow; never write off an unexplained process state.</p></div>
+    </div>
+
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/procurement/material-valuation/"><span>MM/FI</span><strong>Material Valuation: Standard Price vs Moving Average Price</strong><small>Material and accounting documents, GR/IR, S vs V, price differences, stock coverage, and FI posting logic.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
-      <a href="/labs/enterprise-context/procurement/tax-code-determination/"><span>MM</span><strong>Tax Code Determination in Purchasing & Invoice Receipt</strong><small>PO tax code, automatic determination, deductible vs non-deductible input tax, MIRO, FI posting, testing, and diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="/atlas/diagnostics/sap-invoice-verification-diagnostics/"><span>CASE</span><strong>SAP Invoice Verification Diagnostics</strong><small>Symptom → evidence → owner → justified fix for blocked or inconsistent supplier invoices.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      <a href="/labs/enterprise-context/procurement/material-valuation/"><span>MM/FI</span><strong>Material Valuation</strong><small>Standard price, moving average price, stock coverage, GR/IR, and price-difference postings.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+      <a href="/labs/enterprise-context/procurement/tax-code-determination/"><span>TAX</span><strong>Tax Code Determination</strong><small>PO tax data, invoice tax proposals, deductible input tax, FI posting, and diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="https://learning.sap.com/courses/invoice-verification-in-sap-s-4hana/using-different-types-of-invoice-verification" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Using Different Types of Invoice Verification</strong><small>PO-based and GR-based reference logic.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/invoice-verification-in-sap-s-4hana/parking-of-documents" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Parking of Documents</strong><small>Hold, Park, Save as Complete, PO history, FI document, and workflow.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/invoice-verification-in-sap-s-4hana/entering-invoices-with-variances-1" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Entering Invoices with Variances</strong><small>Blocking logic, tolerance keys, standard price, moving average price, and stock coverage.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/invoice-verification-in-sap-s-4hana/entering-delivery-costs-1" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Entering Delivery Costs</strong><small>Planned and unplanned delivery costs, UPF, and valuation effects.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/invoice-verification-in-sap-s-4hana/performing-gr-ir-account-maintenance" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Performing GR/IR Account Maintenance</strong><small>MR11, selection logic, account-maintenance documents, and reversal.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/invoice-verification-in-sap-s-4hana/using-fiori-apps-for-gr-ir-reconciliation" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Using Fiori Apps for GR/IR Reconciliation</strong><small>F3302, F3303, F5796, smart facts, worklists, analytics, and ML proposals.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
-
 
 
   <section class="research-canvas__inventory" id="execution-transactions" data-reveal>
