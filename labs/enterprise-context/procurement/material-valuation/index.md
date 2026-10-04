@@ -100,9 +100,9 @@ semantic_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP MM / Goods Receipt → Invoice Verification → FI</p>
-      <h1>The quantity changes in logistics.<br />The value change depends on price control.</h1>
-      <p>Material valuation connects a physical event with an accounting result. The same purchase order can produce different FI postings depending on whether the material uses standard price or moving average price, whether the invoice differs from the PO, and whether enough stock still exists when the invoice is posted.</p>
+      <p class="research-canvas__eyebrow">SAP MM / Valuation → Account Determination → FI</p>
+      <h1>Valuation decides how much value moves. Account determination decides where it posts.</h1>
+      <p>A goods movement or supplier invoice can create several accounting lines. To explain them, separate three questions: what business event happened, how the value was calculated, and which G/L account was selected. Price control answers the valuation question; transaction keys, organizational context, and valuation class drive account determination.</p>
       <a class="research-canvas__button" href="#mental-model">Build the model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
@@ -110,8 +110,8 @@ semantic_links:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
     <div>
-      <p><strong>Assessment rule:</strong> separate the document event from the valuation rule.</p>
-      <p><strong>Fast chain:</strong> PO sets the commercial reference → GR changes stock and may create FI → IR creates the supplier liability and resolves price differences → price control decides whether the difference stays in inventory or goes to a price-difference account.</p>
+      <p><strong>Assessment rule:</strong> separate amount logic from account logic.</p>
+      <p><strong>Fast chain:</strong> business event → valuation result → posting purpose → account-determination factors → G/L account. For a PO flow, GR/IR still bridges goods receipt and invoice receipt.</p>
     </div>
     <a href="/labs/enterprise-context/procurement/">Back to Procurement <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
@@ -346,7 +346,13 @@ semantic_links:
       </table>
     </div>
 
-    <p>Other transaction keys exist for specific processes, for example purchase-account management or subcontracting. For assessment preparation, the important skill is to explain why a key is needed and which business event produced it.</p>
+    <p>Other transaction keys exist for specific processes, for example EIN and EKG where purchase-account management is active, plus additional keys in subcontracting scenarios. For assessment preparation, the important skill is to explain why a key is needed and which business event produced it.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Do not confuse two kinds of keys:</strong> an MM transaction/event key such as BSX or GBB describes the posting purpose for automatic account determination. An FI posting key controls line-item behavior such as debit or credit and the account type. They are related in the final accounting document, but they are not the same concept.</p>
+    </div>
+
     <p><strong>Boundary:</strong> the supplier line does not come from the same MM account-determination rule. The supplier posts through the reconciliation account assigned in Business Partner / Financial Accounting. Tax accounts follow tax determination. This prevents a common error: treating every line in the accounting document as an MM automatic-posting problem.</p>
   </section>
 
