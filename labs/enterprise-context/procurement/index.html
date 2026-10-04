@@ -1825,6 +1825,97 @@ source_links:
       </table>
     </div>
 
+    <h3>Supplier evaluation KPIs</h3>
+    <p>Supplier evaluation answers a different control question from spend analytics: <strong>how reliably does the supplier perform?</strong> In SAP S/4HANA 2025 FPS01 on-premise, the core operational score uses weighted price, time, and quantity variances. The overall evaluation combines operational evidence with questionnaire feedback. Quality KPIs, user-defined criteria, and score history add more evidence, but they should not be confused with the basic operational formula.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+      <p><strong>Memory model:</strong> Operational = weighted <strong>price + time + quantity</strong>. Overall = operational evidence + <strong>questionnaire</strong> feedback. Current S/4HANA also supports active user-defined criteria, so confirm the target release and deployment before treating one formula as universal.</p>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier evaluation KPIs">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">KPI / app</th><th scope="col">What it measures</th><th scope="col">Lead interpretation</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Overall Supplier Evaluation</th>
+            <td>Supplier performance from operational evidence and questionnaire results over the previous year to date.</td>
+            <td>Use the overall score as a signal, then drill into the contributing criteria before changing the source strategy.</td>
+          </tr>
+          <tr>
+            <th scope="row">Operational Supplier Evaluation</th>
+            <td>Weighted average of quantity, price, and time variance over the previous year to date.</td>
+            <td>The same raw variance can have a different business impact when the purchasing-category weights differ. Check weighting before comparing suppliers.</td>
+          </tr>
+          <tr>
+            <th scope="row">Supplier Evaluation by Quantity</th>
+            <td>Difference between ordered and delivered quantity. Both under-delivery and over-delivery are variances.</td>
+            <td>A delivery can be complete operationally and still have a poor quantity score if it differs from the ordered quantity.</td>
+          </tr>
+          <tr>
+            <th scope="row">Supplier Evaluation by Time</th>
+            <td>Difference between the ordered delivery date and the actual delivery date. Early and late delivery both count as variance.</td>
+            <td>Do not assume that earlier is always better. The KPI measures adherence to the requested date; in the SAP Learning scoring model, each day of variance counts as one percent.</td>
+          </tr>
+          <tr>
+            <th scope="row">Supplier Evaluation by Price</th>
+            <td>Difference between the purchase-order amount and the invoiced amount. Higher and lower invoice prices both create variance.</td>
+            <td>This is a key S/4HANA contrast with classic LIS supplier evaluation: the KPI is based on PO versus invoice values, not on info-record price changes.</td>
+          </tr>
+          <tr>
+            <th scope="row">Quality — Inspection Lot</th>
+            <td>Quality performance derived from inspection results, linked back to the supplier through the purchasing document.</td>
+            <td>Use inspection evidence when the question is product quality, not delivery reliability or commercial variance.</td>
+          </tr>
+          <tr>
+            <th scope="row">Quality — Quality Notifications</th>
+            <td>Supplier quality based on complaint notifications. Fewer complaints support a higher evaluation score.</td>
+            <td>Interpret complaints together with purchasing volume. A raw complaint count without the business population can be misleading.</td>
+          </tr>
+          <tr>
+            <th scope="row">Supplier Evaluation by Questionnaire</th>
+            <td>Structured appraiser feedback from evaluation questionnaires, including comparison of actual and target scores.</td>
+            <td>This is a soft-fact channel. Keep human judgement separate from system-derived operational facts, then combine them deliberately.</td>
+          </tr>
+          <tr>
+            <th scope="row">User Defined Criteria for Supplier Evaluation</th>
+            <td>Up to five active criteria can be defined for additional supplier-evaluation factors and included in the evaluation model.</td>
+            <td>Use them for business factors not represented well by the standard operational or questionnaire criteria. Keep scoring ownership clear.</td>
+          </tr>
+          <tr>
+            <th scope="row">Supplier Evaluation Score History</th>
+            <td>Persisted supplier scores by supplier, material group, year, and month for trend analysis.</td>
+            <td>History changes the question from “What is the score now?” to “Is performance improving or deteriorating?” Persist scores with the scheduled job before relying on the trend.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Questionnaire evaluation flow</h4>
+    <ol>
+      <li><strong>Manage Questions:</strong> create sections and questions; groups are optional. For scored answer types such as single-answer and yes/no questions, maintain scores for the answer options.</li>
+      <li><strong>Manage Evaluation Questionnaires:</strong> assemble the questions into questionnaires, weight the questions, and assign the questionnaire to the relevant purchasing category.</li>
+      <li><strong>Manage Evaluation Templates:</strong> define the reusable evaluation setup, including questionnaires, suppliers and appraisers for group-based evaluation, response deadline, and texts.</li>
+      <li><strong>Start Group-Based Evaluation:</strong> generate the evaluation requests from the template.</li>
+      <li><strong>Evaluate Suppliers:</strong> appraisers complete and submit the questionnaire. A submitted response can be displayed but is no longer editable.</li>
+      <li><strong>Display Scorecards / Supplier Evaluation by Questionnaire:</strong> review one scorecard per supplier and evaluation request, then compare questionnaire performance across suppliers.</li>
+    </ol>
+
+    <div class="research-canvas__callout">
+      <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+      <div>
+        <strong>Configuration and recalculation</strong>
+        <p>The HANA-based supplier evaluation by purchasing category must be activated where this evaluation model is used. Maintain criterion weights and variance scoring in <em>Supplier Evaluation Weighting and Scoring</em>. After changing variance scores, run <code>MM_PUR_SEWS_VAR_SCORE_UPDATE</code> so existing scores are recalculated. If scheduling agreements are included in supplier evaluation, also verify document-category scope and the required analytics migration for the target release.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Assessment traps:</strong> questionnaire score is not the operational score; early delivery can reduce the time score; quantity variance includes both over- and under-delivery; S/4HANA price evaluation compares PO and invoice values; and a changed scoring rule does not update historical results until the required recalculation is run.</p>
+    </div>
+
     <h3>Procurement Overview app</h3>
     <p>The <em>Procurement Overview</em> app is an operational cockpit. It places actionable cards on one page and ranks items so the buyer can move from an exception directly to the relevant purchasing app or object page.</p>
 
@@ -1852,7 +1943,7 @@ source_links:
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
       <div>
         <strong>60-second lead answer</strong>
-        <p>“I group procurement KPIs by the decision they control. Spend KPIs show where money bypasses a PO or contract. Contract KPIs show expiry, usage, and leakage. Requisition KPIs show automation, rework, and cycle time. Purchase-order KPIs show delivery execution, commitment value, supplier lead-time performance, and invoice-price variance. The Procurement Overview app brings the most actionable exceptions into one cockpit and lets the buyer drill into the source document.”</p>
+        <p>“I group procurement KPIs by the decision they control. Spend KPIs show where money bypasses a PO or contract. Contract KPIs show expiry, usage, and leakage. Requisition KPIs show automation, rework, and cycle time. Purchase-order KPIs show delivery execution, commitment value, supplier lead-time performance, and invoice-price variance. Supplier evaluation then asks how reliably a supplier performs: operational scoring uses weighted price, time, and quantity variance, while questionnaires add structured human feedback. I use the score as a signal and drill into the contributing documents or quality evidence before changing sourcing or commercial terms. The Procurement Overview app brings the most actionable exceptions into one cockpit.”</p>
       </div>
     </div>
 
