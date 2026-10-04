@@ -385,13 +385,18 @@ tags:
     <div class="ecg-source-list">
       <article>
         <span>SAP Learning · Collaboration Hub purpose</span>
-        <h3><a href="https://learning.sap.com/courses/analyzing-business-processes-with-sap-signavio-solutions" rel="noopener noreferrer">Analyzing Business Processes with SAP Signavio Solutions</a></h3>
-        <p>Process transparency, knowledge management, collaboration, and process understanding.</p>
+        <h3><a href="https://learning.sap.com/courses/managing-business-processes-with-sap-signavio-solutions/sap-signavio-process-collaboration-hub_ac509548-8ff6-4699-8cb1-3f9b54c211ac" rel="noopener noreferrer">SAP Signavio Process Collaboration Hub</a></h3>
+        <p>Central process entry point, process transparency, knowledge management, collaboration, and process understanding.</p>
       </article>
       <article>
         <span>SAP Learning · Hub navigation</span>
         <h3><a href="https://learning.sap.com/courses/analyzing-business-processes-with-sap-signavio-solutions/navigating-through-the-collaboration-hub_f17b5290-cb7f-4448-b32a-c4c912a3bef0" rel="noopener noreferrer">Navigating through the Collaboration Hub</a></h3>
         <p>Menu, entry diagram, search, notifications, Preview and Published views, editing, approvals, read confirmations, and Process Intelligence visibility.</p>
+      </article>
+      <article>
+        <span>SAP Learning · process collaboration</span>
+        <h3><a href="https://learning.sap.com/courses/managing-business-processes-with-sap-signavio-solutions/collaborate-on-processes-in-the-hub_e28c4d24-1f1c-458e-9d77-fe1b1e1bc93d" rel="noopener noreferrer">Collaborating on Processes in the Hub</a></h3>
+        <p>Comments on processes and elements, replies, notifications, and continuous feedback.</p>
       </article>
       <article>
         <span>SAP Learning · process architecture</span>
