@@ -108,6 +108,13 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/enterprise-context/transportation-management/"><span>TM</span><strong>Transportation Management</strong><small>Demand, freight units, planning, freight orders, execution, charges, and settlement.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
       <a href="/labs/assessment/cross-process/"><span>X</span><strong>Cross-Process Lead Cases</strong><small>O2C, third-party, intercompany, stock transfer, MTO, subcontracting, and returns.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
     </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">school</span>
+      <div>
+        <p><strong>Specific Procurement recall:</strong> invoicing plan = invoice dates inside the PO; periodic repeats a recurring charge, partial splits one item value into stages, and the plan cannot be requested in a PR.</p>
+        <p><strong>Blanket / limit:</strong> Overall Limit is the invoice ceiling; Expected Value is the planning, release, and commitment reference. <strong>Subcontracting L:</strong> we provide components and the finished-product GR consumes them. <strong>Park</strong> needs MM-complete data; <strong>Hold</strong> can keep any error; Manage Purchase Orders uses <strong>Draft</strong>. PO down-payment planning belongs to Purchasing, but the down-payment request and payment are FI processes.</p>
+      </div>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
