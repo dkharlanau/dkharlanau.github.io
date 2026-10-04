@@ -362,7 +362,7 @@ tags:
           </tr>
           <tr>
             <td><strong>How do people consume, discuss, and give feedback on process knowledge?</strong></td>
-            <td>SAP Signavio Process Collaboration Hub</td>
+            <td><a href="/labs/enterprise-context/signavio/collaboration-hub/">SAP Signavio Process Collaboration Hub</a></td>
             <td>A shared access point for published process content, collaboration, feedback, and process knowledge</td>
             <td>The authoring tool for every process artifact</td>
           </tr>
