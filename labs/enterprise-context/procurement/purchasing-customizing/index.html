@@ -1,0 +1,269 @@
+---
+layout: default
+title: "Purchasing Customizing — Document Types, Field Selection & User Parameters"
+description: "A practical SAP S/4HANA Purchasing guide to document types, item-category links, field selection, EVO and EFB user parameters, and Info Record update control."
+permalink: /labs/enterprise-context/procurement/purchasing-customizing/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-10-04
+hide_global_cta: true
+tags:
+  - sap-s4hana
+  - sap-mm
+  - procurement
+  - purchasing
+  - customizing
+  - document-types
+  - field-selection
+  - evo
+  - efb
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">Enterprise Context</a></li>
+    <li><a href="/labs/enterprise-context/procurement/">Procurement</a></li>
+    <li aria-current="page">Purchasing Customizing</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">SAP Procurement / Selected Customizing</p>
+      <h1>Document type controls the document.<br />Field selection controls the fields.</h1>
+      <p>In Purchasing, several configuration layers work together. A document type defines the business variant and allowed structure. Item categories define item behavior. Field-selection keys decide whether a field is hidden, display-only, required, or optional. EVO and EFB add user-specific defaults and function controls.</p>
+      <a class="research-canvas__button" href="#mental-model">Start with the control model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <div>
+      <p><strong>Lead rule:</strong> when a purchasing field or process behaves differently for two users or two document types, do not start by changing the screen. First identify the document category, document type, item category, transaction/activity, release status, and user parameters.</p>
+      <p>The same field can be influenced by several keys at the same time.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="mental-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Read the control stack from business document to user.</h2>
+    </header>
+    <div class="ecg-compact-sequence">
+      <div><span>01</span><h4>Document category</h4><p>PR, RFQ, PO, contract, or scheduling agreement.</p></div>
+      <div><span>02</span><h4>Document type</h4><p>Number ranges, field-selection key, and process-specific behavior.</p></div>
+      <div><span>03</span><h4>Item category</h4><p>Controls item-level process behavior and must be allowed for the document type.</p></div>
+      <div><span>04</span><h4>Field selection</h4><p>Combines transaction, activity, document type, item category, EFB, and release status.</p></div>
+      <div><span>05</span><h4>User controls</h4><p>EVO proposes defaults. EFB restricts selected purchasing functions.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="document-types" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Document types</p>
+      <h2>A document type is a control object, not only a label.</h2>
+      <p>When defining a purchasing document type, start with the general parameters and then maintain the business-specific controls for that document category.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="General document type controls">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Control</th><th scope="col">What it determines</th><th scope="col">Lead check</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Item number interval</th><td>Step size between proposed item numbers.</td><td>Formatting and usability control, not item process logic.</td></tr>
+          <tr><th scope="row">Number range</th><td>Internal and, where allowed, external document numbering.</td><td>At least one valid number range is needed for the document type.</td></tr>
+          <tr><th scope="row">Field-selection key</th><td>One input into the final hidden/display/required/optional status of document fields.</td><td>Do not diagnose the document-type key in isolation because other field-selection keys also apply.</td></tr>
+          <tr><th scope="row">Allowed item categories</th><td>Which purchasing item categories can be used with the document type.</td><td>A new document type is incomplete if the required item categories are not assigned.</td></tr>
+          <tr><th scope="row">PR → external document links</th><td>Which PR document-type and item-category combinations can be converted into which purchasing-document item categories.</td><td>This is a conversion rule, not simple copy control by document name.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Important category-specific controls</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Special document type controls">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Document</th><th scope="col">Important controls</th><th scope="col">What to remember</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">RFQ</th><td>Global percentage bid; time-dependent conditions.</td><td>Time-dependent conditions allow validity periods and scales. The Fiori sourcing RFQ process has its own Customizing path.</td></tr>
+          <tr><th scope="row">Purchase Requisition</th><td>Control <strong>R</strong>; overall release; scenario-based workflow.</td><td>Control R requires an outline agreement as follow-on instead of a standard PO. Overall release means the PR is released as a whole, not item by item.</td></tr>
+          <tr><th scope="row">Purchase Order</th><td>Control <strong>T</strong>; Stock Transfer Vndr; scenario-based workflow.</td><td>Control T marks a stock transport order document type. Supplier data can also be considered for supplying plants when the supplier master setup exists.</td></tr>
+          <tr><th scope="row">Scheduling Agreement</th><td>Control T; Stock Transfer Vndr; time-dependent conditions; release documentation; scenario-based workflow.</td><td>Release documentation decides whether scheduling agreement releases are stored as separate release records.</td></tr>
+          <tr><th scope="row">Contract</th><td>Shared lock; distributed contract via ALE; scenario-based workflow.</td><td>A shared lock improves parallel release-order processing but can allow the target quantity to be exceeded.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <div>
+        <p><strong>Copy trap:</strong> when a document type is copied, the partner schema assignment is not copied automatically. If partner functions are needed, assign the partner schema to the new document type.</p>
+        <p><strong>Workflow trap:</strong> marking a document type for scenario-based workflow is not enough by itself. The relevant flexible-workflow scenario also has to be activated and configured.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pr-linkage" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">PR conversion linkage</p>
+      <h2>Document type and item category must form an allowed conversion path.</h2>
+      <p>For example, if an NB purchase requisition is to become a subcontracting PO item, the relevant PR and PO item-category combinations must be maintained in Customizing.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchase requisition conversion controls">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Indicator</th><th scope="col">Meaning</th><th scope="col">Assessment interpretation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">NAA — No AccAss</th><td>The PO item may not contain account assignment even if the PR has one.</td><td>The conversion mapping can deliberately change accounting behavior.</td></tr>
+          <tr><th scope="row">R/S — Contract Release / SA Schedule Line</th><td>Controls whether the combination can be used for release orders or scheduling-agreement schedule lines.</td><td>Check it when the follow-on document is an outline-agreement execution step.</td></tr>
+          <tr><th scope="row">Dialog</th><td>Controls whether SAP issues a warning when the combination is selected during conversion.</td><td>A warning can be an intended control, not a technical error.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Customizing paths:</strong> Materials Management → Purchasing → Purchase Requisition / Purchase Order / Contract / Purchase Scheduling Agreement / RFQ → Define Document Types.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="field-selection" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Field selection</p>
+      <h2>The final field status is the combined result of several keys.</h2>
+      <p>A field can be hidden, display-only, required, or optional. When several keys define different statuses, the more restrictive result wins.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>1. Hide</h3><p>Strongest result. If one relevant key hides the field, it is hidden.</p></div>
+      <div><h3>2. Display</h3><p>Stronger than required or optional. The user can see the value but cannot change it.</p></div>
+      <div><h3>3. Required</h3><p>Stronger than optional. The user must enter a value.</p></div>
+      <div><h3>4. Optional</h3><p>Weakest result. It remains optional only when no stronger key changes it.</p></div>
+    </div>
+
+    <h3>Field-selection keys that can participate</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchasing field selection keys">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Key source</th><th scope="col">Examples</th><th scope="col">Why it matters</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Transaction</th><td>ME21N, ME32, ME33</td><td>Linked to the transaction used to process the document.</td></tr>
+          <tr><th scope="row">Activity category</th><td>AKTH create, AKTV change / Enjoy, AKTA display, AKTE extension</td><td>One transaction can contain different activities, such as adding a new item while changing a contract.</td></tr>
+          <tr><th scope="row">Document type</th><td>NBF for NB; UBF for UB</td><td>Allows different screen behavior for different purchasing document types.</td></tr>
+          <tr><th scope="row">Item category</th><td>PT0F standard PO item; PT3F subcontracting PO item</td><td>The field key depends on item category plus document category.</td></tr>
+          <tr><th scope="row">Function authorization</th><td>EFB</td><td>Can restrict price/condition display or entry for a user.</td></tr>
+          <tr><th scope="row">Release status</th><td>PR release indicator field-selection key</td><td>Can change what is editable after or during release.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <div>
+        <p><strong>Classic example:</strong> Material Group can be optional in ME21N, AKTV, and NBF, but required in PT0F. The final result is <strong>required</strong>.</p>
+        <p><strong>Diagnostic method:</strong> list every active field-selection key first. Do not change NBF only because the symptom is visible in an NB purchase order.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="user-parameters" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">EVO and EFB</p>
+      <h2>EVO changes defaults. EFB restricts selected purchasing functions.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="EVO and EFB comparison">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Parameter</th><th scope="col">Main purpose</th><th scope="col">Typical controls</th><th scope="col">Lead interpretation</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">EVO</th><td>User-specific defaults for buyers.</td><td>InfoUpdate default, order acknowledgement requirement, fast processing, price adoption, source-determination defaults, delivery-date check.</td><td>If two users receive different proposals but both are allowed to perform the action, check EVO and personal settings.</td></tr>
+          <tr><th scope="row">EFB</th><td>User-specific purchasing function authorization.</td><td>Display/enter conditions, PO without material, adopt PR valuation price, allowed reference objects, manual source assignment.</td><td>If one user cannot perform an action or cannot see/enter commercial fields, check EFB in addition to authorization roles and field selection.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>EVO points worth remembering</h3>
+    <div class="ecg-decision-columns">
+      <div><h3>Indicators</h3><p>Can default InfoUpdate and order acknowledgement requirements for selected purchasing documents.</p></div>
+      <div><h3>Fast processing</h3><p>Can preselect template items and automatically adopt assigned PR items into the purchasing document.</p></div>
+      <div><h3>Price adoption</h3><p>Can suppress a default from the last PO. The manual-gross-price protection applies to the gross price condition only.</p></div>
+      <div><h3>Source determination</h3><p>Can default automatic source determination and check whether a source can meet the desired delivery date.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">priority_high</span>
+      <p><strong>MRP boundary:</strong> EVO source-determination settings such as <em>Check Delivery Date</em> are not used by the planning run. Do not use an EVO difference to explain an MRP sourcing result.</p>
+    </div>
+
+    <p><strong>Customizing:</strong> EVO — Materials Management → Purchasing → Environment Data → Define Default Values for Buyers. EFB — Materials Management → Purchasing → Authorization Management → Define Function Authorizations for Buyers.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="info-update" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Info Record update</p>
+      <h2>Separate “which info record is updated” from “which purchasing conditions are maintained”.</h2>
+      <p>In ME21N, the Info Record Update indicator controls whether a purchasing info record is created or updated. Plant-level condition control influences which PIR level is selected for that update.</p>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Info Record Update status">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Condition control</th><th scope="col">InfoUpdate status</th><th scope="col">PIR level affected</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Blank — conditions with or without plant</th><td>C</td><td>Create purchasing-organization-level PIR if none exists; otherwise update an existing plant-specific or purchasing-organization-level PIR.</td></tr>
+          <tr><th scope="row">+ — plant-specific conditions only</th><td>B</td><td>Create or update the plant-specific PIR.</td></tr>
+          <tr><th scope="row">− — no plant-specific conditions</th><td>A</td><td>Create or update the purchasing-organization-level PIR.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <p><strong>Assessment trap:</strong> InfoUpdate can create or update PIR data, but current SAP Learning explicitly notes that PO conditions themselves are not created or updated because InfoUpdate is selected. Do not describe InfoUpdate as a price-condition maintenance mechanism.</p>
+    </div>
+
+    <p>If an item has no material master record, the indicator is not proposed from the personal setting. It can still be set manually, which can create a material-group info record.</p>
+    <p><strong>Customizing:</strong> Materials Management → Purchasing → Conditions → Define Condition Control at Plant Level.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment</p>
+      <h2>Five questions that expose whether the control model is understood.</h2>
+    </header>
+
+    <div class="ecg-diagnostic">
+      <div><h4>Why is a PO field required although NBF says optional?</h4><p>Another active key can be stricter. Check transaction, activity, item category, EFB, and release status. PT0F can make Material Group required.</p></div>
+      <div><h4>Why can User A enter conditions but User B cannot?</h4><p>Check EFB and field selection before changing document-type configuration.</p></div>
+      <div><h4>Why does a new copied document type have missing partner behavior?</h4><p>The partner schema assignment is not copied automatically. Assign it explicitly.</p></div>
+      <div><h4>Why does source determination differ between ME51N and MRP?</h4><p>EVO can influence manual defaults and delivery-date checks, but EVO is not considered by the planning run.</p></div>
+      <div><h4>Why did InfoUpdate not change the supplier price condition?</h4><p>Because InfoUpdate is about PIR creation/update. It is not a condition-maintenance mechanism.</p></div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> “I separate Purchasing Customizing into layers. The document type controls numbering, allowed structure, field-selection key, and special process behavior. Item categories must be assigned and PR-to-external-document combinations must be linked. Final field status comes from several keys, where hide is strongest, then display, required, and optional. EVO gives buyer defaults, while EFB restricts selected functions such as condition entry or manual source assignment. For an unexpected result, I reconstruct all active layers before changing configuration.”</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>SAP Learning references</h2>
+    </header>
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/customizing-document-types-in-purchasing" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Customizing Document Types in Purchasing</strong><small>Document-type parameters, special controls, item categories, and PR-to-purchasing-document linkage.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/setting-up-field-selection-in-purchasing-documents" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Setting Up Field Selection in Purchasing Documents</strong><small>Field-status linkage, transaction and activity keys, document type, item category, EFB, and release status.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/defining-function-authorizations-for-buyers" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Defining Function Authorizations for Buyers</strong><small>EFB controls for conditions, reference documents, PO items without material, and manual source assignment.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/working-with-purchasing-info-records-1" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Working with Purchasing Info Records</strong><small>InfoUpdate behavior, price defaults, plant-level conditions, and PIR maintenance.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
+
+    <nav class="ecg-context-links" aria-label="Purchasing Customizing related pages">
+      <span>Related</span>
+      <a href="/labs/enterprise-context/procurement/">Procurement</a>
+      <a href="/labs/enterprise-context/master-data/purchasing-info-record/">Purchasing Info Record</a>
+      <a href="/labs/enterprise-context/master-data/source-list/">Source List</a>
+      <a href="/labs/enterprise-context/master-data/quota-arrangement/">Quota Arrangement</a>
+    </nav>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
