@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-10-02
+last_modified_at: 2026-10-04
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -20,9 +20,9 @@ tags:
   - procure-to-pay
   - special-procurement
   - troubleshooting
-last_reviewed: 2026-10-02
+last_reviewed: 2026-10-04
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning sourcing, procurement automation, purchasing price determination, contracts, and scheduling-agreement cross-check + S4500 process refresh"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, procurement automation, pricing, contracts, and scheduling-agreement cross-check + S4500 process refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -65,6 +65,14 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/907fb65334e6b54ce10000000a174cb4.html"
   - title: "Source List"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/757fb65334e6b54ce10000000a174cb4.html"
+  - title: "Outlining Source Determination"
+    url: "https://learning.sap.com/courses/sourcing-in-sap-s4hana/outlining-source-determination"
+  - title: "Controlling Source Determination with Source Lists"
+    url: "https://learning.sap.com/courses/purchasing-in-sap-s-4hana/controlling-source-determination-with-source-lists-1"
+  - title: "Controlling Source Determination with Quota Arrangements"
+    url: "https://learning.sap.com/courses/purchasing-in-sap-s-4hana/controlling-source-determination-with-quota-arrangements-1"
+  - title: "Identifying Additional Aspects of Source Determination"
+    url: "https://learning.sap.com/courses/purchasing-in-sap-s-4hana/identifying-additional-aspects-of-source-determination"
   - title: "Purchasing Info Records (MM-PUR-VM)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/487fb65334e6b54ce10000000a174cb4.html"
   - title: "Price Determination"
@@ -224,21 +232,7 @@ source_links:
     <p><strong>Fiori:</strong> <em>Manage Purchase Orders</em> is the main app for creating, finding, monitoring, displaying, and changing purchase orders. Current SAP Learning also uses references such as contracts, info records, and existing purchase orders to reduce data entry. App scope and supported item categories can vary by release.</p>
   </section>
 
-  <section class="research-canvas__inventory" id="source-determination" data-reveal>
-    <span id="procurement-master-data" aria-hidden="true"></span>
-    <span id="procurement-comparisons" aria-hidden="true"></span>
-    <header>
-      <p class="research-canvas__eyebrow">Source of supply</p>
-      <h2>Supplier selection is a constrained choice, not a simple vendor lookup.</h2>
-    </header>
-    <p>Source determination has to be read in the exact purchasing context. Material, plant, requirement date, purchasing organization, and maintained source relationships can all matter. A source list can make a source fixed or block it for a validity period. A quota arrangement can distribute requirements across several sources. Contracts, scheduling agreements, and purchasing info records provide additional source and commercial context.</p>
-    <p>This is why a fixed sequence such as “quota first, then source list, then info record” is a poor mental model. These objects have different jobs and interact through the configured source-determination process. Start with the result SAP produced and reconstruct which valid source objects existed for that material, plant, date, and purchasing organization.</p>
-    <p>For example, if Supplier A looks correct in the info record but the requisition is assigned to Supplier B, the difference may be intentional: a valid source-list record can mark B as fixed, or a quota arrangement can allocate part of the requirement to B. Manually replacing the supplier in the PO may hide the real sourcing rule.</p>
-    <div class="research-route-list">
-      <a href="https://help.sap.com/docs/PRODUCT_ID/af9ef57f504840d2b81be8667206d485/7b7fb65334e6b54ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Source list</strong><small>Validity, fixed sources, blocked sources, vendors, outline agreements, and supplying plants.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/docs/PRODUCT_ID/af9ef57f504840d2b81be8667206d485/c4e187576b49ab76e10000000a441470.html" target="_blank" rel="noopener"><span>SAP</span><strong>Quota arrangements</strong><small>Validity-based distribution of a material requirement across multiple sources of supply.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-    </div>
-  </section>
+  
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
@@ -709,71 +703,106 @@ source_links:
 
 
   <section class="research-canvas__inventory" id="source-determination" data-reveal>
+    <span id="procurement-master-data" aria-hidden="true"></span>
+    <span id="procurement-comparisons" aria-hidden="true"></span>
     <header>
       <p class="research-canvas__eyebrow">Source determination</p>
-      <h2>First identify the runtime. MRP and a manual purchase requisition do not use exactly the same search logic.</h2>
-      <p>Source determination answers <strong>where the requirement should be supplied from</strong>. It is separate from price determination. A correct supplier does not prove that the price is correct, and a correct price does not prove that the right source was selected.</p>
+      <h2>First identify the runtime. MRP and manual purchasing do not use one universal search sequence.</h2>
+      <p>Source determination answers <strong>where the requirement should be supplied from</strong>. It is separate from price determination: SAP does not use condition technique to choose the source, so there is no pricing-style condition analysis that explains why a source was selected.</p>
     </header>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">alt_route</span>
       <div>
-        <p><strong>Lead rule:</strong> do not memorize one universal sourcing hierarchy. First ask whether the source is being determined in MRP or outside MRP.</p>
-        <p>Current SAP Learning documents different search sequences for these two runtimes.</p>
+        <p><strong>Lead rule:</strong> start with the runtime, material, plant, relevant date, and procurement type. Then reconstruct the valid quota, Source List, outline agreement, and Purchasing Info Record evidence.</p>
+        <p>The <strong>EFB</strong> user parameter for purchasing function authorizations can also be used to prevent selected users from manually assigning sources of supply.</p>
       </div>
+    </div>
+
+    <h3>Where source determination can run</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Source determination transactions and applications">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Function</th><th scope="col">SAP GUI</th><th scope="col">Fiori / application route</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Execute planning run</th><td>MD01, MD01N, MD02, MD03</td><td><em>Manage Material Coverage</em>, <em>Schedule MRP Runs</em></td></tr>
+          <tr><th scope="row">Create purchase requisition</th><td>ME51N</td><td><em>Create Purchase Requisition - Advanced</em>, <em>Manage Purchase Requisitions - Professional</em></td></tr>
+          <tr><th scope="row">Assign source to PRs</th><td>ME56</td><td><em>Assign Source of Supply to Purchase Requisitions</em></td></tr>
+          <tr><th scope="row">Assign and process PRs</th><td>ME57</td><td><em>Assign and Process Purchase Requisitions</em>, <em>Process Purchase Requisitions</em></td></tr>
+          <tr><th scope="row">Create PO when supplier is not known</th><td>ME25</td><td><em>Create Purchase Order - With Source Determination</em></td></tr>
+          <tr><th scope="row">Convert planned orders to PRs</th><td>MD14, MD15</td><td><em>Convert Planned Orders - to Purchase Requisitions</em></td></tr>
+        </tbody>
+      </table>
     </div>
 
     <h3>Source determination in MRP</h3>
     <div class="table-scroll study-table" tabindex="0" role="region" aria-label="MRP source determination priority">
       <table class="study-table__table">
-        <thead>
-          <tr><th scope="col">Priority</th><th scope="col">Source object</th><th scope="col">What to remember</th></tr>
-        </thead>
+        <thead><tr><th scope="col">Priority</th><th scope="col">Source object</th><th scope="col">Runtime rule</th></tr></thead>
         <tbody>
-          <tr><th scope="row">1</th><td><strong>Quota arrangement</strong></td><td>Highest priority in the MRP search. The quota logic allocates requirements across suppliers or plants over time.</td></tr>
-          <tr><th scope="row">2</th><td><strong>Source list</strong></td><td>MRP considers valid source-list entries with MRP indicator 1 or 2.</td></tr>
-          <tr><th scope="row">3</th><td><strong>Scheduling agreement</strong></td><td>If several valid agreements exist, SAP applies documented tie-break rules, including active releases.</td></tr>
-          <tr><th scope="row">4</th><td><strong>Contract</strong></td><td>Plant-specific contracts have priority over cross-plant contracts; additional tie-break rules apply when several remain valid.</td></tr>
-          <tr><th scope="row">5</th><td><strong>Purchasing Info Record with Automatic Sourcing</strong></td><td>This is the fallback when no higher-priority sourcing object resolves the requirement.</td></tr>
+          <tr><th scope="row">1</th><td><strong>Quota Arrangement</strong></td><td>Highest priority. Suppliers and plants can be entered directly. If an outline-agreement item must participate, reference it through a Source List entry with MRP indicator 1 or 2.</td></tr>
+          <tr><th scope="row">2</th><td><strong>Source List</strong></td><td>MRP checks valid entries with MRP indicator 1 or 2. If several are MRP-relevant, the documented logic takes the first relevant item.</td></tr>
+          <tr><th scope="row">3</th><td><strong>Scheduling Agreement</strong></td><td>If several are valid, an agreement with active releases is preferred; otherwise SAP uses the smallest document number.</td></tr>
+          <tr><th scope="row">4</th><td><strong>Contract</strong></td><td>Plant-specific contracts have priority over cross-plant contracts. At the same organizational level, the smallest document number wins.</td></tr>
+          <tr><th scope="row">5</th><td><strong>Purchasing Info Record with Automatic Sourcing</strong></td><td>Fallback after the higher-priority objects. Tie-breaks are plant-specific PIR first, then smallest supplier, purchasing organization, and purchasing group numbers.</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">priority_high</span>
-      <p><strong>Important correction:</strong> Source List MRP indicator <strong>2</strong> does not mean “exclusive supplier”. It means the record is relevant to MRP and schedule lines are generated automatically. A <strong>Fixed</strong> source is controlled by a separate indicator.</p>
+      <p><strong>MRP indicator 2 is not “exclusive supplier”.</strong> It means the Source List record is relevant to MRP and scheduling-agreement schedule lines can be generated automatically. <strong>Fixed</strong> is a different indicator and is not the planning-run preference control.</p>
     </div>
 
     <h3>Source determination outside MRP</h3>
     <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Manual purchase requisition source determination priority">
       <table class="study-table__table">
-        <thead>
-          <tr><th scope="col">Priority</th><th scope="col">Source object</th><th scope="col">How automatic assignment behaves</th></tr>
-        </thead>
+        <thead><tr><th scope="col">Priority</th><th scope="col">Source object</th><th scope="col">Automatic assignment behavior</th></tr></thead>
         <tbody>
-          <tr><th scope="row">1</th><td><strong>Quota arrangement</strong></td><td>A valid quota arrangement is checked first and the source with the relevant quota result is assigned.</td></tr>
-          <tr><th scope="row">2</th><td><strong>Source list</strong></td><td>If one valid entry exists, it can be assigned. With several entries, a fixed source can resolve the choice.</td></tr>
-          <tr><th scope="row">3</th><td><strong>Outline agreement items</strong></td><td>A unique valid contract or scheduling-agreement item can be assigned automatically; otherwise the user may need to select a source.</td></tr>
-          <tr><th scope="row">4</th><td><strong>Purchasing Info Records</strong></td><td>A unique valid info record can be assigned automatically; several valid records can require user selection.</td></tr>
+          <tr><th scope="row">1</th><td><strong>Quota Arrangement</strong></td><td>A valid arrangement is checked against the PR delivery date. The source with the lowest quota rating is assigned.</td></tr>
+          <tr><th scope="row">2</th><td><strong>Source List</strong></td><td>One valid entry can be assigned directly. With several valid entries, a Fixed source can resolve the choice. If both an outline-agreement item and an info record are fixed, the outline agreement has priority.</td></tr>
+          <tr><th scope="row">3</th><td><strong>Outline agreement items</strong></td><td>A unique valid item can be assigned automatically. If several exist, the user can select from the offered sources.</td></tr>
+          <tr><th scope="row">4</th><td><strong>Purchasing Info Records</strong></td><td>A unique valid PIR can be assigned automatically. If several remain, the user can select from the list.</td></tr>
         </tbody>
       </table>
     </div>
 
-    <p>If MRP cannot determine a source, it can still create a procurement proposal without one. That is different from automatic PO creation: the later conversion step needs a valid, unique source and all mandatory data to be complete.</p>
+    <h3>The reference date changes with the runtime</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Source List reference dates and plant sourcing rules">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Rule</th><th scope="col">Outside MRP</th><th scope="col">MRP</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Source List validity</th><td>Checked against the purchase-requisition <strong>delivery date</strong>.</td><td>Checked against the <strong>requirements date</strong>. For reorder-point planning, the requirement date is the current date.</td></tr>
+          <tr><th scope="row">Fixed source</th><td>Can resolve competing valid Source List entries.</td><td>Not the planning-run priority control; use MRP relevance and the documented MRP sequence.</td></tr>
+          <tr><th scope="row">Supplying plant</th><td colspan="2">A plant is found as a source only for a PR with item category <strong>U — Stock transfer</strong>. For MRP-created PRs, the material also needs the corresponding special procurement setting.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>If MRP cannot determine a source, it can still create a procurement proposal without one. That is different from automatic PO creation: automatic conversion needs a valid, unique source and complete mandatory data.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">person_check</span>
+      <div>
+        <p><strong>Regular Supplier is a special case, not another universal priority level.</strong> With the indicator in the Purchasing Info Record and the relevant Customizing active, SAP can propose the regular supplier as the unique source when only info records are available. Only one regular supplier should be active per material.</p>
+        <p>In requirements planning, the regular-supplier function is relevant only in a Retail system.</p>
+      </div>
+    </div>
 
     <div class="ecg-decision-columns">
-      <div><h3>Source List</h3><p>Controls time-dependent source eligibility and can mark a source as fixed or blocked.</p><p><a href="/labs/enterprise-context/master-data/source-list/">Open Source List →</a></p></div>
-      <div><h3>Quota Arrangement</h3><p>Controls how requirements are allocated across several sources over time.</p><p><a href="/labs/enterprise-context/master-data/quota-arrangement/">Open Quota Arrangement →</a></p></div>
-      <div><h3>Purchasing Info Record</h3><p>Stores the supplier-material purchasing relationship, conditions, and the Automatic Sourcing flag used as an MRP fallback.</p><p><a href="/labs/enterprise-context/master-data/purchasing-info-record/">Open Purchasing Info Record →</a></p></div>
+      <div><h3>Source List</h3><p>Controls time-dependent source eligibility, fixed sources, blocking, and explicit MRP relevance.</p><p><a href="/labs/enterprise-context/master-data/source-list/">Open Source List →</a></p></div>
+      <div><h3>Quota Arrangement</h3><p>Allocates requirements across several sources and can add splitting, lot-size, maximum-quantity, and priority controls.</p><p><a href="/labs/enterprise-context/master-data/quota-arrangement/">Open Quota Arrangement →</a></p></div>
+      <div><h3>Purchasing Info Record</h3><p>Stores the supplier-material purchasing relationship, supplier-specific data, conditions, and the Automatic Sourcing flag.</p><p><a href="/labs/enterprise-context/master-data/purchasing-info-record/">Open Purchasing Info Record →</a></p></div>
     </div>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
-      <p><strong>Diagnostic path:</strong> requirement context → runtime (MRP or manual PR) → validity date → quota → source-list controls → outline agreements → info record → actual source stored in the PR. Only after the source is proved should you investigate purchasing conditions and PO price.</p>
+      <p><strong>Diagnostic path:</strong> requirement context → runtime → reference date → quota → Source List eligibility and block state → outline agreements → info record → actual source stored in the PR. Only after the source is proved should you investigate purchasing conditions and PO price.</p>
     </div>
 
     <div class="research-route-list">
-      <a href="https://learning.sap.com/courses/sourcing-in-sap-s4hana/outlining-source-determination" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Outlining Source Determination</strong><small>Current MRP and non-MRP search sequences, source-list MRP indicators, and tie-break rules.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/sourcing-in-sap-s4hana/outlining-source-determination" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Outlining Source Determination</strong><small>Current MRP and non-MRP search sequences.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/controlling-source-determination-with-source-lists-1" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Controlling Source Determination with Source Lists</strong><small>Validity dates, fixed and blocked sources, MRP indicators, mandatory Source Lists, and maintenance.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/controlling-source-determination-with-quota-arrangements-1" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Controlling Source Determination with Quota Arrangements</strong><small>Quota rating, base quantity, source assignment, and MRP splitting behavior.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
 
@@ -1123,6 +1152,9 @@ source_links:
     <h3>Defaults reduce manual input, but they are still process data.</h3>
     <p>User defaults can provide values such as plant, purchasing group, account assignment category, or cost center. A user can maintain selected defaults, and administrators can maintain defaults for several users with the <em>Default Settings for Users</em> app. In landscapes integrated with HR organizational structure, self-service procurement attributes can also be derived from the employee assignment.</p>
     <p>The requester can also be changed when the app is used on behalf of another employee, for example when an assistant creates a requisition for a manager. The important control is the business requester, not only the person who entered the document.</p>
+
+    <p>For a stock material, the self-service process can also create a reservation together with the purchase requisition when this function is configured.</p>
+    <p>Catalog integration is not limited to the self-service app. Catalogs can also be connected to purchase-requisition and purchase-order processing such as ME51N and ME21N. In classic Customizing, the connection is maintained under <em>Purchasing → Environment Data → Web Services: ID and Description</em>; selected catalog items are then copied back into the purchasing document.</p>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">school</span>
