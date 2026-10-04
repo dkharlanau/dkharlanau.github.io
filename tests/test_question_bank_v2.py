@@ -91,7 +91,7 @@ def test_question_and_practice_pages_use_question_bank_v2():
         assert '/assets/js/interview-readiness.js' in text
         assert '/assets/js/interview-question-bank.js' in text
 
-    assert "42 skills / 168 questions" in questions
+    assert "43 skills / 172 questions" in questions
     assert "ir-type-filter" in questions
     assert "ir-skill-filter" in questions
     assert "Pressure follow-up" in questions
