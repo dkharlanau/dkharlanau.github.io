@@ -22,7 +22,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-04
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, procurement automation, pricing, contracts, and scheduling-agreement cross-check + S4500 process refresh"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, PR assignment and conversion, procurement automation, supplier confirmations, Situation Handling, pricing, contracts, and scheduling-agreement cross-check + S4500/S4520 process refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -801,7 +801,7 @@ source_links:
   <section class="research-canvas__inventory" id="advanced-purchasing-transactions" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Advanced purchasing transactions</p>
-      <h2>ME51N, ME21N, and ME59N are different interaction patterns around the same document flow.</h2>
+      <h2>Create, assign, process, convert, and automate are different purchasing actions.</h2>
       <p>For assessment questions, explain the business object first and the transaction second. The transaction is the work surface; the requisition, source, reference, purchase order, and follow-on history are the process evidence.</p>
     </header>
 
@@ -822,12 +822,55 @@ source_links:
             <td>Use <em>Adopt</em> or drag the selected predecessor item from the document overview. Double-click displays a PR or PO; it does not copy it.</td>
           </tr>
           <tr>
+            <th scope="row">ME56</th>
+            <td>Assign sources of supply to purchase requisitions that are still unassigned.</td>
+            <td>Use it when the sourcing decision is missing. You can trigger automatic assignment for selected items or choose a source when several valid options exist.</td>
+          </tr>
+          <tr>
+            <th scope="row">ME57</th>
+            <td>Assign and process purchase requisitions in one worklist.</td>
+            <td>It combines source assignment with follow-on processing, so a buyer can assign a source and continue to a PO, scheduling-agreement schedule line, or RFQ without leaving the assignment overview.</td>
+          </tr>
+          <tr>
+            <th scope="row">ME58</th>
+            <td>Convert purchase requisitions that already have a source of supply.</td>
+            <td>The assignment list is an interactive conversion route for purchase orders or scheduling-agreement delivery schedule lines. The source must already be assigned.</td>
+          </tr>
+          <tr>
             <th scope="row">ME59N</th>
             <td>Convert eligible purchase requisitions to purchase orders automatically.</td>
             <td>Selection and grouping rules decide which PR items become the same PO. Assigned contracts can be converted into contract release orders.</td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <h3>ME56, ME57, ME58, and ME59N solve different stages of the same backlog.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Purchase requisition assignment and conversion comparison">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Question</th><th scope="col">Use</th><th scope="col">Reason</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">The PR has no source. What should I do?</th><td><strong>ME56</strong></td><td>Assign the source first and save the requisition for later processing.</td></tr>
+          <tr><th scope="row">The PR has no source, and I want to continue immediately.</th><td><strong>ME57</strong></td><td>Assign the source and process the follow-on document from the same worklist.</td></tr>
+          <tr><th scope="row">The source is already assigned. How do I convert interactively?</th><td><strong>ME58</strong></td><td>Use the requisition assignment list to create the follow-on purchasing document.</td></tr>
+          <tr><th scope="row">The PR is eligible for no-touch PO creation.</th><td><strong>ME59N</strong></td><td>Run automatic PO generation online or in the background with selection and grouping controls.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <div>
+        <p><strong>Assessment traps:</strong> in the classic assignment flow, automatic source determination can overwrite an already assigned source when it finds a different valid source. An RFQ flag set during assignment is temporary, so the requisition must be converted to an RFQ before you leave the transaction.</p>
+        <p><strong>Fiori boundary:</strong> the <em>Process Purchase Requisitions</em> app supports manual source assignment and follow-on document creation, but it does not provide the same mass assignment and automatic assignment behavior as ME56/ME57. In this app, quota arrangements and source lists are not used for automatic assignment.</p>
+      </div>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/processing-unassigned-purchase-requisitions" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Processing Unassigned Purchase Requisitions</strong><small>ME56, ME57, source assignment, RFQ handling, and the Process Purchase Requisitions app boundary.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/processing-assigned-purchase-requisitions" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Processing Assigned Purchase Requisitions</strong><small>ME58 assignment-list conversion and ME59N automatic PO generation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
 
     <h3>Reference creation preserves the document chain.</h3>
@@ -1328,6 +1371,100 @@ source_links:
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">outgoing_mail</span>
       <p><strong>Lead diagnostic split:</strong> first prove that the PO is valid and approved. Then prove output determination, recipient, channel, dispatch time, form/content, and processing status. Do not change purchasing data to repair an output problem.</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="supplier-confirmations-situation-handling" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Supplier confirmations and exception handling</p>
+      <h2>Output proves what we sent. Confirmation proves what the supplier says will happen.</h2>
+      <p>Keep four layers separate: purchase-order output, supplier confirmation, delivery execution, and exception notification. They are connected, but each layer has its own evidence and control logic.</p>
+    </header>
+
+    <h3>Choose the confirmation model before you monitor it.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier confirmation models">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Model</th><th scope="col">Control</th><th scope="col">What SAP can represent</th><th scope="col">Assessment point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Order confirmation only</th>
+            <td><strong>Acknowl.Reqd</strong> in the purchasing document.</td>
+            <td>A general supplier acknowledgment. The process checks whether an acknowledgment number has been entered.</td>
+            <td>This does not give the same date-and-quantity detail in MRP as confirmation categories do.</td>
+          </tr>
+          <tr>
+            <th scope="row">Several confirmation types</th>
+            <td><strong>Confirmation control key</strong> at item level.</td>
+            <td>An ordered sequence such as order confirmation, loading confirmation, or shipping notification, with confirmed dates and quantities.</td>
+            <td>The key also controls which confirmation categories are relevant for MRP and goods receipt.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The confirmation control key can be defaulted from the purchasing info record or supplier purchasing data. Confirmations can be entered in the purchasing document, represented by an inbound delivery when the confirmation category allows it, or received electronically. Scheduling agreements use confirmation control keys rather than the simple acknowledgment-only model.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <div>
+        <p><strong>Confirmation sequence:</strong> <em>MRP-Relevant</em> controls whether the confirmation changes the planning element used by MRP. <em>GR-Relevant</em> links the confirmed quantity to goods receipt. <em>GR Assignment</em> can require a prior confirmation before the goods receipt is posted and is used together with GR relevance.</p>
+        <p><strong>Lead rule:</strong> a confirmation control key is part of purchasing execution. It is not the same thing as a Situation Handling notification rule.</p>
+      </div>
+    </div>
+
+    <h3>Monitoring and reminders answer different questions.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Confirmation monitoring and reminder controls">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Need</th><th scope="col">Tool or control</th><th scope="col">What to prove</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Monitor supplier confirmations</th><td><strong>ME2A</strong> or <em>Monitor Supplier Confirmations</em></td><td>Which expected confirmations exist, which quantities and dates are confirmed, and what is still missing.</td></tr>
+          <tr><th scope="row">Remind for missing order acknowledgment</th><td>Acknowledgment reminder logic</td><td>Acknowledgment is required, the relevant confirmation is still missing or incomplete, the purchasing document has been output, and reminder output is configured.</td></tr>
+          <tr><th scope="row">Remind for late delivery</th><td>Reminder levels in the purchasing item plus output settings</td><td>The reminder periods, reference date, document output, and active output framework are correct.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Output-management boundary:</strong> classic reminder transactions such as ME91F belong to classic output determination. When SAP S/4HANA Output Management is active for purchase orders, SAP provides the corresponding advanced reminder processing, including ME91FF / <em>Dunning Reminder on Purchase Order - Advanced</em>. Always identify the active output framework before diagnosing reminder generation.</p>
+
+    <h3>Situation Handling changes the operating model from pull monitoring to targeted exceptions.</h3>
+    <p>Situation Handling detects a defined business exception and brings it to the responsible users. Object-based situations are driven by a business object and conditions. Message-based situations are driven by warnings or errors from system runs or reports. A situation template is the blueprint; a situation type defines the productive trigger, recipients, texts, and follow-up behavior.</p>
+    <p>For purchasing, Responsibility Management can be used to route situation instances to the relevant teams. The important design chain is <strong>template → situation type → conditions or trigger → recipients → enabled type → situation instance → user action</strong>.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Selected purchasing Situation Handling templates">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Situation</th><th scope="col">Template ID</th><th scope="col">Consuming app</th><th scope="col">Business purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Predicted Contract Consumption</th><td><code>PROC_CONTRACTCONSUMPTNPREDICTION</code></td><td>Manage Purchase Contracts</td><td>Warn the purchaser before a quantity contract is expected to be consumed.</td></tr>
+          <tr><th scope="row">Contract Is Ready as Source of Supply</th><td><code>PROC_CONTRACTREADYTOUSE_V2</code></td><td>Manage Purchase Requisitions - Professional</td><td>Tell operational purchasing that a new or changed contract can now cover open requisitions.</td></tr>
+          <tr><th scope="row">Pending Supplier Confirmation</th><td><code>PROC_PENDINGSUPPLIERCONF_V2</code></td><td>Monitor Supplier Confirmations</td><td>Surface purchase-order items where the expected supplier confirmation is still pending.</td></tr>
+          <tr><th scope="row">Quantity Deficit in Supplier's Delivery</th><td><code>PROC_POITEMCONFQTYDEFICIT</code></td><td>Manage Purchase Orders</td><td>Notify purchasing when the ordered quantity is not fully confirmed for the required delivery date.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">notifications_active</span>
+      <div>
+        <p><strong>Architecture boundary:</strong> Situation Handling does not replace purchase-order output, source determination, confirmation control, or reminder logic. It observes business state and routes an exception to the people who should act on it.</p>
+        <p><strong>Diagnostic path for “no supplier-confirmation alert”:</strong> prove PO output → identify the confirmation model → prove the expected confirmation and due state → inspect ME2A / Monitor Supplier Confirmations → then check whether the required situation type is enabled, its trigger conditions, scheduling where applicable, and recipient responsibility.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second answer:</strong> “I separate communication from commitment. PO output proves that SAP sent the order. Acknowledgment or a confirmation control key records what the supplier confirms. ME2A and reminder logic monitor missing confirmations or due deliveries. Situation Handling sits above that state: it detects a configured exception and routes it to the responsible purchaser. If an alert is missing, I first prove the underlying PO and confirmation state, then the situation trigger and recipient logic.”</p>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/monitoring-purchase-orders" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Monitoring Purchase Orders</strong><small>Order acknowledgments, confirmation control keys, ME2A, confirmation reminders, and delivery reminders.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/b8e9ca2b85df4ecf9bd180cfcea78805.html" target="_blank" rel="noopener"><span>SAP Help</span><strong>Situation Templates in Sourcing and Procurement</strong><small>Current purchasing templates, technical IDs, consuming apps, and situation types.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/configuring-supply-chain-business-scenarios-in-sap-s-4hana-cloud-public-edition/setting-up-situation-handling_f900d8bc-96d9-4749-a173-cc1789c5b387" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Setting up Situation Handling</strong><small>Situation type setup, teams and responsibility, notification behavior, and the supplier-delivery quantity-deficit example.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
 
