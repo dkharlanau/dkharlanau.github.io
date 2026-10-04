@@ -29,7 +29,7 @@ Business AI graph and data work must use `_data/labs/business_ai/contract.yml`, 
 - Keep established deep URLs stable unless there is a strong technical reason to move them.
 - Prefer a hub or alias over a mass directory move. A clean taxonomy is not worth breaking external references.
 - `/labs/enterprise-context/` remains the canonical physical route for the SAP Enterprise workspace. In UI copy, call the workspace **SAP Enterprise** because its scope now covers far more than context.
-- `/lab/` is a compatibility route that redirects to `/labs/`.
+- `/lab/` is the canonical **Enterprise Engineering Toolkit** launcher for executable process, decision, integration, mapping, reconciliation, graph, cutover, architecture, visual, and SAP operations tools. `/labs/` remains the learning and assessment product hub.
 - `/labs/reusable-data-procedures/` is a compatibility route that redirects to the canonical `/reusable-data-procedures/` workspace.
 - `/triz/`, `/ddd/`, and `/reusable-data-procedures/` remain canonical framework routes even though they are grouped under `/frameworks/` in navigation.
 - Generated artifacts, sitemaps, and AI exports must not be hand-edited when a generator owns them.
