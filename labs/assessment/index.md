@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-26
+last_modified_at: 2026-10-04
 hide_global_cta: true
 tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
 ---
@@ -101,6 +101,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
     <div class="research-route-list">
       <a href="/labs/enterprise-context/procurement/"><span>P2P</span><strong>Procurement Decision Map</strong><small>Demand, source, item behavior, account assignment, price, approval, receipt, invoice, and GR/IR.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
       <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production Planning & Execution</strong><small>Demand, MRP, production method, order, staging, confirmation, goods receipt, and settlement.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/production/consumption-based-planning/"><span>MRP</span><strong>Consumption-Based Planning & Forecasting</strong><small>MRP types, reorder point, forecast, lot sizing, scheduling, MRP Live versus classic MRP, MRP areas, and planning diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">query_stats</i></a>
       <a href="/labs/enterprise-context/quality-management/"><span>QM</span><strong>Quality Management</strong><small>Inspection trigger, lot, results, usage decision, stock disposition, follow-up, and certificates.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Movement semantics, stock state, valuation, reservations, physical inventory, and EWM handoff.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
       <a href="/labs/enterprise-context/automotive-jit/"><span>JIS</span><strong>Automotive JIT / JIS</strong><small>Schedules versus exact calls, call control, sequence, HU, Delivery, EWM/TM, and supplier forwarding.</small><i class="material-symbols-outlined" aria-hidden="true">format_list_numbered</i></a>
@@ -113,6 +114,13 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <div>
         <p><strong>Specific Procurement recall:</strong> invoicing plan = invoice dates inside the PO; periodic repeats a recurring charge, partial splits one item value into stages, and the plan cannot be requested in a PR.</p>
         <p><strong>Blanket / limit:</strong> Overall Limit is the invoice ceiling; Expected Value is the planning, release, and commitment reference. <strong>Subcontracting L:</strong> we provide components and the finished-product GR consumes them. <strong>Park</strong> needs MM-complete data; <strong>Hold</strong> can keep any error; Manage Purchase Orders uses <strong>Draft</strong>. PO down-payment planning belongs to Purchasing, but the down-payment request and payment are FI processes.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">query_stats</span>
+      <div>
+        <p><strong>MRP recall:</strong> VB = manual reorder point, VM = automatic reorder point, V1/V2 add external requirements, and R1/R2 are time-phased procedures. Reorder point = safety stock + expected demand during replenishment lead time.</p>
+        <p><strong>MRP Live vs classic:</strong> MRP Live creates schedule lines for a valid scheduling agreement and purchase requisitions for other external procurement. Classic MRP keeps detailed creation controls and MRP Lists. Diagnose in sequence: shortage trigger → lot size → dates → proposal type → source → execution.</p>
       </div>
     </div>
   </section>
