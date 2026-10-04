@@ -157,11 +157,11 @@ tags:
       <h2>From landscape to process in four steps.</h2>
     </header>
 
-    <ol class="compact-sequence">
-      <li><span>01</span><div><strong>Open the process map</strong><p>Start from the entry diagram or the relevant process landscape.</p></div></li>
-      <li><span>02</span><div><strong>Select the business area</strong><p>Move into the process area or topic that owns the business outcome.</p></div></li>
-      <li><span>03</span><div><strong>Drill down</strong><p>Open the linked end-to-end process or subprocess.</p></div></li>
-      <li><span>04</span><div><strong>Use the process context</strong><p>Review descriptions, documents, roles, process information, and other available details.</p></div></li>
+    <ol>
+      <li><strong>Open the process map.</strong> Start from the entry diagram or the relevant process landscape.</li>
+      <li><strong>Select the business area.</strong> Move into the process area or topic that owns the business outcome.</li>
+      <li><strong>Drill down.</strong> Open the linked end-to-end process or subprocess.</li>
+      <li><strong>Use the process context.</strong> Review descriptions, documents, roles, process information, and other available details.</li>
     </ol>
 
     <p>A legend helps users understand unfamiliar BPMN symbols. Sensitive process information can also be hidden from particular user groups, so different users may not see exactly the same detail.</p>
