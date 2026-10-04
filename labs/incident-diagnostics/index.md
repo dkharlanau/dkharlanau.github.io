@@ -7,8 +7,8 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-22
-last_reviewed: 2026-09-22
+last_modified_at: 2026-10-04
+last_reviewed: 2026-10-04
 hide_global_cta: true
 hide_site_share: true
 career_impact: mapped
@@ -131,6 +131,30 @@ tags:
       <button class="incident-diagnostics__button" type="button" data-copy>Copy Markdown</button>
       <button class="incident-diagnostics__button incident-diagnostics__button--quiet" type="button" data-download>Download .md</button>
     </div>
+  </section>
+
+
+  <section class="incident-diagnostics__sources" aria-labelledby="incident-causal-model">
+    <p class="incident-diagnostics__label">Lead reasoning model</p>
+    <h2 id="incident-causal-model">Separate the symptom from the cause.</h2>
+    <p>Monitoring evidence tells us what changed. Root-cause analysis has to explain why the visible failure occurred and which upstream state first became wrong. A timestamp correlation is a hypothesis, not proof.</p>
+
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Step</th><th scope="col">Lead question</th><th scope="col">Useful evidence</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1. Symptom</th><td>What business or operational outcome is wrong?</td><td>Affected document, interface, stock state, posting, user action, or downstream process.</td></tr>
+          <tr><th scope="row">2. Dependency chain</th><td>Which upstream objects and systems can produce this state?</td><td>Document flow, ownership, messages, queues, master data, configuration, recent changes.</td></tr>
+          <tr><th scope="row">3. Competing causes</th><td>Which explanations fit the timing and dependency direction?</td><td>Good-vs-bad comparison, status chronology, change history, logs, traces, configuration evidence.</td></tr>
+          <tr><th scope="row">4. First wrong state</th><td>Where does correct behavior first diverge?</td><td>The earliest object, rule, message, or execution state that is inconsistent with the expected process.</td></tr>
+          <tr><th scope="row">5. Remediation</th><td>What is the smallest justified action?</td><td>Preconditions, authority, reversibility, duplicate protection, and approval boundary.</td></tr>
+          <tr><th scope="row">6. Verification</th><td>What proves that the business problem is actually resolved?</td><td>Corrected document state, successful downstream processing, reconciliation, and no new exception.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Autonomy boundary:</strong> this browser-local lab remains an evidence organizer. A production agent may later automate evidence collection or prepare a remediation, but diagnosis, write authority, and verification must remain explicit and reviewable.</p>
+    <p><a href="/labs/ai-ready/agent-architecture/#closed-loop-operations-need-a-model-of-the-system">Open the closed-loop operations pattern →</a></p>
   </section>
 
   <section class="incident-diagnostics__sources" aria-labelledby="incident-source-model">
