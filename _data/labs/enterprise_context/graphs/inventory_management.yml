@@ -208,24 +208,58 @@ reservation_model:
   source_refs: [SRC-SAP-IM-RESERVATIONS]
 
 physical_inventory_model:
-  path: "SCOPE → DOCUMENT → COUNT → DIFFERENCE → APPROVE → POST → EXPLAIN"
+  path: "SCOPE → DOCUMENT → COUNT → DIFFERENCE → RECOUNT/APPROVE → POST → EXPLAIN"
+  stock_management_unit:
+    dimensions: ["material", "plant", "storage location", "stock type", "valuation type", "batch", "special stock context"]
+    reading: "Physical inventory is performed per nondivisible book-stock segment, not against an undifferentiated material total."
   stages:
     - title: "Scope"
-      reading: "Define the stock management units and stock categories that are being inventoried."
+      reading: "Define the stock management units and procedure to be inventoried."
     - title: "Physical Inventory Document"
-      reading: "Freeze the count scope and create the control object for count and difference processing."
+      reading: "Create the control object with planned count date, optional posting block, book-inventory freeze, physical-inventory number, and grouping."
     - title: "Count"
-      reading: "Record the physical observation independently from book quantity where the procedure requires it."
+      reading: "Record the physical observation and count date. Classic entry uses a Zero Count indicator; Manage Physical Inventory Count accepts quantity zero directly."
     - title: "Difference"
-      reading: "Compare counted quantity with book stock and investigate material differences before posting."
+      reading: "Compare counted quantity with book stock, including timing and posting-period context."
+    - title: "Recount"
+      reading: "Create a new physical inventory document for uncertain items before adjustment when another observation is justified."
     - title: "Post"
-      reading: "Adjust book stock to counted quantity and create the corresponding inventory/accounting effect."
+      reading: "Adjust book stock and create the inventory/accounting effect. Difference-posting tolerances can be controlled by user group."
     - title: "Explain"
-      reading: "Classify root cause such as timing, unposted movement, wrong location, picking/staging error, unit issue, theft/damage, or master-data/process error."
+      reading: "Classify root cause such as timing, unposted movement, wrong location, picking/staging error, unit issue, damage, theft, master-data error, or integration mismatch."
+  timing_controls:
+    posting_block: "Prevents goods movements for the relevant stock management unit during the protected counting period."
+    freeze_book_inventory: "Preserves the book quantity used for comparison while operational goods movements can continue."
+    adjust_book_inventory: "Adjusts the inventory document when a later-posted goods movement belongs before the count date, avoiding a false timing difference."
+  difference_accounting:
+    own_stock_shortage: "Credit stock and post the offset to physical-inventory difference expense."
+    own_stock_surplus: "Debit stock and post the offset to physical-inventory difference revenue."
+    principle: "Difference posting closes the inventory control step; it does not prove the cause has been removed."
+  procedures:
+    - title: "Annual / Scheduled Inventory"
+      decision: "Use broad scheduled coverage when the control objective is to count the full required population."
+      source_refs: [SRC-SAP-LEARNING-IM-PHYSICAL-INVENTORY]
+    - title: "Cycle Counting"
+      decision: "Count selected materials several times per year based on plant-specific cycle-count categories; all stock units are still inventoried at least once per year."
+      source_refs: [SRC-SAP-LEARNING-IM-CYCLE-COUNTING]
+    - title: "Inventory Sampling"
+      decision: "Use statistical sampling only when sample design, error tolerance, complete-count area, strata, and auditor acceptance make the extrapolation valid."
+      source_refs: [SRC-SAP-LEARNING-IM-INVENTORY-SAMPLING]
+    - title: "Simplified / Mass Processing"
+      decision: "Use Fiori creation, scheduled jobs, Manage Physical Inventory Count, scanning, or batch input to reduce operational effort without changing stock-unit control."
+      source_refs: [SRC-SAP-LEARNING-IM-PHYSICAL-INVENTORY-SIMPLIFY]
+  situation_handling:
+    principle: "Situation Handling routes unattended exceptions to responsible users; it does not replace physical-inventory execution or root-cause analysis."
+    examples:
+      - template: "MAN_MATLOVERDUESITSITN"
+        use: "Overdue Stock Transport Order receipt"
+      - template: "MAN_PHYSICAL_INVENTORY_MONITOR"
+        use: "Overdue physical-inventory count or excessive count deviation"
+    source_refs: [SRC-SAP-LEARNING-IM-SITUATION-HANDLING]
   lead_lens: >-
-    Posting a physical inventory difference fixes book stock. It does not explain why the difference existed.
-    A Lead separates statutory/control completion from process root-cause elimination.
-  source_refs: [SRC-SAP-IM-PHYSICAL-INVENTORY, SRC-SAP-IM-INVENTORY-DIFFERENCE]
+    Posting a physical inventory difference fixes book stock. A Lead first proves the counted stock unit and timing,
+    then closes the difference, and separately removes the process cause if the difference is not a one-time event.
+  source_refs: [SRC-SAP-IM-PHYSICAL-INVENTORY, SRC-SAP-IM-INVENTORY-DIFFERENCE, SRC-SAP-LEARNING-IM-PHYSICAL-INVENTORY]
 
 goods_receipt_models:
   principle: "The receipt point defines when quantity, value, liability, and process history become valid. Do not treat every receipt as a 101 event."
@@ -345,13 +379,93 @@ material_type_inventory:
   - title: "UNBW"
     quantity_update: true
     value_update: false
-    reading: "Quantity-managed nonvaluated material. Procurement requires account assignment and stock value is not updated."
+    account_assignment_required: true
+    reading: "Quantity-managed nonvaluated material. No accounting data or stock value is maintained. Other GRs, transfer postings, and GIs do not create FI postings merely from stock movement; consumption issues can still update consumption statistics."
     source_refs: [SRC-SAP-LEARNING-IM-UNBW-NLAG]
   - title: "NLAG"
     quantity_update: false
     value_update: false
-    reading: "Non-stock material. Procurement requires account assignment; goods receipt updates consumption and posts value to the consuming account assignment."
+    account_assignment_required: true
+    reading: "Non-stock material. Goods receipt for an account-assigned PO posts quantity to consumption and value to the consumption/account-assignment side."
     source_refs: [SRC-SAP-LEARNING-IM-UNBW-NLAG]
+
+split_valuation_model:
+  principle: "Keep one material identity but separate partial stocks financially when the valuation distinction is real and durable."
+  category: "Defines the criterion for the split, such as procurement origin, country of origin, quality, or batch valuation."
+  valuation_type: "Identifies the concrete partial stock inside the category."
+  customizing:
+    activation: "OMW0"
+    configuration: "OMWC"
+    structure: ["global valuation types", "global valuation categories", "type-to-category assignment", "local category availability per valuation area"]
+  material_master:
+    header_price_control: "V"
+    partial_stock_price_control: "S or V"
+    partial_stock_accounting: "Each valuation type can carry its own valuation class and accounting data."
+  runtime:
+    reading: "Every value-relevant GR, GI, invoice receipt, or physical inventory posting addresses the affected valuation type; the total stock is the aggregation of all partial stocks."
+  decision_boundary: "If the distinction also changes planning, specification, compliance, or lifecycle behavior, separate material numbers may be clearer than split valuation."
+  source_refs: [SRC-SAP-LEARNING-IM-SPLIT-VALUATION]
+
+inventory_evidence_model:
+  principle: "Select evidence by question: current stock, planning availability, movement history, financial consequence, historical stock, or transit state."
+  tools:
+    - question: "Which material movements were posted?"
+      evidence: "MB51 / Display Material Document List"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+    - question: "Which FI documents belong to the material?"
+      evidence: "MR51 / Accounting Document List for Materials"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+    - question: "Where is current stock?"
+      evidence: "MMBE / Display Stock Overview"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+    - question: "What is the current MRP situation?"
+      evidence: "MD04 stock/requirements list"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+    - question: "Static versus dynamic availability?"
+      evidence: "MB53 / Display Plant Stock Availability versus CO09 / Monitor Product Availability"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+    - question: "Historical stock on posting date?"
+      evidence: "MB5B / Stocks for Posting Date"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+    - question: "Stock in transit?"
+      evidence: "MB5T / Display Stock in Transit; MB5TD for key date"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+    - question: "Valuated GR blocked stock?"
+      evidence: "MB5OA / Display Valuated GR Blocked Stock"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+    - question: "Subcontracting stock?"
+      evidence: "MBLB / Stocks at Subcontractor"
+      source_refs: [SRC-SAP-LEARNING-IM-CLASSIC-LISTS]
+  analytics:
+    reading: "Fiori overview and analytical apps expose stock value, movement history, overdue blocked/transit states, throughput, slow/non-moving stock, dead stock, and date-range analysis as actionable signals."
+    source_refs: [SRC-SAP-LEARNING-IM-ANALYTICS]
+  periodic_controls:
+    - control: "MB5U / Analyze Conversion Differences"
+      purpose: "Detect UoM rounding and conversion effects."
+    - control: "MB5L / Display List of Stock Values"
+      purpose: "Reconcile material stock values with stock G/L account balances."
+    - control: "MB5K / Check Stock Consistency"
+      purpose: "Detect stock-data inconsistencies at valuation-area or material level."
+    source_refs: [SRC-SAP-LEARNING-IM-PERIODIC]
+
+movement_type_customizing:
+  principle: "A movement type is a control bundle. Create a custom key only when standard movement semantics cannot represent the required business event safely."
+  controls: ["quantity update", "value update", "stock and consumption accounts", "field selection", "reasons", "allowed transactions", "stock determination", "dynamic availability", "shelf-life checks", "storage-location creation", "automatic PO at GR", "account grouping"]
+  custom_namespace: ["9", "X", "Y", "Z"]
+  design_rule: "Copy the closest standard movement type and its dependent entries, and copy/assign the related reversal movement where applicable."
+  fixed_controls:
+    quantity_string: "Fixed SAP control mechanism for quantity update; not freely redesigned."
+    value_string: "Fixed SAP control mechanism for value update and automatic account-assignment relevance."
+  account_grouping: "Can differentiate G/L determination for related movement families, for example consumption versus scrap."
+  migo_layers:
+    - "plant parameters"
+    - "general MIGO field selection"
+    - "field selection per movement type"
+    - "transaction and reference-document settings"
+  document_identity:
+    reading: "Accounting-document, material/physical-inventory document, and reservation number assignments are separate audit controls and do not change movement semantics."
+    source_refs: [SRC-SAP-LEARNING-IM-DOCUMENT-SETTINGS]
+  source_refs: [SRC-SAP-LEARNING-IM-MOVEMENT-TYPE-CUSTOMIZING, SRC-SAP-LEARNING-IM-MIGO-CUSTOMIZING]
 
 integration_boundaries:
   - boundary: "Procurement → Inventory Management"
@@ -400,6 +514,18 @@ failure_modes:
     symptom: "Material is physically present, but valuation, liability, or consumption is wrong."
     first_checks: ["special stock indicator", "ownership", "supplier/subcontractor assignment", "consignment or subcontracting info", "withdrawal/transfer event", "settlement history"]
     avoid: "Do not move special stock into own unrestricted stock before proving the intended ownership transition."
+  - id: IM-FAIL-SPLIT-VALUATION
+    symptom: "Quantity is correct, but price, stock account, or valuation segment is wrong."
+    first_checks: ["valuation category", "valuation type on the posting", "valuation-type accounting data", "price control at header and partial-stock level", "valuation class", "source/procurement rule that selected the valuation type"]
+    avoid: "Do not correct only the total material value while leaving the wrong partial stock."
+  - id: IM-FAIL-PI-TIMING
+    symptom: "Physical inventory shows a large difference that disappears when later documents are reviewed."
+    first_checks: ["count date", "posting date", "posting block or freeze setting", "backdated goods movements", "Adjust Book Inventory behavior", "EWM/warehouse execution timestamps"]
+    avoid: "Do not post a difference before proving whether it is a physical mismatch or a timing mismatch."
+  - id: IM-FAIL-CUSTOM-MVT
+    symptom: "A team proposes a new movement type because a field, account, or control does not behave as expected."
+    first_checks: ["business event", "closest standard movement", "field-selection layer", "account grouping", "quantity/value update requirement", "allowed transaction/reference", "reversal behavior"]
+    avoid: "Do not create a custom movement type to solve a problem owned by field selection, master data, account determination, or process design."
   - id: IM-FAIL-ACCOUNT
     symptom: "Quantity is correct but G/L or cost-object posting is wrong."
     first_checks: ["movement business purpose", "valuation context", "account assignment", "automatic account determination", "material value", "accounting document"]
@@ -440,8 +566,8 @@ lead_lens:
   main_trade_off: "Direct IM postings are simple, but warehouse-managed scenarios need stronger process ownership and synchronization rather than convenient manual corrections."
   typical_failure: "Teams diagnose movement-type numbers in isolation or correct stock manually while the reference process, ownership, or warehouse state remains wrong."
   proof_of_cause: "Reconstruct before/after stock dimensions, reference object, movement semantics, material document, accounting document, and EWM state using the same timestamp and quantity."
-  integration_impact: "Inventory Management is the quantity/value junction between Procurement, Production, QM, Sales, EWM, Finance, special procurement, and MRP availability."
-  data_impact: "Material, plant, storage location, stock type, batch, valuation type, special-stock identity, reference document, and account assignment must describe one coherent event."
+  integration_impact: "Inventory Management is the quantity/value junction between Procurement, Production, QM, Sales, EWM, Finance, special procurement, MRP availability, valuation, and physical-inventory control."
+  data_impact: "Material, plant, storage location, stock type, batch, valuation type, special-stock identity, reference document, account assignment, and count/posting dates must describe one coherent event."
   sixty_second_explanation: >-
     I do not start Inventory Management with movement-type numbers. I start with the business event and reference, then explain which stock state changes,
     whether value or consumption changes, and who owns warehouse execution. The material document is my evidence. If the result is wrong,
@@ -453,6 +579,9 @@ practitioner_heuristics:
   - "I distinguish transfer posting from stock transfer: logical state change and physical location movement are different questions."
   - "I trace dependent reservations back to their order or project."
   - "I use physical inventory differences as control evidence and then look for repeatable process causes."
+  - "I distinguish UNBW quantity-only inventory from NLAG direct consumption, and I use split valuation only when the partial-stock valuation difference is real."
+  - "I choose inventory evidence by question: MMBE for stock, MD04 for MRP state, MB51 for movements, MB5B for historical stock, and MB5L/MB5K for reconciliation controls."
+  - "I treat a request for a custom movement type as a design review, not as a configuration task."
   - "I reconcile ERP and EWM states instead of correcting both sides independently."
   - "I prefer reversal of the wrong business event over a compensating posting when the process allows it."
 
@@ -462,6 +591,9 @@ anti_patterns:
   - "Post a transfer movement to fix a quality, reservation, or EWM problem without tracing ownership."
   - "Edit dependent reservations instead of the owning order."
   - "Close physical inventory differences without root-cause analysis."
+  - "Treat UNBW and NLAG as equivalent because both lack stock valuation."
+  - "Use total material value to diagnose split valuation without checking the valuation type."
+  - "Create a custom movement type before proving that standard movement semantics and field/account controls are insufficient."
   - "Correct FI separately from the inventory event that created the wrong accounting."
   - "Post manual corrections in ERP and EWM independently."
 
