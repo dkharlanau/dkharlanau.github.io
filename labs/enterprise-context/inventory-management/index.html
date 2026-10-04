@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-10-04
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -19,9 +19,9 @@ tags:
   - physical-inventory
   - ewm
   - troubleshooting
-last_reviewed: 2026-09-23
+last_reviewed: 2026-10-04
 publication_wave: "logistics-search-wave-02"
-review_method: "primary sources + factual review + page-level editorial review"
+review_method: "SAP S/4HANA 2025 FPS01 primary sources + current SAP Learning Inventory Management course cross-check + page-level editorial review"
 search_intent: "SAP inventory management goods movements, stock types and ownership"
 # ai-discovery-managed:start
 structured_data:
@@ -133,6 +133,118 @@ source_links:
     <p>When an automatic reservation is wrong, the first useful question is often whether the owning order or component requirement is wrong. Editing the symptom downstream can leave planning and execution describing different needs.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="goods-receipt-control" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Goods receipt control</p>
+      <h2>Ask when ownership and valuation should change.</h2>
+      <p>A goods receipt with reference is planned by a purchase order or production order. A goods receipt without reference is unplanned: the receiver must supply the material, quantity, plant, storage location, stock type, and origin context at posting time. The key Lead question is not only “Which movement type?” but “At which event do quantity, value, liability, and process history become valid?”</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Goods receipt movement patterns">
+      <table>
+        <thead><tr><th scope="col">Business event</th><th scope="col">Standard movement</th><th scope="col">State change</th><th scope="col">Assessment point</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">GR for PO or production order</th><td>101</td><td>Receipt into unrestricted-use, quality-inspection, or blocked stock.</td><td>Planned receipt. For valuated stock, quantity and value are updated and FI can be posted.</td></tr>
+          <tr><th scope="row">Nonvaluated GR blocked stock</th><td>103 → 105</td><td>103 records receipt in GR blocked stock; 105 releases it to warehouse stock.</td><td>Valuation and normal stock update wait until release. A rejected quantity can be returned with 124.</td></tr>
+          <tr><th scope="row">Valuated GR blocked stock</th><td>107 → 109</td><td>107 records origin acceptance and value; 109 records arrival into the warehouse stock type.</td><td>Useful when acceptance and invoice relevance happen before physical arrival. Wrong 107 is reversed with 108.</td></tr>
+          <tr><th scope="row">External GR without PO</th><td>501 / 503 / 505</td><td>Unrestricted-use / quality-inspection / blocked stock.</td><td>No purchasing document preplans the receipt, so the user enters the logistics data manually.</td></tr>
+          <tr><th scope="row">Internal receipt without production order</th><td>521 / 523 / 525</td><td>Unrestricted-use / quality-inspection / blocked stock.</td><td>Use only when production receipt is not represented by a production order.</td></tr>
+          <tr><th scope="row">Initial stock entry</th><td>561 / 563 / 565</td><td>Initial unrestricted-use / quality-inspection / blocked stock.</td><td>Migration or opening balance, not a physical receipt. Large migrations belong in the migration process, not manual mass posting.</td></tr>
+          <tr><th scope="row">Free-of-charge receipt</th><td>511</td><td>Quantity increases; valuation behavior depends on price control.</td><td>Do not assume “free” means no valuation consequence. Standard price and moving average price behave differently.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Assessment trap:</strong> “GR without PO” and “automatic PO at GR” are not the same design. Automatic PO creation at receipt needs specific movement-type configuration, a valuated material, a standard purchasing organization when required, and a valid purchasing info record. The detailed prerequisites are covered in the <a href="/labs/enterprise-context/procurement/">Procurement Decision Map</a>.</p>
+
+    <h3>Reversal and return answer different business questions</h3>
+    <p>A reversal says the original posting itself was wrong. A return delivery says the receipt happened, but the goods are being sent back. Prefer a reversal with reference to the original material document because SAP can copy the original items, derive the reversal movement, and preserve the document chain.</p>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Common reversal movement pairs">
+      <table>
+        <thead><tr><th scope="col">Original event</th><th scope="col">Movement</th><th scope="col">Reversal</th><th scope="col">Lead reading</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">GR for PO / production order</th><td>101</td><td>102</td><td>Cancel the original receipt.</td></tr>
+          <tr><th scope="row">Nonvaluated GR blocked stock</th><td>103</td><td>104</td><td>Cancel the blocked-stock receipt before release.</td></tr>
+          <tr><th scope="row">Return delivery</th><td>122</td><td>123</td><td>Cancel a posted supplier return.</td></tr>
+          <tr><th scope="row">Initial stock entry</th><td>561</td><td>562</td><td>Correct the opening stock posting.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Many standard reversal pairs follow “original movement + 1”, but the safer process rule is to reference the original material document and let the system determine the reversal where possible. A reason for movement can also be configured as optional or mandatory, which makes returns and cancellations easier to analyze later.</p>
+
+    <h3>Three GR controls that often appear in assessment questions</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Goods receipt controls">
+      <table>
+        <thead><tr><th scope="col">Control</th><th scope="col">What changes</th><th scope="col">Lead point</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Order unit vs order price unit</th><td>Delivered quantity can be counted in one unit while GR valuation and invoice verification use another.</td><td>If price is per kg but order quantity is pieces, confirm the actual price-unit quantity at receipt instead of trusting the planning conversion.</td></tr>
+          <tr><th scope="row">Under/overdelivery tolerance + Delivery Completed</th><td>Controls how delivered quantity compares with open PO quantity and whether the item is treated as closed.</td><td>Delivery Completed sets open PO quantity to zero and removes MRP/reminder relevance, but it does not universally make another GR technically impossible.</td></tr>
+          <tr><th scope="row">Shelf life and delivery-date checks</th><td>GR can check minimum remaining shelf life and can warn or block an early/late receipt depending on message configuration.</td><td>Separate product/master-data rules from configurable message severity and app behavior.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="transfer-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transfer model</p>
+      <h2>One-step is simpler. Two-step gives transit visibility.</h2>
+      <p>A transfer posting changes stock identity or qualification; a physical stock transfer changes location. The choice of one-step, two-step, or Stock Transport Order changes visibility, planning, valuation timing, and process evidence.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Stock transfer comparison">
+      <table>
+        <thead><tr><th scope="col">Pattern</th><th scope="col">Standard movement</th><th scope="col">Intermediate state</th><th scope="col">Accounting / planning effect</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Storage location → storage location, one step</th><td>311 unrestricted; 323 QI; 325 blocked</td><td>None</td><td>Same plant and valuation area, so no accounting document for the transfer.</td></tr>
+          <tr><th scope="row">Plant → plant, one step</th><td>301</td><td>None</td><td>Plant stock changes immediately. FI is relevant when the plants belong to different valuation areas.</td></tr>
+          <tr><th scope="row">Plant → plant, two steps</th><td>303 → 305</td><td>Stock in transfer</td><td>Valuation happens at the first step; 305 moves the quantity from transfer into unrestricted stock at the receiving plant.</td></tr>
+          <tr><th scope="row">STO without delivery</th><td>351 → 101</td><td>Stock in transit</td><td>MRP and PO history can monitor the transfer. The receiving plant plans the receipt against the STO.</td></tr>
+          <tr><th scope="row">Material → material</th><td>309</td><td>None</td><td>Single-step transfer from unrestricted stock of the issuing material to unrestricted stock of the receiving material; both materials need the same base unit of measure.</td></tr>
+          <tr><th scope="row">QI → unrestricted</th><td>321</td><td>Stock-type change</td><td>If QM inspection processing is active, the quality process owns the disposition; do not bypass it with a manual IM correction.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Stock in transfer vs stock in transit:</strong> stock in transfer is the intermediate state of a two-step transfer without a Stock Transport Order. Stock in transit belongs to an STO-based transfer. This distinction is useful when issuing stock is gone but receiving unrestricted stock has not appeared yet.</p>
+    <p><strong>Cross-company boundary:</strong> when the plants belong to different company codes, the transfer can create two accounting documents, with a company-code clearing account as the offsetting bridge. In a two-step transfer, valuation still occurs in the first step.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="availability-reservations" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Availability and reservations</p>
+      <h2>Physical stock, available stock, and reserved demand are different states.</h2>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Static and dynamic availability comparison">
+      <table>
+        <thead><tr><th scope="col">Check</th><th scope="col">What it reads</th><th scope="col">Typical decision</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Static availability</th><td>Physical book stock in the affected stock segment at posting time.</td><td>Can this goods movement reduce this stock without making the segment negative?</td></tr>
+          <tr><th scope="row">Dynamic availability</th><td>Current stock plus relevant planned receipts and issues from the MRP view.</td><td>Is the quantity still available for this requirement after future reservations and receipts are considered?</td></tr>
+          <tr><th scope="row">Missing parts check</th><td>Dynamic availability logic at goods receipt plus a checking horizon.</td><td>Does this receipt cover an existing or near-term shortage that the warehouse clerk and MRP controller should act on?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>A manual reservation preplans a goods movement; it does not move stock. One reservation has one movement type and one account assignment purpose. Dependent reservations belong to their upstream order, network, or project and should normally be corrected there. The <strong>Movement Allowed</strong> indicator controls whether the reservation item can be used for a posting; <strong>Final Issue</strong> closes the remaining requirement when no further withdrawal is expected.</p>
+    <p><strong>Negative stock is an operational exception, not a planning strategy.</strong> SAP can allow it for selected stock and special-stock categories when configuration and material settings permit it, for example when the physical receipt happened before the system receipt was posted. The later goods receipt must restore the system state. Negative balances should not remain at physical-inventory time or the balance-sheet key date.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="special-stock-patterns" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Ownership and special procurement</p>
+      <h2>Ask who owns the material before asking where it is.</h2>
+      <p>Special stock separates quantity by ownership or business assignment. The same material number can therefore represent very different legal, valuation, planning, and settlement states.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Special stock and material type comparison">
+      <table>
+        <thead><tr><th scope="col">Pattern</th><th scope="col">Inventory model</th><th scope="col">Key posting or settlement</th><th scope="col">Lead memory</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Vendor consignment</th><td>Special stock K. Material is physically in your warehouse but remains supplier-owned and nonvaluated while in consignment stock.</td><td>Withdrawal creates the liability; 411 K transfers consignment into own stock. Settlement is performed with consignment/pipeline settlement such as MRKO.</td><td>Receipt is not the liability event.</td></tr>
+          <tr><th scope="row">Subcontracting components</th><td>Special stock O. Components remain company-owned and valuated while located at the subcontractor.</td><td>541 provides components in one step; 30A/30C supports a two-step process. Finished-product GR also posts component consumption; later differences use subsequent adjustment.</td><td>Location changes, ownership does not.</td></tr>
+          <tr><th scope="row">Pipeline</th><td>Special stock indicator P for withdrawals, but no normal warehouse stock exists for pipeline-only material.</td><td>Typical consumption movements include 201, 261, 281, and 291 with pipeline/vendor context; withdrawal creates supplier liability from the pipeline info-record price.</td><td>Availability is conceptual: material is drawn from the pipeline, not picked from warehouse stock.</td></tr>
+          <tr><th scope="row">UNBW</th><td>Quantity is managed, value is not.</td><td>No stock-value update; procurement requires account assignment.</td><td>Nonvaluated stock is still inventory by quantity.</td></tr>
+          <tr><th scope="row">NLAG</th><td>Neither stock quantity nor stock value is managed in Inventory Management.</td><td>PO procurement uses account assignment; GR updates consumption and posts value to the consumption/account-assignment side.</td><td>Non-stock material is not the same as nonvaluated stock material.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="runtime" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">From event to document</p>
@@ -169,6 +281,7 @@ source_links:
     </header>
     <p>When inventory is wrong, compare the business reference, material document, current stock segment, accounting document where relevant, and EWM state where warehouse execution is involved. If the original posting itself is wrong, use the supported reversal or correction path for that process instead of adding an unrelated compensating movement simply to make today's quantity look right.</p>
     <p>This keeps the document chain understandable. Procurement history can still explain the receipt, production can still explain consumption and output, a delivery can still explain goods issue, and Finance can still reconcile the value. Inventory support becomes much easier when every layer tells the same story.</p>
+    <p><strong>60-second assessment answer:</strong> “I start with the business event and reference, not with a movement number. Then I identify the stock segment before and after the posting, whether valuation or consumption changes, and which process owns the next step. For receipts I distinguish normal 101 from GR blocked stock and unplanned receipts. For transfers I distinguish one-step, two-step, and STO because transit visibility and FI timing change. For special stock I first ask who owns the material. Finally, I prove the result with the material document, accounting document where relevant, PO or order history, and EWM/QM state if those components own execution.”</p>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/procurement/"><span>MM</span><strong>Procurement</strong><small>Follow purchase demand, order, receipt, invoice, and settlement context.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
       <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production</strong><small>Connect component reservations and issues with production output and order state.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
