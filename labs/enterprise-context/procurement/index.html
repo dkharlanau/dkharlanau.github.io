@@ -22,7 +22,7 @@ tags:
   - troubleshooting
 last_reviewed: 2026-10-04
 publication_wave: "logistics-search-wave-01"
-review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, procurement automation, pricing, contracts, and scheduling-agreement cross-check + S4500 process refresh"
+review_method: "SAP S/4HANA 2025 FPS01 primary-source recheck + current SAP Learning source-list, quota-arrangement, sourcing-priority, procurement automation, pricing, contracts, scheduling agreements, release procedures, flexible workflow, and Situation Handling cross-check + S4500 process refresh"
 search_intent: "SAP MM procurement process from purchase order to goods receipt and invoice"
 # ai-discovery-managed:start
 structured_data:
@@ -1312,13 +1312,145 @@ source_links:
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="approval-situation-handling" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Purchase-order control</p>
-      <h2>A complete PO still has to become an executable commitment.</h2>
+      <h2>Approval, Situation Handling, and output solve different problems.</h2>
     </header>
-    <p>The purchase order brings the sourcing and commercial decisions into a supplier-facing document, but it can still be subject to approval and output controls. In current SAP S/4HANA, flexible workflow is available for purchase requisitions and purchase orders alongside other approval mechanisms that may exist in a customer landscape. The active model therefore has to be identified before an approval problem is diagnosed.</p>
-    <p>Keep document validity, approval, and supplier communication distinct. A PO can be structurally correct but still wait for approval. An approved PO can still have a communication problem. Conversely, receiving a supplier response does not prove that the accounting or receipt design of the item is correct.</p>
+    <p>The purchase order brings sourcing and commercial decisions into a supplier-facing document, but it can still be blocked by an approval process. SAP S/4HANA can use classic release procedures, flexible workflow, or a combination chosen by document type and deployment. Before diagnosing a blocked document, first identify which control model is active.</p>
+    <p>Keep three states separate: <strong>approval</strong> decides whether the document may proceed, <strong>Situation Handling</strong> detects an exceptional business event and informs the responsible users, and <strong>output</strong> transmits the approved document to the supplier. A notification is not an approval, and an approval is not proof that the supplier received the document.</p>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Approval</h3>
+        <p>Controls whether a purchase requisition or purchasing document can continue. The active mechanism can be a classic release procedure or flexible workflow.</p>
+      </div>
+      <div>
+        <h3>Situation Handling</h3>
+        <p>Detects a condition such as a missing supplier confirmation, contract consumption risk, or delivery quantity deficit and routes the situation to responsible users.</p>
+      </div>
+      <div>
+        <h3>Output</h3>
+        <p>Controls the supplier communication after the purchasing document is ready to be sent. Output failures must be diagnosed separately from approval failures.</p>
+      </div>
+    </div>
+
+    <h3>Classic release procedure: classification drives the approval strategy.</h3>
+    <p>For classic release procedures with classification, SAP evaluates document values through classification characteristics. Purchase requisitions use the communication structure <strong>CEBAN</strong>; external purchasing documents such as purchase orders use <strong>CEKKO</strong>. The release class uses class type <strong>032</strong> for release strategies.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Classic release procedure for purchase requisitions and purchasing documents">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Control</th><th scope="col">Purchase requisition</th><th scope="col">External purchasing documents</th><th scope="col">Lead-level point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Release level</th>
+            <td>With classification, a PR can use item-wise release or overall release.</td>
+            <td>POs, RFQs, contracts, and scheduling agreements are released at header level; item-wise release is not available.</td>
+            <td>Do not assume the same approval granularity for PRs and POs.</td>
+          </tr>
+          <tr>
+            <th scope="row">Release group and class</th>
+            <td>The release group links the release class to the PR release object and also distinguishes item-wise versus overall release.</td>
+            <td>The release group links the class to the purchasing-document release object.</td>
+            <td>The class contains the characteristics; the strategy contains the values that must match.</td>
+          </tr>
+          <tr>
+            <th scope="row">Release codes</th>
+            <td colspan="2">Release codes represent approval points. Authorizations control who can use a code, and prerequisites define the sequence between codes.</td>
+            <td>A missing approval can be an authorization or sequence problem even when strategy determination is correct.</td>
+          </tr>
+          <tr>
+            <th scope="row">Release indicators</th>
+            <td>Indicators represent blocked and released states and can control follow-on documents, changeability, and fixing behavior.</td>
+            <td>Indicators control the release state and change behavior. PO release does not use the PR fixing indicator or PR field-selection key.</td>
+            <td>After a change, check whether the strategy should remain, reset, or be re-determined.</td>
+          </tr>
+          <tr>
+            <th scope="row">Release strategy</th>
+            <td colspan="2">The strategy combines release codes, release prerequisites, resulting status, and classification values.</td>
+            <td>Strategy determination is a data-and-classification problem; execution is an approver-and-authorization problem.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+      <p><strong>Classic PO boundary:</strong> a blocked purchasing document can be displayed, but it cannot be output to the supplier until the required release has been completed. For purchase orders, SAP Learning references <strong>ME29N</strong> for individual release and <strong>ME28</strong> for collective release.</p>
+    </div>
+
+    <h3>Flexible workflow: define conditions, steps, and approvers in Fiori.</h3>
+    <p>Flexible workflow is scenario-based and does not require the classic classification model. It can replace a classic release procedure or coexist with it for different document types. For purchase orders, configure the process in <em>Manage Workflows for Purchase Orders</em>. For purchase requisitions, use <em>Manage Workflows for Purchase Requisitions</em>; both overall and item-wise approval are possible.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Flexible workflow controls in purchasing">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Dimension</th><th scope="col">Flexible workflow behavior</th><th scope="col">Lead check</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Start conditions</th><td>Conditions can use purchasing and accounting context such as company code, document type, purchasing organization or group, currency, material group, account-assignment context, and total net amount.</td><td>First prove that the workflow should have started for the saved document values.</td></tr>
+          <tr><th scope="row">Approval steps</th><td>A workflow can contain one or several approval steps and can assign one or several possible approvers.</td><td>Separate workflow definition from runtime agent determination.</td></tr>
+          <tr><th scope="row">Approvers</th><td>Approvers can be resolved from users or roles, depending on the workflow design and release.</td><td>If a work item is missing, check responsibility/agent resolution before changing the business document.</td></tr>
+          <tr><th scope="row">Execution</th><td>Approvals are processed through SAP Fiori My Inbox and supported mobile scenarios.</td><td>Prove the workflow instance, current step, approver, decision, and history.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Workflow ID boundary:</strong> SAP Learning for the S/4HANA purchasing course uses workflow template <strong>00800238</strong> for purchase orders and templates <strong>00800173</strong> for item-wise PR release and <strong>00800157</strong> for overall PR release. Current SAP S/4HANA Cloud Public Edition documentation can expose newer workflow scenario IDs. Treat these IDs as release- and deployment-specific references, not as universal constants.</p>
+
+    <h3>Situation Handling: detect the exception, then route it to the right owner.</h3>
+    <p>Situation Handling is a monitoring and notification framework. <strong>Object-based situations</strong> evaluate conditions for a business object such as a contract or purchase order. <strong>Message-based situations</strong> are created from selected warning or error messages in runs or reports. A standard <strong>situation template</strong> is copied into a configurable <strong>situation type</strong>; when its trigger is met, SAP creates a <strong>situation instance</strong>.</p>
+    <p>Recipients can be determined through Responsibility Management using teams or responsibility rules. Object-based situations can appear in <em>My Situations</em>, in the consuming business app, as Fiori launchpad notifications, and optionally by e-mail. Key users can monitor instances in <em>Monitor Situations</em>.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Situation Handling examples for procurement">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Situation</th><th scope="col">Template ID</th><th scope="col">Consuming app</th><th scope="col">Business reaction</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Predicted Contract Consumption</th><td><code>PROC_CONTRACTCONSUMPTNPREDICTION</code></td><td>Manage Purchase Contracts</td><td>Act before the contract is fully consumed and sourcing continuity is affected.</td></tr>
+          <tr><th scope="row">Contract is Ready as Source of Supply</th><td><code>PROC_CONTRACTREADYTOUSE_V2</code></td><td>Manage Purchase Requisitions - Professional</td><td>Review whether the new or updated contract should be used for open requisitions.</td></tr>
+          <tr><th scope="row">Pending Supplier Confirmation</th><td><code>PROC_PENDINGSUPPLIERCONF_V2</code></td><td>Monitor Supplier Confirmations</td><td>Follow up before an unconfirmed order becomes a delivery risk.</td></tr>
+          <tr><th scope="row">Quantity Deficit in Supplier's Delivery</th><td><code>PROC_POITEMCONFQTYDEFICIT</code></td><td>Manage Purchase Orders</td><td>React when confirmation is missing or the confirmed quantity will not cover the scheduled requirement.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">notification_important</span>
+      <p><strong>Situation setup mental model:</strong> template → situation type → trigger conditions → batch schedule where required → display and notification text → recipients through Responsibility Management → monitoring → enable. Template versions can change by release, so verify the exact template ID in the target system before configuration.</p>
+    </div>
+
+    <h3>Approval diagnostic sequence.</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Approval and situation handling diagnostic sequence">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Question</th><th scope="col">Evidence to prove</th><th scope="col">Do not confuse it with</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">1. Which control model is active?</th><td>Document type configuration and whether classic release or flexible workflow applies.</td><td>A notification shown by Situation Handling.</td></tr>
+          <tr><th scope="row">2. Why was the approval triggered?</th><td>Classic strategy/classification values or flexible workflow start conditions.</td><td>The person who happens to receive the work item.</td></tr>
+          <tr><th scope="row">3. Who must act now?</th><td>Release code and authorization, or workflow step and resolved approver.</td><td>The purchasing group alone; organizational ownership does not always equal workflow responsibility.</td></tr>
+          <tr><th scope="row">4. What is the document state?</th><td>Release indicator or workflow status/history and whether a change reset or retriggered approval.</td><td>Supplier output status.</td></tr>
+          <tr><th scope="row">5. Was the exception communicated?</th><td>Situation instance, recipient resolution, notification channel, or purchasing output processing.</td><td>The approval decision itself.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
+      <p><strong>60-second assessment answer:</strong> “Classic release is classification-based: PRs can be item-wise or overall, while external purchasing documents are released at header level. Flexible workflow is scenario-based and configured in Fiori with conditions, approval steps, and approvers. Situation Handling is separate: it detects exceptions and notifies responsible users. In support, I first identify the active control model, then prove the trigger, approver resolution, approval state, and only after that check notifications or supplier output.”</p>
+    </div>
+
+    <div class="research-route-list">
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/releasing-purchase-requisitions" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Releasing Purchase Requisitions</strong><small>Item-wise versus overall release, release groups, strategies, indicators, and codes.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/releasing-purchasing-documents" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Releasing Purchasing Documents</strong><small>Header-level release for POs and other external purchasing documents, including ME29N and ME28.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/configuring-release-procedures-in-customizing" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Configuring Release Procedures in Customizing</strong><small>CEBAN, CEKKO, class type 032, release groups, codes, indicators, and strategy definition.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/setting-up-flexible-workflows-in-purchasing" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Setting Up Flexible Workflows in Purchasing</strong><small>Workflow conditions, approval steps, approvers, and PR/PO workflow templates used in the course.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/purchasing-in-sap-s-4hana/deploying-situation-handling" target="_blank" rel="noopener"><span>SAP Learning</span><strong>Deploying Situation Handling</strong><small>Situation templates, types, instances, responsibility-based recipients, channels, and procurement use cases.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    </div>
   </section>
 
 
