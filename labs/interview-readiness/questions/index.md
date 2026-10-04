@@ -47,7 +47,7 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" id="question-bank" data-reveal>
-    <header><p class="research-canvas__eyebrow">42 skills / 168 questions</p><h2>Filter by area, skill, or interview pressure.</h2><p id="ir-question-count">Loading question bank.</p></header>
+    <header><p class="research-canvas__eyebrow">43 skills / 172 questions</p><h2>Filter by area, skill, or interview pressure.</h2><p id="ir-question-count">Loading question bank.</p></header>
     <div class="ir-filter-stack">
       <div class="ir-filter-group"><strong>Area</strong><div class="ir-filter" id="ir-question-filter" aria-label="Question area filters"></div></div>
       <div class="ir-filter-group"><strong>Type</strong><div class="ir-filter" id="ir-type-filter" aria-label="Question type filters"></div></div>
