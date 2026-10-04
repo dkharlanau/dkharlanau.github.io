@@ -26,7 +26,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <p>Current practice model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Assessment tracks</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>5</strong><small>Reasoning levels</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>78</strong><small>Structured practice cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>82</strong><small>Structured practice cases</small></div>
       <em>The vertical backlog is closed. The practice layer now adapts to scoring history.</em>
     </div>
   </header>
