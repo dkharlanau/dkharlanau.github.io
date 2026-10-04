@@ -45,7 +45,7 @@ Use these rules:
 
 Examples:
 
-- `/lab/` is a compatibility alias for `/labs/`.
+- `/lab/` is the canonical **Enterprise Engineering Toolkit** launcher. It connects independent executable repositories through one task-oriented product surface; `/labs/` remains the learning, exploration, interview, and assessment hub.
 - `/labs/reusable-data-procedures/` redirects to canonical `/reusable-data-procedures/`.
 - The UI calls `/labs/enterprise-context/` **SAP Enterprise**, while the established physical URL remains stable.
 - `/triz/`, `/ddd/`, and `/reusable-data-procedures/` remain canonical routes but are grouped under the Frameworks product.
