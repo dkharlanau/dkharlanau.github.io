@@ -6,13 +6,13 @@ process_family: "Materials Management / Inventory Management"
 process_step: "From business event to goods movement, stock state, value, warehouse handoff, and reconciliation"
 status: researching
 created_at: "2026-08-16"
-updated_at: "2026-08-16"
-verified_at: "2026-08-16"
+updated_at: "2026-10-04"
+verified_at: "2026-10-04"
 
 summary: >-
   A Lead-level map of Inventory Management. It explains goods movements as business-state changes rather than a list of movement-type numbers.
   The model connects reference documents, movement semantics, stock type, ownership, valuation, reservations, physical inventory,
-  special stock, EWM boundaries, accounting impact, reversal, and reconciliation.
+  special stock, goods-receipt controls, transfer models, availability, negative stock, EWM boundaries, accounting impact, reversal, and reconciliation.
 
 thesis: >-
   A material document is evidence of a stock event. The important question is what business state changed:
@@ -25,6 +25,10 @@ boundary:
     - "Material document and movement type control"
     - "Plant, storage location, stock type, batch, valuation type, and special-stock context"
     - "Reservations and planned goods movements"
+    - "Planned and unplanned goods receipts, GR blocked stock, reversals, and return delivery"
+    - "Storage-location, cross-plant, and STO transfer models"
+    - "Static and dynamic availability, missing-parts checks, and negative-stock boundary"
+    - "Vendor consignment, subcontracting stock, pipeline withdrawals, UNBW, and NLAG"
     - "Physical inventory and difference posting"
     - "Automatic accounting boundary"
     - "IM versus EWM ownership and goods-movement communication"
@@ -223,6 +227,132 @@ physical_inventory_model:
     A Lead separates statutory/control completion from process root-cause elimination.
   source_refs: [SRC-SAP-IM-PHYSICAL-INVENTORY, SRC-SAP-IM-INVENTORY-DIFFERENCE]
 
+goods_receipt_models:
+  principle: "The receipt point defines when quantity, value, liability, and process history become valid. Do not treat every receipt as a 101 event."
+  patterns:
+    - title: "Planned GR"
+      movements: ["101"]
+      reading: "Purchase or production reference preplans material, quantity, dates, source, and destination stock."
+      source_refs: [SRC-SAP-LEARNING-IM-GR-REFERENCE]
+    - title: "Nonvaluated GR blocked stock"
+      movements: ["103", "105", "124"]
+      reading: "103 records the receipt before acceptance; valuation and normal stock update occur at 105 release. Rejected blocked stock can be returned with 124."
+      source_refs: [SRC-SAP-LEARNING-IM-GR-REFERENCE]
+    - title: "Valuated GR blocked stock / origin acceptance"
+      movements: ["107", "108", "109", "122"]
+      reading: "107 records accepted value before warehouse arrival, 109 releases the quantity to warehouse stock, 108 reverses wrong origin acceptance, and a later defect is handled after 109 with the normal return path."
+      source_refs: [SRC-SAP-LEARNING-IM-GR-REFERENCE]
+    - title: "Other GR without reference"
+      movements: ["501", "503", "505", "521", "523", "525", "561", "563", "565", "511"]
+      reading: "No purchase or production object preplans the receipt, so logistics data is entered manually. Initial balances and free-of-charge receipts are different business events from normal procurement."
+      source_refs: [SRC-SAP-LEARNING-IM-GR-NO-REFERENCE]
+  reversal_rule:
+    reading: "Prefer reversal with reference to the original material document. Common standard pairs include 101/102, 103/104, 122/123, and 561/562."
+    source_refs: [SRC-SAP-LEARNING-IM-REVERSALS-RETURNS]
+  receipt_controls:
+    - title: "Order Unit versus Order Price Unit"
+      decision: "Confirm the physical quantity and the price-unit quantity when valuation is based on a different unit."
+      source_refs: [SRC-SAP-LEARNING-IM-ORDER-PRICE-UNIT]
+    - title: "Under/Overdelivery and Delivery Completed"
+      decision: "Use tolerances to evaluate delivery quantity and understand that Delivery Completed closes open PO quantity without universally forbidding every later receipt."
+      source_refs: [SRC-SAP-LEARNING-IM-GR-CONTROLS]
+    - title: "Shelf Life and Delivery Date"
+      decision: "Separate minimum shelf-life control from configurable early/late-delivery message behavior."
+      source_refs: [SRC-SAP-LEARNING-IM-DATE-CHECKS]
+
+transfer_models:
+  principle: "Choose the transfer model by the business need for transit visibility, planning, valuation timing, and document control."
+  patterns:
+    - title: "Storage location to storage location, one step"
+      movements: ["311", "323", "325"]
+      intermediate_state: "none"
+      reading: "The issue and receipt are posted together inside one plant; no accounting document is needed because the valuation area does not change."
+      source_refs: [SRC-SAP-LEARNING-IM-TRANSFER-POSTINGS]
+    - title: "Plant to plant, one step"
+      movements: ["301"]
+      intermediate_state: "none"
+      reading: "Both plant stock states change in one posting; FI is relevant when valuation areas differ."
+      source_refs: [SRC-SAP-LEARNING-IM-CROSS-PLANT]
+    - title: "Plant to plant, two steps"
+      movements: ["303", "305"]
+      intermediate_state: "stock in transfer"
+      reading: "Valuation happens when stock leaves the issuing plant; 305 moves the quantity from transfer into unrestricted stock at the receiving plant."
+      source_refs: [SRC-SAP-LEARNING-IM-CROSS-PLANT]
+    - title: "Stock Transport Order without delivery"
+      movements: ["351", "101"]
+      intermediate_state: "stock in transit"
+      reading: "The STO provides MRP and PO-history visibility and plans the receipt at the receiving plant."
+      source_refs: [SRC-SAP-LEARNING-IM-CROSS-PLANT]
+    - title: "Material to material"
+      movements: ["309"]
+      intermediate_state: "none"
+      reading: "Single-step unrestricted-to-unrestricted transfer between materials with the same base unit of measure; it cannot be preplanned with a reservation."
+      source_refs: [SRC-SAP-LEARNING-IM-TRANSFER-POSTINGS]
+    - title: "Quality inspection to unrestricted"
+      movements: ["321"]
+      intermediate_state: "stock-type change"
+      reading: "The stock qualification changes. If QM inspection processing is active, the quality process owns this disposition."
+      source_refs: [SRC-SAP-LEARNING-IM-TRANSFER-POSTINGS]
+
+availability_model:
+  principle: "Book stock, dynamically available stock, and business demand are different measures."
+  checks:
+    - title: "Static Availability"
+      reading: "Checks physical book stock in the affected stock segment at movement time and prevents an unsupported negative result."
+      source_refs: [SRC-SAP-LEARNING-IM-AVAILABILITY]
+    - title: "Dynamic Availability"
+      reading: "Adds planned receipts and issues from the MRP view so an already committed quantity is not treated as free stock."
+      source_refs: [SRC-SAP-LEARNING-IM-AVAILABILITY]
+    - title: "Missing Parts Check"
+      reading: "Uses dynamic availability at goods receipt to identify uncovered requirements and inform the warehouse and MRP responsibility."
+      source_refs: [SRC-SAP-LEARNING-IM-AVAILABILITY]
+  reservation_controls:
+    - "One reservation has one movement type and one account-assignment purpose."
+    - "Dependent reservations are changed through their owning order, network, or project."
+    - "Movement Allowed controls whether the item can be used for a posting."
+    - "Final Issue closes the remaining requirement when no further withdrawal is expected."
+  reservation_source_refs: [SRC-SAP-LEARNING-IM-RESERVATIONS]
+  negative_stock_boundary:
+    reading: "Negative stock can be an intentional posting-sequence exception only when Customizing and material settings allow it. It signals that the corresponding physical receipt must be posted later and should not remain at physical inventory or balance-sheet date."
+    source_refs: [SRC-SAP-LEARNING-IM-NEGATIVE-STOCK]
+
+special_procurement_inventory:
+  principle: "Special stock is mainly an ownership and assignment model. Start by asking who owns the material and when liability or consumption is created."
+  patterns:
+    - title: "Vendor Consignment"
+      special_stock: "K"
+      ownership: "supplier"
+      valuation: "nonvaluated while in consignment stock"
+      trigger: "withdrawal or transfer to own stock creates liability"
+      key_postings: ["411 K", "MRKO settlement"]
+      source_refs: [SRC-SAP-LEARNING-IM-CONSIGNMENT]
+    - title: "Subcontracting Components"
+      special_stock: "O"
+      ownership: "your company"
+      valuation: "valuated while held at subcontractor"
+      trigger: "finished-product GR posts component consumption; later differences use subsequent adjustment"
+      key_postings: ["541", "30A", "30C"]
+      source_refs: [SRC-SAP-LEARNING-IM-SUBCONTRACTING]
+    - title: "Pipeline"
+      special_stock: "P"
+      ownership: "supplier until withdrawal"
+      valuation: "no normal warehouse stock for pipeline-only material"
+      trigger: "withdrawal creates supplier liability using pipeline info-record price"
+      key_postings: ["201", "261", "281", "291"]
+      source_refs: [SRC-SAP-LEARNING-IM-PIPELINE]
+
+material_type_inventory:
+  - title: "UNBW"
+    quantity_update: true
+    value_update: false
+    reading: "Quantity-managed nonvaluated material. Procurement requires account assignment and stock value is not updated."
+    source_refs: [SRC-SAP-LEARNING-IM-UNBW-NLAG]
+  - title: "NLAG"
+    quantity_update: false
+    value_update: false
+    reading: "Non-stock material. Procurement requires account assignment; goods receipt updates consumption and posts value to the consuming account assignment."
+    source_refs: [SRC-SAP-LEARNING-IM-UNBW-NLAG]
+
 integration_boundaries:
   - boundary: "Procurement → Inventory Management"
     ownership: "Purchasing owns the commercial order; IM records receipt, stock, valuation, and material-document state."
@@ -254,10 +384,22 @@ failure_modes:
     symptom: "Quantity exists but cannot be used by the next process."
     first_checks: ["plant", "storage location", "stock type", "special stock", "batch/status", "reservation/requirement", "EWM location where relevant"]
     avoid: "Do not use total plant stock as proof that the required quantity is usable."
+  - id: IM-FAIL-GR-BLOCKED
+    symptom: "Receipt exists, but stock, value, or invoice timing is different from what the team expected."
+    first_checks: ["101 versus 103/105 versus 107/109 design", "origin acceptance indicator", "current blocked-stock state", "PO history", "accounting document", "release or return requirement"]
+    avoid: "Do not convert blocked-stock states into normal stock with an unrelated posting just to make quantity visible."
   - id: IM-FAIL-TRANSFER-IN-TRANSIT
     symptom: "Issuing stock decreased but receiving stock is not yet usable."
     first_checks: ["one-step versus two-step design", "stock in transfer/transit", "issuing and receiving documents", "receiving location", "delivery/STO involvement if applicable"]
     avoid: "Do not post a second independent receipt before tracing the transfer chain."
+  - id: IM-FAIL-AVAILABILITY
+    symptom: "Book stock exists, but a reservation or goods issue reports shortage."
+    first_checks: ["static versus dynamic check", "checking group/rule", "planned receipts and issues", "requirement date", "replenishment lead-time horizon", "special stock and storage-location scope"]
+    avoid: "Do not treat book quantity as proof of dynamic availability."
+  - id: IM-FAIL-SPECIAL-STOCK
+    symptom: "Material is physically present, but valuation, liability, or consumption is wrong."
+    first_checks: ["special stock indicator", "ownership", "supplier/subcontractor assignment", "consignment or subcontracting info", "withdrawal/transfer event", "settlement history"]
+    avoid: "Do not move special stock into own unrestricted stock before proving the intended ownership transition."
   - id: IM-FAIL-ACCOUNT
     symptom: "Quantity is correct but G/L or cost-object posting is wrong."
     first_checks: ["movement business purpose", "valuation context", "account assignment", "automatic account determination", "material value", "accounting document"]
@@ -298,7 +440,7 @@ lead_lens:
   main_trade_off: "Direct IM postings are simple, but warehouse-managed scenarios need stronger process ownership and synchronization rather than convenient manual corrections."
   typical_failure: "Teams diagnose movement-type numbers in isolation or correct stock manually while the reference process, ownership, or warehouse state remains wrong."
   proof_of_cause: "Reconstruct before/after stock dimensions, reference object, movement semantics, material document, accounting document, and EWM state using the same timestamp and quantity."
-  integration_impact: "Inventory Management is the quantity/value junction between Procurement, Production, QM, Sales, EWM, and Finance."
+  integration_impact: "Inventory Management is the quantity/value junction between Procurement, Production, QM, Sales, EWM, Finance, special procurement, and MRP availability."
   data_impact: "Material, plant, storage location, stock type, batch, valuation type, special-stock identity, reference document, and account assignment must describe one coherent event."
   sixty_second_explanation: >-
     I do not start Inventory Management with movement-type numbers. I start with the business event and reference, then explain which stock state changes,
