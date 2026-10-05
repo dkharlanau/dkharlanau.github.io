@@ -204,8 +204,13 @@ def test_footer_is_compact_and_trust_oriented():
     assert "portal-footer__social" in text
     assert "footer-brand" in text
     assert "DzmitryiKharlanau.avif" in text
-    assert 'href="/services/"' in text
     assert 'href="/knowledge/"' in text
+    assert 'href="/lab/"' in text
+    assert 'href="/research/"' in text
+    assert 'href="/about/"' in text
+    assert 'href="/services/"' not in text
+    assert "EPAM Systems" in text
+    assert "non-commercial" in text
     assert "site.data.identity.profiles.linkedin" in text
     assert "site.data.identity.profiles.github" in text
     assert 'href="/atlas/"' not in text
