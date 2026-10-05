@@ -3,13 +3,14 @@ layout: default
 title: "SAP Integration Reliability Assessment — Ownership, Recovery, and Observability"
 description: "A problem-led SAP integration assessment for recurring IDoc, API, middleware, and replication failures that are costly to investigate and slow to recover."
 permalink: /services/sap-integration-reliability-assessment/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-10-05
 status: needs_verification
 verified: false
 robots: noindex,follow
 sitemap: false
 ---
 
+> **Reference-only page.** This personal site does not offer independent commercial services. Dzmitryi Kharlanau is a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This legacy URL is kept for technical reference and link compatibility; employer and client work remains private.
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>
