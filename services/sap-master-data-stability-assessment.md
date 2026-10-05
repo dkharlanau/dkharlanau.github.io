@@ -3,24 +3,26 @@ layout: default
 title: "SAP Master Data Stability Assessment — Ownership, Replication, and Controls"
 description: "A problem-led SAP master data assessment for duplicate records, failed business partner replication, unclear ownership, and repeated manual correction."
 permalink: /services/sap-master-data-stability-assessment/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-10-05
 status: needs_verification
 verified: false
 robots: noindex,follow
 sitemap: false
 ---
 
+<p class="focus-notice"><strong>Personal lab note:</strong> This page is a public practice playbook from my independent technical lab. It is not a commercial service, proposal, or client engagement offer. Use public or synthetic data only.</p>
+
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>
-    <li><a href="/services/">Services</a></li>
+    <li><a href="/services/">Practice playbooks</a></li>
     <li aria-current="page">Master Data Stability Assessment</li>
   </ol>
 </nav>
 
 <article class="section note-detail">
   <header class="note-header">
-    <p class="eyebrow">Diagnostic service</p>
+    <p class="eyebrow">Diagnostic playbook</p>
     <h1>SAP master data stability assessment</h1>
     <p class="note-subtitle">For teams where customer, supplier, material, or business-partner defects consume support capacity and disrupt downstream processes.</p>
   </header>
