@@ -1,11 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/main/schema/site-profile.schema.json",
   "profileVersion": "0.1",
-  "id": "dkharlanau-sap-knowledge",
-  "name": "Dzmitryi Kharlanau — SAP Learning & AMS Optimization",
+  "id": "dkharlanau-sap-ai-lab",
+  "name": "Dzmitryi Kharlanau — Personal SAP & AI Lab",
   "canonicalUrl": "https://dkharlanau.github.io/",
-  "description": "Public professional SAP site with two primary routes: practical SAP learning, interview and assessment practice for professionals; and SAP AMS optimization focused on repeat incidents, integration reliability, master-data stability, operational knowledge and bounded automation. Supporting SAP and AI material exists to strengthen those two jobs, not as separate top-level promises.",
-  "languages": ["en"],
+  "description": "Personal and independent SAP and AI technical lab with a public knowledge base, assessment practice, AI-agent experiments, enterprise engineering tools, integrations, architecture exercises, and technology tracking. Dzmitryi Kharlanau works at EPAM Systems; the site is not an official employer publication and does not offer commercial consulting services.",
+  "languages": [
+    "en"
+  ],
   "web": {
     "sitemap": "https://dkharlanau.github.io/sitemap.xml",
     "robots": "https://dkharlanau.github.io/robots.txt",
@@ -17,18 +19,18 @@
     "schemas": "https://dkharlanau.github.io/datasets/schema.json",
     "distributions": [
       {
-        "name": "Two-focus routing map",
+        "name": "Personal lab routing map",
         "url": "https://dkharlanau.github.io/ai/focus-map.json",
         "mediaType": "application/json",
         "role": "search-index",
-        "description": "Primary routing contract separating SAP learning and assessment practice from SAP AMS optimization, including current indexing and review boundaries."
+        "description": "Primary routing contract between Knowledge & Practice and the AI & Engineering Lab."
       },
       {
         "name": "Dataset manifest",
         "url": "https://dkharlanau.github.io/datasets/manifest.json",
         "mediaType": "application/json",
         "role": "catalog",
-        "description": "Public dataset manifest for the professional knowledge site."
+        "description": "Public dataset manifest for the personal technical lab."
       },
       {
         "name": "SAP Atlas compact index",
@@ -42,46 +44,25 @@
         "url": "https://dkharlanau.github.io/ai/page-knowledge-index.json",
         "mediaType": "application/json",
         "role": "search-index",
-        "description": "Machine-readable routing index connecting public pages to canonical entities and AI sidecars."
-      },
-      {
-        "name": "Canonical entity graph",
-        "url": "https://dkharlanau.github.io/ai/entity-graph.jsonld",
-        "mediaType": "application/ld+json",
-        "role": "other",
-        "description": "JSON-LD graph connecting the person, website and public machine-readable identity surfaces."
+        "description": "Page-level discovery and entity-routing index for public knowledge pages."
       },
       {
         "name": "AI Search & Citation Profile",
         "url": "https://dkharlanau.github.io/ai/ai-search-profile.json",
         "mediaType": "application/json",
         "role": "other",
-        "description": "Site-specific implementation profile for citation-ready, machine-discoverable and trust-oriented surfaces."
-      },
-      {
-        "name": "AI crawler access matrix",
-        "url": "https://dkharlanau.github.io/crawler-matrix/crawlers.json",
-        "mediaType": "application/json",
-        "role": "other",
-        "description": "Dated machine-readable representation of the site's published AI/search crawler policy."
-      },
-      {
-        "name": "Trust Center",
-        "url": "https://dkharlanau.github.io/trust/trust.json",
-        "mediaType": "application/json",
-        "role": "other",
-        "description": "Machine-readable trust, evidence, correction and security boundaries for the site."
+        "description": "Implementation profile for citation-ready, machine-discoverable, trust-oriented public surfaces."
       }
     ]
   },
   "retrieval": {
     "indexes": [
       {
-        "name": "Two-focus routing map",
+        "name": "Personal lab routing map",
         "url": "https://dkharlanau.github.io/ai/focus-map.json",
         "mediaType": "application/json",
         "format": "json",
-        "description": "Read first to classify a request as SAP learning/practice or SAP AMS optimization before entering the deeper knowledge indexes."
+        "description": "Read first to choose Knowledge & Practice or AI & Engineering Lab."
       },
       {
         "name": "SAP Atlas compact index",
@@ -95,7 +76,7 @@
         "url": "https://dkharlanau.github.io/ai/page-knowledge-index.json",
         "mediaType": "application/json",
         "format": "json",
-        "description": "Page-level discovery and entity-routing index for public knowledge pages."
+        "description": "Page-level discovery and entity-routing index."
       }
     ],
     "search": "https://dkharlanau.github.io/datasets/search/"
@@ -132,20 +113,21 @@
     "citation": "https://dkharlanau.github.io/CITATION/",
     "provenance": "https://github.com/dkharlanau/dkharlanau.github.io/commits/main",
     "reviewPolicy": "https://raw.githubusercontent.com/dkharlanau/dkharlanau.github.io/main/_data/knowledge_publication_contract.yml",
-    "security": "https://github.com/dkharlanau/dkharlanau.github.io/blob/main/SECURITY.md"
+    "security": "https://github.com/dkharlanau/dkharlanau.github.io/blob/main/SECURITY.md",
+    "terms": "https://dkharlanau.github.io/legal/terms-of-engagement/"
   },
   "extensions": {
     "io.github.dkharlanau/two-focus-routing": {
-      "version": "1.0",
+      "version": "1.1",
       "status": "active-site-routing",
       "profile": "https://dkharlanau.github.io/ai/focus-map.json",
       "primaryDirections": [
-        "sap-learning-practice",
-        "sap-ams-optimization"
+        "knowledge-practice",
+        "ai-engineering-lab"
       ],
-      "learningHumanEntry": "https://dkharlanau.github.io/learn/",
-      "amsEntry": "https://dkharlanau.github.io/services/sap-ams-consulting/",
-      "note": "The learning hub remains review-gated/noindex; the focus map declares separate indexable learning entry points until human technical review permits promotion."
+      "knowledgeEntry": "https://dkharlanau.github.io/knowledge/",
+      "labEntry": "https://dkharlanau.github.io/lab/",
+      "note": "The two routes describe a personal technical lab. They are not commercial service routes."
     },
     "io.github.dkharlanau/ai-search-profile": {
       "version": "0.1",
