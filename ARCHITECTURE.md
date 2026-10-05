@@ -11,7 +11,7 @@ The site has six top-level product areas:
 3. **Labs** — active SAP, AI, operational, interview, and assessment workspaces.
 4. **Frameworks** — reusable reasoning and execution methods.
 5. **Machine layer** — datasets, AI-readable exports, skills, tools, and MCP source packages.
-6. **Services** — consulting offers and engagement context.
+6. **Practice** — non-commercial playbooks and exercises retained under stable legacy `/services/` URLs.
 
 The global header should navigate products, not expose every content collection. Deep links belong inside their product hub.
 
@@ -21,7 +21,7 @@ Canonical product hubs:
 - `/labs/`
 - `/frameworks/`
 - `/machine/`
-- `/services/`
+- `/services/` (legacy stable practice route)
 
 Profile is reached through `/`, `/about/`, and `/cv/`.
 
@@ -191,7 +191,7 @@ Before adding a new root directory, classify the work:
 - active exploration, interview preparation, or practice → Lab;
 - reusable reasoning/execution method → Framework;
 - structured representation for tools → Machine layer;
-- commercial offer → Services;
+- problem-led practice playbook or exercise → Practice (legacy `/services/` route);
 - identity/evidence → Profile.
 
 When a topic becomes large, first deepen its domain model. Do not automatically promote it to a new top-level product. The filesystem has no shortage of folders; the reader has a finite attention span.
