@@ -80,7 +80,7 @@ last_modified_at: 2026-10-05
   "itemListElement": [
     {"@type": "ListItem","position": 1,"name": "Home","item": "https://dkharlanau.github.io/"},
     {"@type": "ListItem","position": 2,"name": "Practice playbooks","item": "https://dkharlanau.github.io/services/"},
-    {"@type": "ListItem","position": 3,"name": "Enterprise AI Pilot Design","item": "https://dkharlanau.github.io/services/enterprise-ai-pilot-design/"}
+    {"@type": "ListItem","position": 3,"name": "Enterprise AI Experiment Design","item": "https://dkharlanau.github.io/services/enterprise-ai-pilot-design/"}
   ]
 }
 </script>
