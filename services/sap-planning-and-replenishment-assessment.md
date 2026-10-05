@@ -3,13 +3,14 @@ layout: default
 title: "SAP Planning and Replenishment Assessment — Exceptions, Commitments, and Control"
 description: "A bounded SAP planning assessment for recurring shortages, expedites, overstock, and exception queues that do not lead to reliable decisions."
 permalink: /services/sap-planning-and-replenishment-assessment/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-10-05
 status: needs_verification
 verified: false
 robots: noindex,follow
 sitemap: false
 ---
 
+> **Reference-only page.** This personal site does not offer independent commercial services. Dzmitryi Kharlanau is a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This legacy URL is kept for technical reference and link compatibility; employer and client work remains private.
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>
