@@ -4,10 +4,13 @@ title: "SAP AMS Optimization — Incident Reduction and Continuous Improvement"
 description: "Improve SAP AMS with a repeat-work diagnostic, a focused reliability improvement and a measurable continuous-improvement cycle."
 permalink: /services/sap-ams-consulting/
 content_model: service
-last_modified_at: 2026-09-10
+last_modified_at: 2026-10-05
 hide_global_cta: true
+robots: noindex,follow
+sitemap: false
 ---
 
+> **Reference-only page.** This personal site does not offer independent commercial services. Dzmitryi Kharlanau is a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This legacy URL is kept for technical reference and link compatibility; employer and client work remains private.
 <link rel="stylesheet" href="{{ '/assets/site-focus.css' | relative_url }}" />
 <article class="focus-page focus-reading-wide">
   <header class="focus-intro">
