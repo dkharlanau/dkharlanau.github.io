@@ -8,14 +8,14 @@
 {% assign asset_version = site.time | date: '%s' %}
 {% assign computed_title = page.seo_title | default: page.title | default: site.title %}
 {% if page.url == '/' or page.permalink == '/' %}
-{% assign computed_title = page.title | default: 'SAP Learning & AMS Optimization | Dzmitryi Kharlanau' %}
+{% assign computed_title = page.title | default: 'SAP & AI Knowledge Base | Dzmitryi Kharlanau' %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
-{% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP AMS, Integration & Process Optimization' %}
+{% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | Senior SAP Consultant at EPAM Systems' %}
 {% elsif page.collection == 'notes' %}
 {% assign computed_title = page.title %}
 {% endif %}
 
-{% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
+{% assign default_description = 'Personal, non-commercial SAP and AI workspace by Dzmitryi Kharlanau, Senior SAP Consultant at EPAM Systems, covering knowledge, practical engineering, technology research, logistics, integration, data, and AI.' %}
 {% if page.url == '/' or page.permalink == '/' %}
 {% assign default_description = page.description | default: default_description %}
 {% elsif page.collection == 'notes' and page.description %}
@@ -23,7 +23,7 @@
 {% elsif page.collection == 'blog' and page.description %}
 {% assign default_description = page.description %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
-{% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau: SAP AMS, SAP support, integration, incident analysis, and practical AI-assisted support workflows.' %}
+{% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau, Senior SAP Consultant at EPAM Systems, covering SAP logistics, integration, MDG, AMS, enterprise engineering, and practical AI.' %}
 {% endif %}
 {% assign content_excerpt = content | strip_html | normalize_whitespace %}
 {% assign content_fallback = page.summary | default: page.excerpt | default: content_excerpt %}
@@ -63,7 +63,7 @@ normalize_whitespace %}
 <link rel="index" href="{{ '/ai/' | absolute_url }}" title="AI Routing Hub" />
 <link rel="about" href="{{ '/about/' | absolute_url }}" title="Canonical Profile" />
 <link rel="describedby" type="application/json" href="{{ '/ai/site-profile.json' | absolute_url }}" title="Agent-Ready Web Profile" />
-<link rel="describedby" type="application/json" href="{{ '/ai/focus-map.json' | absolute_url }}" title="Two-Focus Routing Map" />
+<link rel="describedby" type="application/json" href="{{ '/ai/focus-map.json' | absolute_url }}" title="Public Workspace Focus Map" />
 <link rel="describedby" type="application/json" href="{{ '/ai/ai-search-profile.json' | absolute_url }}" title="AI Search and Citation Profile" />
 <link rel="describedby" type="application/json" href="{{ '/ai/catalog.json' | absolute_url }}" title="AI Catalog" />
 <link rel="describedby" type="application/json" href="{{ '/ai/discovery-map.json' | absolute_url }}" title="AI Discovery Map" />
@@ -209,21 +209,34 @@ normalize_whitespace %}
     "@id": "https://dkharlanau.github.io/#dkharlanau"
   },
   "about": [
-    {"@type": "Thing", "name": "SAP learning and assessment practice"},
-    {"@type": "Thing", "name": "SAP AMS optimization"}
+    {"@type": "Thing", "name": "SAP knowledge base"},
+    {"@type": "Thing", "name": "Enterprise engineering practical lab"},
+    {"@type": "Thing", "name": "SAP and enterprise AI technology watch"}
   ],
   "hasPart": [
     {
       "@type": "WebPage",
-      "@id": "https://dkharlanau.github.io/learn/#learning",
-      "url": "https://dkharlanau.github.io/learn/",
-      "name": "SAP Learning & Assessment Practice"
+      "@id": "https://dkharlanau.github.io/knowledge/#knowledge",
+      "url": "https://dkharlanau.github.io/knowledge/",
+      "name": "Knowledge Base"
     },
     {
       "@type": "WebPage",
-      "@id": "https://dkharlanau.github.io/services/sap-ams-consulting/#ams-optimization",
-      "url": "https://dkharlanau.github.io/services/sap-ams-consulting/",
-      "name": "SAP AMS Optimization"
+      "@id": "https://dkharlanau.github.io/lab/#practical-lab",
+      "url": "https://dkharlanau.github.io/lab/",
+      "name": "Practical Lab"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://dkharlanau.github.io/research/#technology-watch",
+      "url": "https://dkharlanau.github.io/research/",
+      "name": "Technology Watch"
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://dkharlanau.github.io/about/#profile",
+      "url": "https://dkharlanau.github.io/about/",
+      "name": "Dzmitryi Kharlanau — Senior SAP Consultant at EPAM Systems"
     }
   ]
 }
