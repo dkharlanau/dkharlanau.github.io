@@ -2,10 +2,12 @@
   "$schema": "https://raw.githubusercontent.com/dkharlanau/agent-ready-web-profile/main/schema/site-profile.schema.json",
   "profileVersion": "0.1",
   "id": "dkharlanau-sap-knowledge",
-  "name": "Dzmitryi Kharlanau — SAP Learning & AMS Optimization",
+  "name": "Dzmitryi Kharlanau — SAP Knowledge, Practical Lab & Technology Watch",
   "canonicalUrl": "https://dkharlanau.github.io/",
-  "description": "Public professional SAP site with two primary routes: practical SAP learning, interview and assessment practice for professionals; and SAP AMS optimization focused on repeat incidents, integration reliability, master-data stability, operational knowledge and bounded automation. Supporting SAP and AI material exists to strengthen those two jobs, not as separate top-level promises.",
-  "languages": ["en"],
+  "description": "Personal, non-commercial professional SAP and AI site of Dzmitryi Kharlanau, Senior SAP Consultant at EPAM Systems. Primary public routes cover a private-work boundary, reusable knowledge, practical enterprise-engineering setups, and technology watch. Employer and client work remains private.",
+  "languages": [
+    "en"
+  ],
   "web": {
     "sitemap": "https://dkharlanau.github.io/sitemap.xml",
     "robots": "https://dkharlanau.github.io/robots.txt",
@@ -17,11 +19,11 @@
     "schemas": "https://dkharlanau.github.io/datasets/schema.json",
     "distributions": [
       {
-        "name": "Two-focus routing map",
+        "name": "Public workspace focus map",
         "url": "https://dkharlanau.github.io/ai/focus-map.json",
         "mediaType": "application/json",
         "role": "search-index",
-        "description": "Primary routing contract separating SAP learning and assessment practice from SAP AMS optimization, including current indexing and review boundaries."
+        "description": "Primary routing contract for the private boundary, Knowledge Base, Practical Setup, and Technology Watch."
       },
       {
         "name": "Dataset manifest",
@@ -77,11 +79,11 @@
   "retrieval": {
     "indexes": [
       {
-        "name": "Two-focus routing map",
+        "name": "Public workspace focus map",
         "url": "https://dkharlanau.github.io/ai/focus-map.json",
         "mediaType": "application/json",
         "format": "json",
-        "description": "Read first to classify a request as SAP learning/practice or SAP AMS optimization before entering the deeper knowledge indexes."
+        "description": "Read first to distinguish public knowledge, practical setup, technology research, and private professional context."
       },
       {
         "name": "SAP Atlas compact index",
@@ -135,18 +137,6 @@
     "security": "https://github.com/dkharlanau/dkharlanau.github.io/blob/main/SECURITY.md"
   },
   "extensions": {
-    "io.github.dkharlanau/two-focus-routing": {
-      "version": "1.0",
-      "status": "active-site-routing",
-      "profile": "https://dkharlanau.github.io/ai/focus-map.json",
-      "primaryDirections": [
-        "sap-learning-practice",
-        "sap-ams-optimization"
-      ],
-      "learningHumanEntry": "https://dkharlanau.github.io/learn/",
-      "amsEntry": "https://dkharlanau.github.io/services/sap-ams-consulting/",
-      "note": "The learning hub remains review-gated/noindex; the focus map declares separate indexable learning entry points until human technical review permits promotion."
-    },
     "io.github.dkharlanau/ai-search-profile": {
       "version": "0.1",
       "status": "active-site-profile",
@@ -171,6 +161,22 @@
       "robots": "https://dkharlanau.github.io/robots.txt",
       "human": "https://dkharlanau.github.io/legal/ai-crawler-policy/",
       "matrix": "https://dkharlanau.github.io/crawler-matrix/crawlers.json"
+    },
+    "io.github.dkharlanau/public-workspace-routing": {
+      "version": "2.0",
+      "status": "active-site-routing",
+      "profile": "https://dkharlanau.github.io/ai/focus-map.json",
+      "primaryDirections": [
+        "private-professional-boundary",
+        "knowledge-base",
+        "practical-setup",
+        "technology-watch"
+      ],
+      "knowledgeEntry": "https://dkharlanau.github.io/knowledge/",
+      "practicalEntry": "https://dkharlanau.github.io/lab/",
+      "technologyWatchEntry": "https://dkharlanau.github.io/research/",
+      "professionalBoundary": "https://dkharlanau.github.io/legal/professional-disclosure/",
+      "note": "The site is personal and non-commercial. Legacy service URLs are compatibility references only and are not active routing targets."
     }
   }
 }
