@@ -3,9 +3,12 @@ layout: default
 title: "Enterprise AI Pilot Design for ERP — Documents, Agents, Controls"
 description: "Enterprise AI pilot design for ERP and document workflows, covering architecture, controls, evaluation, integration, and safe production boundaries."
 permalink: /services/enterprise-ai-pilot-design/
-last_modified_at: 2026-08-17
+last_modified_at: 2026-10-05
+robots: noindex,follow
+sitemap: false
 ---
 
+> **Reference-only page.** This personal site does not offer independent commercial services. Dzmitryi Kharlanau is a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This legacy URL is kept for technical reference and link compatibility; employer and client work remains private.
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
