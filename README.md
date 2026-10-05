@@ -1,8 +1,8 @@
-# Dzmitryi Kharlanau — SAP Transformation, Enterprise Operations & Agentic AI
+# Dzmitryi Kharlanau — Personal SAP & AI Lab
 
-This repository powers the public professional website and knowledge base of **Dzmitryi Kharlanau**, an SAP consultant and system analyst working across SAP transformation, enterprise operations, SD/MM, MDG, integrations, data governance, AMS, and practical agentic AI.
+This repository powers the personal public technical lab and knowledge base of **Dzmitryi Kharlanau**, an SAP consultant and system analyst at **EPAM Systems** working across SAP transformation, enterprise operations, SD/MM, MDG, integrations, data governance, AMS, and practical AI.
 
-The site is designed as three things at once: a human-readable professional profile, a source-backed enterprise knowledge base, and a machine-readable discovery surface for search engines, retrieval systems, and AI agents.
+The site is designed as four things at once: a professional profile, a source-backed enterprise knowledge base, a practical lab for tools and experiments, and a machine-readable discovery surface for search engines, retrieval systems, and AI agents. It is a personal and independent project, not an EPAM Systems publication or a commercial consulting service.
 
 For repository work from ChatGPT or another coding agent, start with [AGENTS.md](AGENTS.md), then use [PROJECT_MAP.md](PROJECT_MAP.md) to route the task to the right sources and checks.
 
@@ -10,7 +10,8 @@ For repository work from ChatGPT or another coding agent, start with [AGENTS.md]
 - **Open-source products:** https://dkharlanau.github.io/products/
 - **LinkedIn:** https://www.linkedin.com/in/dkharlanau/
 - **About:** https://dkharlanau.github.io/about/
-- **Services:** https://dkharlanau.github.io/services/
+- **Practical lab:** https://dkharlanau.github.io/lab/
+- **Practice playbooks (legacy stable route):** https://dkharlanau.github.io/services/
 - **SAP / enterprise knowledge:** https://dkharlanau.github.io/atlas/
 - **Datasets:** https://dkharlanau.github.io/datasets/
 - **AI discovery:** https://dkharlanau.github.io/ai/
@@ -79,9 +80,9 @@ This is complementary to normal SEO and public web publishing. It is not present
 
 ## Why this repository exists
 
-Professional expertise increasingly needs more than a platform profile. This repository provides a canonical, citable, version-controlled source that connects **Dzmitryi Kharlanau** with concrete SAP, enterprise-operations, data-governance, and agentic-AI work.
+Professional learning increasingly needs more than a platform profile. This repository is my canonical, citable, version-controlled place for SAP knowledge, enterprise-engineering methods, AI-agent experiments, open-source tools, and technical practice.
 
-The goal is to make professional capability inspectable: architecture, research, datasets, reusable methods, and working interoperability experiments are public where they can safely be public.
+The goal is to make my learning and engineering work inspectable: architecture, research, datasets, reusable methods, tools, and interoperability experiments are public where they can safely be public.
 
 ## Supporting and earlier projects
 
@@ -90,7 +91,7 @@ The goal is to make professional capability inspectable: architecture, research,
 
 ## Trust and boundaries
 
-This is an independent personal project. It is not an official SAP, employer, or client repository.
+This is an independent personal project. I work at EPAM Systems, but this is not an official EPAM Systems, SAP, employer, or client repository, and it does not offer commercial consulting services.
 
 Only intentionally public material belongs here. Client information, internal ticket numbers, private incident data, secrets, credentials, and proprietary exports must not be committed.
 
