@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
-description: "Public profile of Dzmitryi Kharlanau: 12+ years across SAP SD, MM, logistics, MDG, integration, AMS, Automotive, Retail, and practical AI around SAP."
+description: "Public professional profile of Dzmitryi Kharlanau, SAP consultant at EPAM Systems, and the owner of this personal SAP and AI technical lab."
 permalink: /about/
-last_modified_at: 2026-08-14
+last_modified_at: 2026-10-05
 profile_page: true
 hide_global_cta: true
 ---
@@ -16,10 +16,10 @@ hide_global_cta: true
   <div class="profile-canvas__hero-copy">
     <p class="profile-canvas__eyebrow">SAP consultant profile</p>
     <h1>Dzmitryi Kharlanau</h1>
-    <p>SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work where SAP operations, transformation, and AI readiness meet: process evidence, technical diagnosis, ownership, and delivery decisions that still make sense after handover.</p>
+    <p>SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work where SAP operations, transformation, integration, data, and practical AI meet. This website is my personal technical lab and knowledge base. It is not an official EPAM Systems publication and does not represent EPAM Systems, SAP, OpenAI, or other organisations mentioned here.</p>
     <div class="profile-canvas__actions">
-      <a class="profile-canvas__button" href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener noreferrer">Discuss an SAP problem <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
-      <a class="profile-canvas__text-link" href="/services/">View services <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="profile-canvas__button" href="/lab/">Explore the lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="profile-canvas__text-link" href="/knowledge/">Open knowledge base <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </div>
   <div class="profile-canvas__portrait"><img src="/assets/img/DzmitryiKharlanau.webp" alt="Dzmitryi Kharlanau" width="720" height="720" fetchpriority="high" /><span aria-hidden="true"></span></div>
@@ -100,7 +100,7 @@ hide_global_cta: true
     <header class="section-heading"><p class="eyebrow">Evidence routes</p><h2>How to examine the positioning</h2></header>
     <div class="decision-table"><table><thead><tr><th>Question</th><th>Public evidence</th></tr></thead><tbody>
       <tr><td>What roles and domains are on record?</td><td><a href="/cv/">CV</a> and the canonical <a href="/ai/resume.yml">resume dataset</a>.</td></tr>
-      <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/services/">Service entry points</a>, <a href="/scenarios/">business scenarios</a>, and the <a href="/atlas/">Knowledge Atlas</a>.</td></tr>
+      <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/lab/">Executable lab tools</a>, <a href="/scenarios/">business scenarios</a>, and the <a href="/atlas/">Knowledge Atlas</a>.</td></tr>
       <tr><td>What has been published publicly?</td><td><a href="/publications/">Publications</a> and <a href="/datasets/">datasets</a>.</td></tr>
       <tr><td>Which credentials are linkable?</td><td><a href="/education/">Education and credentials</a> and the public profile audit.</td></tr>
     </tbody></table></div>
