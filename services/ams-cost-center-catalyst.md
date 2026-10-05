@@ -3,9 +3,12 @@ layout: default
 title: "AMS Cost Center or Catalyst — SAP AMS Analysis Questions"
 description: "A structured SAP AMS analysis page with questions for SLA quality, repeat incidents, integrations, side-by-side AI, change throughput, and TCO reduction."
 permalink: /services/ams-cost-center-catalyst/
-last_modified_at: 2026-04-24
+last_modified_at: 2026-10-05
+robots: noindex,follow
+sitemap: false
 ---
 
+> **Reference-only page.** This personal site does not offer independent commercial services. Dzmitryi Kharlanau is a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This legacy URL is kept for technical reference and link compatibility; employer and client work remains private.
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
