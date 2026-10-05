@@ -20,21 +20,27 @@ def frontmatter(path):
     return yaml.safe_load(text.split("---", 2)[1])
 
 
-def test_home_routes_to_two_jobs_without_replacing_the_brand():
+def test_home_routes_to_four_public_jobs_with_private_boundary():
     home = read("_includes/sections/home-focus.html")
     assert frontmatter("index.md")["sections"] == ["home-focus"]
-    assert len(re.findall(r'class="focus-card(?:\s|\")', home)) == 2
-    assert "'/learn/' | relative_url" in home
-    assert "'/services/sap-ams-consulting/' | relative_url" in home
+    assert len(re.findall(r'class="focus-card(?:\s|\")', home)) == 4
+    assert "'/legal/professional-disclosure/' | relative_url" in home
+    assert "'/knowledge/' | relative_url" in home
+    assert "'/lab/' | relative_url" in home
+    assert "'/research/' | relative_url" in home
+    assert "EPAM Systems" in home
+    assert "no independent commercial services" in home
     assert home.count("<h1 ") == 1
     assert 'role="search"' in home and "'/search/' | relative_url" in home and 'name="q"' in home
     header = read("_includes/header.html")
     assert "/assets/img/logo-d.svg" in header
     assert "page_locale" not in header
     assert "portal_nav." not in header
-    assert "'/learn/' | relative_url" in header
     assert "'/knowledge/' | relative_url" in header
+    assert "'/lab/' | relative_url" in header
+    assert "'/research/' | relative_url" in header
     assert 'href="/about/"' in header
+    assert "/services/" not in header
     assert "data-site-header" in header and 'aria-controls="site-navigation"' in header
 
 
@@ -95,34 +101,27 @@ def test_pilot_has_five_attempt_review_cycles_and_no_new_data_collection():
     assert ".focus-diagnostic-sheet" in css
 
 
-def test_service_schema_matches_visible_bounded_offer_and_example():
+def test_legacy_service_route_is_noindex_and_reference_only():
     path = "services/sap-ams-consulting.md"
     text = read(path)
-    assert frontmatter(path)["permalink"] == "/services/sap-ams-consulting/"
-    assert frontmatter(path)["content_model"] == "service"
-    documents = [json.loads(block) for block in re.findall(
-        r'<script type="application/ld\+json">\s*(.*?)\s*</script>', text, re.S
-    )]
-    service = next(item for item in documents if item["@type"] == "Service")
-    assert service["url"].endswith(frontmatter(path)["permalink"])
-    assert service["name"] == "SAP AMS optimization"
-    assert "offers" not in service and "aggregateRating" not in service
-    assert "not a replacement" in text
-    assert "Released team capacity and cash savings are different outcomes" in text
-    assert 'id="diagnostic-example"' in text
-    assert "Illustrative diagnostic output" in text
-    assert "synthetic example" in text
-    assert "not customer evidence" in text
-    assert "Do not make mass replay the default action" in text
+    fm = frontmatter(path)
+    assert fm["permalink"] == "/services/sap-ams-consulting/"
+    assert fm["robots"] == "noindex,follow"
+    assert fm["sitemap"] is False
+    assert "Reference-only page." in text
+    assert "does not offer independent commercial services" in text
+    assert "Senior SAP Consultant at [EPAM Systems]" in text
 
 
-def test_strategy_retains_source_product_and_production_boundaries():
+def test_strategy_defines_noncommercial_four_route_model():
     strategy = read("docs/two-focus-product-strategy.md")
     assert "English entry points only" in strategy
-    assert "not a seventh independent knowledge base" in strategy
-    assert "five synthetic cases" in strategy
+    assert "Private boundary" in strategy
+    assert "Knowledge Base" in strategy
+    assert "Practical Setup" in strategy
+    assert "Technology Watch" in strategy
+    assert "Senior SAP Consultant at EPAM Systems" in strategy
     assert "No checkout" in strategy
-    assert "Do not dispatch Repository State Sync" in strategy
-    assert "#329" in strategy and "#331" in strategy and "#380" in strategy
-    assert "never manufacture review status" in strategy
-    assert "training case is never customer evidence" in strategy
+    assert "no independent commercial services" in strategy.lower()
+    assert "legacy service pages are noindex" in strategy.lower()
+
