@@ -1,37 +1,41 @@
 ---
 layout: default
 title: "Professional Disclosure"
-description: "Professional disclosure for Dzmitryi Kharlanau — employment with EPAM Systems, certifications, independence policy, and contact channels for reference checks."
+description: "Professional disclosure for Dzmitryi Kharlanau: current employment at EPAM Systems and the independence boundary of this personal SAP and AI lab."
 permalink: /legal/professional-disclosure/
-last_modified_at: 2026-04-19
+last_modified_at: 2026-10-05
 ---
 
 # Professional Disclosure
 
 ## Employment
 
-- I am employed as a System Analyst and Senior SAP Order-to-Cash Consultant at [EPAM Systems](https://www.epam.com).
-- When an engagement is contracted through [EPAM Systems](https://www.epam.com), the company’s governance, compliance, and security frameworks apply.
-- Independent collaborations are scoped transparently so there is no conflict with [EPAM Systems](https://www.epam.com) responsibilities.
+I work at [EPAM Systems](https://www.epam.com) as an SAP consultant and system analyst. My current employer is shown on this site as professional identity context.
 
-## Affiliations and certifications
+This website is my personal project. It is not an EPAM Systems website, publication, service channel, or statement of company policy.
 
-- SAP certified across S/4HANA Sales, Service, and integration tracks.
-- Active member of [EPAM Systems](https://www.epam.com)’ SAP community of practice and architecture review forums.
-- Participant in AI and observability working groups focused on enterprise SAP landscapes.
+## Site scope
 
-## Independence and conflict management
+The site contains my personal learning notes, public technical analysis, SAP and enterprise knowledge, AI-agent experiments, reusable methods, open-source tools, and assessment practice.
 
-- I disclose potential conflicts of interest before agreeing to new work and will decline opportunities that overlap with current client engagements or [EPAM Systems](https://www.epam.com) policies.
-- Technology recommendations are based on programme fit, not commercial incentives. I do not accept referral fees or vendor commissions.
+It does not offer commercial consulting or independent client delivery.
 
-## Communication channels
+## Affiliations
 
-- Use LinkedIn for business enquiries, partnership discussions, or reference checks.
-- For [EPAM Systems](https://www.epam.com) clients, official communication should flow through your account manager or the EPAM project workspace.
+References to SAP, EPAM Systems, OpenAI, Microsoft, Google, Anthropic, AWS, and other organisations do not imply that this site is endorsed by or officially affiliated with those organisations.
 
-## Contact
+Where official documentation or public sources are used, the source should be checked directly for current product behaviour and policy.
+
+## Confidentiality
+
+I do not intentionally publish client names, private project material, internal incidents, proprietary configuration, credentials, or confidential system data.
+
+Public examples should use synthetic, public, or safely anonymised information.
+
+## Communication
+
+Use the public profile links for professional networking, reference checks, and technical discussion.
 
 - LinkedIn: [linkedin.com/in/dkharlanau](https://www.linkedin.com/in/dkharlanau)
-- [EPAM Systems](https://www.epam.com) (corporate): [epam.com](https://www.epam.com)
-- Canonical profile page: [/about/](/about/)
+- GitHub: [github.com/dkharlanau](https://github.com/dkharlanau)
+- Canonical profile: [/about/](/about/)
