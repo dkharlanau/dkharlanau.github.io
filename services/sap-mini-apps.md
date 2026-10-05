@@ -3,18 +3,20 @@ layout: default
 title: "SAP Mini Apps and Automation Tools — Fast Prototypes for O2C and Integration"
 description: "SAP mini apps and automation tools for IDoc retries, BP validation, cutover simulation, reconciliation, and operational dashboards."
 permalink: /services/sap-mini-apps/
-last_modified_at: 2026-04-19
+last_modified_at: 2026-10-05
 ---
+
+<p class="focus-notice"><strong>Personal lab note:</strong> This page is a public practice playbook from my independent technical lab. It is not a commercial service, proposal, or client engagement offer. Use public or synthetic data only.</p>
 
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
-      <p class="eyebrow">Service</p>
+      <p class="eyebrow">Practice playbook</p>
       <h1>SAP mini apps and automation tools for narrow, high-value pain points</h1>
       <p class="note-subtitle">Build lightweight tools that remove repetitive manual work without starting a heavyweight programme.</p>
     </header>
     <div class="note-body">
-      <p>The service builds small utilities and edge apps for teams that need fast operational relief: safer retries, easier diagnostics, lightweight reconciliation, or a better operator workflow than a fragile spreadsheet plus transaction code routine.</p>
+      <p>This playbook explores small utilities and edge apps for cases that need safer retries, easier diagnostics, lightweight reconciliation, or a better operator workflow: safer retries, easier diagnostics, lightweight reconciliation, or a better operator workflow than a fragile spreadsheet plus transaction code routine.</p>
 
       <h2>Examples</h2>
       <ul>
@@ -31,25 +33,12 @@ last_modified_at: 2026-04-19
       </ul>
 
       <h2>Related pages</h2>
-      <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/datasets/agentic-bytes/">Agentic datasets</a> · <a href="/ai/practical-ai-for-sap-support/">AI routing page</a> · <a href="/notes/tools-mini-apps/">Mini apps and prototypes</a> · <a href="/search/">Search</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS practice</a> · <a href="/datasets/agentic-bytes/">Agentic datasets</a> · <a href="/ai/practical-ai-for-sap-support/">AI routing page</a> · <a href="/notes/tools-mini-apps/">Mini apps and prototypes</a> · <a href="/search/">Search</a></p>
     </div>
   </article>
 </section>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "SAP mini apps and automation tools",
-  "provider": {
-    "@type": "Person",
-    "@id": "https://dkharlanau.github.io/#dkharlanau"
-  },
-  "serviceType": "SAP automation tools",
-  "url": "https://dkharlanau.github.io/services/sap-mini-apps/",
-  "description": "SAP mini apps and automation tools for IDoc retries, BP validation, cutover simulation, reconciliation, and operational dashboards."
-}
-</script>
+
 
 <script type="application/ld+json">
 {
@@ -57,7 +46,7 @@ last_modified_at: 2026-04-19
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem","position": 1,"name": "Home","item": "https://dkharlanau.github.io/"},
-    {"@type": "ListItem","position": 2,"name": "Services","item": "https://dkharlanau.github.io/services/"},
+    {"@type": "ListItem","position": 2,"name": "Practice playbooks","item": "https://dkharlanau.github.io/services/"},
     {"@type": "ListItem","position": 3,"name": "SAP mini apps and automation tools","item": "https://dkharlanau.github.io/services/sap-mini-apps/"}
   ]
 }
