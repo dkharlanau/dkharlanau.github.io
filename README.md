@@ -1,8 +1,8 @@
-# Dzmitryi Kharlanau — SAP Transformation, Enterprise Operations & Agentic AI
+# Dzmitryi Kharlanau — SAP Knowledge, Enterprise Engineering & Practical AI
 
-This repository powers the public professional website and knowledge base of **Dzmitryi Kharlanau**, an SAP consultant and system analyst working across SAP transformation, enterprise operations, SD/MM, MDG, integrations, data governance, AMS, and practical agentic AI.
+This repository powers the personal, non-commercial professional website and knowledge system of **Dzmitryi Kharlanau**, a Senior SAP Consultant at **EPAM Systems**, working across SAP logistics, integration, MDG, AMS, enterprise engineering, and practical AI.
 
-The site is designed as three things at once: a human-readable professional profile, a source-backed enterprise knowledge base, and a machine-readable discovery surface for search engines, retrieval systems, and AI agents.
+The site is designed as a public professional profile, a source-backed knowledge base, a practical engineering lab, a technology watch, and a machine-readable discovery surface. Employer and client work remains private, and no independent commercial services are offered through the site.
 
 For repository work from ChatGPT or another coding agent, start with [AGENTS.md](AGENTS.md), then use [PROJECT_MAP.md](PROJECT_MAP.md) to route the task to the right sources and checks.
 
@@ -10,8 +10,9 @@ For repository work from ChatGPT or another coding agent, start with [AGENTS.md]
 - **Open-source products:** https://dkharlanau.github.io/products/
 - **LinkedIn:** https://www.linkedin.com/in/dkharlanau/
 - **About:** https://dkharlanau.github.io/about/
-- **Services:** https://dkharlanau.github.io/services/
-- **SAP / enterprise knowledge:** https://dkharlanau.github.io/atlas/
+- **Knowledge base:** https://dkharlanau.github.io/knowledge/
+- **Practical Lab:** https://dkharlanau.github.io/lab/
+- **Technology Watch:** https://dkharlanau.github.io/research/
 - **Datasets:** https://dkharlanau.github.io/datasets/
 - **AI discovery:** https://dkharlanau.github.io/ai/
 - **llms.txt:** https://dkharlanau.github.io/llms.txt
