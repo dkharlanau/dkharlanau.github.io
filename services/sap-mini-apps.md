@@ -3,9 +3,12 @@ layout: default
 title: "SAP Mini Apps and Automation Tools — Fast Prototypes for O2C and Integration"
 description: "SAP mini apps and automation tools for IDoc retries, BP validation, cutover simulation, reconciliation, and operational dashboards."
 permalink: /services/sap-mini-apps/
-last_modified_at: 2026-04-19
+last_modified_at: 2026-10-05
+robots: noindex,follow
+sitemap: false
 ---
 
+> **Reference-only page.** This personal site does not offer independent commercial services. Dzmitryi Kharlanau is a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This legacy URL is kept for technical reference and link compatibility; employer and client work remains private.
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
