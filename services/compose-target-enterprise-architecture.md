@@ -3,9 +3,12 @@ layout: default
 title: "Compose Target Enterprise Architecture from Business Context"
 description: "Compose a reviewable target architecture from explicit business scope, constraints and current systems. Inspect rule traces, unknowns and delivery handoffs."
 permalink: /services/compose-target-enterprise-architecture/
-last_modified_at: 2026-09-08
+last_modified_at: 2026-10-05
+robots: noindex,follow
+sitemap: false
 ---
 
+> **Reference-only page.** This personal site does not offer independent commercial services. Dzmitryi Kharlanau is a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This legacy URL is kept for technical reference and link compatibility; employer and client work remains private.
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
