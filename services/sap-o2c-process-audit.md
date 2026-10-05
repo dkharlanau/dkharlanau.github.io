@@ -35,7 +35,7 @@ last_modified_at: 2026-10-05
         <li>Custom enhancements, BAdIs, wrappers, manual workarounds, and cross-process dependencies affecting O2C throughput.</li>
       </ul>
 
-      <h2>Deliverable preview</h2>
+      <h2>Practice output preview</h2>
       <div class="decision-table"><table><thead><tr><th>Output</th><th>What it answers</th></tr></thead><tbody>
         <tr><td>O2C breakpoint map</td><td>Where the order, delivery, billing, or return path loses control and which dependency is involved.</td></tr>
         <tr><td>Evidence pack</td><td>Which document state, master-data condition, log, configuration fact, or interface event supports the finding.</td></tr>
@@ -56,7 +56,7 @@ last_modified_at: 2026-10-05
       <p>AI can summarize incident patterns, group similar blocker descriptions, and prepare evidence for a functional reviewer. It should not autonomously release blocked orders, override credit decisions, or alter pricing and billing logic. Those actions need deterministic checks and accountable approval.</p>
 
       <h2>Dependencies and boundaries</h2>
-      <p>A useful practice exercise uses representative, sanitized examples and identifies the roles that own the commercial process, operational execution, SAP configuration, master data, and connected interfaces. It does not replace period-end controls, formal change approval, or system-specific SAP documentation. The immediate deliverable is a prioritised decision model and remediation backlog; any configuration or production change remains subject to the relevant organisation’s governance.</p>
+      <p>A useful practice exercise uses representative, sanitized examples and identifies the roles that own the commercial process, operational execution, SAP configuration, master data, and connected interfaces. It does not replace period-end controls, formal change approval, or system-specific SAP documentation. The immediate practice output is a prioritised decision model and remediation backlog; any configuration or production change remains subject to the relevant organisation’s governance.</p>
 
       <h2>Related pages</h2>
       <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS practice</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/ai/integration-reliability/">Integration reliability route</a> · <a href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">SAP SD order-to-cash diagnostics hub</a> · <a href="/scenarios/delivery-billing-block-order-to-cash-delays/">Delivery and billing block scenario</a> · <a href="/notes/process-audit/">Process audit playbook</a> · <a href="/cv/">CV</a></p>
