@@ -85,7 +85,7 @@ last_modified_at: 2026-10-05
   "itemListElement": [
     {"@type": "ListItem","position": 1,"name": "Home","item": "https://dkharlanau.github.io/"},
     {"@type": "ListItem","position": 2,"name": "Practice playbooks","item": "https://dkharlanau.github.io/services/"},
-    {"@type": "ListItem","position": 3,"name": "SAP integration architecture consulting","item": "https://dkharlanau.github.io/services/sap-integration-architecture/"}
+    {"@type": "ListItem","position": 3,"name": "SAP integration architecture practice","item": "https://dkharlanau.github.io/services/sap-integration-architecture/"}
   ]
 }
 </script>
