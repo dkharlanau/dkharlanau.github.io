@@ -1,20 +1,22 @@
 ---
 layout: default
 title: "SAP AI and ML Enablement — Sidecar AI Around Clean-Core S/4HANA"
-description: "SAP AI and ML enablement for sidecar services, retrieval, forecasting, risk scoring, and governance around clean-core S/4HANA."
+description: "Personal SAP AI and ML practice playbook for sidecar patterns, retrieval, forecasting, risk scoring, and governance around clean-core S/4HANA."
 permalink: /services/sap-ai-ml-enablement/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-10-05
 ---
+
+<p class="focus-notice"><strong>Personal lab note:</strong> This page is a public practice playbook from my independent technical lab. It is not a commercial service, proposal, or client engagement offer. Use public or synthetic data only.</p>
 
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
-      <p class="eyebrow">Service</p>
+      <p class="eyebrow">Practice playbook</p>
       <h1>SAP AI and ML enablement without breaking deterministic ERP</h1>
       <p class="note-subtitle">Use probabilistic services at the edge while the transactional core stays predictable and auditable.</p>
     </header>
     <div class="note-body">
-      <p>This service is for teams that want demand forecasts, risk scoring, retrieval workflows, or operator copilots around SAP, but do not want to push uncertain logic into the ERP core. The work defines the sidecar pattern, data flows, controls, and implementation boundaries.</p>
+      <p>This playbook explores cases where teams want demand forecasts, risk scoring, retrieval workflows, or operator copilots around SAP, but do not want to push uncertain logic into the ERP core. The work defines the sidecar pattern, data flows, controls, and implementation boundaries.</p>
 
       <h2>Start with the decision, not the model</h2>
       <p>A workable AI use case begins with a decision that is currently slow, inconsistent, or dependent on scattered information. It then asks what evidence the reviewer needs, what a good recommendation looks like, what the tool must never do, and how a wrong output will be detected. This is a more useful starting point than selecting a model or building a polished demo.</p>
@@ -33,7 +35,7 @@ last_modified_at: 2026-07-25
         <li>Retrieval and recommendation flows for operators working across SAP and external systems.</li>
       </ul>
 
-      <h2>What the engagement covers</h2>
+      <h2>What the practice exercise covers</h2>
       <ul>
         <li>Side-by-side architecture for models, prompts, vector retrieval, and feature views.</li>
         <li>Governance for audit trail, retention, security, and explainability.</li>
@@ -69,25 +71,12 @@ last_modified_at: 2026-07-25
       <p><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-based automation versus AI</a> · <a href="/atlas/automation/sap-planning-exception-automation/">SAP planning exception automation</a> · <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent for SAP support</a> · <a href="/atlas/sap/evaluation-guardrails/">Evaluation guardrails</a> · <a href="/scenarios/ai-ready-support-knowledge-layer-sap-ams/">AI-ready support knowledge scenario</a></p>
 
       <h2>Related pages</h2>
-      <p><a href="/about/">Profile</a> · <a href="/ai/practical-ai-for-sap-support/">AI routing page</a> · <a href="/legal/responsible-ai/">Responsible AI</a> · <a href="/notes/ai-ml/">AI and ML around SAP</a> · <a href="/services/sap-integration-architecture/">Integration architecture consulting</a> · <a href="/faq/">FAQ</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/ai/practical-ai-for-sap-support/">AI routing page</a> · <a href="/legal/responsible-ai/">Responsible AI</a> · <a href="/notes/ai-ml/">AI and ML around SAP</a> · <a href="/services/sap-integration-architecture/">Integration architecture practice</a> · <a href="/faq/">FAQ</a></p>
     </div>
   </article>
 </section>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "SAP AI and ML enablement",
-  "provider": {
-    "@type": "Person",
-    "@id": "https://dkharlanau.github.io/#dkharlanau"
-  },
-  "serviceType": "SAP AI and ML enablement",
-  "url": "https://dkharlanau.github.io/services/sap-ai-ml-enablement/",
-  "description": "SAP AI and ML enablement for sidecar services, retrieval, forecasting, risk scoring, and governance around clean-core S/4HANA."
-}
-</script>
+
 
 <script type="application/ld+json">
 {
@@ -95,7 +84,7 @@ last_modified_at: 2026-07-25
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem","position": 1,"name": "Home","item": "https://dkharlanau.github.io/"},
-    {"@type": "ListItem","position": 2,"name": "Services","item": "https://dkharlanau.github.io/services/"},
+    {"@type": "ListItem","position": 2,"name": "Practice playbooks","item": "https://dkharlanau.github.io/services/"},
     {"@type": "ListItem","position": 3,"name": "SAP AI and ML enablement","item": "https://dkharlanau.github.io/services/sap-ai-ml-enablement/"}
   ]
 }
