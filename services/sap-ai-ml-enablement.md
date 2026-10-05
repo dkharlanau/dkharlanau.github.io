@@ -3,9 +3,12 @@ layout: default
 title: "SAP AI and ML Enablement — Sidecar AI Around Clean-Core S/4HANA"
 description: "SAP AI and ML enablement for sidecar services, retrieval, forecasting, risk scoring, and governance around clean-core S/4HANA."
 permalink: /services/sap-ai-ml-enablement/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-10-05
+robots: noindex,follow
+sitemap: false
 ---
 
+> **Reference-only page.** This personal site does not offer independent commercial services. Dzmitryi Kharlanau is a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This legacy URL is kept for technical reference and link compatibility; employer and client work remains private.
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
