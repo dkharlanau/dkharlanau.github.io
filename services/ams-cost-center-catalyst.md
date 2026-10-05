@@ -1,10 +1,12 @@
 ---
 layout: default
-title: "AMS Cost Center or Catalyst — SAP AMS Analysis Questions"
+title: "AMS Cost Center or Catalyst — Personal SAP AMS Analysis"
 description: "A structured SAP AMS analysis page with questions for SLA quality, repeat incidents, integrations, side-by-side AI, change throughput, and TCO reduction."
 permalink: /services/ams-cost-center-catalyst/
-last_modified_at: 2026-04-24
+last_modified_at: 2026-10-05
 ---
+
+<p class="focus-notice"><strong>Personal lab note:</strong> This page is a public practice playbook from my independent technical lab. It is not a commercial service, proposal, or client engagement offer. Use public or synthetic data only.</p>
 
 <section class="section note-detail">
   <article class="note-article neub-card">
@@ -77,25 +79,12 @@ last_modified_at: 2026-04-24
       </ul>
 
       <h2>Related pages</h2>
-      <p><a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/services/sap-o2c-process-audit/">SAP transformation friction audit</a> · <a href="/services/sap-ai-ml-enablement/">Side-by-side AI and automation</a> · <a href="/ai/integration-reliability/">Integration reliability</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/notes/ams/">AMS playbook</a></p>
+      <p><a href="/services/sap-ams-consulting/">SAP AMS practice</a> · <a href="/services/sap-o2c-process-audit/">SAP O2C diagnostic practice</a> · <a href="/services/sap-ai-ml-enablement/">Side-by-side AI and automation</a> · <a href="/ai/integration-reliability/">Integration reliability</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/notes/ams/">AMS playbook</a></p>
     </div>
   </article>
 </section>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "SAP AMS cost center or catalyst analysis",
-  "provider": {
-    "@type": "Person",
-    "@id": "https://dkharlanau.github.io/#dkharlanau"
-  },
-  "serviceType": "SAP AMS analysis",
-  "url": "https://dkharlanau.github.io/services/ams-cost-center-catalyst/",
-  "description": "Structured SAP AMS analysis for SLA quality, repeat incidents, integration reliability, side-by-side AI readiness, change throughput, and TCO reduction."
-}
-</script>
+
 
 <script type="application/ld+json">
 {
@@ -103,7 +92,7 @@ last_modified_at: 2026-04-24
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem","position": 1,"name": "Home","item": "https://dkharlanau.github.io/"},
-    {"@type": "ListItem","position": 2,"name": "Services","item": "https://dkharlanau.github.io/services/"},
+    {"@type": "ListItem","position": 2,"name": "Practice playbooks","item": "https://dkharlanau.github.io/services/"},
     {"@type": "ListItem","position": 3,"name": "AMS cost center or catalyst analysis","item": "https://dkharlanau.github.io/services/ams-cost-center-catalyst/"}
   ]
 }
