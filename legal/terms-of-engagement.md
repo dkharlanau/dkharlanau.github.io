@@ -1,54 +1,41 @@
 ---
 layout: default
-title: "Terms of Engagement"
-description: "Baseline terms for SAP consulting with Dzmitryi Kharlanau: scope control, delivery cadence, billing, IP ownership, confidentiality, and governing law expectations."
+title: "Site Independence and Use"
+description: "Independence and usage notes for Dzmitryi Kharlanau's personal SAP and AI lab."
 permalink: /legal/terms-of-engagement/
+last_modified_at: 2026-10-05
 ---
 
-# Terms of Engagement
+# Site Independence and Use
 
-As a System Analyst and Senior SAP consultant at [EPAM Systems](https://www.epam.com), these terms outline how I structure SAP consulting collaborations. When a project is executed through [EPAM Systems](https://www.epam.com), the EPAM master services agreement or statement of work takes precedence.
+This website is my personal technical lab, public knowledge base, and professional learning space.
 
-## Scope and deliverables
+I work at [EPAM Systems](https://www.epam.com). That employment is part of my public professional profile, but this website is not an official EPAM Systems publication and does not represent the views, services, commitments, or offers of EPAM Systems.
 
-- Each engagement is governed by a written statement of work or proposal that defines objectives, deliverables, timelines, and acceptance criteria.
-- Changes to scope, timeline, or budget require written approval from both parties.
-- Prototype or advisory artefacts produced during discovery are not production-ready unless explicitly stated.
+## No commercial service offer
 
-## Fees and invoicing
+This website does not offer commercial consulting, contracting, implementation, advisory, or managed services.
 
-- Pricing may be time-and-materials, milestone-based, or fixed-fee depending on the agreed model.
-- Invoices are issued according to the payment schedule in the statement of work and are payable within 30 calendar days unless otherwise specified.
-- Expenses are billable only when pre-approved and supported by receipts.
+Pages under older `/services/` URLs are kept for link stability. They are practice playbooks, analysis patterns, architecture exercises, and technical experiments. They are not proposals, statements of work, prices, or promises of delivery.
 
-## Collaboration commitments
+## Independent technical content
 
-- You will designate a primary stakeholder empowered to review deliverables and provide timely feedback.
-- I will provide weekly progress updates, risk logs, and backlog visibility to avoid surprises.
-- Decisions that affect programme risk or compliance will be recorded in shared documentation.
+References to SAP, OpenAI, Microsoft, Google, Anthropic, AWS, and other companies describe technologies, public sources, or products used in analysis. They do not imply endorsement, partnership, or official affiliation.
 
-## Intellectual property
+SAP-related content is independent learning and engineering material. It is not official SAP documentation.
 
-- Final deliverables, documentation, and code created specifically for your engagement become your property upon full payment, subject to any third-party licensing terms.
-- Reusable accelerators, frameworks, or methodologies developed prior to the engagement remain my intellectual property or [EPAM Systems](https://www.epam.com)’ property, while you retain a non-exclusive licence to use them within the agreed solution.
+## Public and synthetic data
 
-## Confidentiality
+Do not send or publish client data, credentials, internal tickets, proprietary configuration, private documents, or confidential system exports through this site.
 
-- Both parties must protect confidential information shared during the engagement and use it only for project purposes.
-- Confidentiality obligations survive the conclusion of the engagement.
+Examples should use public, synthetic, or safely anonymised information.
 
-## Non-solicitation
+## Production decisions
 
-- Neither party will solicit or hire the other’s personnel who are involved in the engagement for a period of 12 months after project completion, unless mutually agreed.
+The material can support learning, analysis, and design discussion. It does not replace system-specific validation, security review, change approval, legal review, or accountable production ownership.
 
-## Liability
+Any configuration, integration, automation, AI, or architecture decision must be validated in the relevant environment.
 
-- Liability is limited to direct damages up to the total fees paid for the applicable engagement, and excludes indirect or consequential losses.
-- For EPAM-led engagements, liability terms defined in the EPAM contract apply.
+## Contact
 
-## Governing law
-
-- Unless otherwise agreed, engagements delivered directly by me are governed by the laws of the European Union member state where services are rendered.
-- [EPAM Systems](https://www.epam.com) engagements follow the governing law stipulated in the EPAM contract.
-
-For contract-specific questions or to request customised terms, contact me at [LinkedIn](https://www.linkedin.com/in/dkharlanau) or reach out through your [EPAM Systems](https://www.epam.com) account director.
+LinkedIn and GitHub links are provided for professional identity, networking, and public technical discussion. They are not a service-ordering channel.
