@@ -435,7 +435,7 @@ MARKDOWN_CLUSTER_LABELS = {
     "atlas": "Knowledge Atlas",
     "skill-hub": "Skill Hub",
     "datasets": "Datasets and reusable evidence",
-    "services": "Consulting services",
+    "services": "Practice playbooks",
     "scenarios": "Business scenarios",
     "research": "Research and comparisons",
     "blog": "Blog and Journal",
@@ -707,7 +707,7 @@ EXPERT_DOMAIN_META = {
         "service_url": "/services/sap-integration-reliability-assessment/",
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
-        "cta_copy": "Dzmitryi Kharlanau provides focused architecture reviews, incident diagnostics, monitoring design, and improvement planning for SAP integration landscapes.",
+        "cta_copy": "Related personal-lab material covers integration ownership, incident diagnostics, monitoring, recovery, and verification.",
     },
     "sap-master-data": {
         "expertise": ["SAP master data", "Business Partner and MDG", "customer and supplier replication"],
@@ -715,7 +715,7 @@ EXPERT_DOMAIN_META = {
         "service_url": "/services/sap-master-data-stability-assessment/",
         "cta_variant": "master-data-replication",
         "cta_heading": "Working on a related SAP master-data problem?",
-        "cta_copy": "Dzmitryi Kharlanau provides focused master-data replication analysis, governance reviews, and practical stabilization planning for SAP landscapes.",
+        "cta_copy": "Related personal-lab material covers master-data replication, governance, ownership, controls, and diagnostic practice.",
     },
     "sap-ams": {
         "expertise": ["SAP AMS operations", "incident diagnostics", "operational knowledge"],
@@ -723,7 +723,7 @@ EXPERT_DOMAIN_META = {
         "service_url": "/services/sap-ams-consulting/",
         "cta_variant": "ams-improvement",
         "cta_heading": "Working on a related SAP AMS problem?",
-        "cta_copy": "Dzmitryi Kharlanau helps SAP AMS teams reduce recurring incidents, clarify ownership, strengthen diagnostics, and plan safe operating-model improvements.",
+        "cta_copy": "Related personal-lab material covers recurring incidents, ownership, diagnostics, operational knowledge, and improvement hypotheses.",
     },
     "ai-sap-operations": {
         "expertise": ["controlled AI-assisted SAP support", "operational knowledge systems", "human-review boundaries"],
@@ -731,7 +731,7 @@ EXPERT_DOMAIN_META = {
         "service_url": "/services/sap-ai-ml-enablement/",
         "cta_variant": "ai-readiness",
         "cta_heading": "Working on a related SAP AI problem?",
-        "cta_copy": "Dzmitryi Kharlanau provides AI-readiness reviews for SAP operations, with attention to evidence, authorization boundaries, evaluation, and human review.",
+        "cta_copy": "Related personal-lab material covers AI evidence, authorization boundaries, evaluation, and human review around SAP operations.",
     },
     "sap-architecture": {
         "expertise": ["SAP architecture", "integration boundaries", "extension and transformation decisions"],
@@ -739,7 +739,7 @@ EXPERT_DOMAIN_META = {
         "service_url": "/services/sap-integration-architecture/",
         "cta_variant": "architecture-review",
         "cta_heading": "Working on a related SAP architecture problem?",
-        "cta_copy": "Dzmitryi Kharlanau provides focused architecture reviews, boundary decisions, and practical transformation planning for SAP landscapes.",
+        "cta_copy": "Related personal-lab material covers architecture boundaries, decision trade-offs, clean-core choices, and transformation practice.",
     },
     "sap-process-operations": {
         "expertise": ["SAP SD/MM process diagnostics", "logistics operations", "document-flow analysis"],
@@ -747,7 +747,7 @@ EXPERT_DOMAIN_META = {
         "service_url": "/services/sap-o2c-process-audit/",
         "cta_variant": "diagnostic-review",
         "cta_heading": "Working on a related SAP process problem?",
-        "cta_copy": "Dzmitryi Kharlanau provides focused process diagnostics, document-flow reviews, and improvement planning for SAP SD/MM and logistics operations.",
+        "cta_copy": "Related personal-lab material covers SAP SD/MM diagnostics, document flow, logistics decisions, and practice scenarios.",
     },
     "enterprise-operations": {
         "expertise": ["enterprise analysis", "delivery control", "AI-assisted work documentation"],
@@ -755,7 +755,7 @@ EXPERT_DOMAIN_META = {
         "service_url": "/services/sap-ams-consulting/",
         "cta_variant": "focused-implementation",
         "cta_heading": "Working on a related delivery problem?",
-        "cta_copy": "Dzmitryi Kharlanau provides practical analysis, documentation, review, and implementation support for enterprise delivery work around SAP.",
+        "cta_copy": "Related personal-lab material covers enterprise analysis, documentation, delivery controls, and AI-assisted working methods.",
     },
 }
 
@@ -870,8 +870,8 @@ def expert_context_markdown(fm, rel_path, all_pages, body=""):
         "LinkedIn: https://www.linkedin.com/in/dkharlanau/",
         "",
         expert.get("cta_heading", "WORKING ON A RELATED SAP PROBLEM?").upper(),
-        expert.get("cta_copy", "Dzmitryi Kharlanau provides focused diagnostics, architecture reviews, improvement planning, and practical implementation support."),
-        f"Related service: {canonical_url(expert.get('service_url', ''))}",
+        expert.get("cta_copy", "Related personal-lab material provides diagnostics, architecture exercises, decision practice, and public evidence."),
+        f"Related practice: {canonical_url(expert.get('service_url', ''))}",
     ]
     evidence_urls = expert.get("evidence_urls") or []
     if evidence_urls:
@@ -1147,7 +1147,7 @@ def generate_expert_artifacts(all_pages, check_mode=False):
             "label": domain.replace("-", " ").title(),
             "can_help_with": meta["problems"],
             "evidence": sorted(evidence_by_domain.get(domain, []), key=lambda item: item["canonical_url"]),
-            "services": [canonical_url(meta["service_url"])],
+            "practice_routes": [canonical_url(meta["service_url"])],
         })
     inventory = {
         "schema": "dkharlanau.expert_promotion_inventory",
