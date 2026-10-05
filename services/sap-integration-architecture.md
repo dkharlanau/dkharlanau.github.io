@@ -1,16 +1,18 @@
 ---
 layout: default
-title: "SAP Integration Architecture Consulting — APIs, Events, and Clean-Core Boundaries"
-description: "SAP integration architecture consulting for APIs, events, IDoc, OData, Integration Suite, and clean-core boundaries across S/4HANA landscapes."
+title: "SAP Integration Architecture Practice — APIs, Events, and Clean-Core Boundaries"
+description: "Personal SAP integration architecture practice for APIs, events, IDoc, OData, Integration Suite, and clean-core boundaries."
 permalink: /services/sap-integration-architecture/
-last_modified_at: 2026-08-14
+last_modified_at: 2026-10-05
 ---
+
+<p class="focus-notice"><strong>Personal lab note:</strong> This page is a public practice playbook from my independent technical lab. It is not a commercial service, proposal, or client engagement offer. Use public or synthetic data only.</p>
 
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
-      <p class="eyebrow">Service</p>
-      <h1>SAP integration architecture consulting for stable and portable landscapes</h1>
+      <p class="eyebrow">Practice playbook</p>
+      <h1>SAP integration architecture practice for stable and portable landscapes</h1>
       <p class="note-subtitle">Design contracts and boundaries that let S/4HANA stay stable while the edge keeps evolving.</p>
     </header>
     <div class="note-body">
@@ -74,20 +76,7 @@ last_modified_at: 2026-08-14
   </article>
 </section>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "SAP integration architecture consulting",
-  "provider": {
-    "@type": "Person",
-    "@id": "https://dkharlanau.github.io/#dkharlanau"
-  },
-  "serviceType": "SAP integration architecture consulting",
-  "url": "https://dkharlanau.github.io/services/sap-integration-architecture/",
-  "description": "SAP integration architecture consulting for APIs, events, Integration Suite, IDoc, OData, and clean-core boundaries."
-}
-</script>
+
 
 <script type="application/ld+json">
 {
@@ -95,7 +84,7 @@ last_modified_at: 2026-08-14
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem","position": 1,"name": "Home","item": "https://dkharlanau.github.io/"},
-    {"@type": "ListItem","position": 2,"name": "Services","item": "https://dkharlanau.github.io/services/"},
+    {"@type": "ListItem","position": 2,"name": "Practice playbooks","item": "https://dkharlanau.github.io/services/"},
     {"@type": "ListItem","position": 3,"name": "SAP integration architecture consulting","item": "https://dkharlanau.github.io/services/sap-integration-architecture/"}
   ]
 }
