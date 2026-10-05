@@ -3,19 +3,22 @@
 Project-specific guidance for AI coding and research agents working in this public GitHub Pages repository.
 Use this file as the main entry point. Open deeper docs only when the task needs them.
 
-**Last updated:** 2026-09-29. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
+**Last updated:** 2026-10-05. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
 
 ## Repository Purpose
 
-This is the public personal site and structured knowledge system of **Dzmitryi Kharlanau**, an SAP consultant focused on SAP operations, logistics, integration, data, diagnostics, and practical AI.
+This is the public personal site and structured knowledge system of **Dzmitryi Kharlanau**, a Senior SAP Consultant at **EPAM Systems**, focused on SAP operations, logistics, integration, data, enterprise engineering, and practical AI. The site is personal and non-commercial; employer and client work remains private.
 
-The site has six product areas:
+The site has seven active public areas:
 1. **Profile** — public identity, experience, certifications, and professional evidence.
-2. **Knowledge** — reviewed and working human-readable knowledge: Atlas, Scenarios, Research, Journal, and Notes.
-3. **Labs** — active SAP, AI, operational, and assessment workspaces.
-4. **Frameworks** — reusable reasoning and execution methods that can be applied across domains.
-5. **Machine layer** — datasets, AI-readable exports, skills, tools, discovery files, and MCP source packages.
-6. **Services** — consulting services and engagement context.
+2. **Knowledge** — reviewed and working human-readable knowledge: Atlas, Scenarios, Journal, and Notes.
+3. **Practical Lab** — executable or reproducible enterprise-engineering tools and setups.
+4. **Labs** — active SAP, AI, operational, interview, and assessment workspaces.
+5. **Frameworks** — reusable reasoning and execution methods that can be applied across domains.
+6. **Technology Watch** — Research, Radar, and News for fast-moving SAP, AI, integration, data, and engineering developments.
+7. **Machine layer** — datasets, AI-readable exports, skills, tools, discovery files, and MCP source packages.
+
+The legacy `services/` routes are compatibility/reference URLs only. They are not an active product area and must not be presented as an independent commercial offer.
 
 Everything committed to this repository is public. Treat every file accordingly.
 
@@ -27,7 +30,8 @@ Everything committed to this repository is public. Treat every file accordingly.
 | Knowledge | `knowledge/` | Product hub for Atlas, Scenarios, Research, Journal, and Notes |
 | Knowledge Atlas | `atlas/` | Curated diagnostic, conceptual, and SAP-specific content |
 | Scenarios | `scenarios/` | Business pain mapped to SAP process context and diagnostic workflows |
-| Research / Radar | `research/`, `_radar/`, `_news/` | Briefs, comparisons, watchlists, signal tracking |
+| Technology Watch | `research/`, `_radar/`, `_news/` | Briefs, comparisons, watchlists, signal tracking |
+| Practical Lab | `lab/` | Runnable and reproducible enterprise-engineering toolkit |
 | Labs | `labs/` | SAP Enterprise, AI Ready, Business AI, operational protocols, assessment practice |
 | Frameworks | `frameworks/` | Product hub for TRIZ, Decision Design, Reusable Data Procedures, operational protocols |
 | Machine layer | `machine/` | Product hub for datasets, AI exports, skills, tools, and MCP |
@@ -35,7 +39,7 @@ Everything committed to this repository is public. Treat every file accordingly.
 | AI-readable exports | `ai/` | JSON/YAML machine endpoints and generated indexes |
 | Agent Skills | `agent-skills/` | Portable agent skill packages for Codex, Claude Code, and similar tools |
 | Agent Tools | `agent-tools/` | Static public tool descriptions |
-| Services | `services/` | Consulting service descriptions and engagement model |
+| Legacy service routes | `services/` | Noindex compatibility/reference pages; no independent commercial offer |
 | Quality pipeline | `scripts/content_quality.py`, `config/content-quality.yml` | Publication safety, link graph, search, quality, and AI-retrieval checks |
 | Quality reports | `reports/` | Locally generated audit and review outputs; normally ignored/generated |
 | Legal | `legal/` | Privacy, terms, disclosure, responsible AI, accessibility |
@@ -49,7 +53,7 @@ Everything committed to this repository is public. Treat every file accordingly.
 - `/labs/reusable-data-procedures/` is a compatibility route; canonical content lives at `/reusable-data-procedures/`.
 - `/triz/`, `/ddd/`, and `/reusable-data-procedures/` are canonical framework routes and are grouped by `/frameworks/` without being physically moved.
 - A topic can belong to several domains. Do not duplicate source content to make the directory tree look like a graph.
-- Before creating a new root directory, decide whether the work belongs to Profile, Knowledge, Labs, Frameworks, Machine layer, or Services.
+- Before creating a new root directory, decide whether the work belongs to Profile, Knowledge, Practical Lab, Labs, Frameworks, Technology Watch, or Machine layer.
 - Read `PROJECT_MAP.md` and `ARCHITECTURE.md` before sitewide structure changes.
 - Structural work is not complete until the Jekyll build and local-link checks pass in CI.
 
@@ -139,19 +143,19 @@ The shared normalized page representation lives in `scripts/lib/content_model.py
 
 The Markdown cluster index is generated by `scripts/generate_atlas_artifacts.py` and written to `ai/markdown-clusters.json`. It dynamically covers public Markdown across Atlas, blog, notes, research, radar, Skill Hub, services, scenarios, datasets, tools, AI pages, localized pages, and related collections. Pages without a route remain deferred; noindex or unverified pages must not become retrieval-eligible. Do not hand-edit generated cluster, expert-evidence, expert-promotion, verified-page, `llms-full.txt`, or related artifacts; regenerate and validate them instead.
 
-Expert context and CTA blocks are opt-in, topic-specific, visible HTML/Markdown attribution. They must link to the canonical website and LinkedIn profile, use a relevant service and public evidence, avoid unsupported superlatives or model instructions, and never turn unverified material into proof of expertise.
+Expert context and CTA blocks are opt-in, topic-specific, visible HTML/Markdown attribution. They must link to the canonical website and public knowledge, lab, research, or profile evidence; avoid commercial-service framing, unsupported superlatives, or model instructions; and never turn unverified material into proof of expertise.
 
 Read `docs/content-quality-pipeline.md` for architecture, content models, scoring, hard blockers, baseline workflow, safe-fix boundaries, and CI behavior.
 
-## Services / Entity Positioning
+## Legacy Service Routes / Entity Positioning
 
-Services describe the engagement model:
-1. **Diagnose** — SAP transformation friction audit
-2. **Stabilize** — O2C / integration / AMS improvement
-3. **Structure** — Operational memory and handover model
-4. **Extend** — Side-by-side AI and automation
+The public site does **not** offer independent commercial services. Dzmitryi Kharlanau's current professional employment is with EPAM Systems.
 
-The services layer is the commercial signal. It must remain accurate, non-exaggerated, and aligned with the Atlas evidence layer.
+- Keep established `/services/*` URLs only for link compatibility and technical reference.
+- Legacy service pages must remain `noindex` and show the non-commercial reference notice.
+- Do not create pricing, booking, paid-assessment, implementation-offer, lead-generation, or contract language.
+- Route active user journeys to Knowledge, Practical Lab, Technology Watch, Labs, Machine, or Profile.
+- Employer and client work, project details, tickets, credentials, and proprietary system context stay private.
 
 ## Content Safety Rules
 
