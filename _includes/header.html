@@ -1,7 +1,9 @@
-{% assign learn_nav_active = false %}
-{% if page.url contains '/learn/' or page.url contains '/labs/' %}{% assign learn_nav_active = true %}{% endif %}
 {% assign knowledge_nav_active = false %}
-{% if page.url contains '/knowledge/' or page.url contains '/atlas/' or page.url contains '/scenarios/' or page.url contains '/research/' or page.url contains '/blog/' or page.url contains '/notes/' or page.url contains '/radar/' or page.url contains '/news/' or page.url contains '/glossary/' or page.url contains '/faq/' or page.url contains '/frameworks/' or page.url contains '/machine/' or page.url contains '/datasets/' or page.url contains '/agent-' or page.url contains '/mcp/' %}{% assign knowledge_nav_active = true %}{% endif %}
+{% if page.url contains '/knowledge/' or page.url contains '/atlas/' or page.url contains '/scenarios/' or page.url contains '/blog/' or page.url contains '/notes/' or page.url contains '/glossary/' or page.url contains '/faq/' %}{% assign knowledge_nav_active = true %}{% endif %}
+{% assign lab_nav_active = false %}
+{% if page.url contains '/lab/' or page.url contains '/labs/' or page.url contains '/frameworks/' or page.url contains '/machine/' or page.url contains '/datasets/' or page.url contains '/agent-' or page.url contains '/mcp/' %}{% assign lab_nav_active = true %}{% endif %}
+{% assign watch_nav_active = false %}
+{% if page.url contains '/research/' or page.url contains '/radar/' or page.url contains '/news/' %}{% assign watch_nav_active = true %}{% endif %}
 {% assign profile_nav_active = false %}
 {% if page.url contains '/about/' or page.url contains '/cv/' or page.url contains '/certifications/' or page.url contains '/education/' or page.url contains '/publications/' %}{% assign profile_nav_active = true %}{% endif %}
 <header class="site-header" data-site-header>
@@ -15,8 +17,9 @@
     </button>
     <nav class="site-nav" aria-label="Primary navigation">
       <div class="nav-links" id="site-navigation">
-        <a href="{{ '/learn/' | relative_url }}" class="nav-link{% if learn_nav_active %} is-active{% endif %}"{% if page.url == '/learn/' %} aria-current="page"{% endif %}>Learn</a>
-        <a href="{{ '/knowledge/' | relative_url }}" class="nav-link{% if knowledge_nav_active %} is-active{% endif %}"{% if page.url == '/knowledge/' %} aria-current="page"{% endif %}>Library</a>
+        <a href="{{ '/knowledge/' | relative_url }}" class="nav-link{% if knowledge_nav_active %} is-active{% endif %}"{% if page.url == '/knowledge/' %} aria-current="page"{% endif %}>Knowledge</a>
+        <a href="{{ '/lab/' | relative_url }}" class="nav-link{% if lab_nav_active %} is-active{% endif %}"{% if page.url == '/lab/' %} aria-current="page"{% endif %}>Practical Lab</a>
+        <a href="{{ '/research/' | relative_url }}" class="nav-link{% if watch_nav_active %} is-active{% endif %}"{% if page.url == '/research/' %} aria-current="page"{% endif %}>Technology Watch</a>
         <a href="/about/" class="nav-link{% if profile_nav_active %} is-active{% endif %}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
         <a href="/search/" class="nav-link nav-link--utility{% if page.url == '/search/' %} is-active{% endif %}" aria-label="Search"{% if page.url == '/search/' %} aria-current="page"{% endif %}>
           <span class="material-symbols-outlined" aria-hidden="true">search</span><span class="nav-link__search-label">Search</span>
