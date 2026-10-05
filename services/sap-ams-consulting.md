@@ -74,7 +74,7 @@ hide_global_cta: true
   <section class="focus-section" id="diagnostic-example" aria-labelledby="ams-example-title">
     <p class="eyebrow">Illustrative diagnostic output</p>
     <h2 id="ams-example-title">What a useful diagnostic result looks like.</h2>
-    <p class="focus-notice">This is a synthetic example created to show the shape of the deliverable. It is not customer evidence, a testimonial or a claim that these findings exist in a specific landscape.</p>
+    <p class="focus-notice">This is a synthetic example created to show the shape of the practice output. It is not customer evidence, a testimonial or a claim that these findings exist in a specific landscape.</p>
     <p><strong>Illustrative situation:</strong> an SAP team repeatedly receives Business Partner replication tickets where message transport is often green but the target business state is disputed. Operators spend time collecting evidence across system boundaries and are tempted to replay before exception classes are understood.</p>
     <div class="focus-diagnostic-sheet" aria-label="Synthetic AMS diagnostic example">
       <div class="focus-diagnostic-sheet__head">
@@ -115,14 +115,14 @@ hide_global_cta: true
   <section class="focus-section" aria-labelledby="ams-ai-title">
     <h2 id="ams-ai-title">AI assists the work. It does not own production.</h2>
     <p>Possible bounded tasks include grouping incident descriptions, preparing an evidence checklist and retrieving relevant runbooks. Outputs need evaluation against representative cases and accountable review. Monitoring access does not imply permission to change data, replay messages or close business exceptions.</p>
-    <p>Use existing monitoring and automation capabilities where they fit. SAP Cloud ALM provides operations capabilities, and SAP Automation Pilot supports automation for SAP BTP. Actual product coverage, entitlements, integration effort and operational authority must be checked for the customer's landscape; this service does not claim to replace those products.</p>
+    <p>Use existing monitoring and automation capabilities where they fit. SAP Cloud ALM provides operations capabilities, and SAP Automation Pilot supports automation for SAP BTP. Actual product coverage, entitlements, integration effort and operational authority must be checked for the customer's landscape; this playbook does not claim to replace those products.</p>
     <p><a href="https://support.sap.com/en/alm/sap-cloud-alm/operations/expert-portal/calm-apis-for-operations.html">SAP Cloud ALM operations APIs</a> · <a href="https://www.sap.com/products/technology-platform/automation-pilot.html">SAP Automation Pilot</a></p>
   </section>
 
   <section class="focus-section" aria-labelledby="ams-proof-title">
     <h2 id="ams-proof-title">Inspect the method before discussing the work.</h2>
     <p><a href="{{ '/atlas/diagnostics/sap-incident-triage-diagnostics/' | relative_url }}">Incident triage diagnostics</a> · <a href="{{ '/atlas/automation/operational-memory-for-sap-ams/' | relative_url }}">Operational-memory reference</a> · <a href="{{ '/learn/packs/bp-mdg-replication/' | relative_url }}">Synthetic BP replication practice pack</a> · <a href="{{ '/about/' | relative_url }}">Professional background</a></p>
-    <p>The learning pack and diagnostic sample demonstrate reasoning and deliverable structure. Neither is customer outcome evidence. No customer savings figure, testimonial or production-validation claim is inferred from either public example.</p>
+    <p>The learning pack and diagnostic sample demonstrate reasoning and practice-output structure. Neither is customer outcome evidence. No customer savings figure, testimonial or production-validation claim is inferred from either public example.</p>
   </section>
 
   <section class="focus-section" aria-labelledby="ams-start-title">
