@@ -5,7 +5,7 @@ Last updated: 2026-08-18.
 
 ## Product Architecture
 
-The public repository has many physical directories, but the site is organised around six product areas. Do not mirror every directory in the global navigation.
+The public repository has many physical directories, but the site is organised around six product areas. The sixth area is a non-commercial practice layer kept on legacy URLs. Do not mirror every directory in the global navigation.
 
 | Product area | Primary route | Purpose |
 |---|---|---|
@@ -14,7 +14,7 @@ The public repository has many physical directories, but the site is organised a
 | Labs | `/labs/` | Active workspaces for SAP Enterprise, AI architecture, Business AI, operational protocols, interview readiness, and assessment practice |
 | Frameworks | `/frameworks/` | Reusable methods: TRIZ Digital, Decision Design, Reusable Data Procedures, operational protocols |
 | Machine layer | `/machine/` | Technical map for datasets, AI-readable exports, skills, tools, and MCP packages |
-| Services | `/services/` | Consulting services and commercial signal |
+| Practice | `/services/` | Legacy stable routes for problem-led playbooks and exercises; not a commercial signal |
 
 The global navigation should stay product-level. Deep domain navigation belongs inside the relevant product.
 
@@ -107,10 +107,10 @@ Frameworks must remain reusable across SAP, AI, data, and general digital-system
 | Discovery | `.well-known/` | Machine discovery and agent skill manifests |
 | Search | `search/` | Human search surface |
 
-## Services and Profile
+## Practice and Profile
 
-- `services/` contains consulting service descriptions.
-- `about.md`, `cv/`, `certifications.md`, `education.md`, and `publications.md` form the public profile layer.
+- `services/` keeps stable historical URLs but now contains personal practice playbooks, diagnostics, and technical exercises. It is not a commercial service catalogue.
+- `about.md`, `cv/`, `certifications.md`, `education.md`, and `publications.md` form the public profile layer. Current employment at EPAM Systems is identity context; the site remains personal and independent.
 - Localised home/profile routes live under `de/`, `fr/`, `es/`, `it/`, `nl/`, `pl/`, `pt-br/`, `ar/`, and `zh-cn/`.
 
 ## Platform and Build Directories
