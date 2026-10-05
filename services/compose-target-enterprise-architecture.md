@@ -3,13 +3,15 @@ layout: default
 title: "Compose Target Enterprise Architecture from Business Context"
 description: "Compose a reviewable target architecture from explicit business scope, constraints and current systems. Inspect rule traces, unknowns and delivery handoffs."
 permalink: /services/compose-target-enterprise-architecture/
-last_modified_at: 2026-09-08
+last_modified_at: 2026-10-05
 ---
+
+<p class="focus-notice"><strong>Personal lab note:</strong> This page is a public practice playbook from my independent technical lab. It is not a commercial service, proposal, or client engagement offer. Use public or synthetic data only.</p>
 
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
-      <p class="eyebrow">Public architecture product</p>
+      <p class="eyebrow">Public architecture exercise</p>
       <h1>Compose a target enterprise architecture from explicit business context</h1>
       <p class="note-subtitle">Business scope in. Explainable responsibilities, integration choices, migration steps, trust boundaries, and delivery work out.</p>
     </header>
@@ -70,7 +72,7 @@ last_modified_at: 2026-09-08
       <h2>Where this fits in my work</h2>
       <p>This project is part of a wider architecture-as-code direction: make enterprise decisions explicit, testable, reviewable in Git, and easier to hand from architecture into delivery without hiding uncertainty behind presentation layers.</p>
 
-      <p><a href="/services/sap-integration-architecture/">SAP integration architecture</a> · <a href="/services/enterprise-ai-pilot-design/">Enterprise AI pilot design</a> · <a href="/about/">Professional profile</a></p>
+      <p><a href="/services/sap-integration-architecture/">SAP integration architecture practice</a> · <a href="/services/enterprise-ai-pilot-design/">Enterprise AI experiment design</a> · <a href="/about/">Professional profile</a></p>
     </div>
   </article>
 </section>
@@ -99,7 +101,7 @@ last_modified_at: 2026-09-08
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dkharlanau.github.io/"},
-    {"@type": "ListItem", "position": 2, "name": "Services", "item": "https://dkharlanau.github.io/services/"},
+    {"@type": "ListItem", "position": 2, "name": "Practice playbooks", "item": "https://dkharlanau.github.io/services/"},
     {"@type": "ListItem", "position": 3, "name": "Compose Target Enterprise Architecture", "item": "https://dkharlanau.github.io/services/compose-target-enterprise-architecture/"}
   ]
 }
