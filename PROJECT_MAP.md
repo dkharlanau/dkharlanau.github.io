@@ -1,26 +1,27 @@
 # PROJECT_MAP.md
 
 Compact map of `dkharlanau.github.io`.
-Last updated: 2026-08-18.
+Last updated: 2026-10-05.
 
 ## Product Architecture
 
-The public repository has many physical directories, but the site is organised around six product areas. Do not mirror every directory in the global navigation.
+The public repository has many physical directories, but the site is organised around seven active public areas. Do not mirror every directory in the global navigation.
 
 | Product area | Primary route | Purpose |
 |---|---|---|
 | Profile | `/`, `/about/`, `/cv/` | Identity, experience, certifications, public profile |
-| Knowledge | `/knowledge/` | Human knowledge entry point for Atlas, Scenarios, Research, Journal, and Notes |
+| Knowledge | `/knowledge/` | Human knowledge entry point for Atlas, Scenarios, Journal, Notes, and durable reference material |
+| Practical Lab | `/lab/` | Runnable and reproducible enterprise-engineering tools and setups |
 | Labs | `/labs/` | Active workspaces for SAP Enterprise, AI architecture, Business AI, operational protocols, interview readiness, and assessment practice |
 | Frameworks | `/frameworks/` | Reusable methods: TRIZ Digital, Decision Design, Reusable Data Procedures, operational protocols |
+| Technology Watch | `/research/` | Research, Radar, and News for fast-moving SAP, AI, integration, data, and engineering developments |
 | Machine layer | `/machine/` | Technical map for datasets, AI-readable exports, skills, tools, and MCP packages |
-| Services | `/services/` | Consulting services and commercial signal |
 
 The global navigation should stay product-level. Deep domain navigation belongs inside the relevant product.
 
 ### Decision Lab foundation
 
-The six product areas are connected by the canonical [SAP Enterprise & Business AI Decision Lab thesis](docs/decision-lab-product-thesis.md). Its north-star chain links a business problem to process, decision, evidence, architecture/control, outcome, and a reusable Lead recommendation.
+The active public areas are connected by the canonical [SAP Enterprise & Business AI Decision Lab thesis](docs/decision-lab-product-thesis.md). Its north-star chain links a business problem to process, decision, evidence, architecture/control, outcome, and a reusable Lead recommendation.
 
 Business AI graph and data work must use `_data/labs/business_ai/contract.yml`, explained in [`docs/business-ai-data-contract.md`](docs/business-ai-data-contract.md). New graph artifacts, analytics, and agent context are views over this contract, not new sources of truth.
 
@@ -107,11 +108,11 @@ Frameworks must remain reusable across SAP, AI, data, and general digital-system
 | Discovery | `.well-known/` | Machine discovery and agent skill manifests |
 | Search | `search/` | Human search surface |
 
-## Services and Profile
+## Legacy Routes and Profile
 
-- `services/` contains consulting service descriptions.
+- `services/` contains legacy noindex reference URLs only; it is not an active commercial product.
 - `about.md`, `cv/`, `certifications.md`, `education.md`, and `publications.md` form the public profile layer.
-- Localised home/profile routes live under `de/`, `fr/`, `es/`, `it/`, `nl/`, `pl/`, `pt-br/`, `ar/`, and `zh-cn/`.
+- The public site uses English entry points. Do not reintroduce localized home/profile trees unless explicitly requested.
 
 ## Platform and Build Directories
 
