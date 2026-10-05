@@ -1,37 +1,35 @@
 ---
 layout: default
-title: "Professional Disclosure"
-description: "Professional disclosure for Dzmitryi Kharlanau — employment with EPAM Systems, certifications, independence policy, and contact channels for reference checks."
+title: "Professional Boundary"
+description: "Professional boundary for Dzmitryi Kharlanau: current employment with EPAM Systems, personal non-commercial publication, privacy, and independence of public technical notes."
 permalink: /legal/professional-disclosure/
-last_modified_at: 2026-04-19
+last_modified_at: 2026-10-05
 ---
 
-# Professional Disclosure
+# Professional Boundary
 
-## Employment
+I am a Senior SAP Consultant at [EPAM Systems](https://www.epam.com). This website is a personal, non-commercial professional workspace. It is not an independent consulting business, agency, or commercial service channel.
 
-- I am employed as a System Analyst and Senior SAP Order-to-Cash Consultant at [EPAM Systems](https://www.epam.com).
-- When an engagement is contracted through [EPAM Systems](https://www.epam.com), the company’s governance, compliance, and security frameworks apply.
-- Independent collaborations are scoped transparently so there is no conflict with [EPAM Systems](https://www.epam.com) responsibilities.
+## Employment and client work
 
-## Affiliations and certifications
+My employer and client work is private. Client names, project details, tickets, credentials, proprietary system information, internal documents, and confidential operating context are not published here. Professional delivery performed as part of my employment follows the relevant EPAM Systems governance, contractual, security, and compliance processes.
 
-- SAP certified across S/4HANA Sales, Service, and integration tracks.
-- Active member of [EPAM Systems](https://www.epam.com)’ SAP community of practice and architecture review forums.
-- Participant in AI and observability working groups focused on enterprise SAP landscapes.
+## What this site contains
 
-## Independence and conflict management
+The public site contains reusable knowledge, technical notes, learning material, practical engineering setups, open-source tools, synthetic examples, and technology research. These materials are published for learning, experimentation, professional development, and public technical discussion.
 
-- I disclose potential conflicts of interest before agreeing to new work and will decline opportunities that overlap with current client engagements or [EPAM Systems](https://www.epam.com) policies.
-- Technology recommendations are based on programme fit, not commercial incentives. I do not accept referral fees or vendor commissions.
+## What this site does not offer
 
-## Communication channels
+No independent commercial consulting services, paid assessments, implementation engagements, or client delivery are offered or contracted through this site. A public page, tool, diagnostic pattern, or architecture example should not be interpreted as an offer to perform paid work.
 
-- Use LinkedIn for business enquiries, partnership discussions, or reference checks.
-- For [EPAM Systems](https://www.epam.com) clients, official communication should flow through your account manager or the EPAM project workspace.
+## Independence of the public material
+
+The views and materials published here are personal unless a page explicitly states otherwise. They do not represent an official position of EPAM Systems, SAP, a client, or another employer or vendor. Technology references are based on technical fit and public evidence; this site does not accept referral fees or vendor commissions.
 
 ## Contact
 
+For professional profile and reference context, use [LinkedIn](https://www.linkedin.com/in/dkharlanau). For EPAM-related business matters, use official EPAM Systems channels.
+
 - LinkedIn: [linkedin.com/in/dkharlanau](https://www.linkedin.com/in/dkharlanau)
-- [EPAM Systems](https://www.epam.com) (corporate): [epam.com](https://www.epam.com)
-- Canonical profile page: [/about/](/about/)
+- EPAM Systems: [epam.com](https://www.epam.com)
+- Canonical profile: [/about/](/about/)
