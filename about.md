@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
-description: "Public profile of Dzmitryi Kharlanau: 12+ years across SAP SD, MM, logistics, MDG, integration, AMS, Automotive, Retail, and practical AI around SAP."
+title: "About Dzmitryi Kharlanau — Senior SAP Consultant at EPAM Systems"
+description: "Public profile of Dzmitryi Kharlanau, Senior SAP Consultant at EPAM Systems: SAP logistics, integration, MDG, AMS, enterprise engineering, and practical AI."
 permalink: /about/
 last_modified_at: 2026-08-14
 profile_page: true
@@ -16,10 +16,11 @@ hide_global_cta: true
   <div class="profile-canvas__hero-copy">
     <p class="profile-canvas__eyebrow">SAP consultant profile</p>
     <h1>Dzmitryi Kharlanau</h1>
-    <p>SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work where SAP operations, transformation, and AI readiness meet: process evidence, technical diagnosis, ownership, and delivery decisions that still make sense after handover.</p>
+    <p>Senior SAP Consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work where SAP operations, transformation, integration, knowledge systems, and practical AI meet.</p>
+    <p>This is a personal, non-commercial site. Employer and client work stays private; the public material is for learning, reusable knowledge, practical engineering, and technology research.</p>
     <div class="profile-canvas__actions">
-      <a class="profile-canvas__button" href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener noreferrer">Discuss an SAP problem <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
-      <a class="profile-canvas__text-link" href="/services/">View services <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="profile-canvas__button" href="/cv/">View public CV <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="profile-canvas__text-link" href="/knowledge/">Open knowledge base <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </div>
   <div class="profile-canvas__portrait"><img src="/assets/img/DzmitryiKharlanau.webp" alt="Dzmitryi Kharlanau" width="720" height="720" fetchpriority="high" /><span aria-hidden="true"></span></div>
@@ -50,7 +51,7 @@ hide_global_cta: true
       <div class="process-rail__step"><strong>3. Separate evidence from assumption</strong><span>Distinguish confirmed facts, missing evidence, and landscape-specific decisions.</span></div>
       <div class="process-rail__step"><strong>4. Leave a reusable artefact</strong><span>Turn the result into an owner decision, runbook, backlog item, or control.</span></div>
     </div>
-    <div class="prose"><p>I avoid fixes that only improve the appearance of control: green SLAs while the same incidents recur, dashboards without an accountable recovery path, AI pilots without a usable knowledge layer, or clean-core work that merely moves unowned complexity elsewhere. I want the result to be a bounded change with an owner, evidence, and a recovery path.</p></div>
+    <div class="prose"><p>I avoid fixes that only improve the appearance of control: green SLAs while the same incidents recur, dashboards without an accountable recovery path, AI workflows without a usable knowledge layer, or clean-core work that merely moves unowned complexity elsewhere. I want the result to be a bounded change with an owner, evidence, and a recovery path.</p></div>
   </div>
 </section>
 
@@ -100,7 +101,7 @@ hide_global_cta: true
     <header class="section-heading"><p class="eyebrow">Evidence routes</p><h2>How to examine the positioning</h2></header>
     <div class="decision-table"><table><thead><tr><th>Question</th><th>Public evidence</th></tr></thead><tbody>
       <tr><td>What roles and domains are on record?</td><td><a href="/cv/">CV</a> and the canonical <a href="/ai/resume.yml">resume dataset</a>.</td></tr>
-      <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/services/">Service entry points</a>, <a href="/scenarios/">business scenarios</a>, and the <a href="/atlas/">Knowledge Atlas</a>.</td></tr>
+      <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/lab/">Practical Lab</a>, <a href="/scenarios/">business scenarios</a>, and the <a href="/atlas/">Knowledge Atlas</a>.</td></tr>
       <tr><td>What has been published publicly?</td><td><a href="/publications/">Publications</a> and <a href="/datasets/">datasets</a>.</td></tr>
       <tr><td>Which credentials are linkable?</td><td><a href="/education/">Education and credentials</a> and the public profile audit.</td></tr>
     </tbody></table></div>
