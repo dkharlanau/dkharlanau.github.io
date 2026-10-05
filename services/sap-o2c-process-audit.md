@@ -1,15 +1,17 @@
 ---
 layout: default
-title: "SAP O2C Process Audit — Diagnose Revenue Leakage and Delivery Breakpoints"
-description: "SAP O2C process audit for blocked orders, billing backlog, credit issues, integration failures, and clean-core remediation priorities."
+title: "SAP O2C Diagnostic Practice — Delivery, Billing, and Control Breakpoints"
+description: "Personal SAP O2C diagnostic practice for blocked orders, billing backlog, credit issues, integration failures, and clean-core remediation priorities."
 permalink: /services/sap-o2c-process-audit/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-10-05
 ---
+
+<p class="focus-notice"><strong>Personal lab note:</strong> This page is a public practice playbook from my independent technical lab. It is not a commercial service, proposal, or client engagement offer. Use public or synthetic data only.</p>
 
 <section class="section note-detail">
   <article class="note-article neub-card">
     <header class="note-header">
-      <p class="eyebrow">Service</p>
+      <p class="eyebrow">Practice playbook</p>
       <h1>SAP O2C process audit for blocked revenue and unstable fulfilment</h1>
       <p class="note-subtitle">Trace where order-to-cash breaks, quantify impact, and prioritise the fixes that matter.</p>
     </header>
@@ -54,28 +56,15 @@ last_modified_at: 2026-07-25
       <p>AI can summarize incident patterns, group similar blocker descriptions, and prepare evidence for a functional reviewer. It should not autonomously release blocked orders, override credit decisions, or alter pricing and billing logic. Those actions need deterministic checks and accountable approval.</p>
 
       <h2>Dependencies and boundaries</h2>
-      <p>A useful audit requires representative, sanitized examples and access to the people who own the commercial process, operational execution, SAP configuration, master data, and connected interfaces. It does not replace period-end controls, formal change approval, or system-specific SAP documentation. The immediate deliverable is a prioritised decision model and remediation backlog; any configuration or production change remains subject to the client’s governance.</p>
+      <p>A useful practice exercise uses representative, sanitized examples and identifies the roles that own the commercial process, operational execution, SAP configuration, master data, and connected interfaces. It does not replace period-end controls, formal change approval, or system-specific SAP documentation. The immediate deliverable is a prioritised decision model and remediation backlog; any configuration or production change remains subject to the relevant organisation’s governance.</p>
 
       <h2>Related pages</h2>
-      <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/ai/integration-reliability/">Integration reliability route</a> · <a href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">SAP SD order-to-cash diagnostics hub</a> · <a href="/scenarios/delivery-billing-block-order-to-cash-delays/">Delivery and billing block scenario</a> · <a href="/notes/process-audit/">Process audit playbook</a> · <a href="/cv/">CV</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS practice</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/ai/integration-reliability/">Integration reliability route</a> · <a href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">SAP SD order-to-cash diagnostics hub</a> · <a href="/scenarios/delivery-billing-block-order-to-cash-delays/">Delivery and billing block scenario</a> · <a href="/notes/process-audit/">Process audit playbook</a> · <a href="/cv/">CV</a></p>
     </div>
   </article>
 </section>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "SAP O2C process audit",
-  "provider": {
-    "@type": "Person",
-    "@id": "https://dkharlanau.github.io/#dkharlanau"
-  },
-  "serviceType": "SAP O2C process audit",
-  "url": "https://dkharlanau.github.io/services/sap-o2c-process-audit/",
-  "description": "SAP O2C process audit for blocked orders, billing backlog, credit issues, integration failures, and remediation priorities."
-}
-</script>
+
 
 <script type="application/ld+json">
 {
@@ -83,7 +72,7 @@ last_modified_at: 2026-07-25
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem","position": 1,"name": "Home","item": "https://dkharlanau.github.io/"},
-    {"@type": "ListItem","position": 2,"name": "Services","item": "https://dkharlanau.github.io/services/"},
+    {"@type": "ListItem","position": 2,"name": "Practice playbooks","item": "https://dkharlanau.github.io/services/"},
     {"@type": "ListItem","position": 3,"name": "SAP O2C process audit","item": "https://dkharlanau.github.io/services/sap-o2c-process-audit/"}
   ]
 }
