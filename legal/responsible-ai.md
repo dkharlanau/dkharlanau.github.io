@@ -1,37 +1,38 @@
 ---
 layout: default
 title: "Responsible AI Statement"
-description: "Responsible AI guidelines for my SAP consulting work and this site: transparency, data minimisation, security, bias checks, and human accountability for AI-assisted outputs."
+description: "Responsible AI rules for this personal SAP and AI lab: public or synthetic data, human review, bounded authority, evaluation, and clear separation from production systems."
 permalink: /legal/responsible-ai/
-last_modified_at: 2026-04-19
+last_modified_at: 2026-10-05
 ---
 
 # Responsible AI Statement
 
-I am a System Analyst and Senior SAP consultant at [EPAM Systems](https://www.epam.com), and these guidelines govern how AI tooling is applied in my work.
+This personal lab uses AI for learning, analysis, retrieval, coding support, comparison, drafting, testing, and small technical experiments.
 
 ## Guiding principles
 
-- **Transparency:** Disclose when AI tooling is used to generate analysis, documentation, or prototypes, and retain human review before delivery.
-- **Data minimisation:** Use only the data required to perform the requested task and avoid exposing confidential information to third-party AI services without written approval.
-- **Security:** Operate AI platforms that meet [EPAM Systems](https://www.epam.com) and client security standards, including encryption in transit and at rest.
-- **Accountability:** Maintain human ownership of outcomes. AI suggestions are treated as input, not final answers, until validated by domain experts.
-- **Bias mitigation:** Review AI outputs for bias or gaps that could affect decision-making, particularly in areas involving customer segmentation, pricing, or staffing.
+- **Human accountability:** AI output is input to a decision, not the owner of the decision.
+- **Data minimisation:** Use public, synthetic, or safely anonymised data for site experiments.
+- **Clear authority:** An agent does not receive production authority simply because it can call a tool.
+- **Deterministic controls:** Business postings, approvals, permissions, financial actions, and irreversible changes require explicit controls.
+- **Evaluation:** Important AI workflows should be tested against representative cases, failure modes, and acceptance criteria.
+- **Traceability:** Keep source references, assumptions, tool calls, and important decisions visible where practical.
+- **Security:** Secrets, credentials, private client data, and proprietary exports do not belong in the public lab.
 
-## Project usage
+## Website experiments
 
-- AI copilots support requirements analysis, documentation drafting, incident triage, and knowledge base maintenance.
-- When integrating AI into client environments, model architecture, data retention, and guardrails are documented and approved before deployment.
-- Ongoing monitoring dashboards track accuracy, drift, and user feedback so automations remain effective and trustworthy.
+Examples may include RAG, MCP, AI agents, decision support, document analysis, code generation, enterprise search, and SAP-related diagnostics.
 
-## Website tooling
+These examples are learning and engineering material. They are not evidence that a workflow is approved for a specific production environment.
 
-- This site uses AI to maintain structured resume formats and copywriting, with manual editing before publication.
-- Machine-readable assets (`/ai/resume.json`, `/ai/resume.yml`, `/LLM.txt`) are intentionally provided to help copilots source accurate profile data.
+## Employment boundary
 
-If you have questions about AI usage or would like a dedicated responsible-AI review, contact me via [LinkedIn](https://www.linkedin.com/in/dkharlanau) or through your [EPAM Systems](https://www.epam.com) engagement manager.
+I work at [EPAM Systems](https://www.epam.com), but this site is a personal and independent project. It does not describe or establish EPAM Systems delivery policy, client approval, or production authorization.
 
 Related public references:
-- [Canonical profile page](/about/)
-- [AI routing hub](/ai/)
+
+- [Personal lab](/lab/)
+- [AI Ready workspace](/labs/ai-ready/)
 - [Professional disclosure](/legal/professional-disclosure/)
+- [Site independence and use](/legal/terms-of-engagement/)
