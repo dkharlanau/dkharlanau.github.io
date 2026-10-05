@@ -4,30 +4,34 @@ This repository is a public Jekyll site, knowledge system, and machine-readable 
 
 ## Product model
 
-The site has six top-level product areas:
+The site has seven active public areas:
 
 1. **Profile** — identity, experience, certifications, and public professional context.
-2. **Knowledge** — Atlas, Scenarios, Research, Journal, and Notes.
-3. **Labs** — active SAP, AI, operational, interview, and assessment workspaces.
-4. **Frameworks** — reusable reasoning and execution methods.
-5. **Machine layer** — datasets, AI-readable exports, skills, tools, and MCP source packages.
-6. **Services** — consulting offers and engagement context.
+2. **Knowledge** — Atlas, Scenarios, Journal, Notes, and durable reference material.
+3. **Practical Lab** — runnable and reproducible enterprise-engineering tools and setups.
+4. **Labs** — active SAP, AI, operational, interview, and assessment workspaces.
+5. **Frameworks** — reusable reasoning and execution methods.
+6. **Technology Watch** — Research, Radar, and News for changing SAP, AI, integration, data, and engineering evidence.
+7. **Machine layer** — datasets, AI-readable exports, skills, tools, and MCP source packages.
+
+The `services/` tree is legacy compatibility/reference content only. It is noindex and is not an active commercial product.
 
 The global header should navigate products, not expose every content collection. Deep links belong inside their product hub.
 
 Canonical product hubs:
 
 - `/knowledge/`
+- `/lab/`
 - `/labs/`
 - `/frameworks/`
+- `/research/`
 - `/machine/`
-- `/services/`
 
 Profile is reached through `/`, `/about/`, and `/cv/`.
 
 ### Decision Lab thesis
 
-The six product areas work together as one evidence-backed SAP Enterprise and Business AI Decision Lab. The canonical product thesis, evidence chain, authority themes, and non-goals are defined in [`docs/decision-lab-product-thesis.md`](docs/decision-lab-product-thesis.md).
+The active public areas work together as one evidence-backed SAP Enterprise and Business AI Decision Lab. The canonical product thesis, evidence chain, authority themes, and non-goals are defined in [`docs/decision-lab-product-thesis.md`](docs/decision-lab-product-thesis.md).
 
 Business AI structured data follows the canonical contract at `_data/labs/business_ai/contract.yml`, with implementation guidance in [`docs/business-ai-data-contract.md`](docs/business-ai-data-contract.md). New graph, agent, analysis, and evidence views must extend or consume that contract instead of creating a parallel source model.
 
@@ -191,7 +195,9 @@ Before adding a new root directory, classify the work:
 - active exploration, interview preparation, or practice → Lab;
 - reusable reasoning/execution method → Framework;
 - structured representation for tools → Machine layer;
-- commercial offer → Services;
+- fast-moving technology evidence → Technology Watch;
+- executable enterprise-engineering setup → Practical Lab;
+- legacy commercial URL → keep as noindex reference only;
 - identity/evidence → Profile.
 
 When a topic becomes large, first deepen its domain model. Do not automatically promote it to a new top-level product. The filesystem has no shortage of folders; the reader has a finite attention span.
