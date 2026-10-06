@@ -243,4 +243,4 @@ The model is useful because it tells us what to measure and where to improve the
 
 **Primary source:** [Harness Engineering: How to Build a Software Factory](https://www.youtube.com/watch?v=X6l4lpA0_NY), Dru Knox, Tessl, AI Engineer.  
 **Conference context:** [AI Engineer World's Fair 2026 — Harness Engineering: The New Core Skill for Agentic Developers](https://ai.engineer/worldsfair/schedule).  
-**Related signal:** [Harness Engineering Is Not Enough — Keep Human Judgment in the Loop](/radar/2026/09/17/harness-engineering-maintainability-human-judgment.html).
+**Related signal:** [Harness Engineering Is Not Enough — Keep Human Judgment in the Loop](/radar/2026-09-17-harness-engineering-maintainability-human-judgment/).
