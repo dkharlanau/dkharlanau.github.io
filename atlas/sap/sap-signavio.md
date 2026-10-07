@@ -36,6 +36,10 @@ tags:
   - dmn
   - decision-modeling
   - business-decision-management
+  - journey-modeler
+  - customer-experience
+  - customer-journey
+  - outside-in
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
@@ -139,6 +143,11 @@ sitemap: false
           <td>Process Governance</td>
           <td>Configure and execute governed workflows</td>
           <td>How do approvals, tasks, reminders, escalations, and controlled handovers actually run?</td>
+        </tr>
+        <tr>
+          <td>Journey Modeler</td>
+          <td>Connect customer or stakeholder experience with processes, systems, organizations, emotions, and metrics</td>
+          <td>How does the person experience the organization from the outside-in?</td>
         </tr>
       </tbody>
     </table>
@@ -1513,6 +1522,212 @@ sitemap: false
       </tbody>
     </table>
 
+    <h2>Outside-in perspective: start from the experience, not the internal process</h2>
+
+    <p>Customer experience is the result of how a person experiences the company's people, processes, technologies, products, services, and outputs. The important shift is from an <strong>inside-out</strong> view — what the organization does — to an <strong>outside-in</strong> view — what the customer or other stakeholder actually experiences.</p>
+
+    <p>A company may execute its internal process smoothly and still create a poor experience. A return can be operationally correct but frustrating if the customer must repeat the same issue to several agents, perform unnecessary work, or discover inconsistent offers across channels.</p>
+
+    <p>This perspective is not limited to paying customers. Employees, suppliers, applicants, and business partners can also have journeys whose quality depends on interactions across several departments and systems.</p>
+
+    <h3>Inside-out process vs outside-in journey</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>View</th>
+          <th>Focus</th>
+          <th>Main question</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Inside-out process</td>
+          <td>Internal tasks, responsibilities, systems, and handovers needed to deliver a product or service.</td>
+          <td>How do we execute the work?</td>
+        </tr>
+        <tr>
+          <td>Outside-in journey</td>
+          <td>The person's steps, interactions, expectations, pain points, and emotions across the organization.</td>
+          <td>How does the person experience the result of our work?</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>A journey can reveal that one apparently simple end-to-end process is actually experienced through several processes, departments, systems, and channels. This is why customer-journey work is useful for cross-functional improvement: the customer experiences the combined system, not the internal organizational chart.</p>
+
+    <h2>Build a customer journey in four steps</h2>
+
+    <ol>
+      <li><strong>Persona</strong> — define whose journey is being studied and capture relevant characteristics, expectations, goals, pain points, and context.</li>
+      <li><strong>Steps</strong> — describe the stages or actions the persona goes through, including stages before direct contact with the company.</li>
+      <li><strong>Touchpoints</strong> — identify direct and indirect interactions with the company, its product, or its partners.</li>
+      <li><strong>Emotion</strong> — record how the persona feels at each relevant stage: positive, neutral, or negative.</li>
+    </ol>
+
+    <p>The model can then be enriched with experience obstacles, improvement ideas, and KPIs that show whether the improvement actually changed the experience.</p>
+
+    <h3>Step is not the same as touchpoint</h3>
+
+    <p>A <strong>step</strong> is something the persona does or experiences during the journey. A <strong>touchpoint</strong> is an interaction with the company or product. A person walking through a store is a journey step; finding and inspecting the company's product is a direct touchpoint; asking a supplier about that product is an indirect touchpoint.</p>
+
+    <p>This distinction prevents teams from treating every moment in the journey as an interaction owned directly by the company.</p>
+
+    <h3>Emotion is evidence for prioritization, not a requirement for constant delight</h3>
+
+    <p>Journey models can use an emotional lane or sentiment view to show where the persona is satisfied, neutral, frustrated, or open to support. The goal is not to make every step positive. Neutral experiences can be acceptable; the useful question is where negative or high-impact moments require intervention.</p>
+
+    <h2>Customer experience connects to business outcomes</h2>
+
+    <p>The learning material links better customer experience with stronger loyalty, advocacy, customer acquisition, revenue effects, and brand perception. The practical Lead-level point is to avoid treating these outcomes as automatic. A journey should connect experience hypotheses to measurable operational or customer KPIs.</p>
+
+    <p>Examples include damaged-delivery rate, use of a newly introduced return-support feature, waiting time, repeated contacts, or satisfaction with the return process. This creates a chain from <strong>pain point → improvement → operational change → measurable experience outcome</strong>.</p>
+
+    <h2>Journey Modeler: one table for experience and operational context</h2>
+
+    <p>SAP Signavio Journey Modeler provides a table-based journey model that can hold journey information and related operational context in one place. The learning material highlights linked processes, IT systems, organizational units, customer emotions, metrics, and other relevant information directly in the model.</p>
+
+    <p>The table structure also makes it practical to bring in tabular data. The course describes copying and pasting data from Excel, including text, images, and other information, and connecting operational or customer-experience data sources such as SAP Signavio Process Intelligence, Google Data Studio, or Tableau.</p>
+
+    <h3>Core Journey Modeler elements</h3>
+
+    <ul>
+      <li>Create a Journey Model and manage revisions.</li>
+      <li>Create a Persona in the Dictionary and reuse it in the journey.</li>
+      <li>Define stages and steps.</li>
+      <li>Customize colors and images.</li>
+      <li>Model touchpoints.</li>
+      <li>Capture sentiments or emotions across the journey.</li>
+    </ul>
+
+    <p>The Dictionary connection is important: personas and other reusable business objects can remain centrally governed instead of being recreated independently in every journey.</p>
+
+    <h2>Journey Modeler vs Customer Journey Map</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Approach</th>
+          <th>Main form</th>
+          <th>Best for</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Journey Modeler</td>
+          <td>Table-based model</td>
+          <td>Holistic view of stages, steps, emotions, processes, systems, organizations, metrics, and other data in one structured grid.</td>
+        </tr>
+        <tr>
+          <td>Customer Journey Map</td>
+          <td>Design-oriented visual notation</td>
+          <td>Visualizing the persona's journey and touchpoints; supporting information is available through attributes and linked objects.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Both approaches support outside-in analysis, but they optimize for different reading tasks. The table-based Journey Modeler concentrates more structured information in one view. The Customer Journey Map emphasizes visual storytelling and the sequence of the persona's experience.</p>
+
+    <h3>Customer Journey Maps connect back to the process landscape</h3>
+
+    <p>A Customer Journey Map can link touchpoints or journey steps to internal process diagrams and Dictionary objects. This turns the journey into an entry point into the process landscape instead of leaving customer experience as a separate workshop artifact.</p>
+
+    <p>Images and attributes can be configured centrally by administrators and reused across customer journeys, which supports consistent presentation and terminology.</p>
+
+    <h2>Journey Complexity: how difficult is the operational system behind the journey?</h2>
+
+    <p>Journey Complexity estimates the operational complexity behind the journey, including directly or indirectly linked processes. It is not simply the number of cells in the journey table.</p>
+
+    <p>The learning material distinguishes process-level drivers such as:</p>
+
+    <ul>
+      <li><strong>Flow complexity</strong> — decision and parallel splits and how deeply they are nested.</li>
+      <li><strong>Handover complexity</strong> — handovers between roles.</li>
+      <li><strong>Linked-process complexity</strong> — references to other process models.</li>
+      <li><strong>Document and data-object complexity</strong> — amount and cross-role use of process information objects.</li>
+      <li><strong>IT-system complexity</strong> — number of systems and how broadly roles interact with them.</li>
+    </ul>
+
+    <h3>Process-complexity weighting</h3>
+
+    <p>The course gives the following weighting for the process complexity subscores:</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Subscore</th>
+          <th>Weight</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Flow complexity</td><td>35%</td></tr>
+        <tr><td>Handover complexity</td><td>35%</td></tr>
+        <tr><td>IT system complexity</td><td>10%</td></tr>
+        <tr><td>Data object complexity</td><td>10%</td></tr>
+        <tr><td>Linked process complexity</td><td>10%</td></tr>
+      </tbody>
+    </table>
+
+    <p>The subscores are combined through weighted aggregation. At journey level, the course describes each linked process complexity contribution with a factor of 0.2 and the final journey score scaled by 100.</p>
+
+    <h3>T-shirt sizing</h3>
+
+    <p>The course maps the Journey Complexity score to an intuitive T-shirt size:</p>
+
+    <ul>
+      <li><strong>Low</strong>: 0 ≤ x ≤ 20</li>
+      <li><strong>Medium</strong>: 20 ≤ x ≤ 60</li>
+      <li><strong>High</strong>: 60 ≤ x</li>
+    </ul>
+
+    <p>The published learning text uses overlapping boundary values at 20 and 60. Preserve the product's displayed classification when interpreting an actual model rather than inventing a different boundary rule.</p>
+
+    <h2>Journey Model Dimensions: model size is not operational complexity</h2>
+
+    <p><strong>Journey Model Dimensions</strong> describe the size and populated content of the journey table. The headline value compares populated cells with total cells, while the detail panel separates structural counts from content counts.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Measure</th>
+          <th>What it tells you</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Journey Complexity</td>
+          <td>Operational uncertainty and interdependence inherited from linked processes and their complexity.</td>
+        </tr>
+        <tr>
+          <td>Journey Model Dimensions</td>
+          <td>How large and populated the Journey Model table is.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The Dimensions detail view includes structure information such as stages, columns, and rows, plus content counts for the section types used in the Journey Model.</p>
+
+    <h3>Counting linked objects</h3>
+
+    <p>A linked process is counted once even when several cells link to that same process, or when one cell links to the whole process and another links to an element inside it. Those cells still count as populated cells in the Journey Model Dimensions calculation.</p>
+
+    <p>Likewise, an IT System or Organizational Unit is counted once regardless of how many journey cells reference the same object.</p>
+
+    <h2>Outside-in improvement pattern</h2>
+
+    <p>A practical way to use journey modeling in process transformation is:</p>
+
+    <ol>
+      <li>Identify a persona and the outcome they are trying to achieve.</li>
+      <li>Map the person's steps, touchpoints, and emotions.</li>
+      <li>Locate pain points and expectations that are not being met.</li>
+      <li>Link those moments to the internal processes, systems, organizations, and decisions that create the experience.</li>
+      <li>Change the responsible internal process rather than only redesigning the journey visualization.</li>
+      <li>Define KPIs and use operational or experience data to verify whether the change improved the journey.</li>
+    </ol>
+
+    <p>This closes the loop between customer experience and process management: <strong>journey models identify where the experience fails; process models explain what the organization does; operational data helps verify whether the change worked.</strong></p>
+
     <h2>Designed process vs observed process</h2>
 
     <p>Process Manager mainly helps describe and govern how work is intended to run. Process Intelligence answers a different question: <strong>what actually happened in execution data?</strong></p>
@@ -1927,6 +2142,18 @@ sitemap: false
         <tr>
           <td>Navigation Map or Value Chain?</td>
           <td>Use Navigation Maps for user-friendly entry and storytelling; use Value Chains for high-level process architecture.</td>
+        </tr>
+        <tr>
+          <td>Inside-out process or outside-in journey?</td>
+          <td>Use the process view to understand internal execution; use the journey view to understand the person's experience across organizational boundaries.</td>
+        </tr>
+        <tr>
+          <td>Journey Modeler or Customer Journey Map?</td>
+          <td>Use Journey Modeler for a structured table combining experience and operational context; use a Customer Journey Map for visual journey storytelling and touchpoints.</td>
+        </tr>
+        <tr>
+          <td>Journey Complexity or Journey Model Dimensions?</td>
+          <td>Complexity measures the operational complexity behind linked processes; Dimensions measure the size and populated content of the journey table.</td>
         </tr>
         <tr>
           <td>BPMN or DMN?</td>
