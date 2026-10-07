@@ -33,6 +33,9 @@ tags:
   - access-control
   - security
   - user-management
+  - dmn
+  - decision-modeling
+  - business-decision-management
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
@@ -96,6 +99,11 @@ sitemap: false
           <td>Graphical Editor</td>
           <td>Create and maintain detailed diagrams</td>
           <td>How does the process work and is the model correct?</td>
+        </tr>
+        <tr>
+          <td>DMN decision modeling</td>
+          <td>Separate decision requirements and decision logic from process flow</td>
+          <td>What information, rules, and authorities determine a business decision?</td>
         </tr>
         <tr>
           <td>QuickModel</td>
@@ -555,6 +563,329 @@ sitemap: false
     </ol>
 
     <p>The exercises explicitly allow more than one valid visual solution. The review criteria are more important than copying one layout: check syntax, semantics, naming conventions, responsibility, token behavior, and readability.</p>
+
+    <h2>DMN: separate decision logic from process flow</h2>
+
+    <p>Business Decision Management aims to make operational decisions standardized, consistent, and transparent. The problem it addresses is not that people cannot make decisions, but that repeated ad hoc decisions can drift because the underlying logic is not explicit.</p>
+
+    <p>Decision Modeling Notation (DMN) complements BPMN by making that logic visible. A BPMN model explains the end-to-end activity flow. A DMN model explains <strong>how a decision is made</strong>. The two model types can exist independently, but they are especially useful together when a BPMN activity reaches a decision whose logic would otherwise create many gateways and conditions.</p>
+
+    <p>For example, a BPMN task such as <strong>Determine how to eat dinner</strong> can call decision logic that evaluates motivation and available budget. The decision result then becomes input to the next routing step in the process.</p>
+
+    <h3>Two levels in a DMN model</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Level</th>
+          <th>Purpose</th>
+          <th>Main question</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Decision Requirements Diagram</td>
+          <td>Show dependencies between decisions, sub-decisions, input data, and knowledge sources.</td>
+          <td>What does this decision depend on?</td>
+        </tr>
+        <tr>
+          <td>Decision Logic</td>
+          <td>Define the detailed business rules, commonly in a decision table.</td>
+          <td>Given these inputs, what output should be returned?</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>This separation is important. The requirements diagram explains the structure of the decision; the decision table explains the exact rule behavior.</p>
+
+    <h2>DMN core elements</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Element</th>
+          <th>Meaning</th>
+          <th>Important property</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Decision</td>
+          <td>Uses logic to determine an outcome.</td>
+          <td>Contains business rules, can be decomposed into sub-decisions, and can be reused.</td>
+        </tr>
+        <tr>
+          <td>Input Data</td>
+          <td>Provides information required by a decision.</td>
+          <td>Has a data type and can be reused by several decisions.</td>
+        </tr>
+        <tr>
+          <td>Knowledge Source</td>
+          <td>Represents authority or knowledge that guides the decision.</td>
+          <td>Can represent internal policy, regulation, law, or another authoritative source.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>A practical way to build a decision model</h3>
+
+    <ol>
+      <li><strong>Identify the decision or business question.</strong> Clarify the objective and the expected kind of answer.</li>
+      <li><strong>Gather decision requirements.</strong> Identify the information, policies, regulations, and external authorities required to answer the question.</li>
+      <li><strong>Split the decision when necessary.</strong> Create sub-decisions when the top-level logic becomes too complex, reusable, or governed by different authorities.</li>
+    </ol>
+
+    <p>A useful review question is: <strong>Can I see which inputs, sub-decisions, and sources of authority explain the final result?</strong></p>
+
+    <h2>Decision tables: rules become explicit rows</h2>
+
+    <p>Decision logic is commonly expressed as a decision table. Input columns contain the facts used by the rules. The output column contains the decision result. Each row is one business rule.</p>
+
+    <p>For example, an insurance decision could use inputs such as number of accidents, age, and traffic points, with an output such as insurability. Operators express comparisons such as equal to, not equal to, element of, not an element of, greater than, less than, less than or equal to, and greater than or equal to.</p>
+
+    <p>The key design objective is that the rules are readable enough for business users and precise enough that the same inputs produce the intended output without hidden interpretation.</p>
+
+    <h2>DMN input types</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Use</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Boolean</td>
+          <td>True/false checks.</td>
+          <td>Regular customer?</td>
+        </tr>
+        <tr>
+          <td>Number</td>
+          <td>Numeric values, ranges, and units of measure.</td>
+          <td>Purchase value, age, percentage, currency.</td>
+        </tr>
+        <tr>
+          <td>Enumeration</td>
+          <td>Predefined list of allowed values.</td>
+          <td>Express delivery or Standard delivery.</td>
+        </tr>
+        <tr>
+          <td>Text</td>
+          <td>Free-form textual information.</td>
+          <td>Name or product description.</td>
+        </tr>
+        <tr>
+          <td>Date</td>
+          <td>A date or point in time that can be compared with other dates.</td>
+          <td>Order date or payment deadline.</td>
+        </tr>
+        <tr>
+          <td>Hierarchy</td>
+          <td>Values organized into parent-child classifications.</td>
+          <td>Goods → Clothes / Electronics or Geography → Country → City.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Where possible, the course recommends an enumeration instead of free text because selecting from controlled values is less error-prone than typing names repeatedly.</p>
+
+    <h3>Numeric intervals</h3>
+
+    <p>Numeric rules can use open, closed, or half-open intervals. The boundary symbols matter:</p>
+
+    <ul>
+      <li><code>[1..5]</code> — includes 1 and 5.</li>
+      <li><code>(1..5)</code> — excludes 1 and 5.</li>
+      <li><code>(1..5]</code> — excludes 1, includes 5.</li>
+      <li><code>[1..5)</code> — includes 1, excludes 5.</li>
+    </ul>
+
+    <p>This is not cosmetic notation. A value exactly on the boundary can change the output, for example a purchase value of 750 qualifying for one discount while 749.99 qualifies for another.</p>
+
+    <h2>Hit policies: define what happens when rules overlap</h2>
+
+    <p>A hit policy defines how the decision table behaves when input values match several rules, and in some designs when no specific rule matches. Choosing the policy is part of the decision semantics, not merely a table setting.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Policy</th>
+          <th>Behavior</th>
+          <th>Key risk or use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Unique (U)</td>
+          <td>Exactly one rule may match for any input combination.</td>
+          <td>Overlapping rules are invalid; completeness is important.</td>
+        </tr>
+        <tr>
+          <td>First</td>
+          <td>Rules are evaluated top to bottom and the first match wins.</td>
+          <td>Rule order changes the result; broad early rules can hide more specific rules.</td>
+        </tr>
+        <tr>
+          <td>Any</td>
+          <td>Several rules may match only when all matching rules return the same output.</td>
+          <td>Overlap is acceptable only when the result is identical.</td>
+        </tr>
+        <tr>
+          <td>Priority</td>
+          <td>Several rules may match; the highest-priority output is returned.</td>
+          <td>Output values require an explicit priority order.</td>
+        </tr>
+        <tr>
+          <td>Collect</td>
+          <td>Several rules may fire and their outputs are collected or aggregated.</td>
+          <td>Useful for scorecards and additive decisions.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>A dash (<code>-</code>) acts as a wildcard and matches any value.</p>
+
+    <h3>Unique vs First</h3>
+
+    <p><strong>Unique</strong> says the rules must not overlap. <strong>First</strong> allows overlap but makes rule order significant. A catch-all rule can be useful at the bottom of a First table, but a catch-all placed too early can make later rules unreachable in practice.</p>
+
+    <h3>Any vs Priority</h3>
+
+    <p><strong>Any</strong> allows overlapping rules only when they all produce the same output. <strong>Priority</strong> allows different outputs and resolves the overlap using the configured output ranking.</p>
+
+    <h3>Collect and aggregation</h3>
+
+    <p>Collect can return a set of matching outputs or aggregate them into one value. The course covers four aggregation functions:</p>
+
+    <ul>
+      <li><strong>Sum</strong> — sum of distinct matching outputs.</li>
+      <li><strong>Min</strong> — smallest matching output.</li>
+      <li><strong>Max</strong> — largest matching output.</li>
+      <li><strong>Count</strong> — number of distinct matching outputs.</li>
+    </ul>
+
+    <p>This pattern fits scorecards. For example, vacation entitlement can start with standard days and add extra days for age or years of service.</p>
+
+    <h2>Sub-decisions: split logic for clarity and reuse</h2>
+
+    <p>Large decisions become easier to understand and maintain when decomposed into smaller decisions. The course uses three criteria for deciding whether to split:</p>
+
+    <ul>
+      <li><strong>Complexity</strong> — too many inputs or dependent decisions make one table difficult to understand.</li>
+      <li><strong>Reusability</strong> — a result such as Customer Status may be useful in several decision models.</li>
+      <li><strong>Authority</strong> — different parts of the logic may come from different internal policies or external regulations.</li>
+    </ul>
+
+    <p>The learning material uses more than seven inputs and/or sub-decisions as a strong warning that the decision logic is likely becoming complex. Treat this as a modeling heuristic, not a mathematical limit.</p>
+
+    <p>Splitting decisions also improves change isolation: one sub-decision can change without forcing unrelated decision logic to change.</p>
+
+    <h2>DMN naming conventions</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Style</th>
+          <th>Use</th>
+          <th>Example pattern</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Activity style</td>
+          <td>Useful for a top-level decision linked to a BPMN task.</td>
+          <td>Verb + object: Determine discount, Select supplier, Calculate score.</td>
+        </tr>
+        <tr>
+          <td>Output style</td>
+          <td>Useful for most other decisions because the name reflects the produced result.</td>
+          <td>Customer status, eligibility, score, ranking.</td>
+        </tr>
+        <tr>
+          <td>Question style</td>
+          <td>Useful when a direct question is clearer than an output label.</td>
+          <td>Is the customer eligible?</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Question style can be intuitive but often creates long labels. For process-linked top-level decisions, activity style keeps the DMN name aligned with the BPMN decision task.</p>
+
+    <h2>Completeness and consistency: decision tables must cover the logic safely</h2>
+
+    <p>A decision table is <strong>incomplete</strong> when an allowed input combination has no matching rule. With a Unique hit policy, the intended model is that exactly one rule fires for every possible input combination, so missing rules are a direct quality problem.</p>
+
+    <p>A decision table is <strong>inconsistent</strong> when rules overlap in a way that violates the selected hit policy. For a Unique table, overlapping rules are not allowed.</p>
+
+    <h3>Verify automates these checks</h3>
+
+    <p>SAP Signavio Process Manager provides a verification function for decision tables. Verify can identify missing combinations and consistency errors such as overlapping rules that do not comply with the hit policy.</p>
+
+    <p><strong>Lead boundary:</strong> verification checks the formal rule space. It does not prove that the business policy itself is correct. Business owners still need to validate the intended rule meaning.</p>
+
+    <h2>Dictionary reuse in DMN</h2>
+
+    <p>DMN models can reuse the same centrally governed Dictionary entries used elsewhere in the process landscape. A knowledge source such as an ERP system can be linked from the Dictionary, and the entry can show where else it is used.</p>
+
+    <p>This keeps decisions aligned with the same business vocabulary as BPMN models. New DMN objects can also be defined and then promoted into governed Dictionary content where appropriate.</p>
+
+    <h2>DMN Simulation: evaluate decision behavior with input data</h2>
+
+    <p>The DMN Simulation tool applies the rules in the decision table to supplied input data and returns the resulting output. This makes the decision executable enough to inspect behavior without confusing it with observed production execution.</p>
+
+    <p>Changing the input data or the decision model makes it possible to compare a new output with the original one. Simulation can also expose sub-decision dependencies and scenarios that the current rules do not cover.</p>
+
+    <p><strong>DMN simulation asks:</strong> “Given this model and these inputs, what result does the logic produce?”</p>
+
+    <h2>DMN Test Lab: preserve expected behavior through change</h2>
+
+    <p>The DMN Test Lab is used for repeatable test cases. The modeler defines input data and an expected output, runs the current decision model, and compares the real result with the expectation.</p>
+
+    <p>This is particularly useful after rule changes. A mismatch between expected and actual output indicates that the implementation does not behave as intended.</p>
+
+    <p>Existing or historical cases can also be imported as regression checks. For example, if a customer must never receive a discount, an older case representing that customer can be rerun after unrelated rule changes to confirm that the protected behavior has not changed.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Main purpose</th>
+          <th>Question</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Verify</td>
+          <td>Check formal completeness and consistency of the decision table.</td>
+          <td>Are there missing or conflicting rule combinations?</td>
+        </tr>
+        <tr>
+          <td>Simulation</td>
+          <td>Evaluate outputs for supplied input data and compare changed decision behavior.</td>
+          <td>What output does this logic produce for these inputs?</td>
+        </tr>
+        <tr>
+          <td>Test Lab</td>
+          <td>Run repeatable expected-result tests and regression cases.</td>
+          <td>Does the changed decision still meet the expected behavior?</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>BPMN and DMN together</h2>
+
+    <p>The strongest architecture uses each notation for the concern it explains best:</p>
+
+    <ol>
+      <li>BPMN shows the process activity <strong>Determine discount</strong>.</li>
+      <li>DMN shows which inputs, sub-decisions, and policies the decision depends on.</li>
+      <li>The decision table defines the exact rules.</li>
+      <li>The result returns to the process and drives the next activity or route.</li>
+    </ol>
+
+    <p>This reduces gateway-heavy process models and makes decision logic independently maintainable, testable, reusable, and reviewable.</p>
 
     <h2>The Dictionary: one shared business vocabulary</h2>
 
@@ -1596,6 +1927,22 @@ sitemap: false
         <tr>
           <td>Navigation Map or Value Chain?</td>
           <td>Use Navigation Maps for user-friendly entry and storytelling; use Value Chains for high-level process architecture.</td>
+        </tr>
+        <tr>
+          <td>BPMN or DMN?</td>
+          <td>Use BPMN to model activity flow and responsibility; use DMN to model decision requirements and rule logic.</td>
+        </tr>
+        <tr>
+          <td>Decision Requirements Diagram or decision table?</td>
+          <td>Use the requirements diagram for dependencies and authorities; use the decision table for detailed rules and outputs.</td>
+        </tr>
+        <tr>
+          <td>Unique or First hit policy?</td>
+          <td>Use Unique when rules must never overlap; use First when ordered overlapping rules are intentional and the first match should win.</td>
+        </tr>
+        <tr>
+          <td>Verify, Simulation, or Test Lab?</td>
+          <td>Verify checks rule-space quality, Simulation evaluates model behavior for inputs, and Test Lab checks expected results and regression cases.</td>
         </tr>
         <tr>
           <td>XOR, AND, or OR?</td>
