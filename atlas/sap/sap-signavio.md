@@ -125,6 +125,12 @@ sitemap: false
 
     <p><strong>The key Lead skill is product selection.</strong> Do not answer every question with “Signavio”. Name the problem first, then the component that owns it.</p>
 
+    <h3>AI is a cross-suite capability</h3>
+
+    <p>AI is not a replacement for the product model above. It assists specific jobs inside the suite. For example, AI-assisted Process Modeler can create a BPMN starting point from text or an image, while AI-assisted Process Analyzer can help users work with process metrics, attributes, insights, and dashboard widgets using natural language.</p>
+
+    <p>The Lead boundary stays the same: AI can accelerate modeling or analysis, but the team still owns process semantics, business rules, data quality, governance, and approval. Licensing and AI consumption rules are feature-specific.</p>
+
     <h3>Current naming you should know</h3>
 
     <p><strong>Process Modeler</strong> is the current product name. Older SAP Learning content and customer environments can still use <strong>Process Manager</strong>. Treat them as the same modeling product generation, not as two different products.</p>
@@ -827,6 +833,7 @@ sitemap: false
 
     <ul>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite">SAP Signavio Process Transformation Suite — product documentation</a></li>
+      <li><a href="https://www.sap.com/about/trust-center/certification-compliance/sap-signavio-c5-2026.html">SAP Signavio C5 2026 — current product naming</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/navigating-sap-signavio-process-transformation-suite">Navigating SAP Signavio Process Transformation Suite</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-modeler/workspace-admin-guide/about-licenses">Process Modeler — License Assignment</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/user-management-authentication-and-authorization/harmonization-of-authentication-and-identity-management">SAP Signavio — Identity-management harmonization</a></li>
@@ -836,6 +843,8 @@ sitemap: false
       <li><a href="https://help.sap.com/docs/signavio-process-governance/user-guide/intro">Process Governance — Fundamentals</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-governance/fsd-collaborator/sap-signavio-process-governance-collaborator">Process Governance Collaborator — Feature Scope Description</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/57542d3a6dab10148cfcc70dfc2ca89e.html">Process Intelligence — User Guide</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/ai-assisted-process-analyzer">Process Intelligence — AI-assisted Process Analyzer</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-manager/user-guide/ai-assisted-process-modeler">Process Modeler — AI-assisted Process Modeler</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Process Intelligence — Investigations transition</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-insights/administration-guide/source-systems-supported">Process Insights capabilities in Process Intelligence</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-manager">Process Transformation Manager — User Guide</a></li>
