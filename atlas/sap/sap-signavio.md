@@ -471,7 +471,7 @@ sitemap: false
 
     <h2>Reporting: turn model metadata into governance evidence</h2>
 
-    <p>Process models contain visible diagram content and less visible information stored in attributes. Reporting aggregates that information across many processes or focuses on selected aspects of one model. The output can support decisions, audits, governance, ownership analysis, system analysis, and process improvement. Reports are available from the Explorer and can also be generated in Process Collaboration Hub. fileciteturn33file0L5-L20</p>
+    <p>Process models contain visible diagram content and less visible information stored in attributes. Reporting aggregates that information across many processes or focuses on selected aspects of one model. The output can support decisions, audits, governance, ownership analysis, system analysis, and process improvement. Reports are available from the Explorer and can also be generated in Process Collaboration Hub.</p>
 
     <h3>Analysis reports</h3>
 
@@ -497,7 +497,7 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>Process Cost Analysis calculates task execution cost and uses the start event's yearly frequency. Gateway probabilities influence the input factor for downstream tasks, so expected path mix changes the calculated cost. Resource Consumption Analysis instead focuses on participant workload and organizes consumed time by department. fileciteturn33file0L22-L41</p>
+    <p>Process Cost Analysis calculates task execution cost and uses the start event's yearly frequency. Gateway probabilities influence the input factor for downstream tasks, so expected path mix changes the calculated cost. Resource Consumption Analysis instead focuses on participant workload and organizes consumed time by department.</p>
 
     <h3>Four matrices for responsibility and usage</h3>
 
@@ -528,23 +528,23 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>These matrices connect process design to operating ownership. They can reveal unclear accountability, excessive handoffs, concentration on critical systems, training needs, document dependencies, and outdated documents. fileciteturn33file0L43-L84</p>
+    <p>These matrices connect process design to operating ownership. They can reveal unclear accountability, excessive handoffs, concentration on critical systems, training needs, document dependencies, and outdated documents.</p>
 
     <h3>Process management and maintenance reports</h3>
 
-    <p><strong>Modeling Conventions</strong> checks selected diagrams against BPMN conventions and workspace-specific modeling rules. Filters can narrow the report by diagram information, publishing state, or custom attributes. The resulting spreadsheet exposes errors, warnings, and hints, with a legend of the conventions that were checked. A high number of violations can point not only to model quality problems but also to a modeler training need. fileciteturn33file0L86-L104</p>
+    <p><strong>Modeling Conventions</strong> checks selected diagrams against BPMN conventions and workspace-specific modeling rules. Filters can narrow the report by diagram information, publishing state, or custom attributes. The resulting spreadsheet exposes errors, warnings, and hints, with a legend of the conventions that were checked. A high number of violations can point not only to model quality problems but also to a modeler training need.</p>
 
-    <p><strong>Process Model Metrics</strong> reports statistics about diagram elements, linked files, and linked Dictionary entries. It also exposes Process Manager and Collaboration Hub links and can help find highly complex or unpublished diagrams, retrieve a process ID, and review authorship or modification information. fileciteturn33file0L106-L117</p>
+    <p><strong>Process Model Metrics</strong> reports statistics about diagram elements, linked files, and linked Dictionary entries. It also exposes Process Manager and Collaboration Hub links and can help find highly complex or unpublished diagrams, retrieve a process ID, and review authorship or modification information.</p>
 
-    <p><strong>Process Characteristics</strong> lists BPMN elements and attributes that contain values. It can help identify redundant attributes, compare modeling patterns across processes, and provide an overview of information such as process ownership or certification requirements. Empty attributes across the selected processes are not shown. fileciteturn33file0L119-L129</p>
+    <p><strong>Process Characteristics</strong> lists BPMN elements and attributes that contain values. It can help identify redundant attributes, compare modeling patterns across processes, and provide an overview of information such as process ownership or certification requirements. Empty attributes across the selected processes are not shown.</p>
 
-    <p><strong>Risks and Controls</strong> aggregates risk and control information defined in the Dictionary and used in selected process diagrams. It can include descriptions, aims, relevant documents, and control frequency, supporting risk evaluation, audits, compliance evidence, control-gap analysis, and IT-risk review. fileciteturn33file0L131-L142</p>
+    <p><strong>Risks and Controls</strong> aggregates risk and control information defined in the Dictionary and used in selected process diagrams. It can include descriptions, aims, relevant documents, and control frequency, supporting risk evaluation, audits, compliance evidence, control-gap analysis, and IT-risk review.</p>
 
     <h3>Process Documentation: tailored output, not only standard reports</h3>
 
-    <p>Process Documentation creates a more configurable document that can include diagram graphics, element descriptions, attributes, and Dictionary entries. It can be generated as PDF or Microsoft Word and can use custom templates. Typical uses include BPMN task overviews, Dictionary matrices, process summaries, quality-management documentation, work instructions, and material for participants who do not have Collaboration Hub access. fileciteturn33file0L144-L155</p>
+    <p>Process Documentation creates a more configurable document that can include diagram graphics, element descriptions, attributes, and Dictionary entries. It can be generated as PDF or Microsoft Word and can use custom templates. Typical uses include BPMN task overviews, Dictionary matrices, process summaries, quality-management documentation, work instructions, and material for participants who do not have Collaboration Hub access.</p>
 
-    <p>Documentation templates can be simple or advanced, including multilingual output. Their design follows an Editor-like approach with objects on a canvas and configuration through an attributes panel. Creating the templates requires the relevant administrator-granted access rights. fileciteturn33file0L155-L161</p>
+    <p>Documentation templates can be simple or advanced, including multilingual output. Their design follows an Editor-like approach with objects on a canvas and configuration through an attributes panel. Creating the templates requires the relevant administrator-granted access rights.</p>
 
     <h3>Simulation vs reporting vs Process Intelligence</h3>
 
