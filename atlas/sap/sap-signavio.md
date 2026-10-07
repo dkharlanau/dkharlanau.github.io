@@ -324,6 +324,49 @@ sitemap: false
 
     <p>The tool can help with syntax and configured conventions. Subject-matter experts are still needed for semantic correctness.</p>
 
+    <h3>Choose the right model type</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Need</th><th>Model</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Detailed business process flow</td><td>BPMN</td></tr>
+        <tr><td>Decision logic</td><td>DMN</td></tr>
+        <tr><td>Enterprise architecture view</td><td>ArchiMate</td></tr>
+        <tr><td>High-level process architecture</td><td>Value Chain</td></tr>
+        <tr><td>Flexible entry point into process content</td><td>Navigation Map</td></tr>
+        <tr><td>Outside-in stakeholder experience</td><td>Journey Model / Customer Journey Map</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Simulation = test a hypothesis</h3>
+
+    <p>Process Modeler can simulate BPMN behavior using four main parameter groups: <strong>Costs, Duration, Frequency, and Resources</strong>. Use it to test questions such as “Can we handle 40% more orders?” or “What happens if shipping becomes faster?”</p>
+
+    <p>Remember the boundary: activity execution time is not always total cycle time. Waiting and resource queues can dominate the result.</p>
+
+    <h3>Reporting = analyze what is modeled</h3>
+
+    <p>Model-based reports can aggregate costs, resource consumption, RACI responsibilities, handovers, IT-system usage, documents, modeling conventions, model metrics, risks and controls, and process documentation.</p>
+
+    <p>Reporting answers <strong>what is in the model and its metadata</strong>. Process Intelligence answers <strong>what happened in operational execution</strong>.</p>
+
+    <h3>Variant Management = standard core with controlled differences</h3>
+
+    <p>Use variants when one global process needs justified regional, organizational, product, or customer-specific differences.</p>
+
+    <p><strong>Template → Dimensions → Dimension values → Variant Group → Variants</strong></p>
+
+    <ul>
+      <li><strong>Attach</strong> an existing process as a variant.</li>
+      <li><strong>Clone</strong> the template to create a new variant.</li>
+      <li><strong>Detach</strong> when the local process must evolve independently.</li>
+      <li><strong>Propagate</strong> supported template changes to variants and review changes that require manual work.</li>
+    </ul>
+
+    <p>The goal is not to eliminate all variation. The goal is to make variation explicit, justified, and governable.</p>
+
     <h2 id="bpmn-dmn">6. BPMN and DMN: the minimum Lead toolkit</h2>
 
     <h3>BPMN</h3>
