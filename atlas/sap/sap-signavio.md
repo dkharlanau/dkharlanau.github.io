@@ -40,6 +40,10 @@ tags:
   - customer-experience
   - customer-journey
   - outside-in
+  - business-process-model-connector
+  - sap-solution-manager
+  - sap-btp
+  - sap-cloud-connector
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
@@ -148,6 +152,11 @@ sitemap: false
           <td>Journey Modeler</td>
           <td>Connect customer or stakeholder experience with processes, systems, organizations, emotions, and metrics</td>
           <td>How does the person experience the organization from the outside-in?</td>
+        </tr>
+        <tr>
+          <td>Business Process Model Connector</td>
+          <td>Align process information between SAP Signavio Process Manager and SAP Solution Manager</td>
+          <td>How do Business and IT keep one aligned process structure while preserving clear system ownership?</td>
         </tr>
       </tbody>
     </table>
@@ -1522,6 +1531,244 @@ sitemap: false
       </tbody>
     </table>
 
+    <h2>Business Process Model Connector: bridge Business and IT</h2>
+
+    <p>The business process model connector for SAP Signavio solutions connects SAP Signavio Process Manager with SAP Solution Manager. The learning material presents it as the bridge between collaborative business-process design and the IT implementation and application-lifecycle view.</p>
+
+    <p>The connector is a stand-alone cloud application built on SAP Business Technology Platform. Its purpose is not to make the two products identical. It keeps a common process structure aligned while each product remains responsible for a different layer.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>System</th>
+          <th>Leading responsibility</th>
+          <th>Typical artifacts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SAP Signavio</td>
+          <td>Process structure and business artifacts</td>
+          <td>Collaborative process models, business process information, Dictionary objects, process design.</td>
+        </tr>
+        <tr>
+          <td>SAP Solution Manager</td>
+          <td>Solution design and IT artifacts</td>
+          <td>Solution documentation, implementation context, application lifecycle, testing, change management, monitoring.</td>
+        </tr>
+        <tr>
+          <td>Business Process Model Connector</td>
+          <td>Controlled transfer between the two systems</td>
+          <td>Mapped process objects, attributes, structures, and synchronization history.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The connector therefore supports a shared language between Business and IT. Business teams can design and govern the process structure in Signavio, while IT teams can use the synchronized structure in Solution Manager for implementation and operations.</p>
+
+    <h3>Transformation dimensions</h3>
+
+    <p>The course places the connector in a wider transformation model with four connected dimensions: <strong>Business Strategy, Processes, Technology, and People</strong>. Strategy sets direction, processes translate that direction into work, technology implements and supports the processes, and people execute and change them.</p>
+
+    <p>The connector mainly strengthens the process-to-technology boundary: it reduces the gap between what the business designed and what IT must implement, test, change, and operate.</p>
+
+    <h2>Synchronization ownership: initial import, then Signavio leads</h2>
+
+    <p>The most important architectural rule in this lesson is the ownership transition. If process information already exists in SAP Solution Manager, an initial synchronization can move it to SAP Signavio Process Manager. After that initial synchronization, SAP Signavio becomes the leading system for process information and changes to process objects and their mapped attributes are managed there.</p>
+
+    <p>Subsequent process updates are then synchronized from SAP Signavio Process Manager to SAP Solution Manager so that IT receives the latest agreed process structure and business information.</p>
+
+    <p><strong>Important limitation:</strong> the learning material explicitly states that BPMN diagrams synchronized from SAP Solution Manager to SAP Signavio cannot be synchronized back. Do not describe the connector as unrestricted symmetric round-trip BPMN synchronization.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Direction</th>
+          <th>Ownership rule</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Initial migration/alignment</td>
+          <td>SAP Solution Manager → SAP Signavio</td>
+          <td>Use when process information already exists in Solution Manager.</td>
+        </tr>
+        <tr>
+          <td>Ongoing process maintenance</td>
+          <td>SAP Signavio → SAP Solution Manager</td>
+          <td>Maintain process information and mapped attributes in Process Manager after the initial synchronization.</td>
+        </tr>
+        <tr>
+          <td>Imported BPMN round trip</td>
+          <td>Not supported as a symmetric return path</td>
+          <td>BPMN diagrams synchronized from Solution Manager to Signavio cannot simply be synchronized back.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Connector prerequisites: several administrators own different parts</h2>
+
+    <p>The setup crosses SAP Solution Manager, SAP Signavio, SAP BTP, and SAP Cloud Connector. The course therefore separates responsibilities between Solution Manager, Signavio, BTP, and Cloud Connector administrators.</p>
+
+    <h3>SAP Solution Manager prerequisites</h3>
+
+    <p>A technical user with the required rights is needed in SAP Solution Manager. The lesson also requires verification that these SICF services are active:</p>
+
+    <ul>
+      <li><code>/sap/opu/odata/sap/ProcessManagement</code></li>
+      <li><code>/sap/bc/icf/info</code></li>
+    </ul>
+
+    <p>This is a useful troubleshooting boundary: connector access can fail even when credentials are correct if the required backend services are not active.</p>
+
+    <h3>SAP Signavio technical user</h3>
+
+    <p>The connector needs a SAP Signavio Process Manager user with write rights. The standard Enterprise license provides sufficient modeling rights, but the course recommends an API license for technical integrations, especially when Single Sign-On is used.</p>
+
+    <p>The training guidance also recommends a neutral technical-user name and <strong>one technical user per technical integration</strong>. Reusing the same technical user for several integrations makes lockouts and support diagnosis harder because one incorrect password can affect several integrations without a clear origin.</p>
+
+    <h3>SAP Cloud Connector</h3>
+
+    <p>SAP Cloud Connector is installed on a virtual machine in the customer environment. The course recommends medium sizing for this scenario. Cloud Connector provides the controlled connectivity path from SAP BTP to the on-premise SAP Solution Manager system.</p>
+
+    <h3>SAP BTP subaccount region</h3>
+
+    <p>The learning material lists two supported SAP BTP regions for the connector subscription:</p>
+
+    <ul>
+      <li><strong>EU10</strong> — AWS Frankfurt.</li>
+      <li><strong>US10</strong> — AWS Virginia.</li>
+    </ul>
+
+    <p>An existing subaccount can be reused when it is in one of these supported regions, even if other applications are already subscribed there. The course also allows reuse of the SAP Signavio Process Insights subaccount when it is hosted in EU10 or US10.</p>
+
+    <p>If the existing subaccount is in another region, a new supported-region subaccount is required. Because supported regions can change over time, verify the current product documentation before implementation.</p>
+
+    <h3>Cloud Connector trust and BTP entitlements</h3>
+
+    <p>After the BTP subaccount exists, the Cloud Connector administrator connects the subaccount to SAP Cloud Connector and establishes the trust relationship to SAP Solution Manager. The BTP administrator then adds the required connector entitlements to the subaccount.</p>
+
+    <h2>Subscribe, assign roles, and launch</h2>
+
+    <p>Once the prerequisites are complete, the SAP BTP administrator subscribes to the connector application and assigns the required connector roles to users or groups.</p>
+
+    <p>Connector access should be limited to administrators and users or groups responsible for executing synchronization. Role assignment is what enables the application tiles and actions for those users.</p>
+
+    <p>If a user cannot access the connector, cannot perform an action, or expected tiles are missing, the course recommends checking whether the required BTP roles are still assigned, reassigning them if needed, and relaunching the connector in an incognito or separate browser window.</p>
+
+    <h2>Synchronization Project: one configuration for one system pair</h2>
+
+    <p>A Synchronization Project stores the mapping and scope rules between one defined SAP Signavio system and one SAP Solution Manager system. Every project has a unique ID and controls one system combination, independent of the direction used in an individual synchronization run.</p>
+
+    <p>The configuration follows four stages:</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Step</th>
+          <th>Configuration</th>
+          <th>Important behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1. Create Synchronization Project</td>
+          <td>Select the system combination and SAP Solution Manager Solution and Branch.</td>
+          <td>One project controls one defined system pair and receives a unique ID.</td>
+        </tr>
+        <tr>
+          <td>2. Map Dictionary Categories</td>
+          <td>Map Signavio Dictionary object types to the corresponding Solution Manager object types.</td>
+          <td>The course highlights the Activity mapping and recommends the connector's predefined mapping where appropriate.</td>
+        </tr>
+        <tr>
+          <td>3. Map Attributes</td>
+          <td>Map Signavio and Solution Manager attributes.</td>
+          <td>Use recommended predefined mappings plus relevant standard or customer-specific custom attributes.</td>
+        </tr>
+        <tr>
+          <td>4. Preview and Save</td>
+          <td>Review selected settings before saving.</td>
+          <td>Saving triggers creation of required Dictionary categories and attributes in SAP Signavio before data transfer.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Revision-state filtering requires Process Governance</h3>
+
+    <p>The project can optionally restrict synchronization to processes in a specific revision state, for example only approved processes. The learning material states that SAP Signavio Process Governance is a prerequisite for using this revision-state selection.</p>
+
+    <p>This makes governance status part of integration scope: only process content that reached the selected lifecycle state needs to cross into the IT implementation view.</p>
+
+    <h2>Run a synchronization project</h2>
+
+    <p>A Synchronization Project must be activated before it can run. Activation creates the required Dictionary structures in SAP Signavio. The same project can later be edited for attribute mappings and executed multiple times.</p>
+
+    <p>The run sequence is:</p>
+
+    <ol>
+      <li><strong>Activate the project.</strong></li>
+      <li><strong>Select an active project.</strong> The connector displays the connected systems so the user can confirm the target pair.</li>
+      <li><strong>Select direction and content.</strong> Available content depends on the selected synchronization direction.</li>
+      <li><strong>Run synchronization.</strong> The connector executes the synchronization in stages and exposes progress, logs, and history.</li>
+    </ol>
+
+    <h3>Direction controls available content</h3>
+
+    <p>For an initial SAP Solution Manager → SAP Signavio synchronization, users can narrow the Solution Manager scope further. After the initial load, updates are managed from SAP Signavio and synchronized toward SAP Solution Manager.</p>
+
+    <p>The connector automatically adjusts the selectable content according to direction, which reduces the risk of choosing content that cannot be transferred in that run.</p>
+
+    <h3>Revision selection controls what is transferred</h3>
+
+    <p>If no Process Governance revision state is configured in the Synchronization Project, the course says the latest revision is synchronized by default. If a lifecycle state such as <strong>Approved</strong> is configured, only process content in that selected state is transferred.</p>
+
+    <h3>Logs and history are part of the control model</h3>
+
+    <p>Synchronization runs execute in stages. After completion, users can inspect synchronization logs and history. For a Lead, these logs are part of the integration evidence: do not conclude that Business and IT are aligned simply because a synchronization was started.</p>
+
+    <h2>Connector architecture in one view</h2>
+
+    <p>A practical architecture sequence is:</p>
+
+    <p><strong>SAP Signavio Process Manager ↔ Business Process Model Connector on SAP BTP ↔ SAP Cloud Connector ↔ SAP Solution Manager</strong></p>
+
+    <p>The arrows describe connectivity, not equal ownership. Process Manager becomes the leading process-information system after the initial alignment, while Solution Manager continues to own solution design and IT lifecycle artifacts.</p>
+
+    <h2>Lead decisions for the connector</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Decision</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Which system owns process information after initial sync?</td>
+          <td>SAP Signavio Process Manager is the leading system for process information; SAP Solution Manager remains the leading system for solution design and IT artifacts.</td>
+        </tr>
+        <tr>
+          <td>One shared technical user or one per integration?</td>
+          <td>Use a dedicated technical user per technical integration to isolate credentials, lockouts, and support diagnosis.</td>
+        </tr>
+        <tr>
+          <td>Can any BTP subaccount be reused?</td>
+          <td>Only reuse one in a connector-supported region; the course lists EU10 and US10.</td>
+        </tr>
+        <tr>
+          <td>Latest revision or approved-only synchronization?</td>
+          <td>Use latest by default; use a selected governance revision state when lifecycle control should gate transfer.</td>
+        </tr>
+        <tr>
+          <td>Is the connector symmetric?</td>
+          <td>No. Treat direction, content ownership, and BPMN round-trip limitations explicitly.</td>
+        </tr>
+      </tbody>
+    </table>
+
     <h2>Outside-in perspective: start from the experience, not the internal process</h2>
 
     <p>Customer experience is the result of how a person experiences the company's people, processes, technologies, products, services, and outputs. The important shift is from an <strong>inside-out</strong> view — what the organization does — to an <strong>outside-in</strong> view — what the customer or other stakeholder actually experiences.</p>
@@ -2144,6 +2391,14 @@ sitemap: false
           <td>Use Navigation Maps for user-friendly entry and storytelling; use Value Chains for high-level process architecture.</td>
         </tr>
         <tr>
+          <td>Signavio or Solution Manager as process-information owner?</td>
+          <td>After initial alignment, keep process information in Signavio and synchronize approved or latest updates toward Solution Manager; keep Solution Manager responsible for solution design and IT lifecycle artifacts.</td>
+        </tr>
+        <tr>
+          <td>Initial sync or ongoing sync?</td>
+          <td>Use Solution Manager → Signavio for initial alignment when process information already exists there; use Signavio → Solution Manager for ongoing process updates after ownership moves to Signavio.</td>
+        </tr>
+        <tr>
           <td>Inside-out process or outside-in journey?</td>
           <td>Use the process view to understand internal execution; use the journey view to understand the person's experience across organizational boundaries.</td>
         </tr>
@@ -2273,6 +2528,8 @@ sitemap: false
       <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/workspace-admin-guide/enable-sso">Single Sign-On using SAML</a>.</li>
       <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/user-guide/custom-graphics">Custom graphics</a>.</li>
       <li>SAP Signavio Process Governance — <a href="https://help.sap.com/docs/signavio-process-governance/user-guide/organization-settings">Organization settings</a>.</li>
+      <li>SAP Signavio Process Transformation Suite — <a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/business-process-model-connector-for-sap-signavio-solutions">Business Process Model Connector for SAP Signavio solutions</a>.</li>
+      <li>SAP Signavio Process Transformation Suite — <a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/creating-synchronization-project">Creating a Synchronization Project</a>.</li>
       <li>SAP Signavio Process Intelligence — <a href="https://help.sap.com/docs/signavio-process-intelligence/onboarding-and-data-integration-guide/creating-customizable-data-connections">Creating Customizable Data Connections</a>.</li>
       <li>SAP Signavio Process Intelligence — <a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Investigations and dashboard transition</a>.</li>
     </ul>
