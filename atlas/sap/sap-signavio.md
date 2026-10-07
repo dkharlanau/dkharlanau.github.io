@@ -582,7 +582,9 @@ sitemap: false
 
     <p><strong>Journey Complexity</strong> measures operational complexity inherited from linked processes. The learning material weights Flow and Handovers at 35% each, and IT Systems, Data Objects, and Linked Processes at 10% each.</p>
 
-    <p><strong>Journey Model Dimensions</strong> measure the size and populated content of the journey table. Model size is not the same as operational complexity.</p>
+    <p><strong>Journey Model Dimensions</strong> measure the size and populated content of the journey table. Model size is not the same as operational complexity. Repeated links to the same process, IT system, or organizational unit are counted once as linked objects even when several cells reference them.</p>
+
+    <p>The learning material maps Journey Complexity to T-shirt sizes: Low 0–20, Medium 20–60, High 60+. The published ranges overlap at the boundary values 20 and 60, so use the product's displayed classification instead of inventing a new boundary rule.</p>
 
     <p>Use journey work to create a traceable improvement chain:</p>
 
@@ -655,6 +657,10 @@ sitemap: false
 
     <p>Approval workflows connect Process Modeler and Process Governance. Process Modeler holds the content and publication state; Process Governance executes the approval tasks. SAP documentation requires a Process Governance license in addition to Process Modeler for this function.</p>
 
+    <h3>Reusable administrator-configured activities</h3>
+
+    <p>Process Governance administrators can configure reusable external activities before workflow designers use them. The learning material highlights <strong>Model Guideline Check</strong> and <strong>SharePoint File Upload</strong>. A guideline check can return error, must, warning, and hint values that a gateway can use to accept, reject, or route a model. SharePoint upload requires stored credentials and an activated activity configuration.</p>
+
     <h3>Integration boundary</h3>
 
     <p>Process Governance supports external actions, connectors, Trigger API, e-mail, and analytics access. It should not be treated as a general embedded workflow engine for another application: current SAP documentation states that tasks and cases are intended to be interacted with through the Process Governance user interface rather than through a generic task/case execution API.</p>
@@ -691,7 +697,9 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>The semantic model matters. A visually convincing analysis can still be wrong if the case definition, activities, timestamps, attributes, or metrics do not represent the business process correctly.</p>
+    <p>The semantic model matters. A visually convincing analysis can still be wrong if the <strong>case definition</strong>, <strong>activities</strong>, <strong>timestamps</strong>, <strong>attributes</strong>, or <strong>metrics</strong> do not represent the business process correctly.</p>
+
+    <p>A practical minimum model is: one business case or object instance, a sequence of business activities/events, timestamps that establish order and duration, contextual attributes, and metrics that answer a defined process question. Validate these semantics before interpreting a dashboard or root-cause result.</p>
 
     <h3>Process Insights current-state note</h3>
 
@@ -823,6 +831,37 @@ sitemap: false
 
     <p>Use groups for stable organizational roles. Use individual permissions only for justified exceptions. This reduces access drift and makes reviews easier.</p>
 
+    <h3>Administrator design controls</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Control</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Workspace languages</td><td>Control available content languages and the default language. Language activation affects diagrams, attributes, and Dictionary terms.</td></tr>
+        <tr><td>BPMN notation subsets</td><td>Expose only the modeling elements needed by the organization and reduce unnecessary notation complexity.</td></tr>
+        <tr><td>Custom attributes</td><td>Add governed metadata such as Process Owner, Review Date, RACI, IT System, Risks and Controls.</td></tr>
+        <tr><td>Attribute overlays</td><td>Visualize metadata with icons and conditional colors without changing the underlying process flow.</td></tr>
+        <tr><td>Custom graphics</td><td>Provide reusable SVG visuals for supported diagram elements. The learning material uses a 20 KB limit, maximum 2,000 anchor points, valid SVG, and no custom XML, JavaScript, or embedded images.</td></tr>
+        <tr><td>Dictionary categories</td><td>Control reusable object structure, reporting categories, modeling suggestions, and custom Dictionary attributes.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Administrator reports</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Report / dashboard</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Governance Report</td><td>Review aggregated diagrams, comments, Dictionary content, files, publishing states, and workspace usage.</td></tr>
+        <tr><td>User/Group Assignment Report</td><td>Export users and direct/indirect group membership for access review.</td></tr>
+        <tr><td>Process Model Dashboard</td><td>Analyze published models, views, open comments, creators, folders, and other model usage filters.</td></tr>
+        <tr><td>Usage Management Dashboard</td><td>Track assigned licenses and unique visitors over time.</td></tr>
+        <tr><td>License Usage Dashboard</td><td>Review available license types and which licenses are assigned to users.</td></tr>
+      </tbody>
+    </table>
+
     <h3>Security</h3>
 
     <p>Important controls include SSO, identity provisioning, IP filtering, password policy where applicable, least-privilege groups, and separation of technical users from human users. New workspaces should be designed around SAP Cloud Identity Services rather than old local-user assumptions.</p>
@@ -903,15 +942,20 @@ sitemap: false
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite">SAP Signavio Process Transformation Suite — product documentation</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/user-management-authentication-and-authorization/about-licenses">SAP Signavio — About Licenses</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/user-management-authentication-and-authorization/harmonization-of-authentication-and-identity-management">SAP Signavio — Harmonization of Authentication and Identity Management</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-modeler/security-guide/single-sign-on-using-saml">SAP Signavio — SAML licensing and license names</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-modeler/sap-signavio-process-manager-api-guide/access-and-licensing">Process Modeler API — Access and Licensing</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-manager/fsd-process-manager/sap-signavio-process-manager">Process Modeler / Process Manager — Feature Scope Description</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-collaboration-hub/8b9170c598674518972c9236fa257a7b/a17911fa61884c4fb532988810ad05b8.html">Process Collaboration Hub — Feature Scope Description</a></li>
       <li><a href="https://help.sap.com/docs/signavio-journey-modeler/user-guide/intro">Journey Modeler — User Guide</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-governance/user-guide">Process Governance — User Guide</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-governance/fsd-collaborator/sap-signavio-process-governance-collaborator">Process Governance Collaborator — Feature Scope Description</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-governance/implementation-guidelines">Process Governance — Implementation Guidelines</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/process-analysis">Process Intelligence — Process Analysis</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/managing-analysis-workflows">Process Intelligence — Analysis Workflows</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Process Intelligence — Investigations and dashboard transition</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-insights/feature-scope-description/application-features-insights-and-intelligence-package">Process Insights and Intelligence package</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-manager">Process Transformation Manager — product documentation</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/signavio-process-transformation-suite-user-guide/license-usage-dashboard">SAP Signavio — License Usage Dashboard</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/business-process-model-connector-for-sap-signavio-solutions">Business Process Model Connector — overview</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/creating-synchronization-project">Business Process Model Connector — synchronization project</a></li>
       <li><a href="https://www.omg.org/spec/BPMN/2.0.2/PDF">OMG BPMN 2.0.2 specification</a></li>
