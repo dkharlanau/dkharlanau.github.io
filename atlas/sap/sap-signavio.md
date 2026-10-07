@@ -109,7 +109,9 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>A useful Lead-level distinction is therefore: <strong>Explorer manages the process landscape; Editor builds the model; Dictionary standardizes shared objects; Collaboration Hub exposes approved content to consumers; analysis functions help evaluate the modeled process.</strong></p>
+    <p>A useful Lead-level distinction is therefore: <strong>Explorer manages the process landscape; Editor builds the model; Dictionary standardizes shared objects; Collaboration Hub exposes published content to consumers; analysis functions help evaluate the modeled process.</strong></p>
+
+    <p>Process Manager also supports collaboration and feedback. A commenting feature lets users discuss process content and provide feedback instead of treating the diagram as a static document.</p>
 
     <h2>The Explorer: manage the process landscape</h2>
 
@@ -154,6 +156,8 @@ sitemap: false
 
     <p>Attributes are reusable operational metadata. They can support filtering in the Explorer, reporting, documentation, and governance. A diagram with good visual flow but weak metadata may still be difficult to govern at scale.</p>
 
+    <p>Administrators can also define how custom attributes are visualized. Modelers can assign the attributes in the Editor, while their configured icons can be shown to process consumers in Process Collaboration Hub.</p>
+
     <h3>Syntax checks and convention checks solve different problems</h3>
 
     <table class="study-table">
@@ -180,14 +184,14 @@ sitemap: false
 
     <p>Syntax correctness is important for consistent models and for downstream capabilities such as reporting and simulation. Convention checks add a second governance layer. SAP Signavio provides best-practice conventions, while administrators can customize or define additional rules for the workspace.</p>
 
-    <p>The checks run when a model is saved, and users can also start them with the Review function. Errors, warnings, and hints help the modeler understand what needs attention.</p>
+    <p>The checks run when a model is saved, and users can also start them with the Review function. Errors, warnings, and hints help the modeler understand what needs attention. Where guideline information is available, the result panel can link the modeler to the relevant guidance.</p>
 
     <h3>Model translation avoids duplicate process copies</h3>
-    <p>If several languages are enabled in the workspace, the same process can be maintained in multiple languages. Users can switch language and translate the model instead of creating separate diagram copies. This reduces duplicate maintenance and helps keep one governed process definition.</p>
+    <p>If several languages are enabled in the workspace, the same process can be maintained in multiple languages. Users can switch language and translate the model instead of creating separate diagram copies. The learning material also describes automatic translation options. This reduces duplicate maintenance and helps keep one governed process definition.</p>
 
     <h2>QuickModel: capture the happy path first</h2>
 
-    <p>QuickModel is a table-based way to create BPMN 2.0 diagrams. The modeler enters process information into rows and columns while the system generates the basic process diagram. It is useful when the business expert should focus on process information rather than graphical notation.</p>
+    <p>QuickModel is a table-based way to create BPMN 2.0 diagrams. The modeler enters process information into rows and columns while the system generates the basic process diagram. This gives users who do not fully master BPMN a simple way to create a compliant starting model while they focus on process information rather than graphical notation. The table can also expose selected attributes as columns.</p>
 
     <p>QuickModel works well for initial modeling, workshops, and the main sequence of activities. It is especially useful for a <strong>happy path</strong>: the normal sequence without exceptions or complex branching.</p>
 
@@ -205,6 +209,8 @@ sitemap: false
 
     <p>The Dictionary is the central object repository of Process Manager. It prevents teams from redefining the same business objects independently in many process models. Common entries can represent organizational responsibilities, IT systems, applications, documents, activities, events, or other reusable business concepts.</p>
 
+    <p>In the Explorer, Dictionary parent categories and subcategories are shown as the organizing structure, while the entries inside the selected category represent the reusable business objects. This makes the Dictionary both a vocabulary and a traceable repository.</p>
+
     <p>The core value is reuse. A role, system, or document can be created once and linked from many models. This gives the process landscape a shared vocabulary and makes the usage of an object traceable across diagrams.</p>
 
     <h3>Create and link entries</h3>
@@ -213,7 +219,13 @@ sitemap: false
     <p>Documents and images that belong to a reusable business object should be linked to the Dictionary entry rather than copied independently into many process models. This keeps the supporting information close to the governed object.</p>
 
     <h3>Avoid duplicates before creating new objects</h3>
-    <p>When a new entry is created, the Dictionary can warn that an entry with the same name already exists. Duplicate names are technically possible, but they weaken governance. Search first, reuse when possible, and create a new object only when it is genuinely different.</p>
+    <p>When a new entry is created, the Dictionary can warn that an entry with the same name already exists. Duplicate names are technically possible, but they weaken governance. Search first, reuse when possible, and create a new object only when it is genuinely different. If the exact name is unknown, the learning material shows that entering <code>**</code> in the search field lists all entries in the selected category.</p>
+
+    <h3>Dictionary entries can carry custom attributes</h3>
+    <p>Dictionary entries can be enriched with additional information through custom attributes defined by the workspace administrator. This is useful when the shared object needs governed metadata beyond its title or standard properties.</p>
+
+    <h3>Use Dictionary entries from QuickModel</h3>
+    <p>The Dictionary is not limited to the Graphical Editor. In QuickModel, typing in an activity attribute field can suggest existing Dictionary entries from the matching category. Additional columns can be added to reach entries from other categories. This keeps fast table-based capture connected to the same governed vocabulary.</p>
 
     <h3>Local diagram change vs central Dictionary change</h3>
     <p>This is an important ownership boundary. A change made to attributes while modeling can affect only that diagram. A change made to the underlying Dictionary entry is a central change and applies to linked process models.</p>
@@ -260,9 +272,9 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>A navigation map can use shapes, text boxes, and images. Elements can link to diagrams, workspace folders, URLs, and Dictionary entries. The goal is usability: help process consumers enter the process world without opening a detailed BPMN diagram first.</p>
+    <p>A navigation map can use shapes, text boxes, and images. Shapes can be customized through properties such as size, description, color, gradient, stroke, and flat design, and administrators can provide custom attributes. Elements and uploaded images can link to diagrams, workspace folders, URLs, and Dictionary entries. Dictionary links can also be assigned to images, shapes, and text boxes. The goal is usability: help process consumers enter the process world without opening a detailed BPMN diagram first.</p>
 
-    <p>A value chain is more structured. Each element can represent a process or process group, and the elements can be linked in sequence to show a high-level architecture. Navigation maps and value chains can also be connected to each other, which makes it possible to build a clear hierarchy from company-level view down to detailed process models.</p>
+    <p>A value chain is more structured. Each element can represent a process or process group, and the elements can be linked in chronological order to show high-level and hierarchical relationships. Many of the same modeling options used for navigation maps also apply here, including links, images, custom attributes, and Live Insights. Navigation maps and value chains can also be connected to each other, which makes it possible to build a clear hierarchy from company-level view down to detailed process models.</p>
 
     <h3>Live Insights connect the map to analytics</h3>
     <p>Live Insights can place analytics or KPI information from SAP Signavio Process Intelligence into a navigation map or value chain. This moves the high-level map from static navigation toward operational awareness. Visibility depends on authorization, and the feature requires the relevant Process Intelligence license.</p>
@@ -368,10 +380,11 @@ sitemap: false
     <h2>Operational details from the learning material</h2>
 
     <ul>
-      <li>Navigation Map images are uploaded through Image Management and use SVG format. The training material describes a 50 KB limit for modeler uploads and a separate 20 KB limit for administrator-provided setup images.</li>
-      <li>Uploaded images may require a security approval before they become available.</li>
+      <li>Navigation Map images are uploaded through Image Management and use SVG format. The training material states that modelers can upload images there, with a 50 KB limit, while images provided through administrator setup use a separate 20 KB limit.</li>
+      <li>Administrator setup does not support bulk image uploads, and uploaded images can only be deleted by workspace administrators.</li>
+      <li>Uploaded images are checked for possible security vulnerabilities and may require approval before they become available.</li>
       <li>After saving a Navigation Map, preview it in Process Collaboration Hub and test the links.</li>
-      <li>QuickModel is intended for BPMN process capture; more complex elements are added later in the Graphical Editor.</li>
+      <li>QuickModel is intended for BPMN process capture; more complex elements are added later in the Graphical Editor. Gateway or other missing logic can first be recorded in documentation for a more experienced modeler to incorporate later.</li>
       <li>Bulk Dictionary maintenance uses Excel import/export and requires correct category and attribute mapping.</li>
       <li>Dictionary sandbox proposals should be reviewed regularly and moved to productive categories only after approval.</li>
     </ul>
