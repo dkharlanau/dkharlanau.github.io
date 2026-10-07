@@ -409,7 +409,9 @@ sitemap: false
 
     <h2>Variant Management: standard core, controlled local difference</h2>
 
-    <p>A process variant is a version of a business process that captures justified differences in execution or documentation while keeping a relationship to a common process framework. Variants are useful when one global process needs different regional, organizational, product, brand, customer, or transformation-specific behavior.</p>
+    <p>SAP Signavio Variant Management is consumed from the Process Collaboration Hub, where the Variant Management area provides access to templates, Variant Groups, dimensions, values, and variant relationships.</p>
+
+    <p>A process variant is a version of a business process that captures justified differences in execution or documentation while keeping a relationship to a common process framework. Variants are useful when one global process needs different regional, organizational, product, brand, customer-journey, customer-type, or transformation-specific behavior.</p>
 
     <p>Variant management is therefore not uncontrolled copying. Its purpose is to maintain transparency between a common template and the processes that differ from it.</p>
 
@@ -428,7 +430,43 @@ sitemap: false
 
     <p>The <strong>process template</strong> is the main model to which variants are attached. The differentiating characteristics are defined as <strong>dimensions</strong>. These dimensions are represented by Dictionary categories, which must first be configured for that purpose in Process Manager. Specific Dictionary entries then become the dimension values.</p>
 
-    <p>Creating a template automatically creates a <strong>Variant Group</strong> containing the template and its attached variants. Variant Groups organize the relationship and are also used when managing dimensions. Reverting the template removes the Variant Group relationship without deleting the process models themselves.</p>
+    <p>Creating a template automatically creates a <strong>Variant Group</strong> containing the template and its attached variants. Variant Groups organize the relationship and are also used when managing dimensions. To remove a Variant Group, the template is reverted. The attached process models are not deleted; they simply stop being variants in that group.</p>
+
+    <h3>Example: one global O2C process, several justified variants</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Purpose</th>
+          <th>Typical difference</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Core O2C Template</td>
+          <td>Common global process</td>
+          <td>Standard order, fulfillment, and invoicing structure.</td>
+        </tr>
+        <tr>
+          <td>US B2B Variant</td>
+          <td>Regional and customer-type adaptation</td>
+          <td>Credit checks and state-specific tax handling.</td>
+        </tr>
+        <tr>
+          <td>EU B2C Variant</td>
+          <td>Regional and customer-type adaptation</td>
+          <td>VAT processing and GDPR-related requirements.</td>
+        </tr>
+        <tr>
+          <td>APAC B2B Variant</td>
+          <td>Regional adaptation</td>
+          <td>Local shipping rules and extended payment terms.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The point is not to create four unrelated processes. The template keeps the common operating model visible, while variants capture the differences that are actually required for region, customer context, regulation, or operating practice.</p>
 
     <h3>Attach, clone, or detach?</h3>
 
@@ -463,11 +501,11 @@ sitemap: false
 
     <h3>Change propagation keeps variants aligned</h3>
 
-    <p>When a template changes, a variant can show unresolved updates in Process Collaboration Hub. Those updates are reviewed in the Editor, where the modeler can apply or ignore them. Simple changes that do not alter diagram structure, such as some renaming changes, can be propagated automatically. More complex structural changes require manual modeling.</p>
+    <p>When a template changes, a variant can show unresolved updates in Process Collaboration Hub. Those updates are reviewed in the Editor, where the modeler can apply or ignore them. Some changes, such as renaming, can be propagated automatically. The learning material also demonstrates automatic propagation for supported added or deleted process elements. Other changes can require manual adjustment in the variant. The correct boundary is therefore <strong>supported automatic propagation vs changes that require modeler review and manual work</strong>, not simply “non-structural vs structural.”</p>
 
     <p>The update notification is visible only when the template has been published in its newest revision. Users who need immediate awareness can subscribe to change-propagation notifications.</p>
 
-    <p><strong>Lead decision:</strong> use a variant when the difference is legitimate but the process still belongs to a common standard. Detach only when independent evolution is more important than template alignment.</p>
+    <p><strong>Lead decision:</strong> use a variant when the difference is legitimate but the process still belongs to a common standard. Detach only when independent evolution is more important than template alignment. Variant Management is therefore a governance mechanism for balancing global consistency with local compliance and operating needs.</p>
 
     <h2>Reporting: turn model metadata into governance evidence</h2>
 
