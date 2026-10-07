@@ -25,6 +25,10 @@ tags:
   - simulation
   - reporting
   - process-variants
+  - bpmn-modeling
+  - gateways
+  - events
+  - subprocesses
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
@@ -217,6 +221,331 @@ sitemap: false
     </ol>
 
     <p>This is a useful facilitation pattern because it separates <strong>process discovery</strong> from <strong>notation detail</strong>.</p>
+
+    <h2>BPMN modeling practice: build a model that behaves correctly</h2>
+
+    <p>BPMN 2.0 is the common process-modeling notation used throughout these examples. The course frames it as more than a drawing language: a useful model must be syntactically correct, semantically correct, and understandable to its audience.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Quality dimension</th>
+          <th>Main question</th>
+          <th>Who can check it?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Syntax</td>
+          <td>Are BPMN elements connected and used according to notation rules?</td>
+          <td>The modeling tool can check many syntax problems.</td>
+        </tr>
+        <tr>
+          <td>Semantics</td>
+          <td>Are the tasks, order, responsibilities, conditions, and outcomes correct for the real business process?</td>
+          <td>People with process knowledge.</td>
+        </tr>
+        <tr>
+          <td>Understandability</td>
+          <td>Can the intended audience follow the model without unnecessary confusion?</td>
+          <td>Process viewers and reviewers.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>This creates an important design rule: <strong>business complexity does not justify visual complexity</strong>. Keep the process flow easy to follow, reduce crossing lines, align tasks and flows, use color and annotations carefully, and show only the level of detail required by the target group. Management may need a high-level process, while implementation teams may need a much more precise model.</p>
+
+    <h3>Core BPMN building blocks</h3>
+
+    <p>The course groups the basic modeling language into four areas: <strong>flow objects</strong>, <strong>connecting objects</strong>, <strong>artifacts</strong>, and <strong>responsibilities</strong>. At the simplest level, a process needs a start event, sequence flow, tasks, and an end event.</p>
+
+    <p>Read a process from left to right and top to bottom. A start event describes the trigger, tasks describe work, sequence flows define the order of execution, and the end event describes the state reached when the process goal is achieved.</p>
+
+    <h3>The token concept explains process behavior</h3>
+
+    <p>A useful mental model is to imagine a token moving through the process. Tasks hold the token while work is performed. Splits can create or route tokens, joins can synchronize them, and events can make them wait or react. The token must be able to reach a valid process end.</p>
+
+    <p>This concept is useful even when the BPMN diagram is not technically executed. SAP Signavio uses the same execution logic for syntax checks and simulations, and it is the easiest way to understand deadlocks, duplicate execution, parallel behavior, and event waiting.</p>
+
+    <h3>Name tasks and events differently</h3>
+
+    <p>Tasks describe action and should normally use active wording such as <strong>Create invoice</strong>: verb plus business object. Events describe a state or something that happened, for example <strong>Order received</strong> or <strong>Invoice created</strong>. Start events should make the trigger clear; end events should make the achieved state clear.</p>
+
+    <p>These naming patterns are presented as BPMN modeling best practices rather than absolute syntax rules. A justified deviation can be acceptable if the model remains meaningful and consistent.</p>
+
+    <h2>Responsibilities: Pools, Lanes, and additional participants</h2>
+
+    <p>A pool normally represents the organization or process participant within which the process is modeled. Lanes divide that pool into responsibilities such as process roles, departments, organizational units, or positions. A task placed in a lane is owned by that lane's responsibility.</p>
+
+    <p>A sequence flow that moves from one lane to another is therefore also a handover of execution responsibility. This makes lane design important for communication and ownership analysis.</p>
+
+    <p>More than one participant can be involved in a task, but one main responsibility should still own it. SAP Signavio provides an additional-participant element for this purpose; the course explicitly notes that this is SAP Signavio-specific and not part of the official BPMN 2.0 element set.</p>
+
+    <p>For maintainability, prefer process-related roles or organizational responsibilities over named people. A person's name changes more often than the process role and increases maintenance across all affected models.</p>
+
+    <h2>Gateways: route and synchronize tokens correctly</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Gateway</th>
+          <th>Split behavior</th>
+          <th>Join behavior</th>
+          <th>Use when</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>XOR / Exclusive</td>
+          <td>Exactly one path is selected.</td>
+          <td>Alternative paths are merged without synchronization.</td>
+          <td>The result is either/or.</td>
+        </tr>
+        <tr>
+          <td>AND / Parallel</td>
+          <td>All outgoing paths are activated.</td>
+          <td>Waits for all required incoming tokens.</td>
+          <td>Independent work must all be completed.</td>
+        </tr>
+        <tr>
+          <td>OR / Inclusive</td>
+          <td>One or several paths can be activated.</td>
+          <td>Waits only for the tokens that were actually activated.</td>
+          <td>Several optional combinations are valid, with at least one selected.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>An XOR gateway is not the business decision</h3>
+
+    <p>A gateway is a routing control, not a task. For example, <strong>Select meal</strong> is the decision task; the following XOR gateway reads that result and routes the token. A person cannot own the gateway itself, and placing a gateway inside a lane does not make that lane responsible for a decision that was never modeled.</p>
+
+    <p>For XOR naming, the course recommends a question on the splitting gateway, mutually exclusive answers on the outgoing sequence flows, and no label on the merging gateway.</p>
+
+    <h3>Split and join consistently</h3>
+
+    <p>The course recommends pairing a split with the corresponding merge when the branches later return to one flow. This keeps token behavior explicit and the diagram easier to maintain. An XOR split does not always require a join in the BPMN standard — for example, branches may end at different end events — but an explicit merge is recommended where paths logically come back together.</p>
+
+    <h3>Parallel work only reduces time when resources are actually parallel</h3>
+
+    <p>An AND split makes tasks independent, but it does not create extra people. If two parallel tasks belong to one resource, that person still performs them one after another. Cycle-time reduction becomes possible when separate resources can really work at the same time. The AND join then waits until all parallel work is complete.</p>
+
+    <h3>Two flow errors to recognize immediately</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Error</th>
+          <th>Token problem</th>
+          <th>Typical cause</th>
+          <th>Correction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Deadlock</td>
+          <td>A synchronizing join waits for a token that will never arrive.</td>
+          <td>An AND join receives branches that were not all created by the preceding logic.</td>
+          <td>Correct the branch structure, for example by adding the missing XOR merge before synchronization.</td>
+        </tr>
+        <tr>
+          <td>Multi-merge</td>
+          <td>Several tokens continue independently and execute the same downstream task more than once.</td>
+          <td>Parallel tokens are merged with logic that does not synchronize them.</td>
+          <td>Add the missing AND join to synchronize the tokens into one continuation.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>SAP Signavio Process Manager's Graphical Editor checks for deadlocks and multi-merges and can show where they occur. The token concept explains why the error exists instead of treating the warning as an arbitrary modeling rule.</p>
+
+    <h2>Events: model states, waiting, and external triggers</h2>
+
+    <p>Events mark states in a process and allow the process to react to its environment. Three questions help select the right event: <strong>where</strong> is it used — start, intermediate, or end; <strong>how</strong> does it behave — catching or throwing; and <strong>what type</strong> of trigger or state does it represent?</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Event position</th>
+          <th>Basic behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Start event</td>
+          <td>Represents the process trigger and has an outgoing sequence flow.</td>
+        </tr>
+        <tr>
+          <td>Intermediate event</td>
+          <td>Appears inside the process; a plain intermediate event has incoming and outgoing flow and can mark a milestone.</td>
+        </tr>
+        <tr>
+          <td>End event</td>
+          <td>Represents the reached process state or goal and has incoming flow only.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Catching</strong> events wait for something to happen. <strong>Throwing</strong> events produce or signal something. Start events are catching; end events are throwing.</p>
+
+    <h3>Common event types</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Main meaning</th>
+          <th>Important boundary</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Message</td>
+          <td>Interaction such as receiving or sending information, goods, files, or another external signal.</td>
+          <td>A catching message can make the process wait; a throwing message can represent that something was sent.</td>
+        </tr>
+        <tr>
+          <td>Timer</td>
+          <td>React to a fixed, recurring, relative, or delayed point in time.</td>
+          <td>Timer events are catching because the process cannot control time.</td>
+        </tr>
+        <tr>
+          <td>Conditional</td>
+          <td>React when an external condition becomes true.</td>
+          <td>Conditional events are catching because the process does not control when the condition occurs.</td>
+        </tr>
+        <tr>
+          <td>Link</td>
+          <td>Technical connection that can replace a long sequence-flow line.</td>
+          <td>Matching link events must use the same name; they add structure, not business meaning.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>A throwing intermediate message event can itself express the state that a message was sent. Modeling both an equivalent send task and the throwing message event can duplicate the action, so the modeler must be clear about what each element represents.</p>
+
+    <h3>Attached events can interrupt or create an additional path</h3>
+
+    <p>An attached catching intermediate event can be used as a cancel condition for a task or subprocess, with an alternative path for the exception. Examples include a timeout or an external condition. The course also shows a <strong>non-interrupting</strong> attached message event: the dashed boundary event does not cancel the subprocess; it creates an additional token so the process can react while the original work continues.</p>
+
+    <h3>Event-based gateway: react to whichever external event happens first</h3>
+
+    <p>An event-based gateway is used when the decision is made outside the process. The token waits for the connected catching intermediate events, and the first event that occurs determines the path. This is useful for scenarios such as waiting for payment while also handling reminder deadlines or cancellation conditions.</p>
+
+    <p>Only catching intermediate events belong after an event-based gateway because the process is waiting to react.</p>
+
+    <h2>Subprocesses: control the level of detail</h2>
+
+    <p>Subprocesses solve a common modeling problem: some activities need much more detail than the main process should display. The main diagram can stay focused on its core facts while detailed steps move into another level.</p>
+
+    <h3>Collapsed subprocess: hide detail behind a process step</h3>
+
+    <p>A collapsed subprocess is shown as one process element with a plus marker. Detailed steps can be moved into a separate process diagram. In SAP Signavio, selecting elements and transforming them into a subprocess can create the new subprocess file directly in the Explorer.</p>
+
+    <p>A subprocess element can be linked either to a newly created process diagram or to an existing process model in the workspace. The system itself does not automatically classify a file as “main process” or “subprocess,” so a clear naming convention can help users recognize its purpose.</p>
+
+    <h3>Reusable global process: use a Call Activity</h3>
+
+    <p>If the same detailed process is needed in several main processes, reuse it instead of modeling it several times. The course represents this reusable global reference as a <strong>Call Activity</strong> with a bold border. Examples such as Product Sourcing or Financial Handling can then be called from Order Handling, Stock Management, Repair, or other processes.</p>
+
+    <p>This creates three benefits: lower modeling effort, stronger process harmonization, and one maintained source for the reusable process logic.</p>
+
+    <h3>Expanded subprocess: local grouping, not reusable global logic</h3>
+
+    <p>An expanded subprocess shows its internal tasks directly inside the parent model. It is useful when several tasks belong to one intermediate goal and should be visually grouped without losing their relationship to the main process. In the course framing, an expanded subprocess belongs to that particular process scenario and is not reused as a separate global model.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Pattern</th>
+          <th>Detail location</th>
+          <th>Reuse</th>
+          <th>Use when</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Collapsed subprocess</td>
+          <td>Behind the subprocess element / linked detailed model</td>
+          <td>Can link to a dedicated model</td>
+          <td>The main diagram should stay compact.</td>
+        </tr>
+        <tr>
+          <td>Call Activity</td>
+          <td>Referenced global process</td>
+          <td>Designed for reuse across processes</td>
+          <td>The same process logic appears in several parent processes.</td>
+        </tr>
+        <tr>
+          <td>Expanded subprocess</td>
+          <td>Visible inside the parent process</td>
+          <td>Local to that process scenario</td>
+          <td>A group of tasks needs one visible intermediate context.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Process interactions: use Pools and Message Flows for externals</h2>
+
+    <p>An external participant can be modeled as a collapsed pool and treated as a black box. The internal process of that participant is not shown; only the interaction with it matters.</p>
+
+    <p>The BPMN boundary is strict: <strong>sequence flows stay inside a pool; message flows cross between pools</strong>. Message flows are for communication between process participants. They are not used as an internal substitute for sequence flow.</p>
+
+    <p>This distinction is useful in integration discussions. A process handoff inside one organizational process is different from a message exchanged across participant boundaries.</p>
+
+    <h3>When to use a correspondence diagram</h3>
+
+    <p>Model several interacting processes in one diagram only when task-level interaction is important, the processes are not too complex, and the result remains easy to follow. Showing every interacting process together can make the model harder to understand than the process itself.</p>
+
+    <p>For a Lead, this is a scope decision: show enough cross-participant behavior to explain the contract and timing, but avoid turning one diagram into the entire enterprise landscape.</p>
+
+    <h2>IT systems and Data Objects: enrich the process without hiding the flow</h2>
+
+    <p>BPMN provides <strong>Data Objects</strong> as standard elements for information or documents used or created in the process. A data object may represent physical documents, digital data, or abstract information and is connected to activities through data associations.</p>
+
+    <p>SAP Signavio also provides an <strong>IT System</strong> element as a custom modeling element. It indicates that an application or system supports particular process steps and is connected to activities by associations.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Element</th>
+          <th>Standard status</th>
+          <th>What it communicates</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Data Object</td>
+          <td>BPMN standard element</td>
+          <td>Information or a document consumed or produced by process work.</td>
+        </tr>
+        <tr>
+          <td>IT System object</td>
+          <td>SAP Signavio custom element</td>
+          <td>An application or system supporting one or more process steps.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Use these elements moderately. Too many data and system artifacts can hide the actual process flow.</p>
+
+    <h3>A lane can represent more than a department</h3>
+
+    <p>The course notes that BPMN does not prescribe one fixed semantic meaning for lanes. A modeling convention can use lanes for roles, departments, positions, systems, or applications. For example, a CRM system can have a lane when the model needs to show system-performed communication and data handling.</p>
+
+    <p>When the system's internal logic is unknown or not needed, model the human-system interaction without inventing the system's internal process.</p>
+
+    <h2>BPMN practice drill: Order Processing in three iterations</h2>
+
+    <p>The learning exercises build one order process in stages. This is a useful review pattern because each stage adds one modeling problem instead of changing everything at once.</p>
+
+    <ol>
+      <li><strong>Part 1 — flow control:</strong> model order processing with responsibilities, one XOR decision for shipment treatment, and an AND pattern for work that can proceed independently.</li>
+      <li><strong>Part 2 — events:</strong> move invoice responsibility to Finance, require prepayment before shipment, model seven-day and five-day waiting periods, payment receipt, reminder, and cancellation with event-based behavior.</li>
+      <li><strong>Part 3 — interaction and information:</strong> add customer communication, ordering-system support, invoice and cancellation Data Objects, and move payment processing into a subprocess.</li>
+    </ol>
+
+    <p>The exercises explicitly allow more than one valid visual solution. The review criteria are more important than copying one layout: check syntax, semantics, naming conventions, responsibility, token behavior, and readability.</p>
 
     <h2>The Dictionary: one shared business vocabulary</h2>
 
@@ -675,6 +1004,22 @@ sitemap: false
           <td>Use Navigation Maps for user-friendly entry and storytelling; use Value Chains for high-level process architecture.</td>
         </tr>
         <tr>
+          <td>XOR, AND, or OR?</td>
+          <td>Use XOR for one alternative, AND for all parallel paths, and OR when one or several optional paths may apply.</td>
+        </tr>
+        <tr>
+          <td>Sequence flow or message flow?</td>
+          <td>Use sequence flow inside one pool; use message flow for communication between pools.</td>
+        </tr>
+        <tr>
+          <td>Collapsed subprocess, Call Activity, or expanded subprocess?</td>
+          <td>Hide detail with a collapsed subprocess, reuse global logic with a Call Activity, and keep scenario-specific grouped detail visible with an expanded subprocess.</td>
+        </tr>
+        <tr>
+          <td>Data Object or IT System object?</td>
+          <td>Use the BPMN Data Object for information/documents; use the SAP Signavio IT System element to show application support.</td>
+        </tr>
+        <tr>
           <td>Simulation or reporting?</td>
           <td>Use simulation for what-if behavior under assumptions; use reporting to aggregate model and attribute information.</td>
         </tr>
@@ -731,6 +1076,7 @@ sitemap: false
       <li>SAP Signavio Process Manager — <a href="https://help.sap.com/doc/10ae12665b494798a8a332bcc195689d/SHIP/en-US/sap-signavio-process-manager-user-guide-en.pdf">Process Manager User Guide</a>.</li>
       <li>SAP Signavio Process Manager — <a href="https://help.sap.com/doc/126253d0517d4ae9afffd4d1c7a01c63/SHIP/en-US/sap-signavio-process-manager-workspace-admin-guide-en.pdf">Workspace Admin Guide</a>.</li>
       <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/user-guide/fa8963fa6dad1014a4730ff5fb2ca89e.html">Navigation Map Elements</a>.</li>
+      <li>Object Management Group — <a href="https://www.omg.org/spec/BPMN/2.0.2/PDF">BPMN 2.0.2 specification</a>.</li>
       <li>SAP Signavio Process Intelligence — <a href="https://help.sap.com/docs/signavio-process-intelligence/onboarding-and-data-integration-guide/creating-customizable-data-connections">Creating Customizable Data Connections</a>.</li>
       <li>SAP Signavio Process Intelligence — <a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Investigations and dashboard transition</a>.</li>
     </ul>
