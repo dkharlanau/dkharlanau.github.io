@@ -123,7 +123,7 @@ sitemap: false
     <ul>
       <li>Create a folder structure that reflects the organization or process architecture.</li>
       <li>Save, copy, delete, and move diagrams.</li>
-      <li>Control access rights through the workspace access concept.</li>
+      <li>Control access rights through the workspace access concept; access rights are assigned by the workspace administrator.</li>
       <li>Share or publish diagrams to SAP Signavio Process Collaboration Hub.</li>
       <li>Use the Dictionary to enrich models with centrally managed business objects.</li>
       <li>Manage and restore diagram revisions.</li>
@@ -134,7 +134,7 @@ sitemap: false
     <ul>
       <li>Create standard reports from selected processes.</li>
       <li>Simulate process instances.</li>
-      <li>Compare versions of process diagrams.</li>
+      <li>Compare process diagrams and use comparison to contrast states such as As-Is and To-Be.</li>
     </ul>
 
     <h3>Folder structure is a governance decision</h3>
@@ -236,7 +236,7 @@ sitemap: false
     <p>A central repository needs accountable owners. A small responsible group can maintain terminology, review proposed objects, correct duplicates, and keep categories usable. Giving every modeler unrestricted productive maintenance rights usually increases inconsistency over time.</p>
 
     <h3>The sandbox approach balances contribution and control</h3>
-    <p>A practical governance pattern is to create sandbox subcategories. Modelers can propose missing entries there without directly changing productive Dictionary categories. Dictionary owners then review proposals, approve useful entries, and move them into the correct productive category.</p>
+    <p>A practical governance pattern is to create sandbox subcategories. The learning material recommends a sandbox for each Dictionary parent category, with modeler access controlled by an appropriate administrator-defined access concept. Modelers can propose missing entries there without directly changing productive Dictionary categories. Dictionary owners then review proposals, approve useful entries, and move them into the correct productive category.</p>
 
     <p>The sandbox is therefore not only a temporary folder. It is a controlled intake mechanism: contribution stays open, while productive terminology remains governed.</p>
 
@@ -244,7 +244,7 @@ sitemap: false
     <p>For large maintenance tasks, Dictionary entries can be exported to an XLS or XLSX file, edited in bulk, and imported again. During import, categories and attributes must be mapped correctly. This is useful when many entries need to be created or adjusted, but it also increases the need for ownership and review.</p>
 
     <h3>Merge duplicate entries</h3>
-    <p>If duplicate Dictionary entries are found, the Merge function can combine them into a target entry. This is an important cleanup capability because duplicate objects weaken reuse, reporting, and consistent process language.</p>
+    <p>If duplicate Dictionary entries are found, the Merge function can combine them into a target entry. During the merge, the responsible user can decide which information should be retained in the target entry. This is an important cleanup capability because duplicate objects weaken reuse, reporting, and consistent process language.</p>
 
     <h2>Navigation Maps and Value Chains: two different high-level views</h2>
 
@@ -375,7 +375,7 @@ sitemap: false
       <li><strong>Improvement</strong> — how reporting, simulation, comparison, and execution data support better decisions.</li>
     </ol>
 
-    <p>A concise answer can be: “I would define the process architecture first, model detailed flows in BPMN, use the Dictionary for shared business objects, apply conventions and access rules for governance, publish the approved content for process consumers, and then use analysis or execution data to identify improvement opportunities.”</p>
+    <p>A concise answer can be: “I would define the process architecture first, model detailed flows in BPMN, use the Dictionary for shared business objects, apply conventions and access rules for governance, publish the process content for process consumers, and then use analysis or execution data to identify improvement opportunities.”</p>
 
     <h2>Operational details from the learning material</h2>
 
