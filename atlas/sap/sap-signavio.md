@@ -29,6 +29,10 @@ tags:
   - gateways
   - events
   - subprocesses
+  - administration
+  - access-control
+  - security
+  - user-management
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
@@ -1209,6 +1213,360 @@ sitemap: false
 
     <p>Neither view replaces the other. If the model is wrong, the design needs to change. If execution differs, the team must determine whether the variation is valid, caused by data or configuration, or evidence of a real process problem.</p>
 
+    <h2>Administration: keep the workspace usable as it scales</h2>
+
+    <p>SAP Signavio administrators manage workspace settings, user access, governance controls, and the configuration that keeps process content consistent as the number of users grows. The first user who registers a workspace becomes the <strong>Tenant Owner</strong>. The training material states that this user cannot be deleted.</p>
+
+    <p>Because administrators have broad workspace rights, the role is best suited to users who understand both the product and BPMN. Administrative changes should be communicated and documented so that the admin team works from the same configuration assumptions.</p>
+
+    <h3>Administrative responsibility is product-specific</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Typical administrator responsibilities</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Process Manager</td>
+          <td>User groups and access rights, workspace settings, modeling conventions, custom attributes, governance and security settings.</td>
+        </tr>
+        <tr>
+          <td>Process Collaboration Hub</td>
+          <td>User accounts and groups, licenses, attribute visualization, audiences, Process Governance enablement, appearance, consumption information, and value accelerators.</td>
+        </tr>
+        <tr>
+          <td>Journey Modeler</td>
+          <td>Journey-model templates plus related administration through Process Manager and Collaboration Hub.</td>
+        </tr>
+        <tr>
+          <td>Process Governance</td>
+          <td>Workflow users/groups/labels, Process Manager Dictionary integration, connectors, approval-workflow setup, read confirmations, process rating, JavaScript-task enablement, and model-guideline checks.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Administrative rights do not automatically transfer between products. In particular, being an administrator in Process Manager and Collaboration Hub does not automatically make the same user a Process Governance administrator.</p>
+
+    <h3>Workspace region is visible in the tenant URL</h3>
+
+    <p>The course material maps SAP Signavio workspace URLs to hosting regions. Examples include the US tenant in Northern Virginia, the traditional editor tenant in Frankfurt, and regional tenants for Sydney, Tokyo, Canada Central, Seoul, and Singapore. Because hosting and service availability can change, treat the URL-to-region mapping as operational tenant information and verify current service status before making architecture or compliance decisions.</p>
+
+    <h2>General workspace settings</h2>
+
+    <h3>Languages affect more than diagram labels</h3>
+
+    <p>Administrators can enable multiple workspace languages and must define a default language. The first language in the configured list becomes the default. Adding languages affects Process Manager content broadly, including <strong>attributes, Dictionary terms, and diagrams</strong>, not only visible activity labels.</p>
+
+    <p>A practical governance rule is to enable only languages that the organization actually maintains. Every extra language increases translation and content-maintenance responsibility.</p>
+
+    <h3>Modeling conventions turn standards into automated checks</h3>
+
+    <p>Modeling conventions help administrators enforce consistency across many modelers. The course describes convention checks across areas such as notation syntax, naming, process structure, architecture, and diagram layout. Administrators can create custom conventions and add organization-specific rules.</p>
+
+    <p>This extends the earlier distinction between syntax and semantics: the tool can check formal and configured rules, while people still need to validate whether the process itself is correct.</p>
+
+    <h2>Reduce BPMN complexity with notation subsets</h2>
+
+    <p>BPMN 2.0 contains a large number of elements. Most organizations use only a subset regularly. Administrators can therefore expose a smaller notation subset so modelers see the elements that fit their process type and do not add unnecessary complexity.</p>
+
+    <p>Administrators can also define the corporate appearance of notation elements, such as task colors and fonts. Formatting changes apply across notation subsets for that element type, so visual standards should be designed centrally rather than corrected diagram by diagram.</p>
+
+    <h2>Custom attributes: extend the information model</h2>
+
+    <p>Custom attributes allow the workspace to capture organization-specific information on diagram elements and Dictionary categories. They behave like standard attributes and can also be exposed in Process Collaboration Hub.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Object</th>
+          <th>Useful attribute examples</th>
+          <th>Typical type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Process</td>
+          <td>Process Owner</td>
+          <td>Text or Dictionary link</td>
+        </tr>
+        <tr>
+          <td>Process</td>
+          <td>Review Date</td>
+          <td>Date</td>
+        </tr>
+        <tr>
+          <td>Process</td>
+          <td>Process Status / maturity</td>
+          <td>Drop-down</td>
+        </tr>
+        <tr>
+          <td>Process</td>
+          <td>Customer interaction / ISO relevance</td>
+          <td>Boolean</td>
+        </tr>
+        <tr>
+          <td>Task</td>
+          <td>Applicable documents or templates</td>
+          <td>Dictionary link or external document/URL</td>
+        </tr>
+        <tr>
+          <td>Task</td>
+          <td>RACI responsibilities</td>
+          <td>Dictionary links</td>
+        </tr>
+        <tr>
+          <td>Task</td>
+          <td>Risks and Controls</td>
+          <td>Risk-management information backed by the Dictionary</td>
+        </tr>
+        <tr>
+          <td>Task</td>
+          <td>IT System</td>
+          <td>Dictionary link</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>This is an important design principle: use custom attributes when information needs to be searchable, reportable, governed, reused, or visualized. Do not add a custom field only because one diagram needs a note.</p>
+
+    <h2>Attribute visualization: show metadata without rewriting the model</h2>
+
+    <p>Administrators can define visualization layers that render selected attributes as overlays using icons and colors. The training material lists support for BPMN diagrams, value chains, ArchiMate diagrams, and organization charts.</p>
+
+    <p>An IT-system attribute can, for example, display an IT icon next to a task. Rules can also depend on attribute values. The course example colors task-cost overlays red above 15, yellow between 10 and 15, and green below 10.</p>
+
+    <p>Overlays therefore separate <strong>stored metadata</strong> from <strong>visual emphasis</strong>: the attribute remains the source of truth, while the overlay is one way to expose it to viewers.</p>
+
+    <h2>Custom graphics: visual branding with controlled constraints</h2>
+
+    <p>Administrators can upload custom SVG graphics for selected elements in customer journeys, value chains, and BPMN diagrams. The training material defines several restrictions for administrator-uploaded graphics:</p>
+
+    <ul>
+      <li>Maximum file size: 20 KB.</li>
+      <li>Maximum 2,000 anchor points.</li>
+      <li>Valid SVG structure.</li>
+      <li>No custom XML, JavaScript, or embedded images inside the SVG.</li>
+    </ul>
+
+    <p>Examples of customizable elements include IT systems and additional participants in BPMN, processes and collapsed processes in value chains, and personas, touchpoints, moments of truth, customers, and decorations in Journey Maps.</p>
+
+    <p>Custom graphics belong to the workspace where they are uploaded. If the organization uses several workspaces, the graphics need to be uploaded separately in each workspace.</p>
+
+    <h2>Dictionary administration: structure determines reuse</h2>
+
+    <p>The Dictionary is not only a list of terms. Administrators can remove, extend, or adjust categories and add subcategories to match the organization. Category design affects both reporting and modeling suggestions.</p>
+
+    <p>Dictionary categories have two important system purposes:</p>
+
+    <ol>
+      <li><strong>Reporting:</strong> reports such as RACI, document usage, and process documentation rely on object categories.</li>
+      <li><strong>Modeling suggestions:</strong> the system suggests entries from relevant categories when a modeler links a Dictionary object.</li>
+    </ol>
+
+    <p>Typical parent and subcategory areas include Organizational Units, Documents, IT Systems, Risks, and Controls. Subcategories are useful when different object groups need separate evaluation, access rights, or attributes.</p>
+
+    <h3>Sandbox and Dictionary Responsible</h3>
+
+    <p>The administrator creates sandbox subcategories so modelers can propose new Dictionary content without writing directly into productive categories. A dedicated group with broad Dictionary access periodically reviews the proposals and moves approved content into the productive structure.</p>
+
+    <p>The course example uses a <strong>Dictionary Responsible</strong> group with full Dictionary rights and import/export capability. This is the operational implementation of the sandbox governance pattern covered earlier on the page.</p>
+
+    <h3>Dictionary attributes can link to other Dictionary categories</h3>
+
+    <p>Custom Dictionary attributes can themselves use Dictionary links. This makes it possible to maintain a fact once and reuse it across related objects. The course example creates an SAP Module category and an SAP Transaction Codes category, then adds a Transaction Codes attribute to the SAP Module that links to the central transaction-code entries.</p>
+
+    <p>The resulting principle is useful beyond this example: <strong>normalize governed reference data instead of copying the same value into many entries</strong>.</p>
+
+    <h2>User licenses and account types</h2>
+
+    <p>Every user requires a license for the relevant SAP Signavio solution in the workspace. A license belongs to a user for that workspace; a license in another workspace does not automatically grant access here. Removing a user frees the license for reassignment. fileciteturn63file0L5-L15</p>
+
+    <h3>Modelers and Collaboration Hub consumers have different access models</h3>
+
+    <p>Modeling users in Process Manager can access workspace content according to folder and group permissions. Collaboration Hub users only consume diagrams that have been explicitly published to the Hub. The course also describes different Hub access behavior depending on the authentication model, including Active Directory/SAML identity or certificate-based rollout. fileciteturn63file0L23-L35</p>
+
+    <h3>Central User Management vs Process Manager Setup</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Administration surface</th>
+          <th>Best suited for</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Collaboration Hub / Central User Management</td>
+          <td>Invite users, review users, export an e-mail list, remove users across Signavio applications, create or delete user groups.</td>
+        </tr>
+        <tr>
+          <td>Process Manager Setup</td>
+          <td>Manage users/groups, folder and Dictionary authorizations, and group feature sets.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The learning material presents these two administration surfaces as coexisting during a transition toward more centralized user management. fileciteturn63file0L37-L64</p>
+
+    <h3>Feedback invitations create restricted external accounts</h3>
+
+    <p>Modelers can invite internal or external stakeholders to review a diagram. External invitees register from the invitation and receive a commenting license rather than normal broad workspace access. They can see only the invited diagram, are not added to default groups, and cannot access other SAP Signavio solutions. Revoking that access requires removing the account from user management, not only removing the license. fileciteturn63file0L66-L88</p>
+
+    <h3>Account deletion has different effects on personal and shared content</h3>
+
+    <p>When an administrator deletes a user account, content in that user's <strong>My Documents</strong> folder is removed from the workspace. Shared Documents content, comments, and changes made by the user remain. Administrators themselves cannot access or manage another modeler's My Documents content. fileciteturn63file0L114-L120</p>
+
+    <h2>User groups, default groups, and feature sets</h2>
+
+    <p>Groups simplify administration at scale. Administrators can build group hierarchies, add or remove users, and mark groups as default so new users automatically receive a baseline set of permissions.</p>
+
+    <p>Users created through SAML or the CSV API are also assigned to default groups unless another group configuration is supplied. Feature sets can then control which capabilities a modeler group may use, for example limiting document-upload functionality to selected groups. fileciteturn63file0L122-L143</p>
+
+    <h2>Access rights: understand the additive permission model</h2>
+
+    <p>Folder structure and authorization design should be planned together. The course explicitly recommends deciding the folder structure before assigning user access. Permissions granted through one group cannot be taken away simply by adding the same user to another group with fewer permissions or by assigning a more restrictive user-specific permission. fileciteturn63file0L144-L156</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Right</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hub (H)</td>
+          <td>View published content in Process Collaboration Hub.</td>
+        </tr>
+        <tr>
+          <td>Read (R)</td>
+          <td>View unpublished content in simulation, revision comparison, commenting view, and Process Collaboration Hub.</td>
+        </tr>
+        <tr>
+          <td>Write (W)</td>
+          <td>Edit and save content in the Editor.</td>
+        </tr>
+        <tr>
+          <td>Delete (D)</td>
+          <td>Delete and move content; moving between folders also requires the necessary rights on source and target folders.</td>
+        </tr>
+        <tr>
+          <td>Publish (P)</td>
+          <td>Publish diagrams to Process Collaboration Hub.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Groups are normally aligned to organizational roles, and nested groups can be useful when different folder levels require different permissions. A user who receives access only to one diagram without access to the containing folder can view that diagram and its path but not the other diagrams in the folder. fileciteturn63file0L158-L188</p>
+
+    <p>The sandbox pattern can be applied not only to Dictionary categories but also to the process repository. Process-documentation template authorization is managed similarly to other repository content: administrators can grant read, write, and delete rights to selected users or groups. fileciteturn63file0L190-L210</p>
+
+    <h2>Collaboration Hub administration</h2>
+
+    <p>Collaboration Hub settings control how process consumers see and interact with published content. Administrators can configure audiences, theme, home page, comments, attribute management, read confirmations, process rating, and related visibility settings.</p>
+
+    <h3>Audiences separate consumption experiences</h3>
+
+    <p>Audience Management is useful when different viewer groups need different entry points or presentation. The course example uses regional audiences with different value-chain entry points and potentially different themes.</p>
+
+    <p>User groups must exist before additional audiences can be created. Users not covered by a specific audience use the General Audience. The training material states that users who belong to more than one user group receive the General Audience settings.</p>
+
+    <h3>Attribute and overlay visibility</h3>
+
+    <p>Administrators can decide which attributes appear at diagram or element level and can group attributes into sections. They can also control overlay visibility and define whether overlays are active by default.</p>
+
+    <p><strong>Featured attributes</strong> highlight a chosen attribute group on the diagram page. <strong>Header attributes</strong> can include process level, revision number, last updated or published information, and last author. Visibility can be configured by audience, including whether process levels count from level 0 or level 1.</p>
+
+    <h3>Read Confirmation vs Process Rating</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Read Confirmation</td>
+          <td>Ask users or groups to acknowledge that they have read a diagram or its latest changes.</td>
+        </tr>
+        <tr>
+          <td>Process Rating</td>
+          <td>Collect structured audience feedback against selected criteria; each audience member can rate once per revision.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>If rating results are enabled, users can also see the accumulated process ratings in Collaboration Hub.</p>
+
+    <h2>Administrator reports and dashboards</h2>
+
+    <h3>Governance Report</h3>
+
+    <p>Process Manager administrators can use the Governance Report to review aggregated workspace activity such as diagrams, comments, Dictionary items, files, publishing states, diagram types, and page visits. Selecting a metric tile can open the corresponding Advanced Search result set.</p>
+
+    <p>The course notes an operational limit of up to 50,000 diagrams for this report. Depending on volume, generation can take up to an hour, and the browser tab that started the report must remain open.</p>
+
+    <h3>User/Group Assignment Report</h3>
+
+    <p>This report lists workspace users and their group memberships and can be downloaded as Excel. It distinguishes direct membership from indirect membership through nested groups. The report is available from both Process Manager reporting and Collaboration Hub reports.</p>
+
+    <h3>Process Model Dashboard and Usage Management Dashboard</h3>
+
+    <p>Collaboration Hub administrators can use Process Model Dashboards backed by Process Intelligence without additional setup. The training material describes two dashboards:</p>
+
+    <ul>
+      <li><strong>Process Model Dashboard</strong> — published models, most-viewed models, open comments, and model-related filters.</li>
+      <li><strong>Usage Management Dashboard</strong> — assigned licenses and unique visitors over time.</li>
+    </ul>
+
+    <p>The predefined widgets cannot be changed or removed, but administrators can apply filters, export widget data as CSV, and share the dashboards with workspace users.</p>
+
+    <h2>Security settings: reduce unnecessary access paths</h2>
+
+    <p>Workspace security settings can apply to current and future users. The training material highlights <strong>IP address filtering</strong> and <strong>password policies</strong> as workspace-level controls.</p>
+
+    <p>For organizations already using Single Sign-On, the course recommends configuring SSO for SAP Signavio. SSO is presented as a way to improve access continuity, adoption, and security. The referenced administration path uses SAML-based SSO.</p>
+
+    <h2>Administering approval workflows across Process Manager and Process Governance</h2>
+
+    <p>Approval workflows are a cross-product configuration. To define and manage them as described in the course, the administrator needs a Process Governance license in addition to Process Manager licensing and must have administrator rights in both components. fileciteturn63file1L10-L18</p>
+
+    <p>The approval workflow prevents a diagram from being published until the required reviewers approve it. The Process Manager administration setup includes <strong>General</strong>, <strong>Diagram states</strong>, <strong>Participants</strong>, and <strong>Approval Expiration</strong>. fileciteturn63file1L20-L33</p>
+
+    <h3>Process Governance administration is separate</h3>
+
+    <p>Workflow participants and workflow creators require licenses. A Process Manager/Collaboration Hub administrator is not automatically a Process Governance administrator; a Process Governance administrator must explicitly promote that user. fileciteturn63file1L41-L59</p>
+
+    <h3>Organization settings</h3>
+
+    <p>Process Governance administrators can configure the workspace time zone, restrict workflow creation to one selected group, customize notification e-mail signatures, disable daily digest e-mails for the workspace, and create labels for organizing workflows. fileciteturn63file1L61-L89</p>
+
+    <h3>Reusable administrator-configured activities</h3>
+
+    <p>The lesson introduces two reusable activity configurations that must be prepared by an administrator before workflow designers can use them:</p>
+
+    <ul>
+      <li><strong>Model Guideline Check / Convention Check</strong></li>
+      <li><strong>SharePoint File Upload</strong></li>
+    </ul>
+
+    <p>The guideline-check activity can return a Boolean error flag and counts for must-level errors, warnings, and hints. A workflow can then route on those results, for example automatically rejecting a model when the configured error count is greater than zero. If the activity does not work, the lesson says to verify the Process Manager integration. fileciteturn63file1L91-L125</p>
+
+    <h3>SharePoint upload requires credentials and activation</h3>
+
+    <p>The SharePoint activity requires stored credentials before configuration. The course describes a credential name plus a secret key for sensitive information and notes that SAP Support does not have access to that key. After the activity is configured, it must be explicitly activated before workflows can use it. The configuration also requires a SharePoint Tenant ID obtained with the organization's IT team. fileciteturn63file1L127-L145</p>
+
+    <h3>Services, connectors, and Process Manager integration</h3>
+
+    <p>Services & Connectors allow Process Governance workflows to exchange data with internal or third-party systems. Administrators can configure data connectors and generate API tokens for read-only reporting access to external data.</p>
+
+    <p>Process Manager integration serves two important governance purposes: triggering model approval before publication and exposing selected Dictionary categories to workflow participants, for example Risks & Controls or document entries. The training material states that a system user account must be configured for the Process Manager integration. fileciteturn63file1L168-L191</p>
+
     <h2>Lead decisions to remember</h2>
 
     <table class="study-table">
@@ -1272,6 +1630,18 @@ sitemap: false
           <td>Use Process Manager to model and govern process content; use Process Governance when the approval, task, or handover must execute as a workflow.</td>
         </tr>
         <tr>
+          <td>Central User Management or Process Manager Setup?</td>
+          <td>Use central user management for workspace-level user/group administration; use Process Manager Setup for detailed folder, Dictionary, and feature-set permissions.</td>
+        </tr>
+        <tr>
+          <td>Audience or access right?</td>
+          <td>Use access rights to control what users may access or change; use audiences to tailor how published process content is presented to viewer groups.</td>
+        </tr>
+        <tr>
+          <td>Read Confirmation or Process Rating?</td>
+          <td>Use Read Confirmation for acknowledgement of process content; use Process Rating for structured feedback on a process revision.</td>
+        </tr>
+        <tr>
           <td>User Task or Multi-User Task?</td>
           <td>Use User Task for one assignee; use Multi-User Task when several people must each perform the same work and their results must be collected.</td>
         </tr>
@@ -1325,6 +1695,10 @@ sitemap: false
       <li>SAP Signavio Process Manager — <a href="https://help.sap.com/doc/126253d0517d4ae9afffd4d1c7a01c63/SHIP/en-US/sap-signavio-process-manager-workspace-admin-guide-en.pdf">Workspace Admin Guide</a>.</li>
       <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/user-guide/fa8963fa6dad1014a4730ff5fb2ca89e.html">Navigation Map Elements</a>.</li>
       <li>Object Management Group — <a href="https://www.omg.org/spec/BPMN/2.0.2/PDF">BPMN 2.0.2 specification</a>.</li>
+      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/workspace-admin-guide/manage-security-settings">Workspace security settings</a>.</li>
+      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/workspace-admin-guide/enable-sso">Single Sign-On using SAML</a>.</li>
+      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/user-guide/custom-graphics">Custom graphics</a>.</li>
+      <li>SAP Signavio Process Governance — <a href="https://help.sap.com/docs/signavio-process-governance/user-guide/organization-settings">Organization settings</a>.</li>
       <li>SAP Signavio Process Intelligence — <a href="https://help.sap.com/docs/signavio-process-intelligence/onboarding-and-data-integration-guide/creating-customizable-data-connections">Creating Customizable Data Connections</a>.</li>
       <li>SAP Signavio Process Intelligence — <a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Investigations and dashboard transition</a>.</li>
     </ul>
