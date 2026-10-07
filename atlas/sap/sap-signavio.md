@@ -1382,11 +1382,11 @@ sitemap: false
 
     <h2>User licenses and account types</h2>
 
-    <p>Every user requires a license for the relevant SAP Signavio solution in the workspace. A license belongs to a user for that workspace; a license in another workspace does not automatically grant access here. Removing a user frees the license for reassignment. fileciteturn63file0L5-L15</p>
+    <p>Every user requires a license for the relevant SAP Signavio solution in the workspace. A license belongs to a user for that workspace; a license in another workspace does not automatically grant access here. Removing a user frees the license for reassignment.</p>
 
     <h3>Modelers and Collaboration Hub consumers have different access models</h3>
 
-    <p>Modeling users in Process Manager can access workspace content according to folder and group permissions. Collaboration Hub users only consume diagrams that have been explicitly published to the Hub. The course also describes different Hub access behavior depending on the authentication model, including Active Directory/SAML identity or certificate-based rollout. fileciteturn63file0L23-L35</p>
+    <p>Modeling users in Process Manager can access workspace content according to folder and group permissions. Collaboration Hub users only consume diagrams that have been explicitly published to the Hub. The course also describes different Hub access behavior depending on the authentication model, including Active Directory/SAML identity or certificate-based rollout.</p>
 
     <h3>Central User Management vs Process Manager Setup</h3>
 
@@ -1409,25 +1409,25 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>The learning material presents these two administration surfaces as coexisting during a transition toward more centralized user management. fileciteturn63file0L37-L64</p>
+    <p>The learning material presents these two administration surfaces as coexisting during a transition toward more centralized user management.</p>
 
     <h3>Feedback invitations create restricted external accounts</h3>
 
-    <p>Modelers can invite internal or external stakeholders to review a diagram. External invitees register from the invitation and receive a commenting license rather than normal broad workspace access. They can see only the invited diagram, are not added to default groups, and cannot access other SAP Signavio solutions. Revoking that access requires removing the account from user management, not only removing the license. fileciteturn63file0L66-L88</p>
+    <p>Modelers can invite internal or external stakeholders to review a diagram. External invitees register from the invitation and receive a commenting license rather than normal broad workspace access. They can see only the invited diagram, are not added to default groups, and cannot access other SAP Signavio solutions. Revoking that access requires removing the account from user management, not only removing the license.</p>
 
     <h3>Account deletion has different effects on personal and shared content</h3>
 
-    <p>When an administrator deletes a user account, content in that user's <strong>My Documents</strong> folder is removed from the workspace. Shared Documents content, comments, and changes made by the user remain. Administrators themselves cannot access or manage another modeler's My Documents content. fileciteturn63file0L114-L120</p>
+    <p>When an administrator deletes a user account, content in that user's <strong>My Documents</strong> folder is removed from the workspace. Shared Documents content, comments, and changes made by the user remain. Administrators themselves cannot access or manage another modeler's My Documents content.</p>
 
     <h2>User groups, default groups, and feature sets</h2>
 
     <p>Groups simplify administration at scale. Administrators can build group hierarchies, add or remove users, and mark groups as default so new users automatically receive a baseline set of permissions.</p>
 
-    <p>Users created through SAML or the CSV API are also assigned to default groups unless another group configuration is supplied. Feature sets can then control which capabilities a modeler group may use, for example limiting document-upload functionality to selected groups. fileciteturn63file0L122-L143</p>
+    <p>Users created through SAML or the CSV API are also assigned to default groups unless another group configuration is supplied. Feature sets can then control which capabilities a modeler group may use, for example limiting document-upload functionality to selected groups.</p>
 
     <h2>Access rights: understand the additive permission model</h2>
 
-    <p>Folder structure and authorization design should be planned together. The course explicitly recommends deciding the folder structure before assigning user access. Permissions granted through one group cannot be taken away simply by adding the same user to another group with fewer permissions or by assigning a more restrictive user-specific permission. fileciteturn63file0L144-L156</p>
+    <p>Folder structure and authorization design should be planned together. The course explicitly recommends deciding the folder structure before assigning user access. Permissions granted through one group cannot be taken away simply by adding the same user to another group with fewer permissions or by assigning a more restrictive user-specific permission.</p>
 
     <table class="study-table">
       <thead>
@@ -1460,9 +1460,9 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>Groups are normally aligned to organizational roles, and nested groups can be useful when different folder levels require different permissions. A user who receives access only to one diagram without access to the containing folder can view that diagram and its path but not the other diagrams in the folder. fileciteturn63file0L158-L188</p>
+    <p>Groups are normally aligned to organizational roles, and nested groups can be useful when different folder levels require different permissions. A user who receives access only to one diagram without access to the containing folder can view that diagram and its path but not the other diagrams in the folder.</p>
 
-    <p>The sandbox pattern can be applied not only to Dictionary categories but also to the process repository. Process-documentation template authorization is managed similarly to other repository content: administrators can grant read, write, and delete rights to selected users or groups. fileciteturn63file0L190-L210</p>
+    <p>The sandbox pattern can be applied not only to Dictionary categories but also to the process repository. Process-documentation template authorization is managed similarly to other repository content: administrators can grant read, write, and delete rights to selected users or groups.</p>
 
     <h2>Collaboration Hub administration</h2>
 
@@ -1534,17 +1534,17 @@ sitemap: false
 
     <h2>Administering approval workflows across Process Manager and Process Governance</h2>
 
-    <p>Approval workflows are a cross-product configuration. To define and manage them as described in the course, the administrator needs a Process Governance license in addition to Process Manager licensing and must have administrator rights in both components. fileciteturn63file1L10-L18</p>
+    <p>Approval workflows are a cross-product configuration. To define and manage them as described in the course, the administrator needs a Process Governance license in addition to Process Manager licensing and must have administrator rights in both components.</p>
 
-    <p>The approval workflow prevents a diagram from being published until the required reviewers approve it. The Process Manager administration setup includes <strong>General</strong>, <strong>Diagram states</strong>, <strong>Participants</strong>, and <strong>Approval Expiration</strong>. fileciteturn63file1L20-L33</p>
+    <p>The approval workflow prevents a diagram from being published until the required reviewers approve it. The Process Manager administration setup includes <strong>General</strong>, <strong>Diagram states</strong>, <strong>Participants</strong>, and <strong>Approval Expiration</strong>.</p>
 
     <h3>Process Governance administration is separate</h3>
 
-    <p>Workflow participants and workflow creators require licenses. A Process Manager/Collaboration Hub administrator is not automatically a Process Governance administrator; a Process Governance administrator must explicitly promote that user. fileciteturn63file1L41-L59</p>
+    <p>Workflow participants and workflow creators require licenses. A Process Manager/Collaboration Hub administrator is not automatically a Process Governance administrator; a Process Governance administrator must explicitly promote that user.</p>
 
     <h3>Organization settings</h3>
 
-    <p>Process Governance administrators can configure the workspace time zone, restrict workflow creation to one selected group, customize notification e-mail signatures, disable daily digest e-mails for the workspace, and create labels for organizing workflows. fileciteturn63file1L61-L89</p>
+    <p>Process Governance administrators can configure the workspace time zone, restrict workflow creation to one selected group, customize notification e-mail signatures, disable daily digest e-mails for the workspace, and create labels for organizing workflows.</p>
 
     <h3>Reusable administrator-configured activities</h3>
 
@@ -1555,17 +1555,17 @@ sitemap: false
       <li><strong>SharePoint File Upload</strong></li>
     </ul>
 
-    <p>The guideline-check activity can return a Boolean error flag and counts for must-level errors, warnings, and hints. A workflow can then route on those results, for example automatically rejecting a model when the configured error count is greater than zero. If the activity does not work, the lesson says to verify the Process Manager integration. fileciteturn63file1L91-L125</p>
+    <p>The guideline-check activity can return a Boolean error flag and counts for must-level errors, warnings, and hints. A workflow can then route on those results, for example automatically rejecting a model when the configured error count is greater than zero. If the activity does not work, the lesson says to verify the Process Manager integration.</p>
 
     <h3>SharePoint upload requires credentials and activation</h3>
 
-    <p>The SharePoint activity requires stored credentials before configuration. The course describes a credential name plus a secret key for sensitive information and notes that SAP Support does not have access to that key. After the activity is configured, it must be explicitly activated before workflows can use it. The configuration also requires a SharePoint Tenant ID obtained with the organization's IT team. fileciteturn63file1L127-L145</p>
+    <p>The SharePoint activity requires stored credentials before configuration. The course describes a credential name plus a secret key for sensitive information and notes that SAP Support does not have access to that key. After the activity is configured, it must be explicitly activated before workflows can use it. The configuration also requires a SharePoint Tenant ID obtained with the organization's IT team.</p>
 
     <h3>Services, connectors, and Process Manager integration</h3>
 
     <p>Services & Connectors allow Process Governance workflows to exchange data with internal or third-party systems. Administrators can configure data connectors and generate API tokens for read-only reporting access to external data.</p>
 
-    <p>Process Manager integration serves two important governance purposes: triggering model approval before publication and exposing selected Dictionary categories to workflow participants, for example Risks & Controls or document entries. The training material states that a system user account must be configured for the Process Manager integration. fileciteturn63file1L168-L191</p>
+    <p>Process Manager integration serves two important governance purposes: triggering model approval before publication and exposing selected Dictionary categories to workflow participants, for example Risks & Controls or document entries. The training material states that a system user account must be configured for the Process Manager integration.</p>
 
     <h2>Lead decisions to remember</h2>
 
