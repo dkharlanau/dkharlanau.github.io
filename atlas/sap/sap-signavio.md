@@ -1624,7 +1624,7 @@ sitemap: false
 
     <h3>SAP Signavio technical user</h3>
 
-    <p>The connector needs a SAP Signavio Process Manager user with write rights. The standard Enterprise license provides sufficient modeling rights, but the course recommends an API license for technical integrations, especially when Single Sign-On is used.</p>
+    <p>The connector needs a SAP Signavio Process Manager user with write rights. The standard Enterprise license provides sufficient rights, but the course recommends an API license for technical integrations, especially when Single Sign-On is used. The learning material says the API license can be requested through an SAP support ticket at no additional cost. After activation, create a neutral technical user and assign the API group either administrator rights or the specific API permissions required for the integration.</p>
 
     <p>The training guidance also recommends a neutral technical-user name and <strong>one technical user per technical integration</strong>. Reusing the same technical user for several integrations makes lockouts and support diagnosis harder because one incorrect password can affect several integrations without a clear origin.</p>
 
