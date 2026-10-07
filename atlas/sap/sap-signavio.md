@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP Signavio"
-description: "SAP Signavio explained as a working process system: Process Manager modeling and governance, BPMN practice, simulation, reporting, variants, executable governance workflows, and the boundary to Process Intelligence."
+title: "SAP Signavio Product Guide"
+description: "A consolidated SAP Signavio product guide: suite components, capabilities, licensing boundaries, Process Modeler, Collaboration Hub, Journey Modeler, Process Governance, Process Intelligence, Process Insights, Transformation Manager, integrations, administration, best practices, and glossary."
 permalink: /atlas/sap/sap-signavio/
 atlas_section: sap
 domain: SAP operations
@@ -17,33 +17,17 @@ author: Dzmitryi Kharlanau
 
 tags:
   - sap-signavio
+  - process-modeler
   - process-manager
-  - process-mining
-  - bpm
-  - bpmn
-  - dictionary
-  - simulation
-  - reporting
-  - process-variants
-  - bpmn-modeling
-  - gateways
-  - events
-  - subprocesses
-  - administration
-  - access-control
-  - security
-  - user-management
-  - dmn
-  - decision-modeling
-  - business-decision-management
+  - process-intelligence
+  - process-governance
   - journey-modeler
-  - customer-experience
-  - customer-journey
-  - outside-in
+  - process-transformation-manager
+  - bpmn
+  - dmn
+  - process-mining
+  - process-variants
   - business-process-model-connector
-  - sap-solution-manager
-  - sap-btp
-  - sap-cloud-connector
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
@@ -67,2475 +51,917 @@ sitemap: false
 
 <article class="section note-detail atlas-page">
   <header class="note-header">
-    <p class="eyebrow">Atlas Product</p>
+    <p class="eyebrow">Atlas Product Guide</p>
     <h1>SAP Signavio</h1>
-    <p class="note-subtitle">A working model of how SAP Signavio models and governs process knowledge, executes governance workflows, and separates designed-process assumptions from observed execution data.</p>
+    <p class="note-subtitle">One product map for process design, collaboration, governance, journey modeling, process mining, transformation management, administration, licensing boundaries, and integrations.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
   <aside class="atlas-meta-panel">
     <dl>
-      <div><dt>Process</dt><dd>Process management</dd></div>
-      <div><dt>Primary focus</dt><dd>Process Manager and Process Governance</dd></div>
-      <div><dt>Assessment lens</dt><dd>Architecture, modeling, governance, analysis</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until product claims are verified against public SAP documentation.</dd></div>
+      <div><dt>Purpose</dt><dd>Lead-level product understanding</dd></div>
+      <div><dt>Scope</dt><dd>SAP Signavio Process Transformation Suite</dd></div>
+      <div><dt>Language</dt><dd>English B2</dd></div>
+      <div><dt>Current-state note</dt><dd>Includes product changes verified against SAP documentation available in 2026.</dd></div>
+      <div><dt>Indexing</dt><dd>Noindex until human review confirms the full product and license matrix.</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <p>SAP Signavio Process Manager is easier to understand as a system rather than as a list of buttons. A company needs to capture processes, organize them, reuse the same business language, control modeling quality, publish the content, collect feedback, and analyze possible improvements. Process Manager brings these tasks into one governed workspace.</p>
 
-    <p>The main idea is simple: a process diagram is useful only when people can find it, understand it, trust its terminology, see who owns it, and use it to make a decision. Modeling is therefore only one part of process management.</p>
+    <h2 id="mental-model">1. Product mental model</h2>
 
-    <h2>Process Manager in one mental model</h2>
+    <p>SAP Signavio is not one application. It is a suite of products that cover different parts of process transformation. The fastest way to understand the suite is to separate six questions:</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Primary capability</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>How should the process work?</td><td>Process Modeler / Process Manager</td></tr>
+        <tr><td>How do people consume and discuss the process?</td><td>Process Collaboration Hub</td></tr>
+        <tr><td>How does a customer, employee, supplier, or partner experience the process?</td><td>Journey Modeler</td></tr>
+        <tr><td>How do approvals, reviews, and governance tasks execute?</td><td>Process Governance</td></tr>
+        <tr><td>What actually happened in operational data?</td><td>Process Intelligence and Process Insights capabilities</td></tr>
+        <tr><td>How do we organize, prioritize, and track transformation initiatives?</td><td>Process Transformation Manager</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Lead rule:</strong> do not answer a Signavio question with only the product name. First identify whether the problem is about process design, consumption, experience, workflow execution, process data, or transformation management.</p>
+
+    <h3>Current naming</h3>
+
+    <p>Current SAP documentation uses <strong>SAP Signavio Process Modeler</strong>. Older documentation and many learning courses use <strong>SAP Signavio Process Manager</strong>. This guide uses <strong>Process Modeler</strong> for the current product name and keeps <strong>Process Manager</strong> where it helps match learning material or older customer terminology.</p>
+
+    <h2 id="suite-map">2. Suite component map</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Main purpose</th>
+          <th>Key capabilities</th>
+          <th>Typical users</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SAP Signavio Process Modeler</td>
+          <td>Design and govern process models</td>
+          <td>BPMN, DMN, QuickModel, Dictionary, simulation, reports, conventions, variants, process documentation</td>
+          <td>Process architects, modelers, process owners, BPM teams</td>
+        </tr>
+        <tr>
+          <td>SAP Signavio Process Collaboration Hub</td>
+          <td>Consume and collaborate on published process content</td>
+          <td>Published process access, comments, feedback, read confirmations, ratings, reporting, audience-based presentation</td>
+          <td>Process consumers, business users, reviewers</td>
+        </tr>
+        <tr>
+          <td>SAP Signavio Journey Modeler</td>
+          <td>Model the outside-in experience</td>
+          <td>Personas, stages, steps, touchpoints, sentiments, linked processes, systems, organizations, metrics, complexity</td>
+          <td>CX teams, process owners, transformation teams</td>
+        </tr>
+        <tr>
+          <td>SAP Signavio Process Governance</td>
+          <td>Execute governed workflows</td>
+          <td>Triggers, forms, tasks, approvals, cases, reminders, escalations, workflow versions, connectors</td>
+          <td>Process governance teams, workflow designers, approvers</td>
+        </tr>
+        <tr>
+          <td>SAP Signavio Process Intelligence</td>
+          <td>Analyze actual process execution</td>
+          <td>Data management, out-of-the-box and custom process analysis, dashboards, metrics, insights, root-cause analysis, analysis workflows</td>
+          <td>Process analysts, data teams, process owners</td>
+        </tr>
+        <tr>
+          <td>SAP Signavio Process Insights</td>
+          <td>Provide predefined SAP process performance content</td>
+          <td>Predefined process flows, performance indicators, recommendations, SAP-focused analysis content</td>
+          <td>Business process experts, transformation teams</td>
+        </tr>
+        <tr>
+          <td>SAP Signavio Process Transformation Manager</td>
+          <td>Manage improvement and transformation initiatives</td>
+          <td>Benchmarking, insights, initiatives, objectives, tasks, value-oriented prioritization</td>
+          <td>Transformation leads, process owners, program teams</td>
+        </tr>
+        <tr>
+          <td>SAP Signavio Process Explorer</td>
+          <td>Discover transformation content and accelerators</td>
+          <td>Access to value accelerators, reference content, and resources</td>
+          <td>Process teams, transformation teams</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Cross-suite capabilities</h3>
+
+    <p>The suite also includes shared capabilities such as the launchpad, user and workspace administration, Value Accelerator Library, AI capabilities, APIs, and integrations. These are not a replacement for the product boundaries above. Their availability depends on product licenses, packages, authorizations, and sometimes additional commercial terms.</p>
+
+    <h2 id="capability-matrix">3. Capability matrix</h2>
 
     <table class="study-table">
       <thead>
         <tr>
           <th>Capability</th>
-          <th>Main job</th>
-          <th>Typical question</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Explorer</td>
-          <td>Organize and manage process content</td>
-          <td>Where is the process, who can access it, and which version is current?</td>
-        </tr>
-        <tr>
-          <td>Graphical Editor</td>
-          <td>Create and maintain detailed diagrams</td>
-          <td>How does the process work and is the model correct?</td>
-        </tr>
-        <tr>
-          <td>DMN decision modeling</td>
-          <td>Separate decision requirements and decision logic from process flow</td>
-          <td>What information, rules, and authorities determine a business decision?</td>
-        </tr>
-        <tr>
-          <td>QuickModel</td>
-          <td>Capture a simple BPMN flow in a table</td>
-          <td>How can we document the main path quickly?</td>
-        </tr>
-        <tr>
-          <td>Dictionary</td>
-          <td>Reuse centrally managed business objects</td>
-          <td>Are we using the same role, system, document, or term everywhere?</td>
-        </tr>
-        <tr>
-          <td>Process Collaboration Hub</td>
-          <td>Publish and consume process content</td>
-          <td>How do process viewers find, read, and discuss the published process?</td>
-        </tr>
-        <tr>
-          <td>Simulation</td>
-          <td>Run what-if scenarios on the designed BPMN process</td>
-          <td>What happens to cost, cycle time, capacity, or bottlenecks if assumptions change?</td>
-        </tr>
-        <tr>
-          <td>Reporting</td>
-          <td>Aggregate model, attribute, responsibility, system, document, risk, and governance data</td>
-          <td>What can we learn across one or many process models?</td>
-        </tr>
-        <tr>
-          <td>Variant Management</td>
-          <td>Control template-to-variant relationships</td>
-          <td>How do we keep a standard core while allowing justified local differences?</td>
-        </tr>
-        <tr>
-          <td>Process Governance</td>
-          <td>Configure and execute governed workflows</td>
-          <td>How do approvals, tasks, reminders, escalations, and controlled handovers actually run?</td>
-        </tr>
-        <tr>
-          <td>Journey Modeler</td>
-          <td>Connect customer or stakeholder experience with processes, systems, organizations, emotions, and metrics</td>
-          <td>How does the person experience the organization from the outside-in?</td>
-        </tr>
-        <tr>
-          <td>Business Process Model Connector</td>
-          <td>Align process information between SAP Signavio Process Manager and SAP Solution Manager</td>
-          <td>How do Business and IT keep one aligned process structure while preserving clear system ownership?</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>A useful Lead-level distinction is therefore: <strong>Explorer manages the process landscape; Editor builds the model; Dictionary standardizes shared objects; Collaboration Hub exposes published content to consumers; analysis functions help evaluate the modeled process.</strong></p>
-
-    <p>Process Manager also supports collaboration and feedback. A commenting feature lets users discuss process content and provide feedback instead of treating the diagram as a static document.</p>
-
-    <h2>The Explorer: manage the process landscape</h2>
-
-    <p>The Explorer is the entry and management point of Process Manager. It provides the folder tree, search, diagram repository, diagram details, and access to other functions. From here, users can create or open diagrams, manage files, publish content, export diagrams, generate reports, and access analysis functions.</p>
-
-    <p>Its two main jobs are <strong>content management</strong> and <strong>content analysis</strong>.</p>
-
-    <h3>Managing content</h3>
-    <ul>
-      <li>Create a folder structure that reflects the organization or process architecture.</li>
-      <li>Save, copy, delete, and move diagrams.</li>
-      <li>Control access rights through the workspace access concept; access rights are assigned by the workspace administrator.</li>
-      <li>Share or publish diagrams to SAP Signavio Process Collaboration Hub.</li>
-      <li>Use the Dictionary to enrich models with centrally managed business objects.</li>
-      <li>Manage and restore diagram revisions.</li>
-      <li>Import and export diagrams.</li>
-    </ul>
-
-    <h3>Analyzing content</h3>
-    <ul>
-      <li>Create standard reports from selected processes.</li>
-      <li>Simulate process instances.</li>
-      <li>Compare process diagrams and use comparison to contrast states such as As-Is and To-Be.</li>
-    </ul>
-
-    <h3>Folder structure is a governance decision</h3>
-    <p>A functional or divisional structure can work well, but the correct design depends on how the company manages ownership and access. A practical pattern is to place department folders under a common parent so that access rights can be assigned at the parent level instead of being maintained repeatedly.</p>
-
-    <p>Sensitive processes should be separated from general process content. For example, budgeting or strategic planning can sit in a dedicated parent folder that is visible only to an authorized group. The folder structure is therefore not only navigation; it is part of the access model.</p>
-
-    <h3>Search depends on metadata quality</h3>
-    <p>Advanced Search can filter by standard and custom attributes. This makes attributes important outside the model itself. A useful filter is the publishing state, especially when several variants or revisions of a process exist.</p>
-
-    <h2>The Graphical Editor: model and enrich processes</h2>
-
-    <p>The Graphical Editor is the main modeling environment. BPMN 2.0 is central for business process modeling, but the editor also supports other diagram types. The learning material highlights DMN 1.2 for decision logic and ArchiMate 3.0 for enterprise architecture, together with navigation maps and value chains for higher-level views.</p>
-
-    <p>The important point for an SAP Lead is not the number of supported notations. It is the separation of concerns: <strong>BPMN explains process flow, DMN explains decision logic, and ArchiMate can describe architecture around the process.</strong></p>
-
-    <h3>Attributes add business context</h3>
-    <p>A process diagram shows the flow. Attributes add information such as descriptions, responsibilities, systems, documents, risks, or other organization-specific details. Workspace administrators can define custom attributes and rules for their visualization.</p>
-
-    <p>Attributes are reusable operational metadata. They can support filtering in the Explorer, reporting, documentation, and governance. A diagram with good visual flow but weak metadata may still be difficult to govern at scale.</p>
-
-    <p>Administrators can also define how custom attributes are visualized. Modelers can assign the attributes in the Editor, while their configured icons can be shown to process consumers in Process Collaboration Hub.</p>
-
-    <h3>Syntax checks and convention checks solve different problems</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Check</th>
-          <th>What it validates</th>
-          <th>Example</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Syntax</td>
-          <td>Correct use of the notation</td>
-          <td>Elements are connected and BPMN rules are respected.</td>
-        </tr>
-        <tr>
-          <td>Convention</td>
-          <td>Organization-specific modeling standards</td>
-          <td>Naming, required attributes, layout, or allowed modeling patterns.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Syntax correctness is important for consistent models and for downstream capabilities such as reporting and simulation. Convention checks add a second governance layer. SAP Signavio provides best-practice conventions, while administrators can customize or define additional rules for the workspace.</p>
-
-    <p>The checks run when a model is saved, and users can also start them with the Review function. Errors, warnings, and hints help the modeler understand what needs attention. Where guideline information is available, the result panel can link the modeler to the relevant guidance.</p>
-
-    <h3>Model translation avoids duplicate process copies</h3>
-    <p>If several languages are enabled in the workspace, the same process can be maintained in multiple languages. Users can switch language and translate the model instead of creating separate diagram copies. The learning material also describes automatic translation options. This reduces duplicate maintenance and helps keep one governed process definition.</p>
-
-    <h2>QuickModel: capture the happy path first</h2>
-
-    <p>QuickModel is a table-based way to create BPMN 2.0 diagrams. The modeler enters process information into rows and columns while the system generates the basic process diagram. This gives users who do not fully master BPMN a simple way to create a compliant starting model while they focus on process information rather than graphical notation. The table can also expose selected attributes as columns.</p>
-
-    <p>QuickModel works well for initial modeling, workshops, and the main sequence of activities. It is especially useful for a <strong>happy path</strong>: the normal sequence without exceptions or complex branching.</p>
-
-    <p>Its limit is also important. Once the process needs gateways, parallel paths, subprocesses, or other complex BPMN structures, the work should move to the Graphical Editor. A good modeling approach is therefore:</p>
-
-    <ol>
-      <li>Capture the main sequence and key attributes quickly.</li>
-      <li>Document missing decisions or exceptions.</li>
-      <li>Move to the Graphical Editor when the process needs richer BPMN logic.</li>
-    </ol>
-
-    <p>This is a useful facilitation pattern because it separates <strong>process discovery</strong> from <strong>notation detail</strong>.</p>
-
-    <h2>BPMN modeling practice: build a model that behaves correctly</h2>
-
-    <p>BPMN 2.0 is the common process-modeling notation used throughout these examples. The course frames it as more than a drawing language: a useful model must be syntactically correct, semantically correct, and understandable to its audience.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Quality dimension</th>
-          <th>Main question</th>
-          <th>Who can check it?</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Syntax</td>
-          <td>Are BPMN elements connected and used according to notation rules?</td>
-          <td>The modeling tool can check many syntax problems.</td>
-        </tr>
-        <tr>
-          <td>Semantics</td>
-          <td>Are the tasks, order, responsibilities, conditions, and outcomes correct for the real business process?</td>
-          <td>People with process knowledge.</td>
-        </tr>
-        <tr>
-          <td>Understandability</td>
-          <td>Can the intended audience follow the model without unnecessary confusion?</td>
-          <td>Process viewers and reviewers.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>This creates an important design rule: <strong>business complexity does not justify visual complexity</strong>. Keep the process flow easy to follow, reduce crossing lines, align tasks and flows, use color and annotations carefully, and show only the level of detail required by the target group. Management may need a high-level process, while implementation teams may need a much more precise model.</p>
-
-    <h3>Core BPMN building blocks</h3>
-
-    <p>The course groups the basic modeling language into four areas: <strong>flow objects</strong>, <strong>connecting objects</strong>, <strong>artifacts</strong>, and <strong>responsibilities</strong>. At the simplest level, a process needs a start event, sequence flow, tasks, and an end event.</p>
-
-    <p>Read a process from left to right and top to bottom. A start event describes the trigger, tasks describe work, sequence flows define the order of execution, and the end event describes the state reached when the process goal is achieved.</p>
-
-    <h3>The token concept explains process behavior</h3>
-
-    <p>A useful mental model is to imagine a token moving through the process. Tasks hold the token while work is performed. Splits can create or route tokens, joins can synchronize them, and events can make them wait or react. The token must be able to reach a valid process end.</p>
-
-    <p>This concept is useful even when the BPMN diagram is not technically executed. SAP Signavio uses the same execution logic for syntax checks and simulations, and it is the easiest way to understand deadlocks, duplicate execution, parallel behavior, and event waiting.</p>
-
-    <h3>Name tasks and events differently</h3>
-
-    <p>Tasks describe action and should normally use active wording such as <strong>Create invoice</strong>: verb plus business object. Events describe a state or something that happened, for example <strong>Order received</strong> or <strong>Invoice created</strong>. Start events should make the trigger clear; end events should make the achieved state clear.</p>
-
-    <p>These naming patterns are presented as BPMN modeling best practices rather than absolute syntax rules. A justified deviation can be acceptable if the model remains meaningful and consistent.</p>
-
-    <h2>Responsibilities: Pools, Lanes, and additional participants</h2>
-
-    <p>A pool normally represents the organization or process participant within which the process is modeled. Lanes divide that pool into responsibilities such as process roles, departments, organizational units, or positions. A task placed in a lane is owned by that lane's responsibility.</p>
-
-    <p>A sequence flow that moves from one lane to another is therefore also a handover of execution responsibility. This makes lane design important for communication and ownership analysis.</p>
-
-    <p>More than one participant can be involved in a task, but one main responsibility should still own it. SAP Signavio provides an additional-participant element for this purpose; the course explicitly notes that this is SAP Signavio-specific and not part of the official BPMN 2.0 element set.</p>
-
-    <p>For maintainability, prefer process-related roles or organizational responsibilities over named people. A person's name changes more often than the process role and increases maintenance across all affected models.</p>
-
-    <h2>Gateways: route and synchronize tokens correctly</h2>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Gateway</th>
-          <th>Split behavior</th>
-          <th>Join behavior</th>
-          <th>Use when</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>XOR / Exclusive</td>
-          <td>Exactly one path is selected.</td>
-          <td>Alternative paths are merged without synchronization.</td>
-          <td>The result is either/or.</td>
-        </tr>
-        <tr>
-          <td>AND / Parallel</td>
-          <td>All outgoing paths are activated.</td>
-          <td>Waits for all required incoming tokens.</td>
-          <td>Independent work must all be completed.</td>
-        </tr>
-        <tr>
-          <td>OR / Inclusive</td>
-          <td>One or several paths can be activated.</td>
-          <td>Waits only for the tokens that were actually activated.</td>
-          <td>Several optional combinations are valid, with at least one selected.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3>An XOR gateway is not the business decision</h3>
-
-    <p>A gateway is a routing control, not a task. For example, <strong>Select meal</strong> is the decision task; the following XOR gateway reads that result and routes the token. A person cannot own the gateway itself, and placing a gateway inside a lane does not make that lane responsible for a decision that was never modeled.</p>
-
-    <p>For XOR naming, the course recommends a question on the splitting gateway, mutually exclusive answers on the outgoing sequence flows, and no label on the merging gateway.</p>
-
-    <h3>Split and join consistently</h3>
-
-    <p>The course recommends pairing a split with the corresponding merge when the branches later return to one flow. This keeps token behavior explicit and the diagram easier to maintain. An XOR split does not always require a join in the BPMN standard — for example, branches may end at different end events — but an explicit merge is recommended where paths logically come back together.</p>
-
-    <h3>Parallel work only reduces time when resources are actually parallel</h3>
-
-    <p>An AND split makes tasks independent, but it does not create extra people. If two parallel tasks belong to one resource, that person still performs them one after another. Cycle-time reduction becomes possible when separate resources can really work at the same time. The AND join then waits until all parallel work is complete.</p>
-
-    <h3>Two flow errors to recognize immediately</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Error</th>
-          <th>Token problem</th>
-          <th>Typical cause</th>
-          <th>Correction</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Deadlock</td>
-          <td>A synchronizing join waits for a token that will never arrive.</td>
-          <td>An AND join receives branches that were not all created by the preceding logic.</td>
-          <td>Correct the branch structure, for example by adding the missing XOR merge before synchronization.</td>
-        </tr>
-        <tr>
-          <td>Multi-merge</td>
-          <td>Several tokens continue independently and execute the same downstream task more than once.</td>
-          <td>Parallel tokens are merged with logic that does not synchronize them.</td>
-          <td>Add the missing AND join to synchronize the tokens into one continuation.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>SAP Signavio Process Manager's Graphical Editor checks for deadlocks and multi-merges and can show where they occur. The token concept explains why the error exists instead of treating the warning as an arbitrary modeling rule.</p>
-
-    <h2>Events: model states, waiting, and external triggers</h2>
-
-    <p>Events mark states in a process and allow the process to react to its environment. Three questions help select the right event: <strong>where</strong> is it used — start, intermediate, or end; <strong>how</strong> does it behave — catching or throwing; and <strong>what type</strong> of trigger or state does it represent?</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Event position</th>
-          <th>Basic behavior</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Start event</td>
-          <td>Represents the process trigger and has an outgoing sequence flow.</td>
-        </tr>
-        <tr>
-          <td>Intermediate event</td>
-          <td>Appears inside the process; a plain intermediate event has incoming and outgoing flow and can mark a milestone.</td>
-        </tr>
-        <tr>
-          <td>End event</td>
-          <td>Represents the reached process state or goal and has incoming flow only.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p><strong>Catching</strong> events wait for something to happen. <strong>Throwing</strong> events produce or signal something. Start events are catching; end events are throwing.</p>
-
-    <h3>Common event types</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Main meaning</th>
+          <th>Primary owner</th>
           <th>Important boundary</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Message</td>
-          <td>Interaction such as receiving or sending information, goods, files, or another external signal.</td>
-          <td>A catching message can make the process wait; a throwing message can represent that something was sent.</td>
-        </tr>
-        <tr>
-          <td>Timer</td>
-          <td>React to a fixed, recurring, relative, or delayed point in time.</td>
-          <td>Timer events are catching because the process cannot control time.</td>
-        </tr>
-        <tr>
-          <td>Conditional</td>
-          <td>React when an external condition becomes true.</td>
-          <td>Conditional events are catching because the process does not control when the condition occurs.</td>
-        </tr>
-        <tr>
-          <td>Link</td>
-          <td>Technical connection that can replace a long sequence-flow line.</td>
-          <td>Matching link events must use the same name; they add structure, not business meaning.</td>
-        </tr>
+        <tr><td>BPMN modeling</td><td>Process Modeler</td><td>Describes designed process flow; it is not process mining.</td></tr>
+        <tr><td>DMN decision modeling</td><td>Process Modeler</td><td>Separates decision logic from BPMN flow.</td></tr>
+        <tr><td>Quick process capture</td><td>QuickModel in Process Modeler</td><td>Best for simple flows; complex BPMN belongs in the Graphical Editor.</td></tr>
+        <tr><td>Shared business vocabulary</td><td>Dictionary</td><td>Central object change can affect many linked diagrams.</td></tr>
+        <tr><td>Process architecture</td><td>Navigation Maps and Value Chains</td><td>Navigation Maps optimize entry and usability; Value Chains express high-level process architecture.</td></tr>
+        <tr><td>Process simulation</td><td>Process Modeler</td><td>What-if analysis based on assumptions, not evidence of real execution.</td></tr>
+        <tr><td>Model-based reporting</td><td>Process Modeler / Collaboration Hub</td><td>Uses model elements and attributes, not event-log evidence.</td></tr>
+        <tr><td>Publishing and consumption</td><td>Collaboration Hub</td><td>Published content is different from editable working content.</td></tr>
+        <tr><td>Feedback and semantic review</td><td>Collaboration Hub + Editor comments</td><td>Syntax can be checked by the system; business meaning still needs people.</td></tr>
+        <tr><td>Variant management</td><td>Process Modeler / Collaboration Hub</td><td>Controls standard-to-local differences; it is not uncontrolled copy-and-paste.</td></tr>
+        <tr><td>Journey modeling</td><td>Journey Modeler</td><td>Outside-in perspective; link pain points back to internal processes.</td></tr>
+        <tr><td>Governance workflow execution</td><td>Process Governance</td><td>Executes tasks and cases; Process Modeler defines process content.</td></tr>
+        <tr><td>Approval before publishing</td><td>Process Modeler + Process Governance</td><td>Requires Process Governance in addition to the modeling product.</td></tr>
+        <tr><td>Process mining</td><td>Process Intelligence</td><td>Uses operational event/process data to explain actual execution.</td></tr>
+        <tr><td>Predefined SAP performance analysis</td><td>Process Insights capabilities</td><td>Current SAP documentation places these capabilities in the Process Intelligence direction/package.</td></tr>
+        <tr><td>Transformation initiative management</td><td>Process Transformation Manager</td><td>Manages improvement work; it is not a BPMN modeling tool.</td></tr>
+        <tr><td>Business-to-IT model synchronization</td><td>Business Process Model Connector</td><td>Connects Signavio and SAP Solution Manager with explicit ownership and mapping rules.</td></tr>
       </tbody>
     </table>
 
-    <p>A throwing intermediate message event can itself express the state that a message was sent. Modeling both an equivalent send task and the throwing message event can duplicate the action, so the modeler must be clear about what each element represents.</p>
+    <h2 id="licensing">4. Licensing and access: what is included and what is separate</h2>
 
-    <h3>Attached events can interrupt or create an additional path</h3>
-
-    <p>An attached catching intermediate event can be used as a cancel condition for a task or subprocess, with an alternative path for the exception. Examples include a timeout or an external condition. The course also shows a <strong>non-interrupting</strong> attached message event: the dashed boundary event does not cancel the subprocess; it creates an additional token so the process can react while the original work continues.</p>
-
-    <h3>Event-based gateway: react to whichever external event happens first</h3>
-
-    <p>An event-based gateway is used when the decision is made outside the process. The token waits for the connected catching intermediate events, and the first event that occurs determines the path. This is useful for scenarios such as waiting for payment while also handling reminder deadlines or cancellation conditions.</p>
-
-    <p>Only catching intermediate events belong after an event-based gateway because the process is waiting to react.</p>
-
-    <h2>Subprocesses: control the level of detail</h2>
-
-    <p>Subprocesses solve a common modeling problem: some activities need much more detail than the main process should display. The main diagram can stay focused on its core facts while detailed steps move into another level.</p>
-
-    <h3>Collapsed subprocess: hide detail behind a process step</h3>
-
-    <p>A collapsed subprocess is shown as one process element with a plus marker. Detailed steps can be moved into a separate process diagram. In SAP Signavio, selecting elements and transforming them into a subprocess can create the new subprocess file directly in the Explorer.</p>
-
-    <p>A subprocess element can be linked either to a newly created process diagram or to an existing process model in the workspace. The system itself does not automatically classify a file as “main process” or “subprocess,” so a clear naming convention can help users recognize its purpose.</p>
-
-    <h3>Reusable global process: use a Call Activity</h3>
-
-    <p>If the same detailed process is needed in several main processes, reuse it instead of modeling it several times. The course represents this reusable global reference as a <strong>Call Activity</strong> with a bold border. Examples such as Product Sourcing or Financial Handling can then be called from Order Handling, Stock Management, Repair, or other processes.</p>
-
-    <p>This creates three benefits: lower modeling effort, stronger process harmonization, and one maintained source for the reusable process logic.</p>
-
-    <h3>Expanded subprocess: local grouping, not reusable global logic</h3>
-
-    <p>An expanded subprocess shows its internal tasks directly inside the parent model. It is useful when several tasks belong to one intermediate goal and should be visually grouped without losing their relationship to the main process. In the course framing, an expanded subprocess belongs to that particular process scenario and is not reused as a separate global model.</p>
+    <p>This section explains product boundaries, not commercial pricing. Exact entitlements depend on the contract, package, edition, region, and SAP Feature Scope Description. SAP documentation explicitly warns that a Help page may describe integrations or features that require a separate license.</p>
 
     <table class="study-table">
       <thead>
         <tr>
-          <th>Pattern</th>
-          <th>Detail location</th>
-          <th>Reuse</th>
-          <th>Use when</th>
+          <th>Product / access type</th>
+          <th>License model</th>
+          <th>What is included or separate</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Collapsed subprocess</td>
-          <td>Behind the subprocess element / linked detailed model</td>
-          <td>Can link to a dedicated model</td>
-          <td>The main diagram should stay compact.</td>
+          <td>Process Modeler modeling user</td>
+          <td>Usually user-level and workspace-bound</td>
+          <td>Full functionality of the licensed Process Modeler edition plus access to Process Collaboration Hub.</td>
         </tr>
         <tr>
-          <td>Call Activity</td>
-          <td>Referenced global process</td>
-          <td>Designed for reuse across processes</td>
-          <td>The same process logic appears in several parent processes.</td>
+          <td>Process Collaboration Hub user</td>
+          <td>User-level license</td>
+          <td>Consumer-oriented access plus a limited Process Modeler feature set such as QuickModel, comparison, export, reporting, and Dictionary access. License alone is not an authorization boundary; access rights still matter.</td>
         </tr>
         <tr>
-          <td>Expanded subprocess</td>
-          <td>Visible inside the parent process</td>
-          <td>Local to that process scenario</td>
-          <td>A group of tasks needs one visible intermediate context.</td>
+          <td>External commenting user</td>
+          <td>Automatic commenting license after invitation</td>
+          <td>Restricted to invited diagram feedback; no broad workspace/product access.</td>
         </tr>
-      </tbody>
-    </table>
-
-    <h2>Process interactions: use Pools and Message Flows for externals</h2>
-
-    <p>An external participant can be modeled as a collapsed pool and treated as a black box. The internal process of that participant is not shown; only the interaction with it matters.</p>
-
-    <p>The BPMN boundary is strict: <strong>sequence flows stay inside a pool; message flows cross between pools</strong>. Message flows are for communication between process participants. They are not used as an internal substitute for sequence flow.</p>
-
-    <p>This distinction is useful in integration discussions. A process handoff inside one organizational process is different from a message exchanged across participant boundaries.</p>
-
-    <h3>When to use a correspondence diagram</h3>
-
-    <p>Model several interacting processes in one diagram only when task-level interaction is important, the processes are not too complex, and the result remains easy to follow. Showing every interacting process together can make the model harder to understand than the process itself.</p>
-
-    <p>For a Lead, this is a scope decision: show enough cross-participant behavior to explain the contract and timing, but avoid turning one diagram into the entire enterprise landscape.</p>
-
-    <h2>IT systems and Data Objects: enrich the process without hiding the flow</h2>
-
-    <p>BPMN provides <strong>Data Objects</strong> as standard elements for information or documents used or created in the process. A data object may represent physical documents, digital data, or abstract information and is connected to activities through data associations.</p>
-
-    <p>SAP Signavio also provides an <strong>IT System</strong> element as a custom modeling element. It indicates that an application or system supports particular process steps and is connected to activities by associations.</p>
-
-    <table class="study-table">
-      <thead>
         <tr>
-          <th>Element</th>
-          <th>Standard status</th>
-          <th>What it communicates</th>
+          <td>Journey Modeler</td>
+          <td>User-level licenses</td>
+          <td>SAP documentation exposes license names <strong>Journey Modeling Standard</strong> and <strong>Journey Modeling Advanced</strong>. Some features require the advanced license. Check the current Feature Scope Description for the exact split.</td>
         </tr>
-      </thead>
-      <tbody>
         <tr>
-          <td>Data Object</td>
-          <td>BPMN standard element</td>
-          <td>Information or a document consumed or produced by process work.</td>
-        </tr>
-        <tr>
-          <td>IT System object</td>
-          <td>SAP Signavio custom element</td>
-          <td>An application or system supporting one or more process steps.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Use these elements moderately. Too many data and system artifacts can hide the actual process flow.</p>
-
-    <h3>A lane can represent more than a department</h3>
-
-    <p>The course notes that BPMN does not prescribe one fixed semantic meaning for lanes. A modeling convention can use lanes for roles, departments, positions, systems, or applications. For example, a CRM system can have a lane when the model needs to show system-performed communication and data handling.</p>
-
-    <p>When the system's internal logic is unknown or not needed, model the human-system interaction without inventing the system's internal process.</p>
-
-    <h2>BPMN practice drill: Order Processing in three iterations</h2>
-
-    <p>The learning exercises build one order process in stages. This is a useful review pattern because each stage adds one modeling problem instead of changing everything at once.</p>
-
-    <ol>
-      <li><strong>Part 1 — flow control:</strong> model order processing with responsibilities, one XOR decision for shipment treatment, and an AND pattern for work that can proceed independently.</li>
-      <li><strong>Part 2 — events:</strong> move invoice responsibility to Finance, require prepayment before shipment, model seven-day and five-day waiting periods, payment receipt, reminder, and cancellation with event-based behavior.</li>
-      <li><strong>Part 3 — interaction and information:</strong> add customer communication, ordering-system support, invoice and cancellation Data Objects, and move payment processing into a subprocess.</li>
-    </ol>
-
-    <p>The exercises explicitly allow more than one valid visual solution. The review criteria are more important than copying one layout: check syntax, semantics, naming conventions, responsibility, token behavior, and readability.</p>
-
-    <h2>DMN: separate decision logic from process flow</h2>
-
-    <p>Business Decision Management aims to make operational decisions standardized, consistent, and transparent. The problem it addresses is not that people cannot make decisions, but that repeated ad hoc decisions can drift because the underlying logic is not explicit.</p>
-
-    <p>Decision Modeling Notation (DMN) complements BPMN by making that logic visible. A BPMN model explains the end-to-end activity flow. A DMN model explains <strong>how a decision is made</strong>. The two model types can exist independently, but they are especially useful together when a BPMN activity reaches a decision whose logic would otherwise create many gateways and conditions.</p>
-
-    <p>For example, a BPMN task such as <strong>Determine how to eat dinner</strong> can call decision logic that evaluates motivation and available budget. The decision result then becomes input to the next routing step in the process.</p>
-
-    <h3>Two levels in a DMN model</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Level</th>
-          <th>Purpose</th>
-          <th>Main question</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Decision Requirements Diagram</td>
-          <td>Show dependencies between decisions, sub-decisions, input data, and knowledge sources.</td>
-          <td>What does this decision depend on?</td>
-        </tr>
-        <tr>
-          <td>Decision Logic</td>
-          <td>Define the detailed business rules, commonly in a decision table.</td>
-          <td>Given these inputs, what output should be returned?</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>This separation is important. The requirements diagram explains the structure of the decision; the decision table explains the exact rule behavior.</p>
-
-    <h2>DMN core elements</h2>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Element</th>
-          <th>Meaning</th>
-          <th>Important property</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Decision</td>
-          <td>Uses logic to determine an outcome.</td>
-          <td>Contains business rules, can be decomposed into sub-decisions, and can be reused.</td>
-        </tr>
-        <tr>
-          <td>Input Data</td>
-          <td>Provides information required by a decision.</td>
-          <td>Has a data type and can be reused by several decisions.</td>
-        </tr>
-        <tr>
-          <td>Knowledge Source</td>
-          <td>Represents authority or knowledge that guides the decision.</td>
-          <td>Can represent internal policy, regulation, law, or another authoritative source.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3>A practical way to build a decision model</h3>
-
-    <ol>
-      <li><strong>Identify the decision or business question.</strong> Clarify the objective and the expected kind of answer.</li>
-      <li><strong>Gather decision requirements.</strong> Identify the information, policies, regulations, and external authorities required to answer the question.</li>
-      <li><strong>Split the decision when necessary.</strong> Create sub-decisions when the top-level logic becomes too complex, reusable, or governed by different authorities.</li>
-    </ol>
-
-    <p>A useful review question is: <strong>Can I see which inputs, sub-decisions, and sources of authority explain the final result?</strong></p>
-
-    <h2>Decision tables: rules become explicit rows</h2>
-
-    <p>Decision logic is commonly expressed as a decision table. Input columns contain the facts used by the rules. The output column contains the decision result. Each row is one business rule.</p>
-
-    <p>For example, an insurance decision could use inputs such as number of accidents, age, and traffic points, with an output such as insurability. Operators express comparisons such as equal to, not equal to, element of, not an element of, greater than, less than, less than or equal to, and greater than or equal to.</p>
-
-    <p>The key design objective is that the rules are readable enough for business users and precise enough that the same inputs produce the intended output without hidden interpretation.</p>
-
-    <h2>DMN input types</h2>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Use</th>
-          <th>Example</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Boolean</td>
-          <td>True/false checks.</td>
-          <td>Regular customer?</td>
-        </tr>
-        <tr>
-          <td>Number</td>
-          <td>Numeric values, ranges, and units of measure.</td>
-          <td>Purchase value, age, percentage, currency.</td>
-        </tr>
-        <tr>
-          <td>Enumeration</td>
-          <td>Predefined list of allowed values.</td>
-          <td>Express delivery or Standard delivery.</td>
-        </tr>
-        <tr>
-          <td>Text</td>
-          <td>Free-form textual information.</td>
-          <td>Name or product description.</td>
-        </tr>
-        <tr>
-          <td>Date</td>
-          <td>A date or point in time that can be compared with other dates.</td>
-          <td>Order date or payment deadline.</td>
-        </tr>
-        <tr>
-          <td>Hierarchy</td>
-          <td>Values organized into parent-child classifications.</td>
-          <td>Goods → Clothes / Electronics or Geography → Country → City.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Where possible, the course recommends an enumeration instead of free text because selecting from controlled values is less error-prone than typing names repeatedly.</p>
-
-    <h3>Numeric intervals</h3>
-
-    <p>Numeric rules can use open, closed, or half-open intervals. The boundary symbols matter:</p>
-
-    <ul>
-      <li><code>[1..5]</code> — includes 1 and 5.</li>
-      <li><code>(1..5)</code> — excludes 1 and 5.</li>
-      <li><code>(1..5]</code> — excludes 1, includes 5.</li>
-      <li><code>[1..5)</code> — includes 1, excludes 5.</li>
-    </ul>
-
-    <p>This is not cosmetic notation. A value exactly on the boundary can change the output, for example a purchase value of 750 qualifying for one discount while 749.99 qualifies for another.</p>
-
-    <h2>Hit policies: define what happens when rules overlap</h2>
-
-    <p>A hit policy defines how the decision table behaves when input values match several rules, and in some designs when no specific rule matches. Choosing the policy is part of the decision semantics, not merely a table setting.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Policy</th>
-          <th>Behavior</th>
-          <th>Key risk or use</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Unique (U)</td>
-          <td>Exactly one rule may match for any input combination.</td>
-          <td>Overlapping rules are invalid; completeness is important.</td>
-        </tr>
-        <tr>
-          <td>First</td>
-          <td>Rules are evaluated top to bottom and the first match wins.</td>
-          <td>Rule order changes the result; broad early rules can hide more specific rules.</td>
-        </tr>
-        <tr>
-          <td>Any</td>
-          <td>Several rules may match only when all matching rules return the same output.</td>
-          <td>Overlap is acceptable only when the result is identical.</td>
-        </tr>
-        <tr>
-          <td>Priority</td>
-          <td>Several rules may match; the highest-priority output is returned.</td>
-          <td>Output values require an explicit priority order.</td>
-        </tr>
-        <tr>
-          <td>Collect</td>
-          <td>Several rules may fire and their outputs are collected or aggregated.</td>
-          <td>Useful for scorecards and additive decisions.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>A dash (<code>-</code>) acts as a wildcard and matches any value.</p>
-
-    <h3>Unique vs First</h3>
-
-    <p><strong>Unique</strong> says the rules must not overlap. <strong>First</strong> allows overlap but makes rule order significant. A catch-all rule can be useful at the bottom of a First table, but a catch-all placed too early can make later rules unreachable in practice.</p>
-
-    <h3>Any vs Priority</h3>
-
-    <p><strong>Any</strong> allows overlapping rules only when they all produce the same output. <strong>Priority</strong> allows different outputs and resolves the overlap using the configured output ranking.</p>
-
-    <h3>Collect and aggregation</h3>
-
-    <p>Collect can return a set of matching outputs or aggregate them into one value. The course covers four aggregation functions:</p>
-
-    <ul>
-      <li><strong>Sum</strong> — sum of distinct matching outputs.</li>
-      <li><strong>Min</strong> — smallest matching output.</li>
-      <li><strong>Max</strong> — largest matching output.</li>
-      <li><strong>Count</strong> — number of distinct matching outputs.</li>
-    </ul>
-
-    <p>This pattern fits scorecards. For example, vacation entitlement can start with standard days and add extra days for age or years of service.</p>
-
-    <h2>Sub-decisions: split logic for clarity and reuse</h2>
-
-    <p>Large decisions become easier to understand and maintain when decomposed into smaller decisions. The course uses three criteria for deciding whether to split:</p>
-
-    <ul>
-      <li><strong>Complexity</strong> — too many inputs or dependent decisions make one table difficult to understand.</li>
-      <li><strong>Reusability</strong> — a result such as Customer Status may be useful in several decision models.</li>
-      <li><strong>Authority</strong> — different parts of the logic may come from different internal policies or external regulations.</li>
-    </ul>
-
-    <p>The learning material uses more than seven inputs and/or sub-decisions as a strong warning that the decision logic is likely becoming complex. Treat this as a modeling heuristic, not a mathematical limit.</p>
-
-    <p>Splitting decisions also improves change isolation: one sub-decision can change without forcing unrelated decision logic to change.</p>
-
-    <h2>DMN naming conventions</h2>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Style</th>
-          <th>Use</th>
-          <th>Example pattern</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Activity style</td>
-          <td>Useful for a top-level decision linked to a BPMN task.</td>
-          <td>Verb + object: Determine discount, Select supplier, Calculate score.</td>
-        </tr>
-        <tr>
-          <td>Output style</td>
-          <td>Useful for most other decisions because the name reflects the produced result.</td>
-          <td>Customer status, eligibility, score, ranking.</td>
-        </tr>
-        <tr>
-          <td>Question style</td>
-          <td>Useful when a direct question is clearer than an output label.</td>
-          <td>Is the customer eligible?</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Question style can be intuitive but often creates long labels. For process-linked top-level decisions, activity style keeps the DMN name aligned with the BPMN decision task.</p>
-
-    <h2>Completeness and consistency: decision tables must cover the logic safely</h2>
-
-    <p>A decision table is <strong>incomplete</strong> when an allowed input combination has no matching rule. With a Unique hit policy, the intended model is that exactly one rule fires for every possible input combination, so missing rules are a direct quality problem.</p>
-
-    <p>A decision table is <strong>inconsistent</strong> when rules overlap in a way that violates the selected hit policy. For a Unique table, overlapping rules are not allowed.</p>
-
-    <h3>Verify automates these checks</h3>
-
-    <p>SAP Signavio Process Manager provides a verification function for decision tables. Verify can identify missing combinations and consistency errors such as overlapping rules that do not comply with the hit policy.</p>
-
-    <p><strong>Lead boundary:</strong> verification checks the formal rule space. It does not prove that the business policy itself is correct. Business owners still need to validate the intended rule meaning.</p>
-
-    <h2>Dictionary reuse in DMN</h2>
-
-    <p>DMN models can reuse the same centrally governed Dictionary entries used elsewhere in the process landscape. A knowledge source such as an ERP system can be linked from the Dictionary, and the entry can show where else it is used.</p>
-
-    <p>This keeps decisions aligned with the same business vocabulary as BPMN models. New DMN objects can also be defined and then promoted into governed Dictionary content where appropriate.</p>
-
-    <h2>DMN Simulation: evaluate decision behavior with input data</h2>
-
-    <p>The DMN Simulation tool applies the rules in the decision table to supplied input data and returns the resulting output. This makes the decision executable enough to inspect behavior without confusing it with observed production execution.</p>
-
-    <p>Changing the input data or the decision model makes it possible to compare a new output with the original one. Simulation can also expose sub-decision dependencies and scenarios that the current rules do not cover.</p>
-
-    <p><strong>DMN simulation asks:</strong> “Given this model and these inputs, what result does the logic produce?”</p>
-
-    <h2>DMN Test Lab: preserve expected behavior through change</h2>
-
-    <p>The DMN Test Lab is used for repeatable test cases. The modeler defines input data and an expected output, runs the current decision model, and compares the real result with the expectation.</p>
-
-    <p>This is particularly useful after rule changes. A mismatch between expected and actual output indicates that the implementation does not behave as intended.</p>
-
-    <p>Existing or historical cases can also be imported as regression checks. For example, if a customer must never receive a discount, an older case representing that customer can be rerun after unrelated rule changes to confirm that the protected behavior has not changed.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Tool</th>
-          <th>Main purpose</th>
-          <th>Question</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Verify</td>
-          <td>Check formal completeness and consistency of the decision table.</td>
-          <td>Are there missing or conflicting rule combinations?</td>
-        </tr>
-        <tr>
-          <td>Simulation</td>
-          <td>Evaluate outputs for supplied input data and compare changed decision behavior.</td>
-          <td>What output does this logic produce for these inputs?</td>
-        </tr>
-        <tr>
-          <td>Test Lab</td>
-          <td>Run repeatable expected-result tests and regression cases.</td>
-          <td>Does the changed decision still meet the expected behavior?</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2>BPMN and DMN together</h2>
-
-    <p>The strongest architecture uses each notation for the concern it explains best:</p>
-
-    <ol>
-      <li>BPMN shows the process activity <strong>Determine discount</strong>.</li>
-      <li>DMN shows which inputs, sub-decisions, and policies the decision depends on.</li>
-      <li>The decision table defines the exact rules.</li>
-      <li>The result returns to the process and drives the next activity or route.</li>
-    </ol>
-
-    <p>This reduces gateway-heavy process models and makes decision logic independently maintainable, testable, reusable, and reviewable.</p>
-
-    <h2>The Dictionary: one shared business vocabulary</h2>
-
-    <p>The Dictionary is the central object repository of Process Manager. It prevents teams from redefining the same business objects independently in many process models. Common entries can represent organizational responsibilities, IT systems, applications, documents, activities, events, or other reusable business concepts.</p>
-
-    <p>In the Explorer, Dictionary parent categories and subcategories are shown as the organizing structure, while the entries inside the selected category represent the reusable business objects. This makes the Dictionary both a vocabulary and a traceable repository.</p>
-
-    <p>The core value is reuse. A role, system, or document can be created once and linked from many models. This gives the process landscape a shared vocabulary and makes the usage of an object traceable across diagrams.</p>
-
-    <h3>Create and link entries</h3>
-    <p>Modelers can view and reuse Dictionary content. Additional permissions are required to create or manage entries. New entries can be created directly in the Dictionary or while modeling in the Editor, depending on permissions and workspace configuration.</p>
-
-    <p>Documents and images that belong to a reusable business object should be linked to the Dictionary entry rather than copied independently into many process models. This keeps the supporting information close to the governed object.</p>
-
-    <h3>Avoid duplicates before creating new objects</h3>
-    <p>When a new entry is created, the Dictionary can warn that an entry with the same name already exists. Duplicate names are technically possible, but they weaken governance. Search first, reuse when possible, and create a new object only when it is genuinely different. If the exact name is unknown, the learning material shows that entering <code>**</code> in the search field lists all entries in the selected category.</p>
-
-    <h3>Dictionary entries can carry custom attributes</h3>
-    <p>Dictionary entries can be enriched with additional information through custom attributes defined by the workspace administrator. This is useful when the shared object needs governed metadata beyond its title or standard properties.</p>
-
-    <h3>Use Dictionary entries from QuickModel</h3>
-    <p>The Dictionary is not limited to the Graphical Editor. In QuickModel, typing in an activity attribute field can suggest existing Dictionary entries from the matching category. Additional columns can be added to reach entries from other categories. This keeps fast table-based capture connected to the same governed vocabulary.</p>
-
-    <h3>Local diagram change vs central Dictionary change</h3>
-    <p>This is an important ownership boundary. A change made to attributes while modeling can affect only that diagram. A change made to the underlying Dictionary entry is a central change and applies to linked process models.</p>
-
-    <p>Before editing a Dictionary object, ask: <strong>am I changing this one diagram, or am I changing the shared business definition?</strong> The second action has a wider impact and should follow governance rules.</p>
-
-    <h3>Use clear Dictionary ownership</h3>
-    <p>A central repository needs accountable owners. A small responsible group can maintain terminology, review proposed objects, correct duplicates, and keep categories usable. Giving every modeler unrestricted productive maintenance rights usually increases inconsistency over time.</p>
-
-    <h3>The sandbox approach balances contribution and control</h3>
-    <p>A practical governance pattern is to create sandbox subcategories. The learning material recommends a sandbox for each Dictionary parent category, with modeler access controlled by an appropriate administrator-defined access concept. Modelers can propose missing entries there without directly changing productive Dictionary categories. Dictionary owners then review proposals, approve useful entries, and move them into the correct productive category.</p>
-
-    <p>The sandbox is therefore not only a temporary folder. It is a controlled intake mechanism: contribution stays open, while productive terminology remains governed.</p>
-
-    <h3>Bulk maintenance with Excel</h3>
-    <p>For large maintenance tasks, Dictionary entries can be exported to an XLS or XLSX file, edited in bulk, and imported again. During import, categories and attributes must be mapped correctly. This is useful when many entries need to be created or adjusted, but it also increases the need for ownership and review.</p>
-
-    <h3>Merge duplicate entries</h3>
-    <p>If duplicate Dictionary entries are found, the Merge function can combine them into a target entry. During the merge, the responsible user can decide which information should be retained in the target entry. This is an important cleanup capability because duplicate objects weaken reuse, reporting, and consistent process language.</p>
-
-    <h2>Navigation Maps and Value Chains: two different high-level views</h2>
-
-    <p>Both navigation maps and value chains can provide an entry point into a process landscape, but they solve different communication problems.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>View</th>
-          <th>Main purpose</th>
-          <th>Best use</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Navigation Map</td>
-          <td>Create a flexible, visual entry point</td>
-          <td>Company-on-a-page views, customer journeys, branded navigation, user-friendly process portals.</td>
-        </tr>
-        <tr>
-          <td>Value Chain</td>
-          <td>Show high-level process architecture and sequence</td>
-          <td>End-to-end process groups, business-unit process structure, hierarchical process landscapes.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>A navigation map can use shapes, text boxes, and images. Shapes can be customized through properties such as size, description, color, gradient, stroke, and flat design, and administrators can provide custom attributes. Elements and uploaded images can link to diagrams, workspace folders, URLs, and Dictionary entries. Dictionary links can also be assigned to images, shapes, and text boxes. The goal is usability: help process consumers enter the process world without opening a detailed BPMN diagram first.</p>
-
-    <p>A value chain is more structured. Each element can represent a process or process group, and the elements can be linked in chronological order to show high-level and hierarchical relationships. Many of the same modeling options used for navigation maps also apply here, including links, images, custom attributes, and Live Insights. Navigation maps and value chains can also be connected to each other, which makes it possible to build a clear hierarchy from company-level view down to detailed process models.</p>
-
-    <h3>Live Insights connect the map to analytics</h3>
-    <p>Live Insights can place analytics or KPI information from SAP Signavio Process Intelligence into a navigation map or value chain. This moves the high-level map from static navigation toward operational awareness. Visibility depends on authorization, and the feature requires the relevant Process Intelligence license.</p>
-
-    <h2>A practical process architecture</h2>
-
-    <p>One useful way to structure a large process landscape is:</p>
-
-    <ol>
-      <li><strong>Navigation Map</strong> — user-friendly entry point.</li>
-      <li><strong>Value Chain</strong> — high-level process architecture.</li>
-      <li><strong>BPMN process</strong> — detailed flow, responsibilities, decisions, and handoffs.</li>
-      <li><strong>Dictionary objects</strong> — shared roles, systems, documents, and business terms.</li>
-      <li><strong>Attributes and conventions</strong> — governance metadata and modeling quality.</li>
-      <li><strong>Collaboration Hub</strong> — published process consumption and feedback.</li>
-      <li><strong>Reporting and simulation</strong> — analysis of the modeled process.</li>
-    </ol>
-
-    <p>This hierarchy separates navigation, architecture, detailed process logic, and reusable enterprise objects. It also makes ownership clearer: changing the entry page is not the same as changing the process, and changing one process is not the same as changing a shared Dictionary object.</p>
-
-    <h2>Simulation: test a designed process before changing reality</h2>
-
-    <p>Process simulation runs BPMN 2.0 models with process assumptions such as execution cost, task duration, case frequency, gateway probabilities, resource schedules, and wages. Its purpose is to estimate behavior before making an operational change: where costs rise, where queues form, whether capacity is sufficient, and how a To-Be design compares with the current model.</p>
-
-    <p>The simulation feature can visualize a process step by step, run a single case, or run multiple cases. It can also support comparison of the current model with a To-Be version. This makes simulation useful for questions such as capacity growth, resource absence, cost reduction, and cycle-time improvement.</p>
-
-    <h3>The four Scenario parameter groups</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          <th>What you define</th>
-          <th>Typical decision</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Costs</td>
-          <td>Execution cost for each activity</td>
-          <td>If shipping or another task becomes cheaper, how much does the process cost change?</td>
-        </tr>
-        <tr>
-          <td>Duration</td>
-          <td>Task execution time and optional duration distributions</td>
-          <td>If one step becomes faster, what happens to total cycle time?</td>
-        </tr>
-        <tr>
-          <td>Frequency</td>
-          <td>Case arrival frequency and gateway path probabilities</td>
-          <td>Can the process handle a higher volume?</td>
-        </tr>
-        <tr>
-          <td>Resources</td>
-          <td>Lane schedules, capacity, and hourly wages</td>
-          <td>Can available people handle the workload, including reduced availability?</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3>Costs: activity expense is not labor cost</h3>
-    <p>The Costs tab holds task-specific execution costs such as material, electricity, shipping, or other direct activity expenses. Labor cost should not be entered here because labor is modeled through Resources. Keeping these cost types separate prevents double counting. The workspace administrator configures the currency used by the process models.</p>
-
-    <h3>Duration: execution time is not total cycle time</h3>
-    <p>Task execution times contribute to process cycle time, but simply adding task durations normally gives only a minimum. Real cycle time can also include waiting and idle time. For variable tasks, the model can define different durations for different proportions of cases and use distributions instead of one fixed value.</p>
-
-    <p>This distinction is important in diagnosis: making a task itself faster does not necessarily remove waiting caused by scarce resources or queues.</p>
-
-    <h3>Frequency: volume and routing drive demand</h3>
-    <p>For a multiple-case simulation, the model defines how often new cases start within a time frame. The learning example uses a default frequency of four new cases per day, or twenty per week, and allows different frequencies for particular days or hours.</p>
-
-    <p>If the BPMN model contains gateways, the Frequency tab also defines the probability of each path. When a process reaches that decision point, the probabilities determine the simulated route independently for each case. Therefore, both demand volume and path mix can change resource consumption and bottlenecks.</p>
-
-    <h3>Resources: availability creates queues</h3>
-    <p>The Resources tab defines working schedules and hourly wages for the lanes in the diagram. Resource availability strongly influences process cost, total cycle time, and bottlenecks. A new case may be ready for an activity while the responsible people are still processing previous cases; the waiting queue then becomes part of the simulated process behavior.</p>
-
-    <h3>Read simulation results correctly</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Result</th>
-          <th>Meaning</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Costs</td>
-          <td>Fixed activity costs plus resource costs. If activity durations vary, resource-related cost can vary with execution time.</td>
-        </tr>
-        <tr>
-          <td>Total cycle time</td>
-          <td>Execution time plus waiting time.</td>
-        </tr>
-        <tr>
-          <td>Resource consumption</td>
-          <td>Total working hours required from process participants.</td>
-        </tr>
-        <tr>
-          <td>Bottlenecks</td>
-          <td>Lanes where capacity constraints create waiting; waiting times are shown against activities in the simulation result.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>If total cycle time extends beyond the simulation time span, the learning material gives two main explanations: resources cannot process incoming cases fast enough and instances accumulate, or new cases entered near the end of the simulated period and have not yet finished.</p>
-
-    <p><strong>Lead boundary:</strong> simulation is a what-if calculation based on model assumptions. It is not evidence that the real process behaved that way. Observed execution belongs to process-data analysis.</p>
-
-    <h2>Collaboration: syntax can be checked, semantics need people</h2>
-
-    <p>Process collaboration matters because the Editor can validate notation but cannot prove that the modeled process is semantically correct. A BPMN model may be syntactically valid and still describe the business incorrectly. Process participants, stakeholders, and subject matter experts therefore need a way to challenge the model while knowledge is still fresh.</p>
-
-    <p>Feedback can be requested during modeling. Comments appear in the Editor's Comments panel, where modelers can reply and mark suggestions as <strong>Resolved</strong> or <strong>Rejected</strong>. Comments can also be filtered by individual model elements, which helps connect feedback to the exact activity, event, or other object under discussion.</p>
-
-    <p>External participants can also be invited to provide feedback. After registration, their access is limited to the specific process to which they were invited. This is useful when a process needs review from a participant outside the normal workspace audience without granting broad workspace access.</p>
-
-    <p>Publishing comes after modeling and feedback have been incorporated. The Process Collaboration Hub then becomes the consumption layer for organizational users. A practical governance flow is therefore <strong>model → review → resolve feedback → publish → consume</strong>.</p>
-
-    <h2>Variant Management: standard core, controlled local difference</h2>
-
-    <p>SAP Signavio Variant Management is consumed from the Process Collaboration Hub, where the Variant Management area provides access to templates, Variant Groups, dimensions, values, and variant relationships.</p>
-
-    <p>A process variant is a version of a business process that captures justified differences in execution or documentation while keeping a relationship to a common process framework. Variants are useful when one global process needs different regional, organizational, product, brand, customer-journey, customer-type, or transformation-specific behavior.</p>
-
-    <p>Variant management is therefore not uncontrolled copying. Its purpose is to maintain transparency between a common template and the processes that differ from it.</p>
-
-    <h3>Common reasons for variants</h3>
-    <ul>
-      <li><strong>Regional differences</strong> — local regulations or operating rules.</li>
-      <li><strong>Product and brand harmonization</strong> — one framework with site- or portfolio-specific differences.</li>
-      <li><strong>Organizational levels</strong> — local units adapt a common template.</li>
-      <li><strong>Transformation journey</strong> — existing and target process variants coexist during change.</li>
-      <li><strong>Customer types</strong> — different process behavior for different customer segments.</li>
-    </ul>
-
-    <p>The learning material describes Variant Management capabilities to detect variants through integration with process data, control the relationship between template and variant, track and propagate template changes, and help users consume the correct variant for their context or role.</p>
-
-    <h3>Template, dimensions, values, and Variant Group</h3>
-
-    <p>The <strong>process template</strong> is the main model to which variants are attached. The differentiating characteristics are defined as <strong>dimensions</strong>. These dimensions are represented by Dictionary categories, which must first be configured for that purpose in Process Manager. Specific Dictionary entries then become the dimension values.</p>
-
-    <p>Creating a template automatically creates a <strong>Variant Group</strong> containing the template and its attached variants. Variant Groups organize the relationship and are also used when managing dimensions. To remove a Variant Group, the template is reverted. The attached process models are not deleted; they simply stop being variants in that group.</p>
-
-    <h3>Example: one global O2C process, several justified variants</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Model</th>
-          <th>Purpose</th>
-          <th>Typical difference</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Core O2C Template</td>
-          <td>Common global process</td>
-          <td>Standard order, fulfillment, and invoicing structure.</td>
-        </tr>
-        <tr>
-          <td>US B2B Variant</td>
-          <td>Regional and customer-type adaptation</td>
-          <td>Credit checks and state-specific tax handling.</td>
-        </tr>
-        <tr>
-          <td>EU B2C Variant</td>
-          <td>Regional and customer-type adaptation</td>
-          <td>VAT processing and GDPR-related requirements.</td>
-        </tr>
-        <tr>
-          <td>APAC B2B Variant</td>
-          <td>Regional adaptation</td>
-          <td>Local shipping rules and extended payment terms.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>The point is not to create four unrelated processes. The template keeps the common operating model visible, while variants capture the differences that are actually required for region, customer context, regulation, or operating practice.</p>
-
-    <h3>Attach, clone, or detach?</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>Meaning</th>
-          <th>Use when</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Attach</td>
-          <td>Make an existing process a variant of a template.</td>
-          <td>The local model already exists and should enter the governed variant structure.</td>
-        </tr>
-        <tr>
-          <td>Clone</td>
-          <td>Copy the template and use the copy as a new variant.</td>
-          <td>A new variant should begin from the same core structure.</td>
-        </tr>
-        <tr>
-          <td>Detach</td>
-          <td>Break the link between the variant and its template.</td>
-          <td>The local process needs extensive independent change and should no longer receive template governance.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Cloning speeds up local adaptation without changing the original template. Detaching is a stronger decision: the process becomes independent, so future template relationships no longer protect alignment.</p>
-
-    <h3>Change propagation keeps variants aligned</h3>
-
-    <p>When a template changes, a variant can show unresolved updates in Process Collaboration Hub. Those updates are reviewed in the Editor, where the modeler can apply or ignore them. Some changes, such as renaming, can be propagated automatically. The learning material also demonstrates automatic propagation for supported added or deleted process elements. Other changes can require manual adjustment in the variant. The correct boundary is therefore <strong>supported automatic propagation vs changes that require modeler review and manual work</strong>, not simply “non-structural vs structural.”</p>
-
-    <p>The update notification is visible only when the template has been published in its newest revision. Users who need immediate awareness can subscribe to change-propagation notifications.</p>
-
-    <p><strong>Lead decision:</strong> use a variant when the difference is legitimate but the process still belongs to a common standard. Detach only when independent evolution is more important than template alignment. Variant Management is therefore a governance mechanism for balancing global consistency with local compliance and operating needs.</p>
-
-    <h2>Reporting: turn model metadata into governance evidence</h2>
-
-    <p>Process models contain visible diagram content and less visible information stored in attributes. Reporting aggregates that information across many processes or focuses on selected aspects of one model. The output can support decisions, audits, governance, ownership analysis, system analysis, and process improvement. Reports are available from the Explorer and can also be generated in Process Collaboration Hub.</p>
-
-    <h3>Analysis reports</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Report</th>
-          <th>Main input</th>
-          <th>What it helps answer</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Process Cost Analysis</td>
-          <td>Execution cost, cost center, yearly start-event frequency, gateway probabilities</td>
-          <td>Which activities drive cost, where is waste, and where could budget be reduced or redirected?</td>
-        </tr>
-        <tr>
-          <td>Resource Consumption Analysis</td>
-          <td>Task time, participant workload, allowances, work times</td>
-          <td>Which departments or roles consume capacity and where do resource constraints create bottlenecks?</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Process Cost Analysis calculates task execution cost and uses the start event's yearly frequency. Gateway probabilities influence the input factor for downstream tasks, so expected path mix changes the calculated cost. Resource Consumption Analysis instead focuses on participant workload and organizes consumed time by department.</p>
-
-    <h3>Four matrices for responsibility and usage</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Matrix</th>
-          <th>What it shows</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Responsibility Assignment Matrix</td>
-          <td>RACI-style mapping of tasks and deliverables to responsible, accountable, consulted, and informed roles.</td>
-        </tr>
-        <tr>
-          <td>Responsibility Handovers Matrix</td>
-          <td>Handoffs between participants based on sequence flows and message flows.</td>
-        </tr>
-        <tr>
-          <td>IT System Usage Matrix</td>
-          <td>Where process activities read from or write to IT systems; the analysis can also be grouped by role.</td>
-        </tr>
-        <tr>
-          <td>Document Usage Matrix</td>
-          <td>Which documents are assigned to tasks as inputs or outputs.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>These matrices connect process design to operating ownership. They can reveal unclear accountability, excessive handoffs, concentration on critical systems, training needs, document dependencies, and outdated documents.</p>
-
-    <h3>Process management and maintenance reports</h3>
-
-    <p><strong>Modeling Conventions</strong> checks selected diagrams against BPMN conventions and workspace-specific modeling rules. Filters can narrow the report by diagram information, publishing state, or custom attributes. The resulting spreadsheet exposes errors, warnings, and hints, with a legend of the conventions that were checked. A high number of violations can point not only to model quality problems but also to a modeler training need.</p>
-
-    <p><strong>Process Model Metrics</strong> reports statistics about diagram elements, linked files, and linked Dictionary entries. It also exposes Process Manager and Collaboration Hub links and can help find highly complex or unpublished diagrams, retrieve a process ID, and review authorship or modification information.</p>
-
-    <p><strong>Process Characteristics</strong> lists BPMN elements and attributes that contain values. It can help identify redundant attributes, compare modeling patterns across processes, and provide an overview of information such as process ownership or certification requirements. Empty attributes across the selected processes are not shown.</p>
-
-    <p><strong>Risks and Controls</strong> aggregates risk and control information defined in the Dictionary and used in selected process diagrams. It can include descriptions, aims, relevant documents, and control frequency, supporting risk evaluation, audits, compliance evidence, control-gap analysis, and IT-risk review.</p>
-
-    <h3>Process Documentation: tailored output, not only standard reports</h3>
-
-    <p>Process Documentation creates a more configurable document that can include diagram graphics, element descriptions, attributes, and Dictionary entries. It can be generated as PDF or Microsoft Word and can use custom templates. Typical uses include BPMN task overviews, Dictionary matrices, process summaries, quality-management documentation, work instructions, and material for participants who do not have Collaboration Hub access.</p>
-
-    <p>Documentation templates can be simple or advanced, including multilingual output. Their design follows an Editor-like approach with objects on a canvas and configuration through an attributes panel. Creating the templates requires the relevant administrator-granted access rights.</p>
-
-    <h3>Simulation vs reporting vs Process Intelligence</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Capability</th>
-          <th>Primary evidence</th>
-          <th>Main question</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Simulation</td>
-          <td>Assumptions attached to the designed model</td>
-          <td>What could happen if volume, time, cost, routing, or capacity changes?</td>
-        </tr>
-        <tr>
-          <td>Reporting</td>
-          <td>Model elements, attributes, Dictionary links, roles, systems, documents, risks</td>
-          <td>What does our modeled process landscape contain and where are governance or design signals?</td>
+          <td>Process Governance</td>
+          <td>Separate workflow license / entitlement</td>
+          <td>Approval workflows in Process Modeler require a Process Governance license in addition to the modeling license. SAP also documents a limited Process Governance Collaborator sub-license that cannot be purchased stand-alone.</td>
         </tr>
         <tr>
           <td>Process Intelligence</td>
-          <td>Observed process event data</td>
-          <td>What actually happened in process execution?</td>
+          <td>Workspace-level license/package</td>
+          <td>The license is assigned to the workspace, not to each user. Feature access is then granted through user-group feature sets and data permissions.</td>
+        </tr>
+        <tr>
+          <td>Process Insights</td>
+          <td>Contract + SAP BTP subscription/role collections</td>
+          <td>Requires a contract that grants access, then BTP subscription and role collections. Current SAP documentation states that Process Insights capabilities are available in Process Intelligence.</td>
+        </tr>
+        <tr>
+          <td>Process Transformation Manager</td>
+          <td>Separate licensed product/capabilities</td>
+          <td>Access to benchmarking, initiatives, insights, objectives, tasks, and related functions depends on license and access rights.</td>
+        </tr>
+        <tr>
+          <td>Process Explorer / Value Accelerator Library</td>
+          <td>Package/entitlement dependent</td>
+          <td>Use as content acceleration. Value accelerators are optional and SAP states they are not part of the core business functionality of the products.</td>
+        </tr>
+        <tr>
+          <td>API technical user</td>
+          <td>API Edition / technical access</td>
+          <td>Use a dedicated technical user for integrations. SAP documentation for APIs describes API Edition licensing and support-driven assignment; do not consume a paid business-user license for technical access when the API license is available.</td>
+        </tr>
+        <tr>
+          <td>Business Process Model Connector</td>
+          <td>BTP entitlement and subscription</td>
+          <td>Requires the relevant connector entitlement, supported BTP setup, roles, and system prerequisites. Commercial entitlement must be verified in the customer contract.</td>
+        </tr>
+        <tr>
+          <td>AI capabilities</td>
+          <td>Feature-specific</td>
+          <td>Do not assume that all AI functions are included with a base product. AI Units and commercial requirements vary by capability and can change.</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>Process Governance: turn governance rules into executable work</h2>
+    <h3>License is not permission</h3>
 
-    <p>SAP Signavio Process Governance is the workflow-management component used to configure and execute governed business workflows. It supports process governance and compliance by coordinating tasks and handovers, tracking relevant information, routing work to the correct people, and handling approvals or rejections.</p>
+    <p>A license gives product access. Groups, feature sets, object permissions, and data access decide what the user can actually do or see. This is especially important in Collaboration Hub, Process Governance, and Process Intelligence.</p>
 
-    <p>The key distinction is that <strong>Process Manager describes and governs process models, while Process Governance executes workflow instances</strong>. A model can describe how approval should work; Process Governance can assign the approval task, collect the result, remind the assignee, escalate delays, and keep a case history.</p>
+    <h3>2026 identity-management boundary</h3>
 
-    <h3>Core governance use cases</h3>
+    <p>For new workspaces, current SAP documentation has moved identity management toward SAP Cloud Identity Services. Workspaces created after November 25, 2025 have SAP Cloud Identity Services SSO enabled automatically. For workspaces created after May 6, 2026, users and groups are created and managed through SAP Cloud Identity Services. Older course material that shows local Signavio user/group administration remains relevant for older tenants, but it is not the universal current-state flow.</p>
+
+    <h2 id="modeler">5. Process Modeler: design, structure, and govern process knowledge</h2>
+
+    <h3>Explorer, Editor, QuickModel, and Dictionary</h3>
 
     <table class="study-table">
       <thead>
         <tr>
           <th>Capability</th>
-          <th>What it governs</th>
-          <th>Typical example</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Process release cycle management</td>
-          <td>Review, approval, and publication of process content</td>
-          <td>Route a model to process owners, risk owners, and quality managers before publication.</td>
-        </tr>
-        <tr>
-          <td>Process maturity assessment</td>
-          <td>Repeatable validation and assessment work</td>
-          <td>Replace spreadsheet-based maturity checks with tracked workflow tasks.</td>
-        </tr>
-        <tr>
-          <td>Risk and control management</td>
-          <td>Review and maintenance of governed risks and controls</td>
-          <td>Use centrally maintained Dictionary risks and controls and schedule recurring verification.</td>
-        </tr>
-        <tr>
-          <td>Configurable governance workflows</td>
-          <td>Approval and control logic modeled with BPMN</td>
-          <td>Assign tasks, route decisions, and analyze workflow data later in Process Intelligence or another BI tool.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Supporting features include automatic reminders, escalation to other users when critical work is overdue, reusable workflow data, direct task or case messaging, and task filters that help users focus on open work.</p>
-
-    <h2>Workflow vs business process</h2>
-
-    <p>A workflow and a process are closely related but are not identical. A process provides the broader roadmap and business objective. A workflow describes how work moves through operational steps: who does what, when, with which information, and who continues next.</p>
-
-    <p>One useful assessment formulation is: <strong>a process explains the business outcome and structure; a workflow operationalizes the work required to achieve it</strong>. A process can exist as a documented business model without an executable workflow, while a workflow belongs to a broader process context.</p>
-
-    <p>Workflows can be handled manually, supported by office tools or ERP systems, implemented as custom software, or executed by a workflow-management system. A workflow-management system automates recurring procedures by assigning the right task to the right person at the right time.</p>
-
-    <h2>Process Governance access and operating surfaces</h2>
-
-    <p>SAP Signavio Process Governance is part of SAP Signavio Process Transformation Suite and is accessed from the SAP Signavio environment. The learning material describes entering through Process Collaboration Hub and selecting Process Governance from the application menu.</p>
-
-    <p>Process Collaboration Hub also exposes governance-related functions such as <strong>diagram approvals</strong>, <strong>read confirmations</strong>, and <strong>process rating</strong>.</p>
-
-    <p>The Process Governance landing page is organized around four main menu tabs: <strong>Tasks</strong>, <strong>Cases</strong>, <strong>Processes</strong>, and <strong>Analytics</strong>. The provided lesson introduces these four areas here and continues their detailed navigation separately.</p>
-
-    <p>The learning material also notes that Process Governance does not provide a trial version and requires a Process Governance login. When the SAP Signavio sign-in flow asks again after entering from Collaboration Hub, the lesson instructs users to choose <strong>Log in with Process Manager Account</strong> rather than re-entering credentials.</p>
-
-    <h2>Creating workflows: reuse before starting from zero</h2>
-
-    <p>Process Governance supports three creation paths from the Processes area:</p>
-
-    <ul>
-      <li><strong>From Scratch</strong> — create a new workflow directly.</li>
-      <li><strong>From Template</strong> — start from an available workflow template and adapt it.</li>
-      <li><strong>Import BPMN</strong> — import an existing BPMN process model that meets execution requirements.</li>
-    </ul>
-
-    <p>A process can also be transferred from SAP Signavio Process Manager into Process Governance. For assessment purposes, the design rule is <strong>reuse an appropriate template or existing BPMN model before rebuilding the workflow manually</strong>, but confirm that the imported process satisfies execution requirements.</p>
-
-    <h2>Triggers: define how a workflow case begins</h2>
-
-    <p>A workflow starts with a trigger. The trigger determines what information or event creates a new case.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Trigger</th>
-          <th>Who or what starts it?</th>
-          <th>Typical use</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Public form</td>
-          <td>Anyone, including an external participant</td>
-          <td>A public request form, for example requesting information or materials.</td>
-        </tr>
-        <tr>
-          <td>Private form</td>
-          <td>Registered internal users</td>
-          <td>Internal requests such as holiday or service requests.</td>
-        </tr>
-        <tr>
-          <td>E-mail</td>
-          <td>An incoming message, often from another system or person</td>
-          <td>An ERP or HR system sends a notification that starts a case.</td>
-        </tr>
-        <tr>
-          <td>Process Manager</td>
-          <td>A process model handed over from Process Manager</td>
-          <td>Start a review and approval workflow before a model is published.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3>Forms create and update workflow data</h3>
-
-    <p>Forms are used in two places: <strong>form triggers</strong> and <strong>user tasks</strong>. A trigger form sets workflow variables when a case starts. A user-task form lets an assignee enter or update information while completing work.</p>
-
-    <p>Trigger forms can be private by default or public. Forms contain fields, and the form builder supports structures such as nested sections, mandatory fields, dynamic fields, and field groups. The important architectural point is that form data becomes workflow data that later tasks, decisions, documents, and messages can reuse.</p>
-
-    <h2>Actions: model the work that happens after the trigger</h2>
-
-    <p>Process Governance groups workflow elements into three categories:</p>
-
-    <ol>
-      <li><strong>Main actions</strong> — the main human or communication work needed to reach the workflow goal.</li>
-      <li><strong>Services and other actions</strong> — automated supporting work such as creating documents or PDFs.</li>
-      <li><strong>Events and gateways</strong> — flow-control elements that decide which actions execute and when.</li>
-    </ol>
-
-    <h3>User Task</h3>
-
-    <p>A User Task represents work performed by one person. Its configuration can define an assignee or candidate users, a process role, a task form, reminders, and access rights. Assigning by process role helps Process Governance keep related tasks with the same person where that role is reused.</p>
-
-    <p>Due dates and reminders are separate concepts. A due date defines the task deadline. A reminder can notify assignees before or independently of that deadline, and continued reminders can repeat. The learning material states a maximum of 25 reminders for one task.</p>
-
-    <h3>Multi-User Task</h3>
-
-    <p>A Multi-User Task creates the same task for several people and collects their individual results into result lists. It supports the same general configuration areas as a User Task plus a Results configuration.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Execution</th>
-          <th>Behavior</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Parallel</td>
-          <td>Create all individual tasks at the same time; assignees may complete them in any order.</td>
-        </tr>
-        <tr>
-          <td>Sequential</td>
-          <td>Create one task at a time; the next is created only after the current assignee completes it.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>This makes Multi-User Task suitable for scenarios such as several reviewers who must each evaluate the same proposal.</p>
-
-    <h3>Send E-mail</h3>
-
-    <p>The Send E-mail action sends workflow-controlled messages to users, addresses, or values held in variables. Workflow fields can be reused in the subject and body, attachments can come from workflow file fields or generated documents, and the body supports Markdown formatting. The case history records successful e-mail events. The lesson also describes a size fallback: if the message is too large, Process Governance attempts to send it without attachments and records that outcome in the case history when successful.</p>
-
-    <h2>Process details and access control</h2>
-
-    <p>The process Details area contains process-level information and configuration, including general information, process owner and description, access control, field overview, and core case information.</p>
-
-    <p>Access control can restrict who can access a process, edit cases, or work with individual tasks. Processes and tasks are described in the learning material as organization-visible by default; making a process private allows permissions to be granted to specific users or groups. Individual User Tasks can also have more specific access restrictions.</p>
-
-    <p><strong>Lead boundary:</strong> process access and task access are related but not identical. A user may need visibility of the overall case without receiving permission to assign, view, or complete every protected task.</p>
-
-    <h2>Versions: editing state and execution state are separate</h2>
-
-    <p>The workflow editor saves model changes while you work, but a new case can start only from a <strong>published process version</strong>. This creates an important governance boundary between the editable workflow definition and the version currently used for execution.</p>
-
-    <h3>Publish, Re-Publish, and Restore solve different problems</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>What changes?</th>
-          <th>Effect on new cases</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Publish</td>
-          <td>Create a published workflow version from the current definition.</td>
-          <td>New cases can use the newly published version.</td>
-        </tr>
-        <tr>
-          <td>Re-Publish</td>
-          <td>Publish a new copy of an older selected version.</td>
-          <td>New cases use that republished version; current unpublished edits are not removed.</td>
-        </tr>
-        <tr>
-          <td>Restore</td>
-          <td>Replace current unpublished edits with an older selected version for further editing.</td>
-          <td>The already published version used for new cases does not change.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Version comments can document what changed between releases and make workflow evolution more transparent. The distinction between Re-Publish and Restore is particularly useful in assessment questions because one changes the version used for future cases, while the other changes the editable draft.</p>
-
-    <h2>Process Manager vs Process Governance vs Process Intelligence</h2>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Component</th>
-          <th>Primary role</th>
+          <th>Use it for</th>
           <th>Lead question</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Process Manager</td>
-          <td>Model, document, govern, publish, and simulate designed processes</td>
-          <td>How should the process be defined and governed?</td>
-        </tr>
-        <tr>
-          <td>Process Governance</td>
-          <td>Configure and execute governed workflows, tasks, approvals, reminders, and cases</td>
-          <td>How is governed work actually assigned and completed?</td>
-        </tr>
-        <tr>
-          <td>Process Intelligence</td>
-          <td>Analyze observed event data and actual process execution</td>
-          <td>What actually happened in operational execution?</td>
-        </tr>
+        <tr><td>Explorer</td><td>Folders, models, search, revisions, access, reporting, simulation entry points</td><td>Where is the process and who owns the content?</td></tr>
+        <tr><td>Graphical Editor</td><td>Detailed BPMN, DMN, attributes, review, conventions</td><td>How is the process or decision modeled?</td></tr>
+        <tr><td>QuickModel</td><td>Fast table-based BPMN capture</td><td>Can the business capture the happy path before detailed modeling?</td></tr>
+        <tr><td>Dictionary</td><td>Reusable roles, systems, documents, risks, controls, and other business objects</td><td>Are we using one governed business vocabulary?</td></tr>
       </tbody>
     </table>
 
-    <h2>Business Process Model Connector: bridge Business and IT</h2>
+    <p><strong>Best practice:</strong> define the process architecture and governance model before creating hundreds of diagrams. Folder structure, access rights, Dictionary categories, attributes, naming rules, and process levels are architecture decisions.</p>
 
-    <p>The business process model connector for SAP Signavio solutions connects SAP Signavio Process Manager with SAP Solution Manager. The learning material presents it as the bridge between collaborative business-process design and the IT implementation and application-lifecycle view.</p>
-
-    <p>The connector is a stand-alone cloud application built on SAP Business Technology Platform. Its purpose is not to make the two products identical. It keeps a common process structure aligned while each product remains responsible for a different layer.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>System</th>
-          <th>Leading responsibility</th>
-          <th>Typical artifacts</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>SAP Signavio</td>
-          <td>Process structure and business artifacts</td>
-          <td>Collaborative process models, business process information, Dictionary objects, process design.</td>
-        </tr>
-        <tr>
-          <td>SAP Solution Manager</td>
-          <td>Solution design and IT artifacts</td>
-          <td>Solution documentation, implementation context, application lifecycle, testing, change management, monitoring.</td>
-        </tr>
-        <tr>
-          <td>Business Process Model Connector</td>
-          <td>Controlled transfer between the two systems</td>
-          <td>Mapped process objects, attributes, structures, and synchronization history.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>The connector therefore supports a shared language between Business and IT. Business teams can design and govern the process structure in Signavio, while IT teams can use the synchronized structure in Solution Manager for implementation and operations.</p>
-
-    <h3>Transformation dimensions</h3>
-
-    <p>The course places the connector in a wider transformation model with four connected dimensions: <strong>Business Strategy, Processes, Technology, and People</strong>. Strategy sets direction, processes translate that direction into work, technology implements and supports the processes, and people execute and change them.</p>
-
-    <p>The connector mainly strengthens the process-to-technology boundary: it reduces the gap between what the business designed and what IT must implement, test, change, and operate.</p>
-
-    <h2>Synchronization ownership: initial import, then Signavio leads</h2>
-
-    <p>The most important architectural rule in this lesson is the ownership transition. If process information already exists in SAP Solution Manager, an initial synchronization can move it to SAP Signavio Process Manager. After that initial synchronization, SAP Signavio becomes the leading system for process information and changes to process objects and their mapped attributes are managed there.</p>
-
-    <p>Subsequent process updates are then synchronized from SAP Signavio Process Manager to SAP Solution Manager so that IT receives the latest agreed process structure and business information.</p>
-
-    <p><strong>Important limitation:</strong> the learning material explicitly states that BPMN diagrams synchronized from SAP Solution Manager to SAP Signavio cannot be synchronized back. Do not describe the connector as unrestricted symmetric round-trip BPMN synchronization.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Stage</th>
-          <th>Direction</th>
-          <th>Ownership rule</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Initial migration/alignment</td>
-          <td>SAP Solution Manager → SAP Signavio</td>
-          <td>Use when process information already exists in Solution Manager.</td>
-        </tr>
-        <tr>
-          <td>Ongoing process maintenance</td>
-          <td>SAP Signavio → SAP Solution Manager</td>
-          <td>Maintain process information and mapped attributes in Process Manager after the initial synchronization.</td>
-        </tr>
-        <tr>
-          <td>Imported BPMN round trip</td>
-          <td>Not supported as a symmetric return path</td>
-          <td>BPMN diagrams synchronized from Solution Manager to Signavio cannot simply be synchronized back.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2>Connector prerequisites: several administrators own different parts</h2>
-
-    <p>The setup crosses SAP Solution Manager, SAP Signavio, SAP BTP, and SAP Cloud Connector. The course therefore separates responsibilities between Solution Manager, Signavio, BTP, and Cloud Connector administrators.</p>
-
-    <h3>SAP Solution Manager prerequisites</h3>
-
-    <p>A technical user with the required rights is needed in SAP Solution Manager. The lesson also requires verification that these SICF services are active:</p>
-
-    <ul>
-      <li><code>/sap/opu/odata/sap/ProcessManagement</code></li>
-      <li><code>/sap/bc/icf/info</code></li>
-    </ul>
-
-    <p>This is a useful troubleshooting boundary: connector access can fail even when credentials are correct if the required backend services are not active.</p>
-
-    <h3>SAP Signavio technical user</h3>
-
-    <p>The connector needs a SAP Signavio Process Manager user with write rights. The standard Enterprise license provides sufficient rights, but the course recommends an API license for technical integrations, especially when Single Sign-On is used. The learning material says the API license can be requested through an SAP support ticket at no additional cost. After activation, create a neutral technical user and assign the API group either administrator rights or the specific API permissions required for the integration.</p>
-
-    <p>The training guidance also recommends a neutral technical-user name and <strong>one technical user per technical integration</strong>. Reusing the same technical user for several integrations makes lockouts and support diagnosis harder because one incorrect password can affect several integrations without a clear origin.</p>
-
-    <h3>SAP Cloud Connector</h3>
-
-    <p>SAP Cloud Connector is installed on a virtual machine in the customer environment. The course recommends medium sizing for this scenario. Cloud Connector provides the controlled connectivity path from SAP BTP to the on-premise SAP Solution Manager system.</p>
-
-    <h3>SAP BTP subaccount region</h3>
-
-    <p>The learning material lists two supported SAP BTP regions for the connector subscription:</p>
-
-    <ul>
-      <li><strong>EU10</strong> — AWS Frankfurt.</li>
-      <li><strong>US10</strong> — AWS Virginia.</li>
-    </ul>
-
-    <p>An existing subaccount can be reused when it is in one of these supported regions, even if other applications are already subscribed there. The course also allows reuse of the SAP Signavio Process Insights subaccount when it is hosted in EU10 or US10.</p>
-
-    <p>If the existing subaccount is in another region, a new supported-region subaccount is required. Because supported regions can change over time, verify the current product documentation before implementation.</p>
-
-    <h3>Cloud Connector trust and BTP entitlements</h3>
-
-    <p>After the BTP subaccount exists, the Cloud Connector administrator connects the subaccount to SAP Cloud Connector and establishes the trust relationship to SAP Solution Manager. The BTP administrator then adds the required connector entitlements to the subaccount.</p>
-
-    <h2>Subscribe, assign roles, and launch</h2>
-
-    <p>Once the prerequisites are complete, the SAP BTP administrator subscribes to the connector application and assigns the required connector roles to users or groups.</p>
-
-    <p>Connector access should be limited to administrators and users or groups responsible for executing synchronization. Role assignment is what enables the application tiles and actions for those users.</p>
-
-    <p>If a user cannot access the connector, cannot perform an action, or expected tiles are missing, the course recommends checking whether the required BTP roles are still assigned, reassigning them if needed, and relaunching the connector in an incognito or separate browser window.</p>
-
-    <h2>Synchronization Project: one configuration for one system pair</h2>
-
-    <p>A Synchronization Project stores the mapping and scope rules between one defined SAP Signavio system and one SAP Solution Manager system. Every project has a unique ID and controls one system combination, independent of the direction used in an individual synchronization run.</p>
-
-    <p>The configuration follows four stages:</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Step</th>
-          <th>Configuration</th>
-          <th>Important behavior</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1. Create Synchronization Project</td>
-          <td>Select the system combination and SAP Solution Manager Solution and Branch.</td>
-          <td>One project controls one defined system pair and receives a unique ID.</td>
-        </tr>
-        <tr>
-          <td>2. Map Dictionary Categories</td>
-          <td>Map Signavio Dictionary object types to the corresponding Solution Manager object types.</td>
-          <td>The course highlights the Activity mapping and recommends the connector's predefined mapping where appropriate.</td>
-        </tr>
-        <tr>
-          <td>3. Map Attributes</td>
-          <td>Map Signavio and Solution Manager attributes.</td>
-          <td>Use recommended predefined mappings plus relevant standard or customer-specific custom attributes.</td>
-        </tr>
-        <tr>
-          <td>4. Preview and Save</td>
-          <td>Review selected settings before saving.</td>
-          <td>Saving triggers creation of required Dictionary categories and attributes in SAP Signavio before data transfer.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3>Revision-state filtering requires Process Governance</h3>
-
-    <p>The project can optionally restrict synchronization to processes in a specific revision state, for example only approved processes. The learning material states that SAP Signavio Process Governance is a prerequisite for using this revision-state selection.</p>
-
-    <p>This makes governance status part of integration scope: only process content that reached the selected lifecycle state needs to cross into the IT implementation view.</p>
-
-    <h2>Run a synchronization project</h2>
-
-    <p>A Synchronization Project must be activated before it can run. Activation creates the required Dictionary structures in SAP Signavio. The same project can later be edited for attribute mappings and executed multiple times.</p>
-
-    <p>The run sequence is:</p>
+    <h3>Recommended process architecture</h3>
 
     <ol>
-      <li><strong>Activate the project.</strong></li>
-      <li><strong>Select an active project.</strong> The connector displays the connected systems so the user can confirm the target pair.</li>
-      <li><strong>Select direction and content.</strong> Available content depends on the selected synchronization direction.</li>
-      <li><strong>Run synchronization.</strong> The connector executes the synchronization in stages and exposes progress, logs, and history.</li>
+      <li><strong>Navigation Map</strong> — user-friendly entry point.</li>
+      <li><strong>Value Chain</strong> — high-level process architecture.</li>
+      <li><strong>BPMN model</strong> — detailed process flow and responsibility.</li>
+      <li><strong>Subprocess / Call Activity</strong> — controlled detail and reusable global logic.</li>
+      <li><strong>Dictionary objects</strong> — shared roles, systems, documents, risks, controls, and terms.</li>
+      <li><strong>Attributes and conventions</strong> — metadata and quality rules.</li>
+      <li><strong>Collaboration Hub</strong> — consumption and feedback.</li>
     </ol>
 
-    <h3>Direction controls available content</h3>
-
-    <p>For an initial SAP Solution Manager → SAP Signavio synchronization, users can narrow the Solution Manager scope further. After the initial load, updates are managed from SAP Signavio and synchronized toward SAP Solution Manager.</p>
-
-    <p>The connector automatically adjusts the selectable content according to direction, which reduces the risk of choosing content that cannot be transferred in that run.</p>
-
-    <h3>Revision selection controls what is transferred</h3>
-
-    <p>If no Process Governance revision state is configured in the Synchronization Project, the course says the latest revision is synchronized by default. If a lifecycle state such as <strong>Approved</strong> is configured, only process content in that selected state is transferred.</p>
-
-    <h3>Logs and history are part of the control model</h3>
-
-    <p>Synchronization runs execute in stages. After completion, users can inspect synchronization logs and history. For a Lead, these logs are part of the integration evidence: do not conclude that Business and IT are aligned simply because a synchronization was started.</p>
-
-    <h2>Connector architecture in one view</h2>
-
-    <p>A practical architecture sequence is:</p>
-
-    <p><strong>SAP Signavio Process Manager ↔ Business Process Model Connector on SAP BTP ↔ SAP Cloud Connector ↔ SAP Solution Manager</strong></p>
-
-    <p>The arrows describe connectivity, not equal ownership. Process Manager becomes the leading process-information system after the initial alignment, while Solution Manager continues to own solution design and IT lifecycle artifacts.</p>
-
-    <h2>Lead decisions for the connector</h2>
+    <h3>BPMN rules that matter in practice</h3>
 
     <table class="study-table">
       <thead>
         <tr>
-          <th>Question</th>
-          <th>Decision</th>
+          <th>Concept</th>
+          <th>Rule</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Which system owns process information after initial sync?</td>
-          <td>SAP Signavio Process Manager is the leading system for process information; SAP Solution Manager remains the leading system for solution design and IT artifacts.</td>
-        </tr>
-        <tr>
-          <td>One shared technical user or one per integration?</td>
-          <td>Use a dedicated technical user per technical integration to isolate credentials, lockouts, and support diagnosis.</td>
-        </tr>
-        <tr>
-          <td>Can any BTP subaccount be reused?</td>
-          <td>Only reuse one in a connector-supported region; the course lists EU10 and US10.</td>
-        </tr>
-        <tr>
-          <td>Latest revision or approved-only synchronization?</td>
-          <td>Use latest by default; use a selected governance revision state when lifecycle control should gate transfer.</td>
-        </tr>
-        <tr>
-          <td>Is the connector symmetric?</td>
-          <td>No. Treat direction, content ownership, and BPMN round-trip limitations explicitly.</td>
-        </tr>
+        <tr><td>Task</td><td>Describe work with active wording, normally verb + object.</td></tr>
+        <tr><td>Event</td><td>Describe a state, trigger, wait, or result; start events catch, end events throw.</td></tr>
+        <tr><td>XOR</td><td>Select exactly one route. The gateway routes a decision result; it is not the decision task.</td></tr>
+        <tr><td>AND</td><td>Create all parallel paths and synchronize all required tokens at the join.</td></tr>
+        <tr><td>OR</td><td>Create one or several valid paths and wait only for paths that were activated.</td></tr>
+        <tr><td>Sequence Flow</td><td>Connect work inside one pool.</td></tr>
+        <tr><td>Message Flow</td><td>Represent communication between pools.</td></tr>
+        <tr><td>Pool</td><td>Represent a participant or organization boundary.</td></tr>
+        <tr><td>Lane</td><td>Represent responsibility according to the chosen modeling convention.</td></tr>
       </tbody>
     </table>
 
-    <h2>Outside-in perspective: start from the experience, not the internal process</h2>
+    <p>The <strong>token concept</strong> is the best way to reason about BPMN behavior. It explains parallel execution, waiting, synchronization, deadlocks, and multi-merges.</p>
 
-    <p>Customer experience is the result of how a person experiences the company's people, processes, technologies, products, services, and outputs. The important shift is from an <strong>inside-out</strong> view — what the organization does — to an <strong>outside-in</strong> view — what the customer or other stakeholder actually experiences.</p>
-
-    <p>A company may execute its internal process smoothly and still create a poor experience. A return can be operationally correct but frustrating if the customer must repeat the same issue to several agents, perform unnecessary work, or discover inconsistent offers across channels.</p>
-
-    <p>This perspective is not limited to paying customers. Employees, suppliers, applicants, and business partners can also have journeys whose quality depends on interactions across several departments and systems.</p>
-
-    <h3>Inside-out process vs outside-in journey</h3>
+    <h3>Deadlock vs multi-merge</h3>
 
     <table class="study-table">
       <thead>
-        <tr>
-          <th>View</th>
-          <th>Focus</th>
-          <th>Main question</th>
-        </tr>
+        <tr><th>Problem</th><th>What happens</th><th>Typical fix</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Inside-out process</td>
-          <td>Internal tasks, responsibilities, systems, and handovers needed to deliver a product or service.</td>
-          <td>How do we execute the work?</td>
-        </tr>
-        <tr>
-          <td>Outside-in journey</td>
-          <td>The person's steps, interactions, expectations, pain points, and emotions across the organization.</td>
-          <td>How does the person experience the result of our work?</td>
-        </tr>
+        <tr><td>Deadlock</td><td>An AND join waits for a token that can never arrive.</td><td>Correct the split/join structure, often by merging alternative branches before synchronization.</td></tr>
+        <tr><td>Multi-merge</td><td>Several tokens continue and execute a downstream task more than once.</td><td>Synchronize parallel tokens with the correct AND join.</td></tr>
       </tbody>
     </table>
 
-    <p>A journey can reveal that one apparently simple end-to-end process is actually experienced through several processes, departments, systems, and channels. This is why customer-journey work is useful for cross-functional improvement: the customer experiences the combined system, not the internal organizational chart.</p>
+    <h3>Subprocess choice</h3>
 
-    <h2>Build a customer journey in four steps</h2>
+    <table class="study-table">
+      <thead>
+        <tr><th>Pattern</th><th>Use</th><th>Reuse</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Collapsed subprocess</td><td>Hide detail and keep the main process readable.</td><td>Can point to a separate detailed model.</td></tr>
+        <tr><td>Call Activity</td><td>Reference reusable global process logic.</td><td>Designed for reuse across processes.</td></tr>
+        <tr><td>Expanded subprocess</td><td>Show grouped detail inside the parent model.</td><td>Local to that process scenario.</td></tr>
+      </tbody>
+    </table>
 
-    <ol>
-      <li><strong>Persona</strong> — define whose journey is being studied and capture relevant characteristics, expectations, goals, pain points, and context.</li>
-      <li><strong>Steps</strong> — describe the stages or actions the persona goes through, including stages before direct contact with the company.</li>
-      <li><strong>Touchpoints</strong> — identify direct and indirect interactions with the company, its product, or its partners.</li>
-      <li><strong>Emotion</strong> — record how the persona feels at each relevant stage: positive, neutral, or negative.</li>
-    </ol>
+    <h3>Dictionary governance</h3>
 
-    <p>The model can then be enriched with experience obstacles, improvement ideas, and KPIs that show whether the improvement actually changed the experience.</p>
+    <p>The Dictionary is a central object repository, not a tag list. Reuse the same object instead of creating local copies. A central Dictionary edit can affect linked models, while a local attribute change can remain diagram-specific.</p>
 
-    <h3>Step is not the same as touchpoint</h3>
+    <p>Use a <strong>sandbox</strong> for proposed entries and a small <strong>Dictionary Responsible</strong> group for review, merge, category maintenance, and productive promotion. Use Excel import/export for controlled bulk maintenance, not as an unmanaged parallel master-data store.</p>
 
-    <p>A <strong>step</strong> is something the persona does or experiences during the journey. A <strong>touchpoint</strong> is an interaction with the company or product. A person walking through a store is a journey step; finding and inspecting the company's product is a direct touchpoint; asking a supplier about that product is an indirect touchpoint.</p>
+    <h3>Modeling conventions</h3>
 
-    <p>This distinction prevents teams from treating every moment in the journey as an interaction owned directly by the company.</p>
+    <p>Syntax checks validate notation behavior. Convention checks validate organization-specific standards such as naming, required attributes, architecture, structure, and layout. A model can pass syntax and still be wrong for the business.</p>
 
-    <h3>Emotion is evidence for prioritization, not a requirement for constant delight</h3>
+    <h2 id="dmn">6. DMN: keep business rules out of gateway spaghetti</h2>
 
-    <p>Journey models can use an emotional lane or sentiment view to show where the persona is satisfied, neutral, frustrated, or open to support. The goal is not to make every step positive. Neutral experiences can be acceptable; the useful question is where negative or high-impact moments require intervention.</p>
+    <p>DMN separates decision structure from decision logic. Use BPMN for activity flow and DMN for the rules that determine an outcome.</p>
 
-    <h2>Customer experience connects to business outcomes</h2>
+    <table class="study-table">
+      <thead>
+        <tr><th>DMN layer</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Decision Requirements Diagram</td><td>Shows decisions, sub-decisions, input data, and knowledge sources.</td></tr>
+        <tr><td>Decision Table</td><td>Defines detailed input conditions and outputs as business rules.</td></tr>
+      </tbody>
+    </table>
 
-    <p>The learning material links better customer experience with stronger loyalty, advocacy, customer acquisition, revenue effects, and brand perception. The practical Lead-level point is to avoid treating these outcomes as automatic. A journey should connect experience hypotheses to measurable operational or customer KPIs.</p>
-
-    <p>Examples include damaged-delivery rate, use of a newly introduced return-support feature, waiting time, repeated contacts, or satisfaction with the return process. This creates a chain from <strong>pain point → improvement → operational change → measurable experience outcome</strong>.</p>
-
-    <h2>Journey Modeler: one table for experience and operational context</h2>
-
-    <p>SAP Signavio Journey Modeler provides a table-based journey model that can hold journey information and related operational context in one place. The learning material highlights linked processes, IT systems, organizational units, customer emotions, metrics, and other relevant information directly in the model.</p>
-
-    <p>The table structure also makes it practical to bring in tabular data. The course describes copying and pasting data from Excel, including text, images, and other information, and connecting operational or customer-experience data sources such as SAP Signavio Process Intelligence, Google Data Studio, or Tableau.</p>
-
-    <h3>Core Journey Modeler elements</h3>
+    <h3>Core elements</h3>
 
     <ul>
-      <li>Create a Journey Model and manage revisions.</li>
-      <li>Create a Persona in the Dictionary and reuse it in the journey.</li>
-      <li>Define stages and steps.</li>
-      <li>Customize colors and images.</li>
-      <li>Model touchpoints.</li>
-      <li>Capture sentiments or emotions across the journey.</li>
+      <li><strong>Decision</strong> — returns an outcome and can be decomposed.</li>
+      <li><strong>Input Data</strong> — information required for the decision.</li>
+      <li><strong>Knowledge Source</strong> — policy, regulation, law, or authoritative source.</li>
     </ul>
 
-    <p>The Dictionary connection is important: personas and other reusable business objects can remain centrally governed instead of being recreated independently in every journey.</p>
+    <h3>Input types</h3>
 
-    <h2>Journey Modeler vs Customer Journey Map</h2>
+    <p>Common input types are Boolean, Number, Enumeration, Text, Date, and Hierarchy. Prefer controlled enumerations over free text when possible because they reduce input variation.</p>
 
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Approach</th>
-          <th>Main form</th>
-          <th>Best for</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Journey Modeler</td>
-          <td>Table-based model</td>
-          <td>Holistic view of stages, steps, emotions, processes, systems, organizations, metrics, and other data in one structured grid.</td>
-        </tr>
-        <tr>
-          <td>Customer Journey Map</td>
-          <td>Design-oriented visual notation</td>
-          <td>Visualizing the persona's journey and touchpoints; supporting information is available through attributes and linked objects.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Both approaches support outside-in analysis, but they optimize for different reading tasks. The table-based Journey Modeler concentrates more structured information in one view. The Customer Journey Map emphasizes visual storytelling and the sequence of the persona's experience.</p>
-
-    <h3>Customer Journey Maps connect back to the process landscape</h3>
-
-    <p>A Customer Journey Map can link touchpoints or journey steps to internal process diagrams and Dictionary objects. This turns the journey into an entry point into the process landscape instead of leaving customer experience as a separate workshop artifact.</p>
-
-    <p>Images and attributes can be configured centrally by administrators and reused across customer journeys, which supports consistent presentation and terminology.</p>
-
-    <h2>Journey Complexity: how difficult is the operational system behind the journey?</h2>
-
-    <p>Journey Complexity estimates the operational complexity behind the journey, including directly or indirectly linked processes. It is not simply the number of cells in the journey table.</p>
-
-    <p>The learning material distinguishes process-level drivers such as:</p>
-
-    <ul>
-      <li><strong>Flow complexity</strong> — decision and parallel splits and how deeply they are nested.</li>
-      <li><strong>Handover complexity</strong> — handovers between roles.</li>
-      <li><strong>Linked-process complexity</strong> — references to other process models.</li>
-      <li><strong>Document and data-object complexity</strong> — amount and cross-role use of process information objects.</li>
-      <li><strong>IT-system complexity</strong> — number of systems and how broadly roles interact with them.</li>
-    </ul>
-
-    <h3>Process-complexity weighting</h3>
-
-    <p>The course gives the following weighting for the process complexity subscores:</p>
+    <h3>Hit policies</h3>
 
     <table class="study-table">
       <thead>
-        <tr>
-          <th>Subscore</th>
-          <th>Weight</th>
-        </tr>
+        <tr><th>Policy</th><th>Meaning</th></tr>
       </thead>
       <tbody>
-        <tr><td>Flow complexity</td><td>35%</td></tr>
-        <tr><td>Handover complexity</td><td>35%</td></tr>
-        <tr><td>IT system complexity</td><td>10%</td></tr>
-        <tr><td>Data object complexity</td><td>10%</td></tr>
-        <tr><td>Linked process complexity</td><td>10%</td></tr>
+        <tr><td>Unique</td><td>Exactly one rule may match; overlaps are invalid.</td></tr>
+        <tr><td>First</td><td>Rules can overlap; first match from top to bottom wins.</td></tr>
+        <tr><td>Any</td><td>Several rules may match only if all return the same output.</td></tr>
+        <tr><td>Priority</td><td>Several rules may match; the highest-priority output wins.</td></tr>
+        <tr><td>Collect</td><td>Several rules may fire; results are returned or aggregated with Sum, Min, Max, or Count.</td></tr>
       </tbody>
     </table>
 
-    <p>The subscores are combined through weighted aggregation. At journey level, the course describes each linked process complexity contribution with a factor of 0.2 and the final journey score scaled by 100.</p>
+    <p>Split a decision when complexity, reuse, or different sources of authority make one table hard to maintain. The learning material treats more than seven inputs and/or sub-decisions as a strong complexity warning, not as a hard technical limit.</p>
 
-    <h3>T-shirt sizing</h3>
-
-    <p>The course maps the Journey Complexity score to an intuitive T-shirt size:</p>
-
-    <ul>
-      <li><strong>Low</strong>: 0 ≤ x ≤ 20</li>
-      <li><strong>Medium</strong>: 20 ≤ x ≤ 60</li>
-      <li><strong>High</strong>: 60 ≤ x</li>
-    </ul>
-
-    <p>The published learning text uses overlapping boundary values at 20 and 60. Preserve the product's displayed classification when interpreting an actual model rather than inventing a different boundary rule.</p>
-
-    <h2>Journey Model Dimensions: model size is not operational complexity</h2>
-
-    <p><strong>Journey Model Dimensions</strong> describe the size and populated content of the journey table. The headline value compares populated cells with total cells, while the detail panel separates structural counts from content counts.</p>
+    <h3>Verify vs Simulation vs Test Lab</h3>
 
     <table class="study-table">
       <thead>
-        <tr>
-          <th>Measure</th>
-          <th>What it tells you</th>
-        </tr>
+        <tr><th>Tool</th><th>Question</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Journey Complexity</td>
-          <td>Operational uncertainty and interdependence inherited from linked processes and their complexity.</td>
-        </tr>
-        <tr>
-          <td>Journey Model Dimensions</td>
-          <td>How large and populated the Journey Model table is.</td>
-        </tr>
+        <tr><td>Verify</td><td>Are rules complete and consistent for the selected hit policy?</td></tr>
+        <tr><td>Simulation</td><td>What output does the decision model produce for these inputs?</td></tr>
+        <tr><td>Test Lab</td><td>Does the changed decision still produce expected and regression-safe results?</td></tr>
       </tbody>
     </table>
 
-    <p>The Dimensions detail view includes structure information such as stages, columns, and rows, plus content counts for the section types used in the Journey Model.</p>
+    <h2 id="simulation-reporting">7. Simulation, reporting, variants, and collaboration</h2>
 
-    <h3>Counting linked objects</h3>
+    <h3>Simulation</h3>
 
-    <p>A linked process is counted once even when several cells link to that same process, or when one cell links to the whole process and another links to an element inside it. Those cells still count as populated cells in the Journey Model Dimensions calculation.</p>
-
-    <p>Likewise, an IT System or Organizational Unit is counted once regardless of how many journey cells reference the same object.</p>
-
-    <h2>Outside-in improvement pattern</h2>
-
-    <p>A practical way to use journey modeling in process transformation is:</p>
-
-    <ol>
-      <li>Identify a persona and the outcome they are trying to achieve.</li>
-      <li>Map the person's steps, touchpoints, and emotions.</li>
-      <li>Locate pain points and expectations that are not being met.</li>
-      <li>Link those moments to the internal processes, systems, organizations, and decisions that create the experience.</li>
-      <li>Change the responsible internal process rather than only redesigning the journey visualization.</li>
-      <li>Define KPIs and use operational or experience data to verify whether the change improved the journey.</li>
-    </ol>
-
-    <p>This closes the loop between customer experience and process management: <strong>journey models identify where the experience fails; process models explain what the organization does; operational data helps verify whether the change worked.</strong></p>
-
-    <h2>Designed process vs observed process</h2>
-
-    <p>Process Manager mainly helps describe and govern how work is intended to run. Process Intelligence answers a different question: <strong>what actually happened in execution data?</strong></p>
-
-    <p>Process Intelligence analyzes event data from source systems. A process-data model needs a correct case definition, activities, timestamps, attributes, and metrics. If these semantics are wrong, the analysis can be visually convincing while describing the wrong business process.</p>
+    <p>BPMN simulation is a <strong>what-if</strong> tool. Its four main parameter groups are Costs, Duration, Frequency, and Resources.</p>
 
     <table class="study-table">
       <thead>
-        <tr>
-          <th>Designed process</th>
-          <th>Observed process</th>
-        </tr>
+        <tr><th>Parameter</th><th>What it controls</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Target flow, ownership, policy, controls, documentation</td>
-          <td>Actual variants, timing, deviations, attributes, outcomes</td>
-        </tr>
-        <tr>
-          <td>Process Manager</td>
-          <td>Process Intelligence</td>
-        </tr>
-        <tr>
-          <td>What should happen?</td>
-          <td>What did happen?</td>
-        </tr>
+        <tr><td>Costs</td><td>Activity-specific execution costs. Do not put labor cost here if it is modeled through Resources.</td></tr>
+        <tr><td>Duration</td><td>Task execution time and optional distributions.</td></tr>
+        <tr><td>Frequency</td><td>Case arrivals and gateway path probabilities.</td></tr>
+        <tr><td>Resources</td><td>Working schedules, capacity, and hourly wages by lane.</td></tr>
       </tbody>
     </table>
 
-    <p>Neither view replaces the other. If the model is wrong, the design needs to change. If execution differs, the team must determine whether the variation is valid, caused by data or configuration, or evidence of a real process problem.</p>
+    <p><strong>Execution time is not total cycle time.</strong> Cycle time can include waiting caused by resource constraints and queues. Simulation can expose potential bottlenecks, but it does not prove what happened in production.</p>
 
-    <h2>Administration: keep the workspace usable as it scales</h2>
-
-    <p>SAP Signavio administrators manage workspace settings, user access, governance controls, and the configuration that keeps process content consistent as the number of users grows. The first user who registers a workspace becomes the <strong>Tenant Owner</strong>. The training material states that this user cannot be deleted.</p>
-
-    <p>Because administrators have broad workspace rights, the role is best suited to users who understand both the product and BPMN. Administrative changes should be communicated and documented so that the admin team works from the same configuration assumptions.</p>
-
-    <h3>Administrative responsibility is product-specific</h3>
+    <h3>Reporting</h3>
 
     <table class="study-table">
       <thead>
-        <tr>
-          <th>Component</th>
-          <th>Typical administrator responsibilities</th>
-        </tr>
+        <tr><th>Report</th><th>Use</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Process Manager</td>
-          <td>User groups and access rights, workspace settings, modeling conventions, custom attributes, governance and security settings.</td>
-        </tr>
-        <tr>
-          <td>Process Collaboration Hub</td>
-          <td>User accounts and groups, licenses, attribute visualization, audiences, Process Governance enablement, appearance, consumption information, and value accelerators.</td>
-        </tr>
-        <tr>
-          <td>Journey Modeler</td>
-          <td>Journey-model templates plus related administration through Process Manager and Collaboration Hub.</td>
-        </tr>
-        <tr>
-          <td>Process Governance</td>
-          <td>Workflow users/groups/labels, Process Manager Dictionary integration, connectors, approval-workflow setup, read confirmations, process rating, JavaScript-task enablement, and model-guideline checks.</td>
-        </tr>
+        <tr><td>Process Cost Analysis</td><td>Estimate task cost using execution cost, frequency, and routing probability.</td></tr>
+        <tr><td>Resource Consumption</td><td>Analyze workload and time by roles or departments.</td></tr>
+        <tr><td>RACI / Responsibility Assignment</td><td>Show Responsible, Accountable, Consulted, and Informed roles.</td></tr>
+        <tr><td>Responsibility Handovers</td><td>Expose handoffs between participants.</td></tr>
+        <tr><td>IT System Usage</td><td>Show system usage across activities and roles.</td></tr>
+        <tr><td>Document Usage</td><td>Show documents used as inputs or outputs.</td></tr>
+        <tr><td>Modeling Conventions</td><td>Check model populations against BPMN and workspace rules.</td></tr>
+        <tr><td>Process Model Metrics</td><td>Measure model size, element types, linked files, and Dictionary links.</td></tr>
+        <tr><td>Process Characteristics</td><td>List used BPMN elements and populated attributes.</td></tr>
+        <tr><td>Risks and Controls</td><td>Aggregate risk/control information linked from the Dictionary.</td></tr>
+        <tr><td>Process Documentation</td><td>Create configurable Word/PDF outputs with diagrams and attributes.</td></tr>
       </tbody>
     </table>
 
-    <p>Administrative rights do not automatically transfer between products. In particular, being an administrator in Process Manager and Collaboration Hub does not automatically make the same user a Process Governance administrator.</p>
+    <h3>Variant Management</h3>
 
-    <h3>Workspace region is visible in the tenant URL</h3>
+    <p>Use variants when one global process needs controlled regional, organizational, product, customer, or transformation-specific differences.</p>
 
-    <p>The course material maps SAP Signavio workspace URLs to hosting regions. Examples include the US tenant in Northern Virginia, the traditional editor tenant in Frankfurt, and regional tenants for Sydney, Tokyo, Canada Central, Seoul, and Singapore. Because hosting and service availability can change, treat the URL-to-region mapping as operational tenant information and verify current service status before making architecture or compliance decisions.</p>
+    <p>The model is:</p>
 
-    <h2>General workspace settings</h2>
-
-    <h3>Languages affect more than diagram labels</h3>
-
-    <p>Administrators can enable multiple workspace languages and must define a default language. The first language in the configured list becomes the default. Adding languages affects Process Manager content broadly, including <strong>attributes, Dictionary terms, and diagrams</strong>, not only visible activity labels.</p>
-
-    <p>A practical governance rule is to enable only languages that the organization actually maintains. Every extra language increases translation and content-maintenance responsibility.</p>
-
-    <h3>Modeling conventions turn standards into automated checks</h3>
-
-    <p>Modeling conventions help administrators enforce consistency across many modelers. The course describes convention checks across areas such as notation syntax, naming, process structure, architecture, and diagram layout. Administrators can create custom conventions and add organization-specific rules.</p>
-
-    <p>This extends the earlier distinction between syntax and semantics: the tool can check formal and configured rules, while people still need to validate whether the process itself is correct.</p>
-
-    <h2>Reduce BPMN complexity with notation subsets</h2>
-
-    <p>BPMN 2.0 contains a large number of elements. Most organizations use only a subset regularly. Administrators can therefore expose a smaller notation subset so modelers see the elements that fit their process type and do not add unnecessary complexity.</p>
-
-    <p>Administrators can also define the corporate appearance of notation elements, such as task colors and fonts. Formatting changes apply across notation subsets for that element type, so visual standards should be designed centrally rather than corrected diagram by diagram.</p>
-
-    <h2>Custom attributes: extend the information model</h2>
-
-    <p>Custom attributes allow the workspace to capture organization-specific information on diagram elements and Dictionary categories. They behave like standard attributes and can also be exposed in Process Collaboration Hub.</p>
+    <p><strong>Template → Dimensions → Dictionary values → Variant Group → Variants</strong></p>
 
     <table class="study-table">
       <thead>
-        <tr>
-          <th>Object</th>
-          <th>Useful attribute examples</th>
-          <th>Typical type</th>
-        </tr>
+        <tr><th>Action</th><th>Meaning</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Process</td>
-          <td>Process Owner</td>
-          <td>Text or Dictionary link</td>
-        </tr>
-        <tr>
-          <td>Process</td>
-          <td>Review Date</td>
-          <td>Date</td>
-        </tr>
-        <tr>
-          <td>Process</td>
-          <td>Process Status / maturity</td>
-          <td>Drop-down</td>
-        </tr>
-        <tr>
-          <td>Process</td>
-          <td>Customer interaction / ISO relevance</td>
-          <td>Boolean</td>
-        </tr>
-        <tr>
-          <td>Task</td>
-          <td>Applicable documents or templates</td>
-          <td>Dictionary link or external document/URL</td>
-        </tr>
-        <tr>
-          <td>Task</td>
-          <td>RACI responsibilities</td>
-          <td>Dictionary links</td>
-        </tr>
-        <tr>
-          <td>Task</td>
-          <td>Risks and Controls</td>
-          <td>Risk-management information backed by the Dictionary</td>
-        </tr>
-        <tr>
-          <td>Task</td>
-          <td>IT System</td>
-          <td>Dictionary link</td>
-        </tr>
+        <tr><td>Attach</td><td>Connect an existing process to a template as a variant.</td></tr>
+        <tr><td>Clone</td><td>Create a new variant from the template structure.</td></tr>
+        <tr><td>Detach</td><td>Break the template relationship so the process evolves independently.</td></tr>
       </tbody>
     </table>
 
-    <p>This is an important design principle: use custom attributes when information needs to be searchable, reportable, governed, reused, or visualized. Do not add a custom field only because one diagram needs a note.</p>
+    <p>Template changes can be propagated to variants. Supported changes can be handled automatically; others require modeler review and manual adjustment. Update notifications depend on the latest template revision being published.</p>
 
-    <h2>Attribute visualization: show metadata without rewriting the model</h2>
+    <h3>Collaboration</h3>
 
-    <p>Administrators can define visualization layers that render selected attributes as overlays using icons and colors. The training material lists support for BPMN diagrams, value chains, ArchiMate diagrams, and organization charts.</p>
+    <p>Comments, stakeholder review, and publishing are part of process quality. A syntax-valid BPMN diagram can still be semantically wrong. Use comments and subject-matter review before publishing important content.</p>
 
-    <p>An IT-system attribute can, for example, display an IT icon next to a task. Rules can also depend on attribute values. The course example colors task-cost overlays red above 15, yellow between 10 and 15, and green below 10.</p>
+    <p>A practical lifecycle is:</p>
 
-    <p>Overlays therefore separate <strong>stored metadata</strong> from <strong>visual emphasis</strong>: the attribute remains the source of truth, while the overlay is one way to expose it to viewers.</p>
+    <p><strong>Model → review → resolve feedback → approval if required → publish → consume → improve</strong></p>
 
-    <h2>Custom graphics: visual branding with controlled constraints</h2>
+    <h2 id="hub">8. Process Collaboration Hub: consumption layer</h2>
 
-    <p>Administrators can upload custom SVG graphics for selected elements in customer journeys, value chains, and BPMN diagrams. The training material defines several restrictions for administrator-uploaded graphics:</p>
+    <p>Process Collaboration Hub is the central place for business users to consume published process content. It is also a collaboration surface for comments, ratings, read confirmations, reports, and navigation.</p>
 
-    <ul>
-      <li>Maximum file size: 20 KB.</li>
-      <li>Maximum 2,000 anchor points.</li>
-      <li>Valid SVG structure.</li>
-      <li>No custom XML, JavaScript, or embedded images inside the SVG.</li>
-    </ul>
+    <h3>Published vs Preview</h3>
 
-    <p>Examples of customizable elements include IT systems and additional participants in BPMN, processes and collapsed processes in value chains, and personas, touchpoints, moments of truth, customers, and decorations in Journey Maps.</p>
+    <p><strong>Published</strong> shows the governed published version. <strong>Preview</strong> exposes current content according to the user's permissions. Do not use Preview access as a substitute for a publication and approval policy.</p>
 
-    <p>Custom graphics belong to the workspace where they are uploaded. If the organization uses several workspaces, the graphics need to be uploaded separately in each workspace.</p>
+    <h3>Audience vs authorization</h3>
 
-    <h2>Dictionary administration: structure determines reuse</h2>
-
-    <p>The Dictionary is not only a list of terms. Administrators can remove, extend, or adjust categories and add subcategories to match the organization. Category design affects both reporting and modeling suggestions.</p>
-
-    <p>Dictionary categories have two important system purposes:</p>
-
-    <ol>
-      <li><strong>Reporting:</strong> reports such as RACI, document usage, and process documentation rely on object categories.</li>
-      <li><strong>Modeling suggestions:</strong> the system suggests entries from relevant categories when a modeler links a Dictionary object.</li>
-    </ol>
-
-    <p>Typical parent and subcategory areas include Organizational Units, Documents, IT Systems, Risks, and Controls. Subcategories are useful when different object groups need separate evaluation, access rights, or attributes.</p>
-
-    <h3>Sandbox and Dictionary Responsible</h3>
-
-    <p>The administrator creates sandbox subcategories so modelers can propose new Dictionary content without writing directly into productive categories. A dedicated group with broad Dictionary access periodically reviews the proposals and moves approved content into the productive structure.</p>
-
-    <p>The course example uses a <strong>Dictionary Responsible</strong> group with full Dictionary rights and import/export capability. This is the operational implementation of the sandbox governance pattern covered earlier on the page.</p>
-
-    <h3>Dictionary attributes can link to other Dictionary categories</h3>
-
-    <p>Custom Dictionary attributes can themselves use Dictionary links. This makes it possible to maintain a fact once and reuse it across related objects. The course example creates an SAP Module category and an SAP Transaction Codes category, then adds a Transaction Codes attribute to the SAP Module that links to the central transaction-code entries.</p>
-
-    <p>The resulting principle is useful beyond this example: <strong>normalize governed reference data instead of copying the same value into many entries</strong>.</p>
-
-    <h2>User licenses and account types</h2>
-
-    <p>Every user requires a license for the relevant SAP Signavio solution in the workspace. A license belongs to a user for that workspace; a license in another workspace does not automatically grant access here. Removing a user frees the license for reassignment.</p>
-
-    <h3>Modelers and Collaboration Hub consumers have different access models</h3>
-
-    <p>Modeling users in Process Manager can access workspace content according to folder and group permissions. Collaboration Hub users only consume diagrams that have been explicitly published to the Hub. The course also describes different Hub access behavior depending on the authentication model, including Active Directory/SAML identity or certificate-based rollout.</p>
-
-    <h3>Central User Management vs Process Manager Setup</h3>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Administration surface</th>
-          <th>Best suited for</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Collaboration Hub / Central User Management</td>
-          <td>Invite users, review users, export an e-mail list, remove users across Signavio applications, create or delete user groups.</td>
-        </tr>
-        <tr>
-          <td>Process Manager Setup</td>
-          <td>Manage users/groups, folder and Dictionary authorizations, and group feature sets.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>The learning material presents these two administration surfaces as coexisting during a transition toward more centralized user management.</p>
-
-    <h3>Feedback invitations create restricted external accounts</h3>
-
-    <p>Modelers can invite internal or external stakeholders to review a diagram. External invitees register from the invitation and receive a commenting license rather than normal broad workspace access. They can see only the invited diagram, are not added to default groups, and cannot access other SAP Signavio solutions. Revoking that access requires removing the account from user management, not only removing the license.</p>
-
-    <h3>Account deletion has different effects on personal and shared content</h3>
-
-    <p>When an administrator deletes a user account, content in that user's <strong>My Documents</strong> folder is removed from the workspace. Shared Documents content, comments, and changes made by the user remain. Administrators themselves cannot access or manage another modeler's My Documents content.</p>
-
-    <h2>User groups, default groups, and feature sets</h2>
-
-    <p>Groups simplify administration at scale. Administrators can build group hierarchies, add or remove users, and mark groups as default so new users automatically receive a baseline set of permissions.</p>
-
-    <p>Users created through SAML or the CSV API are also assigned to default groups unless another group configuration is supplied. Feature sets can then control which capabilities a modeler group may use, for example limiting document-upload functionality to selected groups.</p>
-
-    <h2>Access rights: understand the additive permission model</h2>
-
-    <p>Folder structure and authorization design should be planned together. The course explicitly recommends deciding the folder structure before assigning user access. Permissions granted through one group cannot be taken away simply by adding the same user to another group with fewer permissions or by assigning a more restrictive user-specific permission.</p>
-
-    <table class="study-table">
-      <thead>
-        <tr>
-          <th>Right</th>
-          <th>Meaning</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Hub (H)</td>
-          <td>View published content in Process Collaboration Hub.</td>
-        </tr>
-        <tr>
-          <td>Read (R)</td>
-          <td>View unpublished content in simulation, revision comparison, commenting view, and Process Collaboration Hub.</td>
-        </tr>
-        <tr>
-          <td>Write (W)</td>
-          <td>Edit and save content in the Editor.</td>
-        </tr>
-        <tr>
-          <td>Delete (D)</td>
-          <td>Delete and move content; moving between folders also requires the necessary rights on source and target folders.</td>
-        </tr>
-        <tr>
-          <td>Publish (P)</td>
-          <td>Publish diagrams to Process Collaboration Hub.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p>Groups are normally aligned to organizational roles, and nested groups can be useful when different folder levels require different permissions. A user who receives access only to one diagram without access to the containing folder can view that diagram and its path but not the other diagrams in the folder.</p>
-
-    <p>The sandbox pattern can be applied not only to Dictionary categories but also to the process repository. Process-documentation template authorization is managed similarly to other repository content: administrators can grant read, write, and delete rights to selected users or groups.</p>
-
-    <h2>Collaboration Hub administration</h2>
-
-    <p>Collaboration Hub settings control how process consumers see and interact with published content. Administrators can configure audiences, theme, home page, comments, attribute management, read confirmations, process rating, and related visibility settings.</p>
-
-    <h3>Audiences separate consumption experiences</h3>
-
-    <p>Audience Management is useful when different viewer groups need different entry points or presentation. The course example uses regional audiences with different value-chain entry points and potentially different themes.</p>
-
-    <p>User groups must exist before additional audiences can be created. Users not covered by a specific audience use the General Audience. The training material states that users who belong to more than one user group receive the General Audience settings.</p>
-
-    <h3>Attribute and overlay visibility</h3>
-
-    <p>Administrators can decide which attributes appear at diagram or element level and can group attributes into sections. They can also control overlay visibility and define whether overlays are active by default.</p>
-
-    <p><strong>Featured attributes</strong> highlight a chosen attribute group on the diagram page. <strong>Header attributes</strong> can include process level, revision number, last updated or published information, and last author. Visibility can be configured by audience, including whether process levels count from level 0 or level 1.</p>
+    <p>An <strong>Audience</strong> changes how content is presented to a viewer group, for example home page, theme, entry point, and attribute visibility. Access rights decide whether the user is allowed to see or change the content. Presentation and authorization are different controls.</p>
 
     <h3>Read Confirmation vs Process Rating</h3>
 
     <table class="study-table">
       <thead>
-        <tr>
-          <th>Feature</th>
-          <th>Purpose</th>
-        </tr>
+        <tr><th>Feature</th><th>Purpose</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Read Confirmation</td>
-          <td>Ask users or groups to acknowledge that they have read a diagram or its latest changes.</td>
-        </tr>
-        <tr>
-          <td>Process Rating</td>
-          <td>Collect structured audience feedback against selected criteria; each audience member can rate once per revision.</td>
-        </tr>
+        <tr><td>Read Confirmation</td><td>Request acknowledgement that a user has read a process or a new revision.</td></tr>
+        <tr><td>Process Rating</td><td>Collect structured feedback on a process revision using selected criteria.</td></tr>
       </tbody>
     </table>
 
-    <p>If rating results are enabled, users can also see the accumulated process ratings in Collaboration Hub.</p>
+    <h2 id="journey">9. Journey Modeler: outside-in process understanding</h2>
 
-    <h2>Administrator reports and dashboards</h2>
-
-    <h3>Governance Report</h3>
-
-    <p>Process Manager administrators can use the Governance Report to review aggregated workspace activity such as diagrams, comments, Dictionary items, files, publishing states, diagram types, and page visits. Selecting a metric tile can open the corresponding Advanced Search result set.</p>
-
-    <p>The course notes an operational limit of up to 50,000 diagrams for this report. Depending on volume, generation can take up to an hour, and the browser tab that started the report must remain open.</p>
-
-    <h3>User/Group Assignment Report</h3>
-
-    <p>This report lists workspace users and their group memberships and can be downloaded as Excel. It distinguishes direct membership from indirect membership through nested groups. The report is available from both Process Manager reporting and Collaboration Hub reports.</p>
-
-    <h3>Process Model Dashboard and Usage Management Dashboard</h3>
-
-    <p>Collaboration Hub administrators can use Process Model Dashboards backed by Process Intelligence without additional setup. The training material describes two dashboards:</p>
-
-    <ul>
-      <li><strong>Process Model Dashboard</strong> — published models, most-viewed models, open comments, and model-related filters.</li>
-      <li><strong>Usage Management Dashboard</strong> — assigned licenses and unique visitors over time.</li>
-    </ul>
-
-    <p>The predefined widgets cannot be changed or removed, but administrators can apply filters, export widget data as CSV, and share the dashboards with workspace users.</p>
-
-    <h2>Security settings: reduce unnecessary access paths</h2>
-
-    <p>Workspace security settings can apply to current and future users. The training material highlights <strong>IP address filtering</strong> and <strong>password policies</strong> as workspace-level controls.</p>
-
-    <p>For organizations already using Single Sign-On, the course recommends configuring SSO for SAP Signavio. SSO is presented as a way to improve access continuity, adoption, and security. The referenced administration path uses SAML-based SSO.</p>
-
-    <h2>Administering approval workflows across Process Manager and Process Governance</h2>
-
-    <p>Approval workflows are a cross-product configuration. To define and manage them as described in the course, the administrator needs a Process Governance license in addition to Process Manager licensing and must have administrator rights in both components.</p>
-
-    <p>The approval workflow prevents a diagram from being published until the required reviewers approve it. The Process Manager administration setup includes <strong>General</strong>, <strong>Diagram states</strong>, <strong>Participants</strong>, and <strong>Approval Expiration</strong>.</p>
-
-    <h3>Process Governance administration is separate</h3>
-
-    <p>Workflow participants and workflow creators require licenses. A Process Manager/Collaboration Hub administrator is not automatically a Process Governance administrator; a Process Governance administrator must explicitly promote that user.</p>
-
-    <h3>Organization settings</h3>
-
-    <p>Process Governance administrators can configure the workspace time zone, restrict workflow creation to one selected group, customize notification e-mail signatures, disable daily digest e-mails for the workspace, and create labels for organizing workflows.</p>
-
-    <h3>Reusable administrator-configured activities</h3>
-
-    <p>The lesson introduces two reusable activity configurations that must be prepared by an administrator before workflow designers can use them:</p>
-
-    <ul>
-      <li><strong>Model Guideline Check / Convention Check</strong></li>
-      <li><strong>SharePoint File Upload</strong></li>
-    </ul>
-
-    <p>The guideline-check activity can return a Boolean error flag and counts for must-level errors, warnings, and hints. A workflow can then route on those results, for example automatically rejecting a model when the configured error count is greater than zero. If the activity does not work, the lesson says to verify the Process Manager integration.</p>
-
-    <h3>SharePoint upload requires credentials and activation</h3>
-
-    <p>The SharePoint activity requires stored credentials before configuration. The course describes a credential name plus a secret key for sensitive information and notes that SAP Support does not have access to that key. After the activity is configured, it must be explicitly activated before workflows can use it. The configuration also requires a SharePoint Tenant ID obtained with the organization's IT team.</p>
-
-    <h3>Services, connectors, and Process Manager integration</h3>
-
-    <p>Services & Connectors allow Process Governance workflows to exchange data with internal or third-party systems. Administrators can configure data connectors and generate API tokens for read-only reporting access to external data.</p>
-
-    <p>Process Manager integration serves two important governance purposes: triggering model approval before publication and exposing selected Dictionary categories to workflow participants, for example Risks & Controls or document entries. The training material states that a system user account must be configured for the Process Manager integration.</p>
-
-    <h2>Lead decisions to remember</h2>
+    <p>Journey modeling starts with the person who experiences the organization. The person can be a customer, employee, applicant, supplier, partner, or another stakeholder.</p>
 
     <table class="study-table">
       <thead>
-        <tr>
-          <th>Question</th>
-          <th>Decision</th>
-        </tr>
+        <tr><th>View</th><th>Main question</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Explorer or Editor?</td>
-          <td>Use Explorer to manage and analyze content; use Editor to model and enrich diagrams.</td>
-        </tr>
-        <tr>
-          <td>QuickModel or Graphical Editor?</td>
-          <td>Use QuickModel for fast, simple, table-based capture; switch to the Editor for complex BPMN logic.</td>
-        </tr>
-        <tr>
-          <td>Syntax or convention issue?</td>
-          <td>Syntax is notation correctness; conventions are modeling standards and governance rules.</td>
-        </tr>
-        <tr>
-          <td>Local change or Dictionary change?</td>
-          <td>Change the diagram for local information; change the Dictionary when the shared business object itself is changing.</td>
-        </tr>
-        <tr>
-          <td>Navigation Map or Value Chain?</td>
-          <td>Use Navigation Maps for user-friendly entry and storytelling; use Value Chains for high-level process architecture.</td>
-        </tr>
-        <tr>
-          <td>Signavio or Solution Manager as process-information owner?</td>
-          <td>After initial alignment, keep process information in Signavio and synchronize approved or latest updates toward Solution Manager; keep Solution Manager responsible for solution design and IT lifecycle artifacts.</td>
-        </tr>
-        <tr>
-          <td>Initial sync or ongoing sync?</td>
-          <td>Use Solution Manager → Signavio for initial alignment when process information already exists there; use Signavio → Solution Manager for ongoing process updates after ownership moves to Signavio.</td>
-        </tr>
-        <tr>
-          <td>Inside-out process or outside-in journey?</td>
-          <td>Use the process view to understand internal execution; use the journey view to understand the person's experience across organizational boundaries.</td>
-        </tr>
-        <tr>
-          <td>Journey Modeler or Customer Journey Map?</td>
-          <td>Use Journey Modeler for a structured table combining experience and operational context; use a Customer Journey Map for visual journey storytelling and touchpoints.</td>
-        </tr>
-        <tr>
-          <td>Journey Complexity or Journey Model Dimensions?</td>
-          <td>Complexity measures the operational complexity behind linked processes; Dimensions measure the size and populated content of the journey table.</td>
-        </tr>
-        <tr>
-          <td>BPMN or DMN?</td>
-          <td>Use BPMN to model activity flow and responsibility; use DMN to model decision requirements and rule logic.</td>
-        </tr>
-        <tr>
-          <td>Decision Requirements Diagram or decision table?</td>
-          <td>Use the requirements diagram for dependencies and authorities; use the decision table for detailed rules and outputs.</td>
-        </tr>
-        <tr>
-          <td>Unique or First hit policy?</td>
-          <td>Use Unique when rules must never overlap; use First when ordered overlapping rules are intentional and the first match should win.</td>
-        </tr>
-        <tr>
-          <td>Verify, Simulation, or Test Lab?</td>
-          <td>Verify checks rule-space quality, Simulation evaluates model behavior for inputs, and Test Lab checks expected results and regression cases.</td>
-        </tr>
-        <tr>
-          <td>XOR, AND, or OR?</td>
-          <td>Use XOR for one alternative, AND for all parallel paths, and OR when one or several optional paths may apply.</td>
-        </tr>
-        <tr>
-          <td>Sequence flow or message flow?</td>
-          <td>Use sequence flow inside one pool; use message flow for communication between pools.</td>
-        </tr>
-        <tr>
-          <td>Collapsed subprocess, Call Activity, or expanded subprocess?</td>
-          <td>Hide detail with a collapsed subprocess, reuse global logic with a Call Activity, and keep scenario-specific grouped detail visible with an expanded subprocess.</td>
-        </tr>
-        <tr>
-          <td>Data Object or IT System object?</td>
-          <td>Use the BPMN Data Object for information/documents; use the SAP Signavio IT System element to show application support.</td>
-        </tr>
-        <tr>
-          <td>Simulation or reporting?</td>
-          <td>Use simulation for what-if behavior under assumptions; use reporting to aggregate model and attribute information.</td>
-        </tr>
-        <tr>
-          <td>Template or detached process?</td>
-          <td>Keep a variant attached while standard alignment matters; detach when the process must evolve independently.</td>
-        </tr>
-        <tr>
-          <td>Syntax check or stakeholder review?</td>
-          <td>Syntax proves notation correctness; stakeholder feedback is needed to challenge semantic correctness.</td>
-        </tr>
-        <tr>
-          <td>Process Manager or Process Governance?</td>
-          <td>Use Process Manager to model and govern process content; use Process Governance when the approval, task, or handover must execute as a workflow.</td>
-        </tr>
-        <tr>
-          <td>Central User Management or Process Manager Setup?</td>
-          <td>Use central user management for workspace-level user/group administration; use Process Manager Setup for detailed folder, Dictionary, and feature-set permissions.</td>
-        </tr>
-        <tr>
-          <td>Audience or access right?</td>
-          <td>Use access rights to control what users may access or change; use audiences to tailor how published process content is presented to viewer groups.</td>
-        </tr>
-        <tr>
-          <td>Read Confirmation or Process Rating?</td>
-          <td>Use Read Confirmation for acknowledgement of process content; use Process Rating for structured feedback on a process revision.</td>
-        </tr>
-        <tr>
-          <td>User Task or Multi-User Task?</td>
-          <td>Use User Task for one assignee; use Multi-User Task when several people must each perform the same work and their results must be collected.</td>
-        </tr>
-        <tr>
-          <td>Re-Publish or Restore?</td>
-          <td>Re-Publish changes which published version future cases use; Restore changes the editable draft without changing the currently published execution version.</td>
-        </tr>
-        <tr>
-          <td>Process Manager or Process Intelligence?</td>
-          <td>Use the model to define and govern intended work; use event data to investigate actual execution.</td>
-        </tr>
+        <tr><td>Inside-out process</td><td>How does the organization execute the work?</td></tr>
+        <tr><td>Outside-in journey</td><td>How does the person experience the result of that work?</td></tr>
       </tbody>
     </table>
 
-    <h2>Assessment answer pattern</h2>
-
-    <p>For a Lead-level question about process management, a strong answer should connect five layers:</p>
+    <h3>Journey structure</h3>
 
     <ol>
-      <li><strong>Architecture</strong> — how people enter and navigate the process landscape.</li>
-      <li><strong>Modeling</strong> — how the process flow and decisions are represented.</li>
-      <li><strong>Governance</strong> — how terms, attributes, access, versions, and conventions stay consistent.</li>
-      <li><strong>Consumption</strong> — how users see published process content and provide feedback.</li>
-      <li><strong>Improvement</strong> — how reporting, simulation, comparison, and execution data support better decisions.</li>
+      <li><strong>Persona</strong> — who is experiencing the journey?</li>
+      <li><strong>Stages and steps</strong> — what does the person go through?</li>
+      <li><strong>Touchpoints</strong> — where does the person interact with the company or product?</li>
+      <li><strong>Sentiment</strong> — how does the person feel at the relevant moments?</li>
+      <li><strong>Operational links</strong> — which processes, systems, organizations, and metrics create the experience?</li>
     </ol>
 
-    <p>A concise answer can be: “I would define the process architecture first, model detailed flows in BPMN, use the Dictionary for shared business objects, apply conventions and access rules for governance, publish the process content for process consumers, and then use analysis or execution data to identify improvement opportunities.”</p>
+    <p>A <strong>step</strong> is part of the person's journey. A <strong>touchpoint</strong> is an interaction with the company, product, or a related channel. Do not treat them as synonyms.</p>
 
-    <h2>Operational details from the learning material</h2>
+    <h3>Journey Modeler vs Customer Journey Map</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Tool</th><th>Best use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Journey Modeler</td><td>Structured table with stages, steps, sentiments, processes, systems, organizations, metrics, and other data.</td></tr>
+        <tr><td>Customer Journey Map</td><td>Visual journey storytelling with persona, steps, touchpoints, and linked attributes.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Journey Complexity vs Journey Model Dimensions</h3>
+
+    <p><strong>Journey Complexity</strong> measures operational complexity inherited from linked processes. The learning material weights Flow and Handovers at 35% each, and IT Systems, Data Objects, and Linked Processes at 10% each.</p>
+
+    <p><strong>Journey Model Dimensions</strong> measure the size and populated content of the journey table. Model size is not the same as operational complexity.</p>
+
+    <p>Use journey work to create a traceable improvement chain:</p>
+
+    <p><strong>Pain point → linked process/system → process change → KPI → evidence of improved experience</strong></p>
+
+    <h2 id="governance">10. Process Governance: execute governance workflows</h2>
+
+    <p>Process Governance is a web-based workflow modeling and execution platform. It coordinates tasks, cases, handovers, approvals, reminders, escalations, and workflow data.</p>
+
+    <h3>Workflow vs process model</h3>
+
+    <p>A process model explains the broader business flow and outcome. A Process Governance workflow operationalizes repeatable work: who receives a task, what data they enter, what happens next, and how the case is controlled.</p>
+
+    <h3>Four operating areas</h3>
+
+    <p>Current Process Governance documentation organizes the product around workflows, tasks, cases, and analytics. Workflows define the executable template; cases are running instances; tasks are units of human work; analytics reports on workflow execution.</p>
+
+    <h3>Triggers</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Trigger</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Public Form</td><td>Allow external or public users to start a case.</td></tr>
+        <tr><td>Private Form</td><td>Allow registered internal users to start a case.</td></tr>
+        <tr><td>E-mail</td><td>Start a case from an incoming message, including system-generated notifications.</td></tr>
+        <tr><td>Process Modeler</td><td>Start governance for a process model, for example approval before publication.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>User Task vs Multi-User Task</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Action</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>User Task</td><td>One person or role performs a task; can include forms, due dates, reminders, and access controls.</td></tr>
+        <tr><td>Multi-User Task</td><td>Several people each perform the same task. Execution can be parallel or sequential and results are collected.</td></tr>
+      </tbody>
+    </table>
+
+    <p>Due date and reminder are separate. A deadline controls expected completion; reminders notify assignees or candidates. The learning material states a maximum of 25 reminders for one task.</p>
+
+    <h3>Workflow versioning</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Action</th><th>Effect</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Publish</td><td>Create a version that can start new cases.</td></tr>
+        <tr><td>Re-Publish</td><td>Publish a new copy of an older version for future cases without deleting current unpublished edits.</td></tr>
+        <tr><td>Restore</td><td>Replace the editable draft with an older version; the current published execution version does not change.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Approval workflow boundary</h3>
+
+    <p>Approval workflows connect Process Modeler and Process Governance. Process Modeler holds the content and publication state; Process Governance executes the approval tasks. SAP documentation requires a Process Governance license in addition to Process Modeler for this function.</p>
+
+    <h3>Integration boundary</h3>
+
+    <p>Process Governance supports external actions, connectors, Trigger API, e-mail, and analytics access. It should not be treated as a general embedded workflow engine for another application: current SAP documentation states that tasks and cases are intended to be interacted with through the Process Governance user interface rather than through a generic task/case execution API.</p>
+
+    <h2 id="intelligence">11. Process Intelligence and Process Insights: observed execution</h2>
+
+    <p>Process Intelligence answers a different question from Process Modeler:</p>
+
+    <p><strong>Process Modeler: what should happen?</strong><br>
+    <strong>Process Intelligence: what did happen?</strong></p>
+
+    <h3>Current product areas</h3>
 
     <ul>
-      <li>Navigation Map images are uploaded through Image Management and use SVG format. The training material states that modelers can upload images there, with a 50 KB limit, while images provided through administrator setup use a separate 20 KB limit.</li>
-      <li>Administrator setup does not support bulk image uploads, and uploaded images can only be deleted by workspace administrators.</li>
-      <li>Uploaded images are checked for possible security vulnerabilities and may require approval before they become available.</li>
-      <li>After saving a Navigation Map, preview it in Process Collaboration Hub and test the links.</li>
-      <li>QuickModel is intended for BPMN process capture; more complex elements are added later in the Graphical Editor. Gateway or other missing logic can first be recorded in documentation for a more experienced modeler to incorporate later.</li>
-      <li>Bulk Dictionary maintenance uses Excel import/export and requires correct category and attribute mapping.</li>
-      <li>Dictionary sandbox proposals should be reviewed regularly and moved to productive categories only after approval.</li>
+      <li><strong>Data Management</strong> — integrate and prepare process data.</li>
+      <li><strong>Analysis Configuration</strong> — define data sources, attributes, metrics, governance, and access.</li>
+      <li><strong>Process Analysis</strong> — use out-of-the-box and custom process analysis.</li>
+      <li><strong>Dashboards</strong> — visualize performance and process behavior.</li>
+      <li><strong>Insights</strong> — save findings and data-backed observations.</li>
+      <li><strong>Automated Root Cause Analysis</strong> — identify subgroups that drive performance.</li>
+      <li><strong>Value Analysis</strong> — add monetary context to improvement opportunities.</li>
+      <li><strong>Analysis Workflows</strong> — monitor process data and trigger actions when conditions are met.</li>
     </ul>
 
-    <h2>Current product boundary</h2>
+    <h3>Out-of-the-box vs custom analysis</h3>
 
-    <p>SAP Signavio is a suite rather than one monolithic runtime. Product capabilities, licenses, APIs, and workspace behavior can change independently. A solution design should name the exact Signavio component and verify the licensed feature set instead of using “Signavio” as if every capability were always present.</p>
+    <table class="study-table">
+      <thead>
+        <tr><th>Approach</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Out-of-the-box process analysis</td><td>Start quickly with SAP-defined process content, process flows, and performance indicators.</td></tr>
+        <tr><td>Custom process analysis</td><td>Define your own process semantics, data integration, metrics, attributes, dashboards, and analysis scope.</td></tr>
+      </tbody>
+    </table>
 
-    <p>Current SAP documentation also reflects ongoing changes in Process Intelligence terminology. Older material may refer to investigations, while SAP has been moving this area toward customizable dashboards. The stable concept is more important than the historical UI name: execution analysis starts from event data and must be interpreted against the correct process semantics.</p>
+    <p>The semantic model matters. A visually convincing analysis can still be wrong if the case definition, activities, timestamps, attributes, or metrics do not represent the business process correctly.</p>
 
-    <h2>Source references</h2>
+    <h3>Process Insights current-state note</h3>
+
+    <p>Current SAP Help states that SAP Signavio Process Insights capabilities are available in SAP Signavio Process Intelligence. The standardized onboarding path uses the <strong>SAP Signavio Process Insights and Intelligence package</strong> for predefined integration and out-of-the-box analysis. Treat older references to Process Insights as a separate application with care and verify the customer's package and migration state.</p>
+
+    <h3>Investigations transition</h3>
+
+    <p>As of May 26, 2026, SAP documentation states that new investigations can no longer be created or imported. Existing investigations remain accessible for now, while customizable dashboards replace the investigation experience. Use current dashboard terminology in new designs.</p>
+
+    <h3>Simulation vs reporting vs Process Intelligence</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Capability</th><th>Evidence</th><th>Question</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Simulation</td><td>Assumptions on a designed model</td><td>What could happen?</td></tr>
+        <tr><td>Model reporting</td><td>Model elements and attributes</td><td>What have we documented?</td></tr>
+        <tr><td>Process Intelligence</td><td>Operational process data</td><td>What actually happened?</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="transformation-manager">12. Process Transformation Manager and accelerators</h2>
+
+    <h3>Process Transformation Manager</h3>
+
+    <p>Process Transformation Manager manages improvement work across the process landscape. Core concepts include:</p>
+
     <ul>
-      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/user-guide/fa78b95c6dad1014a4730ff5fb2ca89e.html">Explorer Overview</a>.</li>
-      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/doc/10ae12665b494798a8a332bcc195689d/SHIP/en-US/sap-signavio-process-manager-user-guide-en.pdf">Process Manager User Guide</a>.</li>
-      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/doc/126253d0517d4ae9afffd4d1c7a01c63/SHIP/en-US/sap-signavio-process-manager-workspace-admin-guide-en.pdf">Workspace Admin Guide</a>.</li>
-      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/user-guide/fa8963fa6dad1014a4730ff5fb2ca89e.html">Navigation Map Elements</a>.</li>
-      <li>Object Management Group — <a href="https://www.omg.org/spec/BPMN/2.0.2/PDF">BPMN 2.0.2 specification</a>.</li>
-      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/workspace-admin-guide/manage-security-settings">Workspace security settings</a>.</li>
-      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/workspace-admin-guide/enable-sso">Single Sign-On using SAML</a>.</li>
-      <li>SAP Signavio Process Manager — <a href="https://help.sap.com/docs/signavio-process-manager/user-guide/custom-graphics">Custom graphics</a>.</li>
-      <li>SAP Signavio Process Governance — <a href="https://help.sap.com/docs/signavio-process-governance/user-guide/organization-settings">Organization settings</a>.</li>
-      <li>SAP Signavio Process Transformation Suite — <a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/business-process-model-connector-for-sap-signavio-solutions">Business Process Model Connector for SAP Signavio solutions</a>.</li>
-      <li>SAP Signavio Process Transformation Suite — <a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/creating-synchronization-project">Creating a Synchronization Project</a>.</li>
-      <li>SAP Signavio Process Intelligence — <a href="https://help.sap.com/docs/signavio-process-intelligence/onboarding-and-data-integration-guide/creating-customizable-data-connections">Creating Customizable Data Connections</a>.</li>
-      <li>SAP Signavio Process Intelligence — <a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Investigations and dashboard transition</a>.</li>
+      <li><strong>Benchmarking</strong> — compare performance with available benchmark data.</li>
+      <li><strong>Insights</strong> — capture findings and evidence.</li>
+      <li><strong>Initiatives</strong> — organize and prioritize improvement efforts.</li>
+      <li><strong>Objectives</strong> — define and align goals.</li>
+      <li><strong>Tasks</strong> — assign work inside initiatives.</li>
+      <li><strong>Value-oriented prioritization</strong> — connect improvement work to measurable impact.</li>
     </ul>
 
-    <h2>Verification limitations</h2>
-    <p>This page combines current public SAP documentation with SAP Learning material used for assessment preparation. Product scope, licensing, UI behavior, limits, APIs, workspace administration, and terminology can change. Verify the documentation for the specific Signavio product, tenant, and release before using this page as implementation guidance.</p>
+    <p>Do not confuse Process Transformation Manager with Process Governance. Governance executes repeatable workflows and cases. Transformation Manager organizes improvement initiatives and the work around them.</p>
+
+    <h3>Process Explorer and Value Accelerator Library</h3>
+
+    <p>Process Explorer and the Value Accelerator Library help teams start from SAP and industry content instead of designing everything from zero. Use accelerators as a starting point and adapt them to the customer's operating model. SAP explicitly describes value accelerators as optional content that can change and is not part of core business functionality.</p>
+
+    <h3>AI capabilities</h3>
+
+    <p>AI is a cross-suite capability, not one single Signavio product. Examples include AI-assisted process analysis and other product-specific AI features. Commercial requirements vary. Some current SAP product pages require AI Units for specific AI features, while others currently do not. Always verify the exact AI feature, base product, entitlement, and current AI Unit policy.</p>
+
+    <h2 id="connector">13. Business Process Model Connector: connect Business and IT</h2>
+
+    <p>The Business Process Model Connector is a stand-alone cloud application on SAP BTP that connects SAP Signavio Process Modeler with SAP Solution Manager.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>System</th><th>Primary ownership</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SAP Signavio</td><td>Process structure and business artifacts.</td></tr>
+        <tr><td>SAP Solution Manager</td><td>Solution design and IT lifecycle artifacts.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Direction and ownership</h3>
+
+    <p>If process information already exists in Solution Manager, an initial synchronization can load it into Signavio. After that alignment, the learning material makes Signavio the leading system for process information and sends ongoing process updates from Signavio to Solution Manager.</p>
+
+    <p>The connector supports transfer in both directions for supported content, but ownership is not symmetric. The course also states that BPMN diagrams synchronized from Solution Manager to Signavio cannot simply be synchronized back as a round trip.</p>
+
+    <h3>Key prerequisites</h3>
+
+    <ul>
+      <li>Solution Manager technical user and required rights.</li>
+      <li>Required Solution Manager SICF services active.</li>
+      <li>Dedicated Signavio technical user with write/API access.</li>
+      <li>SAP Cloud Connector installed and connected.</li>
+      <li>Supported BTP subaccount region and entitlements.</li>
+      <li>Trust relationship between BTP connectivity and Solution Manager.</li>
+      <li>Connector subscription and user roles.</li>
+    </ul>
+
+    <p>The learning material lists EU10 and US10 as supported BTP regions for the connector. Verify current regional availability before implementation.</p>
+
+    <h3>Synchronization Project</h3>
+
+    <p>A Synchronization Project defines one system pair, Solution/Branch context, Dictionary-category mappings, attribute mappings, optional governance revision state, and synchronization settings.</p>
+
+    <p>Run sequence:</p>
+
+    <p><strong>Create → map categories → map attributes → preview/save → activate → select direction/content → run → inspect logs/history</strong></p>
+
+    <p>If no governance revision state is selected, the learning material uses the latest revision by default. If a state such as Approved is selected, only content in that lifecycle state is transferred. Process Governance is required for revision-state gating.</p>
+
+    <h2 id="administration">14. Administration, access, and security</h2>
+
+    <h3>Admin responsibilities</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Area</th><th>Administrator decisions</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Process Modeler</td><td>Workspace settings, conventions, attributes, Dictionary structure, content access, security.</td></tr>
+        <tr><td>Collaboration Hub</td><td>Audiences, presentation, attribute visibility, ratings, read confirmations, consumer experience.</td></tr>
+        <tr><td>Journey Modeler</td><td>Journey templates and shared settings.</td></tr>
+        <tr><td>Process Governance</td><td>Users/groups, workflow creation control, reusable activities, connectors, credentials, labels, workspace settings.</td></tr>
+        <tr><td>Process Intelligence</td><td>Feature access, data access, analysis configuration permissions, semantic-view access.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Access rights are additive</h3>
+
+    <p>Design folder structure and groups before assigning large numbers of users. In the traditional Process Modeler access model, rights granted through one group cannot be removed by adding the user to a second group with fewer rights.</p>
+
+    <p>Common Process Modeler rights are:</p>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Right</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>H — Hub</td><td>View published Hub content.</td></tr>
+        <tr><td>R — Read</td><td>Read working/unpublished content where permitted.</td></tr>
+        <tr><td>W — Write</td><td>Edit and save content.</td></tr>
+        <tr><td>D — Delete</td><td>Delete and move content with required source/target permissions.</td></tr>
+        <tr><td>P — Publish</td><td>Publish to Collaboration Hub.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Groups over individual permissions</h3>
+
+    <p>Use groups for stable organizational roles. Use individual permissions only for justified exceptions. This reduces access drift and makes reviews easier.</p>
+
+    <h3>Security</h3>
+
+    <p>Important controls include SSO, identity provisioning, IP filtering, password policy where applicable, least-privilege groups, and separation of technical users from human users. New workspaces should be designed around SAP Cloud Identity Services rather than old local-user assumptions.</p>
+
+    <h2 id="best-practices">15. Best practices and anti-patterns</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Do</th><th>Avoid</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Define process architecture before mass modeling.</td><td>Hundreds of unrelated diagrams with no level or ownership model.</td></tr>
+        <tr><td>Use Dictionary objects as governed master references.</td><td>Duplicate roles, systems, documents, risks, and controls in each diagram.</td></tr>
+        <tr><td>Use DMN for complex decision logic.</td><td>Gateway-heavy BPMN that hides business rules.</td></tr>
+        <tr><td>Use Call Activities for reusable global logic.</td><td>Copying the same subprocess into many models.</td></tr>
+        <tr><td>Use process roles instead of named people in lanes.</td><td>Person-specific models that require constant maintenance.</td></tr>
+        <tr><td>Use conventions plus stakeholder review.</td><td>Assuming a syntax-valid model is business-correct.</td></tr>
+        <tr><td>Use simulation for hypotheses and Process Intelligence for evidence.</td><td>Presenting simulation output as real process performance.</td></tr>
+        <tr><td>Use variants for justified controlled differences.</td><td>Independent local copies that silently diverge from the global process.</td></tr>
+        <tr><td>Separate license assignment from access rights.</td><td>Assuming a license automatically provides safe authorization.</td></tr>
+        <tr><td>Use groups and lifecycle governance.</td><td>Long-term individual access exceptions.</td></tr>
+        <tr><td>Link journey pain points to processes and KPIs.</td><td>Customer journey maps that never change internal processes.</td></tr>
+        <tr><td>Use dedicated technical users for integrations.</td><td>Sharing one human or technical account across several integrations.</td></tr>
+        <tr><td>Define the system of record for synchronized data.</td><td>Treating connectors as unrestricted symmetric replication.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="assessment">16. Lead-level decision guide</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Question</th><th>Short answer</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Process Modeler or Process Intelligence?</td><td>Designed process vs observed execution.</td></tr>
+        <tr><td>Process Modeler or Process Governance?</td><td>Process content/model vs executable governance workflow.</td></tr>
+        <tr><td>BPMN or DMN?</td><td>Activity flow vs decision logic.</td></tr>
+        <tr><td>Navigation Map or Value Chain?</td><td>User-friendly entry vs structured high-level process architecture.</td></tr>
+        <tr><td>QuickModel or Graphical Editor?</td><td>Fast simple capture vs detailed BPMN logic.</td></tr>
+        <tr><td>Local attribute or Dictionary?</td><td>Diagram-specific fact vs shared governed business object.</td></tr>
+        <tr><td>Simulation or Process Intelligence?</td><td>What could happen vs what did happen.</td></tr>
+        <tr><td>Journey or process?</td><td>Outside-in experience vs inside-out execution.</td></tr>
+        <tr><td>Process Governance or Transformation Manager?</td><td>Repeatable workflow execution vs improvement initiative management.</td></tr>
+        <tr><td>License or permission?</td><td>Product entitlement vs authorization to features/content/data.</td></tr>
+        <tr><td>Template variant or detached process?</td><td>Keep standard alignment while it adds value; detach only for justified independent evolution.</td></tr>
+        <tr><td>Connector direction?</td><td>Know the initial-load direction, ongoing ownership, supported content, and round-trip limits.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Strong assessment answer pattern</h3>
+
+    <p>For a broad Signavio design question, structure the answer in this order:</p>
+
+    <ol>
+      <li><strong>Purpose</strong> — what business problem are we solving?</li>
+      <li><strong>Component</strong> — which Signavio product owns the capability?</li>
+      <li><strong>Information model</strong> — process, decision, journey, workflow, or event data?</li>
+      <li><strong>Governance</strong> — ownership, Dictionary, conventions, approvals, access, lifecycle.</li>
+      <li><strong>Integration</strong> — source/target systems and system-of-record boundary.</li>
+      <li><strong>Evidence</strong> — simulation, report, workflow history, or operational process data?</li>
+      <li><strong>License</strong> — base product, separate product, workspace package, or additional entitlement?</li>
+    </ol>
+
+    <h2 id="current-state">17. Current-state notes for 2026</h2>
+
+    <ul>
+      <li>Current SAP documentation uses <strong>Process Modeler</strong>; older learning content commonly uses <strong>Process Manager</strong>.</li>
+      <li>New Signavio workspaces use SAP Cloud Identity Services for identity management; workspaces created after May 6, 2026 manage users/groups there.</li>
+      <li>Process Intelligence license is workspace-level; user access then depends on feature sets and data permissions.</li>
+      <li>Process Insights capabilities are being consumed through the Process Intelligence direction/package in current SAP documentation.</li>
+      <li>New Process Intelligence investigations cannot be created or imported since May 26, 2026; customizable dashboards are the forward path.</li>
+      <li>Commercial scope changes faster than modeling concepts. Always verify the current Feature Scope Description and contract before promising a feature.</li>
+    </ul>
+
+    <h2 id="sources">18. Source register</h2>
+
+    <ul>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite">SAP Signavio Process Transformation Suite — product documentation</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/user-management-authentication-and-authorization/about-licenses">SAP Signavio — About Licenses</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/user-management-authentication-and-authorization/harmonization-of-authentication-and-identity-management">SAP Signavio — Harmonization of Authentication and Identity Management</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-manager/fsd-process-manager/sap-signavio-process-manager">Process Modeler / Process Manager — Feature Scope Description</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-collaboration-hub/8b9170c598674518972c9236fa257a7b/a17911fa61884c4fb532988810ad05b8.html">Process Collaboration Hub — Feature Scope Description</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-journey-modeler/user-guide/intro">Journey Modeler — User Guide</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-governance/user-guide">Process Governance — User Guide</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-governance/implementation-guidelines">Process Governance — Implementation Guidelines</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/process-analysis">Process Intelligence — Process Analysis</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Process Intelligence — Investigations and dashboard transition</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-insights/feature-scope-description/application-features-insights-and-intelligence-package">Process Insights and Intelligence package</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-manager">Process Transformation Manager — product documentation</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/business-process-model-connector-for-sap-signavio-solutions">Business Process Model Connector — overview</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/creating-synchronization-project">Business Process Model Connector — synchronization project</a></li>
+      <li><a href="https://www.omg.org/spec/BPMN/2.0.2/PDF">OMG BPMN 2.0.2 specification</a></li>
+    </ul>
+
+    <p><strong>Verification boundary:</strong> this guide combines SAP Learning material used for assessment preparation with current public SAP documentation. The page explains product architecture and decision boundaries. Exact commercial scope, edition, package, regional availability, AI consumption, and licensed feature set must be checked against the customer's current SAP contract and Feature Scope Description.</p>
+
+    <h2 id="glossary">19. Glossary</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Term</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Process Modeler</td><td>Current SAP Signavio product for process and decision modeling. Older material often calls it Process Manager.</td></tr>
+        <tr><td>Process Manager</td><td>Earlier/current-learning name for the modeling product; still appears in SAP documentation and courses.</td></tr>
+        <tr><td>Explorer</td><td>Repository and management area for process content, folders, search, revisions, reports, and related functions.</td></tr>
+        <tr><td>Graphical Editor</td><td>Detailed modeling environment for BPMN, DMN, attributes, and other diagram types.</td></tr>
+        <tr><td>QuickModel</td><td>Table-based way to create simple BPMN models quickly.</td></tr>
+        <tr><td>BPMN</td><td>Business Process Model and Notation; standard notation for process flow.</td></tr>
+        <tr><td>DMN</td><td>Decision Model and Notation; notation for decision requirements and decision logic.</td></tr>
+        <tr><td>DRD</td><td>Decision Requirements Diagram; shows decision dependencies, inputs, and knowledge sources.</td></tr>
+        <tr><td>Decision Table</td><td>Table that defines business rules from input conditions to outputs.</td></tr>
+        <tr><td>Hit Policy</td><td>Rule that defines how a DMN table handles one or several matching rows.</td></tr>
+        <tr><td>Token</td><td>Mental model for BPMN execution that moves through flows, tasks, gateways, and events.</td></tr>
+        <tr><td>XOR Gateway</td><td>Exclusive gateway; routes one path.</td></tr>
+        <tr><td>AND Gateway</td><td>Parallel gateway; activates all paths and synchronizes required tokens.</td></tr>
+        <tr><td>OR Gateway</td><td>Inclusive gateway; activates one or several valid paths.</td></tr>
+        <tr><td>Event-Based Gateway</td><td>Routes according to which external catching event occurs first.</td></tr>
+        <tr><td>Pool</td><td>BPMN participant or organizational boundary.</td></tr>
+        <tr><td>Lane</td><td>Responsibility partition inside a pool according to the modeling convention.</td></tr>
+        <tr><td>Sequence Flow</td><td>Execution order inside one pool.</td></tr>
+        <tr><td>Message Flow</td><td>Communication between different pools.</td></tr>
+        <tr><td>Subprocess</td><td>Process detail grouped below or inside a parent process.</td></tr>
+        <tr><td>Call Activity</td><td>BPMN element used to call reusable global process logic.</td></tr>
+        <tr><td>Dictionary</td><td>Central repository of reusable business objects such as roles, systems, documents, risks, and controls.</td></tr>
+        <tr><td>Dictionary Entry</td><td>One governed reusable business object in the Dictionary.</td></tr>
+        <tr><td>Attribute</td><td>Structured metadata attached to a diagram, element, or Dictionary object.</td></tr>
+        <tr><td>Overlay</td><td>Visual icon or color that exposes attribute information on a model.</td></tr>
+        <tr><td>Modeling Convention</td><td>Organization-specific modeling rule checked in addition to BPMN syntax.</td></tr>
+        <tr><td>Navigation Map</td><td>Flexible visual entry point into a process landscape.</td></tr>
+        <tr><td>Value Chain</td><td>Structured high-level view of process groups and their relationships.</td></tr>
+        <tr><td>Process Collaboration Hub</td><td>Consumption and collaboration surface for published process content.</td></tr>
+        <tr><td>Published View</td><td>View of governed published content.</td></tr>
+        <tr><td>Preview View</td><td>View of current content according to access rights, including working state.</td></tr>
+        <tr><td>Audience</td><td>Viewer group used to tailor Hub presentation and visibility settings.</td></tr>
+        <tr><td>Read Confirmation</td><td>Request for users to confirm that they read a process or revision.</td></tr>
+        <tr><td>Process Rating</td><td>Structured user feedback on a process revision.</td></tr>
+        <tr><td>Variant</td><td>Controlled variation of a process that remains related to a common template.</td></tr>
+        <tr><td>Template</td><td>Main process model used as the governed base for variants.</td></tr>
+        <tr><td>Dimension</td><td>Characteristic that differentiates process variants, represented through configured Dictionary categories.</td></tr>
+        <tr><td>Variant Group</td><td>Template plus its related variants and dimensions.</td></tr>
+        <tr><td>Simulation</td><td>What-if calculation using model assumptions such as time, cost, frequency, probability, and resources.</td></tr>
+        <tr><td>Journey Modeler</td><td>Table-based outside-in modeling product for journeys, touchpoints, sentiments, processes, systems, and metrics.</td></tr>
+        <tr><td>Persona</td><td>Representative person whose experience is modeled.</td></tr>
+        <tr><td>Touchpoint</td><td>Direct or indirect interaction between the persona and the company, product, or channel.</td></tr>
+        <tr><td>Sentiment</td><td>Recorded positive, neutral, or negative experience at a journey stage.</td></tr>
+        <tr><td>Journey Complexity</td><td>Measure of operational complexity behind linked processes.</td></tr>
+        <tr><td>Journey Model Dimensions</td><td>Measure of journey-table size and populated content.</td></tr>
+        <tr><td>Process Governance</td><td>Workflow modeling and execution product for governed tasks, cases, approvals, and controls.</td></tr>
+        <tr><td>Workflow</td><td>Executable template describing how repeatable work is assigned and completed.</td></tr>
+        <tr><td>Case</td><td>One running instance of a Process Governance workflow.</td></tr>
+        <tr><td>User Task</td><td>Task completed by one assigned person or role.</td></tr>
+        <tr><td>Multi-User Task</td><td>Same task created for several users, in parallel or sequence.</td></tr>
+        <tr><td>Trigger</td><td>Event or input that starts a workflow case.</td></tr>
+        <tr><td>Process Intelligence</td><td>Process-mining and analysis product for operational process data.</td></tr>
+        <tr><td>Process Insights</td><td>SAP-focused predefined performance and recommendation capabilities, now documented as available through the Process Intelligence direction/package.</td></tr>
+        <tr><td>Process Transformation Manager</td><td>Product for benchmarking, insights, initiatives, objectives, tasks, and transformation management.</td></tr>
+        <tr><td>Process Explorer</td><td>Entry point for value accelerators and transformation resources.</td></tr>
+        <tr><td>Insight</td><td>Saved analytical finding or observation.</td></tr>
+        <tr><td>Analysis Workflow</td><td>Process Intelligence automation that monitors process data and triggers actions when defined conditions are met.</td></tr>
+        <tr><td>Feature Set</td><td>Authorization mechanism used to grant access to product capabilities.</td></tr>
+        <tr><td>Tenant Owner</td><td>Initial workspace owner with broad administrative responsibility.</td></tr>
+        <tr><td>Business Process Model Connector</td><td>BTP-based connector between SAP Signavio process information and SAP Solution Manager solution documentation.</td></tr>
+        <tr><td>Synchronization Project</td><td>Connector configuration that defines one system pair, mappings, scope, and synchronization settings.</td></tr>
+        <tr><td>Value Accelerator</td><td>Optional prebuilt content used to accelerate analysis, modeling, or transformation work.</td></tr>
+      </tbody>
+    </table>
+
   </div>
 
   <section class="atlas-related">
