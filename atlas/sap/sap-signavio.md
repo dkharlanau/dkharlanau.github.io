@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Signavio"
-description: "SAP Signavio Process Manager explained as a working system: Explorer, Editor, QuickModel, Dictionary, navigation maps, value chains, simulation, reporting, collaboration, variant management, governance, and the boundary to Process Intelligence."
+description: "SAP Signavio explained as a working process system: Process Manager modeling and governance, BPMN practice, simulation, reporting, variants, executable governance workflows, and the boundary to Process Intelligence."
 permalink: /atlas/sap/sap-signavio/
 atlas_section: sap
 domain: SAP operations
@@ -54,14 +54,14 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Product</p>
     <h1>SAP Signavio</h1>
-    <p class="note-subtitle">A working model of how SAP Signavio Process Manager organizes, models, governs, publishes, and analyzes process knowledge — and how that designed process view differs from observed execution in Process Intelligence.</p>
+    <p class="note-subtitle">A working model of how SAP Signavio models and governs process knowledge, executes governance workflows, and separates designed-process assumptions from observed execution data.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
   <aside class="atlas-meta-panel">
     <dl>
       <div><dt>Process</dt><dd>Process management</dd></div>
-      <div><dt>Primary focus</dt><dd>Process Manager</dd></div>
+      <div><dt>Primary focus</dt><dd>Process Manager and Process Governance</dd></div>
       <div><dt>Assessment lens</dt><dd>Architecture, modeling, governance, analysis</dd></div>
       <div><dt>Indexing</dt><dd>Noindex until product claims are verified against public SAP documentation.</dd></div>
     </dl>
@@ -122,6 +122,11 @@ sitemap: false
           <td>Variant Management</td>
           <td>Control template-to-variant relationships</td>
           <td>How do we keep a standard core while allowing justified local differences?</td>
+        </tr>
+        <tr>
+          <td>Process Governance</td>
+          <td>Configure and execute governed workflows</td>
+          <td>How do approvals, tasks, reminders, escalations, and controlled handovers actually run?</td>
         </tr>
       </tbody>
     </table>
@@ -942,6 +947,235 @@ sitemap: false
       </tbody>
     </table>
 
+    <h2>Process Governance: turn governance rules into executable work</h2>
+
+    <p>SAP Signavio Process Governance is the workflow-management component used to configure and execute governed business workflows. It supports process governance and compliance by coordinating tasks and handovers, tracking relevant information, routing work to the correct people, and handling approvals or rejections.</p>
+
+    <p>The key distinction is that <strong>Process Manager describes and governs process models, while Process Governance executes workflow instances</strong>. A model can describe how approval should work; Process Governance can assign the approval task, collect the result, remind the assignee, escalate delays, and keep a case history.</p>
+
+    <h3>Core governance use cases</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>What it governs</th>
+          <th>Typical example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Process release cycle management</td>
+          <td>Review, approval, and publication of process content</td>
+          <td>Route a model to process owners, risk owners, and quality managers before publication.</td>
+        </tr>
+        <tr>
+          <td>Process maturity assessment</td>
+          <td>Repeatable validation and assessment work</td>
+          <td>Replace spreadsheet-based maturity checks with tracked workflow tasks.</td>
+        </tr>
+        <tr>
+          <td>Risk and control management</td>
+          <td>Review and maintenance of governed risks and controls</td>
+          <td>Use centrally maintained Dictionary risks and controls and schedule recurring verification.</td>
+        </tr>
+        <tr>
+          <td>Configurable governance workflows</td>
+          <td>Approval and control logic modeled with BPMN</td>
+          <td>Assign tasks, route decisions, and analyze workflow data later in Process Intelligence or another BI tool.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Supporting features include automatic reminders, escalation to other users when critical work is overdue, reusable workflow data, direct task or case messaging, and task filters that help users focus on open work.</p>
+
+    <h2>Workflow vs business process</h2>
+
+    <p>A workflow and a process are closely related but are not identical. A process provides the broader roadmap and business objective. A workflow describes how work moves through operational steps: who does what, when, with which information, and who continues next.</p>
+
+    <p>One useful assessment formulation is: <strong>a process explains the business outcome and structure; a workflow operationalizes the work required to achieve it</strong>. A process can exist as a documented business model without an executable workflow, while a workflow belongs to a broader process context.</p>
+
+    <p>Workflows can be handled manually, supported by office tools or ERP systems, implemented as custom software, or executed by a workflow-management system. A workflow-management system automates recurring procedures by assigning the right task to the right person at the right time.</p>
+
+    <h2>Process Governance access and operating surfaces</h2>
+
+    <p>SAP Signavio Process Governance is part of SAP Signavio Process Transformation Suite and is accessed from the SAP Signavio environment. The learning material describes entering through Process Collaboration Hub and selecting Process Governance from the application menu.</p>
+
+    <p>Process Collaboration Hub also exposes governance-related functions such as <strong>diagram approvals</strong>, <strong>read confirmations</strong>, and <strong>process rating</strong>.</p>
+
+    <p>The Process Governance landing page is organized around four main menu tabs: <strong>Tasks</strong>, <strong>Cases</strong>, <strong>Processes</strong>, and <strong>Analytics</strong>. The important mental model is straightforward: workflow definitions live under Processes, execution creates cases, human work appears as tasks, and Analytics supports workflow analysis.</p>
+
+    <h2>Creating workflows: reuse before starting from zero</h2>
+
+    <p>Process Governance supports three creation paths from the Processes area:</p>
+
+    <ul>
+      <li><strong>From Scratch</strong> — create a new workflow directly.</li>
+      <li><strong>From Template</strong> — start from an available workflow template and adapt it.</li>
+      <li><strong>Import BPMN</strong> — import an existing BPMN process model that meets execution requirements.</li>
+    </ul>
+
+    <p>A process can also be transferred from SAP Signavio Process Manager into Process Governance. For assessment purposes, the design rule is <strong>reuse an appropriate template or existing BPMN model before rebuilding the workflow manually</strong>, but confirm that the imported process satisfies execution requirements.</p>
+
+    <h2>Triggers: define how a workflow case begins</h2>
+
+    <p>A workflow starts with a trigger. The trigger determines what information or event creates a new case.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Trigger</th>
+          <th>Who or what starts it?</th>
+          <th>Typical use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Public form</td>
+          <td>Anyone, including an external participant</td>
+          <td>A public request form, for example requesting information or materials.</td>
+        </tr>
+        <tr>
+          <td>Private form</td>
+          <td>Registered internal users</td>
+          <td>Internal requests such as holiday or service requests.</td>
+        </tr>
+        <tr>
+          <td>E-mail</td>
+          <td>An incoming message, often from another system or person</td>
+          <td>An ERP or HR system sends a notification that starts a case.</td>
+        </tr>
+        <tr>
+          <td>Process Manager</td>
+          <td>A process model handed over from Process Manager</td>
+          <td>Start a review and approval workflow before a model is published.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Forms create and update workflow data</h3>
+
+    <p>Forms are used in two places: <strong>form triggers</strong> and <strong>user tasks</strong>. A trigger form sets workflow variables when a case starts. A user-task form lets an assignee enter or update information while completing work.</p>
+
+    <p>Trigger forms can be private by default or public. Forms contain fields, and the form builder supports structures such as nested sections, mandatory fields, dynamic fields, and field groups. The important architectural point is that form data becomes workflow data that later tasks, decisions, documents, and messages can reuse.</p>
+
+    <h2>Actions: model the work that happens after the trigger</h2>
+
+    <p>Process Governance groups workflow elements into three categories:</p>
+
+    <ol>
+      <li><strong>Main actions</strong> — the main human or communication work needed to reach the workflow goal.</li>
+      <li><strong>Services and other actions</strong> — automated supporting work such as creating documents or PDFs.</li>
+      <li><strong>Events and gateways</strong> — flow-control elements that decide which actions execute and when.</li>
+    </ol>
+
+    <h3>User Task</h3>
+
+    <p>A User Task represents work performed by one person. Its configuration can define an assignee or candidate users, a process role, a task form, reminders, and access rights. Assigning by process role helps Process Governance keep related tasks with the same person where that role is reused.</p>
+
+    <p>Due dates and reminders are separate concepts. A due date defines the task deadline. A reminder can notify assignees before or independently of that deadline, and continued reminders can repeat. The learning material states a maximum of 25 reminders for one task. fileciteturn54file0L82-L95</p>
+
+    <h3>Multi-User Task</h3>
+
+    <p>A Multi-User Task creates the same task for several people and collects their individual results into result lists. It supports the same general configuration areas as a User Task plus a Results configuration.</p>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Execution</th>
+          <th>Behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Parallel</td>
+          <td>Create all individual tasks at the same time; assignees may complete them in any order.</td>
+        </tr>
+        <tr>
+          <td>Sequential</td>
+          <td>Create one task at a time; the next is created only after the current assignee completes it.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>This makes Multi-User Task suitable for scenarios such as several reviewers who must each evaluate the same proposal. fileciteturn54file0L101-L119</p>
+
+    <h3>Send E-mail</h3>
+
+    <p>The Send E-mail action sends workflow-controlled messages to users, addresses, or values held in variables. Workflow fields can be reused in the subject and body, attachments can come from workflow file fields or generated documents, and the body supports Markdown formatting. The case history records successful e-mail events. fileciteturn54file0L121-L131</p>
+
+    <h2>Process details and access control</h2>
+
+    <p>The process Details area contains process-level information and configuration, including general information, process owner and description, access control, field overview, and core case information.</p>
+
+    <p>Access control can restrict who can access a process, edit cases, or work with individual tasks. Processes and tasks are described in the learning material as organization-visible by default; making a process private allows permissions to be granted to specific users or groups. Individual User Tasks can also have more specific access restrictions. fileciteturn54file0L139-L163</p>
+
+    <p><strong>Lead boundary:</strong> process access and task access are related but not identical. A user may need visibility of the overall case without receiving permission to assign, view, or complete every protected task.</p>
+
+    <h2>Versions: editing state and execution state are separate</h2>
+
+    <p>The workflow editor saves model changes while you work, but a new case can start only from a <strong>published process version</strong>. This creates an important governance boundary between the editable workflow definition and the version currently used for execution. fileciteturn54file0L164-L176</p>
+
+    <h3>Publish, Re-Publish, and Restore solve different problems</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>What changes?</th>
+          <th>Effect on new cases</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Publish</td>
+          <td>Create a published workflow version from the current definition.</td>
+          <td>New cases can use the newly published version.</td>
+        </tr>
+        <tr>
+          <td>Re-Publish</td>
+          <td>Publish a new copy of an older selected version.</td>
+          <td>New cases use that republished version; current unpublished edits are not removed.</td>
+        </tr>
+        <tr>
+          <td>Restore</td>
+          <td>Replace current unpublished edits with an older selected version for further editing.</td>
+          <td>The already published version used for new cases does not change.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Version comments can document what changed between releases and make workflow evolution more transparent. The distinction between Re-Publish and Restore is particularly useful in assessment questions because one changes the version used for future cases, while the other changes the editable draft. fileciteturn54file0L178-L198</p>
+
+    <h2>Process Manager vs Process Governance vs Process Intelligence</h2>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Primary role</th>
+          <th>Lead question</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Process Manager</td>
+          <td>Model, document, govern, publish, and simulate designed processes</td>
+          <td>How should the process be defined and governed?</td>
+        </tr>
+        <tr>
+          <td>Process Governance</td>
+          <td>Configure and execute governed workflows, tasks, approvals, reminders, and cases</td>
+          <td>How is governed work actually assigned and completed?</td>
+        </tr>
+        <tr>
+          <td>Process Intelligence</td>
+          <td>Analyze observed event data and actual process execution</td>
+          <td>What actually happened in operational execution?</td>
+        </tr>
+      </tbody>
+    </table>
+
     <h2>Designed process vs observed process</h2>
 
     <p>Process Manager mainly helps describe and govern how work is intended to run. Process Intelligence answers a different question: <strong>what actually happened in execution data?</strong></p>
@@ -1030,6 +1264,18 @@ sitemap: false
         <tr>
           <td>Syntax check or stakeholder review?</td>
           <td>Syntax proves notation correctness; stakeholder feedback is needed to challenge semantic correctness.</td>
+        </tr>
+        <tr>
+          <td>Process Manager or Process Governance?</td>
+          <td>Use Process Manager to model and govern process content; use Process Governance when the approval, task, or handover must execute as a workflow.</td>
+        </tr>
+        <tr>
+          <td>User Task or Multi-User Task?</td>
+          <td>Use User Task for one assignee; use Multi-User Task when several people must each perform the same work and their results must be collected.</td>
+        </tr>
+        <tr>
+          <td>Re-Publish or Restore?</td>
+          <td>Re-Publish changes which published version future cases use; Restore changes the editable draft without changing the currently published execution version.</td>
         </tr>
         <tr>
           <td>Process Manager or Process Intelligence?</td>
