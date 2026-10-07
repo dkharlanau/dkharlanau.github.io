@@ -94,7 +94,7 @@ sitemap: false
 
     <h3>Current naming</h3>
 
-    <p>Current SAP documentation uses <strong>SAP Signavio Process Modeler</strong>. Older documentation and many learning courses use <strong>SAP Signavio Process Manager</strong>. This guide uses <strong>Process Modeler</strong> for the current product name and keeps <strong>Process Manager</strong> where it helps match learning material or older customer terminology.</p>
+    <p>Current SAP documentation exposes both names. SAP's 2026 trust documentation describes <strong>SAP Signavio Process Modeler</strong> as the product previously called <strong>SAP Signavio Process Manager</strong>, while many Help pages and learning courses still use Process Manager. This guide uses <strong>Process Modeler</strong> as the primary current name and keeps Process Manager where it helps match course or customer terminology.</p>
 
     <h2 id="suite-map">2. Suite component map</h2>
 
@@ -196,76 +196,95 @@ sitemap: false
 
     <h2 id="licensing">4. Licensing and access: what is included and what is separate</h2>
 
-    <p>This section explains product boundaries, not commercial pricing. Exact entitlements depend on the contract, package, edition, region, and SAP Feature Scope Description. SAP documentation explicitly warns that a Help page may describe integrations or features that require a separate license.</p>
+    <p>Licensing and authorization are different layers. The table below describes product boundaries, not commercial pricing. Exact entitlements depend on the contract, package, edition, region, and current SAP Feature Scope Description.</p>
 
     <table class="study-table">
       <thead>
         <tr>
           <th>Product / access type</th>
-          <th>License model</th>
-          <th>What is included or separate</th>
+          <th>Boundary</th>
+          <th>Assignment model</th>
+          <th>Key point</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Process Modeler modeling user</td>
-          <td>Usually user-level and workspace-bound</td>
-          <td>Full functionality of the licensed Process Modeler edition plus access to Process Collaboration Hub.</td>
+          <td>Base modeling license</td>
+          <td>User-level, workspace-bound</td>
+          <td>Gets the functionality of the licensed Process Modeler edition and access to Process Collaboration Hub.</td>
         </tr>
         <tr>
           <td>Process Collaboration Hub user</td>
-          <td>User-level license</td>
-          <td>Consumer-oriented access plus a limited Process Modeler feature set such as QuickModel, comparison, export, reporting, and Dictionary access. License alone is not an authorization boundary; access rights still matter.</td>
+          <td>Separate consumer license, but included for modeling users</td>
+          <td>User-level</td>
+          <td>Hub users receive consumer access plus a limited Modeler feature set such as QuickModel, comparison, export, reporting, and Dictionary access. The license itself is not an authorization rule.</td>
         </tr>
         <tr>
           <td>External commenting user</td>
+          <td>Included feedback path</td>
           <td>Automatic commenting license after invitation</td>
-          <td>Restricted to invited diagram feedback; no broad workspace/product access.</td>
+          <td>Restricted to invited diagram feedback; no broad workspace or product access.</td>
         </tr>
         <tr>
           <td>Journey Modeler</td>
-          <td>User-level licenses</td>
-          <td>SAP documentation exposes license names <strong>Journey Modeling Standard</strong> and <strong>Journey Modeling Advanced</strong>. Some features require the advanced license. Check the current Feature Scope Description for the exact split.</td>
+          <td>Separate product license</td>
+          <td>User-level</td>
+          <td>SAP identity documentation exposes <strong>Journey Modeling Standard</strong> and <strong>Journey Modeling Advanced</strong>. Exact feature differences must be checked in the current scope/contract.</td>
         </tr>
         <tr>
           <td>Process Governance</td>
-          <td>Separate workflow license / entitlement</td>
-          <td>Approval workflows in Process Modeler require a Process Governance license in addition to the modeling license. SAP also documents a limited Process Governance Collaborator sub-license that cannot be purchased stand-alone.</td>
+          <td>Separate product license</td>
+          <td>User-level workflow access</td>
+          <td>SAP SAML documentation uses the license name <strong>Workflow</strong>. Approval workflows in Process Modeler require Process Governance in addition to the modeling license.</td>
+        </tr>
+        <tr>
+          <td>Process Governance Collaborator</td>
+          <td>Sub-license</td>
+          <td>Limited user access</td>
+          <td>Can start cases, complete tasks, use the task inbox and notifications, and participate in supported variant change propagation. SAP states that this sub-license cannot be purchased stand-alone.</td>
         </tr>
         <tr>
           <td>Process Intelligence</td>
-          <td>Workspace-level license/package</td>
-          <td>The license is assigned to the workspace, not to each user. Feature access is then granted through user-group feature sets and data permissions.</td>
+          <td>Separate workspace/package entitlement</td>
+          <td>License on workspace; user access through feature sets and data permissions</td>
+          <td>Unlike most Signavio products, the Process Intelligence license is not assigned individually to each user.</td>
         </tr>
         <tr>
           <td>Process Insights</td>
-          <td>Contract + SAP BTP subscription/role collections</td>
-          <td>Requires a contract that grants access, then BTP subscription and role collections. Current SAP documentation states that Process Insights capabilities are available in Process Intelligence.</td>
+          <td>Separate package/BTP entitlement</td>
+          <td>Contract + BTP subscription + role collections</td>
+          <td>Current SAP documentation says Process Insights capabilities are available in Process Intelligence. Standardized integration and out-of-the-box analysis use the Process Insights and Intelligence package.</td>
         </tr>
         <tr>
           <td>Process Transformation Manager</td>
-          <td>Separate licensed product/capabilities</td>
-          <td>Access to benchmarking, initiatives, insights, objectives, tasks, and related functions depends on license and access rights.</td>
+          <td>Separate product/capability license</td>
+          <td>User access plus object roles</td>
+          <td>Benchmarking, initiatives, insights, objectives, tasks, and related functions depend on license and access rights.</td>
         </tr>
         <tr>
           <td>Process Explorer / Value Accelerator Library</td>
           <td>Package/entitlement dependent</td>
-          <td>Use as content acceleration. Value accelerators are optional and SAP states they are not part of the core business functionality of the products.</td>
+          <td>Depends on workspace products and authorization</td>
+          <td>Use as acceleration content. SAP states that value accelerators are optional and are not part of core product business functionality.</td>
         </tr>
         <tr>
           <td>API technical user</td>
-          <td>API Edition / technical access</td>
-          <td>Use a dedicated technical user for integrations. SAP documentation for APIs describes API Edition licensing and support-driven assignment; do not consume a paid business-user license for technical access when the API license is available.</td>
+          <td>Technical license</td>
+          <td>Dedicated technical account</td>
+          <td>Use API Edition when available instead of consuming a paid business-user license. SAP API documentation describes support-driven API Edition assignment and no additional license cost for this technical use.</td>
         </tr>
         <tr>
           <td>Business Process Model Connector</td>
-          <td>BTP entitlement and subscription</td>
-          <td>Requires the relevant connector entitlement, supported BTP setup, roles, and system prerequisites. Commercial entitlement must be verified in the customer contract.</td>
+          <td>BTP application entitlement</td>
+          <td>BTP subscription + connector roles</td>
+          <td>Requires connector entitlement, supported BTP setup, Cloud Connector where applicable, system prerequisites, and assigned roles. Verify commercial entitlement in the contract.</td>
         </tr>
         <tr>
           <td>AI capabilities</td>
           <td>Feature-specific</td>
-          <td>Do not assume that all AI functions are included with a base product. AI Units and commercial requirements vary by capability and can change.</td>
+          <td>Base product + possible AI entitlement/AI Units</td>
+          <td>Do not infer AI access from the base product. SAP commercial requirements vary by AI feature and can change.</td>
         </tr>
       </tbody>
     </table>
@@ -608,6 +627,16 @@ sitemap: false
     </table>
 
     <p>Due date and reminder are separate. A deadline controls expected completion; reminders notify assignees or candidates. The learning material states a maximum of 25 reminders for one task.</p>
+
+    <h3>Workflow design best practices</h3>
+
+    <ul>
+      <li>Name a workflow with a short active verb phrase that describes the goal of one case.</li>
+      <li>Use labels for categorization instead of encoding categories into long workflow names.</li>
+      <li>Use a readable case-name template so users can identify a running case quickly.</li>
+      <li>Restrict experimental workflows so unfinished test content does not fill the common workflow list.</li>
+      <li>Prefer group-based access control over long-term individual permissions.</li>
+    </ul>
 
     <h3>Workflow versioning</h3>
 
