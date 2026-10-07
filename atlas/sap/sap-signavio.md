@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Signavio"
-description: "SAP Signavio Process Manager explained as a working system: Explorer, Editor, QuickModel, Dictionary, navigation maps, value chains, governance, publishing, simulation, reporting, and the boundary to Process Intelligence."
+description: "SAP Signavio Process Manager explained as a working system: Explorer, Editor, QuickModel, Dictionary, navigation maps, value chains, simulation, reporting, collaboration, variant management, governance, and the boundary to Process Intelligence."
 permalink: /atlas/sap/sap-signavio/
 atlas_section: sap
 domain: SAP operations
@@ -22,6 +22,9 @@ tags:
   - bpm
   - bpmn
   - dictionary
+  - simulation
+  - reporting
+  - process-variants
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
@@ -102,9 +105,19 @@ sitemap: false
           <td>How do process viewers find, read, and discuss the published process?</td>
         </tr>
         <tr>
-          <td>Simulation and reporting</td>
-          <td>Analyze modeled processes</td>
-          <td>What does the model imply and what information can we aggregate?</td>
+          <td>Simulation</td>
+          <td>Run what-if scenarios on the designed BPMN process</td>
+          <td>What happens to cost, cycle time, capacity, or bottlenecks if assumptions change?</td>
+        </tr>
+        <tr>
+          <td>Reporting</td>
+          <td>Aggregate model, attribute, responsibility, system, document, risk, and governance data</td>
+          <td>What can we learn across one or many process models?</td>
+        </tr>
+        <tr>
+          <td>Variant Management</td>
+          <td>Control template-to-variant relationships</td>
+          <td>How do we keep a standard core while allowing justified local differences?</td>
         </tr>
       </tbody>
     </table>
@@ -295,6 +308,273 @@ sitemap: false
 
     <p>This hierarchy separates navigation, architecture, detailed process logic, and reusable enterprise objects. It also makes ownership clearer: changing the entry page is not the same as changing the process, and changing one process is not the same as changing a shared Dictionary object.</p>
 
+    <h2>Simulation: test a designed process before changing reality</h2>
+
+    <p>Process simulation runs BPMN 2.0 models with process assumptions such as execution cost, task duration, case frequency, gateway probabilities, resource schedules, and wages. Its purpose is to estimate behavior before making an operational change: where costs rise, where queues form, whether capacity is sufficient, and how a To-Be design compares with the current model.</p>
+
+    <p>The simulation feature can visualize a process step by step, run a single case, or run multiple cases. It can also support comparison of the current model with a To-Be version. This makes simulation useful for questions such as capacity growth, resource absence, cost reduction, and cycle-time improvement.</p>
+
+    <h3>The four Scenario parameter groups</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>What you define</th>
+          <th>Typical decision</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Costs</td>
+          <td>Execution cost for each activity</td>
+          <td>If shipping or another task becomes cheaper, how much does the process cost change?</td>
+        </tr>
+        <tr>
+          <td>Duration</td>
+          <td>Task execution time and optional duration distributions</td>
+          <td>If one step becomes faster, what happens to total cycle time?</td>
+        </tr>
+        <tr>
+          <td>Frequency</td>
+          <td>Case arrival frequency and gateway path probabilities</td>
+          <td>Can the process handle a higher volume?</td>
+        </tr>
+        <tr>
+          <td>Resources</td>
+          <td>Lane schedules, capacity, and hourly wages</td>
+          <td>Can available people handle the workload, including reduced availability?</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Costs: activity expense is not labor cost</h3>
+    <p>The Costs tab holds task-specific execution costs such as material, electricity, shipping, or other direct activity expenses. Labor cost should not be entered here because labor is modeled through Resources. Keeping these cost types separate prevents double counting. The workspace administrator configures the currency used by the process models.</p>
+
+    <h3>Duration: execution time is not total cycle time</h3>
+    <p>Task execution times contribute to process cycle time, but simply adding task durations normally gives only a minimum. Real cycle time can also include waiting and idle time. For variable tasks, the model can define different durations for different proportions of cases and use distributions instead of one fixed value.</p>
+
+    <p>This distinction is important in diagnosis: making a task itself faster does not necessarily remove waiting caused by scarce resources or queues.</p>
+
+    <h3>Frequency: volume and routing drive demand</h3>
+    <p>For a multiple-case simulation, the model defines how often new cases start within a time frame. The learning example uses a default frequency of four new cases per day, or twenty per week, and allows different frequencies for particular days or hours.</p>
+
+    <p>If the BPMN model contains gateways, the Frequency tab also defines the probability of each path. When a process reaches that decision point, the probabilities determine the simulated route independently for each case. Therefore, both demand volume and path mix can change resource consumption and bottlenecks.</p>
+
+    <h3>Resources: availability creates queues</h3>
+    <p>The Resources tab defines working schedules and hourly wages for the lanes in the diagram. Resource availability strongly influences process cost, total cycle time, and bottlenecks. A new case may be ready for an activity while the responsible people are still processing previous cases; the waiting queue then becomes part of the simulated process behavior.</p>
+
+    <h3>Read simulation results correctly</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Result</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Costs</td>
+          <td>Fixed activity costs plus resource costs. If activity durations vary, resource-related cost can vary with execution time.</td>
+        </tr>
+        <tr>
+          <td>Total cycle time</td>
+          <td>Execution time plus waiting time.</td>
+        </tr>
+        <tr>
+          <td>Resource consumption</td>
+          <td>Total working hours required from process participants.</td>
+        </tr>
+        <tr>
+          <td>Bottlenecks</td>
+          <td>Lanes where capacity constraints create waiting; waiting times are shown against activities in the simulation result.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>If total cycle time extends beyond the simulation time span, the learning material gives two main explanations: resources cannot process incoming cases fast enough and instances accumulate, or new cases entered near the end of the simulated period and have not yet finished.</p>
+
+    <p><strong>Lead boundary:</strong> simulation is a what-if calculation based on model assumptions. It is not evidence that the real process behaved that way. Observed execution belongs to process-data analysis.</p>
+
+    <h2>Collaboration: syntax can be checked, semantics need people</h2>
+
+    <p>Process collaboration matters because the Editor can validate notation but cannot prove that the modeled process is semantically correct. A BPMN model may be syntactically valid and still describe the business incorrectly. Process participants, stakeholders, and subject matter experts therefore need a way to challenge the model while knowledge is still fresh.</p>
+
+    <p>Feedback can be requested during modeling. Comments appear in the Editor's Comments panel, where modelers can reply and mark suggestions as <strong>Resolved</strong> or <strong>Rejected</strong>. Comments can also be filtered by individual model elements, which helps connect feedback to the exact activity, event, or other object under discussion.</p>
+
+    <p>External participants can also be invited to provide feedback. After registration, their access is limited to the specific process to which they were invited. This is useful when a process needs review from a participant outside the normal workspace audience without granting broad workspace access.</p>
+
+    <p>Publishing comes after modeling and feedback have been incorporated. The Process Collaboration Hub then becomes the consumption layer for organizational users. A practical governance flow is therefore <strong>model → review → resolve feedback → publish → consume</strong>.</p>
+
+    <h2>Variant Management: standard core, controlled local difference</h2>
+
+    <p>A process variant is a version of a business process that captures justified differences in execution or documentation while keeping a relationship to a common process framework. Variants are useful when one global process needs different regional, organizational, product, brand, customer, or transformation-specific behavior.</p>
+
+    <p>Variant management is therefore not uncontrolled copying. Its purpose is to maintain transparency between a common template and the processes that differ from it.</p>
+
+    <h3>Common reasons for variants</h3>
+    <ul>
+      <li><strong>Regional differences</strong> — local regulations or operating rules.</li>
+      <li><strong>Product and brand harmonization</strong> — one framework with site- or portfolio-specific differences.</li>
+      <li><strong>Organizational levels</strong> — local units adapt a common template.</li>
+      <li><strong>Transformation journey</strong> — existing and target process variants coexist during change.</li>
+      <li><strong>Customer types</strong> — different process behavior for different customer segments.</li>
+    </ul>
+
+    <p>The learning material describes Variant Management capabilities to detect variants through integration with process data, control the relationship between template and variant, track and propagate template changes, and help users consume the correct variant for their context or role.</p>
+
+    <h3>Template, dimensions, values, and Variant Group</h3>
+
+    <p>The <strong>process template</strong> is the main model to which variants are attached. The differentiating characteristics are defined as <strong>dimensions</strong>. These dimensions are represented by Dictionary categories, which must first be configured for that purpose in Process Manager. Specific Dictionary entries then become the dimension values.</p>
+
+    <p>Creating a template automatically creates a <strong>Variant Group</strong> containing the template and its attached variants. Variant Groups organize the relationship and are also used when managing dimensions. Reverting the template removes the Variant Group relationship without deleting the process models themselves.</p>
+
+    <h3>Attach, clone, or detach?</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Meaning</th>
+          <th>Use when</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Attach</td>
+          <td>Make an existing process a variant of a template.</td>
+          <td>The local model already exists and should enter the governed variant structure.</td>
+        </tr>
+        <tr>
+          <td>Clone</td>
+          <td>Copy the template and use the copy as a new variant.</td>
+          <td>A new variant should begin from the same core structure.</td>
+        </tr>
+        <tr>
+          <td>Detach</td>
+          <td>Break the link between the variant and its template.</td>
+          <td>The local process needs extensive independent change and should no longer receive template governance.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Cloning speeds up local adaptation without changing the original template. Detaching is a stronger decision: the process becomes independent, so future template relationships no longer protect alignment.</p>
+
+    <h3>Change propagation keeps variants aligned</h3>
+
+    <p>When a template changes, a variant can show unresolved updates in Process Collaboration Hub. Those updates are reviewed in the Editor, where the modeler can apply or ignore them. Simple changes that do not alter diagram structure, such as some renaming changes, can be propagated automatically. More complex structural changes require manual modeling.</p>
+
+    <p>The update notification is visible only when the template has been published in its newest revision. Users who need immediate awareness can subscribe to change-propagation notifications.</p>
+
+    <p><strong>Lead decision:</strong> use a variant when the difference is legitimate but the process still belongs to a common standard. Detach only when independent evolution is more important than template alignment.</p>
+
+    <h2>Reporting: turn model metadata into governance evidence</h2>
+
+    <p>Process models contain visible diagram content and less visible information stored in attributes. Reporting aggregates that information across many processes or focuses on selected aspects of one model. The output can support decisions, audits, governance, ownership analysis, system analysis, and process improvement. Reports are available from the Explorer and can also be generated in Process Collaboration Hub. fileciteturn33file0L5-L20</p>
+
+    <h3>Analysis reports</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Report</th>
+          <th>Main input</th>
+          <th>What it helps answer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Process Cost Analysis</td>
+          <td>Execution cost, cost center, yearly start-event frequency, gateway probabilities</td>
+          <td>Which activities drive cost, where is waste, and where could budget be reduced or redirected?</td>
+        </tr>
+        <tr>
+          <td>Resource Consumption Analysis</td>
+          <td>Task time, participant workload, allowances, work times</td>
+          <td>Which departments or roles consume capacity and where do resource constraints create bottlenecks?</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Process Cost Analysis calculates task execution cost and uses the start event's yearly frequency. Gateway probabilities influence the input factor for downstream tasks, so expected path mix changes the calculated cost. Resource Consumption Analysis instead focuses on participant workload and organizes consumed time by department. fileciteturn33file0L22-L41</p>
+
+    <h3>Four matrices for responsibility and usage</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Matrix</th>
+          <th>What it shows</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Responsibility Assignment Matrix</td>
+          <td>RACI-style mapping of tasks and deliverables to responsible, accountable, consulted, and informed roles.</td>
+        </tr>
+        <tr>
+          <td>Responsibility Handovers Matrix</td>
+          <td>Handoffs between participants based on sequence flows and message flows.</td>
+        </tr>
+        <tr>
+          <td>IT System Usage Matrix</td>
+          <td>Where process activities read from or write to IT systems; the analysis can also be grouped by role.</td>
+        </tr>
+        <tr>
+          <td>Document Usage Matrix</td>
+          <td>Which documents are assigned to tasks as inputs or outputs.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>These matrices connect process design to operating ownership. They can reveal unclear accountability, excessive handoffs, concentration on critical systems, training needs, document dependencies, and outdated documents. fileciteturn33file0L43-L84</p>
+
+    <h3>Process management and maintenance reports</h3>
+
+    <p><strong>Modeling Conventions</strong> checks selected diagrams against BPMN conventions and workspace-specific modeling rules. Filters can narrow the report by diagram information, publishing state, or custom attributes. The resulting spreadsheet exposes errors, warnings, and hints, with a legend of the conventions that were checked. A high number of violations can point not only to model quality problems but also to a modeler training need. fileciteturn33file0L86-L104</p>
+
+    <p><strong>Process Model Metrics</strong> reports statistics about diagram elements, linked files, and linked Dictionary entries. It also exposes Process Manager and Collaboration Hub links and can help find highly complex or unpublished diagrams, retrieve a process ID, and review authorship or modification information. fileciteturn33file0L106-L117</p>
+
+    <p><strong>Process Characteristics</strong> lists BPMN elements and attributes that contain values. It can help identify redundant attributes, compare modeling patterns across processes, and provide an overview of information such as process ownership or certification requirements. Empty attributes across the selected processes are not shown. fileciteturn33file0L119-L129</p>
+
+    <p><strong>Risks and Controls</strong> aggregates risk and control information defined in the Dictionary and used in selected process diagrams. It can include descriptions, aims, relevant documents, and control frequency, supporting risk evaluation, audits, compliance evidence, control-gap analysis, and IT-risk review. fileciteturn33file0L131-L142</p>
+
+    <h3>Process Documentation: tailored output, not only standard reports</h3>
+
+    <p>Process Documentation creates a more configurable document that can include diagram graphics, element descriptions, attributes, and Dictionary entries. It can be generated as PDF or Microsoft Word and can use custom templates. Typical uses include BPMN task overviews, Dictionary matrices, process summaries, quality-management documentation, work instructions, and material for participants who do not have Collaboration Hub access. fileciteturn33file0L144-L155</p>
+
+    <p>Documentation templates can be simple or advanced, including multilingual output. Their design follows an Editor-like approach with objects on a canvas and configuration through an attributes panel. Creating the templates requires the relevant administrator-granted access rights. fileciteturn33file0L155-L161</p>
+
+    <h3>Simulation vs reporting vs Process Intelligence</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Primary evidence</th>
+          <th>Main question</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Simulation</td>
+          <td>Assumptions attached to the designed model</td>
+          <td>What could happen if volume, time, cost, routing, or capacity changes?</td>
+        </tr>
+        <tr>
+          <td>Reporting</td>
+          <td>Model elements, attributes, Dictionary links, roles, systems, documents, risks</td>
+          <td>What does our modeled process landscape contain and where are governance or design signals?</td>
+        </tr>
+        <tr>
+          <td>Process Intelligence</td>
+          <td>Observed process event data</td>
+          <td>What actually happened in process execution?</td>
+        </tr>
+      </tbody>
+    </table>
+
     <h2>Designed process vs observed process</h2>
 
     <p>Process Manager mainly helps describe and govern how work is intended to run. Process Intelligence answers a different question: <strong>what actually happened in execution data?</strong></p>
@@ -355,6 +635,18 @@ sitemap: false
         <tr>
           <td>Navigation Map or Value Chain?</td>
           <td>Use Navigation Maps for user-friendly entry and storytelling; use Value Chains for high-level process architecture.</td>
+        </tr>
+        <tr>
+          <td>Simulation or reporting?</td>
+          <td>Use simulation for what-if behavior under assumptions; use reporting to aggregate model and attribute information.</td>
+        </tr>
+        <tr>
+          <td>Template or detached process?</td>
+          <td>Keep a variant attached while standard alignment matters; detach when the process must evolve independently.</td>
+        </tr>
+        <tr>
+          <td>Syntax check or stakeholder review?</td>
+          <td>Syntax proves notation correctness; stakeholder feedback is needed to challenge semantic correctness.</td>
         </tr>
         <tr>
           <td>Process Manager or Process Intelligence?</td>
