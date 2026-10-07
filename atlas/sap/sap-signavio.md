@@ -1003,7 +1003,9 @@ sitemap: false
 
     <p>Process Collaboration Hub also exposes governance-related functions such as <strong>diagram approvals</strong>, <strong>read confirmations</strong>, and <strong>process rating</strong>.</p>
 
-    <p>The Process Governance landing page is organized around four main menu tabs: <strong>Tasks</strong>, <strong>Cases</strong>, <strong>Processes</strong>, and <strong>Analytics</strong>. The important mental model is straightforward: workflow definitions live under Processes, execution creates cases, human work appears as tasks, and Analytics supports workflow analysis.</p>
+    <p>The Process Governance landing page is organized around four main menu tabs: <strong>Tasks</strong>, <strong>Cases</strong>, <strong>Processes</strong>, and <strong>Analytics</strong>. The provided lesson introduces these four areas here and continues their detailed navigation separately.</p>
+
+    <p>The learning material also notes that Process Governance does not provide a trial version and requires a Process Governance login. When the SAP Signavio sign-in flow asks again after entering from Collaboration Hub, the lesson instructs users to choose <strong>Log in with Process Manager Account</strong> rather than re-entering credentials.</p>
 
     <h2>Creating workflows: reuse before starting from zero</h2>
 
@@ -1073,7 +1075,7 @@ sitemap: false
 
     <p>A User Task represents work performed by one person. Its configuration can define an assignee or candidate users, a process role, a task form, reminders, and access rights. Assigning by process role helps Process Governance keep related tasks with the same person where that role is reused.</p>
 
-    <p>Due dates and reminders are separate concepts. A due date defines the task deadline. A reminder can notify assignees before or independently of that deadline, and continued reminders can repeat. The learning material states a maximum of 25 reminders for one task. fileciteturn54file0L82-L95</p>
+    <p>Due dates and reminders are separate concepts. A due date defines the task deadline. A reminder can notify assignees before or independently of that deadline, and continued reminders can repeat. The learning material states a maximum of 25 reminders for one task.</p>
 
     <h3>Multi-User Task</h3>
 
@@ -1098,23 +1100,23 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>This makes Multi-User Task suitable for scenarios such as several reviewers who must each evaluate the same proposal. fileciteturn54file0L101-L119</p>
+    <p>This makes Multi-User Task suitable for scenarios such as several reviewers who must each evaluate the same proposal.</p>
 
     <h3>Send E-mail</h3>
 
-    <p>The Send E-mail action sends workflow-controlled messages to users, addresses, or values held in variables. Workflow fields can be reused in the subject and body, attachments can come from workflow file fields or generated documents, and the body supports Markdown formatting. The case history records successful e-mail events. fileciteturn54file0L121-L131</p>
+    <p>The Send E-mail action sends workflow-controlled messages to users, addresses, or values held in variables. Workflow fields can be reused in the subject and body, attachments can come from workflow file fields or generated documents, and the body supports Markdown formatting. The case history records successful e-mail events. The lesson also describes a size fallback: if the message is too large, Process Governance attempts to send it without attachments and records that outcome in the case history when successful.</p>
 
     <h2>Process details and access control</h2>
 
     <p>The process Details area contains process-level information and configuration, including general information, process owner and description, access control, field overview, and core case information.</p>
 
-    <p>Access control can restrict who can access a process, edit cases, or work with individual tasks. Processes and tasks are described in the learning material as organization-visible by default; making a process private allows permissions to be granted to specific users or groups. Individual User Tasks can also have more specific access restrictions. fileciteturn54file0L139-L163</p>
+    <p>Access control can restrict who can access a process, edit cases, or work with individual tasks. Processes and tasks are described in the learning material as organization-visible by default; making a process private allows permissions to be granted to specific users or groups. Individual User Tasks can also have more specific access restrictions.</p>
 
     <p><strong>Lead boundary:</strong> process access and task access are related but not identical. A user may need visibility of the overall case without receiving permission to assign, view, or complete every protected task.</p>
 
     <h2>Versions: editing state and execution state are separate</h2>
 
-    <p>The workflow editor saves model changes while you work, but a new case can start only from a <strong>published process version</strong>. This creates an important governance boundary between the editable workflow definition and the version currently used for execution. fileciteturn54file0L164-L176</p>
+    <p>The workflow editor saves model changes while you work, but a new case can start only from a <strong>published process version</strong>. This creates an important governance boundary between the editable workflow definition and the version currently used for execution.</p>
 
     <h3>Publish, Re-Publish, and Restore solve different problems</h3>
 
@@ -1145,7 +1147,7 @@ sitemap: false
       </tbody>
     </table>
 
-    <p>Version comments can document what changed between releases and make workflow evolution more transparent. The distinction between Re-Publish and Restore is particularly useful in assessment questions because one changes the version used for future cases, while the other changes the editable draft. fileciteturn54file0L178-L198</p>
+    <p>Version comments can document what changed between releases and make workflow evolution more transparent. The distinction between Re-Publish and Restore is particularly useful in assessment questions because one changes the version used for future cases, while the other changes the editable draft.</p>
 
     <h2>Process Manager vs Process Governance vs Process Intelligence</h2>
 
