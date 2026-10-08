@@ -89,6 +89,17 @@ sitemap: false
 <li><a href="#build-events-agents">Events, MCP and agents</a></li>
 <li><a href="#build-operations">Delivery, monitoring and recovery</a></li>
 </ol></section>
+<section class="signavio-reader__toc-group" aria-labelledby="btp-route-context-data"><h3 id="btp-route-context-data">Contextualize &amp; Reason / Data</h3><ol>
+<li><a href="#context-why">Why business context matters</a></li>
+<li><a href="#context-language">Data architecture terminology</a></li>
+<li><a href="#context-data-products">Data product contract</a></li>
+<li><a href="#context-products">Which data service owns what?</a></li>
+</ol></section>
+<section class="signavio-reader__toc-group" aria-labelledby="btp-route-context-ai"><h3 id="btp-route-context-ai">Contextualize &amp; Reason / AI</h3><ol>
+<li><a href="#context-bdc">Business Data Cloud architecture</a></li>
+<li><a href="#context-knowledge-models">Knowledge Graph vs SAP-RPT</a></li>
+<li><a href="#context-case">Supplier disruption case</a></li>
+</ol></section>
 <section class="signavio-reader__toc-group" aria-labelledby="btp-route-3"><h3 id="btp-route-3">Explain and practice</h3><ol><li><a href="#client-explanation">Explain to business</a></li>
 <li><a href="#interview">Assessment questions and answers</a></li>
 <li><a href="#next">Learning path and future chapters</a></li>
@@ -490,7 +501,125 @@ sitemap: false
 <p>Sources: <a href="https://help.sap.com/docs/cloud-logging">SAP Cloud Logging</a>, <a href="https://help.sap.com/docs/cloud-transport-management">Cloud Transport Management</a>, <a href="https://help.sap.com/docs/cloud-integration-automation/user-guide/overview">CIAS</a> and <a href="https://help.sap.com/docs/SAP_Solution_Manager">Solution Manager transition information</a>.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">24 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="context-why" aria-labelledby="context-why-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">24 / Business context</p><h2 id="context-why-title">Why AI needs business context before it can reason</h2></header><div class="signavio-reader__content">
+<p>An AI agent can call the correct API and still make the wrong business decision. A lower price is not necessarily a better purchase. A supplier in a spreadsheet is not necessarily an approved supplier. An ERP lead time may not reflect a disruption that happened yesterday.</p>
+<p>The Contextualize &amp; Reason pillar addresses the evidence and interpretation behind decisions. It connects business data with meaning, relationships and suitable models. <strong>Build</strong> enables an application or agent to work; <strong>Contextualize</strong> provides grounded facts and business meaning; <strong>Reason</strong> helps evaluate options; <strong>Govern</strong> controls permitted actions.</p>
+<div class="table-scroll study-table" tabindex="0" role="region" aria-label="Why disconnected AI fails in business processes"><table class="study-table__table"><thead><tr><th scope="col">Scenario</th><th scope="col">Missing context</th><th scope="col">Safer decision</th></tr></thead><tbody>
+<tr><td>An agent discounts a popular material.</td><td>Margin of related products and commercial rules.</td><td>Compare the full product portfolio and margin impact before proposing a discount.</td></tr>
+<tr><td>An agent selects a low-price supplier from a spreadsheet.</td><td>Supplier approval status, master-data source and contract validity.</td><td>Treat the spreadsheet as a supplier lead, not as authorization to place a purchase order.</td></tr>
+<tr><td>An agent schedules material using an old lead time.</td><td>Current disruptions, route constraints and data timestamp.</td><td>Recalculate delivery risk and request confirmation before changing purchasing commitments.</td></tr>
+</tbody></table></div>
+<p><strong>Three checks before an agent acts:</strong> Is the fact authoritative? Is it still current? Does this role have permission to use it for this action? A data platform can expose answers to these questions, but an application still must enforce its business rules.</p>
+<p><strong>Remember:</strong> Context is not only more data. It is the meaning, authority, relationships, and validity of data.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="context-language" aria-labelledby="context-language-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">25 / Data concepts</p><h2 id="context-language-title">Data warehouse, lake, fabric, mesh and product: six different ideas</h2></header><div class="signavio-reader__content">
+<p>These terms are related, but they refer to different kinds of things. A repository stores data, a fabric connects and governs it, a mesh changes who owns it, and a data product packages it for a consumer.</p>
+<div class="table-scroll study-table" tabindex="0" role="region" aria-label="Business data architecture vocabulary"><table class="study-table__table"><thead><tr><th scope="col">Concept</th><th scope="col">What it means</th><th scope="col">When it is useful</th></tr></thead><tbody>
+<tr><td>Data warehouse</td><td>A structured store optimized for reporting and analysis.</td><td>Combine historical sales and purchasing facts for reliable KPIs.</td></tr>
+<tr><td>Data lake</td><td>A store for data in varied formats, often including files and raw records.</td><td>Keep large raw datasets for later engineering, analytics or ML.</td></tr>
+<tr><td>Data fabric</td><td>An architecture to connect, access, manage and govern data across sources.</td><td>Reduce fragmented access without requiring everything to move into one database.</td></tr>
+<tr><td>Business data fabric</td><td>A data fabric that preserves business definitions, semantics and context.</td><td>Make 'supplier', 'net amount' and 'open PO' mean the right thing across systems.</td></tr>
+<tr><td>Data mesh</td><td>A decentralized operating model with domain-owned data products and shared standards.</td><td>Give purchasing and sales teams ownership of reusable data without abandoning common governance.</td></tr>
+<tr><td>Data product</td><td>A reusable, documented dataset or data service with a defined consumer contract.</td><td>Offer a governed 'Purchase Orders' dataset instead of a one-off table extraction.</td></tr>
+</tbody></table></div>
+<h3>What the architect must not assume</h3>
+<p>A business data fabric is <strong>not automatically a new central database</strong>. It may use replication, virtualization, sharing or combinations of these. A data mesh does not require separate infrastructure for every department. A warehouse and a lake are not mutually exclusive. A data product is more than a renamed table.</p>
+<p><strong>Practical test:</strong> Before selecting technology, ask whether the team needs persistent historical storage, near-real-time access, standard business meaning, decentralized ownership, or a consumer-ready contract. Different answers produce different designs.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="context-data-products" aria-labelledby="context-data-products-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">26 / Reusable data</p><h2 id="context-data-products-title">A data product is a contract, not an export file</h2></header><div class="signavio-reader__content">
+<p>Suppose a procurement manager needs an overview of delayed purchase orders. Extracting three ERP tables may produce a report, but it does not explain what “delayed” means or whether canceled items and partial deliveries are included.</p>
+<p>A <strong>Purchase Order Status data product</strong> could expose the agreed business objects and measures, a documented definition of lateness, data refresh rules and access controls. The report, data scientist and AI agent then reuse the same meaning rather than each inventing a calculation.</p>
+<div class="table-scroll study-table" tabindex="0" role="region" aria-label="Data product checklist"><table class="study-table__table"><thead><tr><th scope="col">Contract element</th><th scope="col">Question</th><th scope="col">Example</th></tr></thead><tbody>
+<tr><td>Business meaning</td><td>Which event or condition does each measure represent?</td><td>Delayed means open schedule lines after their agreed delivery date.</td></tr>
+<tr><td>Owner and source</td><td>Who owns the definition and which application is authoritative?</td><td>Procurement process owner and purchasing transaction source.</td></tr>
+<tr><td>Grain and identity</td><td>What is one record?</td><td>A purchase-order schedule line, not just a purchase order header.</td></tr>
+<tr><td>Refresh and quality</td><td>How old can data be and which quality checks apply?</td><td>Source timestamp, rejected rows and completeness checks are visible.</td></tr>
+<tr><td>Security</td><td>Who can consume each field or record?</td><td>Purchasers see only authorized organizational data.</td></tr>
+<tr><td>Interface and lifecycle</td><td>How do consumers access it and what happens when it changes?</td><td>Published schema, supported access method, version and change notice.</td></tr>
+</tbody></table></div>
+<p>In SAP Business Data Cloud, SAP-managed data products are grouped into packages and can be activated for supported consumption paths. SAP also documents creation and sharing of custom data products in supported landscapes. <strong>Availability, source coverage and prerequisites must be checked</strong>; a product listed in a catalog is not proof that it is activated for the customer's tenant.</p>
+<p><strong>Lead question:</strong> If two reports show different delayed-PO counts, first compare their business definition, record grain, source time and authorization filters. Do not start by changing the dashboard layout.</p>
+<p>See <a href="https://help.sap.com/docs/SAP_BUSINESS_DATA_CLOUD/f7acf8c9dad54e99b5ce5ebc633ed8e1/fcf9975b49ea4adeb837e4be16116175.html">SAP Help: Working with Data Products</a> and <a href="https://help.sap.com/docs/SAP_DATASPHERE/e4059f908d16406492956e5dbcf142dc/b07e95d07a1e4569b87d9bb57b732bcf.html">Creating Custom Data Products</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="context-products" aria-labelledby="context-products-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">27 / Product roles</p><h2 id="context-products-title">Which SAP data product or service owns which job?</h2></header><div class="signavio-reader__content">
+<p>Do not choose SAP HANA Cloud, Datasphere, Analytics Cloud, Master Data Integration and Master Data Governance as if they were alternatives for the same requirement. Each has a different primary responsibility.</p>
+<div class="table-scroll study-table" tabindex="0" role="region" aria-label="SAP data and analytics product responsibilities"><table class="study-table__table"><thead><tr><th scope="col">Product</th><th scope="col">Main job</th><th scope="col">Boundary to remember</th></tr></thead><tbody>
+<tr><td><a href='/atlas/sap/sap-datasphere/'>SAP Datasphere</a></td><td>Connect, model and expose governed business data; support data warehousing and virtualization.</td><td>A semantic model does not approve or correct a business partner by itself.</td></tr>
+<tr><td><a href='/atlas/sap/sap-analytics-cloud/'>SAP Analytics Cloud</a></td><td>Business intelligence, stories, dashboards and planning.</td><td>A story is a consumption experience, not the authoritative purchasing transaction.</td></tr>
+<tr><td>SAP HANA Cloud</td><td>Managed database for transactional, analytical and multi-model workloads.</td><td>A database does not create business semantics or data governance automatically.</td></tr>
+<tr><td>SAP Master Data Integration (MDI)</td><td>Synchronize supported master data objects between applications using integration models.</td><td>It distributes master data; it is not the approval workflow that defines a valid supplier.</td></tr>
+<tr><td>SAP Master Data Governance (MDG)</td><td>Govern, validate, consolidate and maintain master data within supported scope.</td><td>Governance decides what is accepted; replication is a separate responsibility.</td></tr>
+<tr><td>SAP Databricks</td><td>Data engineering, large-scale processing and machine-learning work within supported BDC offerings.</td><td>A data science workspace does not replace ERP ownership of business documents.</td></tr>
+<tr><td>SAP BW and BW bridge</td><td>Preserve or modernize supported BW data warehousing assets.</td><td>Migration paths depend on BW version, edition, source extractors and target architecture.</td></tr>
+</tbody></table></div>
+<h3>One master-data example</h3>
+<p>An employee proposes a new supplier. An <strong>MDG governance process</strong>, where implemented for the scenario, checks the data and makes an approved record available. <strong>MDI</strong> can then help synchronize supported master data to participating applications. <strong>Datasphere</strong> models procurement measures, and <strong>Analytics Cloud</strong> displays them. Each component has a distinct owner and a distinct completion signal.</p>
+<p>MDI uses SAP One Domain Model integration models for supported objects. These are <strong>integration representations</strong>, not necessarily complete copies of each application's data model. The receiving application still owns its local use of the data.</p>
+<p>References: <a href="https://help.sap.com/docs/master-data-integration/sap-master-data-integration-prod/synchronization-of-master-data">SAP MDI synchronization</a>, <a href="https://help.sap.com/docs/SAP_DATASPHERE/c8a54ee704e94e15926551293243fd1d/5c1e3d4a49554fcd8fcf199d664d1109.html">Datasphere semantic modeling</a>, <a href="https://help.sap.com/docs/SAP_ANALYTICS_CLOUD/18850a0e13944f53aa8a8b7c094ea29e/0ebd87416257410d910bea925d27f4cb.html">Analytics Cloud stories</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="context-bdc" aria-labelledby="context-bdc-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">28 / Data platform</p><h2 id="context-bdc-title">SAP Business Data Cloud: connect sources to useful insights</h2></header><div class="signavio-reader__content">
+<p>SAP Business Data Cloud (BDC) brings together data products and capabilities for modeling, analytics, planning and AI. Think of it as an <strong>integrated offering and data architecture</strong>, not as a replacement name for every database, ERP or reporting system.</p>
+<div class="table-scroll study-table" tabindex="0" role="region" aria-label="A practical view of the SAP Business Data Cloud architecture"><table class="study-table__table"><thead><tr><th scope="col">Layer</th><th scope="col">What it contains</th><th scope="col">Why it matters</th></tr></thead><tbody>
+<tr><td>Source systems</td><td>SAP applications, selected non-SAP systems and existing data platforms.</td><td>This is where original business events and documents are created.</td></tr>
+<tr><td>Governed data products</td><td>Curated datasets with meaning, metadata, ownership and consumption contracts.</td><td>Consumers reuse defined business objects instead of reverse-engineering tables.</td></tr>
+<tr><td>Business data fabric</td><td>Semantic modeling, data integration, sharing and analytical capabilities including Datasphere, Analytics Cloud and supported partner tools.</td><td>Connect data with business context while managing security and movement.</td></tr>
+<tr><td>Intelligent content and applications</td><td>SAP-managed content using data products and analytical models, plus customer-developed consumption paths.</td><td>Deliver measurable analysis, planning and AI use cases.</td></tr>
+</tbody></table></div>
+<p><strong>Logical relationship:</strong> Source system → governed data product → business model → dashboard, prediction or agent context. This is a view of ownership and consumption, <em>not</em> a mandatory physical pipeline. Some paths replicate data, some access it remotely, and some support open sharing such as Delta Sharing.</p>
+<h3>Where BW and Databricks fit</h3>
+<p>Existing SAP BW investments can follow supported modernization approaches; SAP Datasphere, BW bridge and SAP Business Data Cloud are related options but not identical migration methods. SAP Databricks adds a data engineering and ML environment for appropriate use cases. The decision depends on source compatibility, data gravity, cost, service entitlement and whether business definitions can be preserved.</p>
+<h3>Intelligent content versus custom reporting</h3>
+<p>SAP-managed BDC intelligent content can combine delivered data products, Datasphere models and Analytics Cloud stories. Customer-specific reporting may still require configuration, source integration, new models or custom data products. Check the exact packaged content, required entitlements, tenant formation and supported source systems before promising a ready-to-run solution.</p>
+<p><strong>Design question:</strong> Which existing assets should we reuse, which new data products must we own, and how will we know when a source definition changes?</p>
+<p>Sources: <a href="https://www.sap.com/products/data-cloud/what-is-sap-business-data-cloud.html">SAP BDC architecture overview</a>, <a href="https://help.sap.com/docs/business-data-cloud/administering-sap-business-data-cloud/install-intelligent-applications">SAP-managed intelligent content</a>, <a href="https://architecture.learning.sap.com/docs/ai-native-north-star-architecture/foundation-layer">SAP Architecture Center: Foundation Layer</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="context-knowledge-models" aria-labelledby="context-knowledge-models-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">29 / Semantics and models</p><h2 id="context-knowledge-models-title">Knowledge Graph and SAP-RPT: relationships are not predictions</h2></header><div class="signavio-reader__content">
+<p><strong>Business data</strong> tells us which transactions exist. <strong>Semantic relationships</strong> explain how objects relate. <strong>AI models</strong> analyze the available context or estimate an outcome. These are three different jobs.</p>
+<h3>See a knowledge graph as business relationships</h3>
+<div class="table-scroll study-table" tabindex="0" role="region" aria-label="Example business relationship graph"><table class="study-table__table"><thead><tr><th scope="col">Entity A</th><th scope="col">Relationship</th><th scope="col">Entity B</th></tr></thead><tbody>
+<tr><td>Purchase Order</td><td>has supplier</td><td>Business Partner</td></tr>
+<tr><td>Purchase Order Item</td><td>requests</td><td>Material</td></tr>
+<tr><td>Material</td><td>is required for</td><td>Production Order</td></tr>
+<tr><td>Supplier</td><td>is covered by</td><td>Purchasing Contract</td></tr>
+<tr><td>Delivery Route</td><td>has current risk</td><td>Logistics Disruption</td></tr>
+</tbody></table></div>
+<p>Each row is a relationship, but together they form a <strong>graph</strong>: one supplier links to many orders, one material affects many production orders, and one disruption may affect several routes. The graph is not a list of steps to execute.</p>
+<p>SAP Knowledge Graph is positioned to support semantic grounding of SAP business context. SAP HANA Cloud also offers technical graph capabilities for customer-built solutions. Do not confuse a delivered semantic product with a database engine; the content, availability, access and maintenance model may differ.</p>
+<h3>What SAP-RPT does</h3>
+<p><strong>SAP-RPT</strong> is a relational pretrained transformer for prediction tasks on structured business data. SAP documents classification and regression without a separate task-specific training cycle, using in-context examples. In 2026, SAP also describes <strong>SAP-RPT-1.5</strong>. A typical question is “What is the likely delivery delay or risk category for this order?”, not “Write a marketing email”.</p>
+<div class="table-scroll study-table" tabindex="0" role="region" aria-label="Knowledge and model roles"><table class="study-table__table"><thead><tr><th scope="col">Capability</th><th scope="col">What question it helps answer</th><th scope="col">What it does not guarantee</th></tr></thead><tbody>
+<tr><td>Knowledge Graph</td><td>Which business objects and policies are related?</td><td>That all customer-specific relationships are available, correct or current.</td></tr>
+<tr><td>SAP-RPT family</td><td>What classification or numeric value is likely from structured examples?</td><td>That a prediction is a valid business decision or requires no evaluation.</td></tr>
+<tr><td>Generative language model</td><td>How should we summarize or interpret text and propose possible steps?</td><td>That the explanation is grounded, authorized or factually correct.</td></tr>
+<tr><td>Business rules and authorization</td><td>May this action be executed under policy?</td><td>That the prediction or recommendation is economically optimal.</td></tr>
+</tbody></table></div>
+<p>Neither a knowledge graph nor a data fabric <strong>eliminates hallucinations or removes the need for human review</strong>. Reliable decisions need valid relationships, permission checks, time-aware source data, model evaluation and clear execution limits.</p>
+<p>Sources: <a href="https://architecture.learning.sap.com/docs/ai-native-north-star-architecture/foundation-layer">SAP Knowledge Graph context</a>, <a href="https://help.sap.com/docs/sap-ai-core/generative-ai/sap-rpt-1">SAP-RPT-1 model guide</a>, <a href="https://www.sap.com/canada/products/artificial-intelligence/sap-rpt.html">SAP-RPT-1.5</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="context-case" aria-labelledby="context-case-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">30 / Architecture exercise</p><h2 id="context-case-title">Trace one supplier disruption from data to a controlled decision</h2></header><div class="signavio-reader__content">
+<p><strong>Illustrative scenario:</strong> A delayed component threatens a production order. An assistant must identify the impact, suggest a valid alternative and help a buyer act. This example is a design exercise, not a measured customer project or a promise of autonomous execution.</p>
+<div class="table-scroll study-table" tabindex="0" role="region" aria-label="Supplier disruption: evidence to action"><table class="study-table__table"><thead><tr><th scope="col">Step</th><th scope="col">Responsible information or capability</th><th scope="col">What must be proved</th></tr></thead><tbody>
+<tr><td>1. Detect</td><td>Logistics alert with source, route and timestamp.</td><td>The alert applies to this supplier or shipment, not just a similar location.</td></tr>
+<tr><td>2. Connect</td><td>Business relationships between supplier, material, PO and production requirement.</td><td>Identifiers match and the relationships are valid for the relevant dates.</td></tr>
+<tr><td>3. Compare</td><td>Purchasing contracts, approved supplier list, lead times, capacity and inventory.</td><td>Alternative suppliers are authorized and the total cost is acceptable.</td></tr>
+<tr><td>4. Recommend</td><td>Rules and, where useful, predictive or generative AI.</td><td>The recommendation includes assumptions, confidence and missing information.</td></tr>
+<tr><td>5. Approve</td><td>Purchasing decision owner and policy-based limits.</td><td>The required authority approves material commercial changes.</td></tr>
+<tr><td>6. Execute</td><td>Released ERP API or a supported standard transaction.</td><td>The intended purchase document changes exactly as authorized.</td></tr>
+<tr><td>7. Reconcile</td><td>ERP confirmation, integration monitoring and audit trail.</td><td>The business document and resulting production risk reflect the decision.</td></tr>
+</tbody></table></div>
+<h3>Architectural choices</h3>
+<p>If the need is only a dashboard, governed data products and analytics may be enough. If the need is a recommendation, include relevant relationships and an evaluated model only where they add value. If an agent can update purchasing documents, <strong>action authorization, audit, idempotency and rollback become mandatory design questions</strong>.</p>
+<p><strong>45-second interview answer:</strong> “I separate data access from business context and execution. First I identify authoritative sources and model the links between supplier, material, order and risk. Then I choose data products and SAP services based on the actual information needs. For predictions, I evaluate the model and show its assumptions. Finally, I keep ERP as the transaction owner and define approval, monitoring and reconciliation. Business context makes the answer useful; governance makes the action safe.”</p>
+<p><strong>Review challenge:</strong> The cheapest alternative supplier appears in a spreadsheet but has not passed quality approval. Should the agent create a purchase order? Explain which data or policy is missing and who owns the next step.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">31 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
 <h3>30-second explanation</h3>
 <p>“We start with what the business needs to improve. SAP Signavio helps us understand the process, while SAP LeanIX shows which applications support it. We use SAP reference architecture to connect that business need to a possible solution. BTP gives us options for extensions and integrations where standard applications have a gap. We then check security, costs, operating responsibility and measurable results.”</p>
 <h3>90-second explanation</h3>
@@ -499,7 +628,7 @@ sitemap: false
 <ul><li>Which business result must improve, and what is the current baseline?</li><li>Which system owns each official business document or master data object?</li><li>What happens when the integration, workflow or AI step fails?</li></ul>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">25 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">32 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
 <ol>
 <li><strong>What is the difference between an EA and an SA?</strong><p>EA defines enterprise-wide direction and governance. SA designs a specific solution within business, technical and delivery constraints. They exchange feedback.</p></li>
 <li><strong>Capability versus process?</strong><p>Capability is what the company must be able to do; process is the sequence of activities used to deliver an outcome. A capability may support several processes.</p></li>
@@ -522,12 +651,21 @@ sitemap: false
 <li><strong>What do MCP and A2A solve for agents?</strong><p>MCP exposes tools and data to agents through controlled interfaces. Agent-to-agent protocols enable delegation between agents. Neither removes the need for authorization and audit.</p></li>
 <li><strong>How do you prove integration completion?</strong><p>Trace the originating request through middleware and backend logs, confirm the intended document exists, and reconcile its business state.</p></li>
 <li><strong>How do CI/CD, transport management, Cloud ALM and CIAS differ?</strong><p>CI/CD builds and tests code, transport management promotes supported artifacts, Cloud ALM handles supported lifecycle and monitoring scenarios, and CIAS guides configuration of supported integrations.</p></li>
+<li><strong>What is the difference between context and reasoning?</strong><p>Context gives an agent authoritative facts, business meaning and relationships. Reasoning compares options or predicts an outcome. Business rules and approval still control actions.</p></li>
+<li><strong>Data warehouse, data fabric, and data mesh: what changes?</strong><p>A warehouse stores structured analytical data. A fabric connects and governs distributed data. A mesh distributes ownership of reusable data products across business domains.</p></li>
+<li><strong>What makes a data product reusable?</strong><p>Its contract defines business meaning, record grain, owner, quality, freshness, access and lifecycle. A raw table extract does not supply all of these.</p></li>
+<li><strong>How do Datasphere, Analytics Cloud and HANA Cloud differ?</strong><p>Datasphere connects and models business data; Analytics Cloud delivers reporting and planning; HANA Cloud provides managed data persistence and processing.</p></li>
+<li><strong>What is the difference between SAP MDG and MDI?</strong><p>MDG governs and validates supported master data. MDI synchronizes supported master data between connected applications. Their approval and distribution responsibilities differ.</p></li>
+<li><strong>What does SAP Business Data Cloud add?</strong><p>It connects governed data products with business modeling, analytics, planning and AI capabilities. It does not replace the systems of record or remove source dependencies.</p></li>
+<li><strong>When would you use a knowledge graph instead of a table?</strong><p>When the decision must traverse meaningful many-to-many relations among orders, suppliers, materials and risks. Tables can still store the underlying data.</p></li>
+<li><strong>SAP-RPT versus a generative LLM?</strong><p>SAP-RPT predicts classes or numeric values from structured business data. A generative LLM produces or interprets language. Both require evaluation and appropriate context.</p></li>
+<li><strong>Does Knowledge Graph guarantee no hallucinations?</strong><p>No. The graph can improve grounding if sources and relationships are accurate and accessible, but results still require checks, policy enforcement and suitable human review.</p></li>
 <li><strong>Does side-by-side automatically mean clean core?</strong><p>No. The solution still needs released interfaces, clear ownership, secure access, controlled coupling and an operational recovery path.</p></li>
 </ol>
 <p><strong>Practice variation:</strong> The customer already has a standard S/4HANA approval function. Would you still propose a custom BTP workflow? Explain the cost, support risk and evidence required before choosing the custom option.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">26 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">33 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
 <p>This guide is the architecture foundation. The next BTP lessons should deepen the areas that determine whether a platform solution can be deployed and operated.</p>
 <div class="table-scroll study-table" role="region" aria-label="BTP study sequence" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Topic</th><th scope="col">What you should be able to decide</th></tr></thead><tbody><tr><td>1. Platform administration</td><td>Design account, region, service and cost boundaries.</td></tr>
 <tr><td>2. Identity and connectivity</td><td>Explain trust, destinations, roles and private-network access.</td></tr>
@@ -536,11 +674,12 @@ sitemap: false
 <tr><td>5. Data and AI architecture</td><td>Choose data access, grounding, governance and evaluations for AI.</td></tr>
 <tr><td>6. Delivery and operations</td><td>Define lifecycle, monitoring, security, ownership and service evidence.</td></tr></tbody></table></div>
 <p><strong>Architecture resources now covered:</strong> Discovery Center, SAP BTP Guidance Framework, Architecture Center, SAP Business Accelerator Hub, solution diagrams, extension and integration methods, cost-estimation entry points and SAP Trust Center.</p>
-<p><strong>The Build pillar is now covered:</strong> clean core, development tools and managed Joule Studio, BTP runtimes, CAP and RAP, Fiori and mobile, integration strategy, Integration Suite, events and MCP, CI/CD, monitoring and operational recovery. Next lessons will expand the Contextualize &amp; Reason and Govern pillars.</p>
+<p><strong>Build is covered:</strong> clean core, SAP Build and Joule Studio, runtimes and programming models, integration and operational controls.</p>
+<p><strong>Contextualize &amp; Reason is covered:</strong> data foundations, governed data products, Datasphere and Analytics Cloud, SAP Business Data Cloud, Knowledge Graph, SAP-RPT and an end-to-end procurement case. The next study area is the Govern pillar: identity, policy enforcement, lifecycle controls and AI agent oversight.</p>
 <p>Use this page as the continuing reference. Add new material to the relevant chapter only when it improves an explanation, design choice or assessment answer.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">27 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">34 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
 <p>This is an independent study guide based on SAP public learning and help content, rewritten for comprehension. It is not an official certification guide or a statement of contractual product availability.</p>
 <ul>
 <li><a href="https://learning.sap.com/courses/sap-enterprise-architecture-framework-foundation-introduction/investigating-the-sap-enterprise-architecture-methodology">SAP Learning — EA methodology and architect roles</a></li>
@@ -574,6 +713,16 @@ sitemap: false
 <li><a href="https://help.sap.com/docs/cloud-logging">SAP Help — Cloud Logging</a></li>
 <li><a href="https://help.sap.com/docs/SAP_Solution_Manager">SAP Help — SAP Solution Manager transition</a></li>
 <li><a href="https://help.sap.com/docs/joule-work-mobile/administration-guide-sap-build-work-zone-setup/overview">SAP Help — Joule Work mobile (formerly SAP Mobile Start)</a></li>
+<li><a href="https://www.sap.com/products/data-cloud/what-is-sap-business-data-cloud.html">SAP: Business Data Cloud architecture</a></li>
+<li><a href="https://help.sap.com/docs/SAP_BUSINESS_DATA_CLOUD/f7acf8c9dad54e99b5ce5ebc633ed8e1/fcf9975b49ea4adeb837e4be16116175.html">SAP Help: Business Data Cloud data products</a></li>
+<li><a href="https://help.sap.com/docs/business-data-cloud/administering-sap-business-data-cloud/install-intelligent-applications">SAP Help: Managed intelligent content</a></li>
+<li><a href="https://help.sap.com/docs/SAP_DATASPHERE/e4059f908d16406492956e5dbcf142dc/b07e95d07a1e4569b87d9bb57b732bcf.html">SAP Help: Custom data products for BDC</a></li>
+<li><a href="https://help.sap.com/docs/SAP_DATASPHERE/c8a54ee704e94e15926551293243fd1d/5c1e3d4a49554fcd8fcf199d664d1109.html">SAP Help: Datasphere business semantic model</a></li>
+<li><a href="https://help.sap.com/docs/master-data-integration/sap-master-data-integration-prod/synchronization-of-master-data">SAP Help: MDI master data synchronization</a></li>
+<li><a href="https://architecture.learning.sap.com/docs/ai-native-north-star-architecture/foundation-layer">SAP Architecture Center: AI and data foundation</a></li>
+<li><a href="https://help.sap.com/docs/sap-ai-core/generative-ai/sap-rpt-1">SAP Help: SAP-RPT-1 model</a></li>
+<li><a href="https://www.sap.com/canada/products/artificial-intelligence/sap-rpt.html">SAP: SAP-RPT-1.5</a></li>
+<li><a href="https://help.sap.com/docs/SAP_ANALYTICS_CLOUD/18850a0e13944f53aa8a8b7c094ea29e/0ebd87416257410d910bea925d27f4cb.html">SAP Help: Analytics Cloud stories</a></li>
 </ul>
 <p><strong>Verification boundary:</strong> Always check the exact SAP edition, release, commercial plan, region, service availability and published interface before making a delivery commitment. SAP's product naming and reference catalog can change. This page remains in review until a separate human publication check.</p>
 </div></section>
