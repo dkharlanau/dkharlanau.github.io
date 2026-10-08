@@ -115,8 +115,8 @@ sitemap: false
       <ol>
         <li><a href="#interview">How to explain SAP Signavio in an interview</a></li>
         <li><a href="#current-state">Current-state notes for 2026</a></li>
-        <li><a href="#glossary">Glossary</a></li>
         <li><a href="#sources">Source register</a></li>
+        <li><a href="#glossary">Glossary</a></li>
       </ol>
     </section>
     </div>
@@ -1121,9 +1121,43 @@ sitemap: false
     </div>
   </section>
 
+  <section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">18 / Sources</p>
+      <h2 id="sources-title">Source register</h2>
+    </header>
+    <div class="signavio-reader__content">
+<ul>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite">SAP Signavio Process Transformation Suite — product documentation</a></li>
+      <li><a href="https://www.sap.com/about/trust-center/certification-compliance/sap-signavio-c5-2026.html">SAP Signavio C5 2026 — current product naming</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/navigating-sap-signavio-process-transformation-suite">Navigating SAP Signavio Process Transformation Suite</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-modeler/workspace-admin-guide/about-licenses">Process Modeler — License Assignment</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/user-management-authentication-and-authorization/harmonization-of-authentication-and-identity-management">SAP Signavio — Identity-management harmonization</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-modeler/security-guide/single-sign-on-using-saml">SAP Signavio — SAML license names</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-manager/sap-signavio-process-manager-api/user-access-and-licensing">Process Modeler API — Access and Licensing</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-journey-modeler/user-guide/intro">Journey Modeler — User Guide</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-governance/user-guide/intro">Process Governance — Fundamentals</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-governance/fsd-collaborator/sap-signavio-process-governance-collaborator">Process Governance Collaborator — Feature Scope Description</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/57542d3a6dab10148cfcc70dfc2ca89e.html">Process Intelligence — User Guide</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/ai-assisted-process-analyzer">Process Intelligence — AI-assisted Process Analyzer</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-manager/user-guide/ai-assisted-process-modeler">Process Modeler — AI-assisted Process Modeler</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Process Intelligence — Investigations transition</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-insights/administration-guide/source-systems-supported">Process Insights capabilities in Process Intelligence</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-manager">Process Transformation Manager — User Guide</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-manager/user-guide/value-accelerator-library-for-sap-signavio-solutions">Value Accelerator Library</a></li>
+      <li><a href="https://help.sap.com/docs/cloud-alm/getting-started-process-navigator/accessing-details-of-solution-process">SAP Signavio Process Navigator</a></li>
+      <li><a href="https://community.sap.com/t5/technology-blog-posts-by-sap/sap-signavio-process-explorer-sunsetting-on-june-30-2026/ba-p/14417041">SAP Signavio Process Explorer retirement</a></li>
+      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/business-process-model-connector-for-sap-signavio-solutions">Business Process Model Connector</a></li>
+      <li><a href="https://www.omg.org/spec/BPMN/2.0.2/PDF">OMG BPMN 2.0.2 specification</a></li>
+    </ul>
+
+    <p><strong>Verification boundary:</strong> this guide combines SAP Learning material used for assessment preparation with current public SAP documentation. Product names, commercial packages, AI consumption rules, regional availability, and feature scope can change. Verify the customer's current contract and SAP Feature Scope Description before making a commercial or implementation commitment.</p>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory signavio-reader__section" id="glossary" aria-labelledby="glossary-title">
     <header class="signavio-reader__section-head">
-      <p class="research-canvas__eyebrow">18 / Glossary</p>
+      <p class="research-canvas__eyebrow">19 / Glossary</p>
       <h2 id="glossary-title">Glossary</h2>
     </header>
     <div class="signavio-reader__content">
@@ -1181,40 +1215,6 @@ sitemap: false
       </tbody>
     </table>
 </div>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title">
-    <header class="signavio-reader__section-head">
-      <p class="research-canvas__eyebrow">19 / Sources</p>
-      <h2 id="sources-title">Source register</h2>
-    </header>
-    <div class="signavio-reader__content">
-<ul>
-      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite">SAP Signavio Process Transformation Suite — product documentation</a></li>
-      <li><a href="https://www.sap.com/about/trust-center/certification-compliance/sap-signavio-c5-2026.html">SAP Signavio C5 2026 — current product naming</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/navigating-sap-signavio-process-transformation-suite">Navigating SAP Signavio Process Transformation Suite</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-modeler/workspace-admin-guide/about-licenses">Process Modeler — License Assignment</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/user-management-authentication-and-authorization/harmonization-of-authentication-and-identity-management">SAP Signavio — Identity-management harmonization</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-modeler/security-guide/single-sign-on-using-saml">SAP Signavio — SAML license names</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-manager/sap-signavio-process-manager-api/user-access-and-licensing">Process Modeler API — Access and Licensing</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-journey-modeler/user-guide/intro">Journey Modeler — User Guide</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-governance/user-guide/intro">Process Governance — Fundamentals</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-governance/fsd-collaborator/sap-signavio-process-governance-collaborator">Process Governance Collaborator — Feature Scope Description</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/57542d3a6dab10148cfcc70dfc2ca89e.html">Process Intelligence — User Guide</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/ai-assisted-process-analyzer">Process Intelligence — AI-assisted Process Analyzer</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-manager/user-guide/ai-assisted-process-modeler">Process Modeler — AI-assisted Process Modeler</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/about-investigations">Process Intelligence — Investigations transition</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-insights/administration-guide/source-systems-supported">Process Insights capabilities in Process Intelligence</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-transformation-manager">Process Transformation Manager — User Guide</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-manager/user-guide/value-accelerator-library-for-sap-signavio-solutions">Value Accelerator Library</a></li>
-      <li><a href="https://help.sap.com/docs/cloud-alm/getting-started-process-navigator/accessing-details-of-solution-process">SAP Signavio Process Navigator</a></li>
-      <li><a href="https://community.sap.com/t5/technology-blog-posts-by-sap/sap-signavio-process-explorer-sunsetting-on-june-30-2026/ba-p/14417041">SAP Signavio Process Explorer retirement</a></li>
-      <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite/business-process-model-connector/business-process-model-connector-for-sap-signavio-solutions">Business Process Model Connector</a></li>
-      <li><a href="https://www.omg.org/spec/BPMN/2.0.2/PDF">OMG BPMN 2.0.2 specification</a></li>
-    </ul>
-
-    <p><strong>Verification boundary:</strong> this guide combines SAP Learning material used for assessment preparation with current public SAP documentation. Product names, commercial packages, AI consumption rules, regional availability, and feature scope can change. Verify the customer's current contract and SAP Feature Scope Description before making a commercial or implementation commitment.</p>
     </div>
   </section>
 
