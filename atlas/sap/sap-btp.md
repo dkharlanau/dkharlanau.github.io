@@ -72,6 +72,11 @@ sitemap: false
 <li><a href="#accounts">BTP account and runtime model</a></li>
 <li><a href="#design-choices">Choose an extension approach</a></li>
 <li><a href="#procurement-case">End-to-end procurement case</a></li></ol></section>
+<section class="signavio-reader__toc-group" aria-labelledby="btp-route-resources"><h3 id="btp-route-resources">Architecture toolkit</h3><ol>
+<li><a href="#btp-guidance">Where to find SAP architecture guidance</a></li>
+<li><a href="#btp-methods">Decision guides and methodologies</a></li>
+<li><a href="#btp-design-evidence">Diagram, cost and security evidence</a></li>
+</ol></section>
 <section class="signavio-reader__toc-group" aria-labelledby="btp-route-3"><h3 id="btp-route-3">Explain and practice</h3><ol><li><a href="#client-explanation">Explain to business</a></li>
 <li><a href="#interview">Assessment questions and answers</a></li>
 <li><a href="#next">Learning path and future chapters</a></li>
@@ -238,7 +243,81 @@ sitemap: false
 <p><strong>Lead decision:</strong> Would this extension create less complexity than standard SAP functionality, training or a process change? If not, reject the extension.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">13 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="btp-guidance" aria-labelledby="btp-guidance-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">13 / Find the right resource</p><h2 id="btp-guidance-title">Start with the architecture question, then open the right SAP resource</h2></header><div class="signavio-reader__content">
+
+<p>These resources have different jobs. A <strong>methodology</strong> gives you a repeatable way to decide. A <strong>reference architecture</strong> shows an established pattern. A <strong>catalog</strong> helps you find real services and interfaces. A <strong>solution diagram</strong> records your proposed design. Mixing them up leads to diagrams without clear decisions.</p>
+<div class="table-scroll study-table" role="region" aria-label="Where SAP architects should look first" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Resource</th><th scope="col">Architect's question</th><th scope="col">What you should take away</th></tr></thead><tbody>
+<tr><td><a href="https://discovery-center.cloud.sap/">SAP Discovery Center</a></td><td>Which BTP services or guided missions fit the use case?</td><td>Service catalog, missions, regional service details and estimation entry points.</td></tr>
+<tr><td><a href="https://help.sap.com/docs/sap_btp_guidance_framework/97dc5926388343be94efd10ae3db716c/what-is-sap-btp-guidance-framework">SAP BTP Guidance Framework</a></td><td>How do I choose an approach instead of guessing a product?</td><td>Decision guides, reference architectures, methodologies, recommendations and DevOps guidance. Access the current content through Discovery Center.</td></tr>
+<tr><td><a href="https://api.sap.com/">SAP Business Accelerator Hub</a></td><td>Is there a suitable published interface or reusable integration?</td><td>API and event specifications, integration packages and other product-specific artifacts.</td></tr>
+<tr><td><a href="https://architecture.learning.sap.com/docs/ref-arch">SAP Architecture Center</a></td><td>What architecture pattern can I start from?</td><td>Reference architectures, explanations of components, relationships and design considerations.</td></tr>
+<tr><td><a href="https://sap.github.io/btp-solution-diagrams/">SAP BTP Solution Diagram Guidelines</a></td><td>How should I communicate the selected solution?</td><td>Diagram notation, examples and editable source templates. A diagram must still reflect the real landscape.</td></tr>
+<tr><td><a href="https://www.sap.com/about/trust-center.html">SAP Trust Center</a></td><td>What SAP security, compliance or availability evidence exists?</td><td>SAP cloud controls, certifications, privacy information, agreements and service status. Check product scope.</td></tr>
+</tbody></table></div>
+<p><strong>2026 update:</strong> SAP Help states that updates to the SAP BTP Guidance Framework are now provided through <a href="https://discovery-center.cloud.sap/">SAP Discovery Center</a>. Use the older Help page for definitions, but follow the Discovery Center for the current material.</p>
+<h3>Five parts of the Guidance Framework</h3>
+<div class="table-scroll study-table" role="region" aria-label="Five kinds of BTP guidance" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Part</th><th scope="col">Plain-English meaning</th><th scope="col">Use it to</th></tr></thead><tbody>
+<tr><td>Decision guides</td><td>Compare viable technology options.</td><td>Choose an extension or integration approach.</td></tr>
+<tr><td>Reference architectures</td><td>See a reusable solution pattern.</td><td>Understand components and typical relationships.</td></tr>
+<tr><td>Methodologies</td><td>Follow an agreed decision process.</td><td>Make team choices consistent and explainable.</td></tr>
+<tr><td>Recommendations</td><td>Review domain-specific safeguards.</td><td>Check security, operations and other implementation choices.</td></tr>
+<tr><td>DevOps principles</td><td>Connect development with deployment and support.</td><td>Design testing, delivery, automation, monitoring and recovery.</td></tr>
+</tbody></table></div>
+<p><strong>First step for a Lead:</strong> Write the business need and the decision you must make. Do not start by searching for a BTP service name.</p>
+
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="btp-methods" aria-labelledby="btp-methods-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">14 / Choose a method</p><h2 id="btp-methods-title">Choose a methodology before choosing the product</h2></header><div class="signavio-reader__content">
+
+<p>Use the guide that matches your decision. Some guides describe technology choices; methodologies describe how your organization should reach and govern those choices.</p>
+<div class="table-scroll study-table" role="region" aria-label="SAP architecture guides and methods" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">When the question is...</th><th scope="col">Read</th><th scope="col">Expected result</th></tr></thead><tbody>
+<tr><td>Should an extension run on-stack or side-by-side?</td><td><a href='https://help.sap.com/docs/sap-btp-guidance-framework/extension-architecture-guide/what-is-extension-architecture-guide'>Extension Architecture Guide</a></td><td>A justified extension option that fits the ERP edition and clean-core boundaries.</td></tr>
+<tr><td>How do we assess an extension consistently?</td><td><a href='https://help.sap.com/docs/sap-btp-guidance-framework/sap-application-extension-methodology/cd2664b67373452ab78825897ff99a81.html'>SAP Application Extension Methodology</a></td><td>Use case → extension tasks → technical building blocks → target solution.</td></tr>
+<tr><td>Which integration style and platform are appropriate?</td><td><a href='https://help.sap.com/docs/sap-btp-guidance-framework/integration-architecture-guide/sap-integration-solution-advisory-methodology'>Integration Architecture Guide / ISA-M</a></td><td>Integration domains, patterns, technical mapping and governance decisions.</td></tr>
+<tr><td>How should an app be implemented and delivered?</td><td><a href='https://help.sap.com/docs/btp/btp-developers-guide/discover'>SAP BTP Developer's Guide</a></td><td>Development, infrastructure, integration and delivery design.</td></tr>
+<tr><td>How should a data and analytics solution be planned?</td><td><a href='https://help.sap.com/docs/sap-btp-guidance-framework/sap-data-methodology/sap-data-analytics-advisory-methodology-overview'>Data &amp; Analytics Advisory Methodology</a></td><td>Business outcomes, data capabilities, use-case patterns, architecture and governance.</td></tr>
+</tbody></table></div>
+<h3>Two approaches worth remembering</h3>
+<p><strong>Extension methodology:</strong> Assess the business use case, assess extension technologies, then define the target solution. For a request-approval scenario, separate the presentation need, workflow logic and ERP transaction before choosing SAP Build, CAP or other components. The standard ERP capability is still an option.</p>
+<p><strong>Integration Solution Advisory Methodology (ISA-M):</strong> First decide the integration domain and style, such as application-to-application process integration, data replication or analytics integration. Then check the required characteristics and map the need to technology. A direct API, middleware flow and event-based interaction are alternatives to evaluate, not a fixed sequence that every interface must use.</p>
+<p><strong>Lead-level point:</strong> “I first classify the problem without a product name. Then I compare suitable technologies and document the decision, constraints and operating responsibilities.”</p>
+
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="btp-design-evidence" aria-labelledby="btp-design-evidence-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">15 / Apply the guidance</p><h2 id="btp-design-evidence-title">Turn the reference architecture into a defensible solution</h2></header><div class="signavio-reader__content">
+
+<p>A good architecture is not complete when the drawing looks finished. It is complete enough to implement when the team can explain component ownership, dependencies, how failure is handled, expected cost and how success will be verified.</p>
+<h3>A six-step route for a real SAP use case</h3>
+<ol>
+<li><strong>Describe the outcome and scope.</strong> Example: employees need a controlled way to request items that are not in the catalog. Define approvals, users, business rules and the purchasing system that owns the official document.</li>
+<li><strong>Choose the pattern.</strong> Check standard S/4HANA functions first. If an extension is justified, use the extension guide and relevant reference architecture to compare on-stack and side-by-side options.</li>
+<li><strong>Prove the interface.</strong> Search <a href="https://api.sap.com/">SAP Business Accelerator Hub</a> for an API or event matching the product and edition. Verify the required operation, communication scenario, authentication, data fields and limitations. A catalog entry does not mean the interface is available or configured in the target tenant.</li>
+<li><strong>Draw the actual boundaries.</strong> Identify the user entry point, workflow owner, integration components if needed, S/4HANA transaction owner, identity, data stores and monitoring. Label each arrow with the interaction and protocol where known.</li>
+<li><strong>Estimate the service consumption.</strong> Create a service inventory from the chosen diagram. Check the relevant region, commercial model, service plan, usage metric, sizing, support and operations. Use the estimator in <a href="https://discovery-center.cloud.sap/">Discovery Center</a> as a planning aid, not a quotation.</li>
+<li><strong>Validate security and completion.</strong> Use the <a href="https://www.sap.com/about/trust-center.html">SAP Trust Center</a> for SAP-managed control evidence and <a href="https://help.sap.com/docs/btp/sap-btp-security-recommendations-c8a9bb59fe624f0981efa0eff2497d7d/sap-btp-security-recommendations">BTP Security Recommendations</a> for customer-side checks. Test access, failed calls, retries, duplicate prevention, reconciliation and business confirmation.</li>
+</ol>
+<h3>Example: the important relationships, not product icons</h3>
+<div class="table-scroll study-table" role="region" aria-label="Procurement solution relationships" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">From</th><th scope="col">Relationship</th><th scope="col">To / owner</th></tr></thead><tbody>
+<tr><td>Employee</td><td>Submits the request; sees a clear status.</td><td>Request interface / workflow, if a new interface is justified.</td></tr>
+<tr><td>Request interface</td><td>Sends approved, validated input through a released contract.</td><td>SAP S/4HANA purchasing; system of record for the purchase requisition.</td></tr>
+<tr><td>Integration layer (if needed)</td><td>Maps, protects and monitors the cross-system call.</td><td>The published ERP API and the originating request.</td></tr>
+<tr><td>S/4HANA</td><td>Returns the business document ID or a business error.</td><td>Request tracking and reconciliation.</td></tr>
+<tr><td>Operations</td><td>Checks missing, failed or duplicate results.</td><td>An accountable support owner; business process completion.</td></tr>
+</tbody></table></div>
+<p>This is a <strong>logical relationship map</strong>, not a claim that SAP Integration Suite or a custom app is mandatory. The actual solution might be smaller if standard SAP functionality meets the requirement.</p>
+<h3>Which diagram is needed?</h3>
+<div class="table-scroll study-table" role="region" aria-label="Distinguish technical architecture artifacts" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Artifact</th><th scope="col">Best for</th><th scope="col">What it cannot prove alone</th></tr></thead><tbody>
+<tr><td>Reference architecture</td><td>Starting from an established reusable pattern.</td><td>That a specific customer's interface, plan or security configuration is ready.</td></tr>
+<tr><td>Customer solution diagram</td><td>Agreeing on in-scope systems, BTP services, flows and boundaries.</td><td>Detailed payload mappings, runtime status or completed transactions.</td></tr>
+<tr><td>Detailed technical model (TAM-style)</td><td>Documenting exact component dependencies, technical configuration and constraints.</td><td>That the business outcome was achieved.</td></tr>
+<tr><td>Interface contract and test evidence</td><td>Proving endpoints, payloads, authorization, retries and business acknowledgments.</td><td>That the full architecture remains cost-effective over time.</td></tr>
+</tbody></table></div>
+<p><strong>Service inventory is not automatically a formal SBOM.</strong> List the BTP services needed for cost estimation; separately maintain software dependencies, versions and licenses when an SBOM is required.</p>
+<p><strong>Final check:</strong> A technical HTTP success is not enough. The team must verify the expected business document and provide a recovery route when that document was not created.</p>
+
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">16 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
 <h3>30-second explanation</h3>
 <p>“We start with what the business needs to improve. SAP Signavio helps us understand the process, while SAP LeanIX shows which applications support it. We use SAP reference architecture to connect that business need to a possible solution. BTP gives us options for extensions and integrations where standard applications have a gap. We then check security, costs, operating responsibility and measurable results.”</p>
 <h3>90-second explanation</h3>
@@ -247,7 +326,7 @@ sitemap: false
 <ul><li>Which business result must improve, and what is the current baseline?</li><li>Which system owns each official business document or master data object?</li><li>What happens when the integration, workflow or AI step fails?</li></ul>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">14 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">17 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
 <ol>
 <li><strong>What is the difference between an EA and an SA?</strong><p>EA defines enterprise-wide direction and governance. SA designs a specific solution within business, technical and delivery constraints. They exchange feedback.</p></li>
 <li><strong>Capability versus process?</strong><p>Capability is what the company must be able to do; process is the sequence of activities used to deliver an outcome. A capability may support several processes.</p></li>
@@ -256,12 +335,16 @@ sitemap: false
 <li><strong>What is the SAP EA Framework made of?</strong><p>Methodology, Reference Architecture Content, Tooling, Practice and Services.</p></li>
 <li><strong>Is SAP Business AI Platform the same as SAP BTP?</strong><p>No. In SAP's 2026 positioning, Business AI Platform is the broader portfolio. BTP remains the platform foundation and one of its parts.</p></li>
 <li><strong>Where are BTP applications deployed?</strong><p>Into a regional subaccount using a suitable environment. Cloud Foundry uses orgs/spaces; Kyma uses clusters/namespaces. Managed service subscriptions follow their own model.</p></li>
+<li><strong>Where do you find published SAP APIs and events?</strong><p>In SAP Business Accelerator Hub. Check the exact product edition, operations, access requirements and documentation before using the interface.</p></li>
+<li><strong>When do you use a methodology instead of a reference architecture?</strong><p>A methodology helps you make and govern the decision. A reference architecture offers a pattern that you adapt after deciding what you need.</p></li>
+<li><strong>What is ISA-M used for?</strong><p>To classify integration needs, compare styles and technologies, define standards and support integration governance. It does not require middleware for every interface.</p></li>
+<li><strong>Where do you estimate BTP service cost and verify compliance?</strong><p>Use Discovery Center and the relevant service information for planning. Use SAP Trust Center for SAP-managed assurance evidence, then check the customer's responsibilities and actual contract.</p></li>
 <li><strong>Does side-by-side automatically mean clean core?</strong><p>No. The solution still needs released interfaces, clear ownership, secure access, controlled coupling and an operational recovery path.</p></li>
 </ol>
 <p><strong>Practice variation:</strong> The customer already has a standard S/4HANA approval function. Would you still propose a custom BTP workflow? Explain the cost, support risk and evidence required before choosing the custom option.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">15 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">18 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
 <p>This guide is the architecture foundation. The next BTP lessons should deepen the areas that determine whether a platform solution can be deployed and operated.</p>
 <div class="table-scroll study-table" role="region" aria-label="BTP study sequence" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Topic</th><th scope="col">What you should be able to decide</th></tr></thead><tbody><tr><td>1. Platform administration</td><td>Design account, region, service and cost boundaries.</td></tr>
 <tr><td>2. Identity and connectivity</td><td>Explain trust, destinations, roles and private-network access.</td></tr>
@@ -269,10 +352,11 @@ sitemap: false
 <tr><td>4. Integration design</td><td>Choose APIs, events, iFlows and recovery patterns.</td></tr>
 <tr><td>5. Data and AI architecture</td><td>Choose data access, grounding, governance and evaluations for AI.</td></tr>
 <tr><td>6. Delivery and operations</td><td>Define lifecycle, monitoring, security, ownership and service evidence.</td></tr></tbody></table></div>
+<p><strong>Architecture resources now covered:</strong> Discovery Center, SAP BTP Guidance Framework, Architecture Center, SAP Business Accelerator Hub, solution diagrams, extension and integration methods, cost-estimation entry points and SAP Trust Center.</p>
 <p>Use this page as the continuing reference. Add new material to the relevant chapter only when it improves an explanation, design choice or assessment answer.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">16 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">19 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
 <p>This is an independent study guide based on SAP public learning and help content, rewritten for comprehension. It is not an official certification guide or a statement of contractual product availability.</p>
 <ul>
 <li><a href="https://learning.sap.com/courses/sap-enterprise-architecture-framework-foundation-introduction/investigating-the-sap-enterprise-architecture-methodology">SAP Learning — EA methodology and architect roles</a></li>
@@ -283,6 +367,16 @@ sitemap: false
 <li><a href="https://help.sap.com/docs/btp/btp-admin-guide/setting-up-your-account-model">SAP Help — BTP landscape structure</a></li>
 <li><a href="https://events.sap.com/sap-user-groups/en_us/sap_btp.html">SAP — Business AI Platform and SAP BTP positioning in 2026</a></li>
 <li><a href="https://architecture.learning.sap.com/docs/ai-native-north-star-architecture/executive-summary">SAP Architecture Center — AI-native architecture</a></li>
+<li><a href="https://discovery-center.cloud.sap/">SAP Discovery Center — services, missions and guidance</a></li>
+<li><a href="https://help.sap.com/docs/sap_btp_guidance_framework/97dc5926388343be94efd10ae3db716c/what-is-sap-btp-guidance-framework">SAP Help — Guidance Framework and its move to Discovery Center</a></li>
+<li><a href="https://help.sap.com/docs/sap-btp-guidance-framework/extension-architecture-guide/what-is-extension-architecture-guide">SAP Help — Extension Architecture Guide</a></li>
+<li><a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-application-extension-methodology/cd2664b67373452ab78825897ff99a81.html">SAP Help — Application Extension Methodology</a></li>
+<li><a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/sap-integration-solution-advisory-methodology">SAP Help — Integration Solution Advisory Methodology</a></li>
+<li><a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-data-methodology/sap-data-analytics-advisory-methodology-overview">SAP Help — Data and Analytics Advisory Methodology</a></li>
+<li><a href="https://api.sap.com/">SAP Business Accelerator Hub — APIs, events and integrations</a></li>
+<li><a href="https://architecture.learning.sap.com/docs/ref-arch">SAP Architecture Center — reference architectures</a></li>
+<li><a href="https://sap.github.io/btp-solution-diagrams/">SAP BTP Solution Diagram Guidelines</a></li>
+<li><a href="https://www.sap.com/about/trust-center.html">SAP Trust Center</a></li>
 </ul>
 <p><strong>Verification boundary:</strong> Always check the exact SAP edition, release, commercial plan, region, service availability and published interface before making a delivery commitment. SAP's product naming and reference catalog can change. This page remains in review until a separate human publication check.</p>
 </div></section>
