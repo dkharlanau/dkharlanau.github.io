@@ -86,6 +86,11 @@ related:
       <p>Every major SAP product organized by category, with plain-language notes on what each one does and who it is for.</p>
       <span class="link-arrow">Read SAP page</span>
     </a>
+    <a class="atlas-card" href="/atlas/sap/sap-btp/">
+      <h2>SAP Business AI Platform &amp; BTP</h2>
+      <p>Study the architect&#39;s path from business capabilities and SAP reference architecture to BTP extension, integration and operations decisions.</p>
+      <span class="link-arrow">Read architect guide</span>
+    </a>
     <a class="atlas-card" href="/atlas/sap/sap-successfactors/">
       <h2>SAP SuccessFactors</h2>
       <p>Cloud HCM suite — core HR, talent management, payroll, and workforce analytics.</p>
