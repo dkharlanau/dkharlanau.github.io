@@ -1,5 +1,7 @@
 ---
 layout: default
+signavio_reader: true
+hide_global_cta: true
 title: "SAP Signavio Product Guide"
 description: "A concise Lead-level guide to SAP Signavio: product map, components, licensing boundaries, BPMN and DMN, collaboration, journeys, governance, process intelligence, transformation management, integrations, administration, best practices, and glossary."
 permalink: /atlas/sap/sap-signavio/
@@ -12,7 +14,7 @@ business_process: "Process management"
 status: needs_verification
 verified: false
 last_reviewed: 2026-09-23
-last_modified_at: 2026-10-07
+last_modified_at: 2026-10-08
 author: Dzmitryi Kharlanau
 
 tags:
@@ -48,35 +50,92 @@ sitemap: false
   </ol>
 </nav>
 
-<article class="section note-detail atlas-page">
-  <header class="note-header">
-    <p class="eyebrow">SAP Product Guide / Lead Preparation</p>
-    <h1>SAP Signavio</h1>
-    <p class="note-subtitle">Understand the full product picture: what each component does, how they work together, where the licensing boundaries are, and how to explain the suite to a client.</p>
-    <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
+<article class="research-canvas signavio-reader" aria-label="SAP Signavio Product Guide">
+  <header class="research-canvas__hero signavio-reader__hero">
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Knowledge Atlas / SAP Lead</p>
+      <h1>SAP Signavio</h1>
+      <p>Understand what each product does, why the business needs it, and how to explain the full suite to a client or interviewer.</p>
+      <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
+      <a class="research-canvas__button" href="#reading-map">Choose a topic <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <aside class="research-canvas__signal" aria-label="Learning outcomes">
+      <p>After reading, you can</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Explain business value</strong></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Choose the right component</strong></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Explain boundaries and trade-offs</strong></div>
+      <em>One practical reference for product knowledge, SAP Lead assessment, and client discussions.</em>
+    </aside>
   </header>
 
-  <aside class="atlas-meta-panel">
-    <dl>
-      <div><dt>Goal</dt><dd>Explain SAP Signavio clearly to a client or interviewer</dd></div>
-      <div><dt>Scope</dt><dd>Process design, collaboration, governance, journeys, mining, transformation, integration</dd></div>
-      <div><dt>Level</dt><dd>SAP Lead mental model</dd></div>
-      <div><dt>Language</dt><dd>English B2</dd></div>
-      <div><dt>Status</dt><dd>Current-state product guide with explicit licensing boundaries</dd></div>
-    </dl>
+  <aside class="research-canvas__boundary" aria-label="How to use this guide">
+    <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+    <p><strong>Reading path:</strong> Start with the product map and business questions, then use the component chapters as reference. Finish with the interview answer and glossary.</p>
   </aside>
 
-  <div class="note-body">
+  <nav class="research-canvas__inventory signavio-reader__toc" id="reading-map" aria-label="Chapters in this guide">
+    <header>
+      <p class="research-canvas__eyebrow">On this page</p>
+      <h2>Choose what you need to understand.</h2>
+      <p>Read in order for the full picture, or jump directly to the product, business question, or exam topic.</p>
+    </header>
+    <div class="signavio-reader__toc-grid">
+    <section class="signavio-reader__toc-group" aria-labelledby="signavio-route-0">
+      <h3 id="signavio-route-0">Understand the suite</h3>
+      <ol>
+        <li><a href="#start">Start with one picture</a></li>
+        <li><a href="#client-map">Client question → Signavio component</a></li>
+        <li><a href="#business">How to explain SAP Signavio to business</a></li>
+        <li><a href="#example">One simple example across the suite</a></li>
+      </ol>
+    </section>
+    <section class="signavio-reader__toc-group" aria-labelledby="signavio-route-1">
+      <h3 id="signavio-route-1">Choose the products</h3>
+      <ol>
+        <li><a href="#licensing">Licensing and access boundaries</a></li>
+        <li><a href="#modeler">Process Modeler: what you must understand</a></li>
+        <li><a href="#bpmn-dmn">BPMN and DMN: the minimum Lead toolkit</a></li>
+        <li><a href="#collaboration-governance">Collaboration Hub and Process Governance</a></li>
+        <li><a href="#journey">Journey Modeler: outside-in view</a></li>
+        <li><a href="#intelligence">Process Intelligence and Process Insights</a></li>
+        <li><a href="#transformation">Process Transformation Manager</a></li>
+      </ol>
+    </section>
+    <section class="signavio-reader__toc-group" aria-labelledby="signavio-route-2">
+      <h3 id="signavio-route-2">Apply it</h3>
+      <ol>
+        <li><a href="#reference-content">Reference content: Process Navigator and Value Accelerator Library</a></li>
+        <li><a href="#integration">Integration model</a></li>
+        <li><a href="#admin">Administration: the boundaries that matter</a></li>
+        <li><a href="#best-practices">Best practices that create real value</a></li>
+      </ol>
+    </section>
+    <section class="signavio-reader__toc-group" aria-labelledby="signavio-route-3">
+      <h3 id="signavio-route-3">Prepare and verify</h3>
+      <ol>
+        <li><a href="#interview">How to explain SAP Signavio in an interview</a></li>
+        <li><a href="#current-state">Current-state notes for 2026</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+        <li><a href="#sources">Source register</a></li>
+      </ol>
+    </section>
+    </div>
+  </nav>
 
-    <h2 id="start">1. Start with one picture</h2>
-
-    <p>SAP Signavio is a process transformation suite. It connects process design, business collaboration, customer or employee journeys, workflow governance, operational process data, and improvement initiatives.</p>
+  <section class="research-canvas__inventory signavio-reader__section" id="start" aria-labelledby="start-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">01 / Product map</p>
+      <h2 id="start-title">Start with one picture</h2>
+    </header>
+    <div class="signavio-reader__content">
+<p>SAP Signavio is a process transformation suite. It connects process design, business collaboration, customer or employee journeys, workflow governance, operational process data, and improvement initiatives.</p>
 
     <p>The simplest mental model is:</p>
 
     <p><strong>Reference → Model → Collaborate → Govern → Observe → Improve → Model again</strong></p>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Start with one picture — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr>
           <th>Need</th>
@@ -122,6 +181,7 @@ sitemap: false
         </tr>
       </tbody>
     </table>
+</div>
 
     <p><strong>The key Lead skill is product selection.</strong> Do not answer every question with “Signavio”. Name the problem first, then the component that owns it.</p>
 
@@ -136,10 +196,17 @@ sitemap: false
     <p><strong>Process Modeler</strong> is the current product name. Older SAP Learning content and customer environments can still use <strong>Process Manager</strong>. Treat them as the same modeling product generation, not as two different products.</p>
 
     <p><strong>Process Explorer is no longer the current reference-content product.</strong> SAP retired SAP Signavio Process Explorer on June 30, 2026 and moved its reference content to <strong>SAP Signavio Process Navigator</strong>. Process Navigator is now the reference point for SAP process content through SAP for Me. The Value Accelerator Library remains available for accelerator content inside the Signavio suite.</p>
+    </div>
+  </section>
 
-    <h2 id="client-map">2. Client question → Signavio component</h2>
-
-    <table class="study-table">
+  <section class="research-canvas__inventory signavio-reader__section" id="client-map" aria-labelledby="client-map-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">02 / Client questions</p>
+      <h2 id="client-map-title">Client question → Signavio component</h2>
+    </header>
+    <div class="signavio-reader__content">
+<div class="table-scroll study-table" role="region" aria-label="Client question → Signavio component — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr>
           <th>Client says...</th>
@@ -190,10 +257,17 @@ sitemap: false
         </tr>
       </tbody>
     </table>
+</div>
+    </div>
+  </section>
 
-    <h2 id="business">3. How to explain SAP Signavio to business</h2>
-
-    <p>Do not start a business conversation with BPMN, process mining, or product names. Start with the problem the business is trying to solve.</p>
+  <section class="research-canvas__inventory signavio-reader__section" id="business" aria-labelledby="business-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">03 / Business value</p>
+      <h2 id="business-title">How to explain SAP Signavio to business</h2>
+    </header>
+    <div class="signavio-reader__content">
+<p>Do not start a business conversation with BPMN, process mining, or product names. Start with the problem the business is trying to solve.</p>
 
     <p>In business language, SAP Signavio helps an organization do four things:</p>
 
@@ -206,7 +280,8 @@ sitemap: false
 
     <h3>Business problem → business explanation</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Business problem → business explanation — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr>
           <th>Business problem</th>
@@ -247,6 +322,7 @@ sitemap: false
         </tr>
       </tbody>
     </table>
+</div>
 
     <h3>What SAP Signavio does not replace</h3>
 
@@ -260,7 +336,8 @@ sitemap: false
 
     <h3>What the business must own</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="What the business must own — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr>
           <th>Role</th>
@@ -294,6 +371,7 @@ sitemap: false
         </tr>
       </tbody>
     </table>
+</div>
 
     <h3>A simple client conversation</h3>
 
@@ -321,10 +399,16 @@ sitemap: false
     </ol>
 
     <p>Process Governance can be introduced where formal approvals, controls, or recurring governance tasks need executable workflows. It is not a mandatory first step for every Signavio adoption.</p>
+    </div>
+  </section>
 
-    <h2 id="example">4. One simple example across the suite</h2>
-
-    <p>Assume a company wants to improve Order-to-Cash.</p>
+  <section class="research-canvas__inventory signavio-reader__section" id="example" aria-labelledby="example-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">04 / Working example</p>
+      <h2 id="example-title">One simple example across the suite</h2>
+    </header>
+    <div class="signavio-reader__content">
+<p>Assume a company wants to improve Order-to-Cash.</p>
 
     <ol>
       <li><strong>Start with reference content.</strong> Review SAP process content in Process Navigator or relevant accelerators.</li>
@@ -338,12 +422,19 @@ sitemap: false
     </ol>
 
     <p>This is the suite story: <strong>design and execution evidence are connected, but they are not the same thing.</strong></p>
+    </div>
+  </section>
 
-    <h2 id="licensing">5. Licensing and access boundaries</h2>
+  <section class="research-canvas__inventory signavio-reader__section" id="licensing" aria-labelledby="licensing-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">05 / Licensing</p>
+      <h2 id="licensing-title">Licensing and access boundaries</h2>
+    </header>
+    <div class="signavio-reader__content">
+<p>Do not memorize commercial prices. Understand the boundaries. SAP contracts, packages, and feature scope can change.</p>
 
-    <p>Do not memorize commercial prices. Understand the boundaries. SAP contracts, packages, and feature scope can change.</p>
-
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Licensing and access boundaries — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr>
           <th>Product / access</th>
@@ -393,14 +484,22 @@ sitemap: false
         </tr>
       </tbody>
     </table>
+</div>
 
     <p><strong>License ≠ authorization.</strong> A license gives access to a product. Groups, object permissions, feature sets, and data permissions decide what the user can actually do.</p>
+    </div>
+  </section>
 
-    <h2 id="modeler">6. Process Modeler: what you must understand</h2>
+  <section class="research-canvas__inventory signavio-reader__section" id="modeler" aria-labelledby="modeler-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">06 / Modeling</p>
+      <h2 id="modeler-title">Process Modeler: what you must understand</h2>
+    </header>
+    <div class="signavio-reader__content">
+<h3>The four building blocks</h3>
 
-    <h3>The four building blocks</h3>
-
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="The four building blocks — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr>
           <th>Part</th>
@@ -426,6 +525,7 @@ sitemap: false
         </tr>
       </tbody>
     </table>
+</div>
 
     <h3>Architecture before diagrams</h3>
 
@@ -445,7 +545,8 @@ sitemap: false
 
     <h3>Syntax vs convention vs business correctness</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Syntax vs convention vs business correctness — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr>
           <th>Check</th>
@@ -458,12 +559,14 @@ sitemap: false
         <tr><td>Semantic review</td><td>Does the model describe the real business correctly?</td></tr>
       </tbody>
     </table>
+</div>
 
     <p>The tool can help with syntax and configured conventions. Subject-matter experts are still needed for semantic correctness.</p>
 
     <h3>Choose the right model type</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Choose the right model type — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Need</th><th>Model</th></tr>
       </thead>
@@ -476,6 +579,7 @@ sitemap: false
         <tr><td>Outside-in stakeholder experience</td><td>Journey Model / Customer Journey Map</td></tr>
       </tbody>
     </table>
+</div>
 
     <h3>Simulation = test a hypothesis</h3>
 
@@ -503,14 +607,21 @@ sitemap: false
     </ul>
 
     <p>The goal is not to eliminate all variation. The goal is to make variation explicit, justified, and governable.</p>
+    </div>
+  </section>
 
-    <h2 id="bpmn-dmn">7. BPMN and DMN: the minimum Lead toolkit</h2>
-
-    <h3>BPMN</h3>
+  <section class="research-canvas__inventory signavio-reader__section" id="bpmn-dmn" aria-labelledby="bpmn-dmn-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">07 / Notation</p>
+      <h2 id="bpmn-dmn-title">BPMN and DMN: the minimum Lead toolkit</h2>
+    </header>
+    <div class="signavio-reader__content">
+<h3>BPMN</h3>
 
     <p>Use BPMN to explain <strong>what happens, in what order, and who is responsible</strong>.</p>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="BPMN — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr>
           <th>Element</th>
@@ -529,6 +640,7 @@ sitemap: false
         <tr><td>Message Flow</td><td>Communication between pools.</td></tr>
       </tbody>
     </table>
+</div>
 
     <p><strong>A gateway is not the decision.</strong> The decision is made in business logic or a task; the gateway routes the result.</p>
 
@@ -536,7 +648,8 @@ sitemap: false
 
     <h3>Subprocess choice</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Subprocess choice — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Pattern</th><th>Use</th></tr>
       </thead>
@@ -546,6 +659,7 @@ sitemap: false
         <tr><td>Expanded subprocess</td><td>Show local grouped detail inside one process.</td></tr>
       </tbody>
     </table>
+</div>
 
     <h3>DMN</h3>
 
@@ -565,7 +679,8 @@ sitemap: false
 
     <h3>Hit policies</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Hit policies — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Policy</th><th>Use</th></tr>
       </thead>
@@ -577,18 +692,26 @@ sitemap: false
         <tr><td>Collect</td><td>Several rules may fire and results are collected or aggregated.</td></tr>
       </tbody>
     </table>
+</div>
 
     <p><strong>Verify</strong> checks formal completeness and consistency. <strong>Simulation</strong> evaluates outputs for selected inputs. <strong>Test Lab</strong> checks expected outcomes and regression cases after rule changes.</p>
+    </div>
+  </section>
 
-    <h2 id="collaboration-governance">8. Collaboration Hub and Process Governance</h2>
-
-    <h3>Collaboration Hub = consume and collaborate</h3>
+  <section class="research-canvas__inventory signavio-reader__section" id="collaboration-governance" aria-labelledby="collaboration-governance-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">08 / Collaboration</p>
+      <h2 id="collaboration-governance-title">Collaboration Hub and Process Governance</h2>
+    </header>
+    <div class="signavio-reader__content">
+<h3>Collaboration Hub = consume and collaborate</h3>
 
     <p>The Hub is the business-facing layer for published process content. It supports navigation, comments, feedback, reporting, read confirmations, ratings, and audience-specific presentation.</p>
 
     <p><strong>Audience is not authorization.</strong> An audience changes the presentation for a viewer group. Access rights decide whether a user may see or change content.</p>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Collaboration Hub = consume and collaborate — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Feature</th><th>Purpose</th></tr>
       </thead>
@@ -598,6 +721,7 @@ sitemap: false
         <tr><td>Process Rating</td><td>Collect structured feedback about a process revision.</td></tr>
       </tbody>
     </table>
+</div>
 
     <h3>Process Governance = execute governed work</h3>
 
@@ -624,7 +748,8 @@ sitemap: false
 
     <h3>Workflow versions</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Workflow versions — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Action</th><th>Meaning</th></tr>
       </thead>
@@ -634,10 +759,17 @@ sitemap: false
         <tr><td>Restore</td><td>Bring an older version back into the editable draft without changing the current published execution version.</td></tr>
       </tbody>
     </table>
+</div>
+    </div>
+  </section>
 
-    <h2 id="journey">9. Journey Modeler: outside-in view</h2>
-
-    <p>A process is usually inside-out: what the company does. A journey is outside-in: what the person experiences.</p>
+  <section class="research-canvas__inventory signavio-reader__section" id="journey" aria-labelledby="journey-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">09 / Journey</p>
+      <h2 id="journey-title">Journey Modeler: outside-in view</h2>
+    </header>
+    <div class="signavio-reader__content">
+<p>A process is usually inside-out: what the company does. A journey is outside-in: what the person experiences.</p>
 
     <p>Use Journey Modeler for customers, employees, applicants, suppliers, partners, or other people interacting with the organization.</p>
 
@@ -649,7 +781,8 @@ sitemap: false
 
     <h3>Journey Modeler vs Customer Journey Map</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Journey Modeler vs Customer Journey Map — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Approach</th><th>Use</th></tr>
       </thead>
@@ -658,16 +791,23 @@ sitemap: false
         <tr><td>Customer Journey Map</td><td>Visual storytelling of the persona's journey and touchpoints, with details available through attributes and links.</td></tr>
       </tbody>
     </table>
+</div>
 
     <p><strong>Journey Complexity</strong> estimates operational complexity behind linked processes. <strong>Journey Model Dimensions</strong> describe the size and populated content of the journey table. They are different metrics.</p>
 
     <p>The valuable pattern is:</p>
 
     <p><strong>Pain point → linked internal process → process change → KPI → verify experience improvement</strong></p>
+    </div>
+  </section>
 
-    <h2 id="intelligence">10. Process Intelligence and Process Insights</h2>
-
-    <p>This is the most important distinction in the suite:</p>
+  <section class="research-canvas__inventory signavio-reader__section" id="intelligence" aria-labelledby="intelligence-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">10 / Process mining</p>
+      <h2 id="intelligence-title">Process Intelligence and Process Insights</h2>
+    </header>
+    <div class="signavio-reader__content">
+<p>This is the most important distinction in the suite:</p>
 
     <p><strong>Process Modeler: what should happen?</strong><br>
     <strong>Process Intelligence: what did happen?</strong></p>
@@ -688,7 +828,8 @@ sitemap: false
 
     <h3>Out-of-the-box vs custom analysis</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Out-of-the-box vs custom analysis — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Approach</th><th>Use it when</th><th>Trade-off</th></tr>
       </thead>
@@ -705,6 +846,7 @@ sitemap: false
         </tr>
       </tbody>
     </table>
+</div>
 
     <h3>What Process Intelligence does</h3>
 
@@ -728,7 +870,8 @@ sitemap: false
 
     <h3>Simulation vs reporting vs mining</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Simulation vs reporting vs mining — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Capability</th><th>Evidence</th><th>Question</th></tr>
       </thead>
@@ -738,16 +881,24 @@ sitemap: false
         <tr><td>Process Intelligence</td><td>Operational process data</td><td>What actually happened?</td></tr>
       </tbody>
     </table>
+</div>
+    </div>
+  </section>
 
-    <h2 id="transformation">11. Process Transformation Manager</h2>
-
-    <p>Process Intelligence can find a problem. Process Transformation Manager helps manage the improvement work that follows.</p>
+  <section class="research-canvas__inventory signavio-reader__section" id="transformation" aria-labelledby="transformation-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">11 / Improvement</p>
+      <h2 id="transformation-title">Process Transformation Manager</h2>
+    </header>
+    <div class="signavio-reader__content">
+<p>Process Intelligence can find a problem. Process Transformation Manager helps manage the improvement work that follows.</p>
 
     <p>A simple flow is:</p>
 
     <p><strong>Finding → Insight → Initiative → Objective → Tasks → Value / progress</strong></p>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Process Transformation Manager — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Object</th><th>Purpose</th></tr>
       </thead>
@@ -761,12 +912,19 @@ sitemap: false
         <tr><td>Asset</td><td>Attach relevant process, dashboard, document, or external reference to an initiative.</td></tr>
       </tbody>
     </table>
+</div>
 
     <p>Do not confuse Process Transformation Manager with Process Governance. <strong>Governance executes repeatable workflows. Transformation Manager manages improvement initiatives.</strong></p>
+    </div>
+  </section>
 
-    <h2 id="reference-content">12. Reference content: Process Navigator and Value Accelerator Library</h2>
-
-    <h3>SAP Signavio Process Navigator</h3>
+  <section class="research-canvas__inventory signavio-reader__section" id="reference-content" aria-labelledby="reference-content-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">12 / Reference content</p>
+      <h2 id="reference-content-title">Reference content: Process Navigator and Value Accelerator Library</h2>
+    </header>
+    <div class="signavio-reader__content">
+<h3>SAP Signavio Process Navigator</h3>
 
     <p>Process Navigator is SAP's current reference point for SAP process content. It is available through SAP for Me and provides process hierarchies, solution processes, variants, roles, capabilities, documentation, and related implementation content.</p>
 
@@ -781,12 +939,19 @@ sitemap: false
     <h3>Legacy term: Process Explorer</h3>
 
     <p>SAP Signavio Process Explorer was retired on June 30, 2026. Its reference content moved to Process Navigator. Do not present Process Explorer as the current strategic content product.</p>
+    </div>
+  </section>
 
-    <h2 id="integration">13. Integration model</h2>
+  <section class="research-canvas__inventory signavio-reader__section" id="integration" aria-labelledby="integration-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">13 / Integration</p>
+      <h2 id="integration-title">Integration model</h2>
+    </header>
+    <div class="signavio-reader__content">
+<p>There is no single “Signavio integration”. Different products integrate for different reasons.</p>
 
-    <p>There is no single “Signavio integration”. Different products integrate for different reasons.</p>
-
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Integration model — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Integration</th><th>Use</th><th>Key boundary</th></tr>
       </thead>
@@ -813,6 +978,7 @@ sitemap: false
         </tr>
       </tbody>
     </table>
+</div>
 
     <h3>API technical-user rule</h3>
 
@@ -834,10 +1000,16 @@ sitemap: false
     <p>The learning material also states that BPMN diagrams synchronized from Solution Manager to Signavio are not a simple symmetric round trip back.</p>
 
     <p>A Synchronization Project defines the system pair, Solution/Branch, Dictionary mappings, attribute mappings, optional governance revision state, direction, and scope.</p>
+    </div>
+  </section>
 
-    <h2 id="admin">14. Administration: the boundaries that matter</h2>
-
-    <h3>Identity and user management</h3>
+  <section class="research-canvas__inventory signavio-reader__section" id="admin" aria-labelledby="admin-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">14 / Administration</p>
+      <h2 id="admin-title">Administration: the boundaries that matter</h2>
+    </header>
+    <div class="signavio-reader__content">
+<h3>Identity and user management</h3>
 
     <p>Current SAP Signavio identity management has changed. Workspaces created after November 25, 2025 have SAP Cloud Identity Services SSO enabled automatically. For workspaces created after May 6, 2026, users and groups are created and managed through SAP Cloud Identity Services.</p>
 
@@ -845,7 +1017,8 @@ sitemap: false
 
     <h3>Four access layers</h3>
 
-    <table class="study-table">
+    <div class="table-scroll study-table" role="region" aria-label="Four access layers — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Layer</th><th>Question</th></tr>
       </thead>
@@ -856,6 +1029,7 @@ sitemap: false
         <tr><td>Data access</td><td>Which process data or analysis scope can the user see?</td></tr>
       </tbody>
     </table>
+</div>
 
     <p>Never use “the user has a license” as proof that the authorization design is correct.</p>
 
@@ -874,10 +1048,17 @@ sitemap: false
       <li>SSO, identity provisioning, IP filtering, and security policy.</li>
       <li>Product licenses, feature sets, and access reviews.</li>
     </ul>
+    </div>
+  </section>
 
-    <h2 id="best-practices">15. Best practices that create real value</h2>
-
-    <table class="study-table">
+  <section class="research-canvas__inventory signavio-reader__section" id="best-practices" aria-labelledby="best-practices-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">15 / Best practices</p>
+      <h2 id="best-practices-title">Best practices that create real value</h2>
+    </header>
+    <div class="signavio-reader__content">
+<div class="table-scroll study-table" role="region" aria-label="Best practices that create real value — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Practice</th><th>Reason</th></tr>
       </thead>
@@ -896,10 +1077,17 @@ sitemap: false
         <tr><td>Use dedicated technical users and explicit systems of record.</td><td>Makes integrations supportable and ownership clear.</td></tr>
       </tbody>
     </table>
+</div>
+    </div>
+  </section>
 
-    <h2 id="interview">16. How to explain SAP Signavio in an interview</h2>
-
-    <h3>60-second answer</h3>
+  <section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">16 / Interview practice</p>
+      <h2 id="interview-title">How to explain SAP Signavio in an interview</h2>
+    </header>
+    <div class="signavio-reader__content">
+<h3>60-second answer</h3>
 
     <p>SAP Signavio is a process transformation suite. I would not treat it as one modeling tool. Process Modeler defines how the process should work and keeps the process architecture and business vocabulary consistent. Collaboration Hub publishes this knowledge to business users. Journey Modeler adds the outside-in customer or employee perspective. Process Governance executes approval and governance workflows. Process Intelligence analyzes operational data to show what actually happened. Process Transformation Manager converts findings into owned improvement initiatives. The main design principle is to connect these layers without mixing their responsibilities: model versus execution data, process versus journey, governance workflow versus transformation initiative, and license versus authorization.</p>
 
@@ -912,10 +1100,16 @@ sitemap: false
       <li>Do we need a finding, or do we need to manage the improvement initiative?</li>
       <li>What is the source of truth, and what license and access model is required?</li>
     </ol>
+    </div>
+  </section>
 
-    <h2 id="current-state">17. Current-state notes for 2026</h2>
-
-    <ul>
+  <section class="research-canvas__inventory signavio-reader__section" id="current-state" aria-labelledby="current-state-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">17 / Current state</p>
+      <h2 id="current-state-title">Current-state notes for 2026</h2>
+    </header>
+    <div class="signavio-reader__content">
+<ul>
       <li><strong>Process Modeler</strong> is the current modeling product name; Process Manager remains common in older material.</li>
       <li><strong>Process Explorer retired on June 30, 2026.</strong> Use Process Navigator for SAP reference process content.</li>
       <li>For new workspaces, identity management is moving through <strong>SAP Cloud Identity Services</strong>; workspaces created after May 6, 2026 manage users and groups there.</li>
@@ -924,10 +1118,17 @@ sitemap: false
       <li>New Process Intelligence <strong>investigations</strong> cannot be created or imported since May 26, 2026; customizable dashboards are the current direction.</li>
       <li>AI features and commercial consumption rules change faster than core modeling concepts. Verify the exact feature before promising scope.</li>
     </ul>
+    </div>
+  </section>
 
-    <h2 id="glossary">18. Glossary</h2>
-
-    <table class="study-table">
+  <section class="research-canvas__inventory signavio-reader__section" id="glossary" aria-labelledby="glossary-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">18 / Glossary</p>
+      <h2 id="glossary-title">Glossary</h2>
+    </header>
+    <div class="signavio-reader__content">
+<div class="table-scroll study-table" role="region" aria-label="Glossary — reference table" tabindex="0">
+<table class="study-table__table">
       <thead>
         <tr><th>Term</th><th>Meaning</th></tr>
       </thead>
@@ -979,10 +1180,17 @@ sitemap: false
         <tr><td>Synchronization Project</td><td>Connector configuration for a system pair, mappings, scope, and synchronization rules.</td></tr>
       </tbody>
     </table>
+</div>
+    </div>
+  </section>
 
-    <h2 id="sources">19. Source register</h2>
-
-    <ul>
+  <section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title">
+    <header class="signavio-reader__section-head">
+      <p class="research-canvas__eyebrow">19 / Sources</p>
+      <h2 id="sources-title">Source register</h2>
+    </header>
+    <div class="signavio-reader__content">
+<ul>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite">SAP Signavio Process Transformation Suite — product documentation</a></li>
       <li><a href="https://www.sap.com/about/trust-center/certification-compliance/sap-signavio-c5-2026.html">SAP Signavio C5 2026 — current product naming</a></li>
       <li><a href="https://help.sap.com/docs/signavio-process-intelligence/user-guide/navigating-sap-signavio-process-transformation-suite">Navigating SAP Signavio Process Transformation Suite</a></li>
@@ -1007,20 +1215,24 @@ sitemap: false
     </ul>
 
     <p><strong>Verification boundary:</strong> this guide combines SAP Learning material used for assessment preparation with current public SAP documentation. Product names, commercial packages, AI consumption rules, regional availability, and feature scope can change. Verify the customer's current contract and SAP Feature Scope Description before making a commercial or implementation commitment.</p>
-
-  </div>
-
-  <section class="atlas-related">
-    <h2>Related pages</h2>
-    <ul>
-      <li><a href="/labs/assessment/">SAP Lead Assessment Lab</a></li>
-      <li><a href="/atlas/maps/sap-technology-landscape-map/">SAP Technology Landscape Map</a></li>
-      <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
-      <li><a href="/atlas/sap/sap-build/">SAP Build</a></li>
-    </ul>
+    </div>
   </section>
 
-  {% include atlas/author-block.html %}
-  {% include atlas/disclaimer.html %}
+  <section class="research-canvas__inventory signavio-reader__related" aria-labelledby="signavio-related-title">
+    <header>
+      <p class="research-canvas__eyebrow">Continue learning</p>
+      <h2 id="signavio-related-title">Related SAP topics</h2>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/"><span>ASSESS</span><strong>SAP Lead Assessment Lab</strong><small>Practice product choices, ownership, architecture, and scenario answers.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/atlas/maps/sap-technology-landscape-map/"><span>MAP</span><strong>SAP Technology Landscape Map</strong><small>Understand the SAP product and integration context.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/atlas/sap/sap-btp/"><span>BTP</span><strong>SAP BTP</strong><small>Review platform, extension, identity, and connectivity boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/atlas/sap/sap-s4hana/"><span>ERP</span><strong>SAP S/4HANA</strong><small>Connect process analysis to the transactional system.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support">
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
 </article>
