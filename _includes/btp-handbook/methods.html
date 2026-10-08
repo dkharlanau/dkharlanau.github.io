@@ -1,0 +1,65 @@
+<span class="btp-anchor" id="btp-methods"></span>
+<span class="btp-anchor" id="btp-design-evidence"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="methods" aria-labelledby="methods-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">13 / Three methods, one design</p><h2 id="methods-title">Use a methodology to produce a decision, not another slide deck</h2></header>
+<div class="signavio-reader__content">
+<p>The supplied lessons introduce three complementary SAP methods. Keep their names, phase order and main artifacts clear. Then apply them to an actual question. The tables below preserve that structure; the supplier-review application is our own worked example.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Which architecture method should lead?">
+<table class="study-table__table">
+<thead><tr><th scope="col">Question</th><th scope="col">Method</th><th scope="col">Result</th></tr></thead>
+<tbody>
+<tr><th scope="row">How should we add missing application behavior?</th><td>SAP Application Extension Methodology.</td><td>Scenes, extension tasks, technology selection and an extension target solution.</td></tr>
+<tr><th scope="row">How should systems exchange information consistently?</th><td>SAP Integration Solution Advisory Methodology (ISA-M).</td><td>Integration scope, policies, technology mapping, best practices and a governed integration practice.</td></tr>
+<tr><th scope="row">How can data support a measurable business outcome?</th><td>SAP Data &amp; Analytics Advisory Methodology (DAAM).</td><td>Outcomes, data journeys, capability/solution architecture, governance and roadmap.</td></tr>
+</tbody></table></div>
+
+<h3 id="method-extension">Application Extension Methodology: three phases</h3>
+<p><strong>1. Assess Extension Use Case.</strong> Agree system context, business requirements and scenes. The SAP scene template uses <strong>Actions, Application Logic, System and Required Data</strong>. For a portfolio extension strategy, the method may instead start from the technology-assessment phase.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Supplier verification: four scene lenses">
+<table class="study-table__table">
+<thead><tr><th scope="col">Scene</th><th scope="col">Actions and application logic</th><th scope="col">System and required data</th></tr></thead>
+<tbody>
+<tr><th scope="row">Request verification</th><td>An employee starts a case; the application records the pending request.</td><td>ERP and review service; BP reference, requester, assignment and initial status.</td></tr>
+<tr><th scope="row">Collect external review</th><td>The specialist accesses only an assigned case and records findings.</td><td>Partner-facing UI/service; permitted BP fields and evidence reference.</td></tr>
+<tr><th scope="row">Approve the next step</th><td>An authorized internal owner accepts/rejects the review outcome.</td><td>Approval service/workflow; decision, reviewer, approver and policy.</td></tr>
+<tr><th scope="row">Update and confirm</th><td>A permitted ERP process records the result; the case tracks confirmation or an exception.</td><td>Released ERP interface and owning business object; correlation and completion evidence.</td></tr>
+</tbody></table></div>
+
+<p><strong>2. Assess Extension Technology.</strong> Identify extension styles across presentation, application and data. Define technology-neutral tasks: present an external review screen, restrict case access, capture evidence, call the approved interface and retain status. Map tasks to candidate building blocks. On-stack versus side-by-side describes the extension domain, not the business need itself.</p>
+<p><strong>3. Define Extension Target Solution.</strong> Select the feasible combination using requirements and decision guidance. Compare standard governance, a side-by-side CAP service, workflow services and existing portal capabilities. Produce the target architecture and rationale. A custom status in our review app is not automatically a standard ERP “activation” field; choose the actual approved business operation for the customer’s edition.</p>
+<h3 id="method-data-analytics">DAAM: four phases, with iteration</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Data and Analytics Advisory Methodology">
+<table class="study-table__table">
+<thead><tr><th scope="col">Phase</th><th scope="col">Action</th><th scope="col">Evidence</th></tr></thead>
+<tbody>
+<tr><th scope="row">I. Scoping and baseline analysis</th><td>Agree the investigation scope, current architecture/capabilities and prioritized pain points.</td><td>Statement of architecture work, baseline and opportunity assessment.</td></tr>
+<tr><th scope="row">II. Business outcomes and solution requirements</th><td>Define the outcome and trace the data journey back from value to sources.</td><td>Approved outcome, use-case/data-product requirements, solution context and data integration flow.</td></tr>
+<tr><th scope="row">III. Capability map and solution architecture</th><td>Identify technology-neutral capabilities, map solutions, compare options and validate assumptions.</td><td>Capability/solution maps, options assessment and target architecture; PoC findings where needed.</td></tr>
+<tr><th scope="row">IV. Data governance and roadmaps</th><td>Assess relevant maturity, organization and ownership gaps; sequence the work.</td><td>Governance actions, roles, data-product ownership and an implementation roadmap.</td></tr>
+</tbody></table></div>
+
+<p>Phases II and III can repeat. For our case, start with “reduce the time to a valid supplier decision”, not “buy a dashboard”. Use the Data Journey Map’s <strong>Action, System, People and Experience</strong> lenses. Work backwards: what decision will the procurement lead make, what measure supports it, which case events define it and where do they originate?</p>
+<p>Two related use cases—review-cycle monitoring and identifying repeated rework—help test whether the data product is reusable. Define the request-level grain, reopenings, timestamps and access scope. Compare live access and persisted history according to requirements, then map capabilities to products. Governance starts during discovery; Phase IV consolidates its actions, not postpones all data ownership until the end.</p>
+<p>A weighted options matrix can help compare fit, cost and complexity. Reject options that violate mandatory constraints before scoring. A high average score cannot compensate for prohibited external ERP access or an unmet recovery requirement.</p>
+<h3 id="method-integration">ISA-M: four phases and a practical interface assessment</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="ISA-M phases and outputs">
+<table class="study-table__table">
+<thead><tr><th scope="col">Phase</th><th scope="col">Output</th></tr></thead>
+<tbody>
+<tr><th scope="row">1. Assess Your Integration Strategy</th><td>In-scope integration domains, styles and use-case patterns.</td></tr>
+<tr><th scope="row">2. Design Your Hybrid Integration Platform</th><td>Technology mapping, integration policies and interface assessment.</td></tr>
+<tr><th scope="row">3. Define Integration Best Practices</th><td>Dos and don’ts, architecture blueprints and development guidelines.</td></tr>
+<tr><th scope="row">4. Enable a Practice of Empowerment</th><td>Roles, responsibilities, governance and integration quality assurance.</td></tr>
+</tbody></table></div>
+
+<p><strong>Domain</strong> describes the landscape relationship, such as cloud-to-on-premise. <strong>Style</strong> describes the integration category, such as process or data integration. <strong>Use-case pattern</strong> describes its purpose, such as application-to-application, B2B or B2G. An integration area combines a domain and style in the relevant taxonomy. Do not use “API” as a substitute for all of these classifications.</p>
+<p>Integration Assessment uses configured questionnaires, characteristics and catalogs. An <strong>application profile</strong> names a product; an <strong>application instance</strong> identifies an actual deployment. Technology profiles and instances apply the same distinction to integration technology. A product in the catalog does not prove the customer has it installed or licensed.</p>
+<p><strong>Worked request:</strong> synchronize newly created/changed BP data from on-premise S/4HANA to Salesforce using an agreed ten-minute polling design. Record source and target instances, classification, required fields, keys, transformations, authentication and operating needs. Review available content and proposed technologies. Then assign real deployments and owners, approve the interface contract and test it.</p>
+<p>Polling needs a reliable change-selection/watermark approach, overlap handling, deduplication, and a decision about deletions and missed runs. An event-based alternative may be better, but only after checking released events and the business requirement. Integration Assessment’s recommendation does not prove either design will work.</p>
+<p>AIF may satisfy some business-monitoring requirements in a supported backend scenario. “Business users need monitoring” is not a universal rule that automatically mandates AIF. Document why the chosen combination fits this interface.</p>
+<h3 id="method-joined-case">One coherent set of deliverables</h3>
+<p>The extension method owns the external reviewer’s experience and application behavior. ISA-M owns the exchange contract and integration standards. DAAM owns the decision-support data and its quality. The business process owner approves authority and success criteria. Connect these decisions through a common BP/request identity and the same target architecture.</p>
+<p id="btp-guidance"><strong>Where to look:</strong> Discovery Center for services, plans, missions and estimation; Guidance Framework and Architecture Center for decision guidance and reference designs; Business Accelerator Hub for APIs, events and integration content; Trust Center for provider assurance. A reference architecture is a starting point, not a customer-specific contract.</p>
+<p class="btp-sources">Reference: <a href="#source-methods-extension">methods-extension</a>, <a href="#source-methods-integration">methods-integration</a>, <a href="#source-methods-data">methods-data</a>, <a href="#source-discovery">discovery</a>, <a href="#source-bp-api">bp-api</a>, <a href="#source-trust">trust</a>.</p><details class="page-faq__item btp-check"><summary><span>Which method should lead a project whose only requirement is trustworthy supplier-review reporting?</span></summary><div class="page-faq__answer"><p>DAAM should lead the data/analytics decision. Use the extension method only if required application behavior is missing, and ISA-M for necessary interface choices. Three methodologies do not mean three mandatory projects or three new products.</p></div></details>
+</div>
+</section>

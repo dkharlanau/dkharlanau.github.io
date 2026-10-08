@@ -1,0 +1,69 @@
+<span class="btp-anchor" id="build-integration-strategy"></span>
+<span class="btp-anchor" id="build-integration-suite"></span>
+<span class="btp-anchor" id="build-events-agents"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="integration" aria-labelledby="integration-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">07 / Integration</p><h2 id="integration-title">Design the business contract, then the transport</h2></header>
+<div class="signavio-reader__content">
+<p>An integration is a promise between systems. It specifies what a message means, who owns it, when it should arrive and what happens when delivery or processing is uncertain. An adapter is only one part of that promise.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Choose an interaction from its business purpose">
+<table class="study-table__table">
+<thead><tr><th scope="col">Need</th><th scope="col">Candidate interaction</th><th scope="col">Cost of the choice</th></tr></thead>
+<tbody>
+<tr><th scope="row">Immediate confirmation of a requested action</th><td>Synchronous API / request–response.</td><td>The caller depends on response time and availability. A timeout can leave an unknown outcome.</td></tr>
+<tr><th scope="row">Independent reactions to a completed change</th><td>Asynchronous event.</td><td>Consumers can lag, receive duplicates or observe changes in a different order. Design eventual consistency.</td></tr>
+<tr><th scope="row">Supplier document exchange</th><td>B2B / EDI or a supported partner API.</td><td>Partner agreements, message versions, mappings and acknowledgments must be maintained.</td></tr>
+<tr><th scope="row">Historical or analytical data movement</th><td>Replication, extraction, federation or supported sharing.</td><td>Freshness, source load, cost, data rights and reconciliation differ.</td></tr>
+<tr><th scope="row">Legacy system without an appropriate API</th><td>A supported existing interface, adapter, file exchange or bounded automation.</td><td>An MCP wrapper does not invent a missing business function or remove legacy risks.</td></tr>
+</tbody></table></div>
+
+<h3>What the Integration Suite capabilities actually do</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Integration capability responsibilities">
+<table class="study-table__table">
+<thead><tr><th scope="col">Capability</th><th scope="col">Its job</th><th scope="col">A common confusion</th></tr></thead>
+<tbody>
+<tr><th scope="row">Cloud Integration</th><td>Execute iFlows: receive, validate, transform, route, call and handle errors.</td><td>An iFlow is not automatically the business-process owner or an ERP transaction.</td></tr>
+<tr><th scope="row">API Management</th><td>Publish and protect APIs with consumer policies, lifecycle controls and analytics.</td><td>API access policy does not replace ERP authorization or every backend security control.</td></tr>
+<tr><th scope="row">Integration Advisor</th><td>Design structured message implementations and mappings using type systems, MIGs and MAGs.</td><td>It is not the tool that selects the enterprise integration platform.</td></tr>
+<tr><th scope="row">Trading Partner Management</th><td>Manage partner profiles and agreements for supported B2B scenarios.</td><td>The commercial agreement and the technical agreement are related, not identical.</td></tr>
+<tr><th scope="row">Integration Assessment</th><td>Apply a configured integration strategy and questionnaire to interface requirements.</td><td>Technology-fit recommendations are not deployed interfaces or production tests.</td></tr>
+<tr><th scope="row">Migration Assessment / migration tooling</th><td>Assess and assist supported PI/PO migration scenarios.</td><td>Generated artifacts still require fit checks, regression tests and operating decisions.</td></tr>
+<tr><th scope="row">Open Connectors / adapters</th><td>Provide supported connections to protocols or applications.</td><td>Connector counts change. Verify the exact operation, authentication, plan and maintenance status.</td></tr>
+<tr><th scope="row">Edge Integration Cell</th><td>Run supported integration workloads in a customer-managed environment with cloud-based design/management.</td><td>It is not every Integration Suite capability installed on-premise without restrictions.</td></tr>
+<tr><th scope="row">MCP gateway capability</th><td>Expose supported APIs/integrations as governed agent tools.</td><td>Tool discovery does not automatically authorize a business action.</td></tr>
+</tbody></table></div>
+
+<p><strong>Message mapping</strong> maps structures and fields. <strong>Value mapping</strong> translates values such as external unit or organization codes. A syntactically valid mapping can still be commercially wrong: “case” and “piece” may both be strings, but they do not represent the same quantity.</p>
+<p>In Integration Advisor, a <strong>MIG</strong> defines an implementation-specific message structure and constraints. A <strong>MAG</strong> defines the mapping between source and target structures. Runtime artifacts can support the chosen integration; they do not remove the need to agree business meaning.</p>
+<h3>Event-driven does not mean “fire and forget the business”</h3>
+<p>A producer publishes a fact. A broker routes it to consumers, often through queues. A consumer performs its own action. The producer does not need to name every consumer, but the enterprise still needs an owner for the complete outcome.</p>
+<p>A <strong>topic</strong> identifies/routes a category of messages; a <strong>queue</strong> holds messages for consumption under its configured behavior. Broker delivery, retention and ordering are bounded by the selected product, protocol and configuration. SAP Event Mesh service offerings, Integration Suite Event Mesh capability and advanced event mesh are not names to collapse into one universal license or feature set. Check the exact offer and any migration guidance.</p>
+<p><strong>Best Effort, Exactly Once and Exactly Once In Order</strong> describe particular messaging contracts. They are not universal synonyms for synchronous or asynchronous communication. End-to-end business effects require their own design: a receiver may commit a document before its response is lost.</p>
+<p>Use a stable business/request key, an idempotent receiver or a deduplication record, bounded retries, a dead-letter or equivalent error path, correlation and reconciliation. A transactional outbox can connect a local database change to eventual event publication; it does not create one atomic transaction across independent ERP and cloud systems.</p>
+<h3>The contract that prevents the expensive failure</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Minimum interface contract for the supplier review result">
+<table class="study-table__table">
+<thead><tr><th scope="col">Element</th><th scope="col">What to agree</th></tr></thead>
+<tbody>
+<tr><th scope="row">Business scope and owner</th><td>What result is being recorded? Which application owns the official supplier state?</td></tr>
+<tr><th scope="row">Identity and authorization</th><td>Which reviewer may submit this case? Which internal role approves the ERP change?</td></tr>
+<tr><th scope="row">Schema and semantics</th><td>Request ID, BP identity, decision, evidence reference, timestamps, versions and validation rules.</td></tr>
+<tr><th scope="row">Delivery and duplicates</th><td>Timeouts, retry policy, deduplication lifetime, order requirements and late responses.</td></tr>
+<tr><th scope="row">Failure and completion</th><td>Distinguish rejected input, technical failure, unknown outcome and confirmed business update.</td></tr>
+<tr><th scope="row">Operations and change</th><td>Who receives errors? What is retained? How are compatible and breaking changes released?</td></tr>
+</tbody></table></div>
+
+<p><strong>Our example payload is a custom contract, not a published SAP API:</strong></p>
+<pre><code>{
+  "requestId": "demo-review-001",
+  "businessPartner": "DEMO-BP-100",
+  "decision": "ACCEPT",
+  "evidenceReference": "review-record-001",
+  "contractVersion": "1"
+}</code></pre>
+<p>Choose a real ERP API in SAP Business Accelerator Hub only after checking edition, release, supported operation, communication scenario, authentication, required fields and limitations. For relevant S/4HANA Cloud integrations, the communication user/system/arrangement must be configured. An API listed in a catalog is not necessarily enabled in the customer tenant.</p>
+<h3>AIF and middleware operate at different boundaries</h3>
+<p>SAP Application Interface Framework can support business-oriented monitoring and correction of suitable backend interfaces. Cloud Integration handles its own messages and technical processing. A business user’s need to correct an error may justify AIF in a supported scenario; it does not make AIF mandatory for every interface.</p>
+<p>For PI/PO modernization, inventory first: retire unused interfaces, identify standard content, assess gaps, migrate or redesign, and test both normal and failure paths. A pipeline approach is a reusable integration architecture, not simply all interfaces combined into a single giant iFlow.</p>
+<p class="btp-sources">Reference: <a href="#source-integration">integration</a>, <a href="#source-events">events</a>, <a href="#source-mcp">mcp</a>, <a href="#source-bp-api">bp-api</a>, <a href="#source-methods-integration">methods-integration</a>.</p><details class="page-faq__item btp-check"><summary><span>The ERP call timed out. Why is “send the same POST again” an unsafe default?</span></summary><div class="page-faq__answer"><p>The ERP may have committed the change before the response was lost. First reconcile using a supported business reference or status lookup. Retry only with the interface’s defined idempotency behavior. Without a safe lookup/contract, route the unknown outcome for controlled recovery.</p></div></details>
+</div>
+</section>

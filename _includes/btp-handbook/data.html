@@ -1,0 +1,48 @@
+<span class="btp-anchor" id="context-why"></span>
+<span class="btp-anchor" id="context-language"></span>
+<span class="btp-anchor" id="context-data-products"></span>
+<span class="btp-anchor" id="context-products"></span>
+<span class="btp-anchor" id="context-bdc"></span>
+<span class="btp-anchor" id="context-knowledge-models"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="data" aria-labelledby="data-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">09 / Contextualize</p><h2 id="data-title">Make business data usable before making it intelligent</h2></header>
+<div class="signavio-reader__content">
+<p>“Show late supplier reviews” sounds simple until two teams disagree about what late means. Is the clock based on calendar days or working days? Does it stop while information is missing? Are reopened cases counted twice? The first data problem is often a definition, not a missing database.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Data architecture concepts without false alternatives">
+<table class="study-table__table">
+<thead><tr><th scope="col">Concept</th><th scope="col">What it describes</th><th scope="col">Useful distinction</th></tr></thead>
+<tbody>
+<tr><th scope="row">Data warehouse / data mart</th><td>Curated analytical storage; a mart usually serves a narrower domain.</td><td>A warehouse can use ETL or ELT. Its business definitions matter as much as its tables.</td></tr>
+<tr><th scope="row">Data lake</th><td>Storage for varied data, often including raw files and records.</td><td>Keeping raw data does not make it ready for business decisions.</td></tr>
+<tr><th scope="row">Data fabric / business data fabric</th><td>An architecture for connected, governed data access; the business variant emphasizes semantics.</td><td>It can combine replication, federation and sharing. It is not necessarily one central database.</td></tr>
+<tr><th scope="row">Data mesh</th><td>An operating model with domain-owned data products, common standards and federated governance.</td><td>It is not simply a data fabric divided into small departmental databases.</td></tr>
+<tr><th scope="row">Data product</th><td>A reusable data asset with a consumer contract.</td><td>A table or CSV alone does not define quality, ownership, freshness and permissible use.</td></tr>
+</tbody></table></div>
+
+<h3>The contract for a “Supplier Review Status” data product</h3>
+<p>Define the <strong>grain</strong>: one review request, not one supplier. Keep the business key and source-of-truth reference. Define status and elapsed-time rules, timestamps, owner, refresh target, completeness checks, permitted consumers, retention and version policy. The same supplier may have several reviews; counting suppliers and counting cases answers different questions.</p>
+<p>A data product’s contract may expose data through a view, API, share or another supported mechanism. It does not require every consumer to reverse-engineer application tables or invent the same measures again.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Data products and SAP service boundaries">
+<table class="study-table__table">
+<thead><tr><th scope="col">Product</th><th scope="col">Main role</th><th scope="col">What remains a separate decision</th></tr></thead>
+<tbody>
+<tr><th scope="row">SAP HANA Cloud</th><td>Database persistence and processing, including supported multi-model capabilities.</td><td>Database choice, capacity and engine features do not create business ownership or semantics automatically.</td></tr>
+<tr><th scope="row">SAP Datasphere</th><td>Integration, warehousing, cataloging, semantic modeling and supported virtualization.</td><td>Spaces, sharing, data access controls, connections and source load need design. It is SaaS, not a promise to run anywhere.</td></tr>
+<tr><th scope="row">SAP Analytics Cloud (SAC)</th><td>Business intelligence, analytical experiences and planning.</td><td>A story, a model and a source system are different artifacts. Planning changes do not automatically post into ERP.</td></tr>
+<tr><th scope="row">SAP Master Data Governance (MDG)</th><td>Govern, consolidate and improve supported master data.</td><td>Cloud-edition scope is not identical to all capabilities of MDG on S/4HANA. Check the domain and edition.</td></tr>
+<tr><th scope="row">SAP Master Data Integration (MDI)</th><td>Synchronize supported master data using defined integration models.</td><td>Distribution is not supplier approval; supported objects and mappings must be checked.</td></tr>
+<tr><th scope="row">SAP Business Data Cloud (BDC)</th><td>An offering combining governed data products, business semantics, analytics and related data/AI capabilities.</td><td>It does not automatically activate every source, eliminate all transformation or replace systems of record.</td></tr>
+<tr><th scope="row">SAP Databricks / BW modernization options</th><td>Data engineering and ML, or reuse/modernization of existing BW investments in supported configurations.</td><td>BW version, hosting, BW bridge, migration path, source compatibility and entitlement are not interchangeable.</td></tr>
+</tbody></table></div>
+
+<h3>Replication, federation and sharing</h3>
+<p><strong>Replicate</strong> when you need appropriate history, local performance or reduced runtime dependency on the source. You now own freshness, storage and reconciliation. <strong>Federate</strong> when supported remote access fits; consider source availability, performance, permissions and cost. <strong>Zero-copy sharing</strong> describes a supported sharing pattern, not a guarantee of no data movement, no compute cost or no security boundary anywhere in the solution.</p>
+<p>In Datasphere, spaces organize resources and collaboration; data access controls and sharing determine who can consume which records. Semantic models provide measures, dimensions and relationships. In SAC, live and imported data have different freshness and access paths. Data Analyzer supports ad-hoc exploration; stories provide a designed analytical experience; planning models and actions introduce write-oriented processes.</p>
+<p>BDC intelligent applications/content can combine delivered data products, models and analytics. This is different from customer-maintained templates. Verify prerequisites, source coverage, tenant formation, scope and lifecycle responsibility before saying “activate and everything works”.</p>
+<h3>Knowledge graphs add explicit relationships</h3>
+<p>A supplier is linked to contracts and materials; a purchase-order item is linked to the requested material; a material can affect several production orders. A graph makes these links explicit. A relational database can also answer many joined queries; a graph is useful when representing and traversing relationships is central to the task.</p>
+<p><strong>SAP Knowledge Graph</strong> and the <strong>HANA Cloud knowledge graph engine</strong> are not the same thing. One is a semantic product/context capability; the other is a technical engine for appropriate graph workloads. Delivered SAP semantics do not mean every current customer fact, custom field, relationship and authorization is automatically available to every agent.</p>
+<p><strong>Reasoning boundary:</strong> a news story about a port closure is not proof that a particular purchase order is late. Resolve the route and shipment, check source time and authority, then connect it to the affected business objects.</p>
+<p class="btp-sources">Reference: <a href="#source-bdc">bdc</a>, <a href="#source-datasphere">datasphere</a>, <a href="#source-sac">sac</a>, <a href="#source-mdi">mdi</a>, <a href="#source-mdg">mdg</a>, <a href="#source-knowledge">knowledge</a>.</p><details class="page-faq__item btp-check"><summary><span>An agent finds a cheap supplier in a spreadsheet. Why is this not enough to recommend a purchase order?</span></summary><div class="page-faq__answer"><p>The spreadsheet may contain an unverified lead rather than an approved supplier. Resolve identity against governed master data, check relevant organizational approval, quality, contract and current capacity. A model’s confidence does not replace those facts.</p></div></details>
+</div>
+</section>

@@ -1,0 +1,54 @@
+<span class="btp-anchor" id="design-choices"></span>
+<span class="btp-anchor" id="build-clean-core"></span>
+<span class="btp-anchor" id="build-tools"></span>
+<span class="btp-anchor" id="build-runtimes"></span>
+<span class="btp-anchor" id="build-experience"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="build" aria-labelledby="build-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">06 / Extensions and development</p><h2 id="build-title">Choose the smallest supported extension</h2></header>
+<div class="signavio-reader__content">
+<p>Start with fit-to-standard. A supported ERP configuration change may solve the problem without custom development. When an extension is justified, decide where its business behavior belongs. <strong>Clean core is about sustainable change, not a ban on every custom ABAP object.</strong></p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="The three SAP extensibility options">
+<table class="study-table__table">
+<thead><tr><th scope="col">Option</th><th scope="col">Good fit</th><th scope="col">Constraint or trade-off</th></tr></thead>
+<tbody>
+<tr><th scope="row">Key-user extensibility — on-stack</th><td>Supported fields, UI adaptation and limited business logic close to the standard process.</td><td>Only the extension points and scope exposed by the target application are available.</td></tr>
+<tr><th scope="row">Developer extensibility — on-stack</th><td>ABAP Cloud / RAP logic using released objects in a supported ERP stack.</td><td>Tighter access to the ERP business context, but the applicable release contracts and edition rules remain binding.</td></tr>
+<tr><th scope="row">Side-by-side — outside ERP</th><td>Cross-system workflow, external user experience, independent lifecycle or a different runtime need.</td><td>Adds remote calls, identity and operations. It does not grant local ERP transaction semantics across the network.</td></tr>
+</tbody></table></div>
+
+<p>For supplier review, the external user boundary can justify a side-by-side UI. It does not justify copying the entire supplier master. Store the case reference and review evidence you need; use a supported interface for authoritative business data.</p>
+<h3>Five clean-core dimensions, not only code</h3>
+<p><strong>Processes:</strong> avoid unnecessary variants. <strong>Extensions:</strong> use supported contracts. <strong>Data:</strong> control quality and lifecycle. <strong>Integrations:</strong> keep stable, governed interfaces. <strong>Operations:</strong> release and recover the solution predictably. Moving unsupported logic to BTP does not automatically improve all five.</p>
+<p>The A–D clean-core classification helps assess extension risk, especially in private-edition and on-premise modernization. Level A uses the preferred released-contract approach. Level B covers the relevant documented classic APIs/technologies under SAP’s classification. Level C has internal-object dependencies requiring stronger upgrade attention. Level D uses non-recommended techniques. <strong>An arbitrary BAPI is not automatically Level B or guaranteed upgrade-safe.</strong> Check the actual object and assessment guidance. Public-edition extensibility remains more restricted.</p>
+<h3>Tool, programming model and runtime</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Keep development concepts separate">
+<table class="study-table__table">
+<thead><tr><th scope="col">Category</th><th scope="col">Examples</th><th scope="col">Decision it supports</th></tr></thead>
+<tbody>
+<tr><th scope="row">Development tool / environment</th><td>SAP Business Application Studio, SAP Build Code, ABAP Development Tools (ADT), Joule Studio tools.</td><td>How the team creates and maintains artifacts. An IDE does not determine every runtime choice.</td></tr>
+<tr><th scope="row">Programming model</th><td>CAP: Node.js/Java and CDS. RAP: ABAP business objects, behavior and service exposure.</td><td>How business data and behavior are implemented. CAP is not a Python framework simply because a runtime can run Python.</td></tr>
+<tr><th scope="row">Runtime</th><td>Cloud Foundry, Kyma, SAP BTP ABAP environment; supported managed Joule Studio execution.</td><td>Where the workload runs and which operational responsibilities exist.</td></tr>
+<tr><th scope="row">User experience</th><td>SAP Fiori principles, SAPUI5, Fiori elements, native mobile frameworks, or an appropriate web UI.</td><td>How users interact. Fiori is not an application server or an alternative to CAP.</td></tr>
+</tbody></table></div>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Runtime selection without a size myth">
+<table class="study-table__table">
+<thead><tr><th scope="col">Runtime</th><th scope="col">Choose when</th><th scope="col">Do not assume</th></tr></thead>
+<tbody>
+<tr><th scope="row">Cloud Foundry</th><td>An application-centric deployment model fits the workload and team. CAP services are a common example.</td><td>It is only for small applications, or that using it forces CAP.</td></tr>
+<tr><th scope="row">Kyma</th><td>You need Kubernetes/container capabilities and can operate the application-level complexity.</td><td>Only Kyma uses containers, or Kubernetes alone provides every required logging/security feature.</td></tr>
+<tr><th scope="row">SAP BTP ABAP environment</th><td>The solution and team fit ABAP Cloud, RAP and released remote integration.</td><td>It allows unrestricted access to tables in a remote S/4HANA system.</td></tr>
+<tr><th scope="row">SAP-managed agent runtime</th><td>The selected Joule Studio offering and supported workload fit the operating model.</td><td>SAP management removes responsibility for business policy, data access, evaluation and recovery.</td></tr>
+</tbody></table></div>
+
+<p>CAP and RAP can both support transactional applications and Fiori experiences. CAP commonly supports cloud extensions on Cloud Foundry or Kyma; RAP runs in an ABAP environment. Select from business coupling, skills, contracts and lifecycle requirements, not from which acronym sounds newer.</p>
+<h3>SAP Build: choose the artifact you need</h3>
+<p><strong>Process Automation</strong> provides workflows, decisions, forms and task automation. Prefer APIs to UI automation where a suitable stable API exists. RPA may still fit an interface gap, but UI changes and desktop execution become operating risks.</p>
+<p><strong>Build Code</strong> supports pro-code development; <strong>ADT</strong> is the ABAP development tool. <strong>Work Zone</strong> provides application access and digital workspaces. Standard and advanced editions differ in scope; advanced collaboration is not needed just because several users launch an app. <strong>Task Center</strong> aggregates supported tasks; the source system still owns task semantics and authorization.</p>
+<p><strong>Lifecycle note:</strong> SAP’s March 2026 announcement deprecates SAP Build Apps as a standalone product while maintaining existing contractual commitments. Do not present it as an unchanged default for a new standalone purchase. Read the transition guidance for the actual customer setup.</p>
+<h3>Mobile is a separate requirement, not a smaller browser</h3>
+<p>Mobile Services supports capabilities such as secure onboarding, push and supported offline synchronization. MDK uses metadata to build mobile experiences; native SAP BTP SDKs for iOS and Android offer deeper platform-specific development. A mobile entry app such as Mobile Start / its evolving Joule Work mobile experience is not the same thing as Mobile Services. Confirm the current product name and scope.</p>
+<p>A warehouse worker who must operate without connectivity needs conflict handling, local-data protection and a synchronization design. “The UI is responsive” does not answer those requirements. Mobile Cards is a separate content/application capability; do not assume every card or approval experience is automatically embedded in the chosen mobile entry app.</p>
+<p><strong>Decision to remember:</strong> start from the required change, select the extension boundary, then choose the programming model, tool and runtime. The <a href="#development-lab">development lab</a> makes that separation concrete.</p>
+<p class="btp-sources">Reference: <a href="#source-extensions">extensions</a>, <a href="#source-clean-core">clean-core</a>, <a href="#source-cap">cap</a>, <a href="#source-cap-security">cap-security</a>, <a href="#source-build-apps">build-apps</a>, <a href="#source-mobile">mobile</a>.</p><details class="page-faq__item btp-check"><summary><span>The team knows ABAP well. Must the extension therefore run inside S/4HANA?</span></summary><div class="page-faq__answer"><p>No. RAP-based applications can also run in SAP BTP ABAP environment where supported. Skills influence the choice, but business coupling, released interfaces, lifecycle, cost and the external-user boundary still need a decision.</p></div></details>
+</div>
+</section>

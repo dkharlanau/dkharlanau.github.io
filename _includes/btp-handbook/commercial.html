@@ -1,0 +1,41 @@
+<section class="research-canvas__inventory signavio-reader__section" id="commercial" aria-labelledby="commercial-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">05 / Licensing and cost</p><h2 id="commercial-title">An architecture has both a service model and a cost model</h2></header>
+<div class="signavio-reader__content">
+<p>“We already have BTP” is not enough to confirm access to a product. Ask which contract, which global account, which service and plan, which region and how usage is metered. A technical subscription, an entitlement and a purchased subscription are three different facts.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Commercial choices and practical restrictions">
+<table class="study-table__table">
+<thead><tr><th scope="col">Model</th><th scope="col">How to think about it</th><th scope="col">What to verify</th></tr></thead>
+<tbody>
+<tr><th scope="row">Trial account</th><td>Personal exploration and non-productive evaluation, separate from an enterprise setup.</td><td>Current trial lifetime and resource limits. SAP’s cited guide describes 90 days and prohibits productive use and team development.</td></tr>
+<tr><th scope="row">Enterprise account with free plans</th><td>An enterprise account can offer limited free plans for eligible services.</td><td>Plan scope, capacity, lifetime, migration path and support. A free plan is not the same as a productive SLA.</td></tr>
+<tr><th scope="row">Pay-As-You-Go</th><td>Consumption of eligible services without a cloud-credit commitment of the CPEA/BTPEA type.</td><td>Catalog eligibility, the applicable meters and invoice terms. Unused but running resources may still cost money.</td></tr>
+<tr><th scope="row">CPEA / SAP BTPEA</th><td>Committed cloud credits for eligible service consumption, with contractual conditions.</td><td>The two catalogs are not identical. Check commitment, term, overage, expiry and conversion conditions in the agreement.</td></tr>
+<tr><th scope="row">Subscription-based purchase</th><td>Commercial commitment to specified service scope and quantities.</td><td>Licensed users, capacity, editions, renewals and overage rules. A fixed subscription price does not imply unlimited use.</td></tr>
+<tr><th scope="row">AI consumption and packages</th><td>AI capabilities may be included, separately entitled or consumed through product-specific usage metrics.</td><td>Model, tokens or AI-unit conversion, runtime, evaluation, grounding and partner-model charges. Do not apply one meter to all AI products.</td></tr>
+</tbody></table></div>
+
+<h3>Free tier is not “automatic free capacity, then automatic paid overflow”</h3>
+<p>The supplied lesson describes free capacity in broad commercial terms. SAP’s service-plan documentation makes an important distinction: free plans have technical limits and a move to a paid plan may be required. Not every service supports an in-place transition. Verify the selected plan instead of promising seamless conversion or automatic paid overrun.</p>
+<p><strong>Always Free</strong> in Discovery Center means a plan is included without additional charges in the relevant overall contract; it is not a statement that the whole application, its runtime or connected services are free. Free plans are not generally subject to productive SLAs in the cited guidance.</p>
+<h3>Turn the diagram into a service bill of materials</h3>
+<p>For each component, record the exact service/plan, environment, region, production and non-production quantity, meter, unit, duty cycle, minimum charge and dependency. This is a <strong>service cost inventory</strong>. A formal software bill of materials (SBOM) records software components and dependencies; it is a different artifact.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Illustrative cost inventory for a supplier review extension">
+<table class="study-table__table">
+<thead><tr><th scope="col">Cost item</th><th scope="col">Sizing input</th><th scope="col">Question that changes the estimate</th></tr></thead>
+<tbody>
+<tr><th scope="row">Application runtime</th><td>Instances × configured memory × running hours.</td><td>Do test systems run all month? What redundancy and minimum capacity are required?</td></tr>
+<tr><th scope="row">Database / persistence</th><td>Capacity, service plan, compute, storage and backup requirements.</td><td>Can existing persistence be reused safely? Does stopping compute still leave storage charges?</td></tr>
+<tr><th scope="row">Integration</th><td>Interfaces, messages, payloads, connectivity and selected API/event capabilities.</td><td>What is included in the plan? How many calls do retries and polling add?</td></tr>
+<tr><th scope="row">AI, when justified</th><td>Requests × model calls × input/output tokens, plus relevant tools and grounding.</td><td>How large is retrieved context? How often does the agent repeat a step?</td></tr>
+<tr><th scope="row">Operations</th><td>Logs, retention, transports, alerting and support effort.</td><td>How much evidence must be retained? Who operates the extra components?</td></tr>
+</tbody></table></div>
+
+<p><strong>Worked sizing example — synthetic, not an SAP quote:</strong> two application instances, each with 0.5 GB of memory, running for 730 hours produce <strong>730 GB-hours</strong>. One 0.5 GB test instance used for 220 hours adds <strong>110 GB-hours</strong>. Total: <strong>840 GB-hours</strong>, before the selected plan’s billing rules. Multiply by the applicable rate only after checking its unit and conditions.</p>
+<p>For a token-metered AI path, a first model is: requests × calls per request × (input tokens × input rate + output tokens × output rate). Add other chargeable services and convert units correctly. This is a planning formula, not a universal SAP pricing formula.</p>
+<p>Use the Discovery Center estimator for the specified region and commercial model, then reconcile it with the agreement. Estimate low, expected and high demand. Include recurring operations and change effort in total cost of ownership. A lower runtime bill can still produce a more expensive solution if it needs difficult support.</p>
+<h3>Control cost where work can actually multiply</h3>
+<p>Set ownership, budgets and usage alerts. Bound an agent’s tool calls, elapsed time and output size; stop loops and repeated failures. A resource quota may limit capacity without preventing every form of spending. Usage analytics, available credits and the billed amount are related but not identical.</p>
+<p><strong>Client explanation:</strong> “We can estimate the design once we know the services and demand. I will show the assumptions, non-production costs and the expensive failure paths. The estimator is a planning aid; your contract defines the bill.”</p>
+<p class="btp-sources">Reference: <a href="#source-commercial">commercial</a>, <a href="#source-entitlements">entitlements</a>, <a href="#source-free">free</a>, <a href="#source-trial">trial</a>, <a href="#source-ai-pricing">ai-pricing</a>.</p><details class="page-faq__item btp-check"><summary><span>Why can a small agent become expensive even when the model’s price per token is low?</span></summary><div class="page-faq__answer"><p>It can retrieve too much context, call several models, repeat failed tools or run continuously. Cost is driven by the complete execution path and supporting services, not only by the advertised price of one model.</p></div></details>
+</div>
+</section>

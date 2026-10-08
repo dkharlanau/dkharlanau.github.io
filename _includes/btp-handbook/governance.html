@@ -1,0 +1,29 @@
+<span class="btp-anchor" id="govern-purpose"></span>
+<span class="btp-anchor" id="govern-toolchain"></span>
+<span class="btp-anchor" id="govern-failure"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="governance" aria-labelledby="governance-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">11 / Govern</p><h2 id="governance-title">Make ownership and control part of execution</h2></header>
+<div class="signavio-reader__content">
+<p>Imagine that a supplier changes its quantity unit from “device” to “case of ten”. An agent orders 1,200 cases while believing it has ordered 1,200 devices. The API succeeds; 12,000 devices are committed. This is not mainly a prompt problem. The unit contract, validation, purchasing limit and approval control failed.</p>
+<p><strong>Governance must be enforced where an action becomes real.</strong> Recording a policy in a document or an agent registry is useful, but a bypassable policy does not protect the ERP posting.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Agent governance across the lifecycle">
+<table class="study-table__table">
+<thead><tr><th scope="col">Stage</th><th scope="col">Decision and evidence</th></tr></thead>
+<tbody>
+<tr><th scope="row">Plan &amp; build</th><td>Name the business owner, intended outcome, prohibited actions, risk class and why an agent is needed.</td></tr>
+<tr><th scope="row">Discover &amp; provision</th><td>Register the asset, version, runtime, identity, tools, source data and responsible team.</td></tr>
+<tr><th scope="row">Observe &amp; analyze</th><td>Collect permitted telemetry, session/tool traces, failure modes, business completion and cost.</td></tr>
+<tr><th scope="row">Secure &amp; govern</th><td>Enforce tool scope, data access, business limits, approval and release policies on the real execution path.</td></tr>
+<tr><th scope="row">Optimize &amp; decommission</th><td>Review value and risk; retire unused agents, revoke identities, handle queued work and preserve required evidence.</td></tr>
+</tbody></table></div>
+
+<p><strong>SAP AI Agent Hub / LeanIX</strong> supports inventory and governance in the wider architecture context. Discovery and observation depend on integrations and supported assets; do not assume every unregistered custom agent is discovered automatically. <strong>Runtime and gateway controls</strong> enforce supported paths. <strong>Identity services</strong> establish relevant identities and provisioning. <strong>Cloud ALM</strong> and native tools support operations; <strong>Signavio</strong> can analyze supported process/agent traces and business value.</p>
+<p>The business owner defines approval authority and acceptable risk. The solution architect defines boundaries and failure handling. Security owners review identity and data controls. Operations owns detection and recovery. None of these responsibilities disappears because the runtime is SAP-managed.</p>
+<h3>The safeguards for the wrong-quantity scenario</h3>
+<p>Validate the contract version and unit conversion. Compare the resulting base quantity with demand, stock coverage, contract limits and storage capacity. Calculate total value in an explicit currency. Escalate material deviations. Do not let a payment agent treat the existence of a purchase order as sufficient evidence for payment; the applicable invoice, receipt and payment controls still apply.</p>
+<p>Keep the initiating identity, approval, request ID, contract/model version and resulting ERP document reference in the right evidence stores. A controlled stop must disable the risky action, preserve work and provide a manual route. Shutting down all replenishment without understanding queued work can create a second incident.</p>
+<h3>Measure the process, not the performance of a chatbot</h3>
+<p>For the supplier-review case, useful outcomes are review lead time, reopened/rejected cases, unauthorized-action attempts, incomplete ERP updates and cost per completed review. Define how each measure is calculated and compare against a baseline. A low API latency does not prove faster approved onboarding.</p>
+<p class="btp-sources">Reference: <a href="#source-agent-hub">agent-hub</a>, <a href="#source-identity">identity</a>, <a href="#source-cloud-alm">cloud-alm</a>, <a href="#source-course">course</a>.</p><details class="page-faq__item btp-check"><summary><span>An agent is marked “verified” in the registry. Can it call any approved API?</span></summary><div class="page-faq__answer"><p>No. Verification is one governance record. The particular agent identity must be authorized for the tool, object, operation and business scope, and any required approval must still exist. Test the enforcement path and possible bypasses.</p></div></details>
+</div>
+</section>

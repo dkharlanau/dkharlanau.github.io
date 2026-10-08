@@ -1,0 +1,46 @@
+<span class="btp-anchor" id="build-operations"></span>
+<span class="btp-anchor" id="foundation-overview"></span>
+<span class="btp-anchor" id="foundation-operations"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="operations" aria-labelledby="operations-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">12 / Run and change</p><h2 id="operations-title">Operate the whole solution, including its failure paths</h2></header>
+<div class="signavio-reader__content">
+<p>A working development URL is not a production operating model. Define service ownership, support hours, monitoring, release controls and recovery before go-live. The platform can provide mechanisms; the project must choose and test the complete path.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Foundation and operations services: different jobs">
+<table class="study-table__table">
+<thead><tr><th scope="col">Capability</th><th scope="col">What it provides</th><th scope="col">Boundary</th></tr></thead>
+<tbody>
+<tr><th scope="row">SAP Continuous Integration and Delivery</th><td>Supported build, test and delivery pipelines.</td><td>Continuous delivery can retain a production approval gate; continuous deployment is the automatic release variant.</td></tr>
+<tr><th scope="row">SAP Cloud Transport Management</th><td>Promotion of supported cloud content/artifacts through a defined landscape.</td><td>It does not replace Git, all ABAP transport mechanisms or a complete regression suite.</td></tr>
+<tr><th scope="row">SAP Cloud Logging</th><td>Supported logs, metrics and traces for technical diagnosis.</td><td>It is not automatically the audit record or a business reconciliation ledger.</td></tr>
+<tr><th scope="row">SAP Audit Log</th><td>Supported security-relevant events emitted by applications and services.</td><td>Events must be emitted correctly; not every business action appears automatically.</td></tr>
+<tr><th scope="row">SAP Job Scheduling</th><td>One-time/recurring execution of supported background jobs.</td><td>Job completion does not guarantee the intended ERP transaction completed. Verify retry and callback behavior.</td></tr>
+<tr><th scope="row">SAP Alert Notification</th><td>Route supported events to configured actions/channels.</td><td>An alert does not prove that the incident was received, owned or resolved.</td></tr>
+<tr><th scope="row">Cloud Integration Automation Service (CIAS)</th><td>Guided configuration for supported integration scenarios.</td><td>Setup guidance is not the productive message runtime.</td></tr>
+<tr><th scope="row">HANA Cloud / object storage / other persistence</th><td>Store structured or unstructured application data in an appropriate service.</td><td>Plans, provider/region availability, backup, retention and isolation are service-specific.</td></tr>
+<tr><th scope="row">Data Retention Manager</th><td>Retention support for applications integrated with its supported BTP approach.</td><td>Do not assume universal deletion of every S/4HANA or SaaS business record.</td></tr>
+</tbody></table></div>
+
+<h3>Cloud ALM, Focused Run and Solution Manager</h3>
+<p>Cloud ALM supports implementation and operations for supported SAP cloud and hybrid scenarios. Focused Run serves advanced, high-volume monitoring needs. Solution Manager is an established ALM platform with a lifecycle transition to consider. SAP’s published mainstream-maintenance horizon for Solution Manager 7.2 is 2027; check the applicable maintenance and transition scope rather than starting a new design from an old monitoring diagram.</p>
+<p>For every tool, list the actual covered systems and collected signals. “Central monitoring” is not proof that all interface fragments, partner systems and business documents are correlated.</p>
+<h3>Release checklist: one change through the landscape</h3>
+<p>Version the code and interface/schema changes. Build a reproducible artifact using a dependency lock file. Run unit, contract, negative authorization and integration tests. Promote the same reviewed artifact with environment-specific configuration outside source code. Validate trust, destination, role assignment and data migration in the target. Record release approval and the rollback/compensation decision.</p>
+<p>Rolling back application code does not reverse an ERP posting, a sent email or an external order. A schema downgrade may also be unsafe after new data has been written. Define a business compensation or forward-recovery path, not only a deployment rollback button.</p>
+<h3>Diagnose “success” with a missing business result</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="First evidence for common integration failures">
+<table class="study-table__table">
+<thead><tr><th scope="col">Symptom</th><th scope="col">First checks</th><th scope="col">Do not do first</th></tr></thead>
+<tbody>
+<tr><th scope="row">401 / failed authentication</th><td>Token issuer/audience/expiry, trust, credentials and the authentication method.</td><td>Add broad business roles without establishing identity.</td></tr>
+<tr><th scope="row">403 / forbidden operation</th><td>Application scopes, object assignment, tenant and backend authorization.</td><td>Make the service identity an administrator.</td></tr>
+<tr><th scope="row">Timeout after a write</th><td>Request key, receiver logs/status and possible completed business document.</td><td>Blindly resend a non-idempotent write.</td></tr>
+<tr><th scope="row">Duplicate documents</th><td>Retry path, idempotency key, retention of deduplication state and concurrency handling.</td><td>Delete documents without understanding downstream effects.</td></tr>
+<tr><th scope="row">Stale analytics</th><td>Source timestamp, replication/refresh jobs, filters and semantic definition.</td><td>Assume the dashboard rendering caused the discrepancy.</td></tr>
+<tr><th scope="row">Unexpected AI cost</th><td>Calls per task, retries, retrieved context, output sizes and active workloads.</td><td>Change models without identifying the expensive execution path.</td></tr>
+</tbody></table></div>
+
+<p>Define <strong>RTO</strong> (target time to restore service) and <strong>RPO</strong> (acceptable data-loss window) for the business need. Test backup restoration, replay, reconciliation and a manual fallback. Redundancy is not the same as a tested disaster-recovery procedure.</p>
+<p><strong>Evidence rule:</strong> technical telemetry explains execution; audit evidence explains security-relevant actions; the owning business application confirms the transaction; an agreed KPI measures value. Use all four where the risk requires them.</p>
+<p class="btp-sources">Reference: <a href="#source-operations">operations</a>, <a href="#source-cloud-alm">cloud-alm</a>, <a href="#source-logging">logging</a>, <a href="#source-audit">audit</a>, <a href="#source-retention">retention</a>.</p><details class="page-faq__item btp-check"><summary><span>A scheduled job is green but supplier status did not change. What do you inspect next?</span></summary><div class="page-faq__answer"><p>Trace the job’s request to the application, interface and ERP response. Confirm the official business state and any rejected validation/authorization. The scheduler can only establish the status of its own execution contract.</p></div></details>
+</div>
+</section>

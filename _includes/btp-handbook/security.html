@@ -1,0 +1,33 @@
+<span class="btp-anchor" id="foundation-identity"></span>
+<span class="btp-anchor" id="foundation-connectivity-data"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="security" aria-labelledby="security-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">08 / Trust and connectivity</p><h2 id="security-title">A successful login is only the first permission check</h2></header>
+<div class="signavio-reader__content">
+<p>Follow one request across the system. The person signs in. The application checks the role and the assigned case. A gateway checks permitted API use. The ERP checks its own business authorization. Every successful check has a different meaning.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Identity and access responsibilities">
+<table class="study-table__table">
+<thead><tr><th scope="col">Layer</th><th scope="col">Responsibility</th><th scope="col">Boundary</th></tr></thead>
+<tbody>
+<tr><th scope="row">Corporate identity provider / Identity Authentication (IAS)</th><td>Authenticate an identity and establish supported trust/SSO.</td><td>SSO does not grant approval authority in every application.</td></tr>
+<tr><th scope="row">Identity Provisioning (IPS)</th><td>Provision and synchronize supported identities/groups according to configured rules and schedules.</td><td>Provisioning is not instant universal revocation of every active session or token.</td></tr>
+<tr><th scope="row">BTP application authorization</th><td>Use the chosen authorization approach, such as XSUAA scopes/roles or appropriate Cloud Identity Services capabilities.</td><td>The frontend hiding a button is not server-side authorization.</td></tr>
+<tr><th scope="row">Role collection / application role</th><td>Assign the relevant platform or application permissions.</td><td>A BTP role collection is not an ABAP PFCG role and does not replace runtime-specific access.</td></tr>
+<tr><th scope="row">ERP authorization</th><td>Permit the relevant business operation and organizational scope.</td><td>An allowed HTTP call can still be rejected by the business application.</td></tr>
+<tr><th scope="row">Row, field and tenant checks</th><td>Limit which specific data and operations the caller can access.</td><td>A user with the Reviewer role must not automatically see every supplier case.</td></tr>
+</tbody></table></div>
+
+<p>In the lab, a reviewer can record an opinion only for an assigned request. An approver can authorize the next business step, but cannot approve their own review. This is an example of separation of duties. The exact organizational rule is a business decision, not a default promise from the platform.</p>
+<h3>User identity or technical identity?</h3>
+<p><strong>Principal propagation</strong> preserves a supported user identity across a call chain. It requires compatible trust, authentication and backend configuration. Merely adding a destination does not activate it.</p>
+<p><strong>Technical client credentials</strong> authorize a service identity. The backend may then see the technical user, not the human who initiated the action. The application must enforce the permitted business scope and retain initiating/approving identity in appropriate audit evidence. Do not give an agent broad administrator credentials to simplify the demo.</p>
+<h3>Destination, Connectivity and Cloud Connector</h3>
+<p>A <strong>destination</strong> holds supported endpoint and authentication configuration. The <strong>Connectivity service</strong> and <strong>Cloud Connector</strong> can support controlled access to private-network systems. Cloud Connector initiates an outbound connection from the private network and exposes configured resources, not the whole network.</p>
+<p>For an internet-accessible cloud API, a Cloud Connector may not be needed. For private access, confirm supported protocols and adapters, resource allowlists, certificates and connectivity components for the selected runtime. The connector is not a general-purpose promise that every legacy protocol will work unchanged.</p>
+<p><strong>Two separate checks:</strong> can the application reach the endpoint, and may this identity perform the requested business operation? A green connectivity test answers only part of the problem.</p>
+<h3>Keep the controls operational</h3>
+<p>Use managed secret/binding mechanisms, minimum privileges, rotation and a clear expiry owner. Never put client secrets in browser code, source control, model prompts or screenshots. Protect logs and retrieval indexes as data stores: they can contain sensitive business information too.</p>
+<p>For offboarding, test account deactivation, provisioning completion, role removal and session/token behavior across the actual applications. For AI tools, check that a revoked tool or policy is enforced on every allowed execution path. A registry flag cannot govern a connection that bypasses its enforcement point.</p>
+<p>Use SAP Trust Center for relevant provider assurance and BTP Security Recommendations for configuration guidance. Provider certification does not certify the custom application’s configuration or the complete customer process.</p>
+<p class="btp-sources">Reference: <a href="#source-identity">identity</a>, <a href="#source-cap-security">cap-security</a>, <a href="#source-connectivity">connectivity</a>, <a href="#source-trust">trust</a>.</p><details class="page-faq__item btp-check"><summary><span>A reviewer changes the request ID in the URL and sees another supplier’s data. Which control is missing?</span></summary><div class="page-faq__answer"><p>Object-level authorization: the service must validate assignment and scope for every read and write. Authentication and a broad role are insufficient. Include this exact negative test in the acceptance criteria.</p></div></details>
+</div>
+</section>

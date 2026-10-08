@@ -1,0 +1,88 @@
+<section class="research-canvas__inventory signavio-reader__section" id="development-lab" aria-labelledby="development-lab-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">15 / Build a small application</p><h2 id="development-lab-title">A supplier-review service you can inspect, test and change</h2></header>
+<div class="signavio-reader__content">
+<p><strong>The increment:</strong> an assigned external reviewer records a decision. A different internal approver authorizes the next step. That authorization is stored in our extension. It does <em>not</em> activate a supplier in ERP. Keeping those two facts separate is part of the design.</p>
+<p><a href="/assets/downloads/btp-review-lab.mjs" download>Get the local CAP lab scaffold</a>. This original script creates nine local files; it does not install packages, connect to SAP or provision chargeable services. Read it before execution. Use Node.js 22 or later, and the currently supported Node.js/CAP combination when adding CAP dependencies.</p>
+<h3>Step 1. Create the exercise and test the business rules</h3>
+<pre><code>node btp-review-lab.mjs supplier-review
+cd supplier-review
+npm test</code></pre>
+<p><strong>Executed check:</strong> the supplied dependency-free policy suite passed 17 tests in Node.js. It checks roles, assignment, valid decisions, evidence, duplicate transitions and separation of duties. The CAP adapter, database concurrency, HTTP authorization and BTP deployment have not been executed in this authoring environment. They are separate checks below, not implied by the unit-test result.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Read the local CAP exercise by responsibility">
+<table class="study-table__table">
+<thead><tr><th scope="col">File</th><th scope="col">What it owns</th><th scope="col">Why it exists</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>db/schema.cds</code></th><td>The local review request, state, reviewer and version.</td><td>The business object is explicit before any UI is drawn.</td></tr>
+<tr><th scope="row"><code>db/data/…Requests.csv</code></th><td>Two clearly synthetic starting records.</td><td>A repeatable scenario without customer data.</td></tr>
+<tr><th scope="row"><code>srv/review-service.cds</code></th><td>A read-only projection and two protected actions.</td><td>A user cannot bypass the approval process with a generic update.</td></tr>
+<tr><th scope="row"><code>srv/policy.cjs</code></th><td>Pure authorization and state-transition rules.</td><td>The policy can be tested without a database or cloud account.</td></tr>
+<tr><th scope="row"><code>srv/review-service.js</code></th><td>CAP request handling and conditional database update.</td><td>The adapter connects the business rule to authenticated requests and persistence.</td></tr>
+<tr><th scope="row"><code>test/policy.test.cjs</code></th><td>Expected positive and negative behavior.</td><td>A change to the rule has a visible regression test.</td></tr>
+<tr><th scope="row"><code>package.json</code> / README</th><td>Scripts, development-only identities and run instructions.</td><td>The local exercise and production obligations are not mixed.</td></tr>
+</tbody></table></div>
+
+<h3>Step 2. Understand the model, not only the syntax</h3>
+<pre><code>entity Requests : cuid, managed {
+  businessPartner : String(40);
+  assignedReviewer : String(80);
+  status : String(20) default 'OPEN';
+  evidence : String(500);
+  reviewedBy : String(80);
+  approvedBy : String(80);
+  version : Integer default 1;
+}</code></pre>
+<p><code>cuid</code> adds a technical UUID key; <code>managed</code> adds lifecycle fields. The BP reference identifies the object being reviewed; it is not a second supplier master. The version supports a conditional update so two requests should not silently overwrite one another. Test that behavior with the chosen database adapter.</p>
+<p>The state path is <strong>OPEN → ACCEPTED or REJECTED → AUTHORIZED only from ACCEPTED</strong>. An external reviewer can record their assigned review. An internal approver can authorize an accepted review, but not their own assessment—even if the same person has both roles.</p>
+<pre><code>@readonly
+@restrict: [
+  { grant: 'READ', to: 'Reviewer', where: 'assignedReviewer = $user' },
+  { grant: 'READ', to: 'Approver' }
+]
+entity Requests as projection on db.Requests;
+
+@requires: 'Reviewer'
+action recordReview(requestID : UUID,
+                    decision : String, evidence : String)
+  returns Requests;</code></pre>
+<p>The projection controls reading; the action controls a specific change. The handler must still verify request ownership, current state and input. A role annotation alone cannot enforce the complete process. In a real deployment, the approver's organization, tenant and object scope also need explicit controls.</p>
+<h3>Step 3. Add the CAP runtime locally</h3>
+<pre><code>npm add @sap/cds @cap-js/sqlite
+npm add --save-dev @sap/cds-dk
+npx cds compile srv --to edmx
+npx cds env get requires.auth
+npm run dev</code></pre>
+<p>These commands require package-registry access. Resolve compatible dependencies and commit the resulting lockfile; later builds should use <code>npm ci</code>. The lab uses public, development-only fake users with basic authentication. Do not expose this server to an untrusted network or reuse its example password in any real system.</p>
+<p>The startup output shows the actual service endpoint. Inspect <code>/odata/v4/reviews/$metadata</code> to see the service contract. Query <code>Requests</code> to see the projection. OData metadata and CRUD behavior save implementation effort; they do not define the approval policy for you.</p>
+<h3>Step 4. Prove the positive and negative paths over HTTP</h3>
+<pre><code>curl -i -u reviewer:local-lab \
+  -H 'Content-Type: application/json' \
+  -d '{"requestID":"11111111-1111-4111-8111-111111111111",
+       "decision":"ACCEPT",
+       "evidence":"Registration details checked against supplied evidence."}' \
+  http://localhost:4004/odata/v4/reviews/recordReview</code></pre>
+<p>The README contains the complete commands. First verify ACCEPTED. Then call <code>authorizeActivation</code> as the independent approver and verify AUTHORIZED. No ERP change has happened.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="HTTP and persistence acceptance checks to execute yourself">
+<table class="study-table__table">
+<thead><tr><th scope="col">Check</th><th scope="col">Expected behavior</th><th scope="col">Evidence</th></tr></thead>
+<tbody>
+<tr><th scope="row">Anonymous read</th><td>Authentication is required.</td><td>HTTP response and server authentication configuration.</td></tr>
+<tr><th scope="row">Unassigned reviewer changes a request</th><td>The action is rejected.</td><td>403 response; record remains unchanged.</td></tr>
+<tr><th scope="row">Generic PATCH/POST/DELETE on Requests</th><td>Read-only projection rejects the write.</td><td>HTTP response and unchanged database state.</td></tr>
+<tr><th scope="row">Reviewer repeats an accepted decision</th><td>Existing review cannot be overwritten.</td><td>Conflict response and original evidence preserved.</td></tr>
+<tr><th scope="row">Dual-role user approves their own review</th><td>Separation of duties still applies.</td><td>403 response, even with both roles.</td></tr>
+<tr><th scope="row">Independent approval</th><td>Accepted request becomes AUTHORIZED.</td><td>Correct identity, local state and version change.</td></tr>
+<tr><th scope="row">Two concurrent transitions</th><td>No lost update; at most one state change succeeds.</td><td>Concurrency test against the selected database, not just the pure policy test.</td></tr>
+</tbody></table></div>
+
+<h3>Step 5. Turn it into a BTP design, one dependency at a time</h3>
+<p><strong>Identity:</strong> choose the production identity and authorization model. IAS authentication does not automatically supply application roles; use the appropriate authorization integration. XSUAA remains an option for suitable landscapes. Check token claims, assigned roles and object-level access.</p>
+<p><strong>Persistence:</strong> replace the development database only when the production requirements justify the target. Review migrations, backup, retention and test isolation. SQLite passing a local test is not proof of HANA behavior.</p>
+<p><strong>Deployment:</strong> in an authorized sandbox, inspect the current CAP deployment guidance. A Cloud Foundry path can use <code>cds add hana</code>, <code>cds add xsuaa</code> where that security model is selected, and <code>cds add mta</code>. Review generated descriptors, install required dependencies, build the archive and validate service bindings before deployment. These steps can create costs. The lab does not execute them automatically.</p>
+<p><strong>ERP:</strong> discover the released BP API for the actual edition and release. Verify the intended operation and status semantics; there is no universal “activate supplier” field to assume. Add a remote service/destination, communication setup, authorization, an outbound request identity and reconciliation. An application authorization followed by an ERP update is not one distributed database transaction.</p>
+<p><strong>UI:</strong> a Fiori elements application can use service metadata and annotations for standard interaction patterns. It still needs task-oriented design, error messages, accessibility and authorization tests. A generated list page is not the whole review experience.</p>
+<h3>Step 6. Make one change and explain the impact</h3>
+<p>Raise the minimum evidence length from ten to thirty characters. Write a failing test, change the policy and rerun the suite. Then explain which UI validation, API documentation and existing clients might also need a change. Finally, design—but do not blindly implement—a retry-safe ERP completion step.</p>
+<p><strong>Your practical artifact:</strong> a test result, one changed policy, a diagram of the proposed BTP deployment, a service/plan inventory and a list of unproven assumptions. Those are concrete signs of understanding; “I read the code” is not.</p>
+<p class="btp-sources">Reference: <a href="#source-cap">cap</a>, <a href="#source-cap-security">cap-security</a>, <a href="#source-cap-handlers">cap-handlers</a>, <a href="#source-cap-deploy">cap-deploy</a>, <a href="#source-bp-api">bp-api</a>.</p>
+</div>
+</section>

@@ -1,0 +1,51 @@
+/* BTP handbook: route-specific reading utilities, semantic SVG figures and glossary.
+   Reuses research-canvas, Signavio reader and the registered study-table skin. */
+.btp-handbook { min-width: 0; }
+.btp-handbook .btp-hero-note { font-family: inherit; font-size: var(--text-base, 1.0625rem); line-height: 1.65; }
+.btp-actions { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; margin-top: 1.5rem; }
+.btp-actions a { display: inline-flex; min-height: 44px; align-items: center; font-weight: 650; text-underline-offset: .2em; }
+.btp-handbook .research-canvas__boundary { display: block; }
+.btp-handbook .research-canvas__boundary p { max-width: 72ch; }
+.btp-anchor, .btp-handbook :is(section[id],h3[id],figure[id],.btp-term[id]) { scroll-margin-top: 6.5rem; }
+.btp-handbook .btp-sources { margin-top: 1.5rem; font-size: .9375rem; line-height: 1.7; }
+.btp-handbook .btp-check { max-width: 72ch; margin: 1.5rem 0; }
+.btp-handbook :is(pre,code) { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+.btp-handbook pre { max-width: 100%; overflow-x: auto; padding: 1.15rem; margin: 1.5rem 0; border: 1px solid var(--color-border, #ccc); border-radius: 4px; background: #fafafa; color: #171717; font-size: 1rem; line-height: 1.65; tab-size: 2; }
+.btp-handbook pre code { font-size: inherit; padding: 0; background: none; color: inherit; white-space: pre; }
+.btp-handbook p code, .btp-handbook td code, .btp-handbook th code { overflow-wrap: anywhere; }
+.btp-figure { min-width: 0; margin: 2.5rem 0 3.5rem; }
+.btp-figure__scroll { max-width: 100%; overflow: auto; border: 1px solid #b7b7b7; background: white; -webkit-overflow-scrolling: touch; }
+.btp-figure__scroll svg { display: block; max-width: none; height: auto; margin: 0; }
+.btp-figure figcaption { max-width: 78ch; margin: 1rem 0 0; font-size: 1rem; line-height: 1.7; text-align: left; }
+.btp-glossary-tools { max-width: 68ch; margin: 1.5rem 0 2rem; }
+.btp-glossary-tools label { display: block; margin-bottom: .6rem; font-weight: 650; }
+.btp-glossary-tools input { width: min(100%, 36rem); min-height: 48px; padding: .65rem; font: inherit; border: 1px solid #757575; border-radius: 4px; background: white; color: #171717; }
+.btp-glossary-tools button { min-height: 48px; margin: .5rem 0 .5rem .5rem; padding: .65rem 1.1rem; font: inherit; border: 1px solid #757575; border-radius: 4px; background: white; color: #171717; cursor: pointer; }
+.btp-glossary-tools p { margin: .4rem 0; font-size: 1rem; }
+.btp-handbook .btp-glossary { margin: 0; }
+.btp-handbook .btp-term { display: grid; grid-template-columns: minmax(11rem,.7fr) minmax(0,2fr); gap: 1.5rem; padding: 1.3rem 0; border-top: 1px solid var(--color-border, #ccc); }
+.btp-handbook .btp-term[hidden] { display: none; }
+.btp-term dt { font-weight: 700; font-size: 1.125rem; line-height: 1.6; }
+.btp-term dd { margin: 0; min-width: 0; }
+.btp-term dd p { margin: 0 0 .55rem; max-width: 68ch; font-size: var(--text-base, 1.0625rem); line-height: 1.7; }
+.btp-handbook .btp-source-register { max-width: 78ch; margin: 1.5rem 0; }
+.btp-source-register > div { padding: 1rem 0; border-top: 1px solid var(--color-border, #ccc); scroll-margin-top: 6.5rem; }
+.btp-source-register dt { font-size: 1.0625rem; font-weight: 650; line-height: 1.6; }
+.btp-source-register dd { margin: .45rem 0 0; font-size: 1rem; line-height: 1.65; }
+.btp-handbook :is(a,button,input,summary,[tabindex]):focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+@media (max-width: 700px) {
+  .btp-handbook .btp-term { grid-template-columns: 1fr; gap: .45rem; }
+  .btp-figure { margin-block: 2rem; }
+  .btp-glossary-tools button { margin-left: 0; }
+  .btp-handbook pre { padding: .9rem; }
+}
+@media print {
+  .btp-handbook .btp-glossary-tools, .btp-actions { display: none !important; }
+  .btp-handbook .btp-term[hidden] { display: grid !important; }
+    .btp-figure { break-inside: avoid; }
+  .btp-figure__scroll { overflow: visible; border: 0; }
+  .btp-figure__scroll svg { width: 100%; max-width: 100%; }
+  .btp-handbook pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .btp-handbook pre code { white-space: pre-wrap; }
+  .btp-handbook .btp-term { break-inside: avoid; }
+}

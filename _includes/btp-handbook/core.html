@@ -1,0 +1,125 @@
+<span class="btp-anchor" id="big-picture"></span>
+<span class="btp-anchor" id="platform-scope"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="start" aria-labelledby="start-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">01 / Read with a purpose</p><h2 id="start-title">From a product list to an architect’s decisions</h2></header>
+<div class="signavio-reader__content">
+<p>A business asks: “Can we use BTP to make supplier onboarding faster?” The useful answer is not a list of cloud services. It is a design: what changes, what stays in ERP, who may act, how information moves, what it costs and how we will prove that it works.</p>
+<p><strong>SAP BTP is a platform, not an ERP replacement, one server or one license.</strong> It provides environments and services for application development, integration, data and AI. SAP’s newer Business AI Platform positioning brings BTP, Business Data Cloud and Business AI together. The portfolio story helps organize the discussion; individual services, contracts and operational boundaries still determine what can actually be delivered.</p>
+<h3>One case will connect the whole guide</h3>
+<p><strong>Design exercise:</strong> a manufacturer asks an external specialist to verify a proposed supplier. The specialist must not receive general S/4HANA access. An internal owner accepts the result. Only then can the approved business process change the relevant supplier status in ERP. Management also needs a reliable measure of review time.</p>
+<p>This gives us an extension problem, an integration problem, an identity problem and a data problem. AI may help read supporting documents, but it is optional. There is no reason to make the approval rule probabilistic.</p>
+<h3>Three passes, with something to produce each time</h3>
+<p><strong>First pass — understand.</strong> Read the platform map, account model and product choices. Explain each major distinction in your own words. Use the glossary as a reference, not as a list to memorize.</p>
+<p><strong>Second pass — reconstruct.</strong> Cover a diagram and draw it again. Explain every arrow. Then solve the short questions before opening the answers. Reconstructing an explanation is a different task from recognizing familiar words.</p>
+<p><strong>Third pass — test.</strong> Run the local development exercise, change a rule, try a forbidden action and explain the failure. Revisit a different case a few days later. The spacing is a study suggestion, not a scientifically optimal timetable.</p>
+<p>Reading builds a mental model; system work tests it. This guide does not turn reading into five years of experience, certify production readiness or guarantee an exam result. Its aim is more useful: help you explain a design, challenge it and produce evidence.</p>
+<p class="btp-sources">Reference: <a href="#source-course">course</a>, <a href="#source-portfolio">portfolio</a>, <a href="#source-retrieval">retrieval</a>.</p><details class="page-faq__item btp-check"><summary><span>Before moving on: why might the best BTP design contain no new custom app?</span></summary><div class="page-faq__answer"><p>The standard ERP or MDG process may already cover the requirement. Configuration, clearer ownership or a supported integration can be cheaper and easier to operate than another application. Start with the gap, not with a preferred platform.</p></div></details>
+</div>
+</section>
+<span class="btp-anchor" id="toolchain"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="platform-map" aria-labelledby="platform-map-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">02 / The whole system</p><h2 id="platform-map-title">What each part of the platform is for</h2></header>
+<div class="signavio-reader__content">
+<p>Keep three maps separate. The <strong>business map</strong> describes capabilities and processes. The <strong>product map</strong> tells us which software can help. The <strong>deployment map</strong> shows real tenants, regions, runtimes and connections. A product’s position in a pillar is not a deployment instruction.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Three Business AI Platform pillars and their architectural responsibilities">
+<table class="study-table__table">
+<thead><tr><th scope="col">Pillar</th><th scope="col">What we need</th><th scope="col">Relevant building blocks and limits</th></tr></thead>
+<tbody>
+<tr><th scope="row">Build</th><td>Create and connect applications, workflows and agents.</td><td>SAP Build, Joule Studio, runtimes and SAP Integration Suite. Building an agent does not grant it business authority.</td></tr>
+<tr><th scope="row">Contextualize &amp; Reason</th><td>Find trustworthy context and evaluate possible outcomes.</td><td>Business Data Cloud, Datasphere, HANA Cloud, Knowledge Graph, SAP and third-party models. Better grounding reduces uncertainty; it does not remove all errors.</td></tr>
+<tr><th scope="row">Govern</th><td>Control ownership, access, lifecycle, behavior and value.</td><td>AI Agent Hub / LeanIX, identity and authorization, execution controls, observability and Signavio. A registered agent is not automatically secured on every path.</td></tr>
+</tbody></table></div>
+
+<h3>The surrounding products are not interchangeable</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Business, platform and transformation product roles">
+<table class="study-table__table">
+<thead><tr><th scope="col">Product family</th><th scope="col">What it owns</th><th scope="col">What it does not replace</th></tr></thead>
+<tbody>
+<tr><th scope="row">SAP S/4HANA / SAP Cloud ERP</th><td>Business transactions, application validations and official business documents.</td><td>A platform service does not automatically become the owner of a purchase order, stock movement or payment.</td></tr>
+<tr><th scope="row">SAP Signavio</th><td>Process models, process analysis, collaboration and improvement evidence.</td><td>It is not the ERP transaction engine or the default place to run every operational approval.</td></tr>
+<tr><th scope="row">SAP LeanIX</th><td>Application and technology portfolios, capabilities, dependencies and architecture change.</td><td>A fact sheet is not proof that an interface was configured or executed.</td></tr>
+<tr><th scope="row">SAP Cloud ALM</th><td>Supported implementation and operational lifecycle activities.</td><td>It does not replace every native product monitor or validate every business outcome automatically.</td></tr>
+<tr><th scope="row">Joule / Joule Work</th><td>The user-facing AI interaction experience, depending on the enabled offering.</td><td>It is not the same thing as the development environment or the model runtime.</td></tr>
+<tr><th scope="row">SAP Build / Joule Studio</th><td>Tools for building applications, workflows and agent capabilities.</td><td>An IDE, a programming model, a runtime and a commercial package remain different things.</td></tr>
+<tr><th scope="row">WalkMe / SAP Enable Now</th><td>User adoption, guidance and learning in supported scenarios.</td><td>Training and usage metrics do not establish authorization or process compliance.</td></tr>
+</tbody></table></div>
+
+<p><strong>Course vocabulary:</strong> the supplied 2610 lessons describe an Autonomous Enterprise, an Autonomous Suite, Industry AI and three platform pillars. Treat these as the course’s organizing model. “Autonomous” does not mean an agent may bypass purchasing controls, and a portfolio announcement does not prove that every capability is generally available in your region.</p>
+<p><strong>Before committing to a named feature:</strong> record the exact product, edition, service plan, region, tenant prerequisites and lifecycle status. In particular, distinguish the course’s customer-managed Joule Studio classic experience from the newer SAP-managed offering. The same name in an older blog may describe a different generation.</p>
+<p>For customers, say: “We keep the business record in its owning application, add only the missing capability, and connect it through a supported contract.”</p>
+<p class="btp-sources">Reference: <a href="#source-portfolio">portfolio</a>, <a href="#source-joule">joule</a>, <a href="#source-course">course</a>.</p>
+</div>
+</section>
+<span class="btp-anchor" id="architect-roles"></span>
+<span class="btp-anchor" id="ea-value"></span>
+<span class="btp-anchor" id="frameworks"></span>
+<span class="btp-anchor" id="rba"></span>
+<span class="btp-anchor" id="rsa"></span>
+<span class="btp-anchor" id="trace"></span>
+<section class="research-canvas__inventory signavio-reader__section" id="architecture" aria-labelledby="architecture-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">03 / Business to solution</p><h2 id="architecture-title">Connect the business outcome to the technical design</h2></header>
+<div class="signavio-reader__content">
+<p>An enterprise architect asks whether the landscape is moving in a coherent direction. A solution architect asks how one solution will meet its requirements within that direction. Both care about business value and technology. “EA only asks why; SA only asks how” is a useful first contrast, not a strict job boundary or a reporting line.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Architecture responsibilities and reviewable evidence">
+<table class="study-table__table">
+<thead><tr><th scope="col">Perspective</th><th scope="col">Typical decision</th><th scope="col">Useful artifact</th></tr></thead>
+<tbody>
+<tr><th scope="row">Enterprise architecture</th><td>Which capabilities, applications and standards should be shared, replaced or retired?</td><td>Capability map, target landscape, principles, transition roadmap and approved exceptions.</td></tr>
+<tr><th scope="row">Solution architecture</th><td>How will this particular use case work securely and reliably?</td><td>System context, component responsibilities, interface contracts, non-functional requirements and decision records.</td></tr>
+<tr><th scope="row">Delivery and operations</th><td>How do we release, monitor and recover it?</td><td>Test evidence, transport plan, runbook, recovery procedure and named support owners.</td></tr>
+</tbody></table></div>
+
+<h3>Capability, process, application: do not merge the concepts</h3>
+<p><strong>Supplier management</strong> is something the business must be able to do. <strong>Verify a supplier</strong> is a process with activities and outcomes. <strong>A review application</strong> supports some of those activities. One capability can serve several processes, and one process can cross several applications.</p>
+<p>SAP Reference Business Architecture (RBA) organizes business capabilities and processes. SAP Reference Solution Architecture (RSA) connects business scope to solution capabilities, components and implementable process content. The mapping is many-to-many; it is not “one business capability equals one SAP product”.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Reference architecture artifacts and the question each answers">
+<table class="study-table__table">
+<thead><tr><th scope="col">Artifact</th><th scope="col">Read it to answer</th><th scope="col">Do not infer</th></tr></thead>
+<tbody>
+<tr><th scope="row">Business capability model</th><td>What must the organization be able to do?</td><td>It does not specify the order of process steps.</td></tr>
+<tr><th scope="row">Business process / value flow</th><td>How is business value produced?</td><td>It does not necessarily select a product or an API.</td></tr>
+<tr><th scope="row">Solution value flow</th><td>How do solution activities contribute to the business result?</td><td>High-level flow is not a complete integration specification.</td></tr>
+<tr><th scope="row">Solution process flow</th><td>Which implemented activities and handoffs occur?</td><td>A reference flow is not proof of availability in every edition.</td></tr>
+<tr><th scope="row">Solution component diagram</th><td>Which software components cooperate?</td><td>It does not show every runtime instance or network control.</td></tr>
+<tr><th scope="row">Solution data flow</th><td>Which data moves between components?</td><td>An arrow alone does not define ownership, frequency or recovery.</td></tr>
+</tbody></table></div>
+
+<p>The supplied RBA material groups enterprise scope into Develop Product and Service, Supply / Fulfill Demand, Customer / Generate Demand and Corporate / Plan and Manage Enterprise. Business capabilities are arranged under domains and areas; process activities connect them to value delivery. <strong>MECE</strong> means mutually exclusive and collectively exhaustive: seek clear boundaries and useful coverage, not duplicate boxes.</p>
+<h3>Which framework helps?</h3>
+<p>TOGAF supplies a method for architecture development; Zachman classifies architectural perspectives. The SAP EA Framework brings together methodology, reference architecture content, tooling, practice and services. These are supports for making decisions, not substitutes for talking to the business.</p>
+<p>For our supplier case, the first architecture decision is whether standard ERP or MDG governance already covers the approval. If a partner-facing extension is needed, the next decision is the access boundary. Draw those responsibilities before discussing runtime size.</p>
+<p><strong>A useful decision record:</strong> “We chose a separate review application because external reviewers cannot access ERP. ERP remains the master-data owner. We rejected a copied supplier master because it adds synchronization and governance work. The design must prove that a reviewer can access only assigned cases.”</p>
+<p class="btp-sources">Reference: <a href="#source-course">course</a>, <a href="#source-methods-extension">methods-extension</a>.</p><details class="page-faq__item btp-check"><summary><span>A beautiful diagram lists twelve services. What important information might still be missing?</span></summary><div class="page-faq__answer"><p>The business outcome, source-of-truth owner, why each service is necessary, actual interfaces, permissions, recovery behavior, cost assumptions and acceptance evidence. A solution can have a correct product list and still be an incomplete architecture.</p></div></details>
+</div>
+</section>
+<section class="research-canvas__inventory signavio-reader__section" id="accounts" aria-labelledby="accounts-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">04 / Platform mechanics</p><h2 id="accounts-title">Account, runtime, subscription, instance and binding</h2></header>
+<div class="signavio-reader__content">
+<p>The account model separates commercial scope from technical deployment. A <strong>global account</strong> realizes an SAP contract and manages members, entitlements and quotas. Optional <strong>directories</strong> organize subaccounts and may support delegated management. A <strong>subaccount</strong> belongs to one region and provides an important administration, trust and service-consumption boundary.</p>
+<p>A directory named “Europe” does not enforce European data residency. The chosen region, service deployment, connected systems, logs, backups and model endpoints must all be examined. Likewise, using the Europe cockpit gateway changes how an administrator reaches the cockpit, not where an application stores data.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Service consumption terms that change an implementation">
+<table class="study-table__table">
+<thead><tr><th scope="col">Term</th><th scope="col">What it means</th><th scope="col">Typical mistake</th></tr></thead>
+<tbody>
+<tr><th scope="row">Service</th><td>An offered platform capability.</td><td>Treating every service as code that you deploy into your own Cloud Foundry space.</td></tr>
+<tr><th scope="row">Service plan</th><td>A technical / commercial variant with particular scope and limits.</td><td>Assuming the same product name implies the same features, region or meter.</td></tr>
+<tr><th scope="row">Entitlement</th><td>The right to use a service plan, assigned within the account model.</td><td>Confusing permission to consume a plan with an already provisioned instance.</td></tr>
+<tr><th scope="row">Quota</th><td>The assigned numeric amount for a service plan or resource.</td><td>Treating every quota as a hard financial spending cap.</td></tr>
+<tr><th scope="row">SaaS subscription</th><td>A technical subscription to a provider-hosted application.</td><td>Confusing it with a subscription-based commercial contract.</td></tr>
+<tr><th scope="row">Service instance</th><td>A provisioned, configured instance of a service plan.</td><td>Assuming each instance has identical physical isolation; that depends on the service.</td></tr>
+<tr><th scope="row">Service binding</th><td>A supported relationship that lets an application consume an instance.</td><td>Assuming a service key must be created first and then bound.</td></tr>
+<tr><th scope="row">Service key</th><td>A supported credential/access artifact, often for consumers outside an app binding.</td><td>Putting the key in source control, a prompt, a screenshot or a browser app.</td></tr>
+</tbody></table></div>
+
+<h3>The structure below a subaccount depends on the runtime</h3>
+<p><strong>Cloud Foundry:</strong> enabling the environment creates its organization; spaces organize deployed applications and service instances. Space roles and BTP subaccount roles are not identical.</p>
+<p><strong>Kyma:</strong> workloads use a Kubernetes-based runtime and namespaces. A namespace is not a BTP subaccount, and a Kubernetes cluster is not a replacement for the commercial account.</p>
+<p><strong>ABAP environment:</strong> an ABAP system provides the relevant development and execution environment. Do not force its system structure into the Cloud Foundry org/space model.</p>
+<p><strong>Managed SaaS:</strong> subscribing to a service does not imply that its internals run as your own application in your chosen space. Identify the provider’s service boundary and the customer responsibilities.</p>
+<h3>Design a landscape you can operate</h3>
+<p>Separate development, test and production where the required isolation, identity, service availability and release process justify it. Directories and labels help ownership and cost reporting; they do not replace technical controls. Within a subaccount, use runtime-specific organization deliberately rather than assuming a space alone meets every security requirement.</p>
+<p>For a multitenant application, distinguish the <strong>provider</strong> account from subscriber tenants. Authentication context, tenant-specific persistence, destinations, caches, background jobs and logs all need isolation. A runtime that supports multitenancy does not automatically make arbitrary application code tenant-safe.</p>
+<p><strong>Provisioning order:</strong> confirm contract and region → assign the service plan → provision the environment or service → establish identity and roles → bind/configure consumers → test a permitted call and a denied call. Commercial access and technical readiness are separate checks.</p>
+<p class="btp-sources">Reference: <a href="#source-account">account</a>, <a href="#source-entitlements">entitlements</a>, <a href="#source-cap-security">cap-security</a>.</p><details class="page-faq__item btp-check"><summary><span>The service exists in Discovery Center but is missing from your subaccount. What do you check first?</span></summary><div class="page-faq__answer"><p>Check regional and provider availability, the exact plan, global-account entitlement, directory/subaccount quota assignment and your administration permissions. Do not start by reinstalling the development tools.</p></div></details>
+</div>
+</section>
