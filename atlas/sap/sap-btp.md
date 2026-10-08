@@ -111,6 +111,12 @@ sitemap: false
 <li><a href="#foundation-connectivity-data">Connectivity, storage and retention</a></li>
 <li><a href="#foundation-operations">Logging, audit, alerts and usage</a></li>
 </ol></section>
+<section class="signavio-reader__toc-group" aria-labelledby="btp-route-methods"><h3 id="btp-route-methods">Apply the SAP methodologies</h3><ol>
+<li><a href="#method-extension">Extension: three phases</a></li>
+<li><a href="#method-data-analytics">Data &amp; Analytics: four phases</a></li>
+<li><a href="#method-integration">ISA-M: four phases and interface request</a></li>
+<li><a href="#method-joined-case">One case across three methods</a></li>
+</ol></section>
 <section class="signavio-reader__toc-group" aria-labelledby="btp-route-3"><h3 id="btp-route-3">Explain and practice</h3><ol><li><a href="#client-explanation">Explain to business</a></li>
 <li><a href="#interview">Assessment questions and answers</a></li>
 <li><a href="#next">Learning path and future chapters</a></li>
@@ -311,10 +317,11 @@ sitemap: false
 <tr><td>How should an app be implemented and delivered?</td><td><a href='https://help.sap.com/docs/btp/btp-developers-guide/discover'>SAP BTP Developer's Guide</a></td><td>Development, infrastructure, integration and delivery design.</td></tr>
 <tr><td>How should a data and analytics solution be planned?</td><td><a href='https://help.sap.com/docs/sap-btp-guidance-framework/sap-data-methodology/sap-data-analytics-advisory-methodology-overview'>Data &amp; Analytics Advisory Methodology</a></td><td>Business outcomes, data capabilities, use-case patterns, architecture and governance.</td></tr>
 </tbody></table></div>
-<h3>Two approaches worth remembering</h3>
-<p><strong>Extension methodology:</strong> Assess the business use case, assess extension technologies, then define the target solution. For a request-approval scenario, separate the presentation need, workflow logic and ERP transaction before choosing SAP Build, CAP or other components. The standard ERP capability is still an option.</p>
-<p><strong>Integration Solution Advisory Methodology (ISA-M):</strong> First decide the integration domain and style, such as application-to-application process integration, data replication or analytics integration. Then check the required characteristics and map the need to technology. A direct API, middleware flow and event-based interaction are alternatives to evaluate, not a fixed sequence that every interface must use.</p>
-<p><strong>Lead-level point:</strong> “I first classify the problem without a product name. Then I compare suitable technologies and document the decision, constraints and operating responsibilities.”</p>
+<h3>Three methods, three decisions</h3>
+<p><strong><a href="#method-extension">Application Extension Methodology</a></strong> decides what to extend and how: use case → tasks → target solution.</p>
+<p><strong><a href="#method-integration">Integration Solution Advisory Methodology (ISA-M)</a></strong> decides how systems should connect and how interfaces will be governed.</p>
+<p><strong><a href="#method-data-analytics">Data &amp; Analytics Advisory Methodology (DAAM)</a></strong> decides how data can support an agreed business outcome, from sources and capabilities through governance.</p>
+<p><strong>Lead-level point:</strong> “I classify the problem before choosing technology. Then I select the relevant method, compare alternatives, document ownership and verify the result.”</p>
 
 </div></section>
 
@@ -754,7 +761,118 @@ sitemap: false
 <p>Sources: <a href="https://help.sap.com/docs/cloud-logging">SAP Cloud Logging</a>, <a href="https://help.sap.com/docs/sap-audit-log">SAP Audit Log</a>, <a href="https://help.sap.com/docs/job-scheduling/sap-job-scheduling-service/schedule-types">Job Scheduling</a> and <a href="https://help.sap.com/docs/btp/sap-business-technology-platform/view-subaccount-usage-analytics">Usage Analytics</a>.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">38 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="method-extension" aria-labelledby="method-extension-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">38 / Extension Methodology</p><h2 id="method-extension-title">Application Extension Methodology: from business scenes to a target design</h2></header><div class="signavio-reader__content">
+<p><strong>Use this when:</strong> A business requirement seems to need new SAP functionality, but the team has not yet agreed whether to configure, extend on-stack or build side-by-side. The method is technology-agnostic at the start. You can apply it to one use case or begin with the technology assessment when defining an enterprise extension strategy.</p>
+<div class="table-scroll study-table" role="region" aria-label="SAP Application Extension Methodology: three phases" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Phase</th><th scope="col">The question to answer</th><th scope="col">Required output</th></tr></thead><tbody>
+<tr><td>1. Assess Extension Use Case</td><td>What is the business need? Who acts, where and with which data?</td><td>System context, business requirements and a scene-based extension use case.</td></tr>
+<tr><td>2. Assess Extension Technology</td><td>What extension tasks are needed, independent of product names?</td><td>Extension styles and tasks, with candidate technical building blocks.</td></tr>
+<tr><td>3. Define Extension Target Solution</td><td>Which feasible building blocks should implement each task?</td><td>Technology decisions, target solution diagram and implementation guidance.</td></tr>
+</tbody></table></div>
+<h3>Phase 1: describe the business process as scenes</h3>
+<p>The SAP template uses four rows for each scene: <strong>Actions</strong> (what a person does), <strong>Application Logic</strong> (what the software must do), <strong>System</strong> (where it happens), and <strong>Required Data</strong> (what information is needed). Do not jump from a business story to a BTP service name.</p>
+<p><strong>Training example:</strong> ACME needs an external partner to validate a new Business Partner (BP). Only ACME employees may use the internal S/4HANA system. The external reviewer must receive a request, perform checks and send a result back for controlled activation.</p>
+<div class="table-scroll study-table" role="region" aria-label="Illustrative BP validation scenes using the SAP four-row structure" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Scene</th><th scope="col">Actions</th><th scope="col">Application logic</th><th scope="col">System and required data</th></tr></thead><tbody>
+<tr><td>1. Create BP</td><td>An internal employee records a new BP.</td><td>Keep the record pending validation and identify the request.</td><td>S/4HANA; BP ID, organization and validation status.</td></tr>
+<tr><td>2. Request review</td><td>An external reviewer receives a notification.</td><td>Create a secure review task using the approved integration contract.</td><td>ERP plus a permitted external channel; BP reference and review request.</td></tr>
+<tr><td>3. Validate</td><td>The partner reviews and submits a decision.</td><td>Capture evidence and prevent unauthorized changes to ERP master data.</td><td>External review application; allowed BP details, findings and decision.</td></tr>
+<tr><td>4. Complete</td><td>An authorized internal process accepts or rejects the result.</td><td>Validate the response, update the master-data state and inform stakeholders.</td><td>S/4HANA / governance workflow; reviewer, timestamp, decision and audit record.</td></tr>
+</tbody></table></div>
+<p>These scenes are a <em>possible design breakdown</em> of the course case, not an SAP-delivered implementation. A process owner must first check whether standard S/4HANA or MDG capabilities already solve the need.</p>
+<h3>Phase 2: map extension tasks before products</h3>
+<p>An <strong>extension style</strong> describes the kind of work: presentation, application logic or data model. An <strong>extension task</strong> describes the required function: adapt a standard UI, expose a field, publish an event, consume an API, create a review UI or store evidence. The <strong>extension domain</strong> distinguishes on-stack ERP work from side-by-side work, but only after the task is understood.</p>
+<div class="table-scroll study-table" role="region" aria-label="BP validation: tasks and possible technology mapping" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Technology-agnostic task</th><th scope="col">Candidate implementation</th><th scope="col">Decision boundary</th></tr></thead><tbody>
+<tr><td>Add a validation field or status</td><td>Supported key-user or developer extensibility in S/4HANA.</td><td>Must fit the exact ERP edition and released extension points.</td></tr>
+<tr><td>Notify an external reviewer</td><td>A supported business event, integration flow or other notification pattern.</td><td>Use an event only if a published contract and reliable delivery are available.</td></tr>
+<tr><td>Provide an isolated review UI</td><td>A side-by-side CAP/Fiori application or suitable existing application.</td><td>An external partner must not inherit unrestricted ERP access.</td></tr>
+<tr><td>Read and return validation results</td><td>Released API with appropriate identity, mapping and error handling.</td><td>Do not update BP data directly through database access.</td></tr>
+<tr><td>Keep a review trail</td><td>Supported application persistence or existing governance audit.</td><td>Avoid duplicate copies of master data when not needed.</td></tr>
+</tbody></table></div>
+<h3>Phase 3: produce an implementable target</h3>
+<p>Compare each candidate against clean core, security, skillset, operating model, region and cost. Use the Extension Architecture Guide, SAP reference architectures and Discovery Center where helpful. The target diagram should show the internal ERP boundary, partner-facing application, API or event contracts, data ownership, authentication and error recovery.</p>
+<p><strong>Lead answer:</strong> “I first describe the business scenes, then translate them into extension tasks and only then choose on-stack or side-by-side building blocks. This keeps product selection tied to the real need and to clean-core constraints.”</p>
+<p>Sources: <a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-application-extension-methodology/cd2664b67373452ab78825897ff99a81.html">SAP three-phase method</a>, <a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-application-extension-methodology/step-3-application-extension-use-case">Four-row scene template</a>, <a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-application-extension-methodology/phase-2-assess-extension-technology">Phase 2 guidance</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="method-data-analytics" aria-labelledby="method-data-analytics-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">39 / Data &amp; Analytics Methodology</p><h2 id="method-data-analytics-title">DAAM: begin with a measurable business outcome, not a data platform</h2></header><div class="signavio-reader__content">
+<p><strong>Use this when:</strong> A business needs reliable reporting, data products, planning or analytics across systems. The SAP Data &amp; Analytics Advisory Methodology (DAAM) draws on SAP EAF and TOGAF and provides four phases. Phases II and III may repeat as teams refine the design.</p>
+<div class="table-scroll study-table" role="region" aria-label="SAP Data &amp; Analytics Advisory Methodology: four phases" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Phase</th><th scope="col">What the team does</th><th scope="col">Output you can review</th></tr></thead><tbody>
+<tr><td>I. Scope &amp; baseline</td><td>Agree scope, architecture work, key systems, current data capabilities and pain points.</td><td>Investigation scope, current-state evidence and prioritized opportunities.</td></tr>
+<tr><td>II. Outcomes &amp; requirements</td><td>Define measurable outcomes and analyze the use cases, people and data journeys.</td><td>Approved business outcomes, use-case descriptions, solution context and data integration flows.</td></tr>
+<tr><td>III. Capability map &amp; solution architecture</td><td>Identify required capabilities; compare solution options and validate the target.</td><td>Capability and solution maps, architecture options, target design and PoC evidence if needed.</td></tr>
+<tr><td>IV. Governance &amp; roadmap</td><td>Assess data quality, organization, roles and the gaps to the target state.</td><td>Governance actions, ownership and sequenced implementation roadmap.</td></tr>
+</tbody></table></div>
+<h3>Phase II: walk backwards from value to source data</h3>
+<p><strong>Example outcome:</strong> Reduce disruption costs from delayed supplier deliveries. Start with what the procurement lead needs to decide. Then trace back through measures, business objects and source systems. SAP calls this exercise the <strong>Data Journey Map</strong>, with four lenses: <strong>Action, System, People and Experience</strong>.</p>
+<div class="table-scroll study-table" role="region" aria-label="Data Journey Map: procurement example" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Lens</th><th scope="col">Question</th><th scope="col">What to record</th></tr></thead><tbody>
+<tr><td>Action</td><td>Which action creates value?</td><td>Find high-risk materials and decide whether to expedite or source elsewhere.</td></tr>
+<tr><td>System</td><td>Which applications and data are required?</td><td>PO schedule lines, supplier master data, GR history, stock and production needs.</td></tr>
+<tr><td>People</td><td>Who owns and consumes the information?</td><td>Procurement lead, supplier manager, planner, data owner and IT support.</td></tr>
+<tr><td>Experience</td><td>How will users act on the result?</td><td>A clear exception list with the affected order, estimated impact and next step.</td></tr>
+</tbody></table></div>
+<p>For each proposed data product, define its grain (for example PO schedule line), business rules, required fields, source, quality, access and freshness. A source-to-target flow must distinguish replication from live/federated access. Use at least the relevant connected use cases, such as delivery-risk monitoring and supplier-reliability analysis, to avoid a one-report architecture.</p>
+<h3>Phase III: choose capabilities before products</h3>
+<p>The <strong>capability model</strong> identifies needs such as data acquisition, semantic modeling, quality checks, governance, analytics and delivery of data products. Only then map capabilities to SAP Datasphere, SAP Business Data Cloud, Analytics Cloud, HANA Cloud or suitable alternatives.</p>
+<p>Compare possible architectures using fit to business requirements, access controls, source freshness, operating effort, cost and change impact. SAP's methodology describes an options assessment using scores from 1 to 5; scores are workshop judgments, not automatically measured system performance.</p>
+<p>If a key assumption remains uncertain, define a <strong>proof of concept</strong> with pass/fail criteria: can the selected access method return the right records at the needed freshness and performance, while preserving the agreed business definition and authorizations?</p>
+<h3>Phase IV: make the data product operable</h3>
+<p>Assess the current versus required governance maturity; name the data domain or product owner, data steward, decision rights and quality controls. Turn gaps into roadmap work: agree definitions first, establish source ownership, build shared data products, test measures, onboard consumers and monitor quality after deployment.</p>
+<p><strong>Lead answer:</strong> “DAAM starts from the business outcome. We trace how users make decisions back to the required data, choose data capabilities, compare implementation options and plan the governance needed to keep the result trustworthy.”</p>
+<p>Sources: <a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-data-methodology/sap-data-analytics-advisory-methodology-overview">DAAM overview</a>, <a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-data-methodology/test-1">The four phases</a>, <a href="https://help.sap.com/doc/0fdd1cd7d8ef4d05bd03061c97558c51/Cloud/en-US/sap.data.methodology.pdf">SAP DAAM user guide and Data Journey Map</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="method-integration" aria-labelledby="method-integration-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">40 / Integration Methodology</p><h2 id="method-integration-title">ISA-M: make interface design a governed decision</h2></header><div class="signavio-reader__content">
+<p><strong>Use this when:</strong> An organization has many interfaces and needs consistent integration choices, reusable patterns and clear operating rules. SAP's Integration Solution Advisory Methodology (ISA-M) covers the enterprise integration practice, while the <strong>Integration Assessment</strong> capability of SAP Integration Suite helps assess individual interface requests using that strategy.</p>
+<div class="table-scroll study-table" role="region" aria-label="ISA-M: four phases and deliverables" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Phase</th><th scope="col">Architecture work</th><th scope="col">Deliverable</th></tr></thead><tbody>
+<tr><td>1. Assess Your Integration Strategy</td><td>Identify integration domains, styles and use-case patterns.</td><td>Technology-independent scope of the integration landscape.</td></tr>
+<tr><td>2. Design Your Hybrid Integration Platform</td><td>Map requirements to technologies, define usage policies and assess interfaces.</td><td>Technology mapping, integration policies and documented interface decisions.</td></tr>
+<tr><td>3. Define Integration Best Practices</td><td>Define dos and don'ts, blueprints and development guidelines.</td><td>Reusable integration standards and reference designs.</td></tr>
+<tr><td>4. Enable a Practice of Empowerment</td><td>Assign roles, establish governance and quality assurance across teams.</td><td>Integration ownership, request workflow and QA controls.</td></tr>
+</tbody></table></div>
+<h3>Terms that must not be mixed up</h3>
+<div class="table-scroll study-table" role="region" aria-label="ISA-M concepts for an interface assessment" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Illustration</th></tr></thead><tbody>
+<tr><td>Integration domain</td><td>Where systems connect in the landscape.</td><td>On-premise-to-cloud.</td></tr>
+<tr><td>Integration style</td><td>What type of integration is needed.</td><td>Process integration, data integration or analytics integration.</td></tr>
+<tr><td>Use-case pattern</td><td>What the integration serves.</td><td>Application-to-application (A2A), B2B or B2G.</td></tr>
+<tr><td>Integration area / pattern</td><td>A domain and style considered together.</td><td>On-premise-to-cloud process integration; wording can vary by tool version.</td></tr>
+<tr><td>Key characteristics</td><td>Criteria that drive technology fit.</td><td>Mapping, security, business monitoring, delivery guarantees or protocol needs.</td></tr>
+<tr><td>Application profile vs instance</td><td>Profile names a product; instance means a real deployed application.</td><td>'SAP S/4HANA' versus the customer's actual S/4HANA production system.</td></tr>
+<tr><td>Technology profile vs instance</td><td>Profile names an integration technology; instance means a real deployment.</td><td>'SAP Integration Suite' versus the actual configured tenant.</td></tr>
+<tr><td>Questionnaire</td><td>Questions used to capture integration requirements.</td><td>Source, target, transformation, error-handling and monitoring needs.</td></tr>
+</tbody></table></div>
+<p><strong>Important distinction:</strong> A2A in ISA-M means <em>application-to-application</em>. It is not the same as the agent-to-agent protocol discussed elsewhere in this guide.</p>
+<h3>From a business request to an interface decision</h3>
+<p><strong>Training example:</strong> A business partner created in on-premise SAP S/4HANA must be synchronized to Salesforce. The described scenario checks for new records every ten minutes, rather than using an event. Preserve that assumption when designing the initial solution; compare an event-based approach only as a separately justified alternative.</p>
+<ol>
+<li><strong>Record the business need.</strong> Identify process owner, criticality, go-live scope and what counts as a successful BP synchronization.</li>
+<li><strong>Select real endpoints.</strong> Use the existing application instances, not only product profiles, and confirm the source is on-premise and the target is a cloud application.</li>
+<li><strong>Classify the interface.</strong> Choose the domain, process-integration style and application-to-application use-case pattern.</li>
+<li><strong>Describe the contract.</strong> Specify changed BP fields, identifiers, poll frequency, mapping, protocol, authentication and whether predefined content fits.</li>
+<li><strong>Define operations.</strong> State whether business users must correct messages, how exceptions are reported and what retry or reconciliation behavior is required.</li>
+<li><strong>Use Integration Assessment.</strong> Answer the configured questionnaire and review the proposed technologies against deployment, cost and policy constraints.</li>
+<li><strong>Assign owners and prove success.</strong> Select deployed technology instances, document the interface decision, test it, and confirm BP identity and status in Salesforce.</li>
+</ol>
+<p>In the course example, <strong>Cloud Integration</strong> covers transformation and communication, while <strong>SAP AIF</strong> is considered for business-oriented monitoring within supported S/4HANA scenarios. They solve different tasks and may be combined. Neither is mandatory solely because an integration exists.</p>
+<p><strong>Lead risk:</strong> A high technology-fit score from Integration Assessment is not evidence that the end-to-end process is correct. Test duplicates, missing BP relationships, delayed polling, authorization, mapping changes and recovery.</p>
+<p>Sources: <a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-integration-solution-advisory-methodology/phases-of-sap-integration-solution-advisory-methodology">ISA-M phases</a>, <a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/sap-integration-solution-advisory-methodology">Integration Assessment methodology</a>, <a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/integration-assessment-apis">Assessment data objects: profile and instance</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="method-joined-case" aria-labelledby="method-joined-case-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">41 / Architecture handoff</p><h2 id="method-joined-case-title">One SAP landscape, three methods: how the decisions fit together</h2></header><div class="signavio-reader__content">
+<p>Three SAP methodologies do not mean three projects or three mandatory tools. Apply the one that owns the decision. Combine them when a business requirement crosses extension logic, interfaces and analytical data.</p>
+<p><strong>Example:</strong> A company introduces external business-partner validation and wants to monitor approval delays. This affects business processes, an extension, a partner integration and reporting.</p>
+<div class="table-scroll study-table" role="region" aria-label="Three methods applied to one business-partner case" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Decision</th><th scope="col">Method</th><th scope="col">Output and owner</th></tr></thead><tbody>
+<tr><td>How can an external validator work without direct ERP access?</td><td>Application Extension Methodology</td><td>Scenes, permission boundary and selected extension design; solution architect.</td></tr>
+<tr><td>How should the result reach S/4HANA safely?</td><td>ISA-M</td><td>Integration domain, interface contract, selected technology, errors and monitoring; integration architect.</td></tr>
+<tr><td>How do we report validation cycle time and rejected requests?</td><td>Data &amp; Analytics Advisory Methodology</td><td>KPI definition, data sources, ownership, data product and analytical architecture; data architect and business owner.</td></tr>
+<tr><td>Who approves the BP and confirms that the process finished?</td><td>ERP and business governance</td><td>Business authority, source-of-truth update and test evidence; process owner and SAP application owner.</td></tr>
+</tbody></table></div>
+<h3>One mental model to remember</h3>
+<p><strong>Business requirement → scenes and extension tasks → interface and data contracts → selected solution → testing and operating evidence.</strong></p>
+<p>Use a solution diagram for system ownership and interactions; use a data flow for information movement; use an interface contract for behavior and recovery; use a roadmap for sequencing. No single diagram replaces the others.</p>
+<p><strong>Workshop question:</strong> The customer already has a supported standard approval process in ERP. Which custom extension parts can be removed, while keeping secure partner communication and the required cycle-time reporting?</p>
+<p><strong>60-second assessment answer:</strong> “I choose the methodology by the problem. For a new extension, I start from user scenes and map tasks before selecting SAP technologies. For integration, I classify the domain, style and pattern, then choose a technology that meets business and operating requirements. For analytics, I work back from measurable outcomes to the data products and capabilities we need. Finally, I connect the decisions in one target architecture and verify that business documents, integrations and KPIs work end to end.”</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">42 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
 <h3>30-second explanation</h3>
 <p>“We start with what the business needs to improve. SAP Signavio helps us understand the process, while SAP LeanIX shows which applications support it. We use SAP reference architecture to connect that business need to a possible solution. BTP gives us options for extensions and integrations where standard applications have a gap. We then check security, costs, operating responsibility and measurable results.”</p>
 <h3>90-second explanation</h3>
@@ -763,7 +881,7 @@ sitemap: false
 <ul><li>Which business result must improve, and what is the current baseline?</li><li>Which system owns each official business document or master data object?</li><li>What happens when the integration, workflow or AI step fails?</li></ul>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">39 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">43 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
 <ol>
 <li><strong>What is the difference between an EA and an SA?</strong><p>EA defines enterprise-wide direction and governance. SA designs a specific solution within business, technical and delivery constraints. They exchange feedback.</p></li>
 <li><strong>Capability versus process?</strong><p>Capability is what the company must be able to do; process is the sequence of activities used to deliver an outcome. A capability may support several processes.</p></li>
@@ -805,12 +923,22 @@ sitemap: false
 <li><strong>Does SAP Data Retention Manager delete every ERP record?</strong><p>No. SAP documents it for applications built on BTP. Other business applications have their own supported retention and archiving rules.</p></li>
 <li><strong>Cloud Logging versus Audit Log?</strong><p>Cloud Logging holds operational logs, metrics and traces. Audit Log stores supported security and compliance events emitted by applications or services.</p></li>
 <li><strong>Actual usage versus billed usage?</strong><p>BTP Usage Analytics can report service consumption; the billed amount depends on commercial models, pricing rules and the appropriate billing view.</p></li>
+<li><strong>What are the three phases of SAP Application Extension Methodology?</strong><p>Assess the extension use case, assess extension technology, then define the extension target solution.</p></li>
+<li><strong>What are the four rows in the SAP extension use-case scene template?</strong><p>Actions, Application Logic, System and Required Data. Use them to describe each business scene before mapping technologies.</p></li>
+<li><strong>How does an extension task differ from a technical building block?</strong><p>An extension task is a technology-agnostic requirement such as consuming an API. A building block is a candidate technology such as a CAP service or a released ERP extension.</p></li>
+<li><strong>When should you use DAAM rather than Application Extension Methodology?</strong><p>Use DAAM when the central decision is a data-driven outcome, data-product design, analytics capabilities and their governance. Use the extension method to decide how required app behavior is built.</p></li>
+<li><strong>What are the four phases of DAAM?</strong><p>Scope and baseline; business outcomes and requirements; capability map and solution architecture; data governance and roadmap. Phases II and III may repeat.</p></li>
+<li><strong>What are the four lenses of the DAAM Data Journey Map?</strong><p>Action, System, People and Experience. Start from the business result and work back toward the required data sources.</p></li>
+<li><strong>What are the four phases of ISA-M?</strong><p>Assess the integration strategy; design the hybrid integration platform; define integration best practices; enable a practice of empowerment.</p></li>
+<li><strong>ISA-M: what is the difference between an integration domain, style and use-case pattern?</strong><p>A domain describes where systems connect, a style describes the integration category, and a use-case pattern explains its purpose.</p></li>
+<li><strong>What is an application profile compared with an instance in Integration Assessment?</strong><p>A profile describes a product category; an instance identifies an actual deployed application in the customer's landscape.</p></li>
+<li><strong>Why is an Integration Assessment result not a production test?</strong><p>It recommends technologies using configured requirements and capabilities. It cannot prove correct mapping, permissions, recovery or completion in the actual business applications.</p></li>
 <li><strong>Does side-by-side automatically mean clean core?</strong><p>No. The solution still needs released interfaces, clear ownership, secure access, controlled coupling and an operational recovery path.</p></li>
 </ol>
 <p><strong>Practice variation:</strong> The customer already has a standard S/4HANA approval function. Would you still propose a custom BTP workflow? Explain the cost, support risk and evidence required before choosing the custom option.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">40 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">44 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
 <p>This guide is the architecture foundation. The next BTP lessons should deepen the areas that determine whether a platform solution can be deployed and operated.</p>
 <div class="table-scroll study-table" role="region" aria-label="BTP study sequence" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Topic</th><th scope="col">What you should be able to decide</th></tr></thead><tbody><tr><td>1. Platform administration</td><td>Design account, region, service and cost boundaries.</td></tr>
 <tr><td>2. Identity and connectivity</td><td>Explain trust, destinations, roles and private-network access.</td></tr>
@@ -822,10 +950,11 @@ sitemap: false
 <p><strong>Build is covered:</strong> clean core, SAP Build and Joule Studio, runtimes and programming models, integration and operational controls.</p>
 <p><strong>Contextualize &amp; Reason is covered:</strong> data foundations, governed data products, Datasphere and Analytics Cloud, SAP Business Data Cloud, Knowledge Graph, SAP-RPT and an end-to-end procurement case.</p>
 <p><strong>Govern and Platform Foundation are covered:</strong> agent lifecycle and inventory, identity and permissions, runtime enforcement, Signavio and Cloud ALM observability, connectivity and storage, retention, security audit, scheduling, alerts and usage. Continue with case practice and verify the exact product scope before designing for a customer.</p>
+<p><strong>SAP architecture methods are covered:</strong> the three-phase Application Extension Methodology, four-phase DAAM, four-phase ISA-M, Integration Assessment and a connected business-partner case. Review the phases and their outputs before practicing the oral questions.</p>
 <p>Use this page as the continuing reference. Add new material to the relevant chapter only when it improves an explanation, design choice or assessment answer.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">41 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">45 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
 <p>This is an independent study guide based on SAP public learning and help content, rewritten for comprehension. It is not an official certification guide or a statement of contractual product availability.</p>
 <ul>
 <li><a href="https://learning.sap.com/courses/sap-enterprise-architecture-framework-foundation-introduction/investigating-the-sap-enterprise-architecture-methodology">SAP Learning — EA methodology and architect roles</a></li>
@@ -881,6 +1010,13 @@ sitemap: false
 <li><a href="https://help.sap.com/docs/job-scheduling/sap-job-scheduling-service/schedule-types">SAP Job Scheduling Service</a></li>
 <li><a href="https://help.sap.com/docs/ALERT_NOTIFICATION/5967a369d4b74f7a9c2b91f5df8e6ab6/security">SAP Alert Notification service</a></li>
 <li><a href="https://help.sap.com/docs/btp/sap-business-technology-platform/view-subaccount-usage-analytics">SAP BTP Usage Analytics</a></li>
+<li><a href="https://learning.sap.com/courses/becoming-an-sap-btp-solution-architect/adopting-the-sap-application-extension-methodology">SAP Learning: Application Extension Methodology</a></li>
+<li><a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-application-extension-methodology/cd2664b67373452ab78825897ff99a81.html">SAP Help: SAP Application Extension Methodology phases</a></li>
+<li><a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-data-methodology/sap-data-analytics-advisory-methodology-overview">SAP Help: DAAM overview</a></li>
+<li><a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-data-methodology/test-1">SAP Help: DAAM phases and artifacts</a></li>
+<li><a href="https://help.sap.com/docs/sap-btp-guidance-framework/sap-integration-solution-advisory-methodology/phases-of-sap-integration-solution-advisory-methodology">SAP Help: ISA-M phases</a></li>
+<li><a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/sap-integration-solution-advisory-methodology">SAP Help: Integration Assessment requirements</a></li>
+<li><a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/integration-assessment-apis">SAP Help: Integration Assessment profiles and instances</a></li>
 </ul>
 <p><strong>Verification boundary:</strong> Always check the exact SAP edition, release, commercial plan, region, service availability and published interface before making a delivery commitment. SAP's product naming and reference catalog can change. This page remains in review until a separate human publication check.</p>
 </div></section>
