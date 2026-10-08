@@ -309,6 +309,19 @@ sitemap: false
 
     <p>SAP Signavio gives the business one connected way to understand and improve processes. We can define how a process should work, publish it to the people who use it, run approvals and governance, understand the customer or employee experience, analyze operational data to see what really happens, and turn the findings into improvement initiatives. The value is not the diagram itself. The value is a common process language, clear ownership, evidence-based improvement, and traceable change.</p>
 
+    <h3>A sensible adoption path</h3>
+
+    <ol>
+      <li><strong>Pick an end-to-end process and business outcome.</strong> Do not start with a tool rollout. Start with a real problem such as order delay, procurement cycle time, compliance, or customer friction.</li>
+      <li><strong>Name the process owner and governance model.</strong> Decide who owns the process, standards, approvals, and improvement decisions.</li>
+      <li><strong>Build the common process language.</strong> Define levels, Dictionary objects, modeling conventions, and controlled variants.</li>
+      <li><strong>Publish and involve the business.</strong> Make process knowledge easy to consume and collect feedback from the people who execute the work.</li>
+      <li><strong>Add operational evidence.</strong> Connect process data when the organization is ready to compare the designed process with real execution.</li>
+      <li><strong>Prioritize and prove improvements.</strong> Assign initiatives, implement changes, and measure whether business outcomes improved.</li>
+    </ol>
+
+    <p>Process Governance can be introduced where formal approvals, controls, or recurring governance tasks need executable workflows. It is not a mandatory first step for every Signavio adoption.</p>
+
     <h2 id="example">4. One simple example across the suite</h2>
 
     <p>Assume a company wants to improve Order-to-Cash.</p>
@@ -672,6 +685,26 @@ sitemap: false
     </ul>
 
     <p>If this semantic model is wrong, a beautiful dashboard can still tell the wrong story.</p>
+
+    <h3>Out-of-the-box vs custom analysis</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr><th>Approach</th><th>Use it when</th><th>Trade-off</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Out-of-the-box analysis</td>
+          <td>The SAP-defined process content and standardized source-system integration fit the business question.</td>
+          <td>Faster start and predefined metrics, but less freedom to redefine the process semantics.</td>
+        </tr>
+        <tr>
+          <td>Custom process analysis</td>
+          <td>The process, data sources, case definition, attributes, or metrics are customer-specific.</td>
+          <td>More flexibility, but the team must design and validate the semantic model and data integration.</td>
+        </tr>
+      </tbody>
+    </table>
 
     <h3>What Process Intelligence does</h3>
 
