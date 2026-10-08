@@ -77,6 +77,18 @@ sitemap: false
 <li><a href="#btp-methods">Decision guides and methodologies</a></li>
 <li><a href="#btp-design-evidence">Diagram, cost and security evidence</a></li>
 </ol></section>
+<section class="signavio-reader__toc-group" aria-labelledby="btp-route-build"><h3 id="btp-route-build">Build · design and develop</h3><ol>
+<li><a href="#build-clean-core">Clean core and extension choice</a></li>
+<li><a href="#build-tools">SAP Build vs Joule Studio</a></li>
+<li><a href="#build-runtimes">Runtime, CAP and RAP</a></li>
+<li><a href="#build-experience">Fiori, Work Zone and mobile</a></li>
+</ol></section>
+<section class="signavio-reader__toc-group" aria-labelledby="btp-route-integrate"><h3 id="btp-route-integrate">Build · integrate and operate</h3><ol>
+<li><a href="#build-integration-strategy">Integration architecture choices</a></li>
+<li><a href="#build-integration-suite">Integration Suite components</a></li>
+<li><a href="#build-events-agents">Events, MCP and agents</a></li>
+<li><a href="#build-operations">Delivery, monitoring and recovery</a></li>
+</ol></section>
 <section class="signavio-reader__toc-group" aria-labelledby="btp-route-3"><h3 id="btp-route-3">Explain and practice</h3><ol><li><a href="#client-explanation">Explain to business</a></li>
 <li><a href="#interview">Assessment questions and answers</a></li>
 <li><a href="#next">Learning path and future chapters</a></li>
@@ -317,7 +329,168 @@ sitemap: false
 
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">16 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="build-clean-core" aria-labelledby="build-clean-core-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">16 / Extensibility</p><h2 id="build-clean-core-title">Clean core: where should an extension live?</h2></header><div class="signavio-reader__content">
+<p>A clean core aims to keep an ERP system easier to upgrade and operate. It covers five connected areas: <strong>processes, extensions, data, integrations and operations</strong>. Moving code to BTP helps in some cases, but it does not remove the need for stable APIs, clear ownership and recovery.</p>
+<h3>Decide whether an extension is needed</h3>
+<div class="table-scroll study-table" role="region" aria-label="Extensibility decisions for SAP Cloud ERP" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Option</th><th scope="col">What it means</th><th scope="col">Use when</th></tr></thead><tbody>
+<tr><td>Standard process or configuration</td><td>Use supported application behavior before writing new code.</td><td>The requirement can be met without an extension.</td></tr>
+<tr><td>Key-user extensibility (on-stack)</td><td>Add a supported field, business logic or UI adjustment using provided tools.</td><td>A small change belongs close to the ERP transaction.</td></tr>
+<tr><td>Developer extensibility (on-stack)</td><td>Use ABAP Cloud and released SAP objects, where supported by the ERP edition.</td><td>The application needs tight ERP business-object behavior.</td></tr>
+<tr><td>Side-by-side extensibility (outside ERP)</td><td>Run an application or service on BTP, connected through supported contracts.</td><td>The solution spans systems, needs an independent lifecycle or has different runtime requirements.</td></tr>
+</tbody></table></div>
+<p><strong>One example:</strong> If a buyer needs one extra field in an SAP purchase requisition, first check supported in-app extensibility. If a non-standard request process spans SAP and a supplier portal, a side-by-side solution may fit. Do not create a second purchase-requisition system: the ERP should remain the transaction owner when it is the system of record.</p>
+<h3>Clean core levels: A to D</h3>
+<div class="table-scroll study-table" role="region" aria-label="SAP clean core extension levels" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Level</th><th scope="col">Meaning</th><th scope="col">Design response</th></tr></thead><tbody>
+<tr><td>A</td><td>Uses released, upgrade-stable interfaces and recommended extension methods.</td><td>Preferred baseline.</td></tr>
+<tr><td>B</td><td>Also uses documented classic APIs and technologies considered suitable for extension.</td><td>Accept with documented scope, supportability and checks.</td></tr>
+<tr><td>C</td><td>Uses internal, unreleased SAP objects where legacy needs require them.</td><td>Treat as upgrade risk; plan monitoring and remediation.</td></tr>
+<tr><td>D</td><td>Uses non-recommended techniques such as modifications or unsafe direct table changes.</td><td>Avoid and prioritize replacement.</td></tr>
+</tbody></table></div>
+<p>Levels A–D are an architecture and quality classification, not a claim that every technique is allowed in every deployment model. SAP Cloud ERP public edition has stricter extension boundaries than private edition or on-premise. Check the target edition, release and the actual API release contract.</p>
+<p><strong>Lead answer:</strong> “I use the smallest supported extension that meets the requirement, document the clean-core impact and verify the process after an upgrade.”</p>
+<p>Details: <a href="https://news.sap.com/2025/08/extend-sap-s4hana-cloud-right-way-clean-clear/">SAP clean core levels</a> and <a href="https://help.sap.com/docs/abap-cloud/abap-cloud/extensibility">SAP extensibility options</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="build-tools" aria-labelledby="build-tools-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">17 / Development choices</p><h2 id="build-tools-title">SAP Build and Joule Studio: similar goals, different models</h2></header><div class="signavio-reader__content">
+<p>Separate <strong>what is being built</strong> from <strong>who manages its runtime</strong>. A Fiori app, a business approval, a CAP service and an AI agent do not require the same tools or operating model.</p>
+<div class="table-scroll study-table" role="region" aria-label="Development products compared" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Product or tool</th><th scope="col">Main purpose</th><th scope="col">Architect's boundary</th></tr></thead><tbody>
+<tr><td>SAP Build Process Automation</td><td>Business workflows, approvals and task automation.</td><td>Rules and approval authority remain explicit; not every workflow needs an AI agent.</td></tr>
+<tr><td>SAP Build Code</td><td>Pro-code applications and extensions, including CAP-based development.</td><td>Define service contracts, persistence, tests and deployment responsibilities.</td></tr>
+<tr><td>ABAP Development Tools (ADT)</td><td>Develop ABAP Cloud and RAP artifacts for an ABAP target.</td><td>ADT is an IDE, not an application runtime.</td></tr>
+<tr><td>SAP Build Work Zone</td><td>Provide role-based sites and application access.</td><td>A portal does not become the transaction owner.</td></tr>
+<tr><td>Joule Studio, classic edition</td><td>Existing customer-managed Joule agent and skill development in SAP Build.</td><td>Check lifecycle and available migration options before extending existing work.</td></tr>
+<tr><td>Joule Studio (new, SAP-managed offering)</td><td>AI-first development of agents, applications and workflows using business intent.</td><td>Check availability, managed-runtime scope, agent evaluation and contract before choosing it.</td></tr>
+</tbody></table></div>
+<p><strong>Current product distinction:</strong> SAP announced the new Joule Studio at SAP Sapphire 2026. Existing SAP Build development remains a valid option, and the new offering is not a reason to rebuild stable applications. SAP also retired <em>SAP Build Apps as a standalone product</em> on 23 March 2026; existing contracts remain supported for their duration. Do not recommend it as an unchanged new standalone purchase.</p>
+<h3>What “intent-based development” changes</h3>
+<p>A traditional project starts by specifying screens, database tables and program logic. An intent-based project starts with a goal, such as “help a buyer resolve delivery delays”. It can then propose requirements, architecture, implementation and tests. Those outputs still need review.</p>
+<p><strong>Intent → requirements → solution design → code or workflow → tests and agent evaluation → deployment → monitoring.</strong></p>
+<p>For SAP scenarios, process facts from Signavio, application dependencies from LeanIX and released ERP interfaces may help create useful context. A generated design is still a proposal: the architect must check data access, authorization, error recovery, lifecycle and measurable business results.</p>
+<p><strong>Lead answer:</strong> “Use Build for established apps and automation where it fits. Consider new Joule Studio for AI-first use cases, but make the choice from capabilities, operating model, risk and commercial availability.”</p>
+<p>Sources: <a href="https://news.sap.com/2026/05/new-joule-studio-enterprise-scale-agentic-development/">SAP announcement on Joule Studio</a> and <a href="https://community.sap.com/t5/technology-blog-posts-by-sap/sap-build-apps-deprecation-and-the-path-forward/bc-p/14357348/highlight/true">SAP Build Apps transition</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="build-runtimes" aria-labelledby="build-runtimes-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">18 / Runtime and programming</p><h2 id="build-runtimes-title">Cloud Foundry, Kyma, ABAP, CAP and RAP: keep the terms separate</h2></header><div class="signavio-reader__content">
+<p>A <strong>runtime</strong> is where software executes. A <strong>programming model</strong> gives developers a structured way to build it. An <strong>IDE</strong> is the tool where they write and test code. Confusing these three leads to incorrect architecture choices.</p>
+<div class="table-scroll study-table" role="region" aria-label="Runtime choices in SAP BTP" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Runtime</th><th scope="col">Where it fits</th><th scope="col">Main trade-off</th></tr></thead><tbody>
+<tr><td>Cloud Foundry</td><td>Managed deployment for cloud applications and services; often used with CAP.</td><td>Less container infrastructure work than self-managed Kubernetes, but runtime rules and quotas apply.</td></tr>
+<tr><td>Kyma</td><td>Managed Kubernetes environment for containerized and event-oriented workloads.</td><td>More flexibility for containers and orchestration; also more operational complexity.</td></tr>
+<tr><td>SAP BTP ABAP environment</td><td>ABAP Cloud development and runtime with RAP, CDS and released APIs.</td><td>Good for ABAP-oriented transactional services; different language and lifecycle constraints.</td></tr>
+<tr><td>Joule Studio runtime (SAP-managed)</td><td>Managed execution model associated with the new Joule Studio offering.</td><td>Check supported workloads, release availability, policy controls and pricing.</td></tr>
+</tbody></table></div>
+<h3>CAP and RAP are not competing cloud providers</h3>
+<div class="table-scroll study-table" role="region" aria-label="CAP versus RAP" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Question</th><th scope="col">CAP</th><th scope="col">RAP</th></tr></thead><tbody>
+<tr><td>What is it?</td><td>SAP Cloud Application Programming Model.</td><td>ABAP RESTful Application Programming Model.</td></tr>
+<tr><td>Main languages</td><td>Node.js and Java services; CDS domain modeling.</td><td>ABAP Cloud and ABAP CDS business-object modeling.</td></tr>
+<tr><td>Typical target</td><td>Cloud Foundry or Kyma.</td><td>SAP BTP ABAP environment or a supported S/4HANA ABAP stack.</td></tr>
+<tr><td>Main strengths</td><td>Business services and cross-system extensions using cloud development.</td><td>Transactional business objects, behavior and released ABAP services.</td></tr>
+<tr><td>Key concern</td><td>Define domain ownership, service API and persistence.</td><td>Use released objects and the applicable ABAP extensibility model.</td></tr>
+</tbody></table></div>
+<p>Both can support SAP Fiori applications, but <strong>SAP Fiori is the UX design approach</strong>; SAPUI5 and Fiori elements are UI technologies. Fiori is not a fourth backend runtime.</p>
+<p><strong>Procurement example:</strong> A cross-system request service may use CAP on Cloud Foundry. A tightly connected ERP business-object extension may use RAP in the ABAP stack. The same business process does not dictate the same technical choice for every customer.</p>
+<p>Read further: <a href="/atlas/sap/cap/">CAP</a>, <a href="/atlas/sap/rap/">RAP</a>, <a href="https://help.sap.com/docs/btp/btp-developers-guide/understanding-available-technology">SAP runtime decision guidance</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="build-experience" aria-labelledby="build-experience-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">19 / User experience</p><h2 id="build-experience-title">Choose the user entry point and mobile approach</h2></header><div class="signavio-reader__content">
+<p>An architect separates the <strong>front door</strong> from the <strong>business application</strong>. A launchpad, a mobile shell and a task inbox can help users reach work, but they do not replace the SAP system that owns the business transaction.</p>
+<div class="table-scroll study-table" role="region" aria-label="SAP entry points and mobile tools" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Need</th><th scope="col">Consider</th><th scope="col">Remember</th></tr></thead><tbody>
+<tr><td>Role-based launchpad for applications</td><td>SAP Build Work Zone, standard edition.</td><td>A central way to launch and organize apps.</td></tr>
+<tr><td>Teams need structured workspaces, shared content and collaboration</td><td>SAP Build Work Zone, advanced edition.</td><td>Additional collaboration and content features; check edition scope.</td></tr>
+<tr><td>Tasks from several systems in one inbox</td><td>SAP Task Center, where the sources are supported.</td><td>The original application usually owns the task execution and its business state.</td></tr>
+<tr><td>Mobile entry point to tasks and business content</td><td>Joule Work mobile app (formerly SAP Mobile Start).</td><td>Product naming and experiences are evolving; check current mobile documentation.</td></tr>
+<tr><td>Custom mobile app with shared cross-platform metadata</td><td>SAP Mobile Development Kit (MDK) with Mobile Services.</td><td>Useful for metadata-driven mobile experiences, including supported offline scenarios.</td></tr>
+<tr><td>Native iOS or Android capabilities</td><td>SAP BTP SDK for iOS or Android, with Mobile Services.</td><td>Use when device integration, offline work or native UX requirements justify the cost.</td></tr>
+</tbody></table></div>
+<p><strong>Mobile Services</strong> provides backend capabilities such as connectivity, onboarding, push notifications and offline synchronization for supported mobile applications. The user-facing app, the backend service and the ERP transaction remain different components.</p>
+<p><strong>Lead question:</strong> A warehouse worker needs to approve or record a stock-related task while offline. Which component presents the UI, which handles offline synchronization, and which system validates and posts the actual inventory movement?</p>
+<p>See <a href="https://help.sap.com/docs/joule-work-mobile/administration-guide-sap-build-work-zone-setup/overview">SAP Joule Work mobile guidance</a> and <a href="https://help.sap.com/docs/build-work-zone-standard-edition">SAP Build Work Zone</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="build-integration-strategy" aria-labelledby="build-integration-strategy-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">20 / Integration design</p><h2 id="build-integration-strategy-title">Choose an integration style from the business dependency</h2></header><div class="signavio-reader__content">
+<p>Enterprise integration connects processes, applications and data across organizational boundaries. An API, an event, a file and a data pipeline solve different problems. A good integration strategy defines when each is allowed, which team owns it and how failures can be recovered.</p>
+<div class="table-scroll study-table" role="region" aria-label="Common enterprise integration styles" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Business need</th><th scope="col">Candidate style</th><th scope="col">What must be designed</th></tr></thead><tbody>
+<tr><td>Request a price or create a document with an immediate answer</td><td>Synchronous API / request-response.</td><td>Authentication, timeout, retries, duplicate prevention and business response.</td></tr>
+<tr><td>Tell other systems that an order status changed</td><td>Event-driven, asynchronous.</td><td>Producer, broker, consumers, event contract, idempotency and eventual consistency.</td></tr>
+<tr><td>Exchange purchase-order documents with a supplier</td><td>B2B / EDI or supported partner integration.</td><td>Partner agreement, standards, mapping, acknowledgments and exceptions.</td></tr>
+<tr><td>Move large datasets for analytics</td><td>Data integration, replication or federation.</td><td>Freshness, lineage, ownership and reconciliation.</td></tr>
+<tr><td>Connect an established on-premise interface</td><td>Supported hybrid connection or integration runtime.</td><td>Network, security, availability, migration and monitoring.</td></tr>
+</tbody></table></div>
+<p>SAP's <strong>Integration Solution Advisory Methodology (ISA-M)</strong> gives an organization a common way to classify integration scenarios and map them to approved patterns and technologies. An Integration Center of Excellence can maintain the patterns, controls, ownership and reusable assets. It should enable teams, not force middleware into every connection.</p>
+<p><strong>Important distinction:</strong> Application-to-application integration is sometimes abbreviated A2A. Agent-to-agent integration is also called A2A in agent protocols. Always say which one you mean.</p>
+<p><strong>Example:</strong> A buyer submitting a request needs confirmation that the ERP created the document; a synchronous API may be suitable. Updating an analytics dashboard after creation might work well with an event. They can be part of the same process without using the same integration style.</p>
+<p>See <a href="/atlas/sap/sap-integration-suite/">SAP Integration Suite concepts</a> and <a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/integration-flow-extension-d3741720e29842e4bf547dcd66139f7f-774">SAP's Integration Suite overview</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="build-integration-suite" aria-labelledby="build-integration-suite-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">21 / Integration components</p><h2 id="build-integration-suite-title">SAP Integration Suite: name the component, not just the suite</h2></header><div class="signavio-reader__content">
+<p>SAP Integration Suite offers several capabilities. Choose each for a specific job, and remember that <strong>delivery of a message is not the same as completion of a business transaction</strong>.</p>
+<div class="table-scroll study-table" role="region" aria-label="Integration Suite components and boundaries" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Capability</th><th scope="col">What it does</th><th scope="col">Key design question</th></tr></thead><tbody>
+<tr><td>Cloud Integration</td><td>Build and run message flows (iFlows), with adapters, routing and transformations.</td><td>Where do we correlate, monitor, retry and recover a message?</td></tr>
+<tr><td>API Management</td><td>Secure, publish, manage and monitor API consumption.</td><td>Which consumer policies, versions and access rules apply?</td></tr>
+<tr><td>Integration Advisor</td><td>Help define structured B2B message formats and mappings.</td><td>What are the partner message structures and validation rules?</td></tr>
+<tr><td>Integration Assessment</td><td>Apply ISA-M to document integration scenarios and technology decisions.</td><td>Why was this integration style selected?</td></tr>
+<tr><td>Migration Assessment</td><td>Assess existing SAP PI/PO scenarios for migration effort and limitations.</td><td>Which interfaces should migrate, change or retire?</td></tr>
+<tr><td>Open Connectors</td><td>Connect to supported third-party SaaS applications.</td><td>Is an appropriate connector available under the target plan?</td></tr>
+<tr><td>Edge Integration Cell</td><td>Run supported integration processing in a customer-managed location.</td><td>Do latency, sovereignty or network constraints require local processing?</td></tr>
+<tr><td>MCP gateway</td><td>Expose supported enterprise API capabilities as MCP tools for agents.</td><td>Who may call the tool, with what scope and control?</td></tr>
+</tbody></table></div>
+<h3>How an iFlow works</h3>
+<p><strong>Sender → inbound adapter → validation → mapping / routing → receiver adapter → receiving application.</strong> An iFlow can include error handling, logging, stores and additional calls. The sender and receiver contracts must be defined separately from the graphical flow.</p>
+<p>Cloud Integration may offer <strong>Best Effort (BE), Exactly Once (EO) and Exactly Once In Order (EOIO)</strong> qualities for supported adapters and scenarios. These describe message-processing behavior and do not automatically prove that the business process ran exactly once. A second purchase requisition after a timeout is still possible unless the design handles idempotency and reconciliation.</p>
+<h3>Do not confuse these supporting concepts</h3>
+<p><strong>MIG</strong> (Message Implementation Guideline) describes the message structure and constraints for a partner interface. <strong>MAG</strong> (Mapping Guideline) maps source and target structures. SAP Application Interface Framework (<strong>AIF</strong>) operates in supported SAP backend scenarios to help monitor, analyze, correct and reprocess application-level interface messages; it is not a replacement for middleware.</p>
+<p>For SAP PI/PO modernization, first assess the current scenario, its business owner, interface contract and relevance. Then decide whether an existing pattern can be migrated, must be adjusted or should be redesigned. Use regression tests to prove the outcome.</p>
+<p>Further detail: <a href="/atlas/sap/sap-integration-suite/">SAP Integration Suite in Atlas</a>, <a href="https://help.sap.com/docs/cloud-integration/sap-cloud-integration/what-is-sap-cloud-integration">Cloud Integration</a>, <a href="https://help.sap.com/docs/integration-suite/isuite-integrations-and-apis/model-context-protocol-mcp">MCP in Integration Suite</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="build-events-agents" aria-labelledby="build-events-agents-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">22 / Events and AI</p><h2 id="build-events-agents-title">Events, MCP and agents: connect actions safely</h2></header><div class="signavio-reader__content">
+<h3>Event-driven design is a relationship, not a product icon</h3>
+<p><strong>Producer → event broker / topic → consumer → business action → confirmation or exception.</strong> A business event is a fact such as “PurchaseOrder.Changed”; a command asks a system to perform an action. They need different handling and business expectations.</p>
+<div class="table-scroll study-table" role="region" aria-label="Messaging choices and caveats" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Element</th><th scope="col">Owns</th><th scope="col">Key risk</th></tr></thead><tbody>
+<tr><td>Event producer</td><td>Publishes a defined business fact.</td><td>Events are missing, late or contain unstable fields.</td></tr>
+<tr><td>Event broker</td><td>Routes events to interested consumers and, where configured, holds messages.</td><td>Retention, redelivery, duplication, ordering and subscriptions.</td></tr>
+<tr><td>Event consumer</td><td>Processes the event and updates its own state.</td><td>Duplicate actions, poison messages and eventual consistency.</td></tr>
+<tr><td>SAP Integration Suite, advanced event mesh</td><td>Enterprise event-broker capabilities for more complex hybrid and distributed scenarios.</td><td>Broker design, protocol compatibility, regional needs and operational costs.</td></tr>
+<tr><td>Earlier SAP Event Mesh offerings / Event Mesh capability</td><td>Existing message/event integrations depending on the customer's landscape.</td><td>Check SAP's current migration guidance to advanced event mesh instead of assuming service names mean identical technology.</td></tr>
+</tbody></table></div>
+<p>Reliable asynchronous processing still needs <strong>idempotent consumers, business keys, retries, dead-letter handling, monitoring and reconciliation</strong>. A queue can support reliable delivery, but it cannot guarantee that an external ERP transaction succeeded.</p>
+<h3>MCP versus agent-to-agent</h3>
+<p><strong>MCP</strong> exposes callable tools and data through a defined interface for agents. SAP Integration Suite's MCP gateway can expose supported API operations with governance, depending on the service plan. MCP is not an automatic adapter for every legacy mainframe: the underlying function must still be implemented and safely exposed.</p>
+<p><strong>Agent-to-agent (A2A)</strong> communication is for delegating and coordinating work between agents. It is not the same thing as an ERP business API. An agent proposing a supplier change still needs permission checks and a controlled process before a purchase order is posted.</p>
+<h3>One procurement chain</h3>
+<p><strong>Carrier delay detected → event received → affected purchase order identified → alternative evaluated → authorized approval → ERP transaction via released API → business confirmation.</strong></p>
+<p>The decision point belongs between recommendation and execution. The process owner sets approval thresholds; the solution architect defines service permissions, human review for material decisions, a correlation ID, error handling and audit evidence. The exact products vary by scenario.</p>
+<p>See <a href="https://help.sap.com/docs/integration-suite/migration-from-event-mesh-capability-in-sap-integration-suite-to-sap-integration-suite-advanced-event-mesh-7a447ab211064dcfacff35ac177ae9b9/adapting-sender-and-consumer-applications">SAP Event Mesh migration guidance</a> and <a href="https://help.sap.com/docs/integration-suite/isuite-integrations-and-apis/how-model-context-protocol-mcp-enables-ai-integration-with-apis">SAP MCP Gateway guidance</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="build-operations" aria-labelledby="build-operations-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">23 / Delivery and operations</p><h2 id="build-operations-title">Build, transport, observe and recover the solution</h2></header><div class="signavio-reader__content">
+<p>Deployment is one stage of delivery. A Lead must know who releases the change, what is monitored, which team handles exceptions, and what business evidence proves the service is working.</p>
+<div class="table-scroll study-table" role="region" aria-label="Operations and delivery toolchain" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Product or service</th><th scope="col">Primary responsibility</th><th scope="col">Do not confuse it with</th></tr></thead><tbody>
+<tr><td>SAP Continuous Integration and Delivery</td><td>Build, automated tests and deployment pipelines.</td><td>Approval of business results or cross-landscape transport governance.</td></tr>
+<tr><td>SAP Cloud Transport Management</td><td>Transport supported artifacts and content through a landscape.</td><td>A full application test suite or source control system.</td></tr>
+<tr><td>SAP Cloud Logging</td><td>Store and analyze supported logs, metrics and traces.</td><td>Business reconciliation across several systems.</td></tr>
+<tr><td>SAP Cloud ALM</td><td>Application lifecycle activities and SAP landscape monitoring for supported scenarios.</td><td>The transaction owner or every product's native log viewer.</td></tr>
+<tr><td>SAP Focused Run</td><td>Advanced monitoring for large and complex SAP landscapes.</td><td>A substitute for all application-level business error handling.</td></tr>
+<tr><td>SAP Solution Manager</td><td>Established ALM platform for many on-premise landscapes.</td><td>A reason to start new ALM designs without checking SAP Cloud ALM.</td></tr>
+<tr><td>Cloud Integration Automation Service (CIAS)</td><td>Guide and automate supported integration setup tasks.</td><td>The middleware runtime that carries productive messages.</td></tr>
+<tr><td>SAP Build Work Zone / SAP Task Center</td><td>User entry points, applications and tasks.</td><td>The component that automatically owns the originating business transaction.</td></tr>
+</tbody></table></div>
+<p>For an existing SAP Solution Manager landscape, include its support lifecycle in the roadmap. SAP states mainstream maintenance for Solution Manager 7.2 ends in 2027 and recommends planning the transition to SAP Cloud ALM. Check actual scope and migration options before selecting ALM tooling.</p>
+<h3>Diagnose an incomplete business result</h3>
+<p><strong>Symptom:</strong> A request app reports success, but the buyer cannot find the purchase requisition.</p>
+<ol>
+<li>Confirm the originating request, correlation key and expected target document.</li>
+<li>Check whether the API or iFlow was called and which response was returned.</li>
+<li>Check ERP application logs, authorization, validations and document creation status.</li>
+<li>Determine whether the call failed, succeeded after a timeout, or created a document that the originating app did not record.</li>
+<li>Recover with a controlled retry or reconciliation path; never blindly resend a posting request.</li>
+<li>Prove that the intended business document exists and the user-visible status matches it.</li>
+</ol>
+<p><strong>IAS/IPS, BTP roles, backend roles and API policies</strong> may all affect the access chain. CIAS may help configure a supported integration scenario; it does not validate its business outcome.</p>
+<p><strong>Lead answer:</strong> “A production-ready design needs the interface contract, service ownership, transport and test evidence, monitoring, support response, rollback plan and business completion proof.”</p>
+<p>Sources: <a href="https://help.sap.com/docs/cloud-logging">SAP Cloud Logging</a>, <a href="https://help.sap.com/docs/cloud-transport-management">Cloud Transport Management</a>, <a href="https://help.sap.com/docs/cloud-integration-automation/user-guide/overview">CIAS</a> and <a href="https://help.sap.com/docs/SAP_Solution_Manager">Solution Manager transition information</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">24 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
 <h3>30-second explanation</h3>
 <p>“We start with what the business needs to improve. SAP Signavio helps us understand the process, while SAP LeanIX shows which applications support it. We use SAP reference architecture to connect that business need to a possible solution. BTP gives us options for extensions and integrations where standard applications have a gap. We then check security, costs, operating responsibility and measurable results.”</p>
 <h3>90-second explanation</h3>
@@ -326,7 +499,7 @@ sitemap: false
 <ul><li>Which business result must improve, and what is the current baseline?</li><li>Which system owns each official business document or master data object?</li><li>What happens when the integration, workflow or AI step fails?</li></ul>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">17 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">25 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
 <ol>
 <li><strong>What is the difference between an EA and an SA?</strong><p>EA defines enterprise-wide direction and governance. SA designs a specific solution within business, technical and delivery constraints. They exchange feedback.</p></li>
 <li><strong>Capability versus process?</strong><p>Capability is what the company must be able to do; process is the sequence of activities used to deliver an outcome. A capability may support several processes.</p></li>
@@ -339,12 +512,22 @@ sitemap: false
 <li><strong>When do you use a methodology instead of a reference architecture?</strong><p>A methodology helps you make and govern the decision. A reference architecture offers a pattern that you adapt after deciding what you need.</p></li>
 <li><strong>What is ISA-M used for?</strong><p>To classify integration needs, compare styles and technologies, define standards and support integration governance. It does not require middleware for every interface.</p></li>
 <li><strong>Where do you estimate BTP service cost and verify compliance?</strong><p>Use Discovery Center and the relevant service information for planning. Use SAP Trust Center for SAP-managed assurance evidence, then check the customer's responsibilities and actual contract.</p></li>
+<li><strong>When do you choose key-user, developer, or side-by-side extensibility?</strong><p>Use key-user tools for small supported changes, developer extensibility for close ERP business-object logic, and side-by-side for cross-system or independent-lifecycle needs. Start with standard capabilities.</p></li>
+<li><strong>What do clean core levels A, B, C and D mean?</strong><p>A uses released stable interfaces; B adds supported classic APIs; C depends on internal objects and requires stronger upgrade controls; D uses non-recommended techniques.</p></li>
+<li><strong>SAP Build or Joule Studio?</strong><p>SAP Build remains suitable for existing apps, workflow automation and ABAP-linked development. New Joule Studio is aimed at AI-first, SAP-managed use cases. Compare availability, runtime, controls and costs.</p></li>
+<li><strong>How do CAP, RAP, Cloud Foundry and Kyma relate?</strong><p>CAP and RAP are programming models; Cloud Foundry, Kyma and the BTP ABAP environment are runtimes. CAP commonly runs on Cloud Foundry or Kyma; RAP is ABAP-based.</p></li>
+<li><strong>What is the difference between Cloud Integration and API Management?</strong><p>Cloud Integration processes integration messages and iFlows. API Management governs API exposure, policies and consumption.</p></li>
+<li><strong>When are events better than synchronous APIs?</strong><p>Use events when consumers should react independently to facts and can handle eventual consistency. Use synchronous APIs when a caller needs an immediate result; design retries in either approach.</p></li>
+<li><strong>Why does exactly-once messaging not always mean exactly-once business processing?</strong><p>A message contract cannot prevent duplicate business effects across systems by itself. Use idempotency, business IDs and reconciliation.</p></li>
+<li><strong>What do MCP and A2A solve for agents?</strong><p>MCP exposes tools and data to agents through controlled interfaces. Agent-to-agent protocols enable delegation between agents. Neither removes the need for authorization and audit.</p></li>
+<li><strong>How do you prove integration completion?</strong><p>Trace the originating request through middleware and backend logs, confirm the intended document exists, and reconcile its business state.</p></li>
+<li><strong>How do CI/CD, transport management, Cloud ALM and CIAS differ?</strong><p>CI/CD builds and tests code, transport management promotes supported artifacts, Cloud ALM handles supported lifecycle and monitoring scenarios, and CIAS guides configuration of supported integrations.</p></li>
 <li><strong>Does side-by-side automatically mean clean core?</strong><p>No. The solution still needs released interfaces, clear ownership, secure access, controlled coupling and an operational recovery path.</p></li>
 </ol>
 <p><strong>Practice variation:</strong> The customer already has a standard S/4HANA approval function. Would you still propose a custom BTP workflow? Explain the cost, support risk and evidence required before choosing the custom option.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">18 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">26 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
 <p>This guide is the architecture foundation. The next BTP lessons should deepen the areas that determine whether a platform solution can be deployed and operated.</p>
 <div class="table-scroll study-table" role="region" aria-label="BTP study sequence" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Topic</th><th scope="col">What you should be able to decide</th></tr></thead><tbody><tr><td>1. Platform administration</td><td>Design account, region, service and cost boundaries.</td></tr>
 <tr><td>2. Identity and connectivity</td><td>Explain trust, destinations, roles and private-network access.</td></tr>
@@ -353,10 +536,11 @@ sitemap: false
 <tr><td>5. Data and AI architecture</td><td>Choose data access, grounding, governance and evaluations for AI.</td></tr>
 <tr><td>6. Delivery and operations</td><td>Define lifecycle, monitoring, security, ownership and service evidence.</td></tr></tbody></table></div>
 <p><strong>Architecture resources now covered:</strong> Discovery Center, SAP BTP Guidance Framework, Architecture Center, SAP Business Accelerator Hub, solution diagrams, extension and integration methods, cost-estimation entry points and SAP Trust Center.</p>
+<p><strong>The Build pillar is now covered:</strong> clean core, development tools and managed Joule Studio, BTP runtimes, CAP and RAP, Fiori and mobile, integration strategy, Integration Suite, events and MCP, CI/CD, monitoring and operational recovery. Next lessons will expand the Contextualize &amp; Reason and Govern pillars.</p>
 <p>Use this page as the continuing reference. Add new material to the relevant chapter only when it improves an explanation, design choice or assessment answer.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">19 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">27 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
 <p>This is an independent study guide based on SAP public learning and help content, rewritten for comprehension. It is not an official certification guide or a statement of contractual product availability.</p>
 <ul>
 <li><a href="https://learning.sap.com/courses/sap-enterprise-architecture-framework-foundation-introduction/investigating-the-sap-enterprise-architecture-methodology">SAP Learning — EA methodology and architect roles</a></li>
@@ -377,6 +561,19 @@ sitemap: false
 <li><a href="https://architecture.learning.sap.com/docs/ref-arch">SAP Architecture Center — reference architectures</a></li>
 <li><a href="https://sap.github.io/btp-solution-diagrams/">SAP BTP Solution Diagram Guidelines</a></li>
 <li><a href="https://www.sap.com/about/trust-center.html">SAP Trust Center</a></li>
+<li><a href="https://news.sap.com/2025/08/extend-sap-s4hana-cloud-right-way-clean-clear/">SAP News — Clean core levels</a></li>
+<li><a href="https://help.sap.com/docs/abap-cloud/abap-cloud/extensibility">SAP Help — ABAP extensibility</a></li>
+<li><a href="https://news.sap.com/2026/05/new-joule-studio-enterprise-scale-agentic-development/">SAP News — new Joule Studio (May 2026)</a></li>
+<li><a href="https://community.sap.com/t5/technology-blog-posts-by-sap/sap-build-apps-deprecation-and-the-path-forward/bc-p/14357348/highlight/true">SAP Community — Build Apps deprecation (March 2026)</a></li>
+<li><a href="https://help.sap.com/docs/btp/btp-developers-guide/understanding-available-technology">SAP Help — BTP runtimes and programming models</a></li>
+<li><a href="https://help.sap.com/docs/cloud-integration/sap-cloud-integration/what-is-sap-cloud-integration">SAP Help — SAP Cloud Integration</a></li>
+<li><a href="https://help.sap.com/docs/integration-suite/isuite-integrations-and-apis/model-context-protocol-mcp">SAP Help — Integration Suite MCP gateway</a></li>
+<li><a href="https://help.sap.com/docs/integration-suite/migration-from-event-mesh-capability-in-sap-integration-suite-to-sap-integration-suite-advanced-event-mesh-7a447ab211064dcfacff35ac177ae9b9/adapting-sender-and-consumer-applications">SAP Help — Event Mesh migration to Advanced Event Mesh</a></li>
+<li><a href="https://help.sap.com/docs/cloud-integration-automation/user-guide/overview">SAP Help — Cloud Integration Automation Service</a></li>
+<li><a href="https://help.sap.com/docs/cloud-transport-management">SAP Help — Cloud Transport Management</a></li>
+<li><a href="https://help.sap.com/docs/cloud-logging">SAP Help — Cloud Logging</a></li>
+<li><a href="https://help.sap.com/docs/SAP_Solution_Manager">SAP Help — SAP Solution Manager transition</a></li>
+<li><a href="https://help.sap.com/docs/joule-work-mobile/administration-guide-sap-build-work-zone-setup/overview">SAP Help — Joule Work mobile (formerly SAP Mobile Start)</a></li>
 </ul>
 <p><strong>Verification boundary:</strong> Always check the exact SAP edition, release, commercial plan, region, service availability and published interface before making a delivery commitment. SAP's product naming and reference catalog can change. This page remains in review until a separate human publication check.</p>
 </div></section>
