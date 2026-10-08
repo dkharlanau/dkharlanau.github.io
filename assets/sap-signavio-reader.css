@@ -1,0 +1,231 @@
+/* SAP Signavio reader.
+   Reuses Labs research-canvas and the registered study-table component.
+   Owns only the long-form guide's reading width, in-page navigation and rhythm. */
+
+.signavio-reader__hero .research-canvas__hero-copy > h1 {
+  max-width: none;
+}
+
+.signavio-reader__hero .research-canvas__hero-copy > p:not(.research-canvas__eyebrow) {
+  max-width: 55ch;
+}
+
+.signavio-reader__hero .atlas-pill-row {
+  margin-top: var(--space-4);
+}
+
+.signavio-reader__hero .research-canvas__signal-line {
+  grid-template-columns: 2rem minmax(0, 1fr);
+}
+
+.signavio-reader__hero .research-canvas__signal-line strong {
+  font-size: var(--text-md);
+  line-height: 1.45;
+}
+
+.signavio-reader__toc {
+  border-top: 1px solid var(--color-border);
+}
+
+.signavio-reader .signavio-reader__toc > header,
+.signavio-reader .signavio-reader__section > header,
+.signavio-reader .signavio-reader__related > header {
+  max-width: 52rem;
+  align-items: flex-start;
+  margin: 0 0 var(--space-6);
+  text-align: left;
+}
+
+.signavio-reader .signavio-reader__toc > header > h2,
+.signavio-reader .signavio-reader__section > header > h2,
+.signavio-reader .signavio-reader__related > header > h2 {
+  max-width: 35ch;
+}
+
+.signavio-reader .research-canvas__inventory {
+  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+
+.signavio-reader__toc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-7) var(--space-8);
+}
+
+.signavio-reader__toc-group {
+  min-width: 0;
+  border-top: 2px solid var(--color-text);
+  padding-top: var(--space-4);
+}
+
+.signavio-reader__toc-group > h3 {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text);
+  font-size: var(--text-xl) !important;
+  font-weight: 650;
+}
+
+.signavio-reader__toc-group > ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.signavio-reader__toc-group li {
+  margin: 0;
+}
+
+.signavio-reader__toc-group a {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2) 0;
+  color: var(--color-text);
+  font-size: var(--text-md);
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.signavio-reader__toc-group a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.signavio-reader__toc-group a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.signavio-reader__section,
+.signavio-reader__related {
+  border-top: 1px solid var(--color-border);
+}
+
+.signavio-reader__section {
+  scroll-margin-top: calc(var(--header-height, 5rem) + var(--space-4));
+}
+
+.signavio-reader__section-head .research-canvas__eyebrow {
+  margin-bottom: var(--space-3);
+}
+
+.signavio-reader__content {
+  font-size: var(--text-lg);
+  line-height: 1.7;
+}
+
+.signavio-reader__content > :is(p, ul, ol, h3) {
+  max-width: 68ch;
+}
+
+.signavio-reader__content > p {
+  margin: var(--space-3) 0 var(--space-4);
+  font-size: var(--text-lg);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.signavio-reader__content > :is(ul, ol) {
+  margin: var(--space-4) 0 var(--space-5);
+  padding-inline-start: 1.5em;
+  font-size: var(--text-lg);
+  line-height: 1.7;
+}
+
+.signavio-reader__content li + li {
+  margin-top: var(--space-2);
+}
+
+.signavio-reader__content h3 {
+  margin: var(--space-7) 0 var(--space-3);
+  font-size: var(--text-2xl) !important;
+  line-height: 1.25;
+}
+
+.signavio-reader__content h3:first-child {
+  margin-top: 0;
+}
+
+.signavio-reader__content h3 + p {
+  margin-top: 0;
+}
+
+/* The registered study-table wrapper owns table appearance.
+   Here we only ensure its scroll viewport is usable in long-form reading. */
+.signavio-reader__content .table-scroll.study-table {
+  max-width: 100%;
+  margin-block: var(--space-5) var(--space-6);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.signavio-reader__content .table-scroll.study-table:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.signavio-reader__related .research-route-list {
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 800px) {
+  .signavio-reader__toc-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .signavio-reader__hero .research-canvas__signal {
+    margin-top: var(--space-5);
+  }
+
+  .signavio-reader__content > :is(p, ul, ol) {
+    font-size: var(--text-base);
+  }
+
+  .signavio-reader__content h3 {
+    margin-top: var(--space-6);
+  }
+}
+
+@media print {
+  .signavio-reader {
+    overflow: visible !important;
+  }
+
+  .signavio-reader__toc,
+  .signavio-reader__hero .research-canvas__button,
+  .signavio-reader__related {
+    display: none !important;
+  }
+
+  .signavio-reader__hero {
+    display: block;
+    padding-block: 0 var(--space-4);
+  }
+
+  .signavio-reader__hero .research-canvas__signal {
+    display: none;
+  }
+
+  .signavio-reader .research-canvas__inventory {
+    width: 100%;
+    padding-block: var(--space-4);
+  }
+
+  .signavio-reader__content .table-scroll.study-table {
+    overflow: visible;
+    border: 1px solid #ccc;
+    box-shadow: none;
+  }
+
+  .signavio-reader__content .study-table__table {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .signavio-reader__content tr {
+    break-inside: avoid;
+  }
+}
