@@ -191,7 +191,125 @@ sitemap: false
       </tbody>
     </table>
 
-    <h2 id="example">3. One simple example across the suite</h2>
+    <h2 id="business">3. How to explain SAP Signavio to business</h2>
+
+    <p>Do not start a business conversation with BPMN, process mining, or product names. Start with the problem the business is trying to solve.</p>
+
+    <p>In business language, SAP Signavio helps an organization do four things:</p>
+
+    <ol>
+      <li><strong>Make the process visible.</strong> Agree how work should happen, who owns it, and which systems and documents are involved.</li>
+      <li><strong>Make the process consistent.</strong> Standardize terminology, responsibilities, process variants, and governance without removing justified local differences.</li>
+      <li><strong>Measure the real process.</strong> Use operational data to see delays, rework, variants, bottlenecks, and value opportunities.</li>
+      <li><strong>Turn findings into change.</strong> Give improvements owners, objectives, tasks, approvals, and measurable outcomes.</li>
+    </ol>
+
+    <h3>Business problem → business explanation</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Business problem</th>
+          <th>How to explain the Signavio answer</th>
+          <th>Business value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Different teams describe the same process differently.</td>
+          <td>Create one governed process architecture, common terms, owners, and controlled variants.</td>
+          <td>Less ambiguity, easier onboarding, clearer ownership.</td>
+        </tr>
+        <tr>
+          <td>People do not know which process is current.</td>
+          <td>Publish approved process knowledge in one collaboration layer instead of distributing uncontrolled files.</td>
+          <td>One trusted source for process consumers.</td>
+        </tr>
+        <tr>
+          <td>Approvals and reviews happen in e-mail and spreadsheets.</td>
+          <td>Run repeatable governance workflows with assigned tasks, reminders, decisions, and history.</td>
+          <td>Traceable governance and fewer missed steps.</td>
+        </tr>
+        <tr>
+          <td>The designed process looks good, but performance is poor.</td>
+          <td>Connect operational data and compare the intended process with actual execution.</td>
+          <td>Fact-based improvement instead of opinion-based discussion.</td>
+        </tr>
+        <tr>
+          <td>Internal KPIs look fine, but customers or employees struggle.</td>
+          <td>Model the outside-in journey and connect pain points to the processes and systems that create them.</td>
+          <td>Improvement based on experience, not only internal efficiency.</td>
+        </tr>
+        <tr>
+          <td>There are many improvement ideas but no clear priority.</td>
+          <td>Convert findings into initiatives with objectives, value, owners, tasks, and progress.</td>
+          <td>Better prioritization and execution of transformation work.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>What SAP Signavio does not replace</h3>
+
+    <ul>
+      <li><strong>It does not replace SAP S/4HANA or another transactional system.</strong> A sales order, goods movement, invoice, or production confirmation still executes in the operational system.</li>
+      <li><strong>It does not make a process correct because the BPMN syntax is correct.</strong> Business owners and subject-matter experts still validate the meaning.</li>
+      <li><strong>It does not improve a process automatically.</strong> Analysis creates evidence; people still choose, own, implement, and verify the change.</li>
+      <li><strong>It does not remove data and integration responsibility.</strong> Process mining is only useful when the case, events, timestamps, attributes, and metrics represent the business correctly.</li>
+      <li><strong>It does not remove governance.</strong> A large repository without ownership, standards, lifecycle rules, and access design becomes another source of confusion.</li>
+    </ul>
+
+    <h3>What the business must own</h3>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Business responsibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Executive sponsor</td>
+          <td>Set transformation direction and remove cross-functional blockers.</td>
+        </tr>
+        <tr>
+          <td>Process owner</td>
+          <td>Own the end-to-end process outcome, standards, and improvement decisions.</td>
+        </tr>
+        <tr>
+          <td>Process architect / BPM team</td>
+          <td>Maintain process architecture, modeling standards, Dictionary design, and governance approach.</td>
+        </tr>
+        <tr>
+          <td>Subject-matter expert</td>
+          <td>Validate that the model and business rules reflect real work.</td>
+        </tr>
+        <tr>
+          <td>Process / data analyst</td>
+          <td>Define correct process semantics, metrics, analysis scope, and evidence.</td>
+        </tr>
+        <tr>
+          <td>Improvement owner</td>
+          <td>Turn an insight into implemented change and prove the result.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>A simple client conversation</h3>
+
+    <p><strong>1. What is the business problem?</strong> Standardization, transparency, compliance, customer experience, performance, or transformation execution?</p>
+
+    <p><strong>2. What evidence do we have?</strong> Process models, stakeholder feedback, operational data, customer journey data, or only assumptions?</p>
+
+    <p><strong>3. Which Signavio capability owns the next step?</strong> Model, collaborate, govern, analyze, or manage the improvement?</p>
+
+    <p><strong>4. Who owns the outcome?</strong> A Signavio tool can support the work, but a business owner must own the decision and measurable result.</p>
+
+    <h3>30-second business explanation</h3>
+
+    <p>SAP Signavio gives the business one connected way to understand and improve processes. We can define how a process should work, publish it to the people who use it, run approvals and governance, understand the customer or employee experience, analyze operational data to see what really happens, and turn the findings into improvement initiatives. The value is not the diagram itself. The value is a common process language, clear ownership, evidence-based improvement, and traceable change.</p>
+
+    <h2 id="example">4. One simple example across the suite</h2>
 
     <p>Assume a company wants to improve Order-to-Cash.</p>
 
@@ -208,7 +326,7 @@ sitemap: false
 
     <p>This is the suite story: <strong>design and execution evidence are connected, but they are not the same thing.</strong></p>
 
-    <h2 id="licensing">4. Licensing and access boundaries</h2>
+    <h2 id="licensing">5. Licensing and access boundaries</h2>
 
     <p>Do not memorize commercial prices. Understand the boundaries. SAP contracts, packages, and feature scope can change.</p>
 
@@ -265,7 +383,7 @@ sitemap: false
 
     <p><strong>License ≠ authorization.</strong> A license gives access to a product. Groups, object permissions, feature sets, and data permissions decide what the user can actually do.</p>
 
-    <h2 id="modeler">5. Process Modeler: what you must understand</h2>
+    <h2 id="modeler">6. Process Modeler: what you must understand</h2>
 
     <h3>The four building blocks</h3>
 
@@ -373,7 +491,7 @@ sitemap: false
 
     <p>The goal is not to eliminate all variation. The goal is to make variation explicit, justified, and governable.</p>
 
-    <h2 id="bpmn-dmn">6. BPMN and DMN: the minimum Lead toolkit</h2>
+    <h2 id="bpmn-dmn">7. BPMN and DMN: the minimum Lead toolkit</h2>
 
     <h3>BPMN</h3>
 
@@ -449,7 +567,7 @@ sitemap: false
 
     <p><strong>Verify</strong> checks formal completeness and consistency. <strong>Simulation</strong> evaluates outputs for selected inputs. <strong>Test Lab</strong> checks expected outcomes and regression cases after rule changes.</p>
 
-    <h2 id="collaboration-governance">7. Collaboration Hub and Process Governance</h2>
+    <h2 id="collaboration-governance">8. Collaboration Hub and Process Governance</h2>
 
     <h3>Collaboration Hub = consume and collaborate</h3>
 
@@ -504,7 +622,7 @@ sitemap: false
       </tbody>
     </table>
 
-    <h2 id="journey">8. Journey Modeler: outside-in view</h2>
+    <h2 id="journey">9. Journey Modeler: outside-in view</h2>
 
     <p>A process is usually inside-out: what the company does. A journey is outside-in: what the person experiences.</p>
 
@@ -534,7 +652,7 @@ sitemap: false
 
     <p><strong>Pain point → linked internal process → process change → KPI → verify experience improvement</strong></p>
 
-    <h2 id="intelligence">9. Process Intelligence and Process Insights</h2>
+    <h2 id="intelligence">10. Process Intelligence and Process Insights</h2>
 
     <p>This is the most important distinction in the suite:</p>
 
@@ -588,7 +706,7 @@ sitemap: false
       </tbody>
     </table>
 
-    <h2 id="transformation">10. Process Transformation Manager</h2>
+    <h2 id="transformation">11. Process Transformation Manager</h2>
 
     <p>Process Intelligence can find a problem. Process Transformation Manager helps manage the improvement work that follows.</p>
 
@@ -613,7 +731,7 @@ sitemap: false
 
     <p>Do not confuse Process Transformation Manager with Process Governance. <strong>Governance executes repeatable workflows. Transformation Manager manages improvement initiatives.</strong></p>
 
-    <h2 id="reference-content">11. Reference content: Process Navigator and Value Accelerator Library</h2>
+    <h2 id="reference-content">12. Reference content: Process Navigator and Value Accelerator Library</h2>
 
     <h3>SAP Signavio Process Navigator</h3>
 
@@ -631,7 +749,7 @@ sitemap: false
 
     <p>SAP Signavio Process Explorer was retired on June 30, 2026. Its reference content moved to Process Navigator. Do not present Process Explorer as the current strategic content product.</p>
 
-    <h2 id="integration">12. Integration model</h2>
+    <h2 id="integration">13. Integration model</h2>
 
     <p>There is no single “Signavio integration”. Different products integrate for different reasons.</p>
 
@@ -684,7 +802,7 @@ sitemap: false
 
     <p>A Synchronization Project defines the system pair, Solution/Branch, Dictionary mappings, attribute mappings, optional governance revision state, direction, and scope.</p>
 
-    <h2 id="admin">13. Administration: the boundaries that matter</h2>
+    <h2 id="admin">14. Administration: the boundaries that matter</h2>
 
     <h3>Identity and user management</h3>
 
@@ -724,7 +842,7 @@ sitemap: false
       <li>Product licenses, feature sets, and access reviews.</li>
     </ul>
 
-    <h2 id="best-practices">14. Best practices that create real value</h2>
+    <h2 id="best-practices">15. Best practices that create real value</h2>
 
     <table class="study-table">
       <thead>
@@ -746,7 +864,7 @@ sitemap: false
       </tbody>
     </table>
 
-    <h2 id="interview">15. How to explain SAP Signavio in an interview</h2>
+    <h2 id="interview">16. How to explain SAP Signavio in an interview</h2>
 
     <h3>60-second answer</h3>
 
@@ -762,7 +880,7 @@ sitemap: false
       <li>What is the source of truth, and what license and access model is required?</li>
     </ol>
 
-    <h2 id="current-state">16. Current-state notes for 2026</h2>
+    <h2 id="current-state">17. Current-state notes for 2026</h2>
 
     <ul>
       <li><strong>Process Modeler</strong> is the current modeling product name; Process Manager remains common in older material.</li>
@@ -774,7 +892,7 @@ sitemap: false
       <li>AI features and commercial consumption rules change faster than core modeling concepts. Verify the exact feature before promising scope.</li>
     </ul>
 
-    <h2 id="glossary">17. Glossary</h2>
+    <h2 id="glossary">18. Glossary</h2>
 
     <table class="study-table">
       <thead>
@@ -829,7 +947,7 @@ sitemap: false
       </tbody>
     </table>
 
-    <h2 id="sources">18. Source register</h2>
+    <h2 id="sources">19. Source register</h2>
 
     <ul>
       <li><a href="https://help.sap.com/docs/signavio-process-transformation-suite">SAP Signavio Process Transformation Suite — product documentation</a></li>
