@@ -100,6 +100,17 @@ sitemap: false
 <li><a href="#context-knowledge-models">Knowledge Graph vs SAP-RPT</a></li>
 <li><a href="#context-case">Supplier disruption case</a></li>
 </ol></section>
+<section class="signavio-reader__toc-group" aria-labelledby="btp-route-govern"><h3 id="btp-route-govern">Govern / Agents</h3><ol>
+<li><a href="#govern-purpose">Ownership and lifecycle</a></li>
+<li><a href="#govern-toolchain">Agent Hub and governance roles</a></li>
+<li><a href="#govern-failure">Replenishment failure and safeguards</a></li>
+</ol></section>
+<section class="signavio-reader__toc-group" aria-labelledby="btp-route-foundation"><h3 id="btp-route-foundation">Platform foundation</h3><ol>
+<li><a href="#foundation-overview">Five foundation areas</a></li>
+<li><a href="#foundation-identity">Authentication and authorization</a></li>
+<li><a href="#foundation-connectivity-data">Connectivity, storage and retention</a></li>
+<li><a href="#foundation-operations">Logging, audit, alerts and usage</a></li>
+</ol></section>
 <section class="signavio-reader__toc-group" aria-labelledby="btp-route-3"><h3 id="btp-route-3">Explain and practice</h3><ol><li><a href="#client-explanation">Explain to business</a></li>
 <li><a href="#interview">Assessment questions and answers</a></li>
 <li><a href="#next">Learning path and future chapters</a></li>
@@ -619,7 +630,131 @@ sitemap: false
 <p><strong>Review challenge:</strong> The cheapest alternative supplier appears in a spreadsheet but has not passed quality approval. Should the agent create a purchase order? Explain which data or policy is missing and who owns the next step.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">31 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="govern-purpose" aria-labelledby="govern-purpose-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">31 / Agent lifecycle</p><h2 id="govern-purpose-title">Govern: an agent needs an owner, limits and evidence</h2></header><div class="signavio-reader__content">
+<p>An agent that can read inventory and recommend replenishment is different from one that can place a purchase order. <strong>Governance begins when we define what the agent may observe, recommend and change.</strong> It continues after go-live, because permissions, data sources, models and business requirements change.</p>
+<p>The Govern pillar should answer: Who owns the agent? What business outcome is expected? Which systems and actions can it access? What approvals and limits apply? What evidence shows that it behaves correctly?</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Five stages in the AI agent governance lifecycle"><table class="study-table__table"><thead><tr><th scope="col">Lifecycle stage</th><th scope="col">Architect's decision</th><th scope="col">Evidence to keep</th></tr></thead><tbody>
+<tr><td>Plan &amp; Build</td><td>Is an agent necessary, or will a rule or workflow work?</td><td>Use case, business owner, risk review and architecture decision.</td></tr>
+<tr><td>Discover &amp; Provision</td><td>Which agents, tools, models and MCP servers already exist?</td><td>Inventory, approved connections, deployment and identity records.</td></tr>
+<tr><td>Observe &amp; Analyze</td><td>Is the agent working and completing the business process?</td><td>Sessions, tool calls, failure reasons and outcome KPIs.</td></tr>
+<tr><td>Secure &amp; Govern</td><td>Which actions are permitted, under which limits and approvals?</td><td>Policies, permissions, evaluations and audit evidence.</td></tr>
+<tr><td>Optimize &amp; Decommission</td><td>Does it still deliver value and meet current policy?</td><td>Periodic review, cost and value evidence, safe shutdown plan.</td></tr>
+</tbody></table></div>
+<p><strong>Remember the distinction:</strong> An agent can be technically healthy and economically harmful. An API response of 200 does not show that the right quantity was ordered or that the result was authorized.</p>
+<p>See <a href="https://architecture.learning.sap.com/docs/ref-arch/jkg4j2">SAP AI Agent Hub architecture and lifecycle</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="govern-toolchain" aria-labelledby="govern-toolchain-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">32 / Responsibility map</p><h2 id="govern-toolchain-title">Agent Hub, runtime, Signavio and identity: who does what?</h2></header><div class="signavio-reader__content">
+<p>These products are not four alternative governance systems. Each provides one part of an end-to-end architecture. Design the handoff rather than placing everything under the label “Govern”.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="AI governance tools and their responsibilities"><table class="study-table__table"><thead><tr><th scope="col">Component</th><th scope="col">Primary role</th><th scope="col">Boundary or check</th></tr></thead><tbody>
+<tr><td>SAP AI Agent Hub (built on SAP LeanIX)</td><td>Discover and inventory AI assets; record ownership, reviews, risk and verification status.</td><td>Registry and verification do not automatically secure every custom runtime.</td></tr>
+<tr><td>SAP LeanIX</td><td>Connect agents to applications, business capabilities, interfaces and architecture decisions.</td><td>Shows dependencies and standards, not business-transaction execution.</td></tr>
+<tr><td>Joule Studio runtime</td><td>Run and manage supported SAP-managed agent workloads with relevant runtime controls.</td><td>Check which workload, feature, monitoring and policies are actually available.</td></tr>
+<tr><td>SAP Agent Gateway</td><td>Enforce supported agent access policies on requests routed through the gateway.</td><td>An out-of-band tool call does not become controlled merely because the agent is in the registry.</td></tr>
+<tr><td>SAP Cloud Identity Services</td><td>Handle identity and provisioning in configured scenarios, including supported agent identities.</td><td>Authentication and provisioning are not the same as the ERP's business authorization.</td></tr>
+<tr><td>SAP Cloud ALM</td><td>Support monitoring and investigation of agent sessions and operational outcomes where integrated.</td><td>Operational telemetry is not a substitute for the official ERP business document.</td></tr>
+<tr><td>SAP Signavio Process Intelligence</td><td>Analyze supported agent and business-process traces, variants, conformance and value.</td><td>Meaningful results need event data, agreed KPI definitions and a usable baseline.</td></tr>
+<tr><td>SAP SuccessFactors</td><td>Provide organizational and skills context for agent impact where integrated.</td><td>Workforce mapping does not assign transaction approval authority.</td></tr>
+</tbody></table></div>
+<h3>How the parts connect</h3>
+<p><strong>Agent plan → registry and verification → identity and permitted access → managed execution → API / ERP action → trace and audit → business outcome review.</strong></p>
+<p>In SAP's reference design, telemetry from supported SAP-managed agents can reach Cloud ALM for operations and Signavio for agent behavior analysis. AI Agent Hub connects this evidence to the wider architecture. These integrations and enforcement points must be enabled and checked in the target landscape.</p>
+<p><strong>Assessment answer:</strong> “AI Agent Hub helps us know what agents exist and how they are governed. The runtime and gateway control supported execution paths. Identity services establish and maintain identities. Cloud ALM and Signavio help us observe behavior and measure the result.”</p>
+<p>Reference: <a href="https://help.sap.com/docs/leanix/ea/ai-agent-hub?version=CLOUD">SAP AI Agent Hub documentation</a> and <a href="https://architecture.learning.sap.com/docs/ref-arch/jkg4j2">SAP architecture and integrations</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="govern-failure" aria-labelledby="govern-failure-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">33 / Failure and controls</p><h2 id="govern-failure-title">A replenishment agent ordered ten times too much: where was the failure?</h2></header><div class="signavio-reader__content">
+<p><strong>Illustrative scenario from the training material:</strong> A retailer's replenishment agent asks a supplier for 1,200 devices. The supplier interface has changed its quantity unit from <em>device</em> to <em>case of ten devices</em>. The agent orders 1,200 cases: 12,000 devices. A payment agent then treats the resulting purchase order as sufficient evidence for payment.</p>
+<p>Both agents report technical success. The business process has failed. There is no agreed unit contract, no independent plausibility check, no cross-agent approval and no complete process trace.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Controls that would break the failure chain"><table class="study-table__table"><thead><tr><th scope="col">Failure point</th><th scope="col">Required control</th><th scope="col">What proves the control worked</th></tr></thead><tbody>
+<tr><td>Supplier changes the unit</td><td>Contract and version check; convert cases to base units and validate material UoM.</td><td>1 case = 10 devices is explicit and tested before any order request.</td></tr>
+<tr><td>Discount encourages an oversized order</td><td>Check demand, stock coverage, warehouse capacity, contract limits and total cost.</td><td>An anomalous quantity is rejected or escalated.</td></tr>
+<tr><td>Agent has broad ERP access</td><td>Least-privilege service identity and permitted action scopes; backend validation.</td><td>A blocked request cannot create or change an unauthorized PO.</td></tr>
+<tr><td>Agent can authorize material commitments</td><td>Defined amount/quantity thresholds and separation of duties.</td><td>A designated human or approved control decides before posting.</td></tr>
+<tr><td>Payment agent trusts technical order status</td><td>Check applicable invoice, receipt and payment controls.</td><td>Payment requires the correct commercial evidence, not just the existence of a PO.</td></tr>
+<tr><td>No correlated tracing</td><td>Preserve agent session, request key, external order and ERP document identifiers.</td><td>Investigators can follow the event from recommendation to business result.</td></tr>
+<tr><td>Emergency shutdown stops all replenishment</td><td>Controlled disablement, queue handling and a manual fallback.</td><td>Risky automation stops without losing required procurement operations.</td></tr>
+</tbody></table></div>
+<p><strong>Key Lead decision:</strong> Do not only improve the prompt. Fix the business contract, authorization boundary and the process control. Governance must be enforced at the point where a high-impact action occurs.</p>
+<p><strong>Transfer exercise:</strong> The supplier now changes the currency instead of the unit. Which checks should stop a wrong payment? Start with currency, exchange-rate source, effective date, value threshold and approval authority.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="foundation-overview" aria-labelledby="foundation-overview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">34 / Service map</p><h2 id="foundation-overview-title">BTP foundation services: the platform below the solution</h2></header><div class="signavio-reader__content">
+<p>Foundation services support applications, integrations and AI workloads across their lifecycle. They are <strong>not one single product</strong> and are not all included in every account or service plan. An architect chooses what the solution actually needs, then verifies entitlement, region, quota and operations.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Foundation capabilities by the job they perform"><table class="study-table__table"><thead><tr><th scope="col">Area</th><th scope="col">Examples of SAP BTP capabilities</th><th scope="col">Why it matters</th></tr></thead><tbody>
+<tr><td>Runtime and lifecycle</td><td>Cloud Foundry, Kyma, ABAP environment, CI/CD, transport management and job scheduling.</td><td>Run and change the application in a controlled way.</td></tr>
+<tr><td>Security and compliance</td><td>Cloud Identity Services, Authorization and Trust Management, Audit Log and retention controls.</td><td>Know who acts, what is allowed and what must be recorded.</td></tr>
+<tr><td>Persistency</td><td>SAP HANA Cloud, object storage and other supported storage services.</td><td>Keep application data according to access, performance and retention requirements.</td></tr>
+<tr><td>Connectivity</td><td>Destination, Connectivity and Cloud Connector.</td><td>Reach remote cloud or private-network systems through a documented contract.</td></tr>
+<tr><td>Operations and administration</td><td>Cloud Logging, Alert Notification, Usage Analytics and Cloud ALM integrations.</td><td>Find failures, manage service health and control consumption.</td></tr>
+</tbody></table></div>
+<p><strong>Working model:</strong> An app uses a runtime; it may consume a data store and a destination; an identity service authenticates the caller; the backend authorizes the operation; logs and alerts help operators recover when something fails.</p>
+<p>Buying one platform service does not automatically provision, configure or authorize the others. A good solution diagram shows real services, runtime boundaries and owners, not a box labeled only “SAP BTP”.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="foundation-identity" aria-labelledby="foundation-identity-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">35 / Security</p><h2 id="foundation-identity-title">Identity, provisioning and authorization are three different tasks</h2></header><div class="signavio-reader__content">
+<p>A user can sign in successfully and still be forbidden to approve a purchase. The distinction is important for business users, platform administrators and AI agents.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="How BTP identity and access components fit together"><table class="study-table__table"><thead><tr><th scope="col">Capability</th><th scope="col">What it answers</th><th scope="col">Responsible component or layer</th></tr></thead><tbody>
+<tr><td>Authentication</td><td>Who is this person or service identity?</td><td>SAP Cloud Identity Services – Identity Authentication (IAS), or another trusted identity provider.</td></tr>
+<tr><td>Provisioning</td><td>Which systems should contain or remove this user account?</td><td>SAP Cloud Identity Services – Identity Provisioning (IPS), where configured.</td></tr>
+<tr><td>Application authorization</td><td>Which application functions may the identity invoke?</td><td>SAP Authorization and Trust Management service, application scopes and role collections where used.</td></tr>
+<tr><td>Backend business authorization</td><td>May this buyer post a PO for this purchasing organization and amount?</td><td>The owning business application / SAP ERP authorization logic.</td></tr>
+<tr><td>Agent tool permission</td><td>May this specific agent invoke this tool or operation?</td><td>Configured gateway, runtime and application controls.</td></tr>
+<tr><td>Security event evidence</td><td>Who accessed or changed a protected resource?</td><td>Application audit events and SAP Audit Log service, within supported scope.</td></tr>
+</tbody></table></div>
+<h3>Follow a purchase approval</h3>
+<p><strong>User → IAS authentication → app role / scope → released ERP API → ERP business authorization → approved transaction.</strong></p>
+<p>IPS may create or update the user identity in configured connected systems, but it does not automatically mean that every app grants the same privileges. A BTP <strong>role collection</strong> is not an SAP ABAP <strong>PFCG role</strong>, and SSO is not proof of purchasing approval authority.</p>
+<p>For agents, use a controlled identity, minimum tool permissions and a clear business principal for the action. Check whether the backend uses the user's delegated identity or a technical identity. Record who initiated the request and who approved the resulting business transaction.</p>
+<p><strong>Lead test:</strong> If the caller has permission to use the API but cannot post a purchase order, inspect both the application token scopes and the ERP business authorization before adding more privileges.</p>
+<p>See <a href="/atlas/sap/identity-access/">SAP Identity and Access</a>, <a href="https://help.sap.com/docs/authorization-and-trust-management-service/authorization-and-trust-management/protecting-your-application">SAP Authorization and Trust Management</a> and <a href="https://help.sap.com/docs/cloud-identity-services/cloud-identity-services/use-identity-authentication-as-authenticating-idp">SAP Identity Authentication</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="foundation-connectivity-data" aria-labelledby="foundation-connectivity-data-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">36 / Connectivity and storage</p><h2 id="foundation-connectivity-data-title">Destination, Cloud Connector, persistence and retention</h2></header><div class="signavio-reader__content">
+<p>Connectivity describes <em>how an application reaches another system</em>. Storage describes <em>where its own data lives</em>. Retention describes <em>when that data must be blocked or destroyed</em>. These are related requirements, not interchangeable services.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Foundation service decisions and boundaries"><table class="study-table__table"><thead><tr><th scope="col">Service or concept</th><th scope="col">Job</th><th scope="col">Do not assume</th></tr></thead><tbody>
+<tr><td>Destination service</td><td>Store and resolve supported remote connection, routing and authentication configuration.</td><td>A destination means the remote API is available or that the caller is authorized.</td></tr>
+<tr><td>Connectivity service and Cloud Connector</td><td>Support controlled access from SAP BTP to on-premise or private-network resources.</td><td>Cloud Connector is required for every cloud-to-cloud call.</td></tr>
+<tr><td>SAP HANA Cloud</td><td>Managed persistence and processing, including supported multi-model workloads.</td><td>Every app needs its own HANA Cloud database.</td></tr>
+<tr><td>Object storage</td><td>Store large documents, media or binary content where the service fits.</td><td>Storage of files automatically provides a searchable business data model.</td></tr>
+<tr><td>Supported PostgreSQL / Redis offerings</td><td>Alternative SQL persistence or caching where offered for the selected environment.</td><td>The same plans and services exist in every region or runtime.</td></tr>
+<tr><td>SAP Data Retention Manager</td><td>Help BTP-built applications handle configured retention and deletion rules for personal data.</td><td>It can automatically delete all data in SAP Cloud ERP or SuccessFactors.</td></tr>
+<tr><td>Audit Log service</td><td>Retain supported audit events written by applications and platform services.</td><td>Application logs and audit logs are the same records.</td></tr>
+</tbody></table></div>
+<h3>Two common connection paths</h3>
+<p><strong>Cloud to cloud:</strong> BTP application → Destination service configuration → supported remote API.</p>
+<p><strong>Cloud to private network:</strong> BTP application → Destination and Connectivity services → Cloud Connector → exposed backend endpoint. For Kyma, the appropriate connectivity proxies may also be involved.</p>
+<p>Use Cloud Connector access controls to expose only the required backend resources. A connection can still fail due to certificates, destinations, trust, firewall rules or the business application's own permissions.</p>
+<h3>Data retention has a scope</h3>
+<p>SAP Data Retention Manager documentation focuses on <strong>applications built on SAP BTP</strong>. It is not a universal ERP deletion tool. For SAP ERP and other SaaS business records, check each product's supported retention, blocking, archiving and legal-hold mechanisms. Business evidence may need to be retained even after an app removes its own working copy.</p>
+<p>References: <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destination-service">Destination service</a>, <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destinations">SAP BTP Connectivity</a> and <a href="https://help.sap.com/docs/data-retention-manager">SAP Data Retention Manager</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="foundation-operations" aria-labelledby="foundation-operations-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">37 / Operate and prove</p><h2 id="foundation-operations-title">Technical logs, audit records, alerts and usage are not the same evidence</h2></header><div class="signavio-reader__content">
+<p>When an agent or extension fails, the operator needs to answer four different questions: Did it run? Was the action permitted? Was the business outcome correct? What did it cost? Different platform services support different answers.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Foundation operations evidence"><table class="study-table__table"><thead><tr><th scope="col">Service</th><th scope="col">What it shows</th><th scope="col">What it does not prove</th></tr></thead><tbody>
+<tr><td>SAP Cloud Logging</td><td>Supported application logs, metrics and traces; errors, latency and runtime health.</td><td>That the correct purchase order exists or that an action was approved.</td></tr>
+<tr><td>SAP Audit Log service</td><td>Supported security-relevant actions and changes recorded by services and applications.</td><td>Every business event, unless the application records it.</td></tr>
+<tr><td>SAP Job Scheduling service</td><td>One-time or recurring scheduled jobs and their technical execution.</td><td>That an API callback completed the intended business process.</td></tr>
+<tr><td>SAP Alert Notification service</td><td>Selected operational events delivered to subscribed notification channels.</td><td>That the incident was resolved or that every possible event was collected.</td></tr>
+<tr><td>SAP BTP Usage Analytics</td><td>Service consumption metrics in the relevant account and time period.</td><td>That the values equal an invoice or prove business ROI.</td></tr>
+<tr><td>SAP Cloud ALM / application monitor</td><td>Supported end-to-end operations and integration monitoring.</td><td>That all systems and business states are covered without configuration.</td></tr>
+</tbody></table></div>
+<h3>Incident exercise: the scheduled agent says “Completed” but stock did not change</h3>
+<ol>
+<li>Check when the job was triggered, its request ID, status and execution logs.</li>
+<li>Trace the tool call to the interface and inspect the backend response.</li>
+<li>Confirm whether the intended material document, purchasing document or inventory state exists in the system of record.</li>
+<li>Check authorization failures, unit conversion, validation, retries and possible duplicate processing.</li>
+<li>Notify the correct business and technical owners; recover only from the confirmed failure state.</li>
+<li>Compare service usage with the contract and monitor for unusual consumption or repeated attempts.</li>
+</ol>
+<p><strong>Cost distinction:</strong> SAP's subaccount Usage Analytics describes <em>actual metered usage</em>, not automatically billed usage. Commercial-model and billing details must be checked at the appropriate account level.</p>
+<p><strong>Lead answer:</strong> “I need technical telemetry, security audit evidence and a business document check. A successful job, API or agent session is not proof that the business process completed correctly.”</p>
+<p>Sources: <a href="https://help.sap.com/docs/cloud-logging">SAP Cloud Logging</a>, <a href="https://help.sap.com/docs/sap-audit-log">SAP Audit Log</a>, <a href="https://help.sap.com/docs/job-scheduling/sap-job-scheduling-service/schedule-types">Job Scheduling</a> and <a href="https://help.sap.com/docs/btp/sap-business-technology-platform/view-subaccount-usage-analytics">Usage Analytics</a>.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="client-explanation" aria-labelledby="client-explanation-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">38 / Communication</p><h2 id="client-explanation-title">How to explain the architecture to a client</h2></header><div class="signavio-reader__content">
 <h3>30-second explanation</h3>
 <p>“We start with what the business needs to improve. SAP Signavio helps us understand the process, while SAP LeanIX shows which applications support it. We use SAP reference architecture to connect that business need to a possible solution. BTP gives us options for extensions and integrations where standard applications have a gap. We then check security, costs, operating responsibility and measurable results.”</p>
 <h3>90-second explanation</h3>
@@ -628,7 +763,7 @@ sitemap: false
 <ul><li>Which business result must improve, and what is the current baseline?</li><li>Which system owns each official business document or master data object?</li><li>What happens when the integration, workflow or AI step fails?</li></ul>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">32 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="interview" aria-labelledby="interview-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">39 / Self-check</p><h2 id="interview-title">Assessment questions: answer with a decision</h2></header><div class="signavio-reader__content">
 <ol>
 <li><strong>What is the difference between an EA and an SA?</strong><p>EA defines enterprise-wide direction and governance. SA designs a specific solution within business, technical and delivery constraints. They exchange feedback.</p></li>
 <li><strong>Capability versus process?</strong><p>Capability is what the company must be able to do; process is the sequence of activities used to deliver an outcome. A capability may support several processes.</p></li>
@@ -660,12 +795,22 @@ sitemap: false
 <li><strong>When would you use a knowledge graph instead of a table?</strong><p>When the decision must traverse meaningful many-to-many relations among orders, suppliers, materials and risks. Tables can still store the underlying data.</p></li>
 <li><strong>SAP-RPT versus a generative LLM?</strong><p>SAP-RPT predicts classes or numeric values from structured business data. A generative LLM produces or interprets language. Both require evaluation and appropriate context.</p></li>
 <li><strong>Does Knowledge Graph guarantee no hallucinations?</strong><p>No. The graph can improve grounding if sources and relationships are accurate and accessible, but results still require checks, policy enforcement and suitable human review.</p></li>
+<li><strong>Why does AI Agent Hub not replace runtime security?</strong><p>AI Agent Hub records ownership, inventory and governance state. Execution requires configured identities, gateway and application controls on the real action path.</p></li>
+<li><strong>What is the five-stage governance lifecycle?</strong><p>Plan and build, discover and provision, observe and analyze, secure and govern, then optimize and decommission.</p></li>
+<li><strong>Which product is responsible for agent behavior mining?</strong><p>SAP Signavio Process Intelligence analyzes supported execution traces; SAP Cloud ALM supports operational monitoring where integrated.</p></li>
+<li><strong>An agent orders 1,200 cases instead of 1,200 devices. What should stop it?</strong><p>Validate the unit contract, quantity conversion, expected demand, total value and approval limits before ERP posting.</p></li>
+<li><strong>What is the difference between IAS, IPS and application authorization?</strong><p>IAS authenticates identities, IPS provisions configured identities, and application roles/scopes plus backend authorizations control permitted actions.</p></li>
+<li><strong>Why is single sign-on insufficient for ERP approval?</strong><p>SSO only confirms authentication. The ERP still enforces purchasing organization, role, amount and other business authorization rules.</p></li>
+<li><strong>What does the Destination service do, and when is Cloud Connector needed?</strong><p>Destination manages supported remote connection information. Cloud Connector and Connectivity support controlled private-network access where needed; ordinary cloud-to-cloud calls may not need it.</p></li>
+<li><strong>Does SAP Data Retention Manager delete every ERP record?</strong><p>No. SAP documents it for applications built on BTP. Other business applications have their own supported retention and archiving rules.</p></li>
+<li><strong>Cloud Logging versus Audit Log?</strong><p>Cloud Logging holds operational logs, metrics and traces. Audit Log stores supported security and compliance events emitted by applications or services.</p></li>
+<li><strong>Actual usage versus billed usage?</strong><p>BTP Usage Analytics can report service consumption; the billed amount depends on commercial models, pricing rules and the appropriate billing view.</p></li>
 <li><strong>Does side-by-side automatically mean clean core?</strong><p>No. The solution still needs released interfaces, clear ownership, secure access, controlled coupling and an operational recovery path.</p></li>
 </ol>
 <p><strong>Practice variation:</strong> The customer already has a standard S/4HANA approval function. Would you still propose a custom BTP workflow? Explain the cost, support risk and evidence required before choosing the custom option.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">33 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="next" aria-labelledby="next-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">40 / Learning sequence</p><h2 id="next-title">What we will study next</h2></header><div class="signavio-reader__content">
 <p>This guide is the architecture foundation. The next BTP lessons should deepen the areas that determine whether a platform solution can be deployed and operated.</p>
 <div class="table-scroll study-table" role="region" aria-label="BTP study sequence" tabindex="0"><table class="study-table__table"><thead><tr><th scope="col">Topic</th><th scope="col">What you should be able to decide</th></tr></thead><tbody><tr><td>1. Platform administration</td><td>Design account, region, service and cost boundaries.</td></tr>
 <tr><td>2. Identity and connectivity</td><td>Explain trust, destinations, roles and private-network access.</td></tr>
@@ -675,11 +820,12 @@ sitemap: false
 <tr><td>6. Delivery and operations</td><td>Define lifecycle, monitoring, security, ownership and service evidence.</td></tr></tbody></table></div>
 <p><strong>Architecture resources now covered:</strong> Discovery Center, SAP BTP Guidance Framework, Architecture Center, SAP Business Accelerator Hub, solution diagrams, extension and integration methods, cost-estimation entry points and SAP Trust Center.</p>
 <p><strong>Build is covered:</strong> clean core, SAP Build and Joule Studio, runtimes and programming models, integration and operational controls.</p>
-<p><strong>Contextualize &amp; Reason is covered:</strong> data foundations, governed data products, Datasphere and Analytics Cloud, SAP Business Data Cloud, Knowledge Graph, SAP-RPT and an end-to-end procurement case. The next study area is the Govern pillar: identity, policy enforcement, lifecycle controls and AI agent oversight.</p>
+<p><strong>Contextualize &amp; Reason is covered:</strong> data foundations, governed data products, Datasphere and Analytics Cloud, SAP Business Data Cloud, Knowledge Graph, SAP-RPT and an end-to-end procurement case.</p>
+<p><strong>Govern and Platform Foundation are covered:</strong> agent lifecycle and inventory, identity and permissions, runtime enforcement, Signavio and Cloud ALM observability, connectivity and storage, retention, security audit, scheduling, alerts and usage. Continue with case practice and verify the exact product scope before designing for a customer.</p>
 <p>Use this page as the continuing reference. Add new material to the relevant chapter only when it improves an explanation, design choice or assessment answer.</p>
 </div></section>
 
-<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">34 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
+<section class="research-canvas__inventory signavio-reader__section" id="sources" aria-labelledby="sources-title"><header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">41 / Evidence</p><h2 id="sources-title">Sources and what must be checked</h2></header><div class="signavio-reader__content">
 <p>This is an independent study guide based on SAP public learning and help content, rewritten for comprehension. It is not an official certification guide or a statement of contractual product availability.</p>
 <ul>
 <li><a href="https://learning.sap.com/courses/sap-enterprise-architecture-framework-foundation-introduction/investigating-the-sap-enterprise-architecture-methodology">SAP Learning — EA methodology and architect roles</a></li>
@@ -723,6 +869,18 @@ sitemap: false
 <li><a href="https://help.sap.com/docs/sap-ai-core/generative-ai/sap-rpt-1">SAP Help: SAP-RPT-1 model</a></li>
 <li><a href="https://www.sap.com/canada/products/artificial-intelligence/sap-rpt.html">SAP: SAP-RPT-1.5</a></li>
 <li><a href="https://help.sap.com/docs/SAP_ANALYTICS_CLOUD/18850a0e13944f53aa8a8b7c094ea29e/0ebd87416257410d910bea925d27f4cb.html">SAP Help: Analytics Cloud stories</a></li>
+<li><a href="https://architecture.learning.sap.com/docs/ref-arch/jkg4j2">SAP AI Agent Hub architecture and lifecycle</a></li>
+<li><a href="https://help.sap.com/docs/leanix/ea/ai-agent-hub?version=CLOUD">SAP AI Agent Hub product documentation</a></li>
+<li><a href="https://help.sap.com/docs/cloud-identity-services/cloud-identity-services/use-identity-authentication-as-authenticating-idp">SAP Cloud Identity Authentication</a></li>
+<li><a href="https://help.sap.com/docs/authorization-and-trust-management-service/authorization-and-trust-management/protecting-your-application">SAP Authorization and Trust Management</a></li>
+<li><a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destination-service">SAP BTP Destination service</a></li>
+<li><a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destinations">SAP BTP Connectivity and Cloud Connector</a></li>
+<li><a href="https://help.sap.com/docs/data-retention-manager">SAP Data Retention Manager</a></li>
+<li><a href="https://help.sap.com/docs/cloud-logging">SAP Cloud Logging</a></li>
+<li><a href="https://help.sap.com/docs/sap-audit-log">SAP Audit Log Service</a></li>
+<li><a href="https://help.sap.com/docs/job-scheduling/sap-job-scheduling-service/schedule-types">SAP Job Scheduling Service</a></li>
+<li><a href="https://help.sap.com/docs/ALERT_NOTIFICATION/5967a369d4b74f7a9c2b91f5df8e6ab6/security">SAP Alert Notification service</a></li>
+<li><a href="https://help.sap.com/docs/btp/sap-business-technology-platform/view-subaccount-usage-analytics">SAP BTP Usage Analytics</a></li>
 </ul>
 <p><strong>Verification boundary:</strong> Always check the exact SAP edition, release, commercial plan, region, service availability and published interface before making a delivery commitment. SAP's product naming and reference catalog can change. This page remains in review until a separate human publication check.</p>
 </div></section>
