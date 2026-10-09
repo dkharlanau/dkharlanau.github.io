@@ -42,10 +42,15 @@
 @media print {
   .btp-handbook .btp-glossary-tools, .btp-actions { display: none !important; }
   .btp-handbook .btp-term[hidden] { display: grid !important; }
-    .btp-figure { break-inside: avoid; }
+  .btp-figure { break-inside: avoid; }
   .btp-figure__scroll { overflow: visible; border: 0; }
   .btp-figure__scroll svg { width: 100%; max-width: 100%; }
   .btp-handbook pre { white-space: pre-wrap; overflow-wrap: anywhere; }
   .btp-handbook pre code { white-space: pre-wrap; }
   .btp-handbook .btp-term { break-inside: avoid; }
 }
+/* Catalogue reuses the glossary controls, native disclosures and study-table. */
+.btp-glossary-tools select { max-width: 100%; min-height: 48px; padding: .65rem; font: inherit; border: 1px solid #757575; border-radius: 4px; background: white; color: #171717; }
+.btp-handbook :is(.btp-service-row,.btp-catalogue-group,.btp-glossary-tools)[hidden] { display: none !important; }
+.btp-handbook :is(span[id],.btp-service-row[id],details[id]) { scroll-margin-top: 6.5rem; }
+.btp-handbook select:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }

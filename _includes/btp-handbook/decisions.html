@@ -1,0 +1,232 @@
+<section class="research-canvas__inventory signavio-reader__section" id="start" aria-labelledby="start-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">01 / Start with the decision</p><h2 id="start-title">Do not start by buying a platform-shaped solution.</h2></header>
+<div class="signavio-reader__content">
+<span id="exam-readiness"></span><span id="exam-brief"></span><span id="big-picture"></span><span id="platform-scope"></span><span id="foundation-overview"></span><span id="btp-guidance"></span>
+<p>A good BTP design answers six questions: <strong>what must change, who owns the business data, where the code runs, how the systems communicate, who may act, and what happens when a dependency fails.</strong> Product names come after those answers.</p>
+<p>Use three reading routes. <strong>Choose:</strong> follow the trees and challenge one alternative. <strong>Build:</strong> follow a recipe and identify its actual configuration objects. <strong>Broaden:</strong> scan the service map, then assemble one pilot without copying an entire reference architecture.</p>
+<div class="btp-rule" id="mandatory-capabilities"><strong>R / Required</strong> means required for the selected pattern, not for every BTP project. <strong>C / Conditional</strong> means add it only when the stated requirement exists. <strong>O / Optional</strong> means useful but replaceable. Security, ownership, recovery and cost control are required responsibilities; buying every SAP service carrying those names is not.</div>
+<h3 id="platform-map">Keep the layers separate</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table"><thead><tr><th scope="col">Layer</th><th scope="col">Examples</th><th scope="col">The decision it answers</th></tr></thead><tbody>
+<tr><th scope="row">Business system</th><td>S/4HANA, MDG, SuccessFactors</td><td>Where is the authoritative transaction or master record?</td></tr>
+<tr><th scope="row">Programming model / library</th><td>CAP, RAP, SAPUI5, SAP Cloud SDK</td><td>How do we implement the application? These are not four hosting subscriptions.</td></tr>
+<tr><th scope="row">Runtime</th><td>Cloud Foundry, Kyma, ABAP environment</td><td>Where does our server-side code execute?</td></tr>
+<tr><th scope="row">Managed service</th><td>HANA Cloud, Destination, Mobile Services</td><td>Which platform responsibility do we consume instead of building?</td></tr>
+<tr><th scope="row">Product / capability</th><td>SAP Build; Cloud Integration within Integration Suite</td><td>Which business or development capability and package fit?</td></tr>
+<tr><th scope="row">Development tool</th><td>BAS, ADT, local IDE, CLI</td><td>Where do developers work? An IDE is not the production runtime.</td></tr>
+<tr><th scope="row">Commercial plan</th><td>A service plan, included use, committed capacity</td><td>What may we use, how much, where, and on what terms?</td></tr>
+</tbody></table></div>
+<p><strong>Three useful negatives:</strong> CAP does not imply Kyma. A mobile application does not automatically need a custom CAP backend. An S/4HANA connection does not automatically need Integration Suite.</p>
+<p class="btp-sources"><a href="#ref-platform">Platform and development reference</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="architecture" aria-labelledby="architecture-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">02 / Extension boundary</p><h2 id="architecture-title">First decide whether anything belongs on BTP.</h2></header>
+<div class="signavio-reader__content">
+<span id="design-choices"></span><span id="design-gates"></span><span id="build-clean-core"></span><span id="architect-roles"></span><span id="ea-value"></span><span id="procurement-case"></span>
+<h3>Tree 01 — Standard, in-app or side-by-side?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Does a standard process meet the requirement?
+├─ Yes → Configure the standard application. Do not build a duplicate.
+└─ No → Is the gap a supported field, UI adaptation, rule or extension point?
+   ├─ Yes → Use the relevant in-app / key-user extension.
+   └─ No → Must custom logic participate in an ERP-local transaction?
+      ├─ Yes → Assess supported on-stack developer extensibility / RAP.
+      └─ No → Independent UI, cross-system logic or release lifecycle?
+         ├─ Yes → Design a side-by-side extension; choose its runtime next.
+         └─ No → Recheck the gap. More platforms are not a requirement.</pre>
+<p><strong>Example:</strong> adding an approved custom BP field differs from building an external supplier-evidence portal. The former may fit standard extensibility. The latter may justify BTP because users, document handling and releases are independent. Neither choice transfers master-data ownership away from MDG or S/4HANA.</p>
+<p><strong>Clean core is an interface discipline, not a location label.</strong> A side-by-side app that updates ERP tables directly still creates coupling. BTP ABAP environment is separate from ERP: using ABAP there does not grant local access to ERP tables or its database transaction. Check released APIs, events and extension points for the actual edition and release.</p>
+<p><strong>Decision record:</strong> name the business gap, selected option, rejected alternative, data owner, interface, operating owner and a revisit trigger. Reject an option that cannot meet access, residency or recovery constraints before comparing convenience.</p>
+<p class="btp-sources"><a href="#ref-extension">Extension methodology</a> · <a href="#ref-bp">BP integration and extensibility</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="build" aria-labelledby="build-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">03 / Runtime and code</p><h2 id="build-title">Cloud Foundry, Kyma or ABAP: choose the operating model.</h2></header>
+<div class="signavio-reader__content">
+<span id="build-runtimes"></span><span id="build-tools"></span><span id="toolchain"></span><span id="minimum-solution"></span>
+<h3 id="runtime-tree">Tree 02 — Which runtime?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Is a managed product enough: workflow, integration or ready-made app?
+├─ Yes → Configure that product. No separate custom-app runtime by default.
+└─ No → Does the implementation require ABAP Cloud / RAP?
+   ├─ Yes → On-stack if transaction-local; BTP ABAP environment if side-by-side.
+   └─ No → Do you need Kubernetes APIs, operators, custom workload topology,
+           or container/network control that the managed app model cannot meet?
+      ├─ Yes → Kyma, provided a team owns Kubernetes application operations.
+      └─ No → Start with Cloud Foundry for supported web/API/worker workloads.
+              Move only when a concrete constraint defeats that choice.</pre>
+<p><strong>A container is not, by itself, a reason to choose Kubernetes.</strong> Neither “microservices”, “events” nor “high volume” automatically means Kyma. Cloud Foundry can run multiple services and workers. Kyma is valuable when Kubernetes-specific control is part of the requirement, not just part of the diagram.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table"><thead><tr><th scope="col">Question</th><th scope="col">Cloud Foundry</th><th scope="col">Kyma</th><th scope="col">ABAP environment</th></tr></thead><tbody>
+<tr><th scope="row">Deployment unit</th><td>Application; buildpack-based deployment or supported image path. MTA can coordinate modules and services.</td><td>Container image plus Kubernetes resources; typically a Helm chart.</td><td>ABAP development objects, packages and supported software-component lifecycle.</td></tr>
+<tr><th scope="row">Objects to recognise</th><td><code>manifest.yml</code> or <code>mta.yaml</code>, route, service instance, binding, application environment.</td><td>Registry, image digest, Deployment, Service, ingress/API exposure, Secret, resource requests/limits, service bindings.</td><td>ADT project, package, CDS view entity, RAP behaviour definition/implementation, service definition and binding.</td></tr>
+<tr><th scope="row">Platform does</th><td>Manages the application platform and its scheduling/routing facilities.</td><td>Provides managed Kubernetes and selected Kyma modules.</td><td>Provides a managed ABAP runtime and its platform lifecycle.</td></tr>
+<tr><th scope="row">You still own</th><td>Code, dependencies, supported runtime versions, sizing, service configuration, migrations, security and recovery.</td><td>All application concerns plus images, workload manifests, probes, resource policies, exposure and compatible add-ons.</td><td>Released-object use, application authorisation, remote integrations, code quality and lifecycle planning.</td></tr>
+<tr><th scope="row">Best starting fit</th><td>Small or medium team building a conventional CAP/API application without a Kubernetes requirement.</td><td>Team already competent in Kubernetes; justified topology, integration or operational requirements.</td><td>ABAP Cloud skills and a supported business-extension model are a strong fit.</td></tr>
+<tr><th scope="row">Hidden cost</th><td>Multiple app instances, database, logs and non-production services.</td><td>Cluster capacity, registry, network/storage and greater application-platform engineering effort.</td><td>Runtime/persistence plan, development landscape and the cost of remote ERP boundaries.</td></tr>
+</tbody></table></div>
+<p><strong>Counterexample:</strong> an order-event consumer with one queue and a simple API does not require Kyma. Choose CF unless a workload constraint says otherwise. Conversely, a required Kubernetes operator cannot be replaced by calling a CF application “cloud native”. Validate the operator, permissions and managed-cluster restrictions before committing.</p>
+<h3>Tree 03 — CAP, RAP, general code or a managed process?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">What dominates the implementation?
+├─ Domain entities, OData/REST services, business rules → CAP in Node.js or Java.
+├─ ABAP transactional business objects → RAP on a supported ABAP target.
+├─ Human tasks, forms, approvals, decision tables → Build Process Automation.
+├─ Special protocol, algorithm or library outside these models → General code.
+└─ A standard supported integration → Configure the integration, not a new app.</pre>
+<p><strong>CAP is a model, not a language and not a runtime.</strong> Select Node.js or Java for team competence, required libraries and operational standards. CAP can target CF or Kyma. SAP Cloud SDK helps application code consume supported APIs and destinations; it does not perform every business mapping or replace Integration Suite.</p>
+<h3 id="lab-artifacts">From a CAP idea to deployable objects</h3>
+<p><strong>Model:</strong> put owned entities in <code>db/</code>, expose a deliberately small service in <code>srv/</code>, and keep the UI in <code>app/</code>. Define actions, validations and authorisation annotations. Import the real remote API metadata and implement only the operations the business needs. A read-through facade need not persist a second copy of the master data.</p>
+<p><strong>Prepare:</strong> choose production identity and persistence explicitly. For a conventional HANA + XSUAA + CF pattern, the CAP facets are <code>cds add hana</code>, <code>cds add xsuaa</code> and <code>cds add mta</code>. Inspect the generated <code>xs-security.json</code>, <code>mta.yaml</code>, database deployment and service dependencies. These commands configure one selected pattern, not a universal mandatory stack.</p>
+<p><strong>Deploy:</strong> build an MTA archive and deploy it to the authorised CF org/space, or use the documented CAP deployment workflow. For Kyma, <code>cds add kyma</code> prepares the corresponding deployment; supply a reachable image registry, build/push images, review the generated chart, and bind the required BTP services. Do not commit credentials or put environment-specific secrets in the chart. A successful image pull is not an application acceptance test.</p>
+<p><strong>Prove:</strong> test a permitted operation, denied role, wrong tenant, expired token, unavailable backend and restart after a pending operation. Check both HTTP behaviour and persisted business state. A local mocked login is not production authentication.</p>
+<p class="btp-sources"><a href="#ref-cf">CAP on Cloud Foundry</a> · <a href="#ref-kyma">CAP on Kyma</a> · <a href="#ref-platform">Runtime choices</a> · <a href="#ref-postgres">CAP and PostgreSQL</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="experience" aria-labelledby="experience-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">04 / User experience</p><h2 id="experience-title">Choose the client separately from the backend.</h2></header>
+<div class="signavio-reader__content"><span id="build-experience"></span>
+<h3>Tree 04 — Which UI?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Where must the work happen?
+├─ Browser, standard lists/forms/object pages → Fiori elements + OData annotations.
+├─ Browser, specialised interaction → Freestyle SAPUI5 or another suitable web UI.
+├─ One entry point for many business apps → Add Work Zone when needed.
+├─ Unified supported approval inbox → Add Task Center when needed.
+└─ Native mobile / unreliable connection → Follow the mobile decision tree.</pre>
+<p><strong>Fiori elements</strong> reduces repetitive UI work when the floorplan fits. <strong>Freestyle UI5</strong> gives more control at the cost of more implementation. <strong>HTML5 Application Repository</strong> stores static frontend content; it does not run CAP or store transactional business data. The selected entry pattern supplies routing and authentication: for example a managed app router through Work Zone, or an application-owned router.</p>
+<p><strong>Work Zone standard edition</strong> is an application-entry option; <strong>advanced edition</strong> adds a broader workspace experience. Neither is mandatory for every web application. Task Center aggregates supported tasks; the provider still owns the workflow and approval semantics. A task tile must not become a second, inconsistent workflow engine.</p>
+<p><strong>Tool/package trap:</strong> BAS is an IDE, SAP Build Code is a development offering, and SAP Build is a portfolio/package context. None is an alternative execution environment to CF, Kyma or ABAP. For new low-code procurement, check the current SAP Build offer: standalone SAP Build Apps was retired from sale on 23 March 2026; existing contracts have their own continuation terms.</p>
+<p class="btp-sources"><a href="#ref-ui">Frontend and Work Zone</a> · <a href="#ref-build-lifecycle">Build Apps lifecycle</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="integration" aria-labelledby="integration-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">05 / Integration</p><h2 id="integration-title">Direct call, iFlow, API gateway or event?</h2></header>
+<div class="signavio-reader__content"><span id="build-integration-strategy"></span><span id="build-integration-suite"></span><span id="build-events-agents"></span>
+<h3>Tree 05 — What must the connection do?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Does the caller need an immediate answer?
+├─ Yes → One supported API, little transformation, clear ownership?
+│  ├─ Yes → Direct backend API consumption can be enough.
+│  └─ No → Cloud Integration for mapping, adapters and mediated flow.
+└─ No → Is this a fact that independent consumers must receive?
+   ├─ Yes → Event-driven delivery; choose a broker/event service below.
+   └─ No → Batch, scheduled command or human approval?
+      ├─ Scheduled work → Job Scheduling + a safe worker, or integration scheduling.
+      └─ Human process → Build Process Automation / existing business workflow.
+Across these branches: add API Management when API publication, traffic policies,
+consumer governance or external exposure justify it. Do not insert it by reflex.</pre>
+<p><strong>Cloud Integration:</strong> the concrete artifact is an <em>integration flow</em> with sender/receiver adapters, connections, mappings, authentication material, exception handling and monitoring. <strong>API Management:</strong> the artifact is an API proxy/product and its policies. A gateway can protect and shape API access; business-object authorisation must still be enforced by the application.</p>
+<p><strong>Example:</strong> a CAP screen reading one released S/4 API can call it directly through the selected destination/authentication path. An EDI order from a trading partner, with document transformation and protocol handling, is a different problem: assess Cloud Integration, Integration Advisor and Trading Partner Management. Buying the suite does not activate every capability or include every edition.</p>
+<h3 id="event-tree">Tree 06 — Which event option?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">What event landscape are you building?
+├─ Supported SAP cloud application event distribution / formation
+│  → Evaluate SAP Cloud Application Event Hub and its supported participants.
+├─ Application queues/topics and asynchronous extension integration
+│  → Evaluate the Event Mesh capability in the selected Integration Suite edition.
+├─ Enterprise-wide mesh across brokers, clouds and locations
+│  → Evaluate Advanced Event Mesh; check separate commercial scope.
+└─ Existing standalone Event Mesh instance
+   → Check its contract and migration path; do not assume new-customer availability.</pre>
+<p><strong>Queue versus topic:</strong> a topic describes an event stream; a durable consumer queue holds deliveries for its consumer group. Separate subscribers usually need independent queues. Design consumer acknowledgement, bounded retry, dead-letter handling, retention and ordering requirements. More consumers on one queue usually share work; they do not each receive a separate copy of every message.</p>
+<p><strong>Exactly-once business effect is a contract, not a checkbox.</strong> A consumer can crash after ERP commits but before the message is acknowledged. Redelivery is then expected. Use a stable operation identity, an atomic deduplication/outbox design where applicable, and receiver-specific status lookup or reconciliation. Do not invent an idempotency header for an API that does not support one.</p>
+<p><strong>Edge Integration Cell</strong> is a selected integration runtime deployed in a customer-managed environment. It is not a generic substitute for Kyma, nor a promise that cloud control-plane dependencies disappear. Validate supported adapters, connectivity, operating responsibility and edition.</p>
+<h3 id="integration-paths">Trace the actual hops</h3><span id="request-paths"></span><span id="trace"></span>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Public API:  Browser → authenticated app entry → CAP → destination/auth → S/4 API
+Private API: CAP → Connectivity path → Cloud Connector → allowlisted ERP resource
+Mobile:      MDK/native client → Mobile Services → configured backend destination → API
+Mediated:    Sender → Cloud Integration iFlow → mapping/error handling → receiver
+Event:       Business producer → event service/queue → consumer → durable result
+AI:          App backend → authorised retrieval → AI Core endpoint → validated output</pre>
+<p>Not every identity token can cross every arrow unchanged. For each hop name the endpoint, protocol, caller identity, trust relationship, timeout and correlation ID. The mobile destination and the BTP Destination service configuration are related concepts, not automatically the same object.</p>
+<h3 id="interface-change">One real API, not an imaginary “activate supplier” button</h3>
+<p>For relevant S/4HANA Cloud Public Edition BP integration, investigate <code>API_BUSINESS_PARTNER</code> and communication scenario <code>SAP_COM_0008</code>. Configure the required communication system, user/authentication and arrangement for that scenario. Check the specific entity and supported operation, required fields, custom-field exposure, CSRF/session requirements and authorisations. This is not a universal API for every MDG change-request operation or every supplier-status transition.</p>
+<p>Version interfaces deliberately: required fields, error schema and event meaning are contracts. Support an agreed transition window and test old consumers. Treat <code>ETag</code>/<code>If-Match</code> as concurrency protection where supported, not as duplicate-request prevention.</p>
+<p class="btp-sources"><a href="#ref-integration">Integration Suite capabilities</a> · <a href="#ref-events">Event services</a> · <a href="#ref-bp">BP API setup</a> · <a href="#ref-concurrency">Concurrency control</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="security" aria-labelledby="security-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">06 / Connectivity and identity</p><h2 id="security-title">A reachable endpoint is not an authorised operation.</h2></header>
+<div class="signavio-reader__content"><span id="foundation-identity"></span><span id="foundation-connectivity-data"></span><span id="token-boundaries"></span>
+<h3>Tree 07 — How do we reach the backend?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Is the approved API reachable over the public internet?
+├─ Yes → HTTPS + supported authentication; destination configuration when useful.
+│        Cloud Connector is not required merely because the target is SAP.
+└─ No → Which private path is supported for this runtime and target?
+   ├─ On-premise/private network → Cloud Connector + relevant Connectivity setup.
+   ├─ Supported hyperscaler private endpoint → Evaluate Private Link Service.
+   └─ Neither → Resolve network architecture; do not expose ERP broadly as a shortcut.</pre>
+<p><strong>Destination</strong> holds endpoint and supported authentication configuration. <strong>Connectivity</strong> provides the relevant connectivity facility. <strong>Cloud Connector</strong> runs in the private network, establishes an outbound tunnel and exposes allowlisted resources. It is not a general VPN and not a licence to expose every path. Kyma may use the applicable Connectivity Proxy / Transparent Proxy and service-binding integration; CF-specific environment variables are not a universal Kubernetes configuration recipe.</p>
+<h3>Tree 08 — Which identity and authorisation components?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Who is calling?
+├─ Human → Corporate identity federation / IAS as the selected login architecture.
+│  ├─ Existing supported XSUAA application model → scopes, roles, role collections.
+│  └─ Supported IAS + Authorization Management model → policies and app integration.
+├─ System / job → supported workload identity or OAuth client; least privilege.
+└─ User lifecycle synchronisation needed → add IPS; provisioning is not login.
+At the backend: technical identity or supported principal propagation?
+Choose and test the whole chain. Neither choice bypasses backend permissions.</pre>
+<p><strong>IAS</strong> authenticates/federates. <strong>IPS</strong> provisions identities. <strong>XSUAA</strong> supports application authorisation/trust in the relevant model. <strong>Authorization Management</strong> supports policy-based authorisation in its supported integration model. Do not install both authorisation approaches without an actual architectural reason.</p>
+<p><strong>Four checks at the app boundary:</strong> validate issuer and audience, token validity, required permission, and tenant/object scope. A user with the reviewer role must still be prevented from reading another supplier's case. Hiding a UI button is not a control. Filter the database query or service result by authorised scope; do not retrieve everything and hope the UI filters it.</p>
+<p><strong>Secrets:</strong> use supported service bindings, credential handling and rotation. Do not embed privileged client secrets in browser JavaScript or native app bundles. Separate administrator and business-user access. Keep sensitive payloads out of routine logs and set retention deliberately. Credentials, destinations, trust settings and role mappings also need recoverable configuration.</p>
+<p class="btp-sources"><a href="#ref-connectivity">Connectivity and Service Manager</a> · <a href="#ref-identity">Identity services and application security</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="data" aria-labelledby="data-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">07 / Data placement</p><h2 id="data-title">Store the extension's state, not a second ERP.</h2></header>
+<div class="signavio-reader__content"><span id="context-why"></span><span id="context-language"></span><span id="context-data-products"></span><span id="context-products"></span><span id="context-bdc"></span><span id="context-knowledge-models"></span><span id="context-case"></span>
+<h3>Tree 09 — Do we need a database, and which kind?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Does the extension own durable state?
+├─ No → Read through released APIs; no extension database by default.
+└─ Yes → What kind of state?
+   ├─ Cases, transactions, joins, rules → HANA Cloud or a supported SQL alternative.
+   │  ├─ HANA-specific capabilities / SAP model fit → HANA Cloud.
+   │  └─ Conventional relational needs → assess PostgreSQL and CAP support matrix.
+   ├─ Files, photos, binaries → Object Store; or Document Management for document semantics.
+   ├─ Disposable fast cache → Redis; never the only authoritative record.
+   ├─ Governed analytical models → Datasphere / relevant Business Data Cloud architecture.
+   └─ Dashboards and planning → SAP Analytics Cloud consumes suitable governed data.</pre>
+<p><strong>HANA Cloud is not mandatory just because the app runs on BTP.</strong> CAP supports database choices with different feature and deployment constraints. Choose for transactions, querying, search/vector needs, extensibility/multitenancy requirements, operations and total cost. Local SQLite development does not prove the production database behaviour.</p>
+<p><strong>HANA HDI container</strong> is an application database-isolation/deployment construct; it is not another complete HANA Cloud database. <strong>Object Store</strong> stores objects; a document repository adds document-oriented services. Test backup, versioning and restore for the actual plan: a managed service does not imply every form of automatic recovery. A cache should be rebuildable.</p>
+<p><strong>MDG versus Master Data Integration:</strong> governance decides how master data is created, approved and controlled; distribution moves supported master data between applications. Neither a replicated copy nor an event bus becomes the approval authority. Start with ownership and the supported business-object model.</p>
+<p><strong>Datasphere versus Business Data Cloud:</strong> Datasphere supplies data integration/modelling and semantic capabilities. Business Data Cloud is a broader commercial and solution context with data products and optional components, not “HANA with another name”. SAC is an analytics/planning consumer, not the default transactional persistence layer for CAP. Source-data rights, refresh/freshness, row-level access and additional component entitlements remain separate decisions.</p>
+<p class="btp-sources"><a href="#ref-postgres">CAP database support</a> · <a href="#ref-data">Data services and Business Data Cloud</a> · <a href="#ref-recovery">Backup boundaries</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="ai" aria-labelledby="ai-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">08 / AI and process logic</p><h2 id="ai-title">Use an agent only when rules are not enough.</h2></header>
+<div class="signavio-reader__content"><span id="ai-runtime-path"></span>
+<h3>Tree 10 — Which AI path?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Can a deterministic rule or query solve the problem?
+├─ Yes → Use it. Do not pay an LLM to compare two known fields.
+└─ No → What is the missing capability?
+   ├─ Extract fields from supported documents → SAP Document AI + validation/review.
+   ├─ Explain or draft from approved knowledge → grounded model access / RAG.
+   ├─ Existing SAP copilot interaction fits → evaluate Joule in that product.
+   ├─ Custom Joule skills / agents → evaluate Joule Studio and its prerequisites.
+   └─ Custom ML workload lifecycle → assess AI Core and the required model pipeline.</pre>
+<p><strong>AI Core</strong> is the runtime/service boundary for supported AI workloads and generative AI hub access. <strong>AI Launchpad</strong> is a management application, not an obligatory hop in every inference request. <strong>Generative AI hub</strong> is a capability; current access requires the documented AI Core <code>extended</code> plan. Check model, region, resource group and running deployment before application integration.</p>
+<p><strong>One concrete RAG path:</strong> authenticate the user → select documents the user may access → retrieve relevant passages → call the configured model/orchestration endpoint → return an answer linked to evidence → record necessary operational metadata. A vector database is conditional on the retrieval design; HANA vector capabilities are one option, not a mandatory companion to every model call.</p>
+<p><strong>What must not happen:</strong> an uploaded document must not redefine the agent's permissions; retrieved text is untrusted input. Enforce allowlisted tools, argument validation, action limits and approvals outside the prompt. A confidence-looking number is not proof of correctness. Test missing evidence, contradictory documents, malicious instructions, access revocation and excessive cost.</p>
+<h3 id="governance">Tree 11 — Workflow, RPA or agent?</h3><span id="govern-purpose"></span><span id="govern-toolchain"></span><span id="govern-failure"></span>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Is the action path stable and explicitly defined?
+├─ Yes → Existing business workflow or Build Process Automation.
+│  └─ No usable API, UI automation is unavoidable → bounded RPA with exception ownership.
+└─ No → Does an evaluated agent add value in choosing among permitted steps?
+   ├─ Yes → bounded agent + deterministic tools + approval before risky effects.
+   └─ No → improve the process/data first; do not automate uncertainty.</pre>
+<p>Keep one owner for the approval state. An agent may draft a recommendation, but it must not silently grant itself authority to change bank details or release a blocked supplier. Define the owner, allowed data, allowed actions, escalation path, evaluation set, spend limit and a kill switch. Inventory/governance tooling can document these controls; the runtime and business systems must enforce them.</p>
+<p class="btp-sources"><a href="#ref-ai">AI Core and generative AI hub</a> · <a href="#ref-process">Process automation</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="accounts" aria-labelledby="accounts-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">09 / Landscape and tenancy</p><h2 id="accounts-title">A role, an entitlement and a tenant solve different problems.</h2></header>
+<div class="signavio-reader__content">
+<p><strong>Global account:</strong> commercial and administrative umbrella. <strong>Directory:</strong> optional grouping/delegation. <strong>Subaccount:</strong> a key regional, trust and entitlement boundary. <strong>CF org/space:</strong> application and development organisation within that environment. <strong>Kyma cluster/namespace:</strong> Kubernetes infrastructure and workload organisation. A namespace is not automatically sufficient isolation for unrelated customers.</p>
+<h3>Tree 12 — How much isolation?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Who shares the solution?
+├─ One organisation → separate development/test/production and access responsibilities.
+├─ Multiple organisations, strict dedicated isolation required
+│  → dedicated deployment/subaccount or stronger boundary justified by the requirements.
+└─ SaaS with shared application operations
+   → tenant-aware application model + onboarding/offboarding + tenant-isolated data,
+      destinations, credentials, authorisation, jobs and observability.</pre>
+<p><strong>Subscription is overloaded.</strong> A commercial subscription is a purchasing model. Subscribing to a SaaS application in a subaccount is a technical onboarding action. A service instance is provisioned configuration/capacity; a binding supplies connection information to a consumer. An entitlement permits a service plan; a quota allocates a measured resource; a role permits a person or workload to perform an action. None substitutes for the others.</p>
+<p>A standard CF org is associated with its subaccount; Kyma has its own cluster model and a subaccount can support multiple clusters. Verify the selected environment and regional setup rather than memorising “one subaccount equals one runtime”. For SaaS, assess SaaS Provisioning, Service Manager and the supported CAP multitenancy lifecycle. Test tenant deletion, key rotation and background jobs, not only login.</p>
+<p><strong>Ownership:</strong> platform owner handles subaccounts and entitlements; security owner handles trust and access design; development/integration teams own their artifacts; operations owns recovery; business owns the approval rules; procurement confirms usage rights. Write a small RACI rather than assigning every task to “the BTP team”.</p>
+<p class="btp-sources"><a href="#ref-accounts">Account model</a> · <a href="#ref-multitenancy">CAP multitenancy</a> · <a href="#commercial">Commercial decision tree</a></p>
+</div></section>

@@ -1,0 +1,149 @@
+<section class="research-canvas__inventory signavio-reader__section" id="recipes" aria-labelledby="recipes-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">12 / Assemble a solution</p><h2 id="recipes-title">Six compositions: keep the minimum, add only the trigger.</h2></header>
+<div class="signavio-reader__content"><span id="decision-workbench"></span><span id="diagrams"></span><span id="rba"></span><span id="rsa"></span>
+<p>These are starting compositions, not universal reference stacks. <strong>R</strong> is required for this composition; <strong>C</strong> depends on the stated condition; <strong>O</strong> can be omitted without losing the described outcome. Productive controls are still required when a dedicated SAP product is optional.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table"><thead><tr><th scope="col">Scenario</th><th scope="col">R — selected minimum</th><th scope="col">C — add when</th><th scope="col">O — not automatic</th></tr></thead><tbody>
+<tr><th scope="row">A. External review portal</th><td>Web UI + authenticated entry, CAP on CF, selected production identity/authorisation, durable case storage, supported ERP API access.</td><td>Destination for managed endpoint/auth config; Connectivity + Cloud Connector for private ERP; DMS for evidence documents; BPA for richer approval flow.</td><td>Kyma, Mobile Services, Event Mesh, SAC and Integration Suite when no requirement calls for them.</td></tr>
+<tr><th scope="row">B. Offline inspections</th><td>MDK + Mobile Services with selected offline scope, supported OData API, identity, working-set/sync/error design.</td><td>Private connectivity; custom CAP/RAP API facade for missing semantics; controlled attachment storage; device management under policy.</td><td>New HANA database, a custom CAP backend, Work Zone and Kyma if the existing backend already fulfils the contract.</td></tr>
+<tr><th scope="row">C. Order-event processing</th><td>Producer, selected broker/event capability, queue/subscription, consumer runtime, durable recovery/deduplication strategy.</td><td>CF or Kyma according to runtime needs; Cloud Integration for mediation; storage when the receiver cannot supply the required recovery contract.</td><td>Human-workflow engine, native client and AI for deterministic event processing.</td></tr>
+<tr><th scope="row">D. Approval-first process</th><td>Existing suitable workflow or Build Process Automation, user/task configuration, action/API contract and access.</td><td>CAP for logic the process model cannot express; Integration Suite for mediation; Task Center for a cross-provider inbox.</td><td>A second custom workflow engine and a separate UI when the supplied form/task experience fits.</td></tr>
+<tr><th scope="row">E. Grounded assistant</th><td>Application or supported copilot entry, authorised retrieval, selected model endpoint, response validation and evaluation.</td><td>AI Core extended for generative AI hub; vector storage for the chosen retrieval design; Document AI for extraction; approvals for effects.</td><td>AI Launchpad in the per-request path, a new Kyma cluster, or an agent when one bounded model call is sufficient.</td></tr>
+<tr><th scope="row">F. Kubernetes-specific worker</th><td>Kyma, reachable image registry, workload/service resources, configuration and bindings, resource/probe/security policy.</td><td>Broker, database, Connectivity Proxy, ingress/API exposure or autoscaling only for the workload's needs.</td><td>CAP, a public endpoint and a service mesh feature merely because a container runs in the cluster.</td></tr>
+</tbody></table></div>
+<h3>Recipe A — Make one request explainable end to end</h3>
+<p><strong>Objects:</strong> a <code>ReviewCase</code> entity containing only extension-owned state; a scoped read service; an explicit <code>submitEvidence</code> or <code>approveReview</code> action; selected security configuration; deployment descriptor; database binding; ERP destination/communication setup. The action names are application-owned examples, not standard SAP BP APIs.</p>
+<p><strong>Flow:</strong> user signs in → backend validates role and case assignment → service reads/writes the permitted case → required ERP action uses the approved API and identity → local state records confirmation or a recoverable unknown outcome. A browser request never carries a broad ERP administrator credential.</p>
+<p><strong>Reject the design</strong> if a reviewer can approve their own evidence when separation is required, if a case number reveals another supplier's data, or if a timeout silently triggers a duplicate non-idempotent posting. A successful happy-path demonstration is not enough.</p>
+<h3>Recipe C — Put the failure between the arrows</h3>
+<p>Write <code>event ID → business key → attempted operation → receiver evidence → final status</code>. Acknowledge only according to the chosen durable processing contract. Test a crash before commit, after commit, and before acknowledgement. A poison message needs bounded retries and an owner; a retry loop is not a recovery strategy.</p>
+<p class="btp-sources"><a href="#ref-cf">Application deployment</a> · <a href="#ref-mobile">Mobile setup</a> · <a href="#ref-events">Event integration</a> · <a href="#ref-ai">AI runtime</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="operations" aria-labelledby="operations-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">13 / Delivery and recovery</p><h2 id="operations-title">A green deployment is the beginning of verification.</h2></header>
+<div class="signavio-reader__content"><span id="build-operations"></span><span id="foundation-operations"></span><span id="reliability-design"></span><span id="quality-contract"></span>
+<h3>Tree 15 — What should happen after failure?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Did the operation reach a known business outcome?
+├─ Confirmed success → record it; do not repeat the effect.
+├─ Confirmed business rejection → correct/escalate; blind retry will not fix it.
+├─ Confirmed transient failure before effect → bounded retry with backoff/jitter.
+└─ Unknown: timeout or crash after dispatch → query/reconcile the receiver first.
+   ├─ Receiver confirms success → close the pending operation.
+   ├─ Receiver proves no effect and replay is safe → retry under policy.
+   └─ Cannot establish outcome → controlled investigation/manual resolution.</pre>
+<p><strong>Delivery:</strong> source control → lint/unit tests → API/contract and authorisation tests → build immutable artifact → deploy to test → integration/failure checks → approved production promotion. Cloud Transport Management can move supported content; a CI/CD system builds and tests. Neither is a substitute for database migration design, secrets configuration or deployment ownership.</p>
+<p><strong>Observability:</strong> correlate UI request, app log, iFlow/message and backend result using appropriate IDs. Use Cloud Logging or the selected logging stack for technical telemetry, Audit Log for relevant security events, Cloud ALM for supported end-to-end monitoring, and Alert Notification/Automation Pilot when routing or controlled remediation is needed. These are distinct jobs, not five mandatory products for every pilot.</p>
+<p><strong>Scaling:</strong> set resource limits, timeouts and downstream concurrency. Autoscaling the caller can overload ERP. Bound queue backlogs, retries and batch sizes. Treat <code>429</code> as a signal to respect the receiver's rate policy, not to create more parallel retries. Define worker overlap protection for scheduled jobs.</p>
+<h3 id="production-quality">Write quality targets as tests</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table"><thead><tr><th scope="col">Requirement</th><th scope="col">Example acceptance statement</th><th scope="col">Test</th></tr></thead><tbody>
+<tr><th scope="row">Access</th><td>A reviewer sees only assigned cases and cannot approve without the required role.</td><td>Negative role, object and tenant tests at the API, not only the UI.</td></tr>
+<tr><th scope="row">Response</th><td>An agreed percentile/latency target holds at an agreed workload.</td><td>Representative end-to-end load including identity, database and remote calls.</td></tr>
+<tr><th scope="row">Recovery</th><td>RTO is the target recovery time; RPO is the acceptable data-loss window.</td><td>Restore data and configuration, then reconcile pending business operations.</td></tr>
+<tr><th scope="row">Offline</th><td>Locally captured work survives restart and receives an explicit server result.</td><td>Airplane mode, app kill, partial sync, conflict and lost response.</td></tr>
+<tr><th scope="row">Change</th><td>Old clients continue within the agreed compatibility window.</td><td>Consumer contract tests, migration rehearsal and a rollback/forward-recovery decision.</td></tr>
+<tr><th scope="row">Cost</th><td>Expensive loops are bounded and a named owner receives usage alerts.</td><td>Duplicate events, failed model calls and a deliberately excessive batch.</td></tr>
+</tbody></table></div>
+<p><strong>Backup has two sides:</strong> service data and customer-managed configuration backups. Recover destinations, trust/role mappings, deployment settings, mobile configuration and integration artifacts as applicable. Do not assume provider-managed data backup reconstructs the entire solution. A second region works only if every essential dependency and recovery procedure supports it.</p>
+<p><strong>Operations handover:</strong> name an owner for each alert, a runbook for each material failure, the safe replay boundary, the data-retention policy, and an exit/export procedure. An SLA in a contract, an internal SLO and observed service performance are different things; design targets are not SAP service guarantees.</p>
+<p class="btp-sources"><a href="#ref-operations">Operations services</a> · <a href="#ref-recovery">Configuration and data recovery</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="commercial" aria-labelledby="commercial-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">14 / Contract to running service</p><h2 id="commercial-title">A service in the catalogue is not yet a service you may use.</h2></header>
+<div class="signavio-reader__content"><span id="commercial-checks"></span><span id="license-gates"></span>
+<h3>Tree 16 — Can we use this component?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Is the offering available for this new/existing-customer scenario?
+├─ No → select an eligible alternative or an agreed transition path.
+└─ Yes → Is the required feature available in the target region/provider/plan?
+   ├─ No → change the design/region only if residency and dependencies allow it.
+   └─ Yes → Is the intended use covered by the agreement, including dependencies?
+      ├─ No / unknown → procurement clarifies or adds scope; do not assume zero cost.
+      └─ Yes → Is the entitlement/quota assigned to the target subaccount?
+         ├─ No → platform administrator allocates the eligible plan/capacity.
+         └─ Yes → provision/subscribe, configure identity and bindings,
+                  activate the capability and validate the complete use case.</pre>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table"><thead><tr><th scope="col">Model</th><th scope="col">How to think about it</th><th scope="col">Main trap</th></tr></thead><tbody>
+<tr><th scope="row">Subscription</th><td>Agreed product/service scope, quantity and term; predictable committed scope.</td><td>Fixed price does not mean unlimited users, capacity or all dependencies.</td></tr>
+<tr><th scope="row">Pay-As-You-Go</th><td>Consumption-based use of eligible services without the same upfront credit commitment.</td><td>No upfront commitment does not mean no bill, no restrictions or universal service eligibility.</td></tr>
+<tr><th scope="row">BTPEA / existing CPEA</th><td>Eligible consumption against the applicable enterprise agreement and committed commercial terms.</td><td>The eligible catalogue, conversion and credit terms are agreement-specific; do not treat agreements as interchangeable.</td></tr>
+<tr><th scope="row">Free service plan</th><td>A limited plan for a particular service in an eligible account.</td><td>Not the same as a trial account; not every service has one; features, quotas and productive suitability differ.</td></tr>
+<tr><th scope="row">Included / restricted use</th><td>A capability bundled with another SAP offering for specified purposes.</td><td>“Included” may cover only that offering's use, not every custom app or external user.</td></tr>
+</tbody></table></div>
+<p><strong>Free-to-paid is a migration question.</strong> Some services support a documented plan upgrade, but this is not universal. For Kyma, moving from a free plan to a paid plan requires a new cluster according to the free-plan guidance. Build the exit path before the pilot accumulates important state.</p>
+<h3>What belongs in the contract conversation</h3>
+<p><strong>Scope:</strong> exact service and plan, feature/edition, permitted productive and non-productive use, internal/external users and developer/consumer categories. Confirm source-system and third-party/model rights separately. An API's technical availability is not a ruling on ERP commercial access rights.</p>
+<p><strong>Economics:</strong> the chargeable unit, minimums/rounding, region, quantities, term, included capacity, overage, unused commitment treatment and supporting services. Check whether model tokens, capacity units and AI Units are converted under the applicable offering; they are not universally equivalent.</p>
+<p><strong>Operations and exit:</strong> support, SLA, residency/subprocessors, retention, restore/export, termination and the fate of stored data. Record unresolved items and the person who must confirm them. This checklist identifies questions; the signed agreement determines the answer.</p>
+<h3>Turn the architecture into a bill of materials</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table"><thead><tr><th scope="col">Line</th><th scope="col">Record before approval</th><th scope="col">Often missed</th></tr></thead><tbody>
+<tr><th scope="row">Application runtime</th><td>CF/Kyma/ABAP plan, region, productive and non-productive capacity, scaling assumptions.</td><td>Idle test environments, multiple instances, cluster baseline and deployment overlap.</td></tr>
+<tr><th scope="row">Persistence/content</th><td>Database/object/document scope, capacity, growth, backup and retention.</td><td>Attachments, replicas, indexes, old versions and recovery requirements.</td></tr>
+<tr><th scope="row">Integration/mobile</th><td>Suite capabilities, mobile plan, consumers and actual chargeable usage unit.</td><td>Retries, large synchronisation working sets, separate event-mesh scope and private connectivity.</td></tr>
+<tr><th scope="row">AI</th><td>Model/region, required plan, expected calls and token mix, retrieval/extraction dependencies.</td><td>Multiple model calls per user action, retries, embeddings, document processing and evaluation traffic.</td></tr>
+<tr><th scope="row">Platform/operations</th><td>Identity, logs, monitoring, transport, domains, support and operating effort.</td><td>Log ingestion/retention, customer-managed components and restricted-use limitations.</td></tr>
+</tbody></table></div>
+<p><strong>Simple sizing example:</strong> two 0.5 GB app instances running for 730 hours consume 730 GB-hours of application memory-time; a 0.5 GB test instance running for 220 hours adds 110 GB-hours. Total: 840 GB-hours before converting to the selected plan's billing unit and rules. This is a workload calculation, not an SAP price quote.</p>
+<p><strong>Cost multiplier:</strong> 5,000 reviews × 2 model calls = 10,000 calls before retries. Ten percent additional calls add 1,000. Model length, extraction, storage and logs also matter. Estimate low/expected/high demand and compare whole-life operating effort, not just the runtime line.</p>
+<p><strong>Budget alerts notify; they do not universally stop consumption.</strong> Put explicit limits where work multiplies: queue retries, batch size, model calls, token/output limits, job concurrency and retention. Keep a named cost owner and regularly remove unused resources.</p>
+<p class="btp-sources"><a href="#ref-commercial">Commercial models and usage</a> · <a href="#ref-free">Free-plan limitations</a> · <a href="#ref-ai">AI prerequisites</a></p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="practice" aria-labelledby="practice-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">15 / Pilots with a purpose</p><h2 id="practice-title">Eight projects that force the architecture to become concrete.</h2></header>
+<div class="signavio-reader__content"><span id="development-lab"></span><span id="next"></span><span id="context-case-pilot"></span>
+<p>Start with synthetic or approved sandbox data and a bounded outcome. Each pilot needs a design, a small implementation, a failure test and a decision about whether to continue. Do not provision paid services or connect productive write APIs before the access and cost scope is approved.</p>
+<details class="page-faq__item btp-check btp-pilot" open id="pilot-bp"><summary><span>1. BP change-request preflight</span></summary><div>
+<p><strong>Problem:</strong> requests reach governance with missing or inconsistent information. <strong>MVP:</strong> a reviewer sees an allowed case, deterministic checks and missing-evidence prompts; no direct update of ERP tables.</p>
+<p><strong>Stack:</strong> Fiori elements + CAP on CF; case storage only if the pilot owns cases; selected identity; a mock API first, then a released BP/MDG interface appropriate to the landscape. <strong>Artifacts:</strong> CDS model, scoped service, validation rules, destination/communication record and negative access tests.</p>
+<p><strong>Prove:</strong> wrong reviewer is denied, stale data is detected, and a rejected business rule cannot be bypassed with a direct API call. <strong>Continue only if:</strong> users can correct a real class of avoidable defects without creating a second governance owner. Measure rejected submissions and correction effort; do not invent an ROI percentage.</p>
+</div></details>
+<details class="page-faq__item btp-check btp-pilot" id="pilot-offline"><summary><span>2. Offline warehouse or field inspection</span></summary><div>
+<p><strong>Problem:</strong> work stops when connectivity disappears. <strong>MVP:</strong> download assigned inspections, capture results/photos offline, reconnect and display accepted/rejected/conflicting outcomes.</p>
+<p><strong>Stack:</strong> MDK + Mobile Services + supported OData; add a facade only for a demonstrated API gap. <strong>Artifacts:</strong> service definition, defining requests, pages/actions/rules, client configuration, sync policy and device test matrix.</p>
+<p><strong>Prove:</strong> airplane mode, restart, partial upload, concurrent server edit, user switch and no duplicated final effects. <strong>Continue only if:</strong> the hardest offline operation and data-security requirement are feasible on real target devices.</p>
+</div></details>
+<details class="page-faq__item btp-check btp-pilot" id="pilot-events"><summary><span>3. Recoverable order-event consumer</span></summary><div>
+<p><strong>Problem:</strong> a successful technical delivery can still leave an uncertain business result. <strong>MVP:</strong> consume a small event type, perform one controlled operation and reconcile unknown outcomes.</p>
+<p><strong>Stack:</strong> eligible event service/queue + CF worker initially; durable processing record or an equivalent receiver contract. <strong>Artifacts:</strong> event schema, queue/subscription policy, consumer, deduplication key, dead-letter runbook and correlation view.</p>
+<p><strong>Prove:</strong> duplicate delivery and a crash after receiver commit do not create a second effect. <strong>Continue only if:</strong> an operator can safely resolve a pending operation without guessing whether to replay it.</p>
+</div></details>
+<details class="page-faq__item btp-check btp-pilot" id="pilot-approval"><summary><span>4. Exception approval without another workflow engine</span></summary><div>
+<p><strong>Problem:</strong> exception approvals live in email with unclear ownership. <strong>MVP:</strong> one form, one decision table, two approval roles and a controlled backend action.</p>
+<p><strong>Stack:</strong> existing suitable workflow or Build Process Automation; approved API; Task Center only if inbox consolidation is a requirement. <strong>Artifacts:</strong> process model, form, action contract, escalation timer and role assignments.</p>
+<p><strong>Prove:</strong> approval expiry, reassignment, absent approver and failed backend completion. <strong>Continue only if:</strong> the workflow state and ERP state can be reconciled and one owner remains authoritative.</p>
+</div></details>
+<details class="page-faq__item btp-check btp-pilot" id="pilot-documents"><summary><span>5. Supplier-document extraction with a human checkpoint</span></summary><div>
+<p><strong>Problem:</strong> reviewers repeatedly retype document fields. <strong>MVP:</strong> extract supported fields, show evidence and allow correction before any business update.</p>
+<p><strong>Stack:</strong> Document AI, a small review UI/process and appropriate document storage; add CAP only for orchestration/validation the existing product cannot provide. <strong>Artifacts:</strong> extraction configuration, field mapping, validation policy, review screen and retention rules.</p>
+<p><strong>Prove:</strong> an unreadable document, incorrect field, unsupported layout and duplicate upload do not silently produce a trusted posting. <strong>Continue only if:</strong> measured correction effort is lower while critical-error handling remains acceptable.</p>
+</div></details>
+<details class="page-faq__item btp-check btp-pilot" id="pilot-rag"><summary><span>6. Read-only integration support assistant</span></summary><div>
+<p><strong>Problem:</strong> support engineers cannot quickly locate the relevant approved runbook. <strong>MVP:</strong> answer from a small permitted document set and cite the exact evidence; no production-changing tools.</p>
+<p><strong>Stack:</strong> authenticated app, permission-aware retrieval, selected AI Core/generative AI hub setup or another approved model path. <strong>Artifacts:</strong> ingestion/access mapping, retrieval configuration, prompt/output schema, evaluation cases and usage limits.</p>
+<p><strong>Prove:</strong> no evidence leads to a qualified non-answer, another team's restricted document is not exposed, and injected instructions cannot add tools. <strong>Continue only if:</strong> evaluated answer usefulness improves over ordinary search at an acceptable cost.</p>
+</div></details>
+<details class="page-faq__item btp-check btp-pilot" id="pilot-runtimes"><summary><span>7. The same small application on CF and Kyma</span></summary><div>
+<p><strong>Problem:</strong> runtime choice is being made by preference rather than requirements. <strong>MVP:</strong> deploy the same bounded API and comparable dependencies to two approved sandboxes.</p>
+<p><strong>Stack:</strong> identical CAP/service contract; CF deployment descriptor versus Kyma image/chart. <strong>Artifacts:</strong> deployment scripts, binding inventory, operations checklist and comparable workload definition.</p>
+<p><strong>Prove:</strong> deploy, update, scale, restart, rotate a credential and diagnose a broken backend. <strong>Decision:</strong> compare operating effort and total cost for the actual workload. Choose Kyma only if its extra control is useful enough to justify its responsibility. A benchmark with unequal database or replica settings is not a fair runtime comparison.</p>
+</div></details>
+<details class="page-faq__item btp-check btp-pilot" id="pilot-cost"><summary><span>8. Architecture cost and entitlement ledger</span></summary><div>
+<p><strong>Problem:</strong> a diagram reaches procurement without a complete dependency list. <strong>MVP:</strong> each component has a reason, plan, region, usage unit, environment quantity, owner and unresolved contract question.</p>
+<p><strong>Stack:</strong> a simple structured register; no BTP runtime is needed to start. <strong>Artifacts:</strong> bill of materials, low/expected/high usage model, assumption log and decommission checklist.</p>
+<p><strong>Prove:</strong> double traffic, add a test environment and add retries; all affected lines change. Unknown licences remain unknown, not zero. <strong>Continue only if:</strong> the register exposes missing dependencies and makes a smaller viable composition visible.</p>
+</div></details>
+<h3 id="contract-exercise">One local recovery exercise</h3>
+<p>Use the existing <a href="/assets/downloads/btp-recovery-drill.mjs">recovery drill</a> to explore a lost response after a simulated receiver commits. Run <code>node btp-recovery-drill.mjs</code> in the supported local Node.js environment. It is a simulation, not an SAP API or a distributed database test. The point is to distinguish safe retry from unknown business outcome; a real receiver's contract must be established separately.</p>
+<h3 id="oral-defense">Defend the choice before adding more services</h3><span id="interview"></span><span id="client-explanation"></span>
+<p><strong>Change one constraint:</strong> the app must now work offline; the backend becomes private; the customer already has a Kubernetes operating team; external reviewers need strict tenant isolation; the expected usage triples. Explain which components change, which remain, and which test now becomes decisive.</p>
+<p><strong>One-minute structure:</strong> “The requirement is ___. I choose ___ because ___. The minimum components are ___. I add ___ only when ___. The request travels through ___. The main failure is ___, handled by ___. We will accept the design when ___.” Then name the exact artifact and owner when challenged.</p>
+</div></section>
+
+<section class="research-canvas__inventory signavio-reader__section" id="methods" aria-labelledby="methods-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">16 / Architecture discipline</p><h2 id="methods-title">Use a method to expose a missing decision.</h2></header>
+<div class="signavio-reader__content"><span id="frameworks"></span><span id="btp-methods"></span><span id="btp-design-evidence"></span><span id="method-extension"></span><span id="method-data-analytics"></span><span id="method-integration"></span><span id="method-joined-case"></span>
+<p><strong>SAP Application Extension Methodology:</strong> identify the gap, assess extension options and choose the right boundary. <strong>ISA-M:</strong> assess integration styles/domains and select suitable technologies. <strong>Data and Analytics Advisory Methodology:</strong> connect decision-support requirements with data and analytical architecture. These are reasoning methods, not three extra services to purchase.</p>
+<p><strong>The architecture pack:</strong> one context/request-flow view; one decision record with a rejected alternative; a service/plan bill of materials; an identity/data-access matrix; an interface/error contract; a deployment/recovery plan; measurable acceptance tests; named owners. A pretty product map cannot replace any of these.</p>
+<p>For C_BAIPA preparation, practise reconstructing this pack for one of the pilots. This is not an official topic weighting, a disclosed exam blueprint or a passing-score predictor. Follow the instructions for the actual assessment; the guide does not confirm an individual booking or permitted resources.</p>
+<p class="btp-sources"><a href="#ref-methods">SAP architecture methodologies</a> · <a href="#ref-certification">Certification information</a></p>
+</div></section>

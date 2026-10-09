@@ -1,0 +1,68 @@
+<section class="research-canvas__inventory signavio-reader__section" id="mobile" aria-labelledby="mobile-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">10 / Mobile architecture</p><h2 id="mobile-title">Mobile SDK, MDK and Mobile Services are not interchangeable.</h2></header>
+<div class="signavio-reader__content">
+<p><strong>Mobile Services</strong> is the cloud service supplying selected mobile capabilities. <strong>MDK — Mobile Development Kit</strong> is the metadata-driven application approach and client. <strong>SAP BTP SDK for iOS / Android</strong> supplies native development libraries. <strong>The business backend</strong> remains a separate API and transaction owner. You may need this combination without needing a new CAP app, a new HANA database or Kyma.</p>
+<h3>Tree 13 — Which mobile approach?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Does an existing supported business mobile app already do the job?
+├─ Yes → Evaluate/configure it before developing another client.
+└─ No → Is a responsive browser experience sufficient?
+   ├─ Yes → Web UI / PWA; design any caching explicitly.
+   └─ No → Standard business forms, lists, barcode/camera needs,
+           and metadata-driven cross-platform delivery fit?
+      ├─ Yes → Evaluate MDK + Mobile Services + supported backend APIs.
+      └─ No → Native SDK for iOS / Android when deep platform integration
+              or highly customised UX justifies separate native engineering.
+              Other frameworks remain an option, but validate the required
+              SAP features and offline implementation rather than assuming parity.</pre>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table"><thead><tr><th scope="col">Choice</th><th scope="col">Good fit</th><th scope="col">Work you still own</th></tr></thead><tbody>
+<tr><th scope="row">Responsive web / PWA</th><td>Online approvals and lookups; one browser codebase.</td><td>Browser support, authentication, caching, local-data policy and any custom sync. An installable icon does not provide business offline behaviour.</td></tr>
+<tr><th scope="row">MDK</th><td>Metadata-driven cross-platform business apps with supported native and offline features.</td><td>Pages, actions, rules, service definitions, extension controls where needed, sync/error UX and client rollout.</td></tr>
+<tr><th scope="row">SDK for iOS</th><td>Native iOS experience; Swift/Xcode skills; platform-specific interaction.</td><td>Native screens, app lifecycle, permissions, testing, signing, distribution and selected SDK integration.</td></tr>
+<tr><th scope="row">SDK for Android</th><td>Native Android experience; Kotlin/Java and Android toolchain skills.</td><td>Native implementation, supported devices, background restrictions, signing, distribution and SDK integration.</td></tr>
+<tr><th scope="row">Joule Work mobile app<br />(formerly SAP Mobile Start)</th><td>Mobile entry to supported enterprise apps, notifications and tasks.</td><td>Relevant content/provider setup. It is not the generic authoring SDK for a custom offline inspection app.</td></tr>
+</tbody></table></div>
+<p><strong>Choose MDK because the application fits the model, not merely because “one codebase is cheaper”.</strong> A required peripheral, unusual interaction or offline operation can change the decision. Prove the hardest requirement on the actual device before building ten easy screens.</p>
+<h3 id="offline">Tree 14 — Online, offline or hybrid?</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Must users keep working without a reliable connection?
+├─ No → Online operations; avoid unnecessary local sensitive data.
+└─ Yes → Can the business accept a bounded local snapshot and delayed validation?
+   ├─ No → Keep authoritative decisions online; allow only safe offline capture.
+   └─ Yes → Does the API and operation fit supported Offline OData capabilities?
+      ├─ Yes → Design defining requests, local store, upload/download and errors.
+      └─ No → Add an appropriate API facade or design custom synchronisation;
+              compare that cost with simplifying the offline requirement.</pre>
+<p><strong>Online is about freshness and authoritative answers.</strong> A stock availability check, credit decision or final posting may require the server. <strong>Offline is about continuity with explicit uncertainty.</strong> A technician can record inspection evidence locally, but “saved on device” must not be displayed as “posted in ERP”. A hybrid design often lets users capture evidence offline and performs final validation online.</p>
+<p>Offline OData supports documented OData 2.0, 4.0 and 4.01 scenarios with limitations. Do not assume every action, query option, draft flow, relationship change or attachment API works offline unchanged. An arbitrary REST or GraphQL endpoint does not become an Offline OData backend just because it is configured as a destination.</p>
+<h3>What actually gets configured</h3>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table"><thead><tr><th scope="col">Object</th><th scope="col">What belongs there</th><th scope="col">Failure it helps prevent</th></tr></thead><tbody>
+<tr><th scope="row">Mobile application configuration</th><td>Application identity, selected security, backend destinations and enabled mobile capabilities in Mobile Services.</td><td>A client reaching the wrong app/backend or lacking the selected capability.</td></tr>
+<tr><th scope="row">MDK <code>.service</code> definition</th><td><code>DestinationName</code>, relevant path, <code>OfflineEnabled</code> and <code>DefiningRequests</code> for the chosen model.</td><td>Initial download of the wrong entities or excessive data.</td></tr>
+<tr><th scope="row">MDK pages, actions and rules</th><td>Task screens, OData operations, initialisation, upload/download actions and error navigation.</td><td>A user creating local work without a recoverable sync path.</td></tr>
+<tr><th scope="row">Native client configuration</th><td>Onboarding/authentication endpoints, app identity, redirect configuration, supported client version and distribution.</td><td>Login loops, wrong redirect targets and incompatible clients.</td></tr>
+<tr><th scope="row">Backend contract</th><td>Authorised data scope, supported writes, version checks, duplicate handling and business validation.</td><td>Another user's records being downloaded, lost updates or duplicate business effects.</td></tr>
+</tbody></table></div>
+<p><strong>Defining requests select the working set; they are not an access-control boundary.</strong> For example, download assigned open inspections and required reference data rather than the entire plant history. The server must enforce assignment and user scope even when the caller changes a filter. Decide how reassignment, deletion and authorisation changes reach existing local stores.</p>
+<h3>The sync lifecycle</h3>
+<pre class="btp-tree" tabindex="0" aria-label="Architecture decision or request flow">Initial online onboarding → authenticate → initialise/download authorised working set
+                    ↓
+Read/write local store → show Pending on device → retain queued changes durably
+                    ↓ connection returns
+Upload pending operations → inspect backend errors → download accepted/current data
+                    ↓
+Show server-confirmed state OR a recoverable rejection/conflict; keep evidence intact.</pre>
+<p>Uploading before downloading is the usual sequence to publish local work before refreshing it; use the documented semantics for the selected client and application. Interrupted sync must be restartable. Partial success is not full failure and not full success: preserve which operations succeeded, which failed and which have an unknown outcome.</p>
+<p><strong>A useful business state model:</strong> <code>Draft → PendingUpload → Submitted → Accepted</code>, with separate <code>Rejected</code>, <code>Conflict</code> and <code>UnknownOutcome</code> paths. These are application states to design, not a claim that the SDK creates this exact state machine for you. Do not clear the local store to “fix sync” while it contains unsubmitted work.</p>
+<h3>Conflicts are business decisions</h3>
+<p><strong>Two users edit one inspection:</strong> compare the server version using the API's supported concurrency mechanism. Decide which fields can merge and which require review. <strong>A server rule changes while offline:</strong> explain the rejection and allow correction. <strong>The server commits but the response is lost:</strong> reconcile using an operation identity/status contract before replaying a non-idempotent action. “Last write wins” is not a safe universal policy for quantity, approval or bank details.</p>
+<p><strong>Files need their own strategy.</strong> Bound photo size, attachment count and total store size; handle upload separately where the API requires it; link attachments to the correct business operation. Add malware scanning, content controls and retention when needed. A metadata sync does not prove every attachment has arrived.</p>
+<h3 id="mobile-tests">Acceptance tests that expose the real design</h3>
+<p><strong>Connectivity:</strong> initialise online, switch to airplane mode, create several records, kill/restart the app, reconnect and verify each server result. Cut the connection during upload and during download. Retry without creating duplicate business effects.</p>
+<p><strong>Correctness:</strong> change the same record on the server, revoke an assignment, return a validation error and return a partial batch result. The app must show the right state and retain recoverable work. Test the largest realistic working set, not only three demo records.</p>
+<p><strong>Security:</strong> use supported encrypted storage/key handling, minimise downloaded data, test logout and user switching, token expiry and lost-device procedures. Remote revocation cannot instantly contact a device that remains offline; define the acceptable offline access window and compensating controls. Never reuse one user's store as another user's starting state.</p>
+<h3>Provisioning and commercial prerequisites</h3>
+<p>The CF-based Mobile Services setup also needs the relevant CF org/space and runtime, route and service-instance quotas. This platform prerequisite does not mean you must develop a separate CAP backend. Mobile Services can be consumed standalone or through the applicable SAP Build setup; follow the onboarding and metering rules of the selected offer.</p>
+<p>In the current SAP Build setup, custom MDK/native-SDK applications fall under the premium-user scope; the standard-user scope does not cover custom application development/deployment. Do not transfer this rule to a different standalone plan without checking its terms.</p>
+<h3>Minimum stack for an offline inspection pilot</h3>
+<p><strong>R:</strong> MDK client/project, Mobile Services configuration with the required mobile/offline scope, supported OData backend, identity/access, local working-set design, sync/error UX and a backend conflict policy. <strong>C:</strong> Cloud Connector/connectivity for a private backend; custom CAP or RAP facade for missing API semantics; document storage/scanning for attachments; enterprise device management/distribution according to policy. <strong>O:</strong> Work Zone, a new HANA database, Integration Suite or Kyma when the pilot has no requirement for them.</p>
+<p class="btp-sources"><a href="#ref-mobile">Mobile Services, MDK and SDKs</a> · <a href="#ref-offline">Offline initialisation, synchronisation and limitations</a></p>
+</div></section>

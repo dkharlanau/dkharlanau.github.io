@@ -1,0 +1,20 @@
+<section class="research-canvas__inventory signavio-reader__section" id="service-map" aria-labelledby="service-map-title">
+<header class="signavio-reader__section-head"><p class="research-canvas__eyebrow">11 / Service map</p><h2 id="service-map-title">A broad map, not a shopping list.</h2></header>
+<div class="signavio-reader__content">
+<p>Start with the responsibility you need, then choose a service. The map separates <strong>services, runtimes, product capabilities, development models, components and neighbouring products</strong>. A capability nested inside a product is not automatically another subscription. Lifecycle entries are deliberately separated from normal new-project candidates.</p>
+<p><strong>Actual availability has four gates:</strong> product lifecycle → region/hyperscaler → commercial/service plan → your account's entitlement and configuration. Use the <a href="https://discovery-center.cloud.sap/serviceCatalog">live SAP Discovery Center service catalogue</a> for the full, changing inventory. No static list can mean “all of these are orderable in every account”.</p>
+<div class="btp-glossary-tools btp-service-tools" hidden>
+<label for="btp-service-search">Find a responsibility, service or limitation</label>
+<input id="btp-service-search" type="search" placeholder="offline, ABAP, queue, identity, document, transport…" autocomplete="off" />
+<label for="btp-service-kind">Entry type</label>
+<select id="btp-service-kind"><option value="">All types</option><option>Service</option><option>Runtime</option><option>Capability</option><option>Product</option><option>Model / SDK</option><option>Component</option><option>Tool</option><option>Related product</option><option>Lifecycle</option></select>
+<button type="button" id="btp-service-clear">Clear filters</button><p id="btp-service-count" role="status" aria-live="polite"></p>
+</div>
+{% for group in site.data.btp_services %}
+<details class="page-faq__item btp-catalogue-group" open><summary><span>{{ group.name | escape }} <span>({{ group.items.size }})</span></span></summary>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Scrollable architecture comparison"><table class="study-table__table btp-service-table"><caption>{{ group.name | escape }} — purpose and selection boundary</caption><thead><tr><th scope="col">Entry / type</th><th scope="col">Use it for</th><th scope="col">Boundary / when not to add it</th></tr></thead><tbody>
+{% for item in group.items %}<tr class="btp-service-row" id="service-{{ item.id | escape }}" data-kind="{{ item.kind | escape }}"><th scope="row">{{ item.name | escape }}<br /><small>{{ item.kind | escape }}</small></th><td>{{ item.use | escape }}</td><td>{{ item.boundary | escape }}</td></tr>{% endfor %}
+</tbody></table></div><p class="btp-sources"><a href="#{{ group.reference | escape }}">Service-family reference</a></p></details>
+{% endfor %}
+<p><strong>Before adding a row to your solution:</strong> finish the sentence “Without this component, requirement ___ would fail because ___.” An empty sentence is a reason to remove the component, not to invent a benefit.</p>
+</div></section>
