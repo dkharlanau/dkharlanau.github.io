@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "SAP Lead Interview Questions — 42 Skills, 168 Questions"
-description: "SAP Lead interview question bank with 168 questions across 42 roadmap skills: Sales, Logistics, Integration, AI, Delivery, and leadership judgment."
+title: "SAP Lead Interview Questions — 43 Skills, 172 Questions"
+description: "SAP Lead interview question bank with 172 questions across 43 roadmap skills: Sales, Logistics, Integration, AI, Delivery, and leadership judgment."
 permalink: /labs/interview-readiness/questions/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-18
+last_modified_at: 2026-10-04
 hide_global_cta: true
 tags:
   - sap
@@ -27,8 +27,8 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Interview Readiness / Question Bank 2.0</p>
       <h1>One roadmap.<br />Four ways to be tested.</h1>
-      <p>The bank now follows all 42 SAP Lead roadmap skills. Every skill has four question types: explain the model, diagnose a failure, design a solution, and challenge a weak requirement.</p>
-      <a class="research-canvas__button" href="#question-bank">Open 168 questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p>The bank now follows all 43 SAP Lead roadmap skills. Every skill has four question types: explain the model, diagnose a failure, design a solution, and challenge a weak requirement.</p>
+      <a class="research-canvas__button" href="#question-bank">Open 172 questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
       <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Question depth">
@@ -47,11 +47,11 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" id="question-bank" data-reveal>
-    <header><p class="research-canvas__eyebrow">42 skills / 168 questions</p><h2>Filter by area, skill, or interview pressure.</h2><p id="ir-question-count">Loading question bank.</p></header>
+    <header><p class="research-canvas__eyebrow">43 skills / 172 questions</p><h2>Filter by area, skill, or interview pressure.</h2><p id="ir-question-count">Loading question bank.</p></header>
     <div class="ir-filter-stack">
       <div class="ir-filter-group"><strong>Area</strong><div class="ir-filter" id="ir-question-filter" aria-label="Question area filters"></div></div>
       <div class="ir-filter-group"><strong>Type</strong><div class="ir-filter" id="ir-type-filter" aria-label="Question type filters"></div></div>
-      <label class="ir-select-label" for="ir-skill-filter"><strong>Skill</strong><select id="ir-skill-filter"><option value="all">All 42 roadmap skills</option></select></label>
+      <label class="ir-select-label" for="ir-skill-filter"><strong>Skill</strong><select id="ir-skill-filter"><option value="all">All 43 roadmap skills</option></select></label>
     </div>
     <div class="ir-question-list" id="ir-question-list"></div>
   </section>

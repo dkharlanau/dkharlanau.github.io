@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-10-01
+last_modified_at: 2026-10-04
 hide_global_cta: true
 tags:
   - sap
@@ -16,6 +16,7 @@ tags:
   - assessment
   - interview
   - business-ai
+  - sap-signavio
 last_reviewed: 2026-10-01
 publication_wave: "public-framework-search-wave-04"
 review_method: "page-level editorial review"
@@ -88,6 +89,7 @@ semantic_links:
     <div class="research-route-list">
       <a href="/lab/"><span>ENG</span><strong>Enterprise Engineering Toolkit</strong><small>Executable process, decision, interface, mapping, reconciliation, graph, cutover, architecture, visual, and SAP operations tools in one connected launcher.</small><i class="material-symbols-outlined" aria-hidden="true">engineering</i></a>
       <a href="/labs/enterprise-context/"><span>SAP</span><strong>SAP Enterprise</strong><small>Sales, procurement, logistics, master data, production, quality, integration, development, analytics, and cross-functional SAP capabilities.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/signavio/"><span>BPM</span><strong>SAP Signavio</strong><small>Process thinking, shared process views, process mining, governance, collaboration, transformation initiatives, and Lead-level product boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">conversion_path</i></a>
       <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture</strong><small>Data, retrieval, MCP, tools, agents, evaluations, security, deployment, and production boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       <a href="/labs/business-ai/"><span>BIZ</span><strong>Business AI</strong><small>Business process → AI job → pattern → technology → control → outcome → evidence, including failed and mixed cases.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/enterprise-assurance/"><span>RISK</span><strong>Enterprise Assurance</strong><small>ISO management systems, ISAE and SOC reports, cloud and industry schemes, vendor evidence, control scope, and practical due diligence.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
