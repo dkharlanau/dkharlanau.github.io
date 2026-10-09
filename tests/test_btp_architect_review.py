@@ -27,20 +27,21 @@ class ArchitectReviewTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.source=expanded_source(); cls.markup=Markup(); cls.markup.feed(cls.source)
+    def test_twenty_one_chapters_and_old_entry_points(self):
+        self.assertEqual(21,self.source.count('class="research-canvas__inventory signavio-reader__section"'))
+        legacy='big-picture architect-roles ea-value frameworks toolchain rba rsa trace platform-scope accounts design-choices procurement-case btp-guidance btp-methods btp-design-evidence build-clean-core build-tools build-runtimes build-experience build-integration-strategy build-integration-suite build-events-agents build-operations context-why context-language context-data-products context-products context-bdc context-knowledge-models context-case govern-purpose govern-toolchain govern-failure foundation-overview foundation-identity foundation-connectivity-data foundation-operations method-extension method-data-analytics method-integration method-joined-case client-explanation interview next sources'
+        self.assertFalse(set(legacy.split())-set(self.markup.ids))
     def test_anchors_and_heading_hierarchy(self):
         self.assertEqual([], [x for x,n in collections.Counter(self.markup.ids).items() if n>1])
         self.assertFalse(set(self.markup.anchors)-set(self.markup.ids))
         self.assertEqual(self.markup.headings.count(1),1)
         for a,b in zip(self.markup.headings,self.markup.headings[1:]): self.assertLessEqual(b,a+1)
-    def test_twenty_chapters_and_old_entry_points(self):
-        self.assertEqual(20,self.source.count('class="research-canvas__inventory signavio-reader__section"'))
-        legacy='big-picture architect-roles ea-value frameworks toolchain rba rsa trace platform-scope accounts design-choices procurement-case btp-guidance btp-methods btp-design-evidence build-clean-core build-tools build-runtimes build-experience build-integration-strategy build-integration-suite build-events-agents build-operations context-why context-language context-data-products context-products context-bdc context-knowledge-models context-case govern-purpose govern-toolchain govern-failure foundation-overview foundation-identity foundation-connectivity-data foundation-operations method-extension method-data-analytics method-integration method-joined-case client-explanation interview next sources'
-        self.assertFalse(set(legacy.split())-set(self.markup.ids))
     def test_correct_certification_target_and_no_readiness_claim(self):
         for name in ['exam-brief.html','practice.html','sources.html']:
             text=(ROOT/'_includes/btp-handbook'/name).read_text(encoding='utf-8')
             self.assertIn('C_BAIPA',text)
-            self.assertIn('sap-certified-solution-architect-sap-business-ai-platform',text)
+        # The canonical URL may be linked through the shared source register.
+        self.assertIn('sap-certified-solution-architect-sap-business-ai-platform',self.source)
         self.assertNotIn('code <strong>P_BTPA</strong>',self.source)
         self.assertIn('not an official topic weighting',self.source)
         self.assertIn('passing-score predictor',self.source)
@@ -59,7 +60,7 @@ class ArchitectReviewTests(unittest.TestCase):
             self.assertIsNotNone(svg.find('{http://www.w3.org/2000/svg}title'))
             self.assertIsNotNone(svg.find('{http://www.w3.org/2000/svg}desc'))
     def test_glossary_is_preserved(self):
-        self.assertEqual(126,self.source.count('class="btp-term"'))
+        self.assertEqual(140,self.source.count('class="btp-term"'))
     def test_recovery_simulation(self):
         node=shutil.which('node')
         if not node:self.skipTest('Node.js unavailable; no execution claim.')

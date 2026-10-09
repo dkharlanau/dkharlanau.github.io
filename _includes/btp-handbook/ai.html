@@ -16,6 +16,12 @@
 <tr><th scope="row">Document AI / document processing</th><td>Extract supported information from documents.</td><td>Extracted fields still need validation, confidence handling and business rules before posting.</td></tr>
 </tbody></table></div>
 
+<h3 id="ai-runtime-path">AI Core, Launchpad and a model endpoint: the actual dependency</h3>
+<p><strong>Current SAP documentation check:</strong> the generative AI hub requires the <code>extended</code> AI Core plan. Model access uses a configured, running deployment and an authorized client. In Launchpad, select the AI Core runtime connection and the relevant resource group. A catalog model card, a Launchpad role and a running deployment are not the same thing.</p>
+<p><strong>One consumption path:</strong> application backend → supported client authentication → AI Core resource-group/deployment context → chosen model or orchestration endpoint → validated response. Launchpad is a management surface and need not be a hop in every application request. Avoid creating a new model deployment for every end-user question.</p>
+<p>Orchestration can combine supported capabilities such as templates, grounding, filtering and masking. Their presence in a portfolio does not prove that all are enabled, that every language is covered, or that masking removed every sensitive value. Inspect the selected configuration and test representative payloads. Keep the model version and evaluation result with the release record.</p>
+<p class="btp-sources">Documentation and further reading: <a href="#source-ai-plans">ai-plans</a>, <a href="#source-ai-deployment">ai-deployment</a>, <a href="#source-genai-metering">genai-metering</a>.</p>
+
 <h3>Four Joule interaction patterns</h3>
 <p><strong>Informational:</strong> answer a question. <strong>Navigational:</strong> take the user to an application. <strong>Transactional:</strong> perform a permitted action. <strong>Analytical:</strong> compare or explain data. Ask which pattern the user needs before proposing a workflow. “Show my open orders” might mean a direct answer, a filtered app or an analysis; those are different outcomes.</p>
 <h3>A grounded document assistant: the actual sequence</h3>

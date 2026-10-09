@@ -61,6 +61,27 @@
   "contractVersion": "1"
 }</code></pre>
 <p>Choose a real ERP API in SAP Business Accelerator Hub only after checking edition, release, supported operation, communication scenario, authentication, required fields and limitations. For relevant S/4HANA Cloud integrations, the communication user/system/arrangement must be configured. An API listed in a catalog is not necessarily enabled in the customer tenant.</p>
+<h3 id="integration-paths">Five paths you should be able to trace without the diagram</h3>
+<p><strong>Worked architecture, not a required product bundle.</strong> Select only the paths the use case needs. The word “integrated” is not enough: explain who calls whom, with which identity, and what confirms the result.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Concrete paths through the supplier-review solution">
+<table class="study-table__table">
+<thead><tr><th scope="col">Path</th><th scope="col">Calls and ownership</th><th scope="col">Proof and boundary</th></tr></thead>
+<tbody>
+<tr><th scope="row">1. External review</th><td>Browser/UI → configured authentication/routing → review service → assignment/role check → local case store.</td><td>The caller sees and changes only assigned cases. A proxy must not expose the complete ERP API to the partner.</td></tr>
+<tr><th scope="row">2. Authorized ERP update</th><td>Internal approval → backend remote-service call → destination configuration → optional mediation/private connectivity → released ERP operation.</td><td>ERP validates the request; the extension records confirmed business state or an explicit unknown/failed outcome.</td></tr>
+<tr><th scope="row">3. ERP business event</th><td>ERP event publication → configured broker/topic routing → subscribed queue → consumer → permitted follow-up call.</td><td>The published event, queue subscription and consumer are configured separately. An event may carry only an ID; fetch authoritative details when necessary.</td></tr>
+<tr><th scope="row">4. Analytical consumption</th><td>Operational records/events → selected acquisition or federation → governed data model/product → analytical consumer.</td><td>Define grain, delay and access. A dashboard refresh neither approves a supplier nor guarantees an ERP change.</td></tr>
+<tr><th scope="row">5. AI-assisted interpretation</th><td>Backend → authorized document retrieval → selected AI deployment → validated result → human/process decision.</td><td>Neither the prompt nor the AI response contains unrestricted credentials or bypasses application/ERP checks.</td></tr>
+</tbody></table></div>
+
+<h3>The S/4HANA side also needs configuration</h3>
+<p>For the applicable S/4HANA Cloud communication model, a <strong>communication scenario</strong> defines the supported integration scope; a <strong>communication system</strong> represents the partner; a <strong>communication user</strong> supplies a supported technical identity; a <strong>communication arrangement</strong> configures how that scenario is used. Verify the specific service and edition rather than assuming every legacy interface uses the same setup.</p>
+<p>A BTP destination is on the caller side. It does not create the ERP communication arrangement, grant ERP business privileges, or change a released API's scope. An API key is not automatically a substitute for the authentication required by that endpoint.</p>
+<h3 id="interface-change">Read the protocol, not just the HTTP color</h3>
+<p><strong>202 Accepted</strong> means a request was accepted for processing, not that the business change is finished. Follow the operation's status/confirmation contract. A <strong>412 Precondition Failed</strong> may mean a stale ETag: read the current version and reconsider the change instead of overwriting it. ETags control concurrent versions; idempotency controls repeated business effects. They are different.</p>
+<p>For delta polling, specify watermark, stable key, overlap, pagination, deletions and the handling of missed runs. For events, specify schema/version, ordering needs, duplicate retention and consumer lag. An added required field, changed unit, or changed meaning can be breaking even when the payload remains valid JSON.</p>
+<p class="btp-sources">Documentation and further reading: <a href="#source-communication">communication</a>, <a href="#source-cap-integration">cap-integration</a>, <a href="#source-cap-concurrency">cap-concurrency</a>.</p>
+
 <h3>AIF and middleware operate at different boundaries</h3>
 <p>SAP Application Interface Framework can support business-oriented monitoring and correction of suitable backend interfaces. Cloud Integration handles its own messages and technical processing. A business user’s need to correct an error may justify AIF in a supported scenario; it does not make AIF mandatory for every interface.</p>
 <p>For PI/PO modernization, inventory first: retire unused interfaces, identify standard content, assess gaps, migrate or redesign, and test both normal and failure paths. A pipeline approach is a reusable integration architecture, not simply all interfaces combined into a single giant iFlow.</p>

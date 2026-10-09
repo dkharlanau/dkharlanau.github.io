@@ -89,6 +89,36 @@
 <p>TOGAF supplies a method for architecture development; Zachman classifies architectural perspectives. The SAP EA Framework brings together methodology, reference architecture content, tooling, practice and services. These are supports for making decisions, not substitutes for talking to the business.</p>
 <p>For our supplier case, the first architecture decision is whether standard ERP or MDG governance already covers the approval. If a partner-facing extension is needed, the next decision is the access boundary. Draw those responsibilities before discussing runtime size.</p>
 <p><strong>A useful decision record:</strong> “We chose a separate review application because external reviewers cannot access ERP. ERP remains the master-data owner. We rejected a copied supplier master because it adds synchronization and governance work. The design must prove that a reviewer can access only assigned cases.”</p>
+<h3 id="design-gates">Reject impossible options before comparing attractive ones</h3>
+<p><strong>Architect's exercise:</strong> before choosing products, agree the decision owner and the hard constraints. In our case these include no general ERP access for the external reviewer, independent internal approval, a released ERP interface and a recoverable business result. Reject any option that violates them before comparing delivery effort or cost.</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="An original options review for supplier validation">
+<table class="study-table__table">
+<thead><tr><th scope="col">Option</th><th scope="col">Where it could fit</th><th scope="col">What would reject it</th></tr></thead>
+<tbody>
+<tr><th scope="row">Standard ERP or MDG process</th><td>The workflow and allowed external interaction already meet the need.</td><td>A verified requirement remains unsupported; do not invent an extension just for novelty.</td></tr>
+<tr><th scope="row">Small side-by-side CAP application</th><td>A distinct external UI and case-level behavior are needed; the team can own code and operations.</td><td>No supported ERP operation, unacceptable support effort, or an access boundary that cannot be enforced.</td></tr>
+<tr><th scope="row">Managed workflow with standard integration</th><td>Approval, task assignment and forms dominate the requirement.</td><td>The required user experience or process behavior is unsupported, or the plan/usage cost is unsuitable.</td></tr>
+<tr><th scope="row">Agent-assisted review</th><td>Unstructured evidence is the genuine bottleneck and an evaluated assistant adds value.</td><td>The task is a known rule, evidence is unauthorized, or the agent cannot stop before a risky action.</td></tr>
+</tbody></table></div>
+
+<p>Record the selected option, rejected alternatives, assumptions, owner and a <strong>revisit trigger</strong>. “Revisit if review volume doubles or the ERP adds a standard external-review function” is more useful than “this architecture is future-proof”.</p>
+<h3 id="production-quality">Turn non-functional requirements into acceptance tests</h3>
+<p>The figures below are <strong>illustrative requirements for our case, not SAP service guarantees or a sizing recommendation</strong>. Agree real values with the business owner and operations. Separate a contractual SLA, your measurable service objective (SLO), and the actual observed indicator (SLI).</p>
+<div class="table-scroll study-table" role="region" tabindex="0" aria-label="Example measurable quality requirements and proofs">
+<table class="study-table__table">
+<thead><tr><th scope="col">Requirement</th><th scope="col">Illustrative target or constraint</th><th scope="col">Evidence required</th></tr></thead>
+<tbody>
+<tr><th scope="row">Response and peak load</th><td>95% of permitted case reads finish within 2 seconds at 10 requests/second.</td><td>Representative end-to-end load test; include identity, database and remote calls in the latency budget.</td></tr>
+<tr><th scope="row">Recovery</th><td>Restore the review service within 4 hours; at most 15 minutes of its recoverable local data may be lost.</td><td>Timed restore/failover drill and reconciliation with durable business evidence. ERP has its own recovery requirements.</td></tr>
+<tr><th scope="row">Business correctness</th><td>A duplicate submission must not produce a second authorized ERP effect.</td><td>Timeout-after-commit, duplicate-delivery and concurrent-update tests.</td></tr>
+<tr><th scope="row">Data scope</th><td>Reviewer sees only assigned cases; region and approved external processors meet the agreed policy.</td><td>Negative access tests and a documented path for files, logs, indexes, backups and model requests.</td></tr>
+<tr><th scope="row">Change safety</th><td>Old callers continue to work during the agreed transition period.</td><td>Consumer contract tests, schema migration plan and a decision about forward recovery.</td></tr>
+<tr><th scope="row">Operate and exit</th><td>A named team can recover an incomplete case and export required records.</td><td>Runbook, support handoff, retention/export test and revocation of unused integrations.</td></tr>
+</tbody></table></div>
+
+<p><strong>Architecture is a set of trade-offs.</strong> A four-hour disaster recovery target does not promise uninterrupted service. More app replicas do not fix a single unavailable ERP API. A second region adds cost and service-compatibility requirements; the whole dependency chain must be recoverable.</p>
+<p class="btp-sources">Documentation and further reading: <a href="#source-resilience">resilience</a>, <a href="#source-multi-region">multi-region</a>.</p>
+
 <p class="btp-sources">Reference: <a href="#source-course">course</a>, <a href="#source-methods-extension">methods-extension</a>.</p><details class="page-faq__item btp-check"><summary><span>A beautiful diagram lists twelve services. What important information might still be missing?</span></summary><div class="page-faq__answer"><p>The business outcome, source-of-truth owner, why each service is necessary, actual interfaces, permissions, recovery behavior, cost assumptions and acceptance evidence. A solution can have a correct product list and still be an incomplete architecture.</p></div></details>
 </div>
 </section>
