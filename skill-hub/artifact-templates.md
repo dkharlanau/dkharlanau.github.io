@@ -3,7 +3,7 @@ layout: default
 title: "Artifact Templates — Reusable Templates for Skill Hub Skills"
 description: "Reusable Markdown templates for enterprise consulting and operations work. Data quality rules, root cause analysis notes, stakeholder briefs, architecture decision records, and more."
 permalink: /skill-hub/artifact-templates/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-10-08
 status: reviewed
 verified: true
 ---
@@ -19,10 +19,49 @@ verified: true
 <article class="section note-detail atlas-page">
   <p class="eyebrow">Skill Hub — Foundation</p>
   <h1>Artifact Templates</h1>
-  <p class="lead">Reusable templates that Skill Hub skills reference. Copy, fill, and use directly in tickets, documents, wikis, or agent outputs.</p>
+  <p class="lead">Choose a template for the decision or handoff you need. Copy one into your working document, then fill it with evidence from your case. The examples and IDs below are placeholders, not incident records.</p>
+
+  <section aria-labelledby="choose-a-template">
+    <h2 id="choose-a-template">Choose by the question you need to answer</h2>
+    <p>A template records the work; it does not replace the method. If you need diagnostic steps, start with the matching skill in <a href="/skill-hub/">Skill Hub</a>.</p>
+    <h3>Understand the situation</h3>
+    <ul>
+      <li>What does the stakeholder need? <a href="#stakeholder-interview-brief">Stakeholder Interview Brief</a></li>
+      <li>Where does the process slow down or fail? <a href="#process-analysis-note">Process Analysis Note</a></li>
+      <li>What differs from the required state? <a href="#gap-analysis-note">Gap Analysis Note</a></li>
+      <li>Where does the data come from, and which step is unverified? <a href="#data-lineage-gap-note">Data Lineage Gap Note</a></li>
+    </ul>
+    <h3>Define the decision or control</h3>
+    <ul>
+      <li>What must the solution do? <a href="#requirements-brief">Requirements Brief</a></li>
+      <li>How will we prove the requirement is met? <a href="#acceptance-criteria-set">Acceptance Criteria Set</a></li>
+      <li>Which design option should we choose, and why? <a href="#architecture-decision-record">Architecture Decision Record</a></li>
+      <li>Which data condition needs an owner and enforcement? <a href="#data-quality-rule">Data Quality Rule</a></li>
+      <li>Who owns each interface and its failures? <a href="#interface-ownership-matrix">Interface Ownership Matrix</a></li>
+    </ul>
+    <h3>Resolve a failure or prepare a change</h3>
+    <ul>
+      <li>What caused the incident, and what prevents recurrence? <a href="#root-cause-analysis-note">Root Cause Analysis Note</a></li>
+      <li>What failed in an interface, and how should recovery and monitoring change? <a href="#integration-failure-review">Integration Failure Review</a></li>
+      <li>Who will carry out the correction? <a href="#remediation-backlog-item">Remediation Backlog Item</a></li>
+      <li>What could the proposed change affect? <a href="#change-impact-assessment">Change Impact Assessment</a></li>
+      <li>What should the next operator be able to repeat? <a href="#operational-knowledge-capture-note">Operational Knowledge Capture Note</a></li>
+    </ul>
+    <p>Choose RCA for cause and prevention; use Integration Failure Review when the interface timeline and monitoring are the main concern. Link related records instead of copying the same incident into both.</p>
+  </section>
+
+  <section aria-labelledby="prepare-the-handoff">
+    <h2 id="prepare-the-handoff">Prepare a record someone can act on</h2>
+    <ol>
+      <li>Replace sample IDs, dates, names, and values. Keep the record in an approved workspace; do not put client data or private evidence on this public site.</li>
+      <li>Link evidence beside each important conclusion. Label assumptions and missing information; an empty root-cause field is not permission to invent a cause.</li>
+      <li>Name the next action, its owner, and the check that will show it is complete. If the template has a status field, use its initial state, such as draft, proposed, or open. Mark it accepted, approved, or closed only after the required review or completion check.</li>
+    </ol>
+    <p>For example, link an RCA note to a Remediation Backlog Item for the fix, then to a Change Impact Assessment before implementation. A filled template is not approval to change a system.</p>
+  </section>
 
   <section>
-    <h2>Data Quality Rule</h2>
+    <h2 id="data-quality-rule">Data Quality Rule</h2>
     <pre><code>---
 artifact: Data Quality Rule
 id: DQ-RULE-001
@@ -113,7 +152,7 @@ status: draft | reviewed | closed
   </section>
 
   <section>
-    <h2>Remediation Backlog Item</h2>
+    <h2 id="remediation-backlog-item">Remediation Backlog Item</h2>
     <pre><code>---
 artifact: Remediation Backlog Item
 id: REM-001
@@ -160,7 +199,7 @@ status: open | in-progress | blocked | done
   </section>
 
   <section>
-    <h2>Stakeholder Interview Brief</h2>
+    <h2 id="stakeholder-interview-brief">Stakeholder Interview Brief</h2>
     <pre><code>---
 artifact: Stakeholder Interview Brief
 id: SIB-001
@@ -208,7 +247,7 @@ stakeholder: Name | Role | Area
   </section>
 
   <section>
-    <h2>Requirements Brief</h2>
+    <h2 id="requirements-brief">Requirements Brief</h2>
     <pre><code>---
 artifact: Requirements Brief
 id: REQ-001
@@ -252,7 +291,7 @@ status: draft | reviewed | approved
   </section>
 
   <section>
-    <h2>Acceptance Criteria Set</h2>
+    <h2 id="acceptance-criteria-set">Acceptance Criteria Set</h2>
     <pre><code>---
 artifact: Acceptance Criteria Set
 id: AC-001
@@ -292,7 +331,7 @@ Then &lt;expected outcome&gt;
   </section>
 
   <section>
-    <h2>Gap Analysis Note</h2>
+    <h2 id="gap-analysis-note">Gap Analysis Note</h2>
     <pre><code>---
 artifact: Gap Analysis Note
 id: GAP-001
@@ -339,7 +378,7 @@ scope: Process | System | Data | Organization
   </section>
 
   <section>
-    <h2>Architecture Decision Record</h2>
+    <h2 id="architecture-decision-record">Architecture Decision Record</h2>
     <pre><code>---
 artifact: Architecture Decision Record
 id: ADR-001
@@ -397,7 +436,7 @@ status: proposed | accepted | deprecated | superseded
   </section>
 
   <section>
-    <h2>Interface Ownership Matrix</h2>
+    <h2 id="interface-ownership-matrix">Interface Ownership Matrix</h2>
     <pre><code>---
 artifact: Interface Ownership Matrix
 id: IOM-001
@@ -430,7 +469,7 @@ scope: System landscape | Project | Domain
   </section>
 
   <section>
-    <h2>Integration Failure Review</h2>
+    <h2 id="integration-failure-review">Integration Failure Review</h2>
     <pre><code>---
 artifact: Integration Failure Review
 id: IFR-001
@@ -477,7 +516,7 @@ status: open | closed | recurring
   </section>
 
   <section>
-    <h2>Data Lineage Gap Note</h2>
+    <h2 id="data-lineage-gap-note">Data Lineage Gap Note</h2>
     <pre><code>---
 artifact: Data Lineage Gap Note
 id: DLG-001
@@ -518,7 +557,7 @@ scope: System | Domain | Report
   </section>
 
   <section>
-    <h2>Process Analysis Note</h2>
+    <h2 id="process-analysis-note">Process Analysis Note</h2>
     <pre><code>---
 artifact: Process Analysis Note
 id: PAN-001
@@ -561,7 +600,7 @@ scope: As-is | To-be | Gap
   </section>
 
   <section>
-    <h2>Change Impact Assessment</h2>
+    <h2 id="change-impact-assessment">Change Impact Assessment</h2>
     <pre><code>---
 artifact: Change Impact Assessment
 id: CIA-001
@@ -612,7 +651,7 @@ status: draft | reviewed | approved
   </section>
 
   <section>
-    <h2>Operational Knowledge Capture Note</h2>
+    <h2 id="operational-knowledge-capture-note">Operational Knowledge Capture Note</h2>
     <pre><code>---
 artifact: Operational Knowledge Capture Note
 id: OKC-001

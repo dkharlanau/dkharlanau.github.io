@@ -92,3 +92,26 @@ def test_reference_case_page_uses_projection_and_preserves_noindex_boundary():
     assert "python3 validate.py" in page
     assert "production authority are absent" in page
     assert "page.url contains '/machine/portfolio/'" in head
+
+
+def test_reference_case_local_validation_and_reproduction_tests_pass():
+    result = subprocess.run(
+        [sys.executable, "-m", "unittest", "discover", "-s", str(CASE_ROOT), "-p", "test_*.py"],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_reference_case_offers_pinned_reproduction_without_promoting_edges():
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    assert manifest["inventory"]["runtime_lock"] == "runtime-lock.json"
+    assert manifest["inventory"]["reproducer"] == "reproduce.py"
+    page = (ROOT / "machine/portfolio/enterprise-change-evidence-pack/index.md").read_text()
+    assert "#reproduce-the-implemented-product-steps" in page
+    assert "Current branches may produce different bytes" in page
+    lock = json.loads((CASE_ROOT / "runtime-lock.json").read_text())
+    assert "not a record of the original" in lock["purpose"]
+    assert set(lock["repositories"]) == {
+        "signal-to-insight", "enterprise-architecture-composer",
+        "visual-workbench", "project-evidence-graph",
+    }

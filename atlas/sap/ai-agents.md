@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "AI Agents"
-description: "AI agents combine models, tools, state, and control logic to pursue a goal across multiple steps; in SAP they must remain bounded by business authorization and process controls."
+description: "Decide when a task needs an AI agent, define its tools and authority, and set evidence, stopping, and review requirements."
 permalink: /atlas/sap/ai-agents/
 atlas_section: sap
 domain: SAP operations
@@ -12,6 +12,7 @@ business_process: "AI-assisted operations"
 status: needs_verification
 verified: false
 last_reviewed: 2026-09-23
+last_modified_at: 2026-10-07
 author: Dzmitryi Kharlanau
 
 tags:
@@ -55,59 +56,28 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <p>An AI agent is software that can work toward a goal across several steps instead of returning one model response and stopping. A useful agent typically combines a model with tools, state, instructions, and control logic. It can inspect the current situation, choose an allowed action, observe the result, and continue until it reaches a stopping condition or hands the task to a person.</p>
+    <p>Consider an agent when choosing the next useful step requires interpretation of new evidence. An agent combines a model, tools, state, and control logic: it observes a result, selects an allowed next action, and stops or escalates when it reaches a defined limit.</p>
 
-    <p>The word <em>agent</em> is often used too loosely. A chatbot is not automatically an agent, and a workflow is not automatically agentic. The important difference is decision freedom: a deterministic workflow follows a predefined path, while an agent can choose among permitted actions based on the context it sees.</p>
-
-    <h2>The agent is only one part of the system</h2>
-
-    <p>For enterprise work, the model itself is rarely the hardest part. The surrounding system decides what the agent is allowed to know and do. We normally need at least four boundaries:</p>
-
+    <h2>First decide whether the task needs that freedom</h2>
     <ul>
-      <li><strong>context</strong> — the data, documents, events, or conversation state available for the task;</li>
-      <li><strong>tools</strong> — the APIs, searches, calculations, or workflow actions the agent may call;</li>
-      <li><strong>authority</strong> — the identity and business permissions under which those tools execute;</li>
-      <li><strong>control</strong> — validation, evaluation, stopping rules, approvals, and escalation.</li>
+      <li><strong>Known rule and known path:</strong> use a rule, script, or workflow. An extra model decision adds uncertainty without helping.</li>
+      <li><strong>One interpretation step:</strong> use a model inside a fixed workflow, for example to classify an incident before routing it.</li>
+      <li><strong>The next check depends on earlier findings:</strong> consider an agent with a small set of diagnostic tools.</li>
     </ul>
+    <p>A conversational interface does not tell you which design is underneath. For SAP-delivered capabilities, check the specific <a href="/atlas/sap/sap-joule/">Joule capability and its authorization boundary</a>.</p>
 
-    <p>If these boundaries are vague, the design is unsafe even when the model performs well in a demo. A tool that exposes an unrestricted update API, for example, gives the agent a much larger risk surface than a tool that accepts one validated business action with explicit authorization checks.</p>
+    <h2>Define the operating scope before choosing the model</h2>
+    <p>Write down the goal, allowed evidence, available tools, execution identity, and stopping condition. These define the agent's operating boundary. Instructions alone cannot enforce it; the retrieval and tool layers must check access and reject unsupported actions.</p>
+    <p><strong>Synthetic example:</strong> an assistant investigates a failed delivery interface. It may read the relevant message status and approved diagnostic guidance, then choose another read-only check. Its output is a likely failure area, supporting evidence, and a next action for the operator. Reprocessing a message is a separate business action with its own permission and duplicate-execution checks.</p>
+    <p>Keep the tool narrow. “Read this message's processing status” is easier to control than arbitrary database access. A write tool should expose a validated business operation rather than unrestricted field updates.</p>
 
-    <h2>Agents are now a real SAP product pattern</h2>
+    <h2>What changes when tools can write?</h2>
+    <p>Read-only agents can disclose restricted data or produce misleading advice. Retrieved text can also contain malicious instructions. Write access adds effects such as creating documents, changing status, or triggering downstream work. Match controls to the effect: identity, business authorization, input validation, duplicate protection, execution evidence, and recovery.</p>
+    <p>Human approval may be required by the process or risk policy. It does not replace these controls. Define what the agent must do when evidence is missing, a tool fails, the request is ambiguous, or its time or action limit is reached.</p>
 
-    <p>SAP's current Joule documentation includes content-based agents that run as part of Joule capabilities. SAP describes these agents as suitable for complex, non-deterministic business processes; during execution they can exchange messages with Joule and request user input or human approval. SAP also ships specialized Joule Agents for business scenarios.</p>
-
-    <p>This means an older rule such as “AI in SAP may only suggest, never act” is no longer accurate. The better rule is narrower: an agent may act only through the tools, identities, and process controls that the solution deliberately exposes. Whether a human approval is required depends on the specific process, risk, and product behavior.</p>
-
-    <h2>Agent versus workflow</h2>
-
-    <p>Many productive designs combine the two. A workflow can establish a reliable outer process—receive a request, collect required data, wait for approval, execute a transaction, record the result—while an agent handles the part that benefits from interpretation, such as classifying an incident or deciding which diagnostic tool to call next.</p>
-
-    <p>The opposite pattern also exists: an agent can call a deterministic workflow as one of its tools. That is often safer than giving it many low-level APIs. The workflow becomes a controlled business capability with known inputs, outputs, authorization checks, and rollback behavior.</p>
-
-    <h2>What changes when the agent can write</h2>
-
-    <p>Read-only assistance mainly risks incorrect information. A write-capable agent adds operational risk: it can create a business object, change a status, trigger a downstream process, or consume a limited resource. The control model therefore has to match the effect of the action.</p>
-
-    <p>Before exposing a write tool, we should know which identity executes it, which business authorization is checked, whether the request is idempotent, how duplicate execution is prevented, what evidence is logged, and what happens if the agent stops halfway through a multi-step task. Human approval can be one control, but it is not a substitute for these engineering controls.</p>
-
-    <h2>How to evaluate an agent</h2>
-
-    <p>Do not evaluate only the final prose. Measure whether the agent completes the business task correctly and safely. Useful tests can include tool-selection accuracy, task completion, invalid-action rate, escalation quality, latency, and the proportion of runs that require manual correction. The right metric depends on the task; there is no universal “agent accuracy” score.</p>
-
-    <p>For SAP scenarios, the most useful test cases usually include realistic authorization differences, stale or incomplete master data, backend errors, duplicate requests, ambiguous user intent, and process states in which an otherwise valid action is not allowed.</p>
-
-    <h2>Source references</h2>
-    <ul>
-      <li>SAP Help Portal — <a href="https://help.sap.com/docs/joule">Joule documentation and development guidance</a>.</li>
-      <li>SAP Help Portal — <a href="https://help.sap.com/docs/Joule_Studio/45f9d2b8914b4f0ba731570ff9a85313/6b0a25c11bc54daf84c29a5f9b82c87d.html">Manage Joule skills and agents across environments</a>.</li>
-      <li>SAP News Center — <a href="https://news.sap.com/2026/04/sap-business-ai-release-highlights-q1-2026/">SAP Business AI release highlights Q1 2026</a>.</li>
-      <li>SAP Help Portal — <a href="https://help.sap.com/docs/btp/sap-business-technology-platform/access-joule">Joule authorization example in SAP BTP cockpit</a>.</li>
-    </ul>
-
-    <h2>Verification limitations</h2>
-    <p>Agent capabilities, supported tools, and product availability change quickly. Treat “agent” as an architectural pattern first, then verify the exact SAP product capability, release, region, entitlement, and authorization model before implementation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>Output of the design review</h2>
+    <p>Produce a bounded task contract and test cases, not only a prompt. Measure task completion, tool choice, invalid actions, escalation, latency, and manual correction for that task. Continue with <a href="/atlas/sap/agent-workflows/">execution and recovery</a> and <a href="/atlas/sap/evaluation-guardrails/">acceptance tests and runtime controls</a>.</p>
+    <p>This is a reusable design pattern, not a tested SAP implementation. Product availability and supported tools need separate checks.</p>
   </div>
 
   <section class="atlas-related">

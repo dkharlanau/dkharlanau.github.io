@@ -90,8 +90,14 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-      - name: Check rendered structured data
-        run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_rendered_structured_data.py
+      - name: Check rendered site contracts
+        run: |
+          test -s _site/index.html
+          PYTHONDONTWRITEBYTECODE=1 python3 -m pytest \
+            tests/test_rendered_structured_data.py \
+            tests/test_build_publication_boundary.py \
+            tests/test_seo_discovery.py \
+            tests/test_atlas_artifacts_guards.py
 
       - name: Check content quality for changed content
         if: github.event_name == 'pull_request'

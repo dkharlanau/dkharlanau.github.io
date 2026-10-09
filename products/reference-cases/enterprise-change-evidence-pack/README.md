@@ -40,60 +40,86 @@ The validator does not call other repositories. This keeps the committed pack ch
 
 ## Reproduce the implemented product steps
 
-Set these variables to checked-out repositories whose current contracts support the documented commands:
+Use the [runtime lock](runtime-lock.json), not the latest branches. The baseline was
+reconstructed and checked on 7 October 2026 against all four retained output files.
+It is not a record of the original run. Current Composer main adds security fields
+and a visual view, so it does not reproduce this pack's exact blueprint and visual
+source. Do not change retained hashes to make a newer version pass.
+
+| Product | Pinned commit |
+|---|---|
+| Signal to Insight | `01193da937f438605169a9cab6b6a440e2b88e1d` |
+| Enterprise Architecture Composer | `0a90cc714c4c5653953062c80ae87d4b708f5156` |
+| Visual Workbench | `4eb394c430629f3f063f1d5058586e810c09275e` |
+| Project Evidence Graph | `80b31b85e0135620ca0ca71115f48b4ea93dd726` |
+
+### Prepare once
+
+Use Python 3.10 or later, Node.js 20 or later, Git, and npm. The observed run used
+Python 3.12.14 and Node.js 24.19.0. Other supported runtime versions still need to
+pass the same byte comparisons.
+
+From this case directory, choose a new directory outside existing checkouts. These
+commands download public source into separate pinned checkouts; they do not change
+your working branches. Review each product's license before use.
 
 ```sh
-export STI_REPO=/path/to/signal-to-insight
-export EAC_REPO=/path/to/enterprise-architecture-composer
-export VW_REPO=/path/to/visual-workbench
-export PEG_REPO=/path/to/project-evidence-graph
 export CASE_DIR="$(pwd)"
+export TOOLS_DIR="$(mktemp -d)"
+python3 -c 'import json; d=json.load(open("runtime-lock.json")); [print(k, v["commit"]) for k,v in d["repositories"].items()]' |
+while read -r repo commit; do
+  git clone --no-checkout "https://github.com/dkharlanau/$repo.git" "$TOOLS_DIR/$repo" &&
+  git -C "$TOOLS_DIR/$repo" checkout --detach "$commit" || exit 1
+done
+
+export STI_REPO="$TOOLS_DIR/signal-to-insight"
+export EAC_REPO="$TOOLS_DIR/enterprise-architecture-composer"
+export VW_REPO="$TOOLS_DIR/visual-workbench"
+export PEG_REPO="$TOOLS_DIR/project-evidence-graph"
+npm ci --prefix "$VW_REPO" --ignore-scripts --no-audit --no-fund
 ```
 
-Create a temporary output directory and validate the producer packet:
+Alternatively, set these four variables to existing clean checkouts at the exact
+locked commits. Install Visual Workbench dependencies with its locked `npm ci`
+command. The runner rebuilds its ignored `dist/` output from the pinned source, so
+an old build cannot silently supply the renderer. The dependency installation is
+user-prepared; the receipt does not attest to every installed dependency byte.
+
+### Run and inspect
 
 ```sh
-CASE_OUTPUT="$(mktemp -d)"
-python3 "$STI_REPO/sti.py" handoff validate "$CASE_DIR/fixtures/research-context.json"
+CASE_OUTPUT="$(mktemp -d)/reproduction"
+PYTHONDONTWRITEBYTECODE=1 python3 "$CASE_DIR/reproduce.py" --output "$CASE_OUTPUT"
 ```
 
-Reproduce the Composer artifacts:
+The runner makes no downloads and never switches branches or updates the pack. It:
 
-```sh
-node "$EAC_REPO/bin/eac.mjs" compose "$CASE_DIR/fixtures/architecture-context.json" \
-  > "$CASE_OUTPUT/architecture.blueprint.json"
+1. Validates the retained pack and requires all four clean, pinned checkouts.
+2. Rebuilds Visual Workbench with its already installed TypeScript compiler.
+3. Validates the research packet with Signal to Insight.
+4. Asks Composer to produce the blueprint and native Markdown projection, then
+   checks both against the retained bytes before handing the projection onward.
+5. Validates and renders that same projection with Visual Workbench, using the
+   existing whitespace normalizer for the SVG.
+6. Runs Project Evidence Graph analysis and compares all four retained outputs.
 
-node "$EAC_REPO/bin/eac.mjs" visual "$CASE_DIR/fixtures/architecture-context.json" \
-  --markdown \
-  --output "$CASE_OUTPUT/architecture.visual.md"
+Success prints `PASS: four retained outputs match exactly`. The new output
+directory contains the outputs, separate command logs, and `receipt.json` with
+status, exact repository commits, runtime versions, input/output hashes, and step
+exit codes. A failed run keeps its logs and a failed receipt. Existing output
+folders are refused, so a retry cannot replace earlier evidence.
 
-cmp artifacts/architecture.blueprint.json "$CASE_OUTPUT/architecture.blueprint.json"
-cmp artifacts/architecture.visual.txt "$CASE_OUTPUT/architecture.visual.md"
-```
+A wrong revision, dirty checkout, missing dependency, failed product command, or
+byte mismatch stops the run. Read the failure before preparing another output
+directory. A receipt with `status: failed` or without all four output matches is
+not a passing reproduction.
 
-Build Visual Workbench according to its repository instructions if `dist/cli.js` is not present, then validate and render the native projection:
-
-```sh
-node "$VW_REPO/dist/cli.js" validate "$CASE_OUTPUT/architecture.visual.md"
-node "$VW_REPO/dist/cli.js" render "$CASE_OUTPUT/architecture.visual.md" \
-  --view executive \
-  --output "$CASE_OUTPUT/architecture.executive.svg"
-python3 "$CASE_DIR/normalize_render.py" "$CASE_OUTPUT/architecture.executive.svg"
-
-cmp artifacts/architecture.executive.svg "$CASE_OUTPUT/architecture.executive.svg"
-```
-
-Reproduce the Project Evidence structural analysis:
-
-```sh
-python3 "$PEG_REPO/evidence_graph.py" "$CASE_DIR/fixtures/project-evidence.json" analyze \
-  > "$CASE_OUTPUT/project-evidence.analysis.json"
-
-cmp artifacts/project-evidence.analysis.json \
-  "$CASE_OUTPUT/project-evidence.analysis.json"
-```
-
-Finish by running `python3 "$CASE_DIR/validate.py"` again. A byte mismatch should trigger review rather than an automatic metadata update.
+The receipt proves this pinned reproduction only. It does not establish current
+main compatibility, package supply-chain integrity, external adoption, human
+approval, or production suitability. Research-to-Composer and visual-to-assurance
+remain manually authored demonstration bridges; reconciliation and cutover stay
+outside this pack. For individual product commands, see the
+[edge ledger](manifest.json) and the pinned source links in the runtime lock.
 
 ## Logical identity and trust
 

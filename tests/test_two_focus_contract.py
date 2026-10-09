@@ -1,5 +1,6 @@
 """Source-level contracts for the two-audience entry points; not browser validation."""
 from pathlib import Path
+from html import unescape
 import json
 import re
 
@@ -23,10 +24,16 @@ def frontmatter(path):
 def test_home_routes_to_two_jobs_without_replacing_the_brand():
     home = read("_includes/sections/home-focus.html")
     assert frontmatter("index.md")["sections"] == ["home-focus"]
-    assert len(re.findall(r'class="focus-card(?:\s|\")', home)) == 2
-    assert "'/learn/' | relative_url" in home
-    assert "'/services/sap-ams-consulting/' | relative_url" in home
+    cards = re.findall(r'<article class="focus-card(?:\s|")[^>]*>(.*?)</article>', home, re.S)
+    assert len(cards) == 2
+    for card, route in zip(cards, ("/knowledge/", "/lab/")):
+        assert f"'{route}' | relative_url" in card
+        assert "portal-primary-link" in card
+        assert "/services/" not in card and "'/learn/'" not in card
     assert home.count("<h1 ") == 1
+    assert '<h1 id="home-title">Personal SAP &amp; AI lab.' in home
+    assert "This website is a personal and independent project." in home
+    assert "It is not an official EPAM Systems, SAP, OpenAI, or other company publication." in home
     assert 'role="search"' in home and "'/search/' | relative_url" in home and 'name="q"' in home
     header = read("_includes/header.html")
     assert "/assets/img/logo-d.svg" in header
@@ -95,18 +102,50 @@ def test_pilot_has_five_attempt_review_cycles_and_no_new_data_collection():
     assert ".focus-diagnostic-sheet" in css
 
 
-def test_service_schema_matches_visible_bounded_offer_and_example():
+def test_legacy_practice_keeps_noncommercial_schema_and_bounded_example():
     path = "services/sap-ams-consulting.md"
     text = read(path)
-    assert frontmatter(path)["permalink"] == "/services/sap-ams-consulting/"
-    assert frontmatter(path)["content_model"] == "service"
+    metadata = frontmatter(path)
+    assert metadata["permalink"] == "/services/sap-ams-consulting/"
+    assert metadata.get("content_model") != "service"
+    assert metadata["hide_global_cta"] is True
+    assert "public practice playbook from my independent technical lab" in text
+    assert "It is not a commercial service, proposal, or client engagement offer." in text
+    assert "Use public or synthetic data only." in text
     documents = [json.loads(block) for block in re.findall(
-        r'<script type="application/ld\+json">\s*(.*?)\s*</script>', text, re.S
+        r"""<script\b[^>]*\btype\s*=\s*["']application/ld\+json["'][^>]*>\s*(.*?)\s*</script\s*>""", text, re.S | re.I
     )]
-    service = next(item for item in documents if item["@type"] == "Service")
-    assert service["url"].endswith(frontmatter(path)["permalink"])
-    assert service["name"] == "SAP AMS optimization"
-    assert "offers" not in service and "aggregateRating" not in service
+    assert documents, "Keep canonical breadcrumb ownership on the stable practice URL."
+
+    def inspect_schema(value):
+        if isinstance(value, dict):
+            types = value.get("@type", [])
+            types = [types] if isinstance(types, str) else types
+            types = {value.rsplit("/", 1)[-1].rsplit("#", 1)[-1].rsplit(":", 1)[-1].lower() for value in types}
+            assert not types & {"service", "offer", "aggregateoffer", "aggregaterating", "professionalservice", "localbusiness"}
+            assert not {"offers", "aggregateRating", "price", "priceCurrency"} & value.keys()
+            for child in value.values():
+                inspect_schema(child)
+        elif isinstance(value, list):
+            for child in value:
+                inspect_schema(child)
+
+    for document in documents:
+        inspect_schema(document)
+    breadcrumb = next(item for item in documents if item["@type"] == "BreadcrumbList")
+    assert breadcrumb["@context"] == "https://schema.org"
+    assert breadcrumb["itemListElement"] == [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://dkharlanau.github.io/"},
+        {"@type": "ListItem", "position": 2, "name": "Practice playbooks", "item": "https://dkharlanau.github.io/services/"},
+        {"@type": "ListItem", "position": 3, "name": "SAP AMS optimization", "item": "https://dkharlanau.github.io/services/sap-ams-consulting/"},
+    ]
+    # Inspect actionable copy, allowing factual or negative mentions in the prose.
+    for _, label in re.findall(r'<(a|button)\b[^>]*>(.*?)</\1>', text, re.S | re.I):
+        label = unescape(re.sub(r"<[^>]+>", " ", label))
+        assert not re.search(r"\b(?:hire me|(?:book|schedule)\s+(?:(?:a|an|free|discovery|introductory|consulting|paid)\s+)*(?:call|consultation)|request (?:a )?proposal|get (?:a )?quote|pricing)\b", label, re.I)
+    assert not re.search(r'<(?:form|input)\b', text, re.I)
+    assert 'href="/atlas/diagnostics/"' in text
+    assert 'href="/lab/"' in text
     assert "not a replacement" in text
     assert "Released team capacity and cash savings are different outcomes" in text
     assert 'id="diagnostic-example"' in text

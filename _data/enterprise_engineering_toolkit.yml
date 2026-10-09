@@ -111,15 +111,17 @@ tools:
     surface: "Browser report + CLI"
     run_label: "Open live investigation"
     run_url: "https://dkharlanau.github.io/data-relationship-map/demo/handoff/investigation.html"
-    docs_url: "https://github.com/dkharlanau/data-relationship-map#readme"
+    docs_url: "https://github.com/dkharlanau/data-relationship-map#hand-the-bounded-evidence-to-project-evidence-graph"
     source_url: "https://github.com/dkharlanau/data-relationship-map"
     quickstart: |
       git clone --depth 1 https://github.com/dkharlanau/data-relationship-map.git
       cd data-relationship-map
-      python -m pip install .
-      data-relationship-map investigate examples/customer-chain.json --policy examples/identity-policy.json --focus AFS:4711 --json-output build/investigation.json --markdown build/investigation.md
-    output: "Bounded identity path, lineage evidence, policy result, and portable investigation handoff."
-    next: "Transformation Graph"
+      python3 -m venv .venv
+      .venv/bin/python -m pip install .
+      .venv/bin/data-relationship-map handoff build examples/customer-chain.json build/customer-handoff --policy examples/identity-policy.json --focus AFS:4711 --max-depth 2 --observed-at 2026-08-25T10:00:00Z
+      .venv/bin/data-relationship-map handoff verify build/customer-handoff
+    output: "build/customer-handoff/: bounded investigation.html, graph, policy findings, artifact-index.json, and integrity manifest. The timestamp belongs to this synthetic example."
+    next: "Project Evidence Graph: import artifact-index.json with import-relationship in a separate environment (see Documentation). The project owns any requirement bridge; pack integrity is not business acceptance."
 
   - order: "07"
     id: "transformation-graph"

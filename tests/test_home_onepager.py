@@ -204,8 +204,12 @@ def test_footer_is_compact_and_trust_oriented():
     assert "portal-footer__social" in text
     assert "footer-brand" in text
     assert "DzmitryiKharlanau.avif" in text
-    assert 'href="/services/"' in text
-    assert 'href="/knowledge/"' in text
+    for route in ("/lab/", "/labs/", "/knowledge/", "/about/"):
+        assert f'href="{route}"' in text
+    assert 'href="/services/"' not in text
+    assert "Personal SAP &amp; AI lab" in text
+    assert "Personal and independent site." in text
+    assert 'href="/legal/terms-of-engagement/">Independence</a>' in text
     assert "site.data.identity.profiles.linkedin" in text
     assert "site.data.identity.profiles.github" in text
     assert 'href="/atlas/"' not in text

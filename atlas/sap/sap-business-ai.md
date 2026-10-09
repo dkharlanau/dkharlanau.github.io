@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Business AI"
-description: "SAP Business AI covers SAP's embedded AI capabilities, Joule, agents, and the platform services used to build and govern AI in SAP landscapes."
+description: "Separate embedded SAP AI capabilities, Joule interactions, and custom AI services to identify the owner, controls, and limits of an implementation."
 permalink: /atlas/sap/sap-business-ai/
 atlas_section: sap
 domain: SAP operations
@@ -12,6 +12,7 @@ business_process: "AI-assisted operations"
 status: needs_verification
 verified: false
 last_reviewed: 2026-09-23
+last_modified_at: 2026-10-07
 author: Dzmitryi Kharlanau
 
 tags:
@@ -55,49 +56,24 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <p>SAP Business AI is best understood as a portfolio and product strategy, not as one runtime service. It covers AI capabilities embedded in SAP applications, Joule and Joule agents, and the technical services that customers and partners use to build their own AI scenarios.</p>
+    <p>“We use SAP Business AI” does not identify an implementation. Name the capability, the application or service that owns it, and the business task it supports before choosing an architecture.</p>
 
-    <p>This distinction matters because older descriptions often reduce Business AI to “AI Core plus the generative AI hub.” Those services are important, but they are only part of the picture. In May 2026 SAP also announced the <strong>SAP Business AI Platform</strong>, positioning it as a unified foundation that brings SAP Business Technology Platform, SAP Business Data Cloud, and SAP Business AI together for agentic and AI development. That platform direction should not be confused with every individual embedded AI feature already delivered in an SAP application.</p>
+    <h2>Separate three responsibilities</h2>
+    <ol>
+      <li><strong>Embedded business capability:</strong> an SAP application provides a specific AI feature. Check its business objects, permissions, release scope, and operational behavior.</li>
+      <li><strong>User interaction and agent behavior:</strong> <a href="/atlas/sap/sap-joule/">Joule capabilities</a> provide supported ways to ask, navigate, or perform tasks. The visible assistant does not reveal every service or permission behind it.</li>
+      <li><strong>Custom AI services:</strong> SAP AI Core and the <a href="https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core">generative AI hub</a> provide building blocks for AI applications. The implementation team still owns the business integration and controls.</li>
+    </ol>
+    <p>This is a responsibility map, not a licensing model. In its <a href="https://news.sap.com/2026/05/sap-sapphire-sap-unveils-autonomous-enterprise/">May 12, 2026 announcement</a>, SAP introduced SAP Business AI Platform as a foundation bringing SAP BTP, SAP Business Data Cloud, and SAP Business AI together. That portfolio statement does not establish availability or entitlement for a particular capability in a particular tenant.</p>
 
-    <h2>There are three useful layers</h2>
+    <h2>Compare a delivered feature with a custom extension</h2>
+    <p>Start with the documented feature if it matches the task. Check its limits before assuming that a custom agent is needed. A custom extension gives the team more design choices but also makes it responsible for grounding, tool access, evaluation, logging, approval, and recovery.</p>
+    <p><strong>Synthetic example:</strong> a team wants help investigating blocked orders. If an available application capability answers the required question within the right access boundary, evaluate that contract first. If the task needs evidence from several systems, define which system owns each fact, how it is retrieved, and who owns the final action. Model access alone does not solve those integration questions.</p>
 
-    <p>The first layer is <strong>embedded business AI</strong>. These are capabilities delivered inside products such as SAP S/4HANA Cloud, SAP SuccessFactors, SAP Ariba, SAP Datasphere, and other SAP solutions. The business application owns the process context and usually determines which data, authorization, and workflow rules apply.</p>
-
-    <p>The second layer is <strong>Joule and agents</strong>. Joule provides the user-facing AI experience, while skills and agents can answer questions, navigate, perform bounded tasks, or coordinate multiple steps where the relevant product supports them. Current SAP releases include specialized Joule agents, so it is no longer accurate to describe SAP Business AI as retrieval-only assistance.</p>
-
-    <p>The third layer is <strong>AI development and foundation services</strong>. SAP AI Core and the generative AI hub provide model access and AI runtime capabilities. The generative AI hub includes orchestration functions such as prompt templates, content filtering, data masking, and grounding. These services are building blocks for custom applications; they do not by themselves define the business process or grant access to ERP data.</p>
-
-    <h2>Embedded AI and custom AI have different responsibilities</h2>
-
-    <p>An embedded SAP feature comes with a product-specific contract: supported business objects, authorizations, release scope, and operational behavior. A custom extension built on AI Core or other platform services shifts more responsibility to the customer or implementation team. We then have to design grounding, tool access, evaluation, logging, approvals, and failure handling ourselves.</p>
-
-    <p>That is why “we use SAP Business AI” is not yet an architecture statement. A useful design names the concrete capability and its owner: an SAP-delivered agent in a business application, a custom Joule agent, a side-by-side application using the generative AI hub, or another AI service entirely.</p>
-
-    <h2>Model access is only one part of the system</h2>
-
-    <p>The generative AI hub gives applications access to supported foundation models through SAP-managed services. Its orchestration layer can add controls and context around model calls. For example, SAP documents optional data masking, input and output content filtering, and document grounding. Those controls are useful, but they do not replace business authorization, segregation of duties, validation against SAP data, or process-level approval.</p>
-
-    <p>The same applies to grounding. Retrieval can improve the context available to a model, but it does not prove that an answer is correct. The source may be stale, the query may retrieve the wrong evidence, or the task may require live transactional data rather than documents. Grounding is an architectural component, not a quality guarantee.</p>
-
-    <h2>Business context is the real differentiator</h2>
-
-    <p>Enterprise AI becomes useful when the model is connected to reliable business context: the right master data, transactional state, process rules, authorizations, and semantics. SAP's current Business AI Platform direction emphasizes this context explicitly. From an architecture perspective, however, the practical work remains familiar: identify the system of record, expose a supported interface, control access, validate the result, and make responsibility for the final action clear.</p>
-
-    <p>This is also the safest way to evaluate new SAP AI announcements. Ask what is generally available now, which product owns the capability, what data it can use, what it can change, and how it is governed. Product names evolve faster than those architectural questions.</p>
-
-    <h2>Source references</h2>
-    <ul>
-      <li>SAP Help Portal — <a href="https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core">Generative AI Hub in SAP AI Core</a>.</li>
-      <li>SAP Help Portal — <a href="https://help.sap.com/docs/ai-launchpad/sap-ai-launchpad/build-your-orchestration-workflow">Build an orchestration workflow in the generative AI hub</a>.</li>
-      <li>SAP Help Portal — <a href="https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/data-masking-d9a54d9ca54b40beacbd24e1663ec3b4">Data masking</a>.</li>
-      <li>SAP News Center — <a href="https://news.sap.com/2026/05/sap-sapphire-sap-unveils-autonomous-enterprise/">SAP introduces SAP Business AI Platform, May 12, 2026</a>.</li>
-      <li>SAP News Center — <a href="https://news.sap.com/2026/04/sap-business-ai-release-highlights-q1-2026/">SAP Business AI release highlights Q1 2026</a>.</li>
-    </ul>
-
-    <h2>Verification limitations</h2>
-    <p>SAP's AI portfolio is changing quickly. Availability, product naming, service plans, supported models, and agent capabilities vary by product, region, and release. Verify the concrete capability rather than assuming that a portfolio-level statement applies everywhere.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>Write a concrete architecture statement</h2>
+    <p>Record the business task, owning product and capability, system of record, data interface, execution identity, allowed effects, and acceptance test. Mark unknowns, including edition, region, entitlement, and release availability.</p>
+    <p>For example: “The assistant retrieves approved diagnostic guidance and current order status, proposes a next check, and sends any business change through the existing controlled workflow.” This describes the intended boundary; it is not evidence that the design has been implemented or tested.</p>
+    <p>Use <a href="/atlas/sap/evaluation-guardrails/">Evaluation and Guardrails</a> for quality and control design, and <a href="/atlas/sap/agent-workflows/">Agent Workflows</a> when the task needs several steps. Retrieval can supply context, but stale or irrelevant evidence can still produce a wrong answer. Keep a testable result and an accountable owner for the decision.</p>
   </div>
 
   <section class="atlas-related">

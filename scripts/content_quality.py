@@ -32,6 +32,7 @@ from lib.content_model import (  # noqa: E402
     canonical_url,
     discover_pages,
     normalize_text,
+    parse_frontmatter,
     stable_fingerprint,
     word_count,
 )
@@ -343,8 +344,75 @@ def audit_built_site(site_dir: Path, findings: list[Finding]) -> dict[str, Any]:
     return result
 
 
-def audit_generated_artifacts(findings: list[Finding], pages: list[ContentPage]) -> dict[str, Any]:
-    artifact_result = {"checked": [], "missing": [], "unverified_in_llms": False, "localhost_values": 0, "malformed_json": []}
+def _reject_json_constant(value: str) -> None:
+    raise ValueError("Non-finite values are not JSON")
+
+
+def audit_json_artifact(path: Path, rel: str, findings: list[Finding], site_dir: Path | None = None) -> dict[str, str]:
+    """Check source and supplied output separately; never emulate Liquid.
+
+    Only the catalog is a registered Jekyll JSON source. A Liquid body remains
+    unvalidated source even when supplied output parses. The caller must build
+    that output from the current sources with Jekyll; parsing proves neither
+    build provenance nor the endpoint's semantic contract.
+    """
+    result = {"source": "invalid", "rendered": "not_requested"}
+
+    def malformed(layer: str) -> None:
+        add_finding(findings, None, "PUBLICATION003_MALFORMED_JSON", "error", f"{layer.capitalize()} artifact is malformed JSON: {rel}", location=layer, path=rel, remediation="Fix the source and rebuild with Jekyll; do not substitute a stale output.")
+
+    def valid_json(text: str, layer: str) -> bool:
+        try:
+            json.loads(text, parse_constant=_reject_json_constant)
+        except (ValueError, RecursionError):
+            malformed(layer)
+            return False
+        return True
+
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeError:
+        malformed("source")
+        return result
+    if rel == "ai/catalog.json" and text.startswith("---"):
+        frontmatter, body, error = parse_frontmatter(path)
+        if error:
+            add_finding(findings, None, "FM001_INVALID_YAML", "error", "Invalid YAML front matter in JSON source.", path=rel, remediation="Use delimited YAML mapping front matter before the JSON template.")
+        elif frontmatter.get("permalink", f"/{rel}") != f"/{rel}":
+            add_finding(findings, None, "PUBLICATION006_JSON_TEMPLATE_ROUTE", "error", "JSON source permalink differs from the audited endpoint.", path=rel, remediation=f"Restore the registered endpoint /{rel} before validating its output.")
+        elif "{{" in body or "{%" in body:
+            result["source"] = "requires_jekyll_render"
+        elif valid_json(body, "source"):
+            result["source"] = "frontmatter_json_valid"
+    elif valid_json(text, "source"):
+        result["source"] = "json_valid"
+
+    # A frontmatter source may be transformed by Liquid, layouts or plugins.
+    # Even a static body is only source-validated without an explicit build.
+    needs_render = rel == "ai/catalog.json" and text.startswith("---") and result["source"] != "invalid"
+    if site_dir is None:
+        if needs_render:
+            result["rendered"] = "pending"
+            add_finding(findings, None, "PUBLICATION005_RENDERED_JSON_REQUIRED", "error", "Jekyll JSON source requires rendered endpoint validation; no rendered directory was supplied.", path=rel, remediation="Build the current sources with Jekyll, then run check --site-dir with that build directory.")
+        return result
+
+    rendered = site_dir / rel
+    if not rendered.is_file() or rendered.resolve() == path.resolve():
+        result["rendered"] = "missing"
+        add_finding(findings, None, "PUBLICATION005_RENDERED_JSON_REQUIRED", "error", "Requested rendered JSON endpoint is missing or resolves to its source.", path=rel, remediation="Supply a separate, complete Jekyll build from the current sources.")
+        return result
+    try:
+        rendered_text = rendered.read_text(encoding="utf-8")
+    except UnicodeError:
+        malformed("rendered")
+        result["rendered"] = "invalid"
+        return result
+    result["rendered"] = "json_valid" if valid_json(rendered_text, "rendered") else "invalid"
+    return result
+
+
+def audit_generated_artifacts(findings: list[Finding], pages: list[ContentPage], site_dir: Path | None = None) -> dict[str, Any]:
+    artifact_result = {"checked": [], "missing": [], "unverified_in_llms": False, "localhost_values": 0, "malformed_json": [], "json_validation": {}}
     generated = ("llms-full.txt", "llms.txt", "ai/expert-evidence.json", "ai/expert-promotion-inventory.json", "ai/markdown-clusters.json", "ai/verified-pages.json", "ai/catalog.json")
     for rel in generated:
         path = REPO_ROOT / rel
@@ -355,19 +423,15 @@ def audit_generated_artifacts(findings: list[Finding], pages: list[ContentPage])
                 artifact_result["localhost_values"] += 1
                 add_finding(findings, None, "SEO002_LOCALHOST_CANONICAL", "error", "Generated AI or LLM artifact contains a localhost reference.", path=rel)
             if path.suffix == ".json":
-                # Some JSON endpoints are Markdown-like Liquid sources with a
-                # front matter header. Validate the rendered endpoint when it
-                # exists; the source template is not itself JSON.
-                rendered = (REPO_ROOT / "_site" / rel) if (REPO_ROOT / "_site" / rel).is_file() else path
-                json_text = rendered.read_text(encoding="utf-8", errors="ignore")
-                try:
-                    json.loads(json_text)
-                except json.JSONDecodeError:
+                first_finding = len(findings)
+                artifact_result["json_validation"][rel] = audit_json_artifact(path, rel, findings, site_dir)
+                if any(item.rule_id == "PUBLICATION003_MALFORMED_JSON" for item in findings[first_finding:]):
                     artifact_result["malformed_json"].append(rel)
-                    add_finding(findings, None, "PUBLICATION003_MALFORMED_JSON", "error", f"Generated artifact is malformed JSON: {rel}", path=rel)
         else:
             artifact_result["missing"].append(rel)
-            if rel in {"llms-full.txt", "ai/expert-evidence.json", "ai/expert-promotion-inventory.json", "ai/markdown-clusters.json"}:
+            if path.suffix == ".json":
+                artifact_result["json_validation"][rel] = {"source": "missing", "rendered": "not_checked"}
+            if rel in {"llms-full.txt", "ai/expert-evidence.json", "ai/expert-promotion-inventory.json", "ai/markdown-clusters.json", "ai/catalog.json"} or (site_dir is not None and path.suffix == ".json"):
                 add_finding(findings, None, "PUBLICATION002_STALE_ARTIFACT", "error", f"Generated artifact is missing: {rel}", path=rel)
     llms = REPO_ROOT / "llms-full.txt"
     if llms.exists():
@@ -436,7 +500,7 @@ def run_audit(site_dir: Path | None = None, changed_from: str | None = None) -> 
     findings, context = check_source_pages(pages, parse_errors, config)
     link_graph = build_link_graph(pages, findings, site_dir)
     built = audit_built_site(site_dir, findings) if site_dir else {"html_files": 0}
-    artifacts = audit_generated_artifacts(findings, pages)
+    artifacts = audit_generated_artifacts(findings, pages, site_dir)
     by_page: dict[str, list[Finding]] = defaultdict(list)
     for finding in findings:
         by_page[finding.path].append(finding)
@@ -521,7 +585,7 @@ def safe_fix(dry_run: bool) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=["audit", "check", "report", "fix", "baseline"])
-    parser.add_argument("--site-dir", default="_site")
+    parser.add_argument("--site-dir", default=None, help="Explicit directory from a current Jekyll build; omitted means source-only validation.")
     parser.add_argument("--changed-from", default=None)
     parser.add_argument("--safe", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
@@ -534,7 +598,10 @@ def main(argv: list[str] | None = None) -> int:
         return safe_fix(args.dry_run)
 
     try:
-        audit = run_audit(Path(args.site_dir) if Path(args.site_dir).is_dir() else None, args.changed_from)
+        if args.site_dir is not None and not Path(args.site_dir).is_dir():
+            print("content_quality: requested rendered site directory does not exist.", file=sys.stderr)
+            return 2
+        audit = run_audit(Path(args.site_dir) if args.site_dir is not None else None, args.changed_from)
     except (OSError, ValueError, yaml.YAMLError) as exc:
         print(f"content_quality: {exc}", file=sys.stderr)
         return 2
@@ -546,7 +613,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "check":
         changed = set(audit["summary"].get("changed_paths", []))
-        errors = [item for item in audit["findings"] if item["severity"] == "error" and (not changed or item["source_path"] in changed or item["source_path"] in {"reports/content-quality.json", "llms-full.txt"})]
+        errors = [item for item in audit["findings"] if item["severity"] == "error" and (not changed or item["source_path"] in changed or item["source_path"] in {"reports/content-quality.json", "llms-full.txt"} or item["source_path"] in audit["artifacts"]["json_validation"])]
         baseline_path = REPO_ROOT / "config" / "content-quality-baseline.json"
         baseline_items = set()
         if baseline_path.exists():

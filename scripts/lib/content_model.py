@@ -18,7 +18,7 @@ import yaml
 
 
 DEFAULT_BASE_URL = "https://dkharlanau.github.io"
-FRONT_MATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*(?:\n|$)", re.DOTALL)
+FRONT_MATTER_RE = re.compile(r"\A---[ \t]*\r?\n(.*?)^---[ \t]*(?:\r?\n|\Z)\s*", re.DOTALL | re.MULTILINE)
 
 
 @dataclass
@@ -62,7 +62,7 @@ class ContentPage:
 
 
 def parse_frontmatter(path: Path) -> tuple[dict[str, Any], str, str | None]:
-    """Return (frontmatter, body, parse_error) for a Markdown file."""
+    """Return (frontmatter, body, parse_error) for a Jekyll source file."""
     text = path.read_text(encoding="utf-8", errors="replace")
     if not text.startswith("---"):
         return {}, text, None
@@ -70,9 +70,11 @@ def parse_frontmatter(path: Path) -> tuple[dict[str, Any], str, str | None]:
     if not match:
         return {}, text, "front matter starts with --- but has no closing delimiter"
     try:
-        data = yaml.safe_load(match.group(1)) or {}
+        data = yaml.safe_load(match.group(1))
     except yaml.YAMLError as exc:
         return {}, text[match.end():], str(exc)
+    if data is None:
+        data = {}
     if not isinstance(data, dict):
         return {}, text[match.end():], "front matter root must be a mapping"
     return data, text[match.end():], None

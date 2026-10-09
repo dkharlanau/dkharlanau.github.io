@@ -7,7 +7,7 @@ status: needs_verification
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-01
+last_modified_at: 2026-10-07
 hide_global_cta: true
 hide_site_share: true
 ai_sidecar: /products/reference-cases/enterprise-change-evidence-pack/manifest.json
@@ -124,10 +124,10 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Continue with evidence</p>
       <h2 id="case-actions-title">Challenge the pack or propose one bounded edge.</h2>
-      <p>The local validator checks the retained pack. Full regeneration requires the participating product checkouts and their documented commands.</p>
+      <p>The local validator checks retained bytes without other tools. To carry the same Composer output into Visual Workbench, use the pinned reproduction guide. Current branches may produce different bytes.</p>
     </header>
     <div>
-      <a href="{{ case.urls.source }}" target="_blank" rel="noopener noreferrer"><span>01</span><strong>Read the source guide</strong><small>Use the complete regeneration sequence, product prerequisites, and expected results.</small><em aria-hidden="true">↗</em></a>
+      <a href="{{ case.urls.source }}#reproduce-the-implemented-product-steps" target="_blank" rel="noopener noreferrer"><span>01</span><strong>Reproduce the pinned handoff</strong><small>Prepare four pinned checkouts, run reproduce.py, and inspect the receipt and exact output comparisons.</small><em aria-hidden="true">↗</em></a>
       <a href="{{ case.urls.expected_artifacts }}"><span>02</span><strong>Inspect exact digests</strong><small>Review the byte counts, SHA-256 bindings, and bounded assertions.</small><em aria-hidden="true">↗</em></a>
       <a href="{{ case.urls.integration_proposal }}" target="_blank" rel="noopener noreferrer"><span>03</span><strong>Propose an integration</strong><small>Name the producer, consumer, safe fixture, trust boundary, and verification command.</small><em aria-hidden="true">↗</em></a>
     </div>

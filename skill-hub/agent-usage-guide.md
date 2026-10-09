@@ -3,7 +3,7 @@ layout: default
 title: "Agent Usage Guide — How AI Agents Should Use Skill Hub"
 description: "Instructions for AI agents on how to use Skill Hub: choose skills, combine them, ask for missing context, separate facts from assumptions, produce artifacts, and avoid generic framework summaries."
 permalink: /skill-hub/agent-usage-guide/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-10-08
 status: reviewed
 verified: true
 ---
@@ -19,55 +19,46 @@ verified: true
 <article class="section note-detail atlas-page">
   <p class="eyebrow">Skill Hub — Foundation</p>
   <h1>Agent Usage Guide</h1>
-  <p class="lead">How AI agents should use Skill Hub to produce useful operational output instead of generic explanations.</p>
+  <p class="lead">Start with a work situation, choose a matching skill, and produce a record someone can review and act on. Use this guide to move from an incomplete request to a usable handoff.</p>
 
   <section>
-    <h2>How to choose a skill</h2>
-    <ol>
-      <li><strong>Identify the work situation</strong>, not the topic. "Data quality problem" is a topic. "Sales orders blocked by missing tax data" is a work situation.</li>
-      <li><strong>Match the situation to a skill group</strong> using the Skill Hub index. Data problems map to DAMA/Data skills. Interface problems map to Integration Architecture skills. Stakeholder confusion maps to Business Analysis skills.</li>
-      <li><strong>Open the skill page</strong> and read "When to use this skill" and "Real work situations." If the situation matches, use the skill. If not, look at "Related skills."</li>
-      <li><strong>If no skill matches exactly</strong>, combine the closest skill with general consulting judgment. Do not default to generic explanation.</li>
-    </ol>
-  </section>
-
-  <section>
-    <h2>How to combine multiple skills</h2>
-    <p>Real enterprise problems span multiple domains. A single incident may require:</p>
+    <h2>Establish the situation before choosing a skill</h2>
+    <p>“Data quality problem” is too broad. “Sales orders blocked by missing tax data” gives you a symptom and a process to investigate. Ask for the missing context:</p>
     <ul>
-      <li><strong>Incident Triage</strong> to classify and contain.</li>
-      <li><strong>Root Cause Analysis</strong> to find the cause.</li>
-      <li><strong>Stakeholder Analysis</strong> to identify who needs to approve the fix.</li>
-      <li><strong>Change Impact Analysis</strong> to assess what else breaks if you change the fix.</li>
-      <li><strong>Operational Knowledge Capture</strong> to record the pattern for next time.</li>
+      <li><strong>System and process:</strong> which SAP module, middleware, database, or API is involved, and which business process is affected?</li>
+      <li><strong>Symptom and scope:</strong> what failed, and does it affect one record, customer, region, or all records?</li>
+      <li><strong>Previous checks:</strong> what has already been tried (for example, reprocessing, manual correction, or a configuration change), and what was the result?</li>
+      <li><strong>Ownership and constraints:</strong> who owns the data or process, and is there a deadline or regulatory constraint?</li>
     </ul>
-    <p>When combining skills:</p>
+    <p>Wait until you have enough context to choose a skill and follow its method before giving advice. Record the gaps; do not fill them with guesses.</p>
+  </section>
+
+  <section>
+    <h2>Choose the method and its output</h2>
     <ol>
-      <li>Run each skill in sequence. Do not merge steps from different skills into a single unordered list.</li>
-      <li>Pass the output of one skill as input to the next. For example, the defect classification from Incident Triage feeds into the root cause hypothesis in Root Cause Analysis.</li>
-      <li>Label which skill produced which part of the output.</li>
-      <li>Flag gaps where a skill does not cover the situation.</li>
+      <li>Use the <a href="/skill-hub/">Skill Hub index</a> to find a matching group: DAMA/Data for data problems, Integration Architecture for interfaces, or Business Analysis for unclear stakeholder needs.</li>
+      <li>Check the skill page’s “When to use this skill” and “Real work situations.” If they do not fit, follow its related skills. If the closest skill covers only part of the problem, name that gap rather than treating it as a complete method.</li>
+      <li>Choose the output before starting: a root cause analysis (RCA) note for cause and prevention, an interview brief for stakeholder questions, an architecture decision record for options and consequences, or a data quality rule for field, condition, owner, and enforcement.</li>
     </ol>
+    <p>For a SAP symptom, consult Atlas diagnostics for the technical checks, then use Skill Hub to structure the decision, communication, or handoff. Link the relevant Atlas pages in the output instead of copying their diagnostic content. A reference page does not confirm the cause of this incident.</p>
   </section>
 
   <section>
-    <h2>How to ask for missing context</h2>
-    <p>Agents must not guess. If the user provides an incomplete situation, ask structured questions:</p>
-    <ul>
-      <li>What system or module is involved? (SAP module, middleware, database, API)</li>
-      <li>What is the business process? (order-to-cash, procure-to-pay, record-to-report)</li>
-      <li>What is the symptom? (error message, blocked transaction, wrong data, missing data)</li>
-      <li>What is the scale? (one record, one customer, one region, all records)</li>
-      <li>What has already been tried? (reprocessing, manual correction, config change)</li>
-      <li>Who owns the affected data or process?</li>
-      <li>Is there a deadline or regulatory constraint?</li>
-    </ul>
-    <p>Do not proceed with advice until you have enough context to choose a skill and follow its working method.</p>
+    <h2>Pass evidence between skills</h2>
+    <p>An incident may need several methods in sequence:</p>
+    <ol>
+      <li><strong>Incident Triage:</strong> classify and contain the incident.</li>
+      <li><strong>Root Cause Analysis:</strong> use the triage findings to test a cause hypothesis.</li>
+      <li><strong>Stakeholder Analysis:</strong> identify who needs to approve the fix.</li>
+      <li><strong>Change Impact Analysis:</strong> check what else the proposed fix could affect.</li>
+      <li><strong>Operational Knowledge Capture:</strong> record the pattern for reuse.</li>
+    </ol>
+    <p>Follow each skill’s steps in order. Pass its output to the next skill, label which skill produced each part, and flag any remaining gaps. Do not flatten the methods into one unordered checklist.</p>
   </section>
 
   <section>
-    <h2>How to separate facts, assumptions, risks, decisions, and open questions</h2>
-    <p>Every agent output must use these labels explicitly:</p>
+    <h2>Keep conclusions separate from evidence</h2>
+    <p>Use explicit labels in the output. The examples below illustrate the labels; they are not records of a real incident.</p>
     <table>
       <thead>
         <tr>
@@ -104,91 +95,22 @@ verified: true
         </tr>
       </tbody>
     </table>
-    <p>Never present an assumption as a fact. Never present a risk as a certainty. Never skip open questions.</p>
+    <p>State confidence as high, medium, low, or unknown, and identify any unverified assumption behind the conclusion. Limited evidence may support “appears to be”; it does not make an assumption a fact or a risk a certainty. Keep open questions visible.</p>
+    <p>Do not invent SAP behavior for a version you have not checked, client names, project details, or internal paths. Say what is unknown.</p>
   </section>
 
   <section>
-    <h2>How to produce artifacts instead of generic explanations</h2>
-    <p>An artifact is a structured, reusable output that a human can act on. Examples:</p>
+    <h2>Deliver a usable record</h2>
+    <p>Use the skill’s template or <a href="/skill-hub/artifact-templates/">Artifact Templates</a>. Produce the actual RCA note, decision record, rule, or other agreed output. A paragraph explaining why governance or architecture matters cannot replace it.</p>
+    <p>Before handing it over, check:</p>
     <ul>
-      <li>A <strong>Root Cause Analysis Note</strong> with defect, cause, impact, correction, and prevention.</li>
-      <li>A <strong>Stakeholder Interview Brief</strong> with questions, answers, assumptions, and follow-ups.</li>
-      <li>An <strong>Architecture Decision Record</strong> with context, options, decision, and consequences.</li>
-      <li>A <strong>Data Quality Rule</strong> with field, condition, owner, and enforcement mechanism.</li>
+      <li>The situation summary distinguishes what is known, assumed, and missing.</li>
+      <li>The selected skills and the reason for using them are clear.</li>
+      <li>Every required field is filled or marked “Unknown — needs input from [owner].”</li>
+      <li>Dates, owners, evidence, and unresolved questions are included.</li>
+      <li>Next actions say who does what by when; unknown owners or dates remain explicit gaps.</li>
+      <li>The record can be pasted into a ticket, document, or wiki without rewriting.</li>
     </ul>
-    <p>Rules for artifact production:</p>
-    <ol>
-      <li>Use the template from the skill page or the <a href="/skill-hub/artifact-templates/">Artifact Templates</a> page.</li>
-      <li>Fill every field. If a field is unknown, label it "Unknown — needs input from [owner]."</li>
-      <li>Include dates, owners, and next actions.</li>
-      <li>Format the artifact so it can be pasted into a ticket, document, or wiki without rewriting.</li>
-      <li>Do not summarize the artifact in prose afterward. The artifact is the output.</li>
-    </ol>
-  </section>
-
-  <section>
-    <h2>How to link Skill Hub with Atlas diagnostics</h2>
-    <p>Atlas contains SAP-specific diagnostics. Skill Hub contains cross-domain working skills. Use them together:</p>
-    <ul>
-      <li>When a user describes a SAP symptom, first consult Atlas diagnostics to understand the technical cause.</li>
-      <li>Then use Skill Hub skills to structure the response: stakeholder communication, change impact, knowledge capture, decision record.</li>
-      <li>Link Atlas pages in the "Related Atlas pages" section of the skill output.</li>
-      <li>Do not duplicate Atlas diagnostic content in Skill Hub skill output.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>How to avoid fake certainty</h2>
-    <p>Agents must not sound confident about things they cannot verify:</p>
-    <ul>
-      <li>Use "appears to be" or "based on the information provided" when inferring from limited data.</li>
-      <li>State confidence levels: high, medium, low, unknown.</li>
-      <li>Flag when a conclusion depends on an unverified assumption.</li>
-      <li>Do not invent system behavior. If you do not know how a specific SAP transaction works in this version, say so.</li>
-      <li>Do not invent client names, project details, or internal paths.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>How to avoid generic framework summaries</h2>
-    <p>Never output text like:</p>
-    <ul>
-      <li>"Data governance is important because..."</li>
-      <li>"Event-driven architecture provides loose coupling..."</li>
-      <li>"Requirements elicitation is the process of..."</li>
-    </ul>
-    <p>Instead, output:</p>
-    <ul>
-      <li>"Here is the ownership matrix for the 6 data domains in scope. Gaps are flagged in red."</li>
-      <li>"Here are the 4 events this process should produce, with owners, schemas, and failure modes."</li>
-      <li>"Here are the 7 requirements extracted from the stakeholder interview, with assumptions and risks."</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>How to create useful project outputs</h2>
-    <p>When a user asks for help with a project, deliver:</p>
-    <ol>
-      <li><strong>Situation summary</strong> — what is known, what is assumed, what is missing.</li>
-      <li><strong>Skill selection</strong> — which Skill Hub skills apply and why.</li>
-      <li><strong>Working method execution</strong> — follow the skill steps, produce artifacts.</li>
-      <li><strong>Deliverables</strong> — the actual artifacts, not a description of them.</li>
-      <li><strong>Quality checklist</strong> — did we cover all required fields? Are there gaps?</li>
-      <li><strong>Next actions</strong> — who does what by when, with owners.</li>
-    </ol>
-  </section>
-
-  <section>
-    <h2>Agent instruction summary</h2>
-    <ul>
-      <li>Choose skills based on work situations, not topics.</li>
-      <li>Ask for missing context before giving advice.</li>
-      <li>Separate facts, assumptions, risks, decisions, and open questions.</li>
-      <li>Produce artifacts using templates. Do not stop at explanation.</li>
-      <li>Link to Atlas diagnostics when the situation is SAP-specific.</li>
-      <li>Avoid fake certainty and generic framework language.</li>
-      <li>Label confidence levels and flag unverified assumptions.</li>
-      <li>End with deliverables, quality check, and next actions.</li>
-    </ul>
+    <p>Keep this context and the quality check with the deliverable. Do not append a prose summary that repeats the artifact.</p>
   </section>
 </article>
