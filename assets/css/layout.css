@@ -129,6 +129,9 @@
 .site-nav__toggle-mark::after { top: 5px; }
 
 @media (max-width: 899px) {
+  .site-header__inner { column-gap: 0; }
+  .site-nav { flex: 0 0 auto; }
+
   .site-nav__toggle {
     display: inline-flex;
   }
@@ -632,6 +635,40 @@
 .portal-footer__meta a:hover {
   color: var(--color-accent);
   text-decoration: underline;
+}
+
+/* Homepage chrome: a wide header and one compact identity/social footer. */
+.page-context--home { --header-height: 4.75rem; }
+.page-context--home .site-header__inner,
+.portal-footer--home { width: min(calc(100% - 2 * var(--space-5)), 82.5rem); }
+.page-context--home .page-content { width: 100%; max-width: none; min-height: 0; padding: 0; }
+.site-footer--home { margin-top: 0; padding: 0 0 var(--space-5); border-top: 0; }
+.portal-footer--home {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  font-size: 1rem;
+}
+.portal-footer__identity { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-5); }
+.portal-footer__identity > a { color: var(--color-text); text-decoration: none; }
+.portal-footer__identity > span { padding-left: var(--space-5); border-left: 1px solid var(--color-border); }
+.portal-footer--home .portal-footer__social { gap: var(--space-5); }
+.portal-footer--home .portal-footer__social a + a { padding-left: var(--space-5); border-left: 1px solid var(--color-border); }
+
+@media (min-width: 900px) {
+  .page-context--home .nav-links { gap: var(--space-3); }
+  .page-context--home .nav-link { font-size: var(--text-base); }
+  .page-context--home .nav-link--utility { margin-left: var(--space-3); padding-left: var(--space-5); border-left: 1px solid var(--color-border); border-radius: 0; }
+}
+@media (max-width: 720px) {
+  .page-context--home { --header-height: 4rem; }
+  .portal-footer__identity { align-items: flex-start; flex-direction: column; gap: var(--space-2); }
+  .portal-footer__identity > span { padding-left: 0; border-left: 0; }
+  .portal-footer--home .portal-footer__social a { display: inline-flex; align-items: center; min-height: 44px; }
 }
 
 /* ---------- Page furniture: related, author, provenance, CTA, share ---------- */

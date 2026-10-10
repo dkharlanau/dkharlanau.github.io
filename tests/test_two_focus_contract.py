@@ -20,14 +20,18 @@ def frontmatter(path):
     return yaml.safe_load(text.split("---", 2)[1])
 
 
-def test_home_routes_to_two_jobs_without_replacing_the_brand():
+def test_home_routes_to_practice_knowledge_and_topics_without_replacing_the_brand():
     home = read("_includes/sections/home-focus.html")
     assert frontmatter("index.md")["sections"] == ["home-focus"]
-    assert len(re.findall(r'class="focus-card(?:\s|\")', home)) == 2
-    assert "'/learn/' | relative_url" in home
-    assert "'/services/sap-ams-consulting/' | relative_url" in home
+    assert "'/lab/' | relative_url" in home
+    assert "'/knowledge/' | relative_url" in home
+    topic_routes = home.split('aria-label="Choose a topic"', 1)[1].split("</nav>", 1)[0]
+    assert topic_routes.count("<a href=") == 2
+    assert "'/labs/enterprise-context/' | relative_url" in topic_routes
+    assert "'/labs/ai-ready/' | relative_url" in topic_routes
     assert home.count("<h1 ") == 1
-    assert 'role="search"' in home and "'/search/' | relative_url" in home and 'name="q"' in home
+    assert "'/search/' | relative_url" in home
+    assert "<img" not in home
     header = read("_includes/header.html")
     assert "/assets/img/logo-d.svg" in header
     assert "page_locale" not in header

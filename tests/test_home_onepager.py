@@ -200,15 +200,16 @@ def test_portrait_corner_audit_behaviour():
 
 def test_footer_is_compact_and_trust_oriented():
     text = (REPO_ROOT / "_includes/footer.html").read_text(encoding="utf-8")
-    assert "portal-footer__nav" in text
-    assert "portal-footer__social" in text
-    assert "footer-brand" in text
-    assert "DzmitryiKharlanau.avif" in text
-    assert 'href="/services/"' in text
-    assert 'href="/knowledge/"' in text
-    assert "site.data.identity.profiles.linkedin" in text
-    assert "site.data.identity.profiles.github" in text
-    assert 'href="/atlas/"' not in text
+    home_footer, other_footer = text.split("{% else %}", 1)
+    assert "{% if page.home_locale %}" in home_footer
+    assert "portal-footer--home" in home_footer
+    assert "Personal and independent project." in home_footer
+    assert "site.data.identity.profiles.linkedin" in home_footer
+    assert "site.data.identity.profiles.github" in home_footer
+    assert "<img" not in home_footer
+    assert "portal-footer__nav" in other_footer
+    assert "footer-brand" in other_footer
+    assert 'href="/lab/"' in other_footer
 
 
 def test_head_loads_site_footer_globally():

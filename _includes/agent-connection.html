@@ -1,0 +1,17 @@
+<section class="agent-connection" id="connect-agent" aria-labelledby="connect-agent-title">
+  <h2 id="connect-agent-title">Bring your own AI agent.</h2>
+  <p>Use this notebook as context. Copy the prompt into an agent with web access, or connect the local MCP tools.</p>
+  <div class="agent-connection__actions">
+    <button class="btn btn--secondary" type="button" data-copy-target="agent-context-prompt" data-copy-status="agent-copy-status">Copy agent prompt</button>
+    {% if include.setup %}
+    <a href="#machine-routes">Browse technical sources <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    {% else %}
+    <a href="{{ '/machine/#agent-setup' | relative_url }}">Connection guide <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    {% endif %}
+  </div>
+  <details class="agent-connection__prompt">
+    <summary>View the prompt</summary>
+    <pre id="agent-context-prompt">Use {{ site.url }}/llms.txt to find relevant public SAP and AI sources for my next question. Follow the linked pages, check their review status, and cite the source URLs. Distinguish reviewed knowledge from working material. If you cannot access a source, tell me and ask me to provide it.</pre>
+  </details>
+  <p class="agent-connection__status" id="agent-copy-status" role="status" aria-live="polite"></p>
+</section>

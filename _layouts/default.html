@@ -105,7 +105,12 @@
   {% endif %}
   {% if page.toolkit_page %}
   <link rel="stylesheet" href="{{ '/assets/lab-toolkit.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  {% endif %}
+  {% if page.toolkit_page or page.home_locale or page.agent_connection %}
   <script src="{{ '/assets/lab-toolkit.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  {% endif %}
+  {% if page.home_locale or page.agent_connection %}
+  <link rel="stylesheet" href="{{ '/assets/agent-connection.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   {% endif %}
   {% if page.url contains '/skill-hub/' %}
   <link rel="stylesheet" href="{{ '/assets/skill-hub-enhancements.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
@@ -208,7 +213,7 @@
     {% include site-share-widget.html %}
     {% endunless %}
   </main>
-  <footer class="site-footer" id="site-footer">
+  <footer class="site-footer{% if is_home %} site-footer--home{% endif %}" id="site-footer">
     {% include footer.html %}
   </footer>
   {% assign structured_robots = page.robots | default: '' %}

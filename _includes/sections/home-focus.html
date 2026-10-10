@@ -1,53 +1,33 @@
-{% comment %}English audience entry point for the personal SAP and AI lab.{% endcomment %}
+{% comment %}Minimal English entry point for the personal SAP and AI lab.{% endcomment %}
 <link rel="stylesheet" href="{{ '/assets/site-focus.css' | relative_url }}" />
 <div class="focus-page focus-home">
   <header class="focus-intro" aria-labelledby="home-title">
-    <p class="eyebrow">Personal technical lab</p>
-    <h1 id="home-title">Personal SAP &amp; AI lab.<br />Learn. Test. Build.</h1>
-    <p class="focus-lead">A public notebook for my own work with SAP, AI agents, integrations, enterprise architecture, and practical problem solving.</p>
-    <p class="focus-meta">Current role: SAP Consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>. This website is a personal and independent project. It is not an official EPAM Systems, SAP, OpenAI, or other company publication.</p>
+    <p class="eyebrow">Dzmitryi Kharlanau / Personal technical lab</p>
+    <h1 id="home-title"><span>SAP &amp; AI.</span><br />Learn. Test. Build.</h1>
+    <p class="focus-lead">Notes, tools, and experiments for SAP, integration, and practical AI.</p>
+    <nav class="focus-actions" aria-label="Explore the lab">
+      <a class="btn btn--primary" href="{{ '/lab/' | relative_url }}">Open practical lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="btn btn--quiet" href="{{ '/knowledge/' | relative_url }}">Explore knowledge</a>
+    </nav>
   </header>
 
-  <section class="focus-grid" aria-label="Choose a route">
-    <article class="focus-card focus-card--learn">
-      <p class="eyebrow">Knowledge base</p>
-      <h2>Understand the problem.</h2>
-      <p>Reviewed notes, diagnostics, concepts, decision cards, SAP context, and assessment practice that I use to learn and explain difficult topics.</p>
-      <a class="portal-primary-link" href="{{ '/knowledge/' | relative_url }}">Open knowledge base <span aria-hidden="true">→</span></a>
-    </article>
-    <article class="focus-card focus-card--ams">
-      <p class="eyebrow">Practical lab</p>
-      <h2>Test the method.</h2>
-      <p>Executable tools, AI-agent patterns, integration experiments, architecture exercises, and small prototypes for solving complex enterprise tasks.</p>
-      <a class="portal-primary-link" href="{{ '/lab/' | relative_url }}">Open practical lab <span aria-hidden="true">→</span></a>
-    </article>
-  </section>
-
-  <section class="focus-search" aria-labelledby="focus-search-title">
-    <h2 id="focus-search-title" class="eyebrow">Search the site</h2>
-    <form class="focus-search__form" role="search" method="get" action="{{ '/search/' | relative_url }}">
-      <label class="focus-search__label" for="focus-search-query">Search the public knowledge base</label>
-      <div class="focus-search__row">
-        <input type="search" id="focus-search-query" name="q" placeholder="Try IDoc, ATP, Business Partner, AI agents" autocomplete="off" />
-        <button type="submit">Search <span class="material-symbols-outlined" aria-hidden="true">search</span></button>
-      </div>
-    </form>
-    <nav class="focus-search__suggestions" aria-label="Suggested searches">
-      <a href="{{ '/search/?q=IDoc' | relative_url }}">IDoc</a>
-      <a href="{{ '/search/?q=ATP' | relative_url }}">ATP</a>
-      <a href="{{ '/search/?q=business%20partner' | relative_url }}">Business Partner</a>
-      <a href="{{ '/search/?q=AI%20agents' | relative_url }}">AI agents</a>
+  <section class="focus-topics" aria-labelledby="focus-start-title">
+    <header class="focus-topics__header">
+      <h2 id="focus-start-title">Start with a topic</h2>
+      <a class="focus-topics__search" href="{{ '/search/' | relative_url }}"><span class="material-symbols-outlined" aria-hidden="true">search</span>Search the notebook</a>
+    </header>
+    <nav class="research-route-list research-route-list--home" aria-label="Choose a topic">
+      <a href="{{ '/labs/enterprise-context/' | relative_url }}">
+        <span class="focus-topic-name"><span class="focus-topic-label">SAP</span><strong>SAP Enterprise</strong></span>
+        <small>Processes, logistics, data, and integration.</small>
+        <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i>
+      </a>
+      <a href="{{ '/labs/ai-ready/' | relative_url }}">
+        <span class="focus-topic-name"><span class="focus-topic-label">AI</span><strong>AI Ready</strong></span>
+        <small>Agents, retrieval, evaluation, and controls.</small>
+        <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i>
+      </a>
     </nav>
   </section>
-
-  <section class="focus-section" aria-labelledby="focus-start-title">
-    <h2 id="focus-start-title">Start from a workspace</h2>
-    <p>The site is organised as a working knowledge system, not as a commercial service catalogue.</p>
-    <ul class="focus-start-list">
-      <li><a href="{{ '/labs/enterprise-context/' | relative_url }}">SAP Enterprise</a> — process, logistics, data, integration, and decision context</li>
-      <li><a href="{{ '/labs/ai-ready/' | relative_url }}">AI Ready</a> — RAG, MCP, agents, evaluation, security, and production boundaries</li>
-      <li><a href="{{ '/lab/' | relative_url }}">Enterprise Engineering Toolkit</a> — executable tools and engineering experiments</li>
-      <li><a href="{{ '/radar/' | relative_url }}">Technology Radar</a> — new tools, patterns, and signals worth watching</li>
-    </ul>
-  </section>
+  {% include agent-connection.html %}
 </div>

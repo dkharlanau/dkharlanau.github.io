@@ -1,3 +1,15 @@
+{% if page.home_locale %}
+<div class="wrapper portal-footer portal-footer--home">
+  <div class="portal-footer__identity">
+    <a href="{{ '/about/' | relative_url }}">Dzmitryi Kharlanau</a>
+    <span>Personal and independent project.</span>
+  </div>
+  <nav class="portal-footer__social" aria-label="Social profiles">
+    <a href="{{ site.data.identity.profiles.github }}" target="_blank" rel="me noopener noreferrer">GitHub</a>
+    <a href="{{ site.data.identity.profiles.linkedin }}" target="_blank" rel="me noopener noreferrer">LinkedIn</a>
+  </nav>
+</div>
+{% else %}
 <div class="wrapper portal-footer portal-footer--consulting">
   <div class="portal-footer__primary">
     <a class="portal-footer__brand footer-brand" href="/about/">
@@ -23,3 +35,4 @@
     <p><a href="/legal/privacy/">Privacy</a><a href="/legal/accessibility/">Accessibility</a><a href="/legal/terms-of-engagement/">Independence</a><a href="/legal/code-of-conduct/">Conduct</a><a href="/legal/ai-crawler-policy/">AI crawlers</a><a href="/entities/">Entities</a><a href="/CITATION/">Citation</a></p>
   </div>
 </div>
+{% endif %}

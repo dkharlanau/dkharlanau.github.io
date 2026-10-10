@@ -186,8 +186,17 @@ diagrams).
   line breaks in technical hero titles: a title that fits should stay on one
   line, while longer titles wrap naturally. Body sections keep the normal
   editorial measure.
-- **Home**: headline, short explanation, two entry routes, search,
-  start-from-a-topic list. Nothing else competes for the first viewport.
+- **Home** (`focus-home`): blue identity line, two-line serif headline, short
+  serif explanation, a primary `/lab/` button and quiet `/knowledge/` link,
+  then two topic rows for SAP Enterprise and AI Ready. The headline is capped at
+  5.375rem on desktop and uses Times New Roman for the selected display treatment.
+  It scales down on mobile; this display treatment is scoped to
+  the home entry point. The search link sits beside the topic heading and stacks
+  below it on mobile. Use the registered route-list homepage projection rather
+  than separate cards. The compact homepage footer shows identity, personal and
+  independent project attribution, GitHub, and LinkedIn. No portrait or additional
+  promotional sections compete with these entry points. Other routes retain the
+  full footer and their existing heading scale.
 
 ## Responsive and accessibility rules
 
@@ -195,6 +204,8 @@ diagrams).
 - No horizontal overflow except intentional table/code scroll.
 - Visible `:focus-visible` outline (2px accent) on all interactive elements.
 - Touch targets ≥44px where practical.
+- The collapsed header navigation takes no flexible width or trailing gap, so the mobile menu
+  toggle stays at the right edge while the brand stays at the left.
 - `prefers-reduced-motion` disables smooth scroll and transitions.
 - Print: chrome hidden, black text, external link URLs shown, code/quotes/
   tables avoid page breaks.
@@ -205,3 +216,18 @@ Score rings, readiness percentages, metric cards, calibration gaps, tile
 strips with arrows, lime/cyan accents, uppercase mono eyebrows, tinted paper
 backgrounds, decorative hero illustrations, route-list card borders, and
 viewport-height heroes. Do not reintroduce them.
+
+### Agent entry and profile reflow
+
+The homepage adds one quiet agent connection entry after the topic routes: a
+serif heading, short explanation, secondary copy action, setup link, and native
+prompt disclosure. Reuse the candidate `agent-connection` component; detailed
+web-access and local MCP instructions live on `/machine/#agent-setup`.
+
+The compact profile hero keeps one column through 800px. Desktop grid overrides
+must not restore the portrait column after the mobile reflow rule. Preserve body
+size rather than squeezing the profile copy into the remaining column.
+
+Search filters use the candidate `search-filters` component: 44px native buttons,
+wrapped labels, visible keyboard focus, and an `aria-pressed` selection. Result
+descriptions use normal body size. Toolkit copy controls also use 44px targets.

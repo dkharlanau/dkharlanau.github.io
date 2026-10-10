@@ -7,7 +7,8 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-01
+last_modified_at: 2026-10-10
+agent_connection: true
 hide_global_cta: true
 hide_site_share: true
 tags:
@@ -27,7 +28,7 @@ tags:
       <p class="research-canvas__eyebrow">Machine layer / structured access</p>
       <h1>Turn public knowledge into usable machine context.</h1>
       <p>Datasets, AI exports, skills, tool descriptions, and local MCP packages expose stable structure for retrieval and automation. Credentials and private context stay outside the public site.</p>
-      <a class="research-canvas__button" href="#machine-routes">Open technical routes <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#agent-setup">Connect your agent <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <figure class="hub-canvas__visual">
       <img src="/assets/img/systems/master-data-lineage-journal.webp" alt="Several public data sources passing through identity, validation, and governance gates into one structured core with controlled downstream routes." width="1728" height="1081" decoding="async" fetchpriority="high" />
@@ -42,6 +43,35 @@ tags:
       <em>Public files only. Runtime credentials, private corpora, and browser-local practice state stay outside the repository.</em>
     </div>
   </header>
+
+  <section class="agent-setup" id="agent-setup" aria-label="Agent connection guide">
+    {% include agent-connection.html setup=true %}
+    <div class="agent-setup__steps">
+      <h3>1. Read the site with web access</h3>
+      <p>Paste the prompt above into your agent, then ask a specific question — for example, “How should I trace an IDoc that arrived but did not create the expected business document?” Your agent needs a browsing or HTTP retrieval tool. A URL pasted into a chat does not provide its contents by itself.</p>
+      <p>The <a href="/llms.txt">source manifest</a> points to the public knowledge. For a retrieval pipeline, use the <a href="/ai/site-profile.json">site profile</a> and <a href="/ai/markdown-clusters.json">page index</a> to inspect available sources and their retrieval eligibility. If your agent has no web access, provide the relevant page text or downloaded file directly.</p>
+      <h3>2. Add local MCP tools</h3>
+      <p>For an MCP client that supports local stdio servers, install Node.js 20 or newer and Git, then clone the public repository on your computer:</p>
+      <pre><code>git clone https://github.com/dkharlanau/dkharlanau.github.io.git</code></pre>
+      <p>Add the following generic stdio configuration to your client’s MCP settings. Replace both example paths with the absolute path to your checkout; the settings file and field names depend on your client.</p>
+      <pre><code>{
+  "mcpServers": {
+    "sap-diagnostics": {
+      "command": "node",
+      "args": ["/path/to/dkharlanau.github.io/mcp/sap-diagnostics-mcp/src/server.js"],
+      "env": {
+        "SAP_ATLAS_DATA_DIR": "/path/to/dkharlanau.github.io"
+      }
+    }
+  }
+}</code></pre>
+      <p>Restart or reconnect the client and check that <code>search_diagnostics</code> is available. Ask it to search for IDoc diagnostics and inspect the returned URLs and review state. See the <a href="/mcp/sap-diagnostics-mcp/">MCP package guide</a> for the tool list and checks.</p>
+      <p>The MCP package runs locally and reads public files. This GitHub Pages site provides static sources; it has no hosted MCP endpoint. No site account or API key is required. Keep your checkout current with <code>git pull --ff-only</code>.</p>
+      <h3>Check the first answer</h3>
+      <p>Look for source URLs, review status, and a clear distinction between evidence and assumptions. Local retrieval provides public context; any later access to SAP needs its own authorization.</p>
+      <p>For reusable agent workflows, browse the <a href="https://github.com/dkharlanau/dkharlanau.github.io/tree/main/agent-skills">Agent Skills installation guide</a>. Choose a role profile rather than installing every skill.</p>
+    </div>
+  </section>
 
   <section class="research-canvas__boundary" data-reveal aria-label="Machine layer boundary">
     <span class="material-symbols-outlined" aria-hidden="true">schema</span>

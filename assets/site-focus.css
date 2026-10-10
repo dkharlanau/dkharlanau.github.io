@@ -7,7 +7,11 @@
   padding-block: clamp(2.5rem, 6vw, 4.5rem);
 }
 
-.focus-home { max-width: var(--container-medium); }
+.focus-home {
+  width: min(calc(100% - 2 * var(--space-5)), 66rem);
+  max-width: none;
+  padding-block: var(--space-9) 3.5rem;
+}
 
 .focus-page h1 {
   max-width: 22ch;
@@ -63,6 +67,55 @@
   font-size: clamp(1.15rem, 1rem + 0.6vw, 1.3rem);
   line-height: 1.55;
 }
+
+/* The homepage uses a spacious serif title and two direct entry points. */
+.focus-home .focus-intro { max-width: none; margin-bottom: 0; }
+.focus-home .focus-intro .eyebrow { margin-bottom: var(--space-5); font-size: var(--text-base); font-weight: 500; }
+.focus-home h1 {
+  max-width: none;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(2.5rem, 5.8vw, 5.375rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.focus-home .focus-lead {
+  max-width: none;
+  margin-top: var(--space-4);
+  font-size: clamp(1.2rem, 2vw, 1.75rem);
+  line-height: 1.5;
+}
+.focus-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-7);
+  margin-top: var(--space-5);
+}
+.focus-actions .btn--primary { min-height: 3.75rem; padding: var(--space-3) var(--space-6); font-size: var(--text-lg); }
+.focus-actions .btn--quiet { font-size: 1.25rem; font-weight: 500; }
+.focus-actions .material-symbols-outlined { font-size: 1.5rem; }
+.focus-topics { margin-top: 5.5rem; }
+.focus-topics__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+  margin-bottom: var(--space-4);
+}
+.focus-topics__header h2 { font-family: var(--font-serif); font-size: 2rem; font-weight: 600; }
+.focus-topics__search {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  text-decoration: none;
+}
+.focus-topics__search .material-symbols-outlined { font-size: 1.4rem; }
+.focus-topics__search:hover { color: var(--color-accent); text-decoration: underline; }
 
 /* Two entry routes: quiet hairline blocks, not colored cards. */
 .focus-grid {
@@ -374,6 +427,17 @@
   .focus-diagnostic-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
   .focus-search__row { flex-direction: column; }
   .focus-search__row button { align-self: flex-start; }
+  .focus-home { padding-block: var(--space-7) var(--space-7); }
+  .focus-home .focus-intro .eyebrow { font-size: var(--text-sm); margin-bottom: var(--space-4); }
+  .focus-home h1 { font-size: clamp(2.1rem, 8.8vw, 3.5rem); line-height: 1.12; }
+  .focus-home .focus-lead { font-size: 1.25rem; }
+  .focus-actions { gap: var(--space-2) var(--space-5); margin-top: var(--space-5); }
+  .focus-actions .btn--primary { font-size: var(--text-md); padding-inline: var(--space-5); }
+  .focus-actions .btn--quiet { font-size: var(--text-md); }
+  .focus-topics { margin-top: var(--space-7); }
+  .focus-topics__header { gap: 0; margin-bottom: var(--space-4); }
+  .focus-topics__header h2 { width: 100%; font-size: 1.65rem; }
+  .focus-topics__search { font-size: var(--text-md); }
 }
 
 @media print {

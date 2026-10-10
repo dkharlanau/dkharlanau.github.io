@@ -111,8 +111,15 @@ One row equals one destination. The row should contain enough information to cho
 the route without adding a duplicate button. Do not use route lists for facts that
 are not links.
 
+The homepage uses `.research-route-list--home`: a small category above a serif
+title, a short destination hint, and a decorative arrow. At narrow widths the hint
+stacks below the title. The whole row is one link. This projection shares the
+route-list owner in `assets/research-canvas.css`.
+
 Reference implementation:
 /labs/enterprise-context/pricing/
+
+Homepage projection: `/`.
 
 ## faceted-route-grid
 
@@ -309,3 +316,34 @@ Do not add route-local table skins, decorative cards around normal prose, upperc
 decorative micro-labels, tiny source metadata, dense three-column paragraph layouts,
 duplicate Open or Read more actions, or repeated rules that fragment one explanation.
 These are information-design problems, not styling opportunities.
+
+## agent-connection
+
+Status: candidate.
+
+Purpose: let readers give the site's public sources to their own agent. Reuse
+`_includes/agent-connection.html` on the homepage and machine hub. The native
+disclosure keeps the prompt inspectable without filling the landing page with
+configuration. A shared `data-copy-target` action copies it; `data-copy-status`
+points to a live region. Clipboard failure opens and selects the prompt for manual
+copying. Actions have 44px targets and wrap on mobile.
+
+The machine hub explains web retrieval and local stdio MCP separately. Do not
+present the static site as a hosted MCP endpoint. Preserve review and retrieval
+eligibility when describing public sources.
+
+Owner: `assets/agent-connection.css`; copy behavior: `assets/lab-toolkit.js`.
+Reference routes: `/`, `/machine/#agent-setup`. The guide target keeps a header
+offset for fragment navigation; its secondary link opens the technical sources
+on the same page.
+
+## search-filters
+
+Status: candidate.
+
+Purpose: narrow results by content area. Reuse `.search-canvas__filters` on
+`/search/`; native buttons expose `aria-pressed`, the active state has a visible
+border, and the live status announces the result count. Labels use the reading
+UI scale, targets are at least 44px high, and the row wraps on mobile.
+Owner: `assets/search-canvas.css`; behavior: `search/index.md`.
+Legacy `/services/` results are labeled Practice without changing their URLs.

@@ -1,0 +1,37 @@
+/* One quiet, reusable entry for agents on the homepage and machine hub. */
+.agent-connection {
+  margin-top: var(--space-7);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+.agent-connection h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.agent-connection > p { max-width: 62ch; margin-top: var(--space-3); color: var(--color-text-muted); font-size: var(--text-base); line-height: 1.7; }
+.agent-connection__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); margin-top: var(--space-5); }
+.agent-connection__actions :is(button, a) { display: inline-flex; min-height: 44px; align-items: center; gap: var(--space-2); font-size: var(--text-base); }
+.agent-connection__actions button { border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); color: var(--color-text); padding: var(--space-2) var(--space-5); }
+.agent-connection__actions button:hover { border-color: var(--color-accent); }
+.focus-home .agent-connection { margin-top: 0; border-top: 0; padding-top: var(--space-7); }
+.agent-connection__prompt { max-width: 68ch; margin-top: var(--space-3); }
+.agent-connection__prompt summary { display: list-item; width: fit-content; min-height: 44px; padding-block: var(--space-2); cursor: pointer; color: var(--color-text-muted); font-size: var(--text-sm); }
+.agent-connection__prompt pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--text-base); line-height: 1.7; }
+.agent-connection > .agent-connection__status { margin: 0; font-size: var(--text-sm); }
+.agent-connection__status:not(:empty) { margin-top: var(--space-3); }
+.agent-setup { width: var(--rc-width); margin: 0 auto; padding-block: var(--space-6) var(--space-7); scroll-margin-top: calc(var(--header-height) + var(--space-5)); }
+.agent-setup > .agent-connection { margin-top: 0; }
+.agent-setup__steps { max-width: 68ch; }
+.agent-setup__steps h3 { margin-top: var(--space-7); font-size: var(--text-xl); }
+.agent-setup__steps p, .agent-setup__steps li { font-size: var(--text-base); line-height: 1.7; }
+.agent-setup__steps ol { padding-left: 1.5em; }
+.agent-setup__steps li + li { margin-top: var(--space-3); }
+.agent-setup__steps pre { max-width: 100%; }
+@media (max-width: 600px) {
+  .agent-connection { margin-top: var(--space-6); padding-top: var(--space-5); }
+  .agent-connection h2 { font-size: 1.65rem; }
+  .agent-connection__actions { gap: var(--space-2) var(--space-5); }
+}

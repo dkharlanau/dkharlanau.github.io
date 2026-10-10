@@ -5,7 +5,7 @@ description: "Search across SAP O2C articles, notes, CV highlights, FAQs, and ma
 permalink: /search/
 sitemap: false
 robots: "noindex,follow"
-last_modified_at: 2026-08-22
+last_modified_at: 2026-10-10
 hide_global_cta: true
 hide_site_share: true
 ---
@@ -14,8 +14,8 @@ hide_site_share: true
   <header class="search-canvas__hero">
     <div class="search-canvas__hero-copy">
       <p class="search-canvas__eyebrow">Search / site knowledge</p>
-      <h1>Find the SAP problem, route, or proof.</h1>
-      <p>Search services, diagnostics, scenarios, labs, research, profile evidence, and public datasets.</p>
+      <h1>Find a note, tool, or answer.</h1>
+      <p>Search SAP diagnostics, labs, research, practice playbooks, and public datasets.</p>
     </div>
   </header>
 
@@ -44,7 +44,7 @@ hide_site_share: true
     <nav class="search-canvas__routes" aria-label="Start routes">
       <a href="/atlas/diagnostics/"><span>Diagnostics</span><small>Trace a SAP symptom</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/scenarios/"><span>Scenarios</span><small>Start from business impact</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/services/"><span>Services</span><small>Choose an improvement route</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/services/"><span>Practice</span><small>Open a technical playbook</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </nav>
   </section>
 </section>
@@ -113,7 +113,7 @@ hide_site_share: true
     const path = new URL(url, window.location.origin).pathname;
     if (path.startsWith('/atlas/')) return 'Atlas';
     if (path.startsWith('/scenarios/')) return 'Scenarios';
-    if (path.startsWith('/services/')) return 'Services';
+    if (path.startsWith('/services/')) return 'Practice';
     if (path.startsWith('/labs/')) return 'Labs';
     if (path.startsWith('/research/') || path.startsWith('/radar/') || path.startsWith('/news/')) return 'Research';
     if (path.startsWith('/datasets/')) return 'Datasets';

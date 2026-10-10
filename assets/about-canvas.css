@@ -76,14 +76,14 @@
   background: var(--pc-ink);
   color: #fff !important;
   padding: .7rem 1rem;
-  font-size: .84rem;
+  font-size: var(--text-md);
   font-weight:600;
   text-decoration: none;
   transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 .profile-canvas__button:hover { border-color: var(--pc-signal); background: var(--pc-signal); color: #fff !important; transform: translateY(-2px); }
 .profile-canvas__button .material-symbols-outlined { font-size: 1.1rem; }
-.profile-canvas__text-link { display: inline-flex; align-items: center; gap: .45rem; border-bottom: 1px solid currentColor; padding-bottom: .2rem; font-size: .84rem; font-weight:600; text-decoration: none; }
+.profile-canvas__text-link { display: inline-flex; min-height: 44px; align-items: center; gap: .45rem; border-bottom: 1px solid currentColor; padding-bottom: .2rem; font-size: var(--text-md); font-weight:600; text-decoration: none; }
 .profile-canvas__text-link .material-symbols-outlined { font-size: 1rem; transition: transform 160ms ease; }
 .profile-canvas__text-link:hover .material-symbols-outlined { transform: translateX(.22rem); }
 
@@ -94,8 +94,8 @@
 .profile-canvas__facts { display: grid; grid-area: facts; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 0; border-top: 1px solid var(--pc-ink); border-bottom: 1px solid var(--pc-line); }
 .profile-canvas__facts > div { min-height: 6.4rem; border-inline-start: 1px solid var(--pc-line); padding: 1rem 1.3rem; }
 .profile-canvas__facts > div:first-child { border-inline-start: 0; }
-.profile-canvas__facts dt { margin-bottom: .5rem; color: var(--pc-muted); font-family: var(--font-mono); font-size: .6rem; font-weight:600; letter-spacing: normal; text-transform: none; }
-.profile-canvas__facts dd { margin: 0; color: var(--pc-soft); font-size: .8rem; line-height: 1.5; }
+.profile-canvas__facts dt { margin-bottom: .5rem; color: var(--pc-soft); font-family: var(--font-sans); font-size: var(--text-sm); font-weight:600; letter-spacing: normal; text-transform: none; }
+.profile-canvas__facts dd { margin: 0; color: var(--pc-soft); font-size: var(--text-base); line-height: 1.7; }
 
 .profile-canvas > .section { width: var(--pc-width); margin: 0 auto; padding: clamp(4rem, 8vw, 7.5rem) 0; }
 .profile-canvas > .section .section-shell {
@@ -117,8 +117,8 @@
 .process-rail { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--pc-line); border-bottom: 1px solid var(--pc-line); }
 .process-rail__step { min-height: 11.5rem; border-inline-start: 1px solid var(--pc-line); padding: 1.25rem; }
 .process-rail__step:first-child { border-inline-start: 0; }
-.process-rail__step strong { display: block; color: var(--pc-ink); font-size: .9rem; line-height: 1.3; }
-.process-rail__step span { display: block; margin-top: .75rem; color: var(--pc-soft); font-size: .8rem; line-height: 1.5; }
+.process-rail__step strong { display: block; color: var(--pc-ink); font-size: var(--text-base); line-height: 1.4; }
+.process-rail__step span { display: block; margin-top: .75rem; color: var(--pc-soft); font-size: var(--text-base); line-height: 1.7; }
 .profile-canvas__approach .prose { margin-top: 2rem; }
 
 .profile-canvas__domains { border-top: 1px solid var(--pc-line); }
@@ -126,7 +126,7 @@
 .evidence-card, .deliverable-card, .profile-card { min-height: 13rem; border-inline-start: 1px solid var(--pc-line); padding: 1.2rem; background: transparent !important; box-shadow: none !important; }
 .evidence-card:first-child, .deliverable-card:first-child, .profile-card:first-child { border-inline-start: 0; }
 .evidence-card h3, .deliverable-card h3, .profile-card h3 { margin-bottom: .8rem; }
-.evidence-card p, .deliverable-card p, .profile-card p { margin: 0; color: var(--pc-soft); font-size:.8125rem; line-height: 1.56; }
+.evidence-card p, .deliverable-card p, .profile-card p { margin: 0; color: var(--pc-soft); font-size: var(--text-base); line-height: 1.7; }
 .profile-canvas .lead { max-width: 46rem; margin: 1.2rem 0 0 auto; color: var(--pc-soft); font-size: .96rem; }
 
 .profile-canvas__outputs { border-top: 1px solid var(--pc-line); }
@@ -135,7 +135,7 @@
 .profile-list { border-top: 1px solid var(--pc-ink); }
 .profile-list__item { display: grid; grid-template-columns: minmax(13rem, .65fr) minmax(16rem, 1fr); gap: 1.8rem; border-bottom: 1px solid var(--pc-line); margin: 0; padding: 1.35rem 1.2rem; background: transparent !important; box-shadow: none !important; }
 .profile-list__item h3 { grid-row: span 2; }
-.profile-list__item p { margin: 0; color: var(--pc-soft); font-size: .85rem; line-height: 1.55; }
+.profile-list__item p { margin: 0; color: var(--pc-soft); font-size: var(--text-base); line-height: 1.7; }
 .profile-list__item p + p { grid-column: 2; }
 .profile-canvas .link-arrow { display: inline-flex; margin-top: 1.4rem; font-weight:600; }
 .decision-table { overflow-x: auto; border-top: 1px solid var(--pc-ink); }
@@ -180,13 +180,17 @@
 .profile-canvas { --pc-width: min(calc(100% - 3rem), 72rem); }
 .profile-canvas h1 { max-width: 13ch; font-size: clamp(2.7rem, 5.2vw, 4.85rem) !important; line-height: .95; }
 .profile-canvas__hero { grid-template-columns: minmax(0, 1fr) minmax(14rem, .64fr); column-gap: clamp(2rem, 6vw, 5.5rem); row-gap: 2.25rem; min-height: 0; padding-block: 1.65rem 2.5rem; }
-.profile-canvas__hero-copy > p:not(.profile-canvas__eyebrow) { max-width: 39rem; margin-top: 1rem; font-size: 1rem; line-height: 1.65; }
+.profile-canvas__hero-copy > p:not(.profile-canvas__eyebrow) { max-width: 39rem; margin-top: 1rem; font-size: var(--text-base); line-height: 1.7; }
 .profile-canvas__actions { margin-top: 1.35rem; }
 .profile-canvas__portrait { width: min(100%, 20rem); }
 .profile-canvas__facts > div { min-height: 5.2rem; padding-block: .85rem; }
 .profile-canvas > .section { padding: clamp(2.8rem, 5vw, 4.5rem) 0; }
 .profile-canvas .section-heading { margin-bottom: 1.6rem; }
-.profile-canvas .prose p { font-size: 1rem; line-height: 1.7; }
+.profile-canvas .prose p { font-size: var(--text-base); line-height: 1.7; }
+/* Keep the compact desktop override from restoring two columns on mobile. */
+@media (max-width: 800px) {
+  .profile-canvas__hero { grid-template-columns: minmax(0, 1fr); }
+}
 @media (max-width: 760px) { .profile-canvas { --pc-width: min(calc(100% - 2rem), 44rem); } .profile-canvas__hero { padding-block: 1.15rem 2rem; } .profile-canvas h1 { font-size: clamp(2.55rem, 13vw, 3.7rem) !important; } }
 
 /* Shared canvas insets must survive the page-specific section shorthand. */

@@ -226,10 +226,11 @@
       "id": "route-list",
       "title": "Route list",
       "status": "domain",
-      "scope": "research-canvas",
+      "scope": "research-canvas and homepage",
       "intent": "Help the reader choose among peer destinations using one clear linked row per route.",
       "selectors": [
-        ".research-route-list"
+        ".research-route-list",
+        ".research-route-list--home"
       ],
       "source_files": [
         "assets/research-canvas.css"
@@ -260,6 +261,10 @@
         {
           "route": "/labs/enterprise-context/pricing/",
           "source_file": "labs/enterprise-context/pricing/index.html"
+        },
+        {
+          "route": "/",
+          "source_file": "_includes/sections/home-focus.html"
         }
       ],
       "documentation_anchor": "route-list"
@@ -708,6 +713,82 @@
         }
       ],
       "documentation_anchor": "skill-memory-grid"
+    },
+    {
+      "id": "agent-connection",
+      "title": "Agent connection entry",
+      "status": "candidate",
+      "scope": "homepage and machine hub",
+      "intent": "Copy public-source context into an agent and reach the setup guide without crowding the homepage.",
+      "selectors": [
+        ".agent-connection",
+        ".agent-connection__prompt",
+        ".agent-setup"
+      ],
+      "source_files": [
+        "_includes/agent-connection.html",
+        "assets/agent-connection.css",
+        "assets/lab-toolkit.js"
+      ],
+      "use_when": [
+        "The reader wants to use the site as context for their own AI agent."
+      ],
+      "avoid_when": [
+        "The page already offers a task-specific agent configuration."
+      ],
+      "accessibility": [
+        "Use a native disclosure and button, visible focus, and a live copy-status region.",
+        "When clipboard access fails, expand and select the visible prompt for manual copying."
+      ],
+      "responsive": [
+        "Actions wrap without reducing text size.",
+        "The prompt wraps; MCP code scrolls inside its block."
+      ],
+      "examples": [
+        {
+          "route": "/",
+          "source_file": "_includes/sections/home-focus.html"
+        },
+        {
+          "route": "/machine/#agent-setup",
+          "source_file": "machine/index.md"
+        }
+      ],
+      "documentation_anchor": "agent-connection"
+    },
+    {
+      "id": "search-filters",
+      "title": "Search result filters",
+      "status": "candidate",
+      "scope": "search",
+      "intent": "Narrow search results by content area with a visible selection and comfortable targets.",
+      "selectors": [
+        ".search-canvas__filters"
+      ],
+      "source_files": [
+        "assets/search-canvas.css",
+        "search/index.md"
+      ],
+      "use_when": [
+        "Search results span several content areas."
+      ],
+      "avoid_when": [
+        "There is only one content area in the results."
+      ],
+      "accessibility": [
+        "Use native buttons with aria-pressed and a live result count.",
+        "Keep visible keyboard focus and at least 44px button height."
+      ],
+      "responsive": [
+        "Wrap the controls instead of squeezing their labels."
+      ],
+      "examples": [
+        {
+          "route": "/search/?q=IDoc",
+          "source_file": "search/index.md"
+        }
+      ],
+      "documentation_anchor": "search-filters"
     }
   ]
 }
