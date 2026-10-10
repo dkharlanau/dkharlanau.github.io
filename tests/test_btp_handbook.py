@@ -72,7 +72,7 @@ class BtpHandbookTests(unittest.TestCase):
         self.assertIn('id="development-lab"',self.source)
         self.assertIn('btp-recovery-drill.mjs',self.source)
         self.assertTrue((ROOT/'assets/downloads/btp-recovery-drill.mjs').is_file())
-        self.assertIn('have not been executed',self.source)
+        self.assertIn('It is a simulation, not an SAP API',self.source)
     def test_example_curl_json_is_valid(self):
         lab=(ROOT/'_includes/btp-handbook/lab.html').read_text(encoding='utf-8')
         bodies=re.findall(r"-d '(\{[\s\S]*?\})'",lab)
