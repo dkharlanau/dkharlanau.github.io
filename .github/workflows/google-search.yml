@@ -26,7 +26,7 @@ on:
       - "config/indexation-recovery.json"
   workflow_run:
     workflows:
-      - CI
+      - pages build and deployment
     types:
       - completed
   schedule:
@@ -121,7 +121,7 @@ jobs:
               echo "max=100" >> "$GITHUB_OUTPUT"
               echo "mode=priority" >> "$GITHUB_OUTPUT"
               echo "cooldown=6" >> "$GITHUB_OUTPUT"
-              echo "policy=post-CI priority refresh" >> "$GITHUB_OUTPUT"
+              echo "policy=post-deploy priority refresh" >> "$GITHUB_OUTPUT"
               ;;
             *)
               echo "max=100" >> "$GITHUB_OUTPUT"
