@@ -10,7 +10,7 @@ concept_type: decision guide
 status: needs_verification
 verified: false
 level: 1
-last_modified_at: 2026-09-21
+last_modified_at: 2026-10-10
 author: Dzmitryi Kharlanau
 robots: noindex,follow
 sitemap: false
@@ -24,6 +24,7 @@ tags:
 related:
   - /atlas/ai-operations/prompts-agents-graphs/
   - /atlas/ai-operations/prompts-agents-graphs/system-one-models-jev/
+  - /atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/
   - /atlas/automation/rule-based-automation-vs-ai/
   - /atlas/ai-operations/ai-agent-for-sap-support/
 ---
@@ -45,6 +46,7 @@ related:
     <ul>
       <li>the model gives inconsistent outputs for the same bounded task;</li>
       <li>the answer lacks current evidence;</li>
+      <li>many tools expose data, but none decides which authorized and fresh subset the model needs;</li>
       <li>the correct next step depends on what a tool returns;</li>
       <li>a process must pause, retry, branch, or recover;</li>
       <li>the same entity appears across many systems and documents;</li>
@@ -60,6 +62,7 @@ related:
       <tr><td>Need fuzzy judgment among known outputs</td><td>Typed probabilistic decision model</td><td>Open-ended agent or generated prose</td></tr>
       <tr><td>Need current external facts or actions</td><td>Tools with narrow contracts</td><td>Longer prompt</td></tr>
       <tr><td>Need information from a document corpus</td><td>Retrieval / RAG</td><td>Knowledge graph by default</td></tr>
+      <tr><td>Need to combine live and historical facts across systems under requester permissions</td><td>Request-scoped context router + live/synced retrieval + provenance</td><td>Give every MCP tool access to every record by default</td></tr>
       <tr><td>Next step depends on observations and cannot be fully preplanned</td><td>Agent loop</td><td>Large fixed workflow pretending to cover every branch</td></tr>
       <tr><td>Run must pause, resume, retry, or expose paths</td><td>Structured state + execution graph</td><td>Chat transcript as state</td></tr>
       <tr><td>Relationships are the main query</td><td>Domain / knowledge graph</td><td>Vector search alone</td></tr>
@@ -92,6 +95,11 @@ related:
     <h2>Use RAG when the problem is finding relevant evidence</h2>
     <p>RAG is appropriate when useful facts live in documents or records too large or dynamic to place permanently in the prompt. It reduces the need to rely on model memory and can attach source evidence.</p>
     <p>But RAG does not automatically give the corpus a coherent domain model. Retrieving five relevant chunks about a Business Partner does not tell the system that two chunks refer to the same BP, which source owns an attribute, or which message caused a later state change.</p>
+
+    <h2>Use a context-selection layer when access is not the same as evidence</h2>
+    <p>If a question spans several systems, merely exposing their MCP/API tools does not tell the application which record versions to fetch, whether a historical aggregation is complete, or what this requester is allowed to see. Add an explicit routing and authorization policy before building a universal graph or a more autonomous agent.</p>
+    <p>Start with scoped live reads for current individual records. Add a synchronized structured index for repeatable historical filters and counts; add full-text or semantic indexes only where narrative search is required. Cache and derived summaries need source lineage, freshness and permission invalidation. The <a href="/atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/">context graph decision guide</a> provides the decision matrix, architecture diagram, and evaluation gates.</p>
+    <p><strong>Counterexample:</strong> an assistant that looks up one known invoice status needs a well-scoped API call, not a context graph platform. Complexity is earned by cross-source selection, not the mere presence of AI.</p>
 
     <h2>Use an agent when the next step genuinely cannot be fixed in advance</h2>
     <p>An agent earns its complexity when the system must repeatedly inspect an environment and decide what to do next. Examples include open-ended code modification, complex research, or diagnostics where each observation changes the investigation path.</p>
@@ -157,6 +165,8 @@ Execution state + checkpoints
         ↓
 Tools and deterministic controls
         ↓
+Authorized context routing (live / synced / derived)
+        ↓
 Retrieval + domain graph + event history
         ↓
 Enterprise systems and documents
@@ -176,7 +186,7 @@ Observability + verification + evaluation</code></pre>
     <p>Return to the <a href="/atlas/ai-operations/prompts-agents-graphs/">cluster map</a>, or connect these concepts to the existing <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a> architecture.</p>
   </div>
 
-  <section class="atlas-related"><h2>Related pages</h2><ul><li><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-Based Automation vs AI</a></li><li><a href="/atlas/ai-operations/prompts-agents-graphs/closed-loop-enterprise-ai/">Verified closed loop</a></li><li><a href="/atlas/ai-operations/prompts-agents-graphs/sap-business-partner-change-case/">SAP Business Partner graph case</a></li></ul></section>
+  <section class="atlas-related"><h2>Related pages</h2><ul><li><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-Based Automation vs AI</a></li><li><a href="/atlas/ai-operations/prompts-agents-graphs/closed-loop-enterprise-ai/">Verified closed loop</a></li><li><a href="/atlas/ai-operations/prompts-agents-graphs/sap-business-partner-change-case/">SAP Business Partner graph case</a></li><li><a href="/atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/">Context graph selection and evidence design</a></li></ul></section>
   {% include atlas/author-block.html %}
   {% include atlas/disclaimer.html %}
 </article>
