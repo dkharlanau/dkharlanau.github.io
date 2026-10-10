@@ -49,26 +49,29 @@ class BtpHandbookTests(unittest.TestCase):
     def test_unique_ids_and_resolvable_anchors(self):
         duplicate = [key for key,count in collections.Counter(self.markup.ids).items() if count > 1]
         self.assertEqual([], duplicate)
-        self.assertEqual(set(), set(self.markup.anchors) - set(self.markup.ids))
+        # A Liquid-generated service reference is resolved when Jekyll renders the page.
+        static_anchors = {value for value in self.markup.anchors if "{{" not in value}
+        self.assertEqual(set(), static_anchors - set(self.markup.ids))
+        services = json.loads((ROOT / '_data/btp_services.json').read_text(encoding='utf-8'))
+        for group in services:
+            self.assertIn(group['reference'], self.markup.ids)
     def test_existing_deep_links_survive(self):
         self.assertEqual(set(), LEGACY - set(self.markup.ids))
     def test_single_title_and_heading_order(self):
         self.assertEqual(1, self.markup.headings.count(1))
         for left,right in zip(self.markup.headings,self.markup.headings[1:]):
             self.assertLessEqual(right,left+1)
-    def test_six_semantic_svg_examples(self):
-        diagrams = re.findall(r'<svg\b[\s\S]*?</svg>', self.source)
-        self.assertEqual(6,len(diagrams))
-        for raw in diagrams:
-            svg = ET.fromstring(raw)
-            self.assertEqual('img',svg.attrib.get('role'))
-            self.assertTrue(svg.attrib.get('aria-labelledby'))
-            self.assertIsNotNone(svg.find('{http://www.w3.org/2000/svg}title'))
-            self.assertIsNotNone(svg.find('{http://www.w3.org/2000/svg}desc'))
+    def test_sixteen_readable_architecture_decision_trees(self):
+        # The current handbook uses readable text decision trees rather than retired SVGs.
+        trees = [int(value) for value in re.findall(r'Tree\s+(\d+)', self.source)]
+        self.assertEqual(list(range(1, 17)), sorted(set(trees)))
+        self.assertGreaterEqual(self.source.count('<pre class="btp-tree"'), 16)
+        self.assertIn('aria-label="Architecture decision or request flow"', self.source)
     def test_glossary_and_lab_are_present(self):
         self.assertGreaterEqual(self.source.count('class="btp-term"'),100)
         self.assertIn('id="development-lab"',self.source)
-        self.assertIn('btp-review-lab.mjs',self.source)
+        self.assertIn('btp-recovery-drill.mjs',self.source)
+        self.assertTrue((ROOT/'assets/downloads/btp-recovery-drill.mjs').is_file())
         self.assertIn('have not been executed',self.source)
     def test_example_curl_json_is_valid(self):
         lab=(ROOT/'_includes/btp-handbook/lab.html').read_text(encoding='utf-8')
