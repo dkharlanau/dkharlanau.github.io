@@ -1,4 +1,4 @@
-"""Regression contract for two-focus search, AI discovery, and ARWP routing."""
+"""Regression contract for personal-lab search, AI discovery, and ARWP routing."""
 
 import json
 from pathlib import Path
@@ -7,169 +7,151 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
+ORIGIN = "https://dkharlanau.github.io"
 
 
 def read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8")
 
 
-def test_focus_map_has_exactly_two_primary_directions():
-    focus = yaml.safe_load(read("_data/site_focus.yml"))
-    directions = focus["directions"]
+def frontmatter(path: str) -> dict:
+    content = read(path)
+    assert content.startswith("---\n"), path
+    return yaml.safe_load(content.split("---", 2)[1])
 
+
+def focus_directions() -> dict:
+    focus = yaml.safe_load(read("_data/site_focus.yml"))
     assert focus["primary_direction_count"] == 2
-    assert len(directions) == 2
-    assert {item["id"] for item in directions} == {
-        "sap-learning-practice",
-        "sap-ams-optimization",
-    }
-    assert all(item["priority"] == "P0" for item in directions)
-
-    secondary_rule = focus["routing_policy"]["secondary_domain_rule"].lower()
-    for supporting_term in ("integration", "mdg", "logistics", "practical ai"):
-        assert supporting_term in secondary_rule
+    assert len(focus["directions"]) == 2
+    return {item["id"]: item for item in focus["directions"]}
 
 
-def test_learning_search_route_preserves_actual_publication_states():
+def test_focus_map_has_exactly_two_personal_lab_routes():
     focus = yaml.safe_load(read("_data/site_focus.yml"))
-    learning = next(item for item in focus["directions"] if item["id"] == "sap-learning-practice")
+    directions = focus_directions()
 
-    assert learning["human_entry"].endswith("/learn/")
-    assert learning["human_entry_status"] == "review-gated"
-    assert learning["search_state"] == "staged"
-    assert learning["search_owner"].endswith("/labs/interview-readiness/")
-    assert learning["indexable_entry_points"] == [
-        "https://dkharlanau.github.io/labs/interview-readiness/",
-        "https://dkharlanau.github.io/labs/enterprise-context/decisions/",
+    assert set(directions) == {"knowledge-practice", "ai-engineering-lab"}
+    assert all(item["priority"] == "P0" for item in directions.values())
+    assert "personal" in focus["site_promise"].lower()
+    assert "not commercial offers" in focus["routing_policy"]["secondary_domain_rule"].lower()
+    assert "instead of inventing a commercial service" in focus["routing_policy"]["no_match"].lower()
+    for supporting_term in ("logistics", "integration", "master data", "ai"):
+        assert supporting_term in focus["routing_policy"]["secondary_domain_rule"].lower()
+
+
+def test_knowledge_route_preserves_review_and_indexing_gates():
+    knowledge = focus_directions()["knowledge-practice"]
+    assert knowledge["human_entry"] == ORIGIN + "/knowledge/"
+    assert knowledge["search_state"] == "active"
+    assert knowledge["search_owner"] == knowledge["human_entry"]
+    assert knowledge["indexable_entry_points"] == [
+        ORIGIN + "/knowledge/",
+        ORIGIN + "/labs/interview-readiness/",
+        ORIGIN + "/labs/enterprise-context/decisions/",
     ]
-    assert any(url.endswith("/labs/assessment/") for url in learning["non_indexable_practice_routes"])
-    assert any(url.endswith("/labs/enterprise-context/") for url in learning["non_indexable_practice_routes"])
+    assert any(url.endswith("/labs/assessment/") for url in knowledge["non_indexable_practice_routes"])
+    assert any(url.endswith("/labs/enterprise-context/") for url in knowledge["non_indexable_practice_routes"])
 
-    for path in (
-        "learning/index.md",
-        "labs/assessment/index.md",
-        "labs/enterprise-context/index.md",
-    ):
-        page = read(path)
-        assert "verified: false" in page
-        assert "robots: noindex,follow" in page
-        assert "sitemap: false" in page
+    for path in ("learning/index.md", "labs/assessment/index.md", "labs/enterprise-context/index.md"):
+        metadata = frontmatter(path)
+        assert metadata["verified"] is False
+        assert "noindex" in metadata["robots"]
+        assert metadata["sitemap"] is False
 
-    interview = read("labs/interview-readiness/index.md")
-    assert "status: reviewed" in interview
-    assert "verified: true" in interview
-    assert "robots: index,follow" in interview
-    assert "sitemap: true" in interview
-
-    decisions = read("labs/enterprise-context/decisions/index.html")
-    assert "status: reviewed" in decisions
-    assert "verified: true" in decisions
-    assert "robots: index,follow" in decisions
-    assert "sitemap: true" in decisions
+    for path in ("labs/interview-readiness/index.md", "labs/enterprise-context/decisions/index.html"):
+        metadata = frontmatter(path)
+        assert metadata["status"] == "reviewed"
+        assert metadata["verified"] is True
+        assert "noindex" not in metadata["robots"]
+        assert metadata["sitemap"] is True
 
 
-def test_ams_route_keeps_drafts_out_of_indexable_entry_points():
-    focus = yaml.safe_load(read("_data/site_focus.yml"))
-    ams = next(item for item in focus["directions"] if item["id"] == "sap-ams-optimization")
+def test_engineering_route_points_to_reviewed_toolkit_not_services():
+    lab = focus_directions()["ai-engineering-lab"]
+    assert lab["human_entry"] == ORIGIN + "/lab/"
+    assert lab["search_owner"] == lab["human_entry"]
+    assert lab["search_state"] == "active"
+    assert ORIGIN + "/lab/" in lab["indexable_entry_points"]
+    assert all("/services/" not in url for url in lab["indexable_entry_points"])
+    assert any("does not offer commercial services" in guardrail for guardrail in lab["guardrails"])
+    assert any("client data" in guardrail.lower() for guardrail in lab["guardrails"])
 
-    assert ams["human_entry"].endswith("/services/sap-ams-consulting/")
-    assert ams["human_entry_status"] == "active"
-    assert ams["search_state"] == "active"
-    assert ams["search_owner"] == ams["human_entry"]
-    assert "SAP AMS optimization" in ams["target_queries"]
-    assert ams["indexable_entry_points"] == [
-        "https://dkharlanau.github.io/services/sap-ams-consulting/",
-        "https://dkharlanau.github.io/services/sap-o2c-process-audit/",
-    ]
-    assert any("integration-reliability-assessment" in url for url in ams["non_indexable_supporting_routes"])
-    assert any("master-data-stability-assessment" in url for url in ams["non_indexable_supporting_routes"])
-
-    for path in (
-        "services/sap-integration-reliability-assessment.md",
-        "services/sap-master-data-stability-assessment.md",
-    ):
-        page = read(path)
-        assert "verified: false" in page
-        assert "robots: noindex,follow" in page
-        assert "sitemap: false" in page
+    metadata = frontmatter("lab/index.html")
+    assert metadata["status"] == "reviewed"
+    assert metadata["verified"] is True
+    assert metadata["sitemap"] is True
+    assert "noindex" not in metadata["robots"]
+    assert "not commercial services" in read("lab/index.html")
 
 
-def test_arwp_site_profile_exposes_two_focus_extension():
+def test_arwp_profile_exposes_canonical_personal_lab_routes():
     profile = json.loads(read("ai/site-profile.json"))
-
     assert profile["profileVersion"] == "0.1"
-    assert profile["name"] == "Dzmitryi Kharlanau — SAP Learning & AMS Optimization"
-    assert "two primary routes" in profile["description"].lower()
-
+    assert profile["name"] == "Dzmitryi Kharlanau — Personal SAP & AI Lab"
+    assert "does not offer commercial consulting services" in profile["description"]
     extension = profile["extensions"]["io.github.dkharlanau/two-focus-routing"]
     assert extension["status"] == "active-site-routing"
-    assert extension["profile"] == "https://dkharlanau.github.io/ai/focus-map.json"
-    assert extension["primaryDirections"] == [
-        "sap-learning-practice",
-        "sap-ams-optimization",
-    ]
-
-    indexes = profile["retrieval"]["indexes"]
-    assert indexes[0]["url"] == "https://dkharlanau.github.io/ai/focus-map.json"
+    assert extension["profile"] == ORIGIN + "/ai/focus-map.json"
+    assert extension["primaryDirections"] == ["knowledge-practice", "ai-engineering-lab"]
+    assert extension["knowledgeEntry"] == ORIGIN + "/knowledge/"
+    assert extension["labEntry"] == ORIGIN + "/lab/"
+    assert "not commercial service routes" in extension["note"]
+    assert profile["retrieval"]["indexes"][0]["url"] == ORIGIN + "/ai/focus-map.json"
 
 
-def test_ai_search_profile_names_both_intents_without_old_site_identity():
+def test_ai_search_profile_describes_knowledge_and_experiments():
     profile = json.loads(read("ai/ai-search-profile.json"))
-
-    assert profile["site"]["name"] == "Dzmitryi Kharlanau — SAP Learning & AMS Optimization"
+    assert profile["site"]["name"] == "Dzmitryi Kharlanau — Personal SAP & AI Lab"
     objective = profile["objective"]["primary"].lower()
-    assert "sap learning" in objective
-    assert "sap ams optimization" in objective
-    assert "enterprise operations & agentic ai" not in profile["site"]["name"].lower()
+    assert "knowledge and practice" in objective
+    assert "engineering experiments" in objective
+    assert "without presenting the site as a commercial consulting offer" in objective
 
     vocabulary = {item["term"]: item for item in profile["vocabulary"]}
-    assert vocabulary["Two-focus routing"]["url"] == "https://dkharlanau.github.io/ai/focus-map.json"
-    assert profile["modules"]["aiVisibility"]["priority"] == "P0"
-    assert "/labs/assessment/" in profile["modules"]["answerPages"]["description"]
-    assert "noindex" in profile["modules"]["answerPages"]["description"]
+    assert vocabulary["Knowledge & Practice"]["url"] == ORIGIN + "/knowledge/"
+    assert vocabulary["AI & Engineering Lab"]["url"] == ORIGIN + "/lab/"
+    assert profile["modules"]["answerPages"]["priority"] == "P0"
+    assert profile["modules"]["aiVisibility"]["priority"] == "P1"
+    assert "reviewed knowledge" in profile["modules"]["answerPages"]["description"].lower()
+    assert "commercial offer" in profile["modules"]["answerPages"]["description"].lower()
 
 
-def test_html_head_advertises_arwp_and_focus_map():
+def test_html_head_advertises_profile_and_real_site_routes():
     head = read("_includes/head.html")
-
-    for path in (
-        "/ai/site-profile.json",
-        "/ai/focus-map.json",
-        "/ai/ai-search-profile.json",
-    ):
-        assert f"href=\"{{{{ '{path}' | absolute_url }}}}\"" in head
-
+    for path in ("/ai/site-profile.json", "/ai/focus-map.json", "/ai/ai-search-profile.json"):
+        assert 'href="{{ \'' + path + '\' | absolute_url }}"' in head
     assert 'title="Agent-Ready Web Profile"' in head
     assert 'title="Two-Focus Routing Map"' in head
     assert '"name": "Dzmitryi Kharlanau"' in head
     assert '"alternateName": ["dkharlanau.github.io"]' in head
-    assert '"name": "SAP Learning & Assessment Practice"' in head
-    assert '"name": "SAP AMS Optimization"' in head
+    assert '"name": "Knowledge & Practice"' in head
+    assert '"name": "AI & Engineering Lab"' in head
+    assert ORIGIN + "/knowledge/" in head
+    assert ORIGIN + "/lab/" in head
+    assert ORIGIN + "/services/sap-ams-consulting/" not in head
 
 
-def test_llms_manifest_routes_before_deeper_knowledge_model():
+def test_llms_manifest_routes_to_knowledge_and_lab_before_machine_endpoints():
     manifest = read("_includes/llms-manifest.txt")
     supplement = read("_includes/llms-arwp-supplement.txt")
-
-    assert manifest.startswith("# LLM Access Manifest (v1.20)")
+    assert manifest.startswith("# LLM Access Manifest (v1.21)")
     assert "## Two Primary Routes" in manifest
-    assert "SAP Learning & Assessment Practice" in manifest
-    assert "SAP AMS Optimization" in manifest
-    assert "https://dkharlanau.github.io/ai/focus-map.json" in manifest
-    assert manifest.index("## Two Primary Routes") < manifest.index("## Canonical Knowledge Model")
-    assert "Learn or Improve AMS → Domain → Decision → Scenario → Evidence" in manifest
-    assert "Current non-indexable practice/navigation routes" in manifest
-    assert "The Integration Reliability Assessment and Master Data Stability Assessment remain `noindex`/unverified" in manifest
-
-    assert "Read this first: two primary routes" in supplement
-    assert "The `/learn/` hub and current BP/MDG pilot pack remain review-gated and `noindex`." in supplement
+    assert "### 1. Knowledge & Practice" in manifest
+    assert "### 2. AI & Engineering Lab" in manifest
+    assert ORIGIN + "/ai/focus-map.json" in manifest
+    assert manifest.index("## Two Primary Routes") < manifest.index("## Machine Endpoints")
+    assert "Route → Domain → Decision → Scenario → Evidence" in manifest
+    assert "does not offer commercial consulting" in manifest
+    assert "personal and independent technical project" in supplement
+    assert "Do not present old " in supplement
+    assert "Preserve page-level review, verification, and indexing state" in supplement
 
 
 def test_focus_map_is_part_of_machine_data_sitemap():
     endpoint = read("ai/focus-map.json")
     sitemap = read("sitemap-data.xml")
-
     assert "permalink: /ai/focus-map.json" in endpoint
     assert "sitemap: true" in endpoint
-    assert "https://dkharlanau.github.io/ai/focus-map.json" in sitemap
+    assert ORIGIN + "/ai/focus-map.json" in sitemap
     assert 'where: "url", "/ai/focus-map.json"' in sitemap
