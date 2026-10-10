@@ -43,13 +43,15 @@ def test_focus_map_has_exactly_two_personal_lab_routes():
 def test_knowledge_route_preserves_review_and_indexing_gates():
     knowledge = focus_directions()["knowledge-practice"]
     assert knowledge["human_entry"] == ORIGIN + "/knowledge/"
+    assert knowledge["human_entry_status"] == "review-gated"
     assert knowledge["search_state"] == "active"
-    assert knowledge["search_owner"] == knowledge["human_entry"]
+    assert knowledge["search_owner"] == ORIGIN + "/labs/"
     assert knowledge["indexable_entry_points"] == [
-        ORIGIN + "/knowledge/",
+        ORIGIN + "/labs/",
         ORIGIN + "/labs/interview-readiness/",
         ORIGIN + "/labs/enterprise-context/decisions/",
     ]
+    assert ORIGIN + "/knowledge/" in knowledge["non_indexable_practice_routes"]
     assert any(url.endswith("/labs/assessment/") for url in knowledge["non_indexable_practice_routes"])
     assert any(url.endswith("/labs/enterprise-context/") for url in knowledge["non_indexable_practice_routes"])
 
@@ -74,6 +76,8 @@ def test_engineering_route_points_to_reviewed_toolkit_not_services():
     assert lab["search_state"] == "active"
     assert ORIGIN + "/lab/" in lab["indexable_entry_points"]
     assert all("/services/" not in url for url in lab["indexable_entry_points"])
+    assert ORIGIN + "/radar/" in lab["non_indexable_observation_routes"]
+    assert ORIGIN + "/radar/" not in lab["indexable_entry_points"]
     assert any("does not offer commercial services" in guardrail for guardrail in lab["guardrails"])
     assert any("client data" in guardrail.lower() for guardrail in lab["guardrails"])
 
@@ -112,6 +116,7 @@ def test_ai_search_profile_describes_knowledge_and_experiments():
     assert vocabulary["Knowledge & Practice"]["url"] == ORIGIN + "/knowledge/"
     assert vocabulary["AI & Engineering Lab"]["url"] == ORIGIN + "/lab/"
     assert profile["modules"]["answerPages"]["priority"] == "P0"
+    assert profile["modules"]["answerPages"]["url"] == ORIGIN + "/labs/"
     assert profile["modules"]["aiVisibility"]["priority"] == "P1"
     assert "reviewed knowledge" in profile["modules"]["answerPages"]["description"].lower()
     assert "commercial offer" in profile["modules"]["answerPages"]["description"].lower()
@@ -127,7 +132,7 @@ def test_html_head_advertises_profile_and_real_site_routes():
     assert '"alternateName": ["dkharlanau.github.io"]' in head
     assert '"name": "Knowledge & Practice"' in head
     assert '"name": "AI & Engineering Lab"' in head
-    assert ORIGIN + "/knowledge/" in head
+    assert ORIGIN + "/labs/" in head
     assert ORIGIN + "/lab/" in head
     assert ORIGIN + "/services/sap-ams-consulting/" not in head
 
