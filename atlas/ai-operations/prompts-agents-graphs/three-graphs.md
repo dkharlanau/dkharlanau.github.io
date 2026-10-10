@@ -10,7 +10,7 @@ concept_type: concept deep dive
 status: needs_verification
 verified: false
 level: 1
-last_modified_at: 2026-09-12
+last_modified_at: 2026-10-10
 author: Dzmitryi Kharlanau
 robots: noindex,follow
 sitemap: false
@@ -23,6 +23,7 @@ tags:
 related:
   - /atlas/ai-operations/prompts-agents-graphs/
   - /atlas/ai-operations/prompts-agents-graphs/state-memory-provenance/
+  - /atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/
   - /atlas/ai-operations/prompts-agents-graphs/sap-business-partner-change-case/
 ---
 
@@ -140,6 +141,10 @@ Reconciliation mismatch @ 10:25</code></pre>
     </ol>
     <p>The agent is not “the graph.” The graph is not “the agent.” The useful system is the composition.</p>
 
+    <h2>Does a context graph belong in this table?</h2>
+    <p>Not necessarily. In production AI, the phrase <em>context graph</em> is also used for a runtime system that selects evidence from live APIs, synchronized history, derived summaries, skills, and memory. That layer decides <em>what this particular requester needs to see now</em>, while enforcing source permissions, freshness limits, cost budgets, and provenance. It can consult each graph above without storing another graph.</p>
+    <p>For example, diagnosing a Business Partner mismatch may need an event path, a domain ownership relationship, and the latest authorized target read. Fetching the entire history would be slower and often less helpful. See the <a href="/atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/">context-graph runtime architecture and retrieval decision guide</a> for the live-versus-synced selection rules.</p>
+
     <h2>A fourth graph sometimes appears: the dependency graph</h2>
     <p>Software packages, jobs, interfaces, transformations, and data products often form dependency graphs. These are closely related to domain and event graphs but deserve separate treatment when blast-radius analysis is the main job. For example: <em>If we change this mapping, which downstream interfaces, reports, reconciliations, and controls can be affected?</em></p>
     <p>Do not invent another graph store merely because the relationship has a different name. One underlying model can often expose several views.</p>
@@ -160,7 +165,7 @@ Reconciliation mismatch @ 10:25</code></pre>
     <p>Continue with <a href="/atlas/ai-operations/prompts-agents-graphs/state-memory-provenance/">State, memory, and provenance</a>.</p>
   </div>
 
-  <section class="atlas-related"><h2>Related pages</h2><ul><li><a href="/atlas/ai-operations/prompts-agents-graphs/agents-and-control-loops/">Agents and control loops</a></li><li><a href="/atlas/ai-operations/prompts-agents-graphs/sap-business-partner-change-case/">Business Partner change case</a></li><li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li></ul></section>
+  <section class="atlas-related"><h2>Related pages</h2><ul><li><a href="/atlas/ai-operations/prompts-agents-graphs/agents-and-control-loops/">Agents and control loops</a></li><li><a href="/atlas/ai-operations/prompts-agents-graphs/sap-business-partner-change-case/">Business Partner change case</a></li><li><a href="/atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/">Context graphs and retrieval control</a></li><li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li></ul></section>
   {% include atlas/author-block.html %}
   {% include atlas/disclaimer.html %}
 </article>

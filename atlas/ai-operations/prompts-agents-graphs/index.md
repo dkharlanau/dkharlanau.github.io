@@ -10,7 +10,7 @@ concept_type: knowledge cluster
 status: needs_verification
 verified: false
 level: 1
-last_modified_at: 2026-09-21
+last_modified_at: 2026-10-10
 author: Dzmitryi Kharlanau
 robots: noindex,follow
 sitemap: false
@@ -28,6 +28,7 @@ related:
   - /atlas/ai-operations/authorization-aware-ai-for-sap/
   - /atlas/ai-operations/ai-ready-process-documentation/
   - /atlas/ai-operations/prompts-agents-graphs/system-one-models-jev/
+  - /atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/
   - /atlas/automation/operational-memory-for-sap-ams/
 ---
 
@@ -77,7 +78,7 @@ Verified closed loop
     <p>“Prompt engineering,” “agents,” “memory,” “GraphRAG,” “knowledge graph,” and “agent graph” are often discussed as if they were successive product generations. That is convenient for conference slides and terrible for architecture decisions.</p>
   </header>
   <div class="note-body">
-    <p>A prompt is primarily an instruction and context boundary. A workflow is control flow. An agent is a decision loop with tools and environmental feedback. State is continuity. A workflow graph represents possible execution paths. A knowledge graph represents things and relationships in a domain. An event or provenance graph represents what changed, when, through which path, and on whose authority. These can coexist in one system, but they are not interchangeable.</p>
+    <p>A prompt is primarily an instruction and context boundary. A workflow is control flow. An agent is a decision loop with tools and environmental feedback. State is continuity. A workflow graph represents possible execution paths. A knowledge graph represents things and relationships in a domain. An event or provenance graph represents what changed, when, through which path, and on whose authority. A context-selection layer is different: it assembles the right authorized and fresh slice of those representations for each request. These can coexist in one system, but they are not interchangeable.</p>
     <p>The distinction becomes especially important in enterprise systems. If an AI assistant says that a Business Partner value is wrong, the useful next questions are not linguistic: <em>Which system owns the value? Which event changed it? Which replication path carried it? Was a later message allowed to overwrite it? What evidence supports the proposed correction? What happens after we act?</em></p>
     <p>At that point, a better prompt helps only a little. The missing asset is a better representation of reality.</p>
   </div>
@@ -86,7 +87,7 @@ Verified closed loop
 <section class="section">
   <header class="section-heading">
     <p class="eyebrow">Reading path</p>
-    <h2>Nine questions, in the order they become useful</h2>
+    <h2>Ten questions, in the order they become useful</h2>
   </header>
   <div class="atlas-card-grid atlas-card-grid--ai-business">
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/prompts-to-systems/">
@@ -113,32 +114,38 @@ Verified closed loop
       <p>Execution graphs, domain knowledge graphs, and event/provenance graphs — with different nodes, edges, and jobs.</p>
       <span class="link-arrow">Separate the graph types</span>
     </a>
+    <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/">
+      <p class="eyebrow">5 · Runtime context</p>
+      <h2>Context graphs: live, synced, and traceable context</h2>
+      <p>Which source to ask, when to use cached or live data, and how permissions and provenance survive retrieval.</p>
+      <span class="link-arrow">Design the context layer</span>
+    </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/state-memory-provenance/">
-      <p class="eyebrow">5 · Continuity</p>
+      <p class="eyebrow">6 · Continuity</p>
       <h2>State, memory, and provenance</h2>
       <p>Why dumping chat history into context is not memory, and why enterprise systems need temporal truth.</p>
       <span class="link-arrow">Model continuity</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/closed-loop-enterprise-ai/">
-      <p class="eyebrow">6 · Control</p>
+      <p class="eyebrow">7 · Control</p>
       <h2>The verified closed loop</h2>
       <p>Observe, diagnose, plan, act, verify, update — and why the verification step changes the architecture.</p>
       <span class="link-arrow">Close the loop</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/sap-business-partner-change-case/">
-      <p class="eyebrow">7 · SAP case</p>
+      <p class="eyebrow">8 · SAP case</p>
       <h2>A Business Partner change as a graph</h2>
       <p>An illustrative MDG → replication → S/4 → reconciliation chain and the questions an agent can answer from it.</p>
       <span class="link-arrow">Trace a concrete case</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/prompts-agents-graphs/architecture-selection-guide/">
-      <p class="eyebrow">8 · Architecture choice</p>
+      <p class="eyebrow">9 · Architecture choice</p>
       <h2>When not to use an agent or a graph</h2>
       <p>A practical selection guide for prompts, rules, workflows, agents, retrieval, state, and graph models.</p>
       <span class="link-arrow">Choose the smallest architecture</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/ai-agent-for-sap-support/">
-      <p class="eyebrow">9 · Existing Atlas</p>
+      <p class="eyebrow">10 · Existing Atlas</p>
       <h2>AI Agent for SAP Support</h2>
       <p>Connect the architecture to evidence, authorization, review, and narrow action boundaries in SAP support.</p>
       <span class="link-arrow">Apply it to operations</span>
@@ -159,13 +166,14 @@ Verified closed loop
   <div class="note-body">
     <h2>What current agent guidance actually says</h2>
     <p>Modern agent guidance is less dramatic than the market vocabulary. Anthropic distinguishes predefined <em>workflows</em> from systems where an LLM dynamically directs tool use, and explicitly recommends adding complexity only when simpler patterns fall short. OpenAI similarly describes agent execution as a run loop with tools, exit conditions, guardrails, handoffs, and tracing; multi-agent systems can be represented as graphs, but do not have to be the first design choice.</p>
-    <p>Knowledge graphs solve a different problem. Microsoft GraphRAG, for example, extracts entities, relationships, and claims from text and builds structured representations for retrieval. That graph describes information in a domain; it is not the same graph that routes an agent from “classify” to “search” to “verify.”</p>
+    <p>Knowledge graphs solve a different problem. Microsoft GraphRAG, for example, extracts entities, relationships, and claims from text and builds structured representations for retrieval. That graph describes information in a domain; it is not the same graph that routes an agent from “classify” to “search” to “verify.” A <a href="/atlas/ai-operations/prompts-agents-graphs/context-graph-runtime/">context graph in Gil Feig's operational sense</a> is a request-time policy and retrieval coordination layer; it is not automatically a new persistent graph store.</p>
 
     <h3>Primary references</h3>
     <ul>
       <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener noreferrer">Anthropic — Building effective agents</a></li>
       <li><a href="https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/" target="_blank" rel="noopener noreferrer">OpenAI — A practical guide to building AI agents</a></li>
       <li><a href="https://github.com/microsoft/graphrag/blob/main/docs/index/overview.md" target="_blank" rel="noopener noreferrer">Microsoft GraphRAG — indexing overview</a></li>
+      <li><a href="https://www.merge.dev/blog/context-graph-misconceptions" target="_blank" rel="noopener noreferrer">Gil Feig — Context graphs as runtime source-selection layers</a></li>
     </ul>
     <p><strong>Boundary:</strong> this cluster is an architecture explanation, not a claim that one vendor framework or graph database is required. The examples are deliberately implementation-neutral.</p>
   </div>
