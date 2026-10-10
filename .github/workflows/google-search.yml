@@ -38,7 +38,8 @@ permissions:
 
 concurrency:
   group: google-search-pipeline
-  cancel-in-progress: true
+  # Frequent Pages deployments must not cancel an ongoing Search Console audit.
+  cancel-in-progress: false
 
 jobs:
   google-search:
@@ -118,9 +119,9 @@ jobs:
               echo "policy=search infrastructure change validation" >> "$GITHUB_OUTPUT"
               ;;
             workflow_run)
-              echo "max=100" >> "$GITHUB_OUTPUT"
+              echo "max=20" >> "$GITHUB_OUTPUT"
               echo "mode=priority" >> "$GITHUB_OUTPUT"
-              echo "cooldown=6" >> "$GITHUB_OUTPUT"
+              echo "cooldown=24" >> "$GITHUB_OUTPUT"
               echo "policy=post-deploy priority refresh" >> "$GITHUB_OUTPUT"
               ;;
             *)
