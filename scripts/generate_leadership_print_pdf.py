@@ -315,7 +315,7 @@ def render_chapter(sec: Tag, index: int, major=False) -> str:
         joined=''.join(blocks)
         joined=joined.replace('<p>The situation.','<p class="practise-meta">THE SITUATION</p><p>')
         joined=joined.replace('<p>Your 90-second question.','<p class="practise-meta">YOUR 90-SECOND QUESTION</p><p class="practice-question">')
-        joined=joined.replace('<p>Assessor\'s challenge.','<p class="practise-meta">ASSESSOR CHALLENGE</p><div class="challenge"><p>')
+        joined=joined.replace('<p>Assessor&#x27;s challenge.','<p class="practise-meta">ASSESSOR CHALLENGE</p><div class="challenge"><p>')
         joined=joined.replace('</p><div class="case-response">','</p><div class="case-response">')
         # Fix challenge wrapper where present without duplicating source text.
         if '<div class="challenge"><p>' in joined:
