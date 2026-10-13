@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import html
 import re
+import unicodedata
 from pathlib import Path
 from bs4 import BeautifulSoup, Tag
 from weasyprint import HTML
@@ -451,6 +452,36 @@ def render_source(source:Path) -> tuple[str,dict]:
     return ''.join(parts),summary
 
 
+
+def assert_content_parity(source:Path, generated_html:str) -> dict:
+    """Guard against accidentally omitting a substantive paragraph or table cell."""
+    raw=source.read_text(encoding='utf8').split('---',2)[-1]
+    root=BeautifulSoup(raw,'html.parser').select_one('div.research-canvas')
+    rendered=BeautifulSoup(generated_html,'html.parser')
+    if not root: raise ValueError('Cannot verify parity without source content')
+    def canonical(s:str) -> str:
+        return ''.join(ch for ch in unicodedata.normalize('NFKC',s).casefold() if ch.isalnum())
+    haystack=canonical(rendered.get_text(' ',strip=True))
+    checked=0
+    missing=[]
+    for block in root.select('section p,section td,section th,section small'):
+        value=leaf_text(block)
+        if ('download' in value.casefold() and 'pdf' in value.casefold()) or value.startswith('Print edition:'):
+            continue
+        for prefix in ('The situation.','Your 90-second question.',"Assessor's challenge.",
+                       'Example B2 answer.','Review.','Change one condition.'):
+            if value.startswith(prefix):
+                value=value[len(prefix):].strip()
+                break
+        target=canonical(value)
+        if len(target)<38: continue
+        checked+=1
+        if target not in haystack: missing.append(value[:110])
+    if missing:
+        raise ValueError(f'PDF would omit {len(missing)} of {checked} substantive source fragments. Examples: '+str(missing[:5]))
+    return {'verified_fragments':checked,'omissions':0}
+
+
 def main() -> None:
     parser=argparse.ArgumentParser(description='Build an unabridged, editorial A4 PDF from the Leadership Toolkit source.')
     parser.add_argument('--source',type=Path,default=SOURCE_DEFAULT)
@@ -458,6 +489,7 @@ def main() -> None:
     parser.add_argument('--html-preview',type=Path,default=None)
     args=parser.parse_args()
     html_source,summary=render_source(args.source)
+    summary.update(assert_content_parity(args.source,html_source))
     if args.html_preview:
         args.html_preview.parent.mkdir(parents=True,exist_ok=True)
         args.html_preview.write_text(html_source,encoding='utf8')
