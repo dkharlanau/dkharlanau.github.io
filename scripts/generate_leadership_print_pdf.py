@@ -382,7 +382,7 @@ def toc(entries: list[tuple[str,str,str]]) -> str:
         if new and new!=part:
             pieces.append('<div class="toc-section">'+escape(new)+'</div>');part=new
         pieces.append(f'<a class="toc-entry{(" small" if kind=="case" else "")}" href="#{escape(slug)}">{escape(title)}</a>')
-    pieces.append('<a class="toc-entry" href="#about-author">About the author</a></section>')
+    pieces.append('</section>')
     return ''.join(pieces)
 
 
@@ -402,20 +402,6 @@ def pressure_section(sec:Tag) -> str:
 
 def boundary(sec:Tag) -> str:
     return '<div class="boundary">'+''.join('<p>'+escape(leaf_text(p))+'</p>' for p in sec.find_all('p',recursive=False))+'</div>'
-
-
-def render_author() -> str:
-    return '''<section class="chapter major" id="about-author">
-    <p class="headline-kicker">Notes on authorship</p><h2 class="chapter-title">About the author</h2>
-    <div class="author-rule"><p class="author-name">Dzmitryi Kharlanau</p>
-    <p class="author-role">Senior SAP Consultant at EPAM Systems</p>
-    <p class="author-note">Dzmitryi works across SAP SD, MM, end-to-end logistics, master data, integrations and enterprise operations. His personal technical lab explores practical SAP engineering, reliable delivery, AI tools and methods for making complicated work easier to understand and manage.</p>
-    <p class="author-note">This guide is part of that personal knowledge base. It connects clear leadership practices with the situations that SAP consultants face when responsibilities, technical evidence and business deadlines meet.</p>
-    <div class="author-links"><a href="https://dkharlanau.github.io/">dkharlanau.github.io</a><br>
-    <a href="https://github.com/dkharlanau">github.com/dkharlanau</a><br>
-    <a href="https://www.linkedin.com/in/dkharlanau/">linkedin.com/in/dkharlanau</a></div>
-    <p class="author-disclosure">Independent, non-commercial educational material. It is not an official publication of EPAM Systems or SAP and does not represent either organisation. The scenarios are fictional; SAP behaviour and approval boundaries must be verified in the relevant landscape.</p>
-    <p class="small">Source: dkharlanau.github.io/labs/assessment/leadership-toolkit/</p></div></section>'''
 
 
 def render_source(source:Path) -> tuple[str,dict]:
@@ -443,12 +429,11 @@ def render_source(source:Path) -> tuple[str,dict]:
             parts.append(pressure_section(section));continue
         major=(section.get('id') in ('decisions','practice-stories'))
         parts.append(render_chapter(section,n,major=major))
-    parts.append(render_author())
     parts.append('</body></html>')
     summary={'cases':case_count,'methods':method_count,'sections':len(sections),
         'tables':sum(len(s.find_all('table')) for s in sections),
         'source_paragraphs':sum(len(s.find_all('p')) for s in sections),
-        'toc_entries':len(entries)+1}
+        'toc_entries':len(entries)}
     return ''.join(parts),summary
 
 
