@@ -26,6 +26,7 @@ tags: [sap, assessment, sap-lead, leadership, management, conflict, planning, re
       <h1>Lead the work.<br />Do not manage the theatre.</h1>
       <p>A SAP Lead is tested by more than configuration knowledge. We need to make decisions under uncertainty, align people with different incentives, handle conflict, protect delivery, communicate bad news early, and keep ourselves useful when pressure rises.</p>
       <a class="research-canvas__button" href="#field-kit">Open the field kit <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="{{ '/assets/downloads/sap-lead-leadership-toolkit-print.pdf' | relative_url }}" download>Download A4 print PDF <span class="material-symbols-outlined" aria-hidden="true">download</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Leadership toolkit structure">
       <p>Working model</p>
@@ -60,6 +61,7 @@ tags: [sap, assessment, sap-lead, leadership, management, conflict, planning, re
         </tbody>
       </table>
     </div>
+    <p><strong>Print edition:</strong> <a href="{{ '/assets/downloads/sap-lead-leadership-toolkit-print.pdf' | relative_url }}" download>Download the A4 PDF</a>. It separates the ten scenarios from their model answers, preserves the RACI examples and includes a final rehearsal sheet.</p>
     <p><strong>Practice rule:</strong> choose a <a href="#practice-stories">scenario</a>, answer aloud before revealing the sample answer, then change one condition and answer again. The goal is judgement, not memorising a script.</p>
   </section>
 
