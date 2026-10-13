@@ -440,7 +440,7 @@ def render_source(source:Path) -> tuple[str,dict]:
             parts.append(boundary(section));continue
         if 'research-canvas__method' in cls:
             parts.append(pressure_section(section));continue
-        major=(section.get('id') in ('decisions','practice-stories','raci'))
+        major=(section.get('id') in ('decisions','practice-stories'))
         parts.append(render_chapter(section,n,major=major))
     parts.append(render_author())
     parts.append('</body></html>')
