@@ -8,7 +8,7 @@
   {% include head.html %}
   {% include seo/page-machine-links.html %}
   {% unless page.url == '/' %}<link rel="stylesheet" href="{{ '/assets/knowledge-trust.css' | relative_url }}" />{% endunless %}
-  {% if page_faq %}<link rel="stylesheet" href="{{ '/assets/page-faq.css' | relative_url }}" />{% endif %}
+  {% if page_faq or page.content contains 'page-faq__item' %}<link rel="stylesheet" href="{{ '/assets/page-faq.css' | relative_url }}" />{% endif %}
   {% if page.ddd_framework %}
   <link rel="stylesheet" href="{{ '/assets/ddd-framework.css' | relative_url }}" />
   <link rel="stylesheet" href="{{ '/assets/ddd-framework-v03.css' | relative_url }}" />
