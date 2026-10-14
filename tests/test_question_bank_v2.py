@@ -26,8 +26,8 @@ def test_question_bank_covers_every_roadmap_skill_once():
     roadmap_ids = {skill["id"] for skill in roadmap_skills}
     bank_ids = [group["skill_id"] for group in bank["skills"]]
 
-    assert len(roadmap_skills) == 42
-    assert len(bank_ids) == 42
+    assert len(roadmap_skills) == 43
+    assert len(bank_ids) == 43
     assert len(bank_ids) == len(set(bank_ids))
     assert set(bank_ids) == roadmap_ids
     assert {skill["track"] for skill in roadmap_skills} == EXPECTED_TRACKS
@@ -49,7 +49,7 @@ def test_every_skill_has_four_lead_question_types():
             assert prompt.endswith(("?", ".")), (group["skill_id"], item["type"])
             prompts.append(prompt)
 
-    assert len(prompts) == 168
+    assert len(prompts) == 172
     assert len(prompts) == len(set(prompts))
 
 
@@ -91,7 +91,7 @@ def test_question_and_practice_pages_use_question_bank_v2():
         assert '/assets/js/interview-readiness.js' in text
         assert '/assets/js/interview-question-bank.js' in text
 
-    assert "42 skills / 168 questions" in questions
+    assert "43 skills / 172 questions" in questions
     assert "ir-type-filter" in questions
     assert "ir-skill-filter" in questions
     assert "Pressure follow-up" in questions

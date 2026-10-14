@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-03
+last_modified_at: 2026-10-04
 hide_global_cta: true
 tags:
   - sap
@@ -76,6 +76,7 @@ tags:
       <p>These playbooks are designed for the questions that appear after the solution diagram is finished: how do we prove the change, diagnose failure, operate integrations, and make a release decision?</p>
     </header>
     <div class="research-route-list">
+      <a href="/labs/enterprise-context/signavio/"><span>BPM</span><strong>SAP Signavio</strong><small>Process thinking, shared process views, BPM, process mining, governance, collaboration, and transformation improvement.</small><i class="material-symbols-outlined" aria-hidden="true">conversion_path</i></a>
       <a href="/labs/enterprise-context/testing/"><span>TEST</span><strong>SAP Testing</strong><small>Risk-based unit, integration, end-to-end, regression, UAT and automation strategy for logistics, ABAP and cross-system processes.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/enterprise-context/performance/"><span>OPS</span><strong>Performance and Technical Operations</strong><small>Follow symptoms through work processes, locks, updates, queues, traces, SQL, HANA and cloud monitoring.</small><i class="material-symbols-outlined" aria-hidden="true">monitor_heart</i></a>
       <a href="/labs/enterprise-context/integration-operations/"><span>INT</span><strong>Integration Operations</strong><small>Diagnose and recover asynchronous and synchronous integration failures without losing business context.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
