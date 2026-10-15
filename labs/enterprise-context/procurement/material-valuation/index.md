@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "Material Valuation in Procurement — Standard Price, Moving Average Price and FI Postings"
-description: "A practical SAP S/4HANA MM guide to material and accounting documents, GR/IR, standard price, moving average price, price differences, stock coverage, and FI postings for goods receipt and invoice receipt."
+title: "Material Valuation and Automatic Account Determination — SAP S/4HANA MM"
+description: "A practical SAP S/4HANA MM guide to material valuation, automatic account determination, valuation classes, transaction keys, G/L postings, split valuation, GR/IR, and delivery-cost accounting."
 permalink: /labs/enterprise-context/procurement/material-valuation/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-10-02
+last_modified_at: 2026-10-04
 hide_global_cta: true
 career_impact: mapped
 career_skills:
@@ -24,6 +24,9 @@ tags:
   - gr-ir
   - invoice-verification
   - fi-integration
+  - automatic-account-determination
+  - valuation-class
+  - split-valuation
 source_links:
   - title: "Analyzing Material Valuation"
     url: "https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/analyzing-material-valuation"
@@ -37,10 +40,24 @@ source_links:
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/18fe3fab96864826bfa0be0de4f65b85/772bf4b02b4245d9912a2b04cd042643.html"
   - title: "WRX — GR/IR Clearing Account"
     url: "https://help.sap.com/docs/s4hana-best-practices/ycoa-1f2ae10b96f740759d66e695f953aa8f/wrx-gr-ir-clearing-account"
+  - title: "Describing Automatic Account Determination"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/describing-automatic-account-determination"
+  - title: "Determining the Relevance of Company Codes and Valuation Areas"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/determining-the-relevance-of-company-codes-and-valuation-areas"
+  - title: "Creating Valuation Classes and Account Category References"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/creating-valuation-classes-and-account-category-references"
+  - title: "Setting Up Account Determination for Specific Transactions"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/setting-up-account-determination-for-specific-transactions"
+  - title: "Subdividing a Transaction with the Account Grouping Code"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/subdividing-a-transaction-with-the-account-grouping-code"
+  - title: "Adjusting Account Determination for Special Cases"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/adjusting-account-determination-for-special-cases"
+  - title: "Adjusting Settings for Split Valuation"
+    url: "https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/adjusting-settings-for-split-valuation"
 last_reviewed: 2026-10-02
 publication_wave: "logistics-search-wave-01"
 review_method: "Current SAP Learning S4500 material-valuation lesson + SAP S/4HANA 2025 FPS01 Help cross-check + editorial rewrite"
-search_intent: "SAP MM material valuation standard price moving average price goods receipt invoice receipt GR IR FI postings"
+search_intent: "SAP MM material valuation automatic account determination valuation class transaction key GBB BSX WRX PRD split valuation GR IR FI postings"
 # ai-discovery-managed:start
 structured_data:
   type: TechArticle
@@ -83,9 +100,9 @@ semantic_links:
 <div class="research-canvas context-graph">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP MM / Goods Receipt → Invoice Verification → FI</p>
-      <h1>The quantity changes in logistics.<br />The value change depends on price control.</h1>
-      <p>Material valuation connects a physical event with an accounting result. The same purchase order can produce different FI postings depending on whether the material uses standard price or moving average price, whether the invoice differs from the PO, and whether enough stock still exists when the invoice is posted.</p>
+      <p class="research-canvas__eyebrow">SAP MM / Valuation → Account Determination → FI</p>
+      <h1>Valuation decides how much value moves. Account determination decides where it posts.</h1>
+      <p>A goods movement or supplier invoice can create several accounting lines. To explain them, separate three questions: what business event happened, how the value was calculated, and which G/L account was selected. Price control answers the valuation question; transaction keys, organizational context, and valuation class drive account determination.</p>
       <a class="research-canvas__button" href="#mental-model">Build the model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
@@ -93,8 +110,8 @@ semantic_links:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
     <div>
-      <p><strong>Assessment rule:</strong> separate the document event from the valuation rule.</p>
-      <p><strong>Fast chain:</strong> PO sets the commercial reference → GR changes stock and may create FI → IR creates the supplier liability and resolves price differences → price control decides whether the difference stays in inventory or goes to a price-difference account.</p>
+      <p><strong>Assessment rule:</strong> separate amount logic from account logic.</p>
+      <p><strong>Fast chain:</strong> business event → valuation result → posting purpose → account-determination factors → G/L account. For a PO flow, GR/IR still bridges goods receipt and invoice receipt.</p>
     </div>
     <a href="/labs/enterprise-context/procurement/">Back to Procurement <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
@@ -279,57 +296,253 @@ semantic_links:
   <section class="research-canvas__inventory" id="account-determination" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Automatic account determination</p>
-      <h2>Do not memorize account numbers. Understand the posting purpose.</h2>
+      <h2>The G/L account is the end of a determination chain.</h2>
+      <p>Do not start with an account number. SAP first decides which accounting operation is required, then combines organizational and material context to find the G/L account.</p>
     </header>
 
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="MM automatic account determination transaction keys">
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <p><strong>Fast chain:</strong> business event → value string → transaction/event key → optional general modification → chart of accounts and valuation grouping → valuation class → G/L account.</p>
+    </div>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Factors that influence MM automatic account determination">
       <table class="study-table__table">
         <thead>
-          <tr><th scope="col">Transaction key</th><th scope="col">Purpose</th><th scope="col">Typical role in this topic</th></tr>
+          <tr><th scope="col">Factor</th><th scope="col">Question it answers</th><th scope="col">Why it matters</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">BSX</th><td>Inventory posting</td><td>Stock account for valuated material movements.</td></tr>
-          <tr><th scope="row">WRX</th><td>GR/IR clearing</td><td>Temporary bridge between goods receipt and invoice receipt.</td></tr>
-          <tr><th scope="row">PRD</th><td>Price differences</td><td>Variance posting when price control or stock coverage sends the difference outside inventory.</td></tr>
+          <tr><th scope="row">Business event / movement type</th><td>What happened?</td><td>Controls the goods-movement logic and helps determine which posting operations can be required.</td></tr>
+          <tr><th scope="row">Chart of accounts</th><td>Which G/L account framework applies?</td><td>The company code is assigned to a chart of accounts. Automatic account determination is maintained separately for each chart of accounts.</td></tr>
+          <tr><th scope="row">Valuation area and valuation grouping code</th><td>Which organizational valuation context applies?</td><td>The grouping code can let several valuation areas share the same account assignment or keep them different.</td></tr>
+          <tr><th scope="row">Valuation class</th><td>Which material account family applies?</td><td>Materials that need different stock or consumption accounts can use different valuation classes.</td></tr>
+          <tr><th scope="row">Transaction/event key</th><td>What is the accounting purpose?</td><td>Examples are stock, GR/IR, price difference, or an offsetting entry to inventory.</td></tr>
+          <tr><th scope="row">General modification</th><td>Does one transaction key need a finer split?</td><td>For selected keys such as GBB, it separates business reasons such as production consumption, scrapping, or inventory differences.</td></tr>
         </tbody>
       </table>
     </div>
 
-    <p>The final G/L account depends on the system's automatic account-determination setup and material valuation context. The material master contributes key information such as valuation class and price control. The document history contributes PO price, receipt status, and invoice status.</p>
-    <p><strong>Lead diagnostic rule:</strong> first prove the amount and transaction purpose. Only then investigate why account determination selected a specific G/L account.</p>
+    <p><strong>Lead rule:</strong> an account-determination problem is not proven because a G/L account looks wrong. First prove the business event, expected amount, transaction/event key, organizational context, and material valuation class. Then compare the configured account.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="transaction-keys" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Transaction/event keys</p>
+      <h2>Remember the posting purpose, not customer-specific account numbers.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Important MM transaction event keys">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Key</th><th scope="col">Purpose</th><th scope="col">Typical use</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">BSX</th><td>Stock posting</td><td>Inventory account for valuated stock movements.</td></tr>
+          <tr><th scope="row">WRX</th><td>GR/IR clearing</td><td>Temporary bridge between valuated goods receipt and supplier invoice.</td></tr>
+          <tr><th scope="row">PRD</th><td>Price differences</td><td>Variance outside inventory when price control or stock coverage requires it.</td></tr>
+          <tr><th scope="row">GBB</th><td>Offsetting entry for inventory posting</td><td>Goods issues, scrapping, inventory differences, and other movements where the business reason matters.</td></tr>
+          <tr><th scope="row">UMB</th><td>Gain/loss from revaluation</td><td>Value changes caused by revaluation scenarios.</td></tr>
+          <tr><th scope="row">KDM</th><td>Exchange-rate differences</td><td>Foreign-currency PO cases when an exchange-rate difference cannot be posted to the material account.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Other transaction keys exist for specific processes, for example EIN and EKG where purchase-account management is active, plus additional keys in subcontracting scenarios. For assessment preparation, the important skill is to explain why a key is needed and which business event produced it.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+      <p><strong>Do not confuse two kinds of keys:</strong> an MM transaction/event key such as BSX or GBB describes the posting purpose for automatic account determination. An FI posting key controls line-item behavior such as debit or credit and the account type. They are related in the final accounting document, but they are not the same concept.</p>
+    </div>
+
+    <p><strong>Boundary:</strong> the supplier line does not come from the same MM account-determination rule. The supplier posts through the reconciliation account assigned in Business Partner / Financial Accounting. Tax accounts follow tax determination. This prevents a common error: treating every line in the accounting document as an MM automatic-posting problem.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="value-strings" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Value strings</p>
+      <h2>A value string says what may post. It does not contain the final G/L accounts.</h2>
+    </header>
+
+    <p>SAP provides value strings for accounting-relevant Inventory Management and Invoice Verification processes. A value string contains transaction/event keys for the posting operations that can occur. The G/L account is determined later from the key plus the active organizational and material factors.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Account determination layers">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Layer</th><th scope="col">Meaning</th><th scope="col">Assessment question</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Movement / business process</th><td>The logistics event that is being posted.</td><td>What happened and which movement type or IV process was used?</td></tr>
+          <tr><th scope="row">Value string</th><td>The possible accounting operations for that process.</td><td>Which transaction/event keys can be triggered?</td></tr>
+          <tr><th scope="row">Transaction/event key</th><td>The accounting purpose, such as stock or GR/IR.</td><td>What kind of posting should this line represent?</td></tr>
+          <tr><th scope="row">General modification</th><td>An optional finer split of selected transaction keys.</td><td>Why did this stock movement occur?</td></tr>
+          <tr><th scope="row">Automatic account determination</th><td>The mapping from the active factors to the G/L account.</td><td>Which account should receive this posting in this valuation context?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>For example, a standard valuated goods receipt for a PO can require BSX for inventory and WRX for GR/IR. If a standard-price material has a variance between PO price and valuation price, PRD can also become relevant. The value string defines the possible posting operations; it does not replace the account-determination table.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="organization-and-material" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Organization and material</p>
+      <h2>Chart of accounts, valuation area, and valuation class answer different questions.</h2>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div><h3>Chart of accounts</h3><p>The plant leads to a company code, and the company code uses a chart of accounts. Account determination is maintained for that chart because the meaning and number of a G/L account belong to it.</p></div>
+      <div><h3>Valuation area</h3><p>The valuation area defines where material stock is valuated. In the customizing model covered by SAP Learning, the valuation level is defined as company code or plant. This is a foundational organizational decision.</p></div>
+      <div><h3>Valuation grouping code</h3><p>It groups valuation areas for account determination. The same code can reuse the same G/L mapping; different codes can separate accounts even when the chart of accounts is the same.</p></div>
+    </div>
+
+    <h3>Valuation class is the material-side account key</h3>
+    <p>The valuation class groups materials that should use the same account logic. Material type and account category reference control which valuation classes are allowed. The material then carries the relevant valuation class in its accounting data.</p>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">compare_arrows</span>
+      <p><strong>Do not mix two fields:</strong> price control answers <em>how much</em> inventory is worth (for example S or V). Valuation class helps answer <em>which G/L account family</em> receives the posting. Both can influence the same accounting document, but they solve different problems.</p>
+    </div>
+
+    <p>The exact configuration UI and available organizational choices depend on the deployment model. In an assessment, explain the determination logic first; then state which S/4HANA edition and configuration scope you are talking about.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="account-grouping" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">General modification</p>
+      <h2>GBB needs a second question: why did inventory change?</h2>
+    </header>
+
+    <p>GBB is intentionally broad. A goods issue to production, scrapping, and an inventory difference can all need an offsetting entry to inventory, but Finance normally wants different expense or difference accounts. The account grouping code, also called the general modification, provides that extra split.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Common GBB general modification examples">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Business reason</th><th scope="col">Common movement example</th><th scope="col">Transaction logic</th><th scope="col">Expected account family</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Production consumption</th><td>261</td><td>GBB + VBR in the standard example</td><td>Consumption / production issue</td></tr>
+          <tr><th scope="row">Scrapping</th><td>551</td><td>GBB + VNG in the standard example</td><td>Scrapping expense</td></tr>
+          <tr><th scope="row">Inventory difference</th><td>Physical-inventory difference movement</td><td>GBB + INV in the standard example</td><td>Inventory difference expense or income</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>These are standard examples, not a promise that every customer uses identical settings. The movement type and related indicators drive the relevant modification. The important design point is the extra business-reason dimension.</p>
+    <p><strong>Assessment boundary:</strong> the account grouping code described here is for Inventory Management transactions. It is not used to subdivide Invoice Verification transactions.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="special-cases" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Special cases</p>
+      <h2>Some postings use extra account-determination inputs outside the simple stock example.</h2>
+    </header>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Special MM account determination cases">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Case</th><th scope="col">Determination consequence</th><th scope="col">Lead-level point</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Account-assigned purchasing item</th>
+            <td>GBB plus the account modification of the account assignment category can default the G/L account. With a material, the material valuation class is relevant. Without a material, a material-group valuation class or a blank valuation class can be used, depending on setup.</td>
+            <td>The G/L default and the CO object are different decisions. Cost center, order, WBS element, or another receiver still comes from account assignment.</td>
+          </tr>
+          <tr>
+            <th scope="row">Planned delivery costs</th>
+            <td>They are planned in the PO with condition types. Their account keys come from the purchasing calculation schema and can post through a clearing or provision account at goods receipt.</td>
+            <td>Do not look for these account keys in the MM value string. The purchasing pricing schema owns this part of the design.</td>
+          </tr>
+          <tr>
+            <th scope="row">Unplanned delivery costs</th>
+            <td>Invoice Verification can distribute them across invoice items or post them to a separate G/L account. The separate-account option uses transaction key UPF.</td>
+            <td>The choice changes whether the cost behaves like a price variance on the items or is isolated on its own account.</td>
+          </tr>
+          <tr>
+            <th scope="row">Supplier and tax lines</th>
+            <td>The supplier uses its reconciliation-account logic; tax uses tax determination.</td>
+            <td>Not every line in an MM-triggered accounting document is determined by the same MM transaction key.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="split-valuation" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Split valuation</p>
+      <h2>One material number can have sub-stocks with different values and different account logic.</h2>
+    </header>
+
+    <p>Split valuation is useful when the same material must be valued differently inside one valuation area, for example by procurement type or origin. It avoids separate material numbers, but it adds another operational decision to purchasing and goods movements.</p>
+
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Split valuation concepts">
+      <table class="study-table__table">
+        <thead>
+          <tr><th scope="col">Object</th><th scope="col">Meaning</th><th scope="col">Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Valuation category</th><td>The criterion used to split the stock.</td><td>Procurement type or origin.</td></tr>
+          <tr><th scope="row">Valuation type</th><td>One concrete partial stock inside that category.</td><td>External / in-house, or Germany / China.</td></tr>
+          <tr><th scope="row">Valuation area assignment</th><td>Where the category and types are allowed for use.</td><td>A specific plant when plant-level valuation is active.</td></tr>
+          <tr><th scope="row">Valuation class by type</th><td>Allows partial stocks to reach different stock or consumption accounts.</td><td>External stock and in-house stock can use different account mappings.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Valuation categories and valuation types are defined globally and then assigned for use in valuation areas. If a valuation type is entered in the purchase order, the later goods receipt is tied to that type. If it is not entered in the PO, the valuation type must be provided when the receipt requires it.</p>
+    <p><strong>Design trade-off:</strong> split valuation reduces master-data duplication, but every value-relevant movement must identify the correct partial stock. It increases configuration, master-data, and operational discipline. SAP Learning also notes that split valuation can only be activated for a material when existing stock or open documents do not block the change.</p>
   </section>
 
   <section class="research-canvas__inventory" id="diagnostics" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Diagnostics</p>
-      <h2>If the FI document looks wrong, trace the decision instead of changing the account first.</h2>
+      <h2>If the FI document looks wrong, replay the determination chain.</h2>
+      <p>The fastest path is to find the first wrong decision. Changing a G/L account before that point is understood can hide the real defect.</p>
     </header>
 
     <div class="ecg-determination-list">
       <article class="ecg-determination-detail">
-        <header><div><span>01</span><small>event</small></div><h3>Confirm the posting sequence</h3><p class="ecg-question">Did GR happen before IR, or did the invoice arrive first?</p></header>
+        <header><div><span>01</span><small>event</small></div><h3>Prove the business event and sequence</h3><p class="ecg-question">What was posted, with which movement or IV process, and in what order?</p></header>
         <div class="ecg-decision-columns">
-          <div><h4>Evidence</h4><p>PO history, material document, invoice document, accounting documents.</p></div>
-          <div><h4>Why it matters</h4><p>Valuation can use PO or invoice values differently depending on the sequence.</p></div>
-          <div><h4>Do not do</h4><p>Do not compare only the final FI document with the PO and assume the difference is an account-determination defect.</p></div>
+          <div><h4>Evidence</h4><p>PO history, material document, invoice document, accounting document, reversal status.</p></div>
+          <div><h4>Why it matters</h4><p>A correct account for the wrong movement is still a process defect.</p></div>
+          <div><h4>First split</h4><p>Wrong amount points toward quantity, price, valuation, currency, or condition logic before account mapping.</p></div>
         </div>
       </article>
 
       <article class="ecg-determination-detail">
-        <header><div><span>02</span><small>valuation</small></div><h3>Check S or V and current stock</h3><p class="ecg-question">Should the variance stay outside stock or correct stock value?</p></header>
+        <header><div><span>02</span><small>posting</small></div><h3>Identify the expected posting purpose</h3><p class="ecg-question">Which value string and transaction/event keys should this process produce?</p></header>
         <div class="ecg-decision-columns">
-          <div><h4>Standard price</h4><p>Expect inventory at standard price and variances outside stock.</p></div>
-          <div><h4>Moving average</h4><p>Expect delivered cost to affect stock value when sufficient coverage exists.</p></div>
-          <div><h4>Evidence</h4><p>Material valuation data, stock quantity at invoice time, PO and invoice prices.</p></div>
+          <div><h4>Stock receipt</h4><p>Expect BSX and WRX in the normal valuated PO receipt, with PRD only when the valuation logic requires a difference posting.</p></div>
+          <div><h4>Goods issue</h4><p>For an offsetting inventory entry, determine whether GBB is expected and why the stock left.</p></div>
+          <div><h4>Boundary</h4><p>Do not treat supplier or tax lines as if they came from the same MM transaction key.</p></div>
         </div>
       </article>
 
       <article class="ecg-determination-detail">
-        <header><div><span>03</span><small>account</small></div><h3>Then inspect automatic account determination</h3><p class="ecg-question">Was the posting purpose correct but the G/L account wrong?</p></header>
+        <header><div><span>03</span><small>context</small></div><h3>Rebuild organization and material inputs</h3><p class="ecg-question">Which chart of accounts, valuation grouping code, valuation class, and price-control context were active?</p></header>
         <div class="ecg-decision-columns">
-          <div><h4>Inventory</h4><p>Check the account used for the inventory posting purpose.</p></div>
-          <div><h4>GR/IR</h4><p>Check the clearing account determination and organizational context.</p></div>
-          <div><h4>Price difference</h4><p>Check the price-difference account only after proving that a price-difference posting is actually expected.</p></div>
+          <div><h4>Organization</h4><p>Plant → company code → chart of accounts, plus valuation area and grouping code.</p></div>
+          <div><h4>Material</h4><p>Material type, valuation class, price control, and valuation type when split valuation is active.</p></div>
+          <div><h4>Evidence</h4><p>Use the values that were valid for the posting, not only today's master data after later changes.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>04</span><small>modifier</small></div><h3>Check the extra business-reason split</h3><p class="ecg-question">Does the transaction key use a general modification or another special account key?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>GBB</h4><p>Check the movement type and the resulting general modification such as the production, scrapping, or inventory-difference branch.</p></div>
+          <div><h4>Delivery costs</h4><p>For planned costs, inspect purchasing condition and account keys; for unplanned costs, inspect the Invoice Verification setting.</p></div>
+          <div><h4>Account assignment</h4><p>Separate the G/L default from the cost object or other management-accounting receiver.</p></div>
+        </div>
+      </article>
+
+      <article class="ecg-determination-detail">
+        <header><div><span>05</span><small>proof</small></div><h3>Compare the configured account and simulate before changing it</h3><p class="ecg-question">Does the active combination map to the expected G/L account?</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Simulation</h4><p>The simulation in Configure Automatic Postings can test material or valuation class, plant, and the relevant Inventory Management or Invoice Verification transaction.</p></div>
+          <div><h4>Posting readiness</h4><p>Check that the G/L account exists and that field-status requirements are compatible with the movement and account assignment.</p></div>
+          <div><h4>Proof</h4><p>After correction, repeat the supported business process or test scenario and compare the new accounting document with the expected posting purpose.</p></div>
         </div>
       </article>
     </div>
@@ -337,27 +550,29 @@ semantic_links:
 
   <section class="research-canvas__inventory" id="assessment" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">60-second assessment answer</p>
-      <h2>Explain the event, the price control, and the destination of the variance.</h2>
+      <p class="research-canvas__eyebrow">60–90 second assessment answer</p>
+      <h2>Explain automatic account determination as a chain, not as a transaction code.</h2>
     </header>
 
     <div class="research-canvas__boundary">
       <span class="material-symbols-outlined" aria-hidden="true">record_voice_over</span>
-      <p><strong>Answer:</strong> “When I post a goods receipt for a PO, SAP creates a material document, and if the movement is valuated it also creates an accounting document. GR/IR is the temporary offset because the supplier liability is normally created only at invoice receipt. With standard price, stock is posted at the material's standard price and differences to the PO or invoice are posted to price-difference accounts. With moving average price, the GR is normally posted at the PO value and the moving average is recalculated. If the invoice later differs from the PO, the variance normally adjusts stock when there is enough stock coverage; otherwise the uncovered part goes to a price-difference account. I would diagnose a wrong posting by checking document sequence, price control, stock coverage, and only then automatic account determination.”</p>
+      <p><strong>Answer:</strong> “In MM, I do not normally enter the G/L account for a valuated goods movement. SAP first identifies the business event and the posting operations required for it. A value string contains transaction/event keys such as BSX for stock, WRX for GR/IR, PRD for price differences, or GBB for an offsetting inventory entry. The final account is then determined from the chart of accounts, valuation grouping context, transaction key, valuation class, and, where the key supports it, a general modification. For GBB, that modification lets us separate production consumption, scrapping, and inventory differences. I also separate this from price control: S or V decides valuation behavior, while valuation class helps decide the account. If a posting is wrong, I trace the event, key, organizational and material inputs, modifier, and configured account before changing Customizing.”</p>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="common-mistakes" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Common mistakes</p>
-      <h2>Five statements to avoid in an assessment.</h2>
+      <h2>Seven statements to avoid in an assessment.</h2>
     </header>
     <div class="ecg-decision-columns">
-      <div><h3>“Every goods movement creates FI.”</h3><p>No. The movement must be valuation-relevant.</p></div>
-      <div><h3>“GR creates the supplier liability.”</h3><p>Not in the normal PO flow. GR normally posts against GR/IR; the supplier liability is created at invoice receipt.</p></div>
-      <div><h3>“Standard price follows the PO.”</h3><p>No. Stock remains at standard price; procurement differences are separated.</p></div>
-      <div><h3>“MAP means all differences go to stock.”</h3><p>Only when the stock-coverage rule allows it.</p></div>
-      <div><h3>“A wrong G/L means OBYC is wrong.”</h3><p>First prove that the business event, valuation method, amount, and transaction key are correct.</p></div>
+      <div><h3>“The movement type directly stores the G/L account.”</h3><p>No. It helps drive posting logic. The final G/L comes from automatic account determination.</p></div>
+      <div><h3>“Valuation class alone determines the account.”</h3><p>No. It is one input together with chart of accounts, transaction key, valuation grouping, and any active modifier.</p></div>
+      <div><h3>“Price control and valuation class do the same thing.”</h3><p>No. Price control drives valuation behavior; valuation class groups materials for account determination.</p></div>
+      <div><h3>“GBB means one consumption account.”</h3><p>No. General modification can separate production consumption, scrapping, inventory differences, and other reasons.</p></div>
+      <div><h3>“General modification also subdivides Invoice Verification.”</h3><p>Not in this MM account-grouping logic. It is used for Inventory Management transactions.</p></div>
+      <div><h3>“The supplier line is determined by BSX, WRX, or GBB.”</h3><p>No. The supplier uses its reconciliation-account logic; tax has its own determination.</p></div>
+      <div><h3>“Split valuation means creating another material number.”</h3><p>No. It keeps one material number and separates partial stocks with valuation types.</p></div>
     </div>
   </section>
 
@@ -378,10 +593,17 @@ semantic_links:
     <header>
       <p class="research-canvas__eyebrow">Primary sources</p>
       <h2>Use SAP product documentation for release-sensitive behavior.</h2>
-      <p>This page explains the standard logic used in the current SAP Learning procurement course and SAP S/4HANA Help examples. Customer configuration, localization, Material Ledger settings, special stock, account assignment, planned delivery costs, exchange rates, and invoice sequence can add more posting lines.</p>
+      <p>This page explains the determination model and the standard examples used in current SAP Learning material. Customer configuration, localization, Material Ledger settings, special stock, account assignment, planned delivery costs, exchange rates, and deployment model can change the detailed posting lines or configuration path.</p>
     </header>
     <div class="research-route-list">
-      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/analyzing-material-valuation" target="_blank" rel="noopener"><span>SAP</span><strong>Analyzing Material Valuation</strong><small>Current SAP Learning lesson for S4500 procurement valuation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/business-processes-in-sap-s-4hana-sourcing-procurement/analyzing-material-valuation" target="_blank" rel="noopener"><span>SAP</span><strong>Analyzing Material Valuation</strong><small>Standard price, moving average price, and procurement valuation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/describing-automatic-account-determination" target="_blank" rel="noopener"><span>SAP</span><strong>Describing Automatic Account Determination</strong><small>Organizational, material, and business-transaction factors.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/determining-the-relevance-of-company-codes-and-valuation-areas" target="_blank" rel="noopener"><span>SAP</span><strong>Company Codes and Valuation Areas</strong><small>Chart of accounts, valuation area, and valuation grouping code.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/creating-valuation-classes-and-account-category-references" target="_blank" rel="noopener"><span>SAP</span><strong>Valuation Classes and Account Category References</strong><small>Material-side grouping for account determination.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/setting-up-account-determination-for-specific-transactions" target="_blank" rel="noopener"><span>SAP</span><strong>Account Determination for Specific Transactions</strong><small>Value strings and transaction/event keys such as BSX, WRX, PRD, and GBB.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/subdividing-a-transaction-with-the-account-grouping-code" target="_blank" rel="noopener"><span>SAP</span><strong>Account Grouping Code</strong><small>General modification for finer Inventory Management account splits.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/adjusting-account-determination-for-special-cases" target="_blank" rel="noopener"><span>SAP</span><strong>Account Determination for Special Cases</strong><small>Default accounts and account-assigned purchasing scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://learning.sap.com/courses/cross-functional-customizing-in-sap-s-4hana-materials-management/adjusting-settings-for-split-valuation" target="_blank" rel="noopener"><span>SAP</span><strong>Split Valuation</strong><small>Valuation categories, valuation types, and account consequences.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/be5eb6531de6b64ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Invoices for Purchase Orders</strong><small>Price variance behavior for standard price and moving average price.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/8860b6531de6b64ce10000000a174cb4.html" target="_blank" rel="noopener"><span>SAP</span><strong>Example: Material with MAP</strong><small>GR, invoice, GR/IR, stock correction, and stock-coverage logic.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://help.sap.com/docs/s4hana-best-practices/ycoa-1f2ae10b96f740759d66e695f953aa8f/wrx-gr-ir-clearing-account" target="_blank" rel="noopener"><span>SAP</span><strong>WRX — GR/IR Clearing Account</strong><small>Account-determination example for inventory, GR/IR, and price variance.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
