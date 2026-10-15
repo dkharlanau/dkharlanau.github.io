@@ -47,6 +47,11 @@ career_skills:
     </div>
   </section>
 
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">route</span>
+    <p><strong>MRP 2 field reference:</strong> if the issue is why a proposal is for production or purchasing, or why a proposed receiving or staging location is wrong, study the <a href="/labs/enterprise-context/procurement/mrp2-procurement-controls/">Procurement Type, Special Procurement and Storage Locations guide</a>.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="planning-chain" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Mental model</p>
