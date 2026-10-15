@@ -696,8 +696,12 @@ def test_verified_articles_connect_author_website_collection_and_related_pages()
 
 
 def test_llms_manifest_uses_one_person_entity_id():
+    import yaml
+
     text = (REPO_ROOT / "_includes" / "llms-manifest.txt").read_text(encoding="utf-8")
-    assert "https://dkharlanau.github.io/#dkharlanau" in text
+    identity = yaml.safe_load((REPO_ROOT / "_data" / "identity.yml").read_text(encoding="utf-8"))
+    assert identity["entity_id"] == "https://dkharlanau.github.io/#dkharlanau"
+    assert "| Person entity ID | {{ site.data.identity.entity_id }} |" in text
     assert "https://dkharlanau.github.io/about/#person" not in text
 
 
