@@ -33,6 +33,11 @@ from datetime import date, datetime
 from pathlib import Path
 
 try:
+    from scripts.lib.content_model import effective_frontmatter, infer_permalink, is_indexable_frontmatter, is_retrieval_eligible_frontmatter
+except ModuleNotFoundError:
+    from lib.content_model import effective_frontmatter, infer_permalink, is_indexable_frontmatter, is_retrieval_eligible_frontmatter
+
+try:
     import yaml
 except ImportError:
     print("ERROR: PyYAML required. Install: pip install pyyaml", file=sys.stderr)
@@ -147,6 +152,11 @@ def parse_frontmatter(path):
         print(f"YAML parse error in {path}: {e}", file=sys.stderr)
         fm = {}
 
+    if fm:
+        fm = effective_frontmatter(REPO_DIR, Path(path), fm)
+        route = infer_permalink(Path(path).relative_to(REPO_DIR).as_posix(), fm)
+        if route:
+            fm["permalink"] = route
     return fm, body
 
 
@@ -643,21 +653,12 @@ def generate_markdown_clusters(all_pages, check_mode=False):
 
 def _is_indexable(fm):
     """Return True if frontmatter signals the page should be indexed."""
-    robots = str(fm.get("robots", "")).lower()
-    if "noindex" in robots:
-        return False
-    if fm.get("sitemap") is False:
-        return False
-    return True
+    return is_indexable_frontmatter(fm)
 
 
 def _is_retrieval_eligible(fm):
     """Return True only for reviewed, verified, indexable public content."""
-    return (
-        fm.get("verified") is True
-        and fm.get("status") == "reviewed"
-        and _is_indexable(fm)
-    )
+    return is_retrieval_eligible_frontmatter(fm)
 
 
 EXPERT_CONTEXT_COPY = {
