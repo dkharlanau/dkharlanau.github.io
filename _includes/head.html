@@ -209,22 +209,19 @@ normalize_whitespace %}
     "@id": "https://dkharlanau.github.io/#dkharlanau"
   },
   "about": [
-    {"@type": "Thing", "name": "SAP learning and assessment practice"},
-    {"@type": "Thing", "name": "SAP AMS optimization"}
+    {% for direction in site.data.site_focus.directions %}
+    {"@type": "Thing", "name": {{ direction.label | jsonify }}}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
   ],
   "hasPart": [
+    {% for direction in site.data.site_focus.directions %}
     {
       "@type": "WebPage",
-      "@id": "https://dkharlanau.github.io/learn/#learning",
-      "url": "https://dkharlanau.github.io/learn/",
-      "name": "SAP Learning & Assessment Practice"
-    },
-    {
-      "@type": "WebPage",
-      "@id": "https://dkharlanau.github.io/services/sap-ams-consulting/#ams-optimization",
-      "url": "https://dkharlanau.github.io/services/sap-ams-consulting/",
-      "name": "SAP AMS Optimization"
-    }
+      "@id": {{ direction.human_entry | append: '#webpage' | jsonify }},
+      "url": {{ direction.human_entry | jsonify }},
+      "name": {{ direction.label | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
   ]
 }
 </script>

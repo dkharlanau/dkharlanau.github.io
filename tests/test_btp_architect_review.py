@@ -68,7 +68,7 @@ class ArchitectReviewTests(unittest.TestCase):
         version=subprocess.check_output([node,'-p','process.versions.node'],text=True).strip()
         if int(version.split('.')[0])<22:self.skipTest('Exercise requires Node.js >=22.')
         test_file=ROOT/'assets/examples/btp-recovery-contract.test.mjs'
-        output=subprocess.run([node,'--test',str(test_file)],check=True,capture_output=True,text=True,timeout=20).stdout
+        output=subprocess.run([node,'--test','--test-reporter=tap',str(test_file)],check=True,capture_output=True,text=True,timeout=20).stdout
         self.assertIn('# pass 18',output);self.assertIn('# fail 0',output)
 
 if __name__=='__main__':unittest.main()

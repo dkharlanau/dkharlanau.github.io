@@ -12,6 +12,26 @@ from scripts.content_quality import (
 from scripts.lib.content_model import ContentPage, parse_frontmatter
 
 
+def test_changed_source_scope_includes_staged_unstaged_and_untracked_files(tmp_path, monkeypatch):
+    import subprocess
+    import scripts.content_quality as quality
+
+    def git(*args):
+        subprocess.run(['git', *args], cwd=tmp_path, check=True, capture_output=True)
+
+    git('init', '-q')
+    source = tmp_path / 'guide.md'
+    source.write_text('Original synthetic guide.\n')
+    git('add', 'guide.md')
+    git('-c', 'user.name=Synthetic check', '-c', 'user.email=check@example.test', 'commit', '-qm', 'Synthetic baseline')
+    source.write_text('Changed synthetic guide.\n')
+    (tmp_path / 'staged.md').write_text('Staged synthetic guide.\n')
+    git('add', 'staged.md')
+    (tmp_path / 'untracked.md').write_text('Untracked synthetic guide.\n')
+    monkeypatch.setattr(quality, 'REPO_ROOT', tmp_path)
+    assert quality.git_changed_paths('HEAD') == {'guide.md', 'staged.md', 'untracked.md'}
+
+
 def page(path: str = "atlas/diagnostics/example.md", **kwargs) -> ContentPage:
     values = {
         "source_path": Path(path),
@@ -57,6 +77,15 @@ def test_malformed_frontmatter_is_reported_without_exposing_content(tmp_path):
     _, _, error = parse_frontmatter(source)
     assert error
     assert "private text" not in error
+
+
+def test_topic_signal_rule_accepts_topics_and_retains_missing_signal_detection():
+    config = load_config()
+    with_topics = page(tags=[], topics=['synthetic-integration'])
+    findings, _ = check_source_pages([with_topics], [], config)
+    assert not any(item.rule_id == 'FM008_MISSING_TOPIC_TAGS' for item in findings)
+    findings, _ = check_source_pages([page(tags=[], topics=[])], [], config)
+    assert any(item.rule_id == 'FM008_MISSING_TOPIC_TAGS' for item in findings)
 
 
 def test_hard_identity_and_eligibility_rules_are_stable():
