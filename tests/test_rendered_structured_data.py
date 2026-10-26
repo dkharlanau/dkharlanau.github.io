@@ -83,6 +83,21 @@ def _plain_text(value: str) -> str:
     return " ".join(html.unescape(TAG_RE.sub(" ", value)).split())
 
 
+def test_personal_lab_home_schema_matches_the_visible_entry_page():
+    home = _require_site() / "index.html"
+    blocks = _jsonld_blocks(home.read_text(encoding="utf-8"), Path("index.html"))
+    types = set()
+    for block in blocks:
+        _collect_types(block, types)
+    assert {"WebPage", "WebSite"}.issubset(types)
+    assert not types.intersection({"ProfessionalService", "Service", "Offer", "OfferCatalog", "FAQPage"}), (
+        "The personal lab homepage must not offer commercial services or mark up an absent FAQ."
+    )
+    about = _require_site() / "about/index.html"
+    about_blocks = _jsonld_blocks(about.read_text(encoding="utf-8"), Path("about/index.html"))
+    assert any("Person" in _collect_types(block) for block in about_blocks)
+
+
 def test_rendered_jsonld_is_valid_json():
     for html_path in _html_files():
         content = html_path.read_text(encoding="utf-8", errors="ignore")
