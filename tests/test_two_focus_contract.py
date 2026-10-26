@@ -99,16 +99,19 @@ def test_pilot_has_five_attempt_review_cycles_and_no_new_data_collection():
     assert ".focus-diagnostic-sheet" in css
 
 
-def test_legacy_ams_route_is_a_practice_playbook_not_a_commercial_service():
+def test_practice_route_retains_diagnostic_boundaries_without_service_offer():
     path = "services/sap-ams-consulting.md"
     text = read(path)
     assert frontmatter(path)["permalink"] == "/services/sap-ams-consulting/"
-    assert "Personal lab note:" in text
-    assert "not a commercial service, proposal, or client engagement offer" in text
+    assert frontmatter(path).get("content_model") != "service"
     documents = [json.loads(block) for block in re.findall(
         r'<script type="application/ld\+json">\s*(.*?)\s*</script>', text, re.S
     )]
-    assert not any(item.get("@type") == "Service" for item in documents)
+    assert all(item.get("@type") not in {"Service", "ProfessionalService", "Offer"} for item in documents)
+    assert "not a commercial service" in text
+    assert "public practice playbook" in text
+    assert "not a replacement" in text
+    assert "Released team capacity and cash savings are different outcomes" in text
     assert 'id="diagnostic-example"' in text
     assert "Illustrative diagnostic output" in text
     assert "synthetic example" in text

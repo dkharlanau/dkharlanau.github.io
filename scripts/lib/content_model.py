@@ -9,7 +9,9 @@ review that question safely.
 from __future__ import annotations
 
 import hashlib
+import copy
 import re
+from functools import lru_cache
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable
@@ -19,6 +21,81 @@ import yaml
 
 DEFAULT_BASE_URL = "https://dkharlanau.github.io"
 FRONT_MATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*(?:\n|$)", re.DOTALL)
+
+
+@lru_cache(maxsize=16)
+def _read_site_config(path: str, modified_ns: int, size: int) -> dict[str, Any]:
+    """Cache by file revision, never just by checkout path."""
+    value = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
+    if not isinstance(value, dict):
+        raise ValueError("Jekyll configuration must be a mapping")
+    return value
+
+
+def _deep_merge(left: dict, right: dict) -> dict:
+    result = copy.deepcopy(left)
+    for key, value in right.items():
+        result[key] = _deep_merge(result[key], value) if isinstance(result.get(key), dict) and isinstance(value, dict) else copy.deepcopy(value)
+    return result
+
+
+def effective_frontmatter(repo_root: Path, path: Path, fm: dict[str, Any]) -> dict[str, Any]:
+    """Apply Jekyll's path/type defaults before explicit page metadata.
+
+    This models declarations, not human review or live Search eligibility.
+    Jekyll 3.10 applies more specific paths first in precedence, then typed
+    scopes; later equally specific scopes win. Frontmatter always overrides.
+    """
+    config_path = repo_root / "_config.yml"
+    if not config_path.is_file():
+        return copy.deepcopy(fm)
+    stat = config_path.stat()
+    config = _read_site_config(str(config_path.resolve()), stat.st_mtime_ns, stat.st_size)
+    sets = config.get("defaults", [])
+    if not isinstance(sets, list):
+        return copy.deepcopy(fm)
+    relative = path.relative_to(repo_root).as_posix()
+    collections_dir = str(config.get("collections_dir") or "").strip("/")
+    logical = relative.removeprefix(collections_dir + "/") if collections_dir else relative
+    first = logical.split("/", 1)[0]
+    collections = config.get("collections", {})
+    collection_types = set(collections) if isinstance(collections, (dict, list)) else set()
+    collection_types.update({"posts", "drafts"})
+    page_type = first[1:] if first.startswith("_") and first[1:] in collection_types else "pages"
+    defaults, old_scope = {}, None
+    aliases = {"page": "pages", "post": "posts", "draft": "drafts"}
+    for entry in sets:
+        if not isinstance(entry, dict) or not isinstance(entry.get("values"), dict):
+            continue
+        scope = entry.get("scope") or {}
+        if not isinstance(scope, dict):
+            continue
+        scope_type = scope.get("type")
+        if scope_type is not None and aliases.get(scope_type, scope_type) != page_type:
+            continue
+        prefix = str(scope.get("path") or "").strip("/")
+        logical_prefix = prefix.removeprefix(collections_dir + "/") if collections_dir else prefix
+        if "*" in prefix:
+            matches = [item.relative_to(repo_root).as_posix() for item in repo_root.glob(prefix)]
+            if not any(relative == match or relative.startswith(match + "/") for match in matches):
+                continue
+        elif logical_prefix and logical != logical_prefix and not logical.startswith(logical_prefix + "/"):
+            continue
+        specificity = (len(prefix) + bool(prefix), "type" in scope)
+        if old_scope is None or specificity >= old_scope:
+            defaults = _deep_merge(defaults, entry["values"])
+            old_scope = specificity
+        else:
+            defaults = _deep_merge(entry["values"], defaults)
+    return _deep_merge(defaults, fm)
+
+
+def is_indexable_frontmatter(fm: dict[str, Any]) -> bool:
+    return "noindex" not in str(fm.get("robots") or "").lower() and fm.get("sitemap", True) is not False
+
+
+def is_retrieval_eligible_frontmatter(fm: dict[str, Any]) -> bool:
+    return fm.get("verified") is True and fm.get("status") == "reviewed" and is_indexable_frontmatter(fm)
 
 
 @dataclass
@@ -120,14 +197,15 @@ def infer_permalink(rel_path: str, fm: dict[str, Any]) -> str:
         return explicit
     path = Path(rel_path)
     stem = path.stem
+    slug = str(fm["slug"]) if fm.get("slug") is not None else re.sub(r"^\d{2,4}-\d{1,2}-\d{1,2}-", "", stem)
     if rel_path.startswith("_blog/"):
-        return f"/blog/{stem}/"
+        return f"/blog/{slug}/"
     if rel_path.startswith("_notes/"):
-        return f"/notes/{stem}/"
+        return f"/notes/{slug}/"
     if rel_path.startswith("_radar/"):
-        return f"/radar/{stem}/"
+        return f"/radar/{slug}/"
     if rel_path.startswith("_news/"):
-        return f"/news/{stem}/"
+        return f"/news/{slug}/"
     if rel_path.startswith("_glossary/"):
         return f"/atlas/glossary/{stem}/"
     return ""
@@ -170,6 +248,7 @@ def infer_content_model(rel_path: str, fm: dict[str, Any]) -> tuple[str, bool]:
 
 
 def make_page(repo_root: Path, path: Path, fm: dict[str, Any], body: str, base_url: str = DEFAULT_BASE_URL) -> ContentPage:
+    fm = effective_frontmatter(repo_root, path, fm)
     rel = path.relative_to(repo_root).as_posix()
     expert = fm.get("expert_context") or {}
     topics = _as_list(fm.get("topics")) + _as_list(fm.get("tags"))
@@ -194,7 +273,7 @@ def make_page(repo_root: Path, path: Path, fm: dict[str, Any], body: str, base_u
         verified=fm.get("verified") is True,
         robots=str(fm.get("robots") or ""),
         sitemap_enabled=fm.get("sitemap", True) is not False,
-        retrieval_eligible=bool(resolved_permalink) and fm.get("verified") is True and fm.get("status") == "reviewed" and "noindex" not in str(fm.get("robots") or "").lower() and fm.get("sitemap", True) is not False,
+        retrieval_eligible=bool(resolved_permalink) and is_retrieval_eligible_frontmatter(fm),
         expert_context_enabled=expert.get("enabled") is True,
         topics=list(dict.fromkeys(topics)),
         tags=_as_list(fm.get("tags")),

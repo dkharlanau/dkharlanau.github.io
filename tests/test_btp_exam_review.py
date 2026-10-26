@@ -54,7 +54,7 @@ class BtpExamReviewTests(unittest.TestCase):
         if not node:self.skipTest('Node is not installed; the drill is a separate check.')
         version=subprocess.check_output([node,'-p','process.versions.node'],text=True).strip()
         if int(version.split('.')[0])<22:self.skipTest('Review uses Node 22 or later.')
-        result=subprocess.run([node,str(ROOT/'assets/downloads/btp-recovery-drill.mjs')],
+        result=subprocess.run([node,'--test','--test-reporter=tap',str(ROOT/'assets/downloads/btp-recovery-drill.mjs')],
             check=True,capture_output=True,text=True,timeout=20)
         self.assertIn('# pass 11',result.stdout);self.assertIn('# fail 0',result.stdout)
 

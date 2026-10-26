@@ -219,7 +219,7 @@ def check_source_pages(pages: list[ContentPage], parse_errors: list[dict[str, An
                     add_finding(findings, page, "FRESHNESS001_STALE_CONTENT", "warning", f"Last review signal is {age} days old; configured limit is {limit} days.", remediation="Review the page for changed terminology, links, release context, and operational boundaries. Do not update the date without a real review.")
             except ValueError:
                 add_finding(findings, page, "FM009_INVALID_DATE", "warning", "Publication or review date is not ISO-formatted.", remediation="Use an ISO date or timestamp.")
-        if not page.tags and page.content_model in {"diagnostic", "technical_guide", "architecture", "research", "opinion"}:
+        if not page.topics and page.content_model in {"diagnostic", "technical_guide", "architecture", "research", "opinion"}:
             add_finding(findings, page, "FM008_MISSING_TOPIC_TAGS", "warning", "Substantial page has no tags or topic signals.", remediation="Add a small, accurate topic set.")
         groups = semantic_signal_groups(page)
         missing = [name for name, terms in groups.items() if name in config["content_models"].get(page.content_model, {}).get("required_signals", []) and not any(term in text for term in terms)]
@@ -424,8 +424,15 @@ def git_changed_paths(ref: str | None) -> set[str]:
     if not ref:
         return set()
     try:
-        result = subprocess.run(["git", "diff", "--name-only", f"{ref}...HEAD"], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
-        return {line.strip() for line in result.stdout.splitlines() if line.strip()}
+        paths = set()
+        for args in (
+            ["diff", "--name-only", "-z", f"{ref}...HEAD"],
+            ["diff", "--name-only", "-z", "HEAD"],
+            ["ls-files", "--others", "--exclude-standard", "-z"],
+        ):
+            result = subprocess.run(["git", *args], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
+            paths.update(path for path in result.stdout.split("\0") if path)
+        return paths
     except (subprocess.CalledProcessError, FileNotFoundError):
         return set()
 

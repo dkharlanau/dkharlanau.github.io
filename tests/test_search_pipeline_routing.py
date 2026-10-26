@@ -46,8 +46,8 @@ def test_noindex_personal_lab_hubs_are_not_search_targets():
     lab = directions["ai-engineering-lab"]
     assert knowledge["human_entry"] == ORIGIN + "/knowledge/"
     assert knowledge["human_entry_status"] == "review-gated"
-    assert ORIGIN + "/knowledge/" in knowledge["non_indexable_practice_routes"]
-    assert ORIGIN + "/radar/" in lab["non_indexable_observation_routes"]
+    assert knowledge["search_state"] == "staged"
+    assert ORIGIN + "/radar/" in lab["non_indexable_supporting_routes"]
     for url in (ORIGIN + "/knowledge/", ORIGIN + "/radar/"):
         assert "noindex" in page_metadata(url).get("robots", "").lower()
         assert all(url not in d["indexable_entry_points"] for d in directions.values())
@@ -64,10 +64,33 @@ def test_recovery_priorities_are_real_lab_pages_not_commercial_routes():
     assert not any(rule["prefix"].startswith("/services/") for rule in cfg["prefix_rules"])
 
 
+def test_added_recovery_routes_are_reviewed_and_indexable():
+    cfg = json.loads((ROOT / "config/indexation-recovery.json").read_text(encoding="utf-8"))
+    for item in cfg["priority_routes"]:
+        if not item["path"].startswith(("/lab/", "/labs/")):
+            continue
+        metadata = page_metadata(ORIGIN + item["path"])
+        assert metadata.get("verified") is True, item["path"]
+        assert metadata.get("status") == "reviewed", item["path"]
+        assert "noindex" not in metadata.get("robots", "").lower(), item["path"]
+        assert metadata.get("sitemap") is True, item["path"]
+
+
+def test_ai_search_answer_route_agrees_with_the_current_focus_owner():
+    focus = yaml.safe_load((ROOT / "_data/site_focus.yml").read_text(encoding="utf-8"))
+    knowledge = next(d for d in focus["directions"] if d["id"] == "knowledge-practice")
+    profile = json.loads((ROOT / "ai/ai-search-profile.json").read_text(encoding="utf-8"))
+    assert profile["modules"]["answerPages"]["url"] == knowledge["search_owner"]
+
+
 def test_post_deploy_search_audit_and_safe_indexnow_gate():
     google = (ROOT / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
     indexnow = (ROOT / ".github/workflows/indexnow.yml").read_text(encoding="utf-8")
-    assert "- pages build and deployment" in google
+    workflow = yaml.load(google, Loader=yaml.BaseLoader)
+    assert workflow["on"]["workflow_run"] == {
+        "workflows": ["pages build and deployment"], "types": ["completed"]
+    }
+    assert workflow["concurrency"]["cancel-in-progress"] == "false"
     assert "github.event.workflow_run.conclusion == 'success'" in google
     assert "github.event.workflow_run.head_branch == 'main'" in google
     assert "post-deploy priority refresh" in google

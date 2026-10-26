@@ -3,14 +3,17 @@ from pathlib import Path
 from html.parser import HTMLParser
 import collections
 import json
+import importlib.util
 import re
 import shutil
 import subprocess
 import tempfile
 import unittest
-import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
+spec = importlib.util.spec_from_file_location('btp_handbook_helpers', Path(__file__).with_name('test_btp_decisions.py'))
+helpers = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(helpers)
 LEGACY = set('''big-picture architect-roles ea-value frameworks toolchain rba rsa trace
 platform-scope accounts design-choices procurement-case btp-guidance btp-methods
 btp-design-evidence build-clean-core build-tools build-runtimes build-experience
@@ -37,6 +40,8 @@ def rendered_source():
     source = (ROOT / 'atlas/sap/sap-btp.md').read_text(encoding='utf-8')
     def expand(match):
         name = match.group(1)
+        if name == 'service-map.html':
+            return helpers.render_catalogue()
         return (ROOT / '_includes/btp-handbook' / name).read_text(encoding='utf-8')
     return re.sub(r'{% include btp-handbook/([a-z-]+\.html) %}', expand, source)
 
@@ -49,30 +54,27 @@ class BtpHandbookTests(unittest.TestCase):
     def test_unique_ids_and_resolvable_anchors(self):
         duplicate = [key for key,count in collections.Counter(self.markup.ids).items() if count > 1]
         self.assertEqual([], duplicate)
-        # A Liquid-generated service reference is resolved when Jekyll renders the page.
-        static_anchors = {value for value in self.markup.anchors if "{{" not in value}
-        self.assertEqual(set(), static_anchors - set(self.markup.ids))
-        services = json.loads((ROOT / '_data/btp_services.json').read_text(encoding='utf-8'))
-        for group in services:
-            self.assertIn(group['reference'], self.markup.ids)
+        self.assertEqual(set(), set(self.markup.anchors) - set(self.markup.ids))
     def test_existing_deep_links_survive(self):
         self.assertEqual(set(), LEGACY - set(self.markup.ids))
     def test_single_title_and_heading_order(self):
         self.assertEqual(1, self.markup.headings.count(1))
         for left,right in zip(self.markup.headings,self.markup.headings[1:]):
             self.assertLessEqual(right,left+1)
-    def test_sixteen_readable_architecture_decision_trees(self):
-        # The current handbook uses readable text decision trees rather than retired SVGs.
-        trees = [int(value) for value in re.findall(r'Tree\s+(\d+)', self.source)]
-        self.assertEqual(list(range(1, 17)), sorted(set(trees)))
-        self.assertGreaterEqual(self.source.count('<pre class="btp-tree"'), 16)
-        self.assertIn('aria-label="Architecture decision or request flow"', self.source)
+    def test_decision_flows_are_readable_and_keyboard_accessible(self):
+        trees = re.findall(r'<pre\b([^>]*class="btp-tree"[^>]*)>([\s\S]*?)</pre>', self.source)
+        self.assertEqual(18, len(trees))
+        for attrs, text in trees:
+            self.assertIn('tabindex="0"', attrs)
+            self.assertRegex(attrs, r'aria-label="[^"]+"')
+            self.assertTrue(text.strip())
+            self.assertTrue(any(symbol in text for symbol in ('├', '└', '→', '↓')))
+            self.assertNotIn('{{', text)
     def test_glossary_and_lab_are_present(self):
         self.assertGreaterEqual(self.source.count('class="btp-term"'),100)
-        self.assertIn('id="development-lab"',self.source)
+        self.assertIn('id="contract-exercise"',self.source)
         self.assertIn('btp-recovery-drill.mjs',self.source)
-        self.assertTrue((ROOT/'assets/downloads/btp-recovery-drill.mjs').is_file())
-        self.assertIn('It is a simulation, not an SAP API',self.source)
+        self.assertIn('not an SAP API or a distributed database test',self.source)
     def test_example_curl_json_is_valid(self):
         lab=(ROOT/'_includes/btp-handbook/lab.html').read_text(encoding='utf-8')
         bodies=re.findall(r"-d '(\{[\s\S]*?\})'",lab)
@@ -87,7 +89,7 @@ class BtpHandbookTests(unittest.TestCase):
             target=Path(temp)/'lab'
             scaffold=ROOT/'assets/downloads/btp-review-lab.mjs'
             subprocess.run([node,str(scaffold),str(target)],check=True,capture_output=True,text=True,timeout=20)
-            result=subprocess.run([node,'--test','test/policy.test.cjs'],cwd=target,check=True,capture_output=True,text=True,timeout=20)
+            result=subprocess.run([node,'--test','--test-reporter=tap','test/policy.test.cjs'],cwd=target,check=True,capture_output=True,text=True,timeout=20)
             self.assertIn('# pass 17',result.stdout)
             self.assertIn('# fail 0',result.stdout)
 
