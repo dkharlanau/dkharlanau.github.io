@@ -502,8 +502,8 @@ Rules:
 {% endif %}
 {% endif %}
 
-{% comment %} FAQPage — existing homepage feature, left untouched. {% endcomment %}
-{% if page.home_locale %}
+{% comment %} Homepage FAQ markup requires the actual visible FAQ section. {% endcomment %}
+{% if page.home_locale and page.sections contains 'faq' %}
 {% assign home_faq = localized_home.content.faq | default: site.data.home.faq %}
 {% if home_faq and home_faq.items and home_faq.items.size > 0 %}
 <script type="application/ld+json">
@@ -525,30 +525,6 @@ Rules:
 }
 </script>
 {% endif %}
-{% endif %}
-
-{% if page.home_locale and home_content.hero.visual.items %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "@id": "{{ canonical_url }}#sap-consulting",
-  "name": "Dzmitryi Kharlanau — SAP Consulting",
-  "url": "{{ canonical_url }}",
-  "description": {{ page_description | truncate: 300, '' | jsonify }},
-  "inLanguage": "{{ structured_language }}",
-  "provider": {"@type": "Person", "@id": "{{ author_id }}", "name": {{ resume.name | jsonify }}},
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": {{ home_content.hero.visual.title | jsonify }},
-    "itemListElement": [
-      {% for item in home_content.hero.visual.items %}
-      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": {{ item.title | jsonify }}, "description": {{ item.detail | jsonify }}}}{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    ]
-  }
-}
-</script>
 {% endif %}
 
 {% comment %} BreadcrumbList (Google-supported rich result) for indexable pages with clear hierarchy. {% endcomment %}
