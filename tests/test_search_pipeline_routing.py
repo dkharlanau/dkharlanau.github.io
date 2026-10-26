@@ -87,8 +87,15 @@ def test_post_deploy_search_audit_and_safe_indexnow_gate():
     google = (ROOT / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
     indexnow = (ROOT / ".github/workflows/indexnow.yml").read_text(encoding="utf-8")
     workflow = yaml.load(google, Loader=yaml.BaseLoader)
+    stable_pages = yaml.load(
+        (ROOT / ".github/workflows/publish-stable-pages.yml").read_text(encoding="utf-8"),
+        Loader=yaml.BaseLoader,
+    )
+    # GitHub registers its built-in workflow as pages-build-deployment;
+    # "pages build and deployment" is only the run display name.
     assert workflow["on"]["workflow_run"] == {
-        "workflows": ["pages build and deployment"], "types": ["completed"]
+        "workflows": ["pages-build-deployment", stable_pages["name"]],
+        "types": ["completed"],
     }
     assert workflow["concurrency"]["cancel-in-progress"] == "false"
     assert "github.event.workflow_run.conclusion == 'success'" in google
