@@ -24,11 +24,7 @@ on:
       - "scripts/google_search_pipeline.py"
       - "scripts/indexation_recovery_queue.py"
       - "config/indexation-recovery.json"
-  workflow_run:
-    workflows:
-      - pages build and deployment
-    types:
-      - completed
+  deployment_status:
   schedule:
     - cron: "23 5 * * *"
 
@@ -44,10 +40,11 @@ concurrency:
 jobs:
   google-search:
     if: >-
-      github.event_name != 'workflow_run' ||
+      github.event_name != 'deployment_status' ||
       (
-        github.event.workflow_run.conclusion == 'success' &&
-        github.event.workflow_run.head_branch == 'main'
+        github.event.deployment_status.state == 'success' &&
+        github.event.deployment.environment == 'github-pages' &&
+        github.event.deployment.ref == 'main'
       )
     runs-on: ubuntu-latest
 
@@ -118,7 +115,7 @@ jobs:
               echo "cooldown=6" >> "$GITHUB_OUTPUT"
               echo "policy=search infrastructure change validation" >> "$GITHUB_OUTPUT"
               ;;
-            workflow_run)
+            deployment_status)
               echo "max=20" >> "$GITHUB_OUTPUT"
               echo "mode=priority" >> "$GITHUB_OUTPUT"
               echo "cooldown=24" >> "$GITHUB_OUTPUT"

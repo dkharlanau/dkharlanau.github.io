@@ -87,12 +87,17 @@ def test_post_deploy_search_audit_and_safe_indexnow_gate():
     google = (ROOT / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
     indexnow = (ROOT / ".github/workflows/indexnow.yml").read_text(encoding="utf-8")
     workflow = yaml.load(google, Loader=yaml.BaseLoader)
-    assert workflow["on"]["workflow_run"] == {
-        "workflows": ["pages build and deployment"], "types": ["completed"]
-    }
+    # Both GitHub-managed Pages and the stable publisher create production
+    # deployment statuses; a workflow run display name is not a deploy receipt.
+    assert "deployment_status" in workflow["on"]
+    assert "workflow_run" not in workflow["on"]
+    assert workflow["jobs"]["google-search"]["if"].split() == (
+        "github.event_name != 'deployment_status' || "
+        "( github.event.deployment_status.state == 'success' && "
+        "github.event.deployment.environment == 'github-pages' && "
+        "github.event.deployment.ref == 'main' )"
+    ).split()
     assert workflow["concurrency"]["cancel-in-progress"] == "false"
-    assert "github.event.workflow_run.conclusion == 'success'" in google
-    assert "github.event.workflow_run.head_branch == 'main'" in google
     assert "post-deploy priority refresh" in google
     assert "GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT" in google
 
