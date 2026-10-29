@@ -1,10 +1,12 @@
 import html
 import json
 import re
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
 
 import pytest
+import yaml
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -81,6 +83,62 @@ def _top_level_nodes(value):
 
 def _plain_text(value: str) -> str:
     return " ".join(html.unescape(TAG_RE.sub(" ", value)).split())
+
+
+def test_intent_starting_points_use_real_rendered_resources():
+    site = _require_site()
+    data = yaml.safe_load((REPO_ROOT / "_data/discovery_map.yml").read_text(encoding="utf-8"))
+
+    class StartingPoints(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.active = False
+            self.links = []
+            self.in_problems = False
+            self.in_problem_item = False
+            self.problems = []
+
+        def handle_starttag(self, tag, attrs):
+            attrs = dict(attrs)
+            if tag == "nav" and attrs.get("aria-labelledby") == "intent-starting-points-title":
+                self.active = True
+            elif self.active and tag == "a":
+                self.links.append(attrs.get("href"))
+            elif tag == "ol" and "intent-brief__list" in attrs.get("class", "").split():
+                self.in_problems = True
+            elif self.in_problems and tag == "li":
+                self.in_problem_item = True
+                self.problems.append("")
+
+        def handle_data(self, data):
+            if self.in_problem_item:
+                self.problems[-1] += data
+
+        def handle_endtag(self, tag):
+            if tag == "nav" and self.active:
+                self.active = False
+            elif tag == "li" and self.in_problem_item:
+                self.in_problem_item = False
+            elif tag == "ol" and self.in_problems:
+                self.in_problems = False
+
+    for intent in data["intents"]:
+        route = intent["permalink"]
+        page = site / route.strip("/") / "index.html"
+        content = page.read_text(encoding="utf-8")
+        parser = StartingPoints()
+        parser.feed(content)
+        expected = [intent["related"][kind][0]["url"] for kind in ("notes", "services", "datasets")
+                    if intent.get("related", {}).get(kind)]
+        assert parser.links == expected, route
+        assert [" ".join(p.split()) for p in parser.problems] == intent["target_problems"], route
+        assert "Search signals</h3>" not in content, route
+        for href in expected:
+            target = site / urlparse(href).path.strip("/") / "index.html"
+            assert target.is_file(), f"{route}: missing destination {href}"
+        blocks = _jsonld_blocks(content, Path(route))
+        collection = next(b for b in blocks if b.get("@type") == "CollectionPage" and b.get("@id", "").endswith("#intent"))
+        assert {urlparse(item["url"]).path for item in collection["mentions"]}.issuperset(expected), route
 
 
 def test_personal_lab_home_schema_matches_the_visible_entry_page():
