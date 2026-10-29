@@ -25,18 +25,23 @@
         <h3 id="intent-problems-title">Problems this covers</h3>
         <ol class="intent-brief__list">
           {% for item in intent.target_problems %}
-          <li><span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><p>{{ item }}</p></li>
+          <li>{{ item }}</li>
           {% endfor %}
         </ol>
       </section>
-      <section aria-labelledby="intent-signals-title">
-        <h3 id="intent-signals-title">Search signals</h3>
-        <ul class="intent-brief__signals">
-          {% for item in intent.query_signals %}
-          <li>{{ item }}</li>
-          {% endfor %}
+      {% assign start_note = intent.related.notes | first %}
+      {% assign start_practice = intent.related.services | first %}
+      {% assign start_dataset = intent.related.datasets | first %}
+      {% if start_note or start_practice or start_dataset %}
+      <nav aria-labelledby="intent-starting-points-title">
+        <h3 id="intent-starting-points-title">Choose a starting point</h3>
+        <ul>
+          {% if start_note %}<li>Read: <a href="{{ start_note.url | escape }}">{{ start_note.label | escape }}</a></li>{% endif %}
+          {% if start_practice %}<li>Practice: <a href="{{ start_practice.url | escape }}">{{ start_practice.label | escape }}</a></li>{% endif %}
+          {% if start_dataset %}<li>Explore data: <a href="{{ start_dataset.url | escape }}">{{ start_dataset.label | escape }}</a></li>{% endif %}
         </ul>
-      </section>
+      </nav>
+      {% endif %}
     </div>
   </section>
 
