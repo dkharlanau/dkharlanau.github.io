@@ -1,6 +1,6 @@
 ---
 layout: blog
-title: "SEPA Direct Debit in SAP S/4HANA: Customer Data, Mandates, and Migration"
+title: "SEPA Direct Debit in SAP S/4HANA: Customer Mandates and Migration"
 description: "A practical guide to SEPA customer mandates in SAP: how direct debit works, what a Business Partner must have, how to migrate mandates, and how to test."
 slug: sepa-direct-debit-sap-s4hana-customer-mandate-migration
 permalink: /blog/sepa-direct-debit-sap-s4hana-customer-mandate-migration/
