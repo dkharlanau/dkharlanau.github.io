@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Where Does the Money Go? SAP S/4HANA FI/CO, Procurement, Production, Costing and Margin Analysis"
-description: "A worked, source-backed introduction to how values move through SAP MM, PP, SD, FI, CO, Product Costing, Material Ledger and CO-PA, with journal examples, diagrams, diagnostics and practice."
+title: "SAP FI/CO Explained: From Procurement and Production to Margin"
+description: "Learn SAP S/4HANA FI/CO through one product: purchasing, production, accounting entries, Product Costing, Material Ledger and Margin Analysis."
 permalink: /atlas/concepts/sap-finance-controlling-from-procurement-to-margin/
 last_modified_at: 2026-10-30
 status: needs_verification
