@@ -11,7 +11,7 @@ last_modified_at: 2026-10-30
 hide_global_cta: true
 career_impact: mapped
 career_skills:
-  - logistics-fi-co
+  - sales-o2c
   - logistics-production-quality
   - logistics-p2p
 tags:
