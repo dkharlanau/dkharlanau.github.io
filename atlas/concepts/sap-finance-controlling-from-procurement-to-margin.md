@@ -112,7 +112,7 @@ These are deliberately synthetic amounts, not entries taken from a customer syst
   <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable diagram tracing value from procurement through finance">
     <svg width="1265" height="250" viewBox="0 0 1265 250" role="img" aria-label="Procurement purchase order, goods receipt to raw stock, production order costing, finished goods receipt, goods issue and customer billing">
       <defs><marker id="fin-arrow" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#365c79"/></marker></defs>
-      <rect x="14" y="42" width="184" height="169" rx="12" fill="#f1f5f9" stroke="#9aabba"/><text x="27" y="70" font-size="15" font-weight="700" fill="#17344a">1 · PROCUREMENT</text><text x="27" y="106" font-size="16" font-weight="600" fill="#122b3a">PO: 1 raw material</text><text x="27" y="137" font-size="15" fill="#294b63">€108 agreed price</text><text x="27" y="170" font-size="14" fill="#37536a">No journal at PO</text><path d="M 201 126 H 215" stroke="#365c79" stroke-width="2.5" fill="none" marker-end="url(#fin-arrow)"/>
+      <rect x="14" y="42" width="184" height="169" rx="12" fill="#f1f5f9" stroke="#9aabba"/><text x="27" y="70" font-size="15" font-weight="700" fill="#17344a">1 · PROCUREMENT</text><text x="27" y="106" font-size="16" font-weight="600" fill="#122b3a">PO: 1 raw material</text><text x="27" y="137" font-size="15" fill="#294b63">PO price €100</text><text x="27" y="170" font-size="14" fill="#37536a">No journal at PO</text><path d="M 201 126 H 215" stroke="#365c79" stroke-width="2.5" fill="none" marker-end="url(#fin-arrow)"/>
 <rect x="223" y="42" width="184" height="169" rx="12" fill="#f1f5f9" stroke="#9aabba"/><text x="236" y="70" font-size="15" font-weight="700" fill="#17344a">2 · GOODS RECEIPT</text><text x="236" y="106" font-size="16" font-weight="600" fill="#122b3a">Raw stock +€100</text><text x="236" y="137" font-size="15" fill="#294b63">GR/IR +€100</text><text x="236" y="170" font-size="14" fill="#37536a">Inventory asset</text><path d="M 410 126 H 424" stroke="#365c79" stroke-width="2.5" fill="none" marker-end="url(#fin-arrow)"/>
 <rect x="432" y="42" width="184" height="169" rx="12" fill="#f1f5f9" stroke="#9aabba"/><text x="445" y="70" font-size="15" font-weight="700" fill="#17344a">3 · PRODUCTION</text><text x="445" y="106" font-size="16" font-weight="600" fill="#122b3a">Order actual €157</text><text x="445" y="137" font-size="15" fill="#294b63">Components + activities</text><text x="445" y="170" font-size="14" fill="#37536a">CO cost object</text><path d="M 619 126 H 633" stroke="#365c79" stroke-width="2.5" fill="none" marker-end="url(#fin-arrow)"/>
 <rect x="641" y="42" width="184" height="169" rx="12" fill="#f1f5f9" stroke="#9aabba"/><text x="654" y="70" font-size="15" font-weight="700" fill="#17344a">4 · FINISHED GOODS</text><text x="654" y="106" font-size="16" font-weight="600" fill="#122b3a">Finished stock +€150</text><text x="654" y="137" font-size="15" fill="#294b63">Order credited €150</text><text x="654" y="170" font-size="14" fill="#37536a">€7 variance remains</text><path d="M 828 126 H 842" stroke="#365c79" stroke-width="2.5" fill="none" marker-end="url(#fin-arrow)"/>
@@ -168,7 +168,7 @@ For the **supplier payment**, the separate journal is generally Dr supplier paya
 
 ### Why GR/IR is not an error account
 
-The purchasing team orders 100 pieces and receives only 80. The supplier invoices 80. The unmatched receipt of the remaining 20 is not a “financial bug” if the remaining delivery is still expected. A GR/IR balance must be interpreted against **purchase-order history, received quantity, invoiced quantity, posting dates and clearing status**. When the process is truly finished, unresolved differences need a controlled reconciliation decision, not a random manual journal. [SAP: GR/IR clearing](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/72256b54f94c8f4ce10000000a4450e5.html).
+The purchasing team orders and receives 100 pieces, but the supplier invoices only 80. The receipt value for 20 pieces may remain open on GR/IR while the remaining invoice is still expected. A GR/IR balance must be interpreted against **purchase-order history, received quantity, invoiced quantity, posting dates and clearing status**. When the process is truly finished, unresolved differences need a controlled reconciliation decision, not a random manual journal. [SAP: GR/IR clearing](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/72256b54f94c8f4ce10000000a4450e5.html).
 
 ### Why an expense can later become inventory
 
@@ -288,6 +288,40 @@ The sales pricing procedure produces commercial values: base price, discounts, s
 </tbody></table></div>
 
 The correct architecture starts with **legal ownership, valuation, timing, cost object and reporting requirement**. Only then choose standard SAP processes, their account assignment and any justified extensions. A change to the logistics document flow can change accounting outcomes even when no FI configuration is touched.
+
+## The configuration map: why the same document can post differently
+
+A strong functional consultant does not need to memorize every FI customizing screen. But they do need to explain **which configuration decision changes the financial result** and who must validate it.
+
+<div class="table-scroll study-table" role="region" aria-label="SAP master data and account determination dependency map" tabindex="0"><table class="study-table__table">
+<thead><tr><th>Layer</th><th>Inputs to check</th><th>Financial consequence</th><th>Typical owner</th></tr></thead>
+<tbody>
+<tr><th scope="row">Legal and CO structure</th><td>Company code, controlling area, chart of accounts, ledger, accounting principle, currency, profit center.</td><td>Which entity and financial view own the value.</td><td>FI/CO.</td></tr>
+<tr><th scope="row">MM valuation</th><td>Plant / valuation area, material valuation class, price control S/V, quantity, movement type, account assignment category.</td><td>Inventory vs consumption; value, stock account, GR/IR, price difference.</td><td>MM with FI/CO.</td></tr>
+<tr><th scope="row">Purchasing document</th><td>PO price, delivery costs, supplier invoice, invoice-before-GR or GR-before-invoice sequence.</td><td>What is cleared and whether a price difference remains or changes inventory.</td><td>Purchasing with AP/FI.</td></tr>
+<tr><th scope="row">Production costing</th><td>BOM, routing, work center, activity type / rate, costing variant, cost component structure, overhead and released estimate.</td><td>Planned cost, actual order debit and finished-goods valuation.</td><td>PP with CO-PC.</td></tr>
+<tr><th scope="row">Period-end processing</th><td>WIP method, order status, variance logic, settlement rule and receiver, actual-costing activation.</td><td>Capitalized WIP, production differences, revaluation and profitability effects.</td><td>CO-PC with FI.</td></tr>
+<tr><th scope="row">SD billing</th><td>Billing relevance, pricing conditions, account assignment groups, account determination, tax, payer / reconciliation account.</td><td>Revenue, deductions, customer receivable and tax posting.</td><td>SD with FI-AR.</td></tr>
+<tr><th scope="row">Profitability analytics</th><td>Margin characteristics, cost account / COGS split, settlement assignment and reporting filters.</td><td>What customer, product or market appears to be profitable.</td><td>CO-PA / FP&amp;A with SD.</td></tr>
+</tbody></table></div>
+
+For classic SAP S/4HANA private / on-premise implementations, MM automatic account determination and SD revenue account determination are separate configuration domains. First reproduce the **value**. Then use the system's account determination analysis to see why the selected **G/L account** was derived. For an SD billing issue, SAP documents an account determination analysis that displays the relevant conditions, access sequence and keys. An MM goods movement uses inventory valuation and account determination rather than the SD sales-price procedure. Public Cloud configuration options and app navigation differ; do not blindly reuse classic GUI steps. [SAP: material valuation structure](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/585eb6531de6b64ce10000000a174cb4.html) · [SAP: billing account determination analysis](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/ee9cc353fad0b44ce10000000a174cb4.html) · [SAP: purchasing account assignment](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/5e23dc8fe9be4fd496f8ab556667ea05/cd7eb65334e6b54ce10000000a174cb4.html).
+
+### Period-end close: why “real-time” has a limit
+
+The journal can be current while the final **actual cost** is not yet known. In a representative production environment, the close may require the following controls. This is a dependency guide, not a fixed job sequence for every release or company:
+
+1. Confirm that operational documents are posted in the correct period: goods receipts, component issues, activities, billing, supplier invoices and corrections.
+2. Reconcile key open states such as GR/IR, stock differences, unprocessed confirmations and failed accounting transfers.
+3. Post or allocate missing production activities and applicable overhead.
+4. Determine and post WIP for unfinished cost objects under the chosen method.
+5. Calculate variances and settle eligible completed production orders / product cost collectors.
+6. If **Actual Costing** is active, calculate material actual prices, distribute eligible single- and multilevel differences and perform configured stock / consumption revaluation.
+7. Run any required cost allocations, accruals or profitability adjustments in their approved order.
+8. Reconcile FI accounts, production cost objects, Material Ledger and Margin Analysis using the same ledger, period, currency and reporting basis.
+9. Close the period only after exceptions have named owners and documented treatment.
+
+An architect should challenge the requirement **“final actual margin every minute”** if some cost inputs only arrive at month end. A better design may show **provisional operational margin now** and **closed actual margin after settlement**, with visible status and traceable adjustment postings. “Real-time” describes when information is available; it does not make an unknown supplier or manufacturing cost known in advance.
 
 ## A cross-module diagnostic method
 
