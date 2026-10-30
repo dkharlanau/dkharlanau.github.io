@@ -4,7 +4,6 @@ title: "Where Does the Money Go? SAP S/4HANA FI/CO, Procurement, Production, Cos
 description: "A worked, source-backed introduction to how values move through SAP MM, PP, SD, FI, CO, Product Costing, Material Ledger and CO-PA, with journal examples, diagrams, diagnostics and practice."
 permalink: /atlas/concepts/sap-finance-controlling-from-procurement-to-margin/
 last_modified_at: 2026-10-30
-last_reviewed:
 status: needs_verification
 verified: false
 robots: noindex,follow
@@ -71,7 +70,7 @@ Read every SAP posting using the same six questions. Do this before opening a tr
 | **5. Is the value final or temporary?** | Stock, expense, receivable, clearing, WIP or variance. | GR/IR must be matched to the supplier invoice. |
 | **6. What proves completion?** | The next document, reconciliation or settlement evidence. | A posted invoice, settled order, or cleared customer item. |
 
-**FI and CO are not two independent sets of money.** FI answers which financial accounts and legal entity are affected. CO explains responsibility, purpose, production costs and profitability. In SAP S/4HANA, primary and secondary cost elements are represented as G/L accounts. The Universal Journal (table <code>ACDOCA</code>) brings financial and controlling line-item dimensions together. Not every posting has every profitability dimension. [SAP: Controlling overview](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/5e23dc8fe9be4fd496f8ab556667ea05/dfb64c53d5ec7d77e10000000a441470-2408.html) · [SAP: Universal Journal](https://help.sap.com/docs/SAP_S4HANA_CLOUD/c0c54048d35849128be8e872df5bea6d/76c59195039142338af63e8a1a7c016f.html).
+**FI and CO are not two independent sets of money.** FI answers which financial accounts and legal entity are affected. CO explains responsibility, purpose, production costs and profitability. In SAP S/4HANA, primary and secondary cost elements are represented as G/L accounts. The Universal Journal (table <code>ACDOCA</code>) brings financial and controlling line-item dimensions together. Not every posting has every profitability dimension. [SAP: Controlling overview](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/5e23dc8fe9be4fd496f8ab556667ea05/68cfb9537cceb44ce10000000a174cb4-1204.html) · [SAP: Universal Journal](https://help.sap.com/docs/SAP_S4HANA_CLOUD/c0c54048d35849128be8e872df5bea6d/76c59195039142338af63e8a1a7c016f.html).
 
 ### The objects are not the same
 
@@ -212,7 +211,7 @@ This matters enormously for SD/MM: two materials with the same supplier invoice 
 
 ### 4. Material Ledger is not the same as Actual Costing
 
-- **Material Ledger** provides the inventory valuation and currency framework in SAP S/4HANA.
+- **Material Ledger** provides the inventory valuation and currency framework and is mandatory in SAP S/4HANA; this does not mean Actual Costing is active.
 - **Actual Costing**, when activated and configured, uses material price determination and period-end processing to calculate actual costs and distribute eligible differences across inventory and consumption, including multilevel production in supported scenarios.
 - Activating Material Ledger does **not** by itself mean that each customer margin is continuously updated with a fully settled actual cost. Actual costing, revaluation, timing and profitability reporting must be designed and verified.
 
