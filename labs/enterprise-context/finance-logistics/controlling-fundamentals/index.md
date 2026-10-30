@@ -86,7 +86,8 @@ For AP/AR, payment and reconciliation accounts, start with [Financial Accounting
 
 <figure aria-labelledby="co-flow-title">
   <figcaption id="co-flow-title"><strong>Figure 1.</strong> The same value moves through different business meanings. Read left to right; boxes show ownership, not additional payments.</figcaption>
-  <svg viewBox="0 0 960 204" role="img" aria-label="Purchased material becomes a stock asset, moves into a production order as consumed cost, becomes finished-goods stock on receipt, and finally reaches cost of goods sold when the finished product is sold." style="width:100%;height:auto">
+  <div class="table-scroll study-table" role="region" aria-label="Horizontal process diagram from inventory through production and sales" tabindex="0">
+  <svg viewBox="0 0 960 204" role="img" aria-label="Purchased material becomes a stock asset, moves into a production order as consumed cost, becomes finished-goods stock on receipt, and finally reaches cost of goods sold when the finished product is sold." style="min-width:860px;width:100%;height:auto">
     <defs><marker id="co-flow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="#496878"/></marker></defs>
     <rect x="4" y="34" width="194" height="125" rx="12" fill="#e9f2f5" stroke="#7390a0"/>
     <rect x="253" y="34" width="194" height="125" rx="12" fill="#eff1fa" stroke="#8490ae"/>
@@ -109,6 +110,7 @@ For AP/AR, payment and reconciliation accounts, start with [Financial Accounting
     </g>
     <text x="478" y="190" font-size="14" text-anchor="middle" fill="#315266">€5 production-order difference must be explained and handled under the chosen costing design.</text>
   </svg>
+  </div>
 </figure>
 
 Take **one unit** of a manufactured product. We buy material for €100, consume €100 of it, allocate €20 of machine time and apply €10 of overhead. The production order has **€130 actual cost**. Its finished product is received at a configured **€125 standard value**. The difference is €5.
