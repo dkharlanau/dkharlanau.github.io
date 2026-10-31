@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Controlling Fundamentals: Costs, Orders, Production and Margin"
-description: "An accessible SAP S/4HANA Controlling guide: FI versus CO, cost centers, profit centers, production orders, activity allocation, product costing, variances, CO-PA and links to SD/MM/PP."
+description: "Learn SAP S/4HANA Controlling: cost centers, production orders, activity allocation, product costing, variances, Margin Analysis and SD/MM/PP links."
 permalink: /labs/enterprise-context/finance-logistics/controlling-fundamentals/
 status: needs_verification
 verified: false
