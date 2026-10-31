@@ -216,7 +216,7 @@ Product references checked on 30 October 2026. Sources describe standard capabil
 - [SAP Help — Integration of Cost Object Controlling (S/4HANA 2025)](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/48b24fbadbee4e0b9dae0e2b72762e68/4d2f6a53e7087425e10000000a44176d.html).
 - [SAP Help — Universal Journal (Cloud Public Edition)](https://help.sap.com/docs/SAP_S4HANA_CLOUD/0fa84c9d9c634132b7c4abb9ffdd8f06/523b8a55559ad007e10000000a44538d.html).
 - [SAP Learning — Profitability Analysis and Profit Center Accounting](https://learning.sap.com/courses/profitability-analysis-in-sap-s-4hana/comparing-profitability-analysis-and-profit-center-accounting).
-- [SAP Help — Material Ledger and Actual Costing boundary](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE_UPA/cd100ef6721d4f9f96df2960a0601f64/bcd6cc5340487214e10000000a174cb4.html?version=2022.3_UPA).
+- [SAP Learning — Material Ledger and optional Actual Costing](https://learning.sap.com/courses/product-cost-planning-in-sap-s-4hana/describing-material-ledger).
 
 **Next:** [FI basics, receivables and payables](/labs/enterprise-context/finance-logistics/financial-accounting-fundamentals/) → [worked procurement-to-margin case](/atlas/concepts/sap-finance-controlling-from-procurement-to-margin/) → [FI/CO event and diagnostic map](/labs/enterprise-context/finance-logistics/).
 
