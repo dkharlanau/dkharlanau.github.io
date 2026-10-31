@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Material Valuation in Procurement — Standard Price, Moving Average Price and FI Postings"
-description: "A practical SAP S/4HANA MM guide to material and accounting documents, GR/IR, standard price, moving average price, price differences, stock coverage, and FI postings for goods receipt and invoice receipt."
+title: "SAP Material Valuation: Standard vs Moving Average Price"
+description: "Understand SAP S/4HANA material valuation: standard and moving average prices, GR/IR, invoice differences, stock coverage and FI postings for goods receipts."
 permalink: /labs/enterprise-context/procurement/material-valuation/
 status: reviewed
 verified: true
