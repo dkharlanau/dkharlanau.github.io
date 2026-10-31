@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Financial Accounting Fundamentals: Accounts Payable and Receivable"
-description: "A practical SAP S/4HANA FI introduction: assets, liabilities, debit and credit, AP, AR, GR/IR, payments, clearing, credit management, bank statements and the SD/MM connection."
+description: "Learn SAP S/4HANA Financial Accounting: debit and credit, AP/AR, GR/IR, invoice clearing, payments, bank statements, and SD/MM integration."
 permalink: /labs/enterprise-context/finance-logistics/financial-accounting-fundamentals/
 status: needs_verification
 verified: false
