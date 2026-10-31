@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Independent Recommendations — SAP, Enterprise Architecture, and AI"
-description: "Independent architecture decisions and technology recommendations: business problem, alternatives, evidence, trade-offs, risks, and what could change the decision."
+description: "Vendor-neutral architecture advice for SAP and enterprise AI: decision scope, evidence, findings, trade-offs, risks, and decision triggers."
 permalink: /research/recommendations/
 status: needs_verification
 verified: false
@@ -10,6 +10,12 @@ sitemap: false
 date: 2026-10-30
 updated: 2026-10-30
 hide_global_cta: true
+tags:
+  - enterprise-architecture
+  - sap
+  - crm-strategy
+  - ai-agents
+  - technology-decisions
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -34,6 +40,10 @@ A technology decision should answer a business question—not repeat a product b
 
 I distinguish **published product facts**, **architecture judgments**, **illustrative assumptions**, and **unknowns**. Recommendations are dated because platforms and commercial models change. An interesting AI demo is not a substitute for security, data quality, or maintainable business processes.
 
+## Scope and evidence
+
+This section covers architecture choices in SAP-centered business systems, especially where the CRM core, integrations, master data, and AI capabilities meet. It compares options against business outcomes, ownership boundaries, delivery costs, and operational risk. The analysis uses public sources and hypothetical scenarios; it is not a report of a specific client assessment. Product and contract details must be checked for the target release and edition.
+
 ## Decision papers
 
 <div class="research-route-list">
@@ -49,6 +59,16 @@ I distinguish **published product facts**, **architecture judgments**, **illustr
 **Recommendation** is a decision I would defend given the stated constraints. **Confidence** reflects the strength of evidence, not enthusiasm. **Decision triggers** explain what would change the preferred architecture.
 
 A recommendation is not an endorsement, a guarantee of ROI, or an account of confidential customer work.
+
+## Findings from the current decision paper
+
+The first CRM assessment presents three conditional findings:
+
+- Do not replace a CRM until measured process and adoption gaps show why smaller improvements are insufficient.
+- Keep transaction and master-data ownership explicit across CRM, SAP S/4HANA, and SAP MDG; use integration rather than uncontrolled copies of the truth.
+- Evaluate AI agents as governed extensions with permissions, auditability, and human escalation, not as replacements for a reliable CRM data model.
+
+These are architecture judgments to test against a real business case, not universal product rankings.
 
 ## Related research
 
