@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP AIF — Monitoring, Error Handling and Reprocessing"
-description: "A practical guide to SAP Application Interface Framework: how interfaces are modeled, monitored, assigned, corrected and reprocessed in the SAP application layer."
+description: "Practical SAP AIF configuration: monitoring, ALRTCATDEF alerts, recipients, event-triggered interfaces, destinations and safe reprocessing."
 permalink: /labs/enterprise-context/aif/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-23
+last_modified_at: 2026-11-03
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -25,7 +25,7 @@ tags:
 last_reviewed: 2026-09-23
 publication_wave: "integration-deep-dive-01"
 review_method: "current SAP Help for ABAP Platform 2025 FPS01 + nearby Labs review + page-level editorial review"
-search_intent: "SAP AIF configuration monitoring error handling restart reprocessing guide"
+search_intent: "SAP AIF configuration alerts ALRTCATDEF workflow event trigger destinations monitoring reprocessing"
 structured_data:
   type: TechArticle
 primary_topic: "sap-aif"
@@ -187,6 +187,140 @@ source_links:
     </header>
     <p>In SAP S/4HANA on-premise and comparable ABAP Platform deployments, current 2025 FPS01 documentation still describes classic AIF Customizing through <code>/AIF/CUST</code>, the Interface Monitor and Monitoring and Error Handling. The interface definition, engines and error-handling model are visible parts of that framework.</p>
     <p>SAP S/4HANA Cloud Public Edition also uses AIF-backed Message Monitoring for delivered communication scenarios, but this is not a promise that customers receive the complete classic workbench or the same actions for every interface. Even in current SAP documentation, restart or reprocessing can be interface-specific. Treat the communication scenario and its product documentation as the authority for what can actually be done.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="alerting" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Hands-on configuration / Alerting</p>
+      <h2>Configure an AIF alert that reaches the right person.</h2>
+      <p>An AIF error does not automatically become a useful email. You need an AIF message with an error, a recipient rule, a user assignment, an alert category, and a working notification channel. The recipient determines responsibility; the alert category determines the notification content.</p>
+    </header>
+    <div class="ecg-rail" aria-label="AIF error notification sequence">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Message error</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">AIF recipient</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Alert category</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">User notification</span>
+      </div>
+    </div>
+    <ol>
+      <li><strong>Define responsibility.</strong> Open <code>/AIF/CUST</code> → Error Handling → Define Namespace-Specific Features → Define Recipients. Create a recipient for a business support group, such as <code>ZSD_ORDER_SUPPORT</code>.</li>
+      <li><strong>Connect the recipient to the interface.</strong> For simple routing, use Error Handling → Define Interface-Specific Features → Assign Recipients Without Key Fields. If a recipient assignment table is maintained under Configure Alerts, check that table first: it can take precedence over the simple interface assignment.</li>
+      <li><strong>Assign actual users.</strong> In <code>/AIF/RECIPIENTS</code>, assign the responsible users to the recipient. Check authorizations and whether the interface is included in their monitor overview.</li>
+      <li><strong>Start with the delivered alert.</strong> SAP supplies <code>/AIF/ALERT_CAT_DEF</code>. Trigger a controlled test error and verify that the default notification reaches the intended user before adding a custom template.</li>
+      <li><strong>Customise the email in <code>ALRTCATDEF</code>.</strong> Create a customer alert category, for example <code>Z_AIF_SD_ERROR</code>. Maintain its priority, title, short/long text and container variables. To reuse AIF's namespace, interface name and interface version, copy the corresponding container element names from <code>/AIF/ALERT_CAT_DEF</code>. You can also include one configured key field, such as an external order reference.</li>
+      <li><strong>Assign the category and test delivery.</strong> In <code>/AIF/CUST</code> → Error Handling → Define Namespace-Specific Features → Configure Alerts, assign the category to the relevant interface settings. Confirm the email text, link, recipient and business key in the actual delivered notification.</li>
+    </ol>
+    <div class="ecg-decision-columns">
+      <div><h3>No email</h3><p>The user does not receive email notifications for that interface/recipient combination.</p></div>
+      <div><h3>Email for next alert</h3><p>A further alert may be suppressed until the existing alert is confirmed or expires. This is useful for reducing repeated emails from the same unresolved problem.</p></div>
+      <div><h3>Email for every error</h3><p>The user receives an email for each error. Use this only when volume and business criticality justify it.</p></div>
+    </div>
+    <p>Users can manage these options in <code>/AIF/IFMON</code> or the corresponding Message Dashboard. When email is missing, check the AIF alert state first, then the user email and SAPconnect delivery in <code>SOST</code> and <code>SCOT</code>. Creating an alert category alone does not configure SMTP. For country-, company- or business-key-specific routing, use AIF key fields and a recipient assignment table instead of hard-coded email logic in the action function module.</p>
+    <p><strong>SAP references:</strong> <a href="https://learning.sap.com/courses/mastering-sap-application-interface-framework/managing-recipients-and-notifications" target="_blank" rel="noopener">Recipients and custom alert categories</a>; <a href="https://help.sap.com/docs/ABAP_PLATFORM_BW4HANA/4db1676c3f114f119b500bd80ccd944d/d8a4c86fd5784c38bc498c2cc2dd8db0.html" target="_blank" rel="noopener">Interface Monitor notification modes</a>.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="events" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Event-driven integration / Two distinct patterns</p>
+      <h2>“Event-triggered AIF interface” can mean two different architectures.</h2>
+      <p>One pattern starts an outbound AIF process after a classic SAP Business Workflow event. Another uses AIF to monitor events consumed through Enterprise Event Enablement. They share AIF monitoring concepts, but they do not use the same trigger configuration.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h3>Business Workflow event → outbound AIF</h3><p>Use the classic Workflow Event Trigger feature when an existing BOR object event must start reading business data and sending an outbound proxy. Configure event linkage in <code>SWE2</code>.</p></div>
+      <div><h3>Enterprise Event → AIF monitoring</h3><p>Use event monitoring for an event consumer registered through Enterprise Event Enablement. AIF observes the consuming interface by repository, registration and topic. This does not itself publish a new event.</p></div>
+      <div><h3>Custom business event → integration</h3><p>An application may use a separate BAdI, released business event, API or custom action to produce data. Adding an AIF monitor does not automatically create the event producer, queue or external subscription.</p></div>
+    </div>
+    <h3>Pattern A: trigger an outbound proxy from a Business Workflow event</h3>
+    <div class="ecg-rail" aria-label="Classic workflow event to outbound proxy">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">BOR event</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">SWE2 linkage</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">AIF reading interface</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">AIF sending interface</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Outbound proxy</span>
+      </div>
+    </div>
+    <ol>
+      <li>Identify the BOR business object and event. The standard AIF Workflow Event Trigger described here supports <strong>BOR Object Type</strong> events, not arbitrary ABAP class events. Use <code>SWO1</code> to inspect the object key.</li>
+      <li>Use <code>/AIF/WET_GEN</code> to generate the reading-interface SAP structure from a suitable business-object read function module or BAPI.</li>
+      <li>In <code>SWE2</code>, activate the event linkage with receiver function module <code>/AIF/WET_EVENT_TRIGGERED</code>. Maintain the runtime group in <code>/AIF/WET_CONFIG</code> and the event-trigger scenario in <code>/AIF/CUST</code> → Interface Development → Event Trigger Settings.</li>
+      <li>Create the <strong>reading interface</strong>: raw structure <code>/AIF/WET_EVENT_DETAILS_PROXY</code>, generated SAP structure, XML application and persistence engines, event-key mapping, after-mapping FM <code>/AIF/WET_FILL_SAP_STRUCT</code>, and action <code>/AIF/WET_AC_TRIGGER_NEXT_INF</code>. Assign the read BAPI under Event Trigger Settings → Define Interface-Specific Settings and the runtime group in <code>/AIF/WET_INF_CONFIG</code>.</li>
+      <li>Create the <strong>sending interface</strong>: map the read data to the outbound proxy structure, assign action <code>/AIF/WET_AC_TRIGGER_PROXY_OUT</code>, and specify proxy class and method under Define Proxy-Specific Settings. Use <code>/AIF/WET_PRXY_CONFIG</code> when a non-default proxy logical port is required.</li>
+      <li>Trigger a test event. Use <code>SWELS</code>/<code>SWEL</code> for the workflow event trace, <code>SM58</code> for possible tRFC delivery problems, and <code>/AIF/ERR</code> for errors in the AIF stages. Confirm the receiver outcome, not only the local event record.</li>
+    </ol>
+    <p>This is the classic SAP-supported configuration flow. It is not a general instruction to activate workflow events for every integration; first check that the object and proxy scenario are available in the target release.</p>
+    <h3>Pattern B: monitor a consumed Enterprise Event</h3>
+    <ol>
+      <li>Confirm that the Event Consumption Model and event subscription already exist. Record the repository ID, registration ID/version and event topic.</li>
+      <li>Create an AIF interface and suitable event payload structure. SAP documents <code>/AIF/EVENT_GEN_CONTAINER_RAW_S</code> for generic JSON attribute-value pairs. A dedicated DDIC payload mapping can require BAdI <code>/AIF/GET_PAYLOAD_EVENT_RT</code>.</li>
+      <li>In <code>/AIF/CUST</code> → Interface Development → Additional Interface Properties → Define Event Settings, bind the interface to the repository, registration, version and topic.</li>
+      <li>Assign recipients, deliver a controlled event, and inspect it in AIF Monitoring and Error Handling. If several AIF interfaces match the same event identifiers, review interface determination; SAP documents BAdI <code>/AIF/EVENT_SELECT_INTERFACE</code> for a unique selection.</li>
+    </ol>
+    <p><strong>SAP references:</strong> <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/4db1676c3f114f119b500bd80ccd944d/30dcfd56d50d5c38e10000000a44147b.html" target="_blank" rel="noopener">Workflow Event Trigger</a>; <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/4db1676c3f114f119b500bd80ccd944d/50339d9923864659b509f1816967c0cc.html?version=202210.000" target="_blank" rel="noopener">Configuring Event Monitoring</a>.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="destinations" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Connectivity / Destination ownership</p>
+      <h2>Choose the destination by transport, not by the AIF interface name.</h2>
+      <p>An AIF interface is a processing and monitoring definition. Its target connection may live in an RFC destination, a partner profile, a SOAP logical port or an external service configuration. “Destination” also means something different for an alert going to SAP BTP than for a business message going to a receiver.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Where to configure destinations for AIF-related scenarios">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Scenario</th><th scope="col">Where to configure</th><th scope="col">What to verify</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Local file/Fiori upload → custom FM/BAPI</th><td>The application and its ABAP processing logic; AIF runtime or enabler integration where implemented</td><td>No external destination is needed for a local BAPI. Verify how errors are persisted in AIF and how the application handles commit and duplicate requests.</td></tr>
+          <tr><th scope="row">Outbound IDoc</th><td><code>WE20</code> partner profile, <code>WE21</code> port and, where RFC is used, <code>SM59</code></td><td>Message type, partner, port, RFC target, status and receiver application result. AIF does not replace ALE configuration.</td></tr>
+          <tr><th scope="row">Outbound SOAP/ABAP consumer proxy</th><td><code>SOAMANAGER</code> logical port; for the classic workflow event trigger, optional port selection in <code>/AIF/WET_PRXY_CONFIG</code></td><td>Correct proxy and endpoint, authentication, certificates, logical-port selection and receiver-side processing.</td></tr>
+          <tr><th scope="row">AIF alert → SAP BTP Alert Notification service</th><td><code>SM59</code> HTTP destination, OAuth configuration in <code>OA2C_CONFIG</code>, and AIF destination mapping in <code>/AIF/ANS_DEST</code></td><td>Token flow, HTTPS connectivity, service event condition, alert confirmation and notification delivery.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>For a remote application call, keep the connectivity configuration with the component that actually sends the request. Test the destination independently before investigating business mapping. Do not put service URLs, passwords or client secrets into AIF mapping tables, alert texts or source code.</p>
+    <p><strong>SAP references:</strong> <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/4db1676c3f114f119b500bd80ccd944d/f0d1b60ff43c45efad71398b1214db04.html" target="_blank" rel="noopener">Interface Creation prerequisites</a>; <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/95a7320cd4054d4e9fed6b5b70f3d004/f39cf89678f04649bc9cb40c577778c9.html" target="_blank" rel="noopener">Configure a consumer proxy logical port</a>.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="btp-alerts" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Optional extension / SAP BTP</p>
+      <h2>Route AIF message alerts to SAP Alert Notification service.</h2>
+      <p>If the operating model needs notifications beyond classic AIF email, SAP documents an integration with SAP Alert Notification service for SAP BTP. This is an additional service integration, not the default behavior of <code>ALRTCATDEF</code>.</p>
+    </header>
+    <ol>
+      <li>Enable SAP Alert Notification service in the relevant BTP subaccount and obtain a service key through the approved platform administration process.</li>
+      <li>In the ABAP system, configure an <code>SM59</code> HTTP destination (type G) for the service endpoint. SAP's published setup uses path <code>/cf/producer/v1/resource-events</code> and an HTTPS connection.</li>
+      <li>Use <code>OA2C_CONFIG</code> with OAuth profile <code>/AIF/CP_ANS_OAUTH_PROFILE</code> to configure client-credentials authentication from the service key. Let Basis/security manage the secret and certificates.</li>
+      <li>Maintain the destination and OAuth configuration reference in <code>/AIF/ANS_DEST</code> according to the documentation and maintenance procedure supported by your installed AIF version.</li>
+      <li>Where the documented deployment applies, activate monitoring via <code>/AIF/CONTENT_EXTRACT</code> for <code>SAP_COM_0578</code>, then assign namespace <code>/AIFAL</code>, recipient <code>RECIPIENT_ALERTING_ANS</code> in <code>/AIF/RECIPIENTS</code>. In BTP, configure the matching notification condition for event type <code>MessageMonitoringAlertingEvent</code>.</li>
+      <li>Cause one controlled application error. Check AIF alert creation, HTTP/OAuth delivery and the actual BTP notification. Confirm the underlying alert before expecting another “next alert” notification.</li>
+    </ol>
+    <p>Follow the <a href="https://help.sap.com/docs/help/08396ebe30e245e69ea8b1f00be0f9d0/a192ab2bfe7b4f358b4199962c3c103a.html" target="_blank" rel="noopener">SAP setup guide for AIF and Alert Notification service</a> for the precise configuration supported by your release; this route and its objects are not a universal setup for S/4HANA Cloud Public Edition.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="aif-checks" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Verification / Troubleshooting</p>
+      <h2>Prove each hop before changing the configuration.</h2>
+      <p>Use a synthetic test message and record its message ID, external business key, timestamp, interface and expected business result. A missing email, missing AIF message and missing receiver document are different incidents.</p>
+    </header>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="AIF alert and event diagnostic checkpoints">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Symptom</th><th scope="col">First evidence to check</th><th scope="col">Next decision</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Interface not visible to a user</th><td><code>/AIF/RECIPIENTS</code>, recipient-interface rule, include-in-overview setting and authorizations</td><td>Correct ownership before changing the message engine.</td></tr>
+          <tr><th scope="row">Error exists, but no email arrived</th><td><code>/AIF/IFMON</code> notification mode and unconfirmed alert; then <code>SU01</code> email, <code>SOST</code> and <code>SCOT</code></td><td>Separate alert suppression from mail-delivery failure.</td></tr>
+          <tr><th scope="row">Classic workflow event did not start AIF</th><td><code>SWE2</code> linkage, <code>SWELS</code>/<code>SWEL</code> trace and <code>SM58</code></td><td>Repair the event delivery before debugging AIF mappings.</td></tr>
+          <tr><th scope="row">Consumed enterprise event absent from AIF</th><td>Event subscription, repository/registration/topic in Define Event Settings, payload and interface determination</td><td>Determine whether the event reached the consumer at all.</td></tr>
+          <tr><th scope="row">AIF succeeded, receiver did not</th><td>Proxy logical port, middleware/transport log and target business object</td><td>Check receiver commit state before any replay.</td></tr>
+          <tr><th scope="row">File upload creates duplicate orders</th><td>External request ID, BAPI success/commit sequence, idempotency or duplicate checks</td><td>Prove whether a prior attempt committed before retrying.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Practice case: monitored sales-order mass upload</h3>
+    <p><strong>Illustrative design, not a statement about an existing client system:</strong> a Fiori application accepts a file of sales orders, calls a custom ABAP function module, and that logic invokes a sales-order creation API/BAPI. AIF can be used to monitor the processing <em>if</em> the application actually registers the data and errors through a supported AIF runtime or enabler. Merely calling a BAPI and adding text to an application worklist does not prove that a complete AIF interface is configured.</p>
+    <p>Start with three synthetic rows: one valid order, one with a missing mapping, and one duplicate external request. Check that the valid order exists in SAP, the failed row is searchable in <code>/AIF/ERR</code>, the intended support recipient gets one actionable alert, and the duplicate cannot create a second order on retry. If any of those checks fail, locate the responsible layer before calling the design ready.</p>
   </section>
 
   <section class="research-canvas__inventory" id="lead" data-reveal>
