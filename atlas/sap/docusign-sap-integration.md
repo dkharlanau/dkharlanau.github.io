@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Docusign + SAP: E-Signatures in Sales, Procurement and HR"
-description: "A practical guide to Docusign integrations with SAP S/4HANA, Ariba, CPQ, Sales Cloud and SuccessFactors. Understand the process flow, architecture choices, controls and implementation steps."
+description: "Docusign + SAP explained: e-signatures in sales, procurement and HR, integration choices, secure callbacks, and practical implementation steps."
 permalink: /atlas/sap/docusign-sap-integration/
 atlas_section: sap
 domain: SAP operations
