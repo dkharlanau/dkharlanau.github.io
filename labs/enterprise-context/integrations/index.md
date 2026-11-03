@@ -405,6 +405,17 @@ source_links:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="api-management" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">API management / practical deep dive</p>
+      <h2>From a released S/4HANA service to a secure API Product.</h2>
+      <p>Understand what an API Provider, Proxy, Product, registered Application and Developer Hub actually do. Compare REST, OData and SOAP; see the real runtime path, implementation sequence, security choices and publicly listed SAP Integration Suite costs.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/integrations/api-management/"><span>API</span><strong>SAP API Management — Proxies, Products, Applications, Protocols and Cost</strong><small>Practical SAP Integration Suite guide with architecture, glossary, API Portal vs Business Accelerator Hub vs Developer Hub, setup steps, cost choices and negative tests.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="business-partner-api" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Master-data API deep dive</p>
