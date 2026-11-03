@@ -67,7 +67,9 @@ function parseArgs(argv) {
 
 function routeFromSourcePath(sourcePath) {
   if (!/\.(?:md|markdown|html)$/i.test(sourcePath)) return null;
-  if (/^(?:_|\.github\/|docs\/|scripts\/|tests\/|reports\/|config\/|assets\/)/.test(sourcePath)) return null;
+  // Jekyll collection sources are published pages when they declare a permalink.
+  const isPublishedCollection = /^_(?:radar|notes|blog|news|glossary)\//.test(sourcePath);
+  if (!isPublishedCollection && /^(?:_|\.github\/|docs\/|scripts\/|tests\/|reports\/|config\/|assets\/)/.test(sourcePath)) return null;
   if (!existsSync(sourcePath)) return null;
 
   const content = readFileSync(sourcePath, 'utf8');
