@@ -103,6 +103,17 @@ source_links:
     <a href="/labs/enterprise-context/data/topics.json">Open machine-readable topic data <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
+  <section class="research-canvas__inventory" id="agreement-signatures" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Applied integration / Agreements</p>
+      <h2>How should a signed document change an SAP business process?</h2>
+      <p>Electronic signatures combine application state, external recipients, secure callbacks and audit evidence. The interface is complete only when the correct signed version is connected to the right business decision.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/atlas/sap/docusign-sap-integration/"><span>CASE</span><strong>Docusign + SAP: a practical end-to-end integration guide</strong><small>Sales contracts, procurement and HR · packaged options versus custom Integration Suite design · visual flows, webhook controls, testing and source references. Working guide; validate release-specific details.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="lead-answer-frame" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead answer frame</p>
@@ -391,6 +402,17 @@ source_links:
       {% for item in language.memory_model %}
       <a href="#sources"><span>{{ forloop.index }}</span><strong>{{ item }}</strong><small>Use this sentence to explain one layer before moving to the next.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="api-management" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">API management / practical deep dive</p>
+      <h2>From a released S/4HANA service to a secure API Product.</h2>
+      <p>Understand what an API Provider, Proxy, Product, registered Application and Developer Hub actually do. Compare REST, OData and SOAP; see the real runtime path, implementation sequence, security choices and publicly listed SAP Integration Suite costs.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/integrations/api-management/"><span>API</span><strong>SAP API Management — Proxies, Products, Applications, Protocols and Cost</strong><small>Practical SAP Integration Suite guide with architecture, glossary, API Portal vs Business Accelerator Hub vs Developer Hub, setup steps, cost choices and negative tests.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>
 

@@ -135,6 +135,7 @@ related:
     <h2>Related Atlas pages</h2>
   </header>
   <ul>
+    <li><a href="/atlas/sap/docusign-sap-integration/">Docusign + SAP — e-signatures in sales, procurement and HR</a></li>
     <li><a href="/atlas/concepts/sap-atp-is-not-inventory/">SAP ATP Is Not Inventory</a></li>
     <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
     <li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
