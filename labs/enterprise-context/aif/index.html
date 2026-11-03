@@ -352,8 +352,9 @@ TRY.
         iv_queue_ns      = 'ZDRF'
         iv_queue_name    = '001' ).
   CATCH /aif/cx_enabler_base INTO DATA(lx_aif).
-    " Translate this into the outbound implementation's
-    " supported error handling; never silently ignore it.
+    " Simplified: propagate the failed handoff.
+    " Production code must use the DRF error contract.
+    RAISE EXCEPTION lx_aif.
 ENDTRY.</code></pre>
     <p>The <code>ZDRF</code> group and <code>Z_DRF_AIF_RAW</code> type are example values. The optional runtime group parameters do not select an external receiver: they select <em>how AIF schedules its own work</em>. For a batch of RAW messages, SAP also provides <code>/AIF/CL_ENABLER_XML=&gt;TRANSFER_TO_AIF_MULT</code> with <code>IT_ANY_STRUCTURE</code>; each table row becomes a separate AIF message, not one atomic business transaction.</p>
     <h3>Concrete Business Partner example — why the call appears in custom DRF code</h3>
