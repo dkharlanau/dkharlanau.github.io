@@ -52,7 +52,7 @@ The most useful architecture is a cycle with evidence at every stage. The diagra
 
 <figure>
   <img src="/assets/img/radar/organizational-learning-loop.svg" width="620" height="770" loading="lazy" alt="Five-stage loop: production work produces traces and human feedback; these become curated eval cases; the team proposes a targeted change; evaluation gates the release; the next work cycle provides new observations." />
-  <figcaption>Figure 1. An evaluated release closes the loop. Retraining is only one possible change.</figcaption>
+  <figcaption>Figure 1. An evaluated release closes the loop. Retraining is only one possible change. <a href="/assets/img/radar/organizational-learning-loop.svg">View full-size diagram</a>.</figcaption>
 </figure>
 
 The difference from ordinary logging is the middle of the loop. A trace is evidence of what happened, but it is not automatically a high-quality training example or a test.
@@ -119,7 +119,7 @@ Brown proposes a decision model in the harness that chooses among a frontier mod
 
 <figure>
   <img src="/assets/img/radar/evidence-based-model-routing.svg" width="620" height="766" loading="lazy" alt="Task and context enter a routing and policy gate, which may select a frontier model, a smaller open model, or a specialized model. Outcomes and human feedback are evaluated for quality, safety, cost, and latency." />
-  <figcaption>Figure 2. Model choice is a controlled decision. This is a conceptual routing pattern, not a measured benchmark.</figcaption>
+  <figcaption>Figure 2. Model choice is a controlled decision. This is a conceptual routing pattern, not a measured benchmark. <a href="/assets/img/radar/evidence-based-model-routing.svg">View full-size diagram</a>.</figcaption>
 </figure>
 
 An inexpensive model is not a success if the result is more often wrong, requires extra review, or creates avoidable incidents. Measure **cost per accepted result**, not only cost per token.
