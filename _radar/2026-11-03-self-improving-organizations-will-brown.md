@@ -1,7 +1,7 @@
 ---
 layout: note
 content_model: opinion
-title: "Self-Improving Organizations: Build the Learning Loop Before Training a Model"
+title: "Self-Improving Organizations: Learning Loops Before Model Training"
 subtitle: "What Will Brown's AI Engineer NYC talk means for enterprise agents, evaluations, routing, and human decisions."
 date: 2026-11-03
 permalink: /radar/self-improving-organizations-will-brown/
