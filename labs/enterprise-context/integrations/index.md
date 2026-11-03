@@ -103,6 +103,17 @@ source_links:
     <a href="/labs/enterprise-context/data/topics.json">Open machine-readable topic data <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
+  <section class="research-canvas__inventory" id="agreement-signatures" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Applied integration / Agreements</p>
+      <h2>How should a signed document change an SAP business process?</h2>
+      <p>Electronic signatures combine application state, external recipients, secure callbacks and audit evidence. The interface is complete only when the correct signed version is connected to the right business decision.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/atlas/sap/docusign-sap-integration/"><span>CASE</span><strong>Docusign + SAP: a practical end-to-end integration guide</strong><small>Sales contracts, procurement and HR · packaged options versus custom Integration Suite design · visual flows, webhook controls, testing and source references. Working guide; validate release-specific details.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="lead-answer-frame" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead answer frame</p>
