@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP AIF — Monitoring, Error Handling and Reprocessing"
-description: "Practical SAP AIF configuration: monitoring, ALRTCATDEF alerts, recipients, event-triggered interfaces, destinations and safe reprocessing."
+description: "Practical SAP AIF: monitoring, ALRTCATDEF alerts, event-triggered interfaces, destinations, DRFOUT XML enabler integration and reprocessing."
 permalink: /labs/enterprise-context/aif/
 status: reviewed
 verified: true
@@ -25,7 +25,7 @@ tags:
 last_reviewed: 2026-09-23
 publication_wave: "integration-deep-dive-01"
 review_method: "current SAP Help for ABAP Platform 2025 FPS01 + nearby Labs review + page-level editorial review"
-search_intent: "SAP AIF configuration alerts ALRTCATDEF workflow event trigger destinations monitoring reprocessing"
+search_intent: "SAP AIF monitoring DRFOUT CL_ENABLER_XML TRANSFER_TO_AIF configuration alerts ALRTCATDEF event trigger destinations reprocessing"
 structured_data:
   type: TechArticle
 primary_topic: "sap-aif"
@@ -297,6 +297,82 @@ source_links:
       <li>Cause one controlled application error. Check AIF alert creation, HTTP/OAuth delivery and the actual BTP notification. Confirm the underlying alert before expecting another “next alert” notification.</li>
     </ol>
     <p>Follow the <a href="https://help.sap.com/docs/help/08396ebe30e245e69ea8b1f00be0f9d0/a192ab2bfe7b4f358b4199962c3c103a.html" target="_blank" rel="noopener">SAP setup guide for AIF and Alert Notification service</a> for the precise configuration supported by your release; this route and its objects are not a universal setup for S/4HANA Cloud Public Edition.</p>
+  </section>
+
+
+  <section class="research-canvas__inventory" id="drf-aif" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Deep dive / DRFOUT + AIF XML enabler</p>
+      <h2>How can DRFOUT hand outbound replication data to SAP AIF?</h2>
+      <p><code>DRFOUT</code> executes a replication model. The outbound implementation prepares and sends object-specific data. AIF can monitor an existing interface, or a custom DRF implementation can hand the outbound payload to AIF for further processing. These are different designs: calling the XML enabler does not simply attach a log to the original DRF send.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Custom DRF outbound implementation handing a message to SAP AIF XML Runtime">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">DRFOUT / direct output</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Outbound implementation</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">XML enabler</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">AIF mapping + action</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Receiver</span>
+      </div>
+    </div>
+    <p><strong>Where does the method call belong?</strong> Not in the <code>DRFOUT</code> transaction code. For a custom outbound implementation, it belongs at the approved handoff point after the DRF payload is assembled and before the original send is executed. One published Business Partner example puts it in the outbound implementation class method <code>IF_DRF_OUTBOUND~SEND_MESSAGE</code>, replacing the original proxy send with an AIF handoff. That is a <strong>custom design example</strong>, not an SAP requirement for every DRF interface or release.</p>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Three design options for monitoring or processing DRF messages with SAP AIF">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">What you need</th><th scope="col">Suggested path</th><th scope="col">Main trade-off</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Observe standard outbound SOAP/IDoc replication</th><td>First check existing AIF content and whether the underlying proxy or IDoc technology can be monitored. Keep the DRF send and connectivity unchanged.</td><td>Less custom code, but the available AIF payload, errors and restart actions depend on the delivered scenario.</td></tr>
+          <tr><th scope="row">Validate, transform and send the message from AIF</th><td>Use a supported custom DRF outbound implementation to pass its RAW payload through <code>/AIF/CL_ENABLER_XML=&gt;TRANSFER_TO_AIF</code>. Configure an XML AIF interface and a sending action.</td><td>AIF becomes part of the processing path. You must design the action, delivery, queuing, commits, retries and duplicate prevention.</td></tr>
+          <tr><th scope="row">Publish an event from DRF data to Event Mesh</th><td>Prefer a standard DRF outbound service → SAP Integration Suite → event broker when it meets the requirement. A direct custom DRF → AIF/AIFAEM design is possible but adds ABAP and maintenance effort.</td><td>Direct routing may remove a middleware hop, but usually makes the backend implementation harder to maintain and upgrade.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Step by step: custom DRF outbound → AIF XML Runtime</h3>
+    <ol>
+      <li><strong>Trace what DRF already does.</strong> In <code>DRFIMG</code>, find the active replication model, outbound implementation class, business object, target system and communication channel. Run one controlled object through <code>DRFOUT</code> and check <code>DRFLOG</code> and the real transport monitor. If the existing SOAP/IDoc interface is already AIF-enabled, you may not need a new call.</li>
+      <li><strong>Choose one owner for sending.</strong> If AIF should transform and send the data, use an approved customer outbound implementation or supported enhancement. Do not modify the SAP-delivered DRF class or insert a second enabler call after its standard proxy/IDoc send. Inspect the actual implementation and release-specific extension options before coding.</li>
+      <li><strong>Prepare a stable RAW structure.</strong> Map the selected business object and target into a DDIC structure containing the payload plus useful correlation values: object key, receiver, replication request or run identifier when available, and an event/message identifier. For example, use a project-defined <code>Z_DRF_AIF_RAW</code>; this is an illustrative name, not a delivered SAP structure.</li>
+      <li><strong>Create the AIF interface.</strong> In <code>/AIF/CUST</code> → Interface Development → Define Interfaces, maintain namespace, interface name, version, RAW structure (the same type passed in <code>IS_ANY_STRUCTURE</code>) and SAP structure. Under Additional Interface Properties → Specify Interface Engines, use the <strong>XML application engine</strong> and an appropriate AIF persistence engine (XML is the straightforward example; structured persistence requires its own setup). Maintain mappings, checks and the action that will perform the outgoing call.</li>
+      <li><strong>Check interface determination.</strong> If the same RAW type is used for several interfaces, configure XML interface determination under <code>/AIF/CUST</code> → System Configuration → Interface Determination, using appropriate business or receiver values. Otherwise AIF may not select the intended interface.</li>
+      <li><strong>Choose the AIF runtime group.</strong> Maintain a group in <code>/AIF/PERS_CGR</code> for controlled package size, jobs and synchronous/asynchronous execution. You can pass its namespace and name in <code>IV_QUEUE_NS</code> and <code>IV_QUEUE_NAME</code>; if omitted, the default runtime group applies. Confirm that the group is active before relying on automatic processing.</li>
+      <li><strong>Hand off the message and make the action the sender.</strong> Call the XML enabler from your approved custom implementation. The AIF action must perform the one intended outbound operation, using the corresponding destination configuration (for example <code>SOAMANAGER</code> for SOAP). An AIF message created successfully is not proof that the receiver accepted the business object.</li>
+      <li><strong>Give support a worklist.</strong> Maintain key fields and recipient rules in <code>/AIF/CUST</code>, user assignments in <code>/AIF/RECIPIENTS</code>, and optional alert categories as described in the <a href="#alerting">alerting section</a>.</li>
+    </ol>
+    <h3>Minimal ABAP handoff — illustrative template</h3>
+    <p>The following is the <em>handoff fragment only</em>, not a complete DRF implementation. The RAW type and mapping are project-specific. Use <code>SE24</code> in the installed system to confirm the method signature and supported exception classes before implementation.</p>
+    <pre><code class="language-abap">DATA ls_aif_raw TYPE z_drf_aif_raw.
+
+" Fill ls_aif_raw from the DRF outbound payload:
+" business object, receiver, correlation key and data.
+" The RAW structure must match the AIF interface definition.
+
+TRY.
+    /aif/cl_enabler_xml=&gt;transfer_to_aif(
+      EXPORTING
+        is_any_structure = ls_aif_raw
+        iv_queue_ns      = 'ZDRF'
+        iv_queue_name    = '001' ).
+  CATCH /aif/cx_enabler_base INTO DATA(lx_aif).
+    " Translate this into the outbound implementation's
+    " supported error handling; never silently ignore it.
+ENDTRY.</code></pre>
+    <p>The <code>ZDRF</code> group and <code>Z_DRF_AIF_RAW</code> type are example values. The optional runtime group parameters do not select an external receiver: they select <em>how AIF schedules its own work</em>. For a batch of RAW messages, SAP also provides <code>/AIF/CL_ENABLER_XML=&gt;TRANSFER_TO_AIF_MULT</code> with <code>IT_ANY_STRUCTURE</code>; each table row becomes a separate AIF message, not one atomic business transaction.</p>
+    <h3>Concrete Business Partner example — why the call appears in custom DRF code</h3>
+    <p>In a published community example for Business Partner replication, the author creates a customer outbound implementation based on standard <code>986_3</code>, adapts the outbound class, maps data prepared by DRF into the corresponding proxy request structure, and replaces the regular outbound proxy call with an AIF enabler call. The AIF interface then maps the payload and uses an action to publish an event. The example references <code>IF_DRF_OUTBOUND~SEND_MESSAGE</code> and a mapping method in <code>CL_MDG_BP_BUPA_SI_OUT</code>. These are <strong>implementation details of that example</strong>; copying a standard DRF class creates upgrade and clean-core risks. Prefer a released extension or the standard DRF-to-Integration-Suite path where possible.</p>
+    <h3>Verify the whole chain, not only the AIF entry</h3>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="DRF to AIF validation and failure isolation">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Checkpoint</th><th scope="col">Evidence</th><th scope="col">Failure means</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">DRF selected and prepared the object</th><td><code>DRFOUT</code>, <code>DRFLOG</code>, outbound implementation debug trace</td><td>Fix the model, filter, outbound implementation or data selection first.</td></tr>
+          <tr><th scope="row">AIF accepted the handoff</th><td><code>/AIF/ERR</code>, <code>/AIF/IFMON</code>, RAW payload and business key</td><td>Check RAW type, XML interface determination, engine and enabler exceptions.</td></tr>
+          <tr><th scope="row">AIF actually executed the action</th><td>AIF application log, runtime group in <code>/AIF/PERS_CGR</code>, jobs in <code>SM37</code></td><td>A queued message can be waiting or failing before any outbound send.</td></tr>
+          <tr><th scope="row">Receiver received the intended message</th><td>SOAP/IDoc/HTTP transport evidence and receiver business object</td><td>A successful handoff or outbound job is not a receiver commit.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Safe test:</strong> run one synthetic Business Partner, then a case with a deliberate mapping error, then a retry of the same external request. The target should contain one correct object. The error should be traceable by its business key, the support recipient should see it, and a restart must not produce a duplicate send. Decide who owns retries at each layer before enabling automatic reprocessing.</p>
+    <p><strong>Product scope:</strong> the classic ABAP <code>DRFOUT</code>, <code>/AIF/CUST</code> and XML enabler steps are relevant to supported on-premise/private-edition or comparable classic ABAP landscapes. Do not assume that S/4HANA Cloud Public Edition exposes the same extension points or configuration transactions.</p>
+    <p><strong>Further reading:</strong> <a href="https://learning.sap.com/courses/mastering-sap-application-interface-framework/aif-xml-runtime" target="_blank" rel="noopener">SAP Learning — AIF XML Runtime</a>; <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/4db1676c3f114f119b500bd80ccd944d/5857a106a19843fcb5007616a5373395.html" target="_blank" rel="noopener">SAP Help — XML Runtime and Persistence</a>; <a href="https://learning.sap.com/courses/mastering-standard-interface-technologies-with-sap-application-interface-framework/building-and-monitoring-outbound-interfaces" target="_blank" rel="noopener">SAP Learning — Outbound Proxy Patterns</a>; <a href="https://community.sap.com/t5/integration-blog-posts/event-enabling-sap-data-replication-framework-with-advanced-event-mesh-amp/ba-p/14156554" target="_blank" rel="noopener">SAP Community — DRF to AIF/AEM custom example</a>; <a href="/labs/enterprise-context/integrations/drf/">DRF configuration guide on this site</a>.</p>
   </section>
 
   <section class="research-canvas__inventory" id="aif-checks" data-reveal>
