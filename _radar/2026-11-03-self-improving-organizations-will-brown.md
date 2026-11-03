@@ -28,7 +28,7 @@ In his [AI Engineer NYC 2026 talk](https://www.youtube.com/watch?v=5SRjPT2Eo7A),
 
 The presentation offers an adoption sequence that is more practical than the headline about training: **discover workflows → write skills → build evals → improve routing → consider continual training**.
 
-This article separates Brown's proposal from my implementation recommendations. It uses an original architecture interpretation and a synthetic SAP example; it does not report a production deployment or independently measured business results.
+**Evidence boundary:** The talk and its conference transcript support the attributed descriptions of Brown's proposal. The two diagrams, SAP scenario, governance controls, and suggested evaluation methods are **my architectural interpretation**. The 10-day pilot is **a proposal, not a completed experiment**; this article reports no production deployment, independent benchmark, or measured SAP business result.
 
 ## What changes when an organization learns
 
@@ -177,7 +177,7 @@ The final slide proposes five steps. They should be understood as a maturity pat
 
 In Brown's vision, daily use supplies new observations and periodic training improves the system. He shows an internal prototype for nightly experiments. That is a promising design direction, not proof that safe autonomous nightly retraining is a solved product feature.
 
-The talk also cites a specialized-model training effort costing about **$300,000**. This is a reported example, not a standard price, a universal ROI calculation, or evidence that every company should train a model.
+Brown cites a **Paper Instruments** example: its *Ultramarine 1 Flash* knowledge-work model, reportedly trained by a five-person team at a cost of about **$300,000**. Those are figures presented in the talk, not independently verified costs here. They are not a standard training price, an SAP budget estimate, or proof of general return on investment.
 
 ## A small pilot I would actually run
 
@@ -199,7 +199,9 @@ The talk also cites a specialized-model training effort costing about **$300,000
 
 **Go / no-go decision:** do not proceed if a candidate introduces an unacceptable safety failure, cannot produce traceable evidence, or performs worse on a critical scenario group. Business owners should agree the acceptance thresholds before comparing models.
 
-If this pilot creates reusable evals and a reliable routing decision, it has delivered value even without fine-tuning. Only after several cycles would I assess specialized training.
+**Interpretation limit:** This ten-day, 30–50-case exercise can test feasibility and reveal failures; it cannot establish statistical production safety. Even zero critical failures in such a small sample would not demonstrate a low real-world failure rate. A production decision would need larger representative evidence, formal risk review, and the relevant business approvals.
+
+If this pilot creates reusable evals and a defensible routing decision, it can provide useful learning even without fine-tuning. Only after several cycles would I assess specialized training.
 
 ## Where this thesis needs caution
 
@@ -223,7 +225,7 @@ That is a more defensible architecture than promising a self-learning enterprise
 
 ## Source and evidence boundary
 
-This is an analytical reading, not an official Prime Intellect guide or an independent validation of the talk's economic claims. The diagrams and SAP pilot are original interpretations. No performance results are presented as measured facts.
+This is an analytical reading, not an official Prime Intellect guide or an independent validation of the talk's economic claims. The two diagrams and SAP pilot are original interpretations. No performance results are presented as measured facts. The conference transcript is machine-generated with reviewed terminology, so ambiguous wording should be checked against the recording before any stronger attribution.
 
 - **Primary talk:** [Will Brown, Prime Intellect — Self-Improving Organizations, AI Engineer NYC 2026](https://www.youtube.com/watch?v=5SRjPT2Eo7A).
 - **Conference summary and transcript:** [AI Engineer NYC — Will Brown keynote](https://ai.engineer/nyc/2026/talks/prime-intellect).
