@@ -3,10 +3,10 @@ layout: default
 title: "SAP AIF — Monitoring, Error Handling and Reprocessing"
 description: "Practical SAP AIF: monitoring, ALRTCATDEF alerts, event-triggered interfaces, destinations, DRFOUT XML enabler integration and reprocessing."
 permalink: /labs/enterprise-context/aif/
-status: reviewed
-verified: true
-robots: index,follow
-sitemap: true
+status: needs_verification
+verified: false
+robots: noindex,follow
+sitemap: false
 last_modified_at: 2026-11-03
 hide_global_cta: true
 enterprise_context_graph: true
@@ -24,7 +24,7 @@ tags:
   - sap-s4hana
 last_reviewed: 2026-09-23
 publication_wave: "integration-deep-dive-01"
-review_method: "current SAP Help for ABAP Platform 2025 FPS01 + nearby Labs review + page-level editorial review"
+review_method: "Original page reviewed 2026-09-23; 2026-11-03 extension source-checked against SAP Learning and SAP Help; release-specific SAP runtime verification outstanding"
 search_intent: "SAP AIF monitoring DRFOUT CL_ENABLER_XML TRANSFER_TO_AIF configuration alerts ALRTCATDEF event trigger destinations reprocessing"
 structured_data:
   type: TechArticle
@@ -190,6 +190,10 @@ source_links:
   </section>
 
 
+  <section class="research-canvas__boundary" data-reveal>
+    <p><strong>Verification boundary (3 November 2026):</strong> SAP-supported AIF capabilities and selected method parameters below have been checked against SAP Learning and SAP Help. Custom DRF outbound changes, system-specific event and alert settings, exception signatures, transactional behavior, and safe replay remain <strong>implementation patterns requiring validation in the installed SAP release</strong>. This expanded article is pending practitioner review, not a validated production runbook.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="alerting" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Hands-on configuration / Alerting</p>
@@ -345,18 +349,31 @@ source_links:
 " business object, receiver, correlation key and data.
 " The RAW structure must match the AIF interface definition.
 
-TRY.
-    /aif/cl_enabler_xml=&gt;transfer_to_aif(
-      EXPORTING
-        is_any_structure = ls_aif_raw
-        iv_queue_ns      = 'ZDRF'
-        iv_queue_name    = '001' ).
-  CATCH /aif/cx_enabler_base INTO DATA(lx_aif).
-    " Simplified: propagate the failed handoff.
-    " Production code must use the DRF error contract.
-    RAISE EXCEPTION lx_aif.
-ENDTRY.</code></pre>
+/aif/cl_enabler_xml=&gt;transfer_to_aif(
+  EXPORTING
+    is_any_structure = ls_aif_raw
+    iv_queue_ns      = 'ZDRF'
+    iv_queue_name    = '001' ).
+" Wrap the call in release-specific exception handling.
+" Translate failures into the supported DRF error contract.
+" Do not add an independent COMMIT WORK or a second receiver send.</code></pre>
     <p>The <code>ZDRF</code> group and <code>Z_DRF_AIF_RAW</code> type are example values. The optional runtime group parameters do not select an external receiver: they select <em>how AIF schedules its own work</em>. For a batch of RAW messages, SAP also provides <code>/AIF/CL_ENABLER_XML=&gt;TRANSFER_TO_AIF_MULT</code> with <code>IT_ANY_STRUCTURE</code>; each table row becomes a separate AIF message, not one atomic business transaction.</p>
+    <p>The <code>IV_QUEUE_NAME</code> argument follows the SAP Learning XML Runtime example. Some SAP Help editions instead document the second optional runtime-group argument as <code>IV_QUEUE_TYPE</code>. <strong>Inspect the actual method signature in <code>SE24</code> for the target release</strong>; these names are not interchangeable in ABAP source. The handoff fragment deliberately omits implementation-specific exception handling and DRF return parameters. Catch the relevant exceptions, translate failures into the supported DRF log/return contract, and do not report a failed enqueue as successful replication.</p>
+    <h3>Transactional boundaries: design before enabling a retry</h3>
+    <p><strong>Documented AIF behavior:</strong> the XML enabler persists or queues work for AIF runtime, and the AIF action executes configured processing. That does not establish whether the source business-object save, AIF queue record, outbound send and receiver commit share one transaction. <strong>Architecture decision to validate:</strong> define who owns the ABAP LUW, AIF action Commit Mode/Commit Level, background scheduling, and receiver acknowledgement. A DRF Direct Output callback can run close to the source save: an extra <code>COMMIT WORK</code> in a custom enhancement can break the intended rollback semantics. Do not assume AIF persistence plus remote delivery is atomic.</p>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Custom DRF AIF retry and transaction failure decisions">
+      <table class="study-table__table">
+        <thead><tr><th scope="col">Failure boundary</th><th scope="col">Check before recovery</th><th scope="col">Safe design rule</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">DRF calls the enabler; enqueue fails</th><td>DRF log/return status, exception and AIF message existence</td><td>Propagate failure through the DRF contract. Do not send directly as an undocumented fallback.</td></tr>
+          <tr><th scope="row">Source LUW rolls back after the handoff</th><td>Source object state, persisted AIF queue state and job scheduling</td><td>Prove rollback behavior in a sandbox. Prevent orphaned messages about uncommitted business changes.</td></tr>
+          <tr><th scope="row">AIF action fails before receiver delivery</th><td>AIF error, action log, retry eligibility and commit settings</td><td>Correct the cause and restart only the failed message; preserve previously successful actions.</td></tr>
+          <tr><th scope="row">Receiver committed, but response was lost</th><td>Receiver business key, transport acknowledgment and idempotency record</td><td>Reconcile before retrying. Neither AIF nor DRF retry guarantees exactly-once delivery.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Duplicate prevention contract (project design, not standard DRF functionality):</strong> use a durable operation identifier such as source object type + source object key + receiver + source change/request ID. A business-partner number alone is insufficient because later legitimate changes must still replicate. Make the outbound action or receiver enforce idempotency, record the receiver reference and completion state, and distinguish <em>queued</em>, <em>sent</em> and <em>confirmed</em>. Reconcile uncertain outcomes before replay. Review AIF action flags such as <em>Restart Always</em> and <em>Stop Processing on Error</em>; neither substitutes for receiver-side duplicate protection.</p>
+    <p><strong>Cross-check with the companion Fiori mass-validation draft (PR #497):</strong> a Fiori file feeder, a custom action that calls a BAPI and a DRF outbound XML enabler are different entry points. They share AIF monitoring, explicit commit ownership, business-key correlation and safe retries, but should not share an unreviewed <code>BAPI_TRANSACTION_COMMIT</code> snippet. See <a href="https://github.com/dkharlanau/dkharlanau.github.io/pull/497" target="_blank" rel="noopener">the companion proposal</a> and <a href="https://learning.sap.com/courses/mastering-sap-application-interface-framework/exploring-the-role-of-actions-in-the-sap-application-interface-framework" target="_blank" rel="noopener">SAP Learning on AIF action commit and restart settings</a>.</p>
     <h3>Concrete Business Partner example — why the call appears in custom DRF code</h3>
     <p>In a published community example for Business Partner replication, the author creates a customer outbound implementation based on standard <code>986_3</code>, adapts the outbound class, maps data prepared by DRF into the corresponding proxy request structure, and replaces the regular outbound proxy call with an AIF enabler call. The AIF interface then maps the payload and uses an action to publish an event. The example references <code>IF_DRF_OUTBOUND~SEND_MESSAGE</code> and a mapping method in <code>CL_MDG_BP_BUPA_SI_OUT</code>. These are <strong>implementation details of that example</strong>; copying a standard DRF class creates upgrade and clean-core risks. Prefer a released extension or the standard DRF-to-Integration-Suite path where possible.</p>
     <h3>Verify the whole chain, not only the AIF entry</h3>
