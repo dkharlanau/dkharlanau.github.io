@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Material Valuation in Procurement — Standard Price, Moving Average Price and FI Postings"
-description: "A practical SAP S/4HANA MM guide to material and accounting documents, GR/IR, standard price, moving average price, price differences, stock coverage, and FI postings for goods receipt and invoice receipt."
+title: "SAP Material Valuation: Standard vs Moving Average Price"
+description: "Understand SAP S/4HANA material valuation: standard and moving average prices, GR/IR, invoice differences, stock coverage and FI postings for goods receipts."
 permalink: /labs/enterprise-context/procurement/material-valuation/
 status: reviewed
 verified: true
@@ -370,6 +370,8 @@ semantic_links:
       <a href="/labs/enterprise-context/procurement/"><span>MM</span><strong>Procurement Process & Decision Map</strong><small>Requirement, source, PO, receipt, invoice, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Movement types, stock categories, quantity updates, and inventory evidence.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/finance-logistics/"><span>FI</span><strong>FI/CO for Logistics</strong><small>Accounting consequences, G/L logic, clearing, and reconciliation across logistics.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/financial-accounting-fundamentals/"><span>AP</span><strong>Financial Accounting: Supplier Payables</strong><small>Continue after GR/IR: supplier invoice, open items, payment terms, outgoing payment and clearing.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/controlling-fundamentals/"><span>CO</span><strong>Controlling: Product Cost and Variances</strong><small>See how procurement price differences relate to production cost, standard value and margin.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/procurement/tax-code-determination/"><span>TAX</span><strong>Tax Code Determination</strong><small>PO tax code, invoice tax, deductible and non-deductible treatment.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>

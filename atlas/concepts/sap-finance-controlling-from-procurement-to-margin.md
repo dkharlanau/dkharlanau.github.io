@@ -28,6 +28,8 @@ tags:
   - order-to-cash
 related:
   - /labs/enterprise-context/finance-logistics/
+  - /labs/enterprise-context/finance-logistics/controlling-fundamentals/
+  - /labs/enterprise-context/finance-logistics/financial-accounting-fundamentals/
   - /labs/enterprise-context/production/
   - /labs/enterprise-context/procurement/
   - /labs/enterprise-context/billing/
@@ -45,6 +47,8 @@ related:
 <p><strong>Reading time:</strong> approximately 30–40 minutes. <strong>Best for:</strong> SAP SD/MM consultants moving into cross-functional solution design. <strong>Source review:</strong> 30 October 2026; SAP S/4HANA on-premise / Private Edition 2025 FPS02 where available, and Cloud Public Edition 2608 where explicitly indicated. <strong>Editorial status:</strong> learning draft awaiting human review.</p>
 
 **Start with one rule:** SAP does not move “a cost” through a single module. Each business event has a quantity, a financial value, a G/L account, and sometimes a controlling object. The next event can change where that value appears. A customer order, purchase order, production order, invoice and accounting document are not interchangeable evidence.
+
+**New to Finance?** Start with [Controlling Fundamentals](/labs/enterprise-context/finance-logistics/controlling-fundamentals/) to understand cost centers and production orders, and [Financial Accounting Fundamentals](/labs/enterprise-context/finance-logistics/financial-accounting-fundamentals/) to understand payables, receivables, journal entries and clearing. Then return to the complete example below.
 
 ## Learning route
 

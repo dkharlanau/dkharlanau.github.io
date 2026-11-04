@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Tax Code Determination in Purchasing & Invoice Receipt — SAP S/4HANA MM"
-description: "A practical SAP MM guide to tax-code determination in purchase orders and Logistics Invoice Verification, including deductible, non-deductible, zero-rate, automatic determination, testing, and FI integration."
+title: "Tax Code Determination in Purchasing & Invoice Receipt — SAP S/4HANA"
+description: "Understand tax-code determination in SAP S/4HANA purchase orders and invoice verification, including input VAT, non-deductible tax, testing and FI postings."
 permalink: /labs/enterprise-context/procurement/tax-code-determination/
 status: reviewed
 verified: true
@@ -47,7 +47,7 @@ semantic_links:
     title: "Procurement Process & Decision Map — Enterprise Context Lab"
     url: "/labs/enterprise-context/procurement/"
   - type: "same_domain"
-    title: "Material Valuation in Procurement — Standard Price, Moving Average Price and FI Postings"
+    title: "SAP Material Valuation: Standard vs Moving Average Price"
     url: "/labs/enterprise-context/procurement/material-valuation/"
   - type: "related_topic"
     title: "SAP Business Partner — Roles, CVI and Organizational Data"

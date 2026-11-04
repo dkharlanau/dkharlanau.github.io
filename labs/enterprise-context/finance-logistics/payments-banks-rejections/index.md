@@ -63,6 +63,7 @@ semantic_links:
     <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
     <div>
       <p><strong>Keep four states separate:</strong> payment proposal, SAP posting, bank execution, and final reconciliation.</p>
+      <p>New to supplier payables and customer receivables? Start with the <a href="/labs/enterprise-context/finance-logistics/financial-accounting-fundamentals/">FI basics guide</a> for open items, invoices, payment and clearing, then use this page to investigate bank-level exceptions.</p>
       <p>A successful proposal does not prove that a payment was posted. A posted payment does not prove that the bank accepted it. A bank execution does not prove that SAP cleared the right item.</p>
     </div>
     <a href="#diagnostic">Trace the first wrong state <span class="material-symbols-outlined" aria-hidden="true">route</span></a>
