@@ -272,5 +272,5 @@ semantic_links:
       <p>Checked 4 November 2026 against the sources linked above. This is technical and process guidance, not legal advice. All customer and mandate identifiers in the migration example are synthetic.</p>
     </div>
   </section>
-  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+  <footer class="sepa-guide-footer" data-reveal><p>Technical field guide by <a href="/about/">Dzmitryi Kharlanau</a> · reviewed 4 November 2026. Verify release-specific SAP behavior and current payment-scheme requirements before production use.</p></footer>
 </article>
