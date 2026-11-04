@@ -151,6 +151,16 @@ semantic_links:
       <article class="ecg-determination-detail"><header><div><span>03</span><small>billing</small></div><h3>Does the mandate survive the billing step?</h3><p>A mandate reference can be copied to billing and become a split criterion.</p></header><p>If two billable transactions have different mandate references, they can create separate invoices. With the relevant status/copy checks, an invalid mandate can also stop billing. A billed document is not the place to casually change the mandate; follow SAP's documented reversal and correction route.</p></article>
       <article class="ecg-determination-detail"><header><div><span>04</span><small>cash</small></div><h3>What does the payment proposal and the bank say?</h3><p>Selection, posting, payment medium and bank confirmation are separate states.</p></header><p>A payment proposal exception is an FI/payment setup investigation. A bank rejection after an instruction was sent is a different problem. Pre-notification is an additional communication requirement, not a substitute for the mandate itself.</p></article>
     </div>
+    <div class="sepa-payment-check">
+      <h3>What the classic FI payment program checks</h3>
+      <ol>
+        <li><strong>Payment method:</strong> is the direct-debit method configured as SEPA-relevant, with the appropriate mandate requirement?</li>
+        <li><strong>Bank account:</strong> is the debtor's IBAN available for the actual payer?</li>
+        <li><strong>Authority:</strong> is an <em>active, unlocked</em> mandate eligible for that debtor, creditor and IBAN?</li>
+        <li><strong>Execution:</strong> did the proposal select the item, and did the payment run produce the expected bank instruction?</li>
+      </ol>
+      <p>These are the documented classic payment-program decision points; verify the exact messages and configuration in your S/4HANA system. <a href="https://help.sap.com/docs/SAP_ERP/ba20fc74bc8c4669870d4da8e3d8b5a6/b049f33c67d348f49a0e4f7b07827112.html" target="_blank" rel="noopener">SAP: evaluation of mandates by payment run</a>.</p>
+    </div>
   </section>
 
   <section id="sepa-tables" class="research-canvas__inventory" data-reveal>
@@ -161,7 +171,7 @@ semantic_links:
         <dl><div><dt><code>MGUID</code></dt><dd>Technical mandate GUID</dd></div><div><dt><code>MNDID</code></dt><dd>Mandate reference / UMR</dd></div><div><dt><code>REC_CRDID</code></dt><dd>Creditor identifier</dd></div><div><dt><code>SND_ID</code>, <code>SND_TYPE</code></dt><dd>Debtor identity and type</dd></div><div><dt><code>SND_IBAN</code></dt><dd>Mandate's debtor IBAN</dd></div><div><dt><code>PAY_TYPE</code></dt><dd>One-off or recurring mandate</dd></div><div><dt><code>STATUS</code>, <code>SIGN_DATE</code></dt><dd>Lifecycle and signature</dd></div></dl>
       </div>
       <div class="sepa-object-card">
-        <span>Mandate use / trace</span><h3><code>SEPA_MANDATE_USE</code></h3><p>Usage history for a mandate; inspect via the mandate's <strong>Use</strong> tab first.</p>
+        <span>Mandate use / trace</span><h3><code>SEPA_MANDATE_USE</code></h3><p>Usage evidence for a mandate; inspect the <strong>Use</strong> tab first. Retention may be limited by configuration.</p>
         <dl><div><dt><code>MGUID</code></dt><dd>Links to the technical mandate</dd></div><div><dt><code>USE_DATE</code></dt><dd>Recorded usage date</dd></div><div><dt><code>USE_DOCTYPE</code>, <code>USE_DOCID</code></dt><dd>Type and key of the usage object</dd></div></dl>
       </div>
       <div class="sepa-object-card">
@@ -169,6 +179,7 @@ semantic_links:
         <dl><div><dt><code>BUT0BK</code> / <code>KNBK</code></dt><dd>BP / classic customer bank context; release and CVI dependent</dd></div><div><dt><code>VBPA</code></dt><dd>Sales-document partner roles, including payer</dd></div><div><dt><code>I_CustomerSEPAMandate</code></dt><dd>Released customer mandate interface view in documented S/4HANA release</dd></div><div><dt><code>I_SEPAMandateUsage</code></dt><dd>CDS usage reporting view</dd></div></dl>
       </div>
     </div>
+    <p class="sepa-source-note"><strong>Usage history has limits:</strong> the classic payment program can retain only a configured number of mandate uses and delete older usage rows. A short or empty <code>SEPA_MANDATE_USE</code> history is not by itself evidence that the mandate was never used. <a href="https://help.sap.com/docs/SAP_ERP/ba20fc74bc8c4669870d4da8e3d8b5a6/b049f33c67d348f49a0e4f7b07827112.html" target="_blank" rel="noopener">SAP: usage recording</a>.</p>
     <p class="sepa-source-note"><strong>Do not join everything by customer number.</strong> The mandate's technical identifier, business reference, creditor, debtor and IBAN have different roles. Confirm field definitions in <code>SE11</code> in your target release and use a released CDS interface or supported API for production integrations. <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ee6ff9b281d8448f96b4fe6c89f2bdc8/59e1eb1e333949ebb74c6a99c1fbd13b.html" target="_blank" rel="noopener">SAP: I_CustomerSEPAMandate</a> · <a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/c0c54048d35849128be8e872df5bea6d/9125b1e147b54a2cbb316b67bc824632.html" target="_blank" rel="noopener">SAP: usage CDS</a>.</p>
     <h3>Useful transactions and apps</h3>
     <div class="sepa-table-wrap" role="region" aria-label="SEPA SAP transactions" tabindex="0">
