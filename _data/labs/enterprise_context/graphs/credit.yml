@@ -10,7 +10,7 @@ process_family: "Order-to-Cash"
 process_step: "Evaluate Credit Risk"
 status: researching
 created_at: "2026-08-14"
-updated_at: "2026-09-26"
+updated_at: "2026-10-30"
 verified_at: null
 
 thesis: >-
@@ -779,6 +779,151 @@ assessment_drills:
       - "Check segment, risk class, rule, exposure, and result for that account."
       - "Treat partner determination as an upstream credit input."
 
+business_architecture:
+  intent: >-
+    Design credit risk as a commercial operating model: who bears the loss, what exposure
+    must be shared, who can change a limit, and which channel may promise delivery.
+    Credit segmentation is not automatically the same as a country, branch, company code,
+    sales organization, or customer hierarchy.
+  working_recommendation: >-
+    Where a central treasury bears shared customer risk but branches need local control,
+    evaluate a main credit segment with consolidated exposure and meaningful subsegment
+    limits. Use a simpler single segment where risk is genuinely pooled, and independent
+    segments where limits and legal responsibility are genuinely separate. Confirm the
+    release-specific organizational mapping and actual exposure flows before deciding.
+  patterns:
+    - id: pooled
+      model: "One shared credit pool"
+      business_fit: "Several selling units share one risk budget and central credit ownership."
+      sap_pattern: "A common credit segment and centrally governed credit-account data."
+      trade_off: "Simple and visible overall risk; no independent hard branch allocation."
+    - id: independent
+      model: "Separate local credit pools"
+      business_fit: "Country entities underwrite risk separately and need their own limits."
+      sap_pattern: "Separate credit segments with properly mapped credit-control structures."
+      trade_off: "Local freedom; the same customer can accumulate risk across entities unseen by any one local check."
+    - id: hybrid
+      model: "Local limits plus a group ceiling"
+      business_fit: "Branches need local spending room but central treasury owns the total risk."
+      sap_pattern: "Main credit segment with subsegment contributions; check local and main limits where configured."
+      trade_off: "Better protection of the shared group ceiling; more master data, currency, mapping and reconciliation work."
+    - id: customer-group
+      model: "Parent and subsidiary buyers"
+      business_fit: "Several buying legal entities use one agreed group facility."
+      sap_pattern: "Credit-account hierarchy using superordinate/subordinate BP relationships, with controlled exposure aggregation."
+      trade_off: "Shared customer risk view; requires verified BP relationships and a defined legal guarantee."
+    - id: central-multi-system
+      model: "One credit authority across systems"
+      business_fit: "Orders, invoices or commitments originate in several SAP or non-SAP systems."
+      sap_pattern: "Central SAP Credit Management and documented credit/commitment service interfaces where supported."
+      trade_off: "Common policy; decisions depend on identity mapping, message delivery, latency and recovery."
+  scenarios:
+    - id: new-customer
+      business_case: "New distributor with little payment history"
+      policy: "Start with a conservative risk class, reviewed limit or secured/prepayment option."
+      boundary: "Risk model inputs and any credit insurance must be explicitly configured and evidenced."
+    - id: regional-branch
+      business_case: "The same customer orders from two countries"
+      policy: "Decide whether local caps, one global cap, or both must stop commitments."
+      boundary: "Do not assume separate sales organizations create separate credit exposure automatically."
+    - id: customer-group
+      business_case: "Several buying subsidiaries share a parent guarantee"
+      policy: "Evaluate a parent credit-account relationship after Legal and Finance confirm the facility."
+      boundary: "Customer hierarchy for commercial reporting is not automatically a credit-account hierarchy."
+    - id: temporary-peak
+      business_case: "Seasonal campaign needs a short-term limit increase"
+      policy: "Use a time-bound, approved limit decision with expiry and review evidence."
+      boundary: "Confirm the available standard temporary-limit capabilities for the target release."
+    - id: prepayment
+      business_case: "Prepaid and cash-on-delivery orders"
+      policy: "Validate credit relevance, payment confirmation and fulfillment hold by business process."
+      boundary: "Do not use a universal risk-rule bypass based only on order type or payment terms."
+    - id: cross-company
+      business_case: "Intercompany fulfillment or third-party sales"
+      policy: "Check the customer-facing payer and the correct selling company's risk responsibility."
+      boundary: "Internal company-to-company documents do not automatically have the same credit relevance."
+    - id: high-volume
+      business_case: "EDI or e-commerce imports thousands of orders"
+      policy: "Apply the same credit policy to all channels and control check timing and capacity."
+      boundary: "Bulk interfaces need duplicate prevention, stale-exposure controls and clear partial-failure behavior."
+    - id: overdue-invoice
+      business_case: "A large invoice becomes overdue after order release"
+      policy: "Use the configured overdue-item check and delivery recheck to reassess new risk."
+      boundary: "Order release does not imply permanent permission to ship."
+    - id: external-risk
+      business_case: "A credit agency reduces the buyer's rating"
+      policy: "Review score and risk-class recalculation, impacted limits and blocked documents."
+      boundary: "External agency data is an input; Finance owns the policy and decision."
+    - id: multi-system
+      business_case: "Legacy CRM creates commitments in a central credit landscape"
+      policy: "Define request/response, commitment updates, account mapping and failure recovery."
+      boundary: "The specific API, topology and supported applications vary by edition and release."
+  integrations:
+    - system: "SD / logistics"
+      exchange: "Sales order and delivery checks; SD commitments and status changes."
+      owner: "Sales and credit-control configuration jointly define check events."
+      failure_risk: "Missing checks, blocked fulfillment or stale/double commitments."
+    - system: "FI-AR"
+      exchange: "Open receivables, clearing, payment behavior and related exposure changes."
+      owner: "Finance owns accounting truth; Credit consumes the approved exposure."
+      failure_risk: "Payments posted but exposure or blocked-document state not refreshed."
+    - system: "Business Partner / MDG"
+      exchange: "Credit role UKM000, global profile, segment data, score, rule and limits."
+      owner: "Credit policy owner approves changes; master-data governance manages controlled updates."
+      failure_risk: "Wrong payer, missing segment, delayed replication or unauthorized limit change."
+    - system: "CRM / e-commerce / EDI"
+      exchange: "Credit inquiry and, where supported, external order commitments."
+      owner: "Channel integration and Credit define contract, timing and data ownership."
+      failure_risk: "A successful front-end order promise is mistaken for a completed SAP credit check."
+    - system: "Central credit / Integration Suite"
+      exchange: "Creditworthiness, credit-account, commitment and documented-decision services, as supported."
+      owner: "Integration team owns identity mapping, retries, authentication and message observability."
+      failure_risk: "Lost or replayed messages, out-of-order changes, incorrect shared exposure."
+    - system: "External credit agencies"
+      exchange: "Credit reports, ratings and monitoring changes via supported credit integration."
+      owner: "Credit Risk owns score interpretation; integration team owns vendor data flow."
+      failure_risk: "Stale rating, wrong corporate identity, over-automated limit change."
+    - system: "Service / FI-CA (where in scope)"
+      exchange: "Service credit checks or contract-accounting commitments."
+      owner: "Service or FI-CA process owner plus Credit defines supported scope."
+      failure_risk: "Omitted non-SD exposure or untested separate-system behavior."
+    - system: "Analytics and operations"
+      exchange: "Credit exposure items, decision logs, blocked-document queues and status."
+      owner: "Finance controls metric definitions and controls; IT owns technical monitoring."
+      failure_risk: "Unreconciled exposure, unaudited overrides and unmeasured release delay."
+  controls:
+    - "Name the legal risk owner and credit decision authority for every segment."
+    - "Document mapping from sales/finance organizational units to credit control area and segment."
+    - "Confirm account identity: sold-to, payer, credit account and any parent credit relationship."
+    - "Reconcile liabilities by source system, account, segment, document and stage before cutover."
+    - "Separate automatic recheck, human release, limit change and technical-failure handling."
+    - "Keep authorization, approval rationale, expiry, exception and decision-log evidence."
+    - "Monitor interface lag, duplicate commitments and stale exposure; define reprocessing ownership."
+  workshop_questions:
+    - "Which legal company bears unpaid-invoice loss for a sale fulfilled by another branch?"
+    - "Should one buyer be allowed to spend its full limit in two countries at once?"
+    - "Does the group have a legally enforceable parent guarantee for buying subsidiaries?"
+    - "Who may approve a temporary increase, with what threshold and expiry?"
+    - "Which sales channels must receive a decision before confirmation or shipping?"
+    - "How current must the exposure be for an automated order to be accepted?"
+    - "What happens during a credit-service outage: hold, later recheck, or controlled exception?"
+  acceptance_tests:
+    - "Local available limit with exhausted main/group limit"
+    - "Customer group parent-child exposure and wrong relationship"
+    - "Different payer from sold-to and missing credit role/segment"
+    - "Overdue receivable after an order passes, followed by delivery recheck"
+    - "Payment clearing and lagged exposure refresh"
+    - "One import order retried, followed by duplicate-commitment reconciliation"
+    - "Temporary credit increase expiry and approval audit"
+    - "External credit-check service timeout with documented recovery"
+    - "Two currencies, cross-company sale and consistent central exposure"
+  edition_boundary: >-
+    Core on-premise/private process behavior is referenced to S/4HANA 2025 FPS01.
+    S/4HANA 2025 FPS02 (October 2026) additionally documents a Credit Management
+    Master Data API and credit-limit approval workflow settings. Public Edition
+    2608 documents cloud communication scenarios. Do not assume the same transactions,
+    extensions, licenses or APIs apply in every edition. Verify release and availability.
+
 source_refs:
   - SRC-SAP-CREDIT-PROCESS
   - SRC-SAP-CREDIT-SETTINGS
@@ -793,3 +938,11 @@ source_refs:
   - SRC-SAP-CREDIT-RECHECK
   - SRC-SAP-CREDIT-EVENTS
   - SRC-SAP-CREDIT-TECHNICAL
+  - SRC-SAP-CREDIT-LANDSCAPE
+  - SRC-SAP-CREDIT-RATING
+  - SRC-SAP-CREDIT-AGENCY
+  - SRC-SAP-CREDIT-MANAGE-DECISIONS
+  - SRC-SAP-CREDIT-EXPOSURE-CDS
+  - SRC-SAP-CREDIT-PUBLIC-API
+  - SRC-SAP-CREDIT-FPS02-MASTER-DATA-API
+  - SRC-SAP-CREDIT-FPS02-APPROVAL
