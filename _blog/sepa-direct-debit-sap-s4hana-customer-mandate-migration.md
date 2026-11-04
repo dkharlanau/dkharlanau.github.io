@@ -158,7 +158,7 @@ semantic_links:
     <div class="sepa-technical-grid">
       <div class="sepa-object-card sepa-object-card--main">
         <span>Mandate master</span><h3><code>SEPA_MANDATE</code></h3><p>Inspect mandate identity, status, payer, creditor, bank account and dates.</p>
-        <dl><div><dt><code>MGUID</code></dt><dd>Technical mandate GUID</dd></div><div><dt><code>MNDID</code></dt><dd>Mandate reference / UMR</dd></div><div><dt><code>REC_CRDID</code></dt><dd>Creditor identifier</dd></div><div><dt><code>SND_ID</code>, <code>SND_TYPE</code></dt><dd>Debtor identity and type</dd></div><div><dt><code>SND_IBAN</code></dt><dd>Mandate's debtor IBAN</dd></div><div><dt><code>STATUS</code>, <code>SIGN_DATE</code></dt><dd>Lifecycle and signature</dd></div></dl>
+        <dl><div><dt><code>MGUID</code></dt><dd>Technical mandate GUID</dd></div><div><dt><code>MNDID</code></dt><dd>Mandate reference / UMR</dd></div><div><dt><code>REC_CRDID</code></dt><dd>Creditor identifier</dd></div><div><dt><code>SND_ID</code>, <code>SND_TYPE</code></dt><dd>Debtor identity and type</dd></div><div><dt><code>SND_IBAN</code></dt><dd>Mandate's debtor IBAN</dd></div><div><dt><code>PAY_TYPE</code></dt><dd>One-off or recurring mandate</dd></div><div><dt><code>STATUS</code>, <code>SIGN_DATE</code></dt><dd>Lifecycle and signature</dd></div></dl>
       </div>
       <div class="sepa-object-card">
         <span>Mandate use / trace</span><h3><code>SEPA_MANDATE_USE</code></h3><p>Usage history for a mandate; inspect via the mandate's <strong>Use</strong> tab first.</p>
@@ -185,6 +185,16 @@ semantic_links:
       </table>
     </div>
     <p class="sepa-source-note">In <code>FSEPA_M3/M4</code>, inspect <strong>Basic Data</strong> (status/validity), <strong>Sender</strong> (debtor/IBAN), <strong>Recipient</strong> (creditor), <strong>Use</strong> (payment usage) and <strong>Versions</strong>. <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/451fcec7eb02466aab0dfef5a2e54901.html" target="_blank" rel="noopener">SAP: mandate maintenance</a>.</p>
+    <div class="sepa-status-ladder" aria-label="SEPA FI-AR mandate lifecycle">
+      <h3>Mandate status: what the labels mean for payment readiness</h3>
+      <div class="sepa-status-grid">
+        <div><span>Preparation</span><strong>Entered / To Be Confirmed</strong><p>A mandate record exists, but this does not itself prove signed and usable authorisation for collection.</p></div>
+        <div><span>Payment eligible</span><strong>Active</strong><p>The normal required FI-AR state for direct-debit use, subject to validity, account, scheme and other payment checks.</p></div>
+        <div><span>Restricted</span><strong>Locked / Canceled</strong><p>Investigate the reason and business decision. Do not reactivate simply to clear a payment error.</p></div>
+        <div><span>End of use</span><strong>Obsolete / Completed</strong><p>Not eligible for new collection; an obsolete mandate and a mandate finished after its intended last use are different histories.</p></div>
+      </div>
+      <p class="sepa-source-note">These are common FI-AR mandate statuses, not a universal cross-application workflow. Different applications expose different status sets: for example, <em>Reversed</em> appears in other mandate-management contexts. Confirm actual values and allowed transitions in the target system's <code>SEPA_STATUS</code> domain and supported maintenance UI. <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ee6ff9b281d8448f96b4fe6c89f2bdc8/b601aa9124254d338ee0ec8f5e01ed1a.html" target="_blank" rel="noopener">SAP: mandate status CDS</a>.</p>
+    </div>
   </section>
 
   <section id="sepa-migration" class="research-canvas__inventory" data-reveal>
