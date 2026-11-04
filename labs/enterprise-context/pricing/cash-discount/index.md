@@ -45,6 +45,15 @@ source_links:
     </div>
   </header>
 
+  <section class="research-canvas__inventory" id="problem-and-context">
+    <header>
+      <p class="research-canvas__eyebrow">Problem and business context</p>
+      <h2>Why does the invoice still show the full amount?</h2>
+    </header>
+    <p><strong>Common problem:</strong> a Sales or Purchasing pricing screen shows a potential 2% cash discount, but the invoice is still for €1,000. That is usually expected, not a pricing error: the discount must first be earned by early payment.</p>
+    <p><strong>Business context:</strong> SD and MM agree the payment terms in the sales order or PO. FI uses the invoice terms, due-date rules and actual settlement to decide whether the discount applies. This distinction avoids double-counting a benefit in pricing and again in FI.</p>
+  </section>
+
   <section class="research-canvas__boundary">
     <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
     <p><strong>Remember:</strong> <code>SKTO</code> in pricing normally shows a <em>potential</em> cash discount as a <strong>statistical</strong> condition. It does not itself reduce the order net value. The actual discount depends on the payment terms, baseline date, cash-discount base and settlement.</p>
