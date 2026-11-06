@@ -11,11 +11,13 @@ import json
 import re
 import sys
 from pathlib import Path
+from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "frameworks/living-documentation/tool-manifest.json"
 CARD = ROOT / "frameworks/living-documentation/generated/tool-card.md"
 DIAGRAM = ROOT / "frameworks/living-documentation/generated/change-flow.mmd"
+DIAGRAM_SVG = ROOT / "frameworks/living-documentation/generated/change-flow.svg"
 
 
 def load_contract() -> dict:
@@ -91,6 +93,32 @@ def diagram_text(contract: dict) -> str:
     return "\n".join(lines)
 
 
+
+def svg_text(contract: dict) -> str:
+    """Narrow, deterministic SVG projection of this linear demo lifecycle."""
+    stages = contract["lifecycle"]
+    height = 24 + 70 * (len(stages) - 1) + 48 + 20
+    lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 {height}" role="img" aria-labelledby="ldc-title ldc-desc">',
+        '  <title id="ldc-title">Living documentation publication flow</title>',
+        '  <desc id="ldc-desc">Versioned tool contract, generated card and diagram, drift check, business review, publication.</desc>',
+        '  <defs><marker id="ldc-arrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#1d4ed8" stroke-width="1.5"/></marker></defs>',
+    ]
+    for index, stage in enumerate(stages):
+        y = 24 + index * 70
+        lines.extend([
+            f'  <rect x="12" y="{y}" width="576" height="48" rx="8" fill="#f4f7fb" stroke="#cad4e2"/>',
+            f'  <text x="30" y="{y + 30}" font-family="Arial, sans-serif" font-size="22" fill="#1f2937">{escape(stage["label"])}</text>',
+        ])
+        if index < len(stages) - 1:
+            lines.append(
+                f'  <line x1="300" y1="{y + 48}" x2="300" y2="{y + 70}" stroke="#1d4ed8" stroke-width="2" marker-end="url(#ldc-arrow)"/>'
+            )
+    lines.append("</svg>")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def inspect_input(contract: dict, payload: dict) -> dict:
     if not isinstance(payload, dict):
         raise ValueError("Input must be a JSON object")
@@ -133,6 +161,7 @@ def main() -> int:
     generated = {
         CARD: card_text(contract),
         DIAGRAM: diagram_text(contract),
+        DIAGRAM_SVG: svg_text(contract),
     }
     if args.action == "sync":
         for path, content in generated.items():
