@@ -1,0 +1,58 @@
+{
+  "contract": "ldc/0.1",
+  "tool": {
+    "id": "order-upload-input-check",
+    "name": "Order upload input check (synthetic)",
+    "version": "0.1.0",
+    "audience": "SAP SD consultants",
+    "purpose": "Identify missing fields in a synthetic order-upload sample before a manual route investigation.",
+    "command": "python3 scripts/living_docs_demo.py inspect --input frameworks/living-documentation/example-order.json",
+    "fields": [
+      {
+        "name": "shipping_condition",
+        "required": true,
+        "meaning": "Upload-level value to inspect if the interface supports it."
+      },
+      {
+        "name": "departure_country",
+        "required": true,
+        "meaning": "Departure context supplied by the synthetic test fixture."
+      },
+      {
+        "name": "departure_zone",
+        "required": true,
+        "meaning": "Departure zone supplied by the synthetic test fixture."
+      }
+    ],
+    "result": "A list of missing or empty fields, not an SAP determination outcome.",
+    "limitations": [
+      "Demonstration only: no SAP connection, customizing read, or transaction update.",
+      "This is not a complete SAP standard route-determination input model.",
+      "A complete set of sample values does not prove that an SAP route can be determined."
+    ],
+    "evidence": "tests/test_living_docs_demo.py and frameworks/living-documentation/example-order.json",
+    "owner": "DKHARLANAU Labs sample; review business assumptions before reuse"
+  },
+  "lifecycle": [
+    {
+      "id": "contract",
+      "label": "Versioned tool contract"
+    },
+    {
+      "id": "project",
+      "label": "Generate card and diagram"
+    },
+    {
+      "id": "check",
+      "label": "Detect stale outputs"
+    },
+    {
+      "id": "review",
+      "label": "Review business meaning"
+    },
+    {
+      "id": "publish",
+      "label": "Publish reviewed version"
+    }
+  ]
+}
