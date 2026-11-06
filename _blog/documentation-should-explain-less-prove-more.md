@@ -52,6 +52,14 @@ Google's documentation guidance already prefers a small set of accurate, maintai
 
 Sources: [Google documentation practices](https://google.github.io/styleguide/docguide/best_practices.html), [Diátaxis](https://diataxis.fr/), [Backstage TechDocs](https://backstage.io/docs/features/techdocs/), [OpenAPI 3.2.1](https://spec.openapis.org/oas/v3.2.1.html), [MCP tools specification](https://modelcontextprotocol.io/specification/2026-07-28/server/tools), [JSON Schema annotations](https://json-schema.org/understanding-json-schema/reference/annotations), [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli).
 
+## What the recent evidence says
+
+A [2026 preprint on documentation drift in AI-generated pull requests](https://arxiv.org/abs/2610.27381) analysed 29,669 AI-created PRs from 2,585 repositories. **63.2% changed code without a documentation-file change in the same PR**. This measures documentation co-change, not whether every change needed documentation or whether a document was accurate. Still, it provides a concrete reason to examine update workflows rather than reward document volume.
+
+A [2025 IEEE/ACM study, Metamon](https://doi.org/10.1109/LLM4Code66737.2025.00020), tested methods for detecting disagreements between code behavior and documentation on 9,482 code-documentation pairs. Its reported **0.72 precision and 0.48 recall** show both the potential and limitations of AI-assisted inconsistency detection. Automatic flags can help reviewers, but cannot safely certify correctness on their own.
+
+These studies do not prove that the proposed LDC improves comprehension. That requires a separate task-based evaluation with target readers.
+
 ## A compact page should answer an actual task
 
 Consider a synthetic SAP SD sales-order upload case. A test order has no determined route. The upload program accepts Shipping Condition, but the customer master also has a value. Different shipping points or plants may require different inputs and configuration.
