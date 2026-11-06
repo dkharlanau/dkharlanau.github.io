@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Frameworks — Practical Methods for Digital Systems"
-description: "Reusable methods for contradiction solving, decision design, opportunity qualification, repeatable data work, and operational analysis."
+description: "Reusable methods for contradiction solving, decision design, living documentation, opportunity qualification, repeatable data work, and operational analysis."
 permalink: /frameworks/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-25
+last_modified_at: 2026-11-06
 hide_global_cta: true
 tags:
   - architecture
