@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Living Documentation Contract v0.1 — Human-first, verifiable documentation"
+title: "Living Documentation Contract v0.1 — Human-first, verifiable docs"
 description: "An experimental documentation specification: concise task cards, self-describing tools, derived diagrams, evidence, and drift checks."
 permalink: /frameworks/living-documentation/
 author: "Dzmitryi Kharlanau"
@@ -32,7 +32,9 @@ tags:
   </header>
   <div class="note-body" markdown="1">
 
-## Design target
+## Problem and design target
+
+A page can build successfully while its examples, input fields, or diagram drift from the actual tool. Experts then have to re-check the implementation before trusting the instructions. The proposed contract detects stale derived content and reserves business meaning for review.
 
 **A reader should find the right tool, understand its safe use, and make the next correct decision with as little unnecessary reading as possible.**
 
