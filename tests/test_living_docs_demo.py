@@ -33,6 +33,8 @@ def test_generated_human_card_and_diagram_are_current():
     contract = demo.load_contract()
     assert demo.CARD.read_text(encoding="utf-8") == demo.card_text(contract)
     assert demo.DIAGRAM.read_text(encoding="utf-8") == demo.diagram_text(contract)
+    assert demo.DIAGRAM_SVG.read_text(encoding="utf-8") == demo.svg_text(contract)
+    assert "<title" in demo.svg_text(contract)
 
 
 def test_contract_change_requires_updated_projection():
