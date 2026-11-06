@@ -82,7 +82,7 @@ python3 scripts/living_docs_demo.py sync
 
 The sample input intentionally omits a departure zone. The pre-check reports that omission; it cannot determine the correct route. That distinction is part of the contract.
 
-Inspect the [machine-readable example manifest](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/frameworks/living-documentation/tool-manifest.json), [generated human card](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/frameworks/living-documentation/generated/tool-card.md), [Mermaid source](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/frameworks/living-documentation/generated/change-flow.mmd), and [Python implementation](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/scripts/living_docs_demo.py).
+Inspect the [machine-readable example manifest](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/frameworks/living-documentation/tool-manifest.json), [generated human card](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/frameworks/living-documentation/generated/tool-card.md), [Mermaid source](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/frameworks/living-documentation/generated/change-flow.mmd), [generated SVG](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/frameworks/living-documentation/generated/change-flow.svg), and [Python implementation](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/scripts/living_docs_demo.py).
 
 ## Rules for automatic diagrams
 
@@ -97,11 +97,12 @@ Diagrams MUST represent **typed relationships from a semantic source**, not an L
 
 This example uses a tiny deterministic Mermaid projection. For richer SVG diagrams, reuse [Visual Workbench](https://github.com/dkharlanau/visual-workbench) rather than building another layout engine. For business process contracts, examine [Process as Code](https://github.com/dkharlanau/process-as-code), which already has validation, diff, documentation and diagram outputs.
 
-The diagram's logical path is:
+The diagram's logical path is generated from the same manifest:
 
-~~~text
-Versioned contract -> Generated card and diagram -> Drift check -> Human review -> Publication
-~~~
+<figure>
+  <img src="/frameworks/living-documentation/generated/change-flow.svg" alt="A five-step vertical flow: versioned tool contract, generated card and diagram, drift check, business review, and reviewed publication." width="600" height="372" loading="lazy" decoding="async" style="max-width:100%;height:auto" />
+  <figcaption>Deterministic SVG projection of the documentation lifecycle. This is not a diagram of SAP route determination.</figcaption>
+</figure>
 
 The diagram is **derived evidence about the publication workflow**, not evidence that the SAP business process is correct.
 
