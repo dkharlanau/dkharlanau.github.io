@@ -101,7 +101,7 @@ sitemap: false
       <li>The owner who can approve a release when the block represents a business control.</li>
     </ul>
 
-        <h2>A useful AI experiment: explain why the order did not move</h2>
+    <h2>A useful AI experiment: explain why the order did not move</h2>
     <p><strong>Simulated case:</strong> a sales order was saved, but no delivery is created. A support assistant should not guess a missing delivery block or remove one. It should first identify the exact missing business step and ask for the evidence that separates three explanations: the schedule line is not due, the item is not delivery-relevant, or an active control prevents processing.</p>
     <p>A small <strong>read-only evidence record</strong> is enough to test this idea. These are diagnostic labels, not SAP database or API field names:</p>
     <pre><code class="language-json">{
