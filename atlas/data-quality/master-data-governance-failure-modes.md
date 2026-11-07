@@ -2,7 +2,8 @@
 
 title: Master Data Governance Failure Modes
 layout: default
-description: A practical view of the governance failures that turn SAP master data defects into recurring process and support problems.
+description: Prevent recurring SAP master-data defects by tracing ownership, replication and business usability; includes a measured AI trial.
+search_intent: "How to find recurring governance failures in SAP MDG and downstream systems"
 permalink: /atlas/data-quality/master-data-governance-failure-modes/
 atlas_section: data-quality
 domain: Data operations
@@ -14,6 +15,7 @@ status: reviewed
 verified: true
 level: 2
 last_reviewed: 2026-06-13
+last_modified_at: 2026-11-07
 
 tags:
   - master-data
@@ -90,6 +92,24 @@ author: Dzmitryi Kharlanau
   <h2>The repair and the governance action are different</h2>
   <p>The incident may need an immediate record correction. Governance work asks what should change so the next record does not fail in the same way. Sometimes the answer is a validation rule. Sometimes it is a clearer owner, a better source-system boundary, a different replication design, or the retirement of an obsolete option.</p>
   <p>If every recurring data problem ends with “user trained”, inspect the process again. Training is useful; it is also a remarkably popular place to hide missing system controls.</p>
+
+  <h2>AI experiment: find the repeated governance failure</h2>
+  <p><strong>Simulated situation:</strong> a business partner is changed in a central hub. The outbound message reports success, but the target system still cannot use the partner in the intended sales area. This is not automatically a replication failure: transmission, target application and business usability are different states.</p>
+  <p>Start with a small <strong>read-only evidence set</strong> instead of an AI agent that updates partners:</p>
+  <pre><code class="language-json">{
+  "object_type": "business_partner",
+  "object_reference": "synthetic-or-pseudonymous-id",
+  "source_change_state": "completed",
+  "outbound_delivery_state": "reported_success",
+  "target_read_state": "not_checked",
+  "required_org_extension": "not_checked",
+  "responsible_owner": "unassigned",
+  "proposed_action": "verify the target business role and sales-area extension",
+  "write_allowed": false
+}</code></pre>
+  <p>Rules should detect missing identifiers, impossible state sequences, stale snapshots and duplicate alerts. AI can then group similar exceptions, summarise the evidence and suggest the next owner or check. It must not invent a missing business value, infer target readiness from an outbound acknowledgement, or activate a record.</p>
+  <p><strong>Two-week trial:</strong> compare 30 anonymised examples with a manually labelled baseline. Measure time to locate the first incorrect state, precision of grouped causes, false-positive escalation rate and repeated defects after the proposed rule change. Include negative cases where replication worked but the required organisational extension was never intended. Stop if the source/target status cannot be proved from approved evidence.</p>
+  <p><strong>SAP-specific check:</strong> the replication channel affects which attributes can be transferred. SAP's <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/6fe343fea9b943f4875eb4425f19ed43.html">S/4HANA 2025 FPS01 MDG documentation</a> recommends SOA-based replication for S/4HANA targets because ALE does not cover all BP-related attributes. Verify the actual release, interface contract and target role/organisation scope before diagnosing a missing field.</p>
 
   <h2>The practical test</h2>
   <p>Take a recent master-data incident and ask four questions: who owned the value, where it should have been checked, why the invalid state was allowed, and what changed afterwards to prevent recurrence. If the fourth answer is “nothing”, you have a support fix, not governance.</p>
