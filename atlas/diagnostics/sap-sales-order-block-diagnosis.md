@@ -2,7 +2,11 @@
 
 layout: default
 title: "SAP Sales Order Block Diagnosis"
-description: "A practical diagnostic frame for finding what stops an SAP sales order from moving to delivery or billing."
+description: "Diagnose why a sales order cannot reach delivery or billing, with evidence checks and a read-only AI triage pilot." 
+search_intent: "Why a sales order does not reach delivery or billing in SAP S/4HANA"
+structured_data:
+  type: TechArticle
+last_modified_at: 2026-11-07
 permalink: /atlas/diagnostics/sap-sales-order-block-diagnosis/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -96,6 +100,23 @@ sitemap: false
       <li>A comparable working document if one exists.</li>
       <li>The owner who can approve a release when the block represents a business control.</li>
     </ul>
+
+        <h2>A useful AI experiment: explain why the order did not move</h2>
+    <p><strong>Simulated case:</strong> a sales order was saved, but no delivery is created. A support assistant should not guess a missing delivery block or remove one. It should first identify the exact missing business step and ask for the evidence that separates three explanations: the schedule line is not due, the item is not delivery-relevant, or an active control prevents processing.</p>
+    <p>A small <strong>read-only evidence record</strong> is enough to test this idea. These are diagnostic labels, not SAP database or API field names:</p>
+    <pre><code class="language-json">{
+  "case": "synthetic-order-01",
+  "next_business_step": "delivery creation",
+  "item_delivery_relevance": "unknown",
+  "schedule_line_due": "unknown",
+  "confirmed_quantity": "unknown",
+  "delivery_block": "unknown",
+  "credit_decision": "unknown",
+  "next_check": "compare schedule line and item control with a working order",
+  "write_allowed": false
+}</code></pre>
+    <p><strong>Test in ten days:</strong> take 20 anonymised historical incidents and record the correct next diagnostic check before using AI. Compare the time to assemble complete evidence, the share of first checks accepted by an SD expert, and unsupported claims or proposed releases. If the source evidence is missing, the assistant must say <em>unknown</em> rather than infer a block from the symptom. The support owner validates the next check; no ERP write-back is part of this pilot.</p>
+    <p><strong>Release boundary:</strong> delivery prerequisites depend on document, item and schedule-line controls, dates, quantities and configuration. For example, a header delivery block may depend on its delivery-type assignment, while a schedule-line block behaves differently. Confirm the applicable design in the target release; see <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/571bbf53d25ab64ce10000000a174cb4.html">SAP Help: prerequisites for processing deliveries</a> (S/4HANA 2025 FPS01).</p>
 
     <h2>The practical distinction</h2>
     <p>A good support result is not “block removed.” It is “the blocking control was identified, its trigger was understood, the correct owner accepted the action, and the order reached the expected next step.” That small change in wording prevents a surprising amount of bad troubleshooting.</p>
