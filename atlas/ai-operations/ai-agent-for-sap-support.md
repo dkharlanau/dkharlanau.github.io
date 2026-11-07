@@ -2,7 +2,8 @@
 
 layout: default
 title: "AI Agent for SAP Support"
-description: "A practical architecture for AI-assisted SAP support with retrieval, evidence, tools, approvals, and clear action boundaries."
+description: "Design and test an evidence-first SAP support agent, comparing AI with deterministic workflows before enabling business actions."
+search_intent: "How to evaluate a safe read-only AI agent for SAP SD/MM incident triage"
 permalink: /atlas/ai-operations/ai-agent-for-sap-support/
 atlas_section: ai-operations
 domain: AI-assisted operations
@@ -26,7 +27,7 @@ expert_context:
     - /atlas/ai-operations/ai-ready-process-documentation/
     - /atlas/automation/operational-memory-for-sap-ams/
 last_reviewed: 2026-05-06
-last_modified_at: 2026-08-15
+last_modified_at: 2026-11-07
 author: Dzmitryi Kharlanau
 
 tags:
@@ -108,6 +109,21 @@ sitemap: true
 
     <h2>What the agent should say when evidence is weak</h2>
     <p>Uncertainty should be visible in the output. A good response can state: what is known, what is only likely, which source supports the conclusion, what evidence is missing, and which next check would reduce uncertainty. That is far more useful in SAP support than a polished paragraph that quietly mixes facts and guesses.</p>
+
+    <h2>Try the smallest agent that can be proved useful</h2>
+    <p><strong>Experiment, not a delivery claim:</strong> take 30 anonymised SD/MM support cases and compare three methods: the team's existing checklist, a deterministic evidence form, and an AI assistant with read-only access to approved runbooks and case snapshots. Give each method the same starting evidence, including five cases with a missing log or conflicting status.</p>
+    <p>Require one structured answer from the assistant. These keys describe a proposed diagnostic contract, not a delivered SAP API:</p>
+    <pre><code class="language-json">{
+  "case_ref": "synthetic-incident-01",
+  "observed_fact": "sales document saved; next step not confirmed",
+  "source_references": ["approved-snapshot-01"],
+  "missing_evidence": ["current item and schedule-line status"],
+  "next_check": "read the latest document status",
+  "proposed_erp_change": null,
+  "human_review_required": true
+}</code></pre>
+    <p>Score <strong>evidence completeness</strong>, first useful next check, unsupported statements, preparation time and reviewer correction time. Track total cost as well as model latency. Re-run the five incomplete or contradictory cases after the evidence changes: a responsible assistant should revise its hypothesis, not defend the first one.</p>
+    <p><strong>Decision gate:</strong> continue only if the AI method beats the simpler form on measured team effort without leaking inaccessible data or suggesting an unapproved write. Stop the pilot if the retrieval source cannot be traced, an access boundary fails, or review effort is greater than the time saved. The <a href="https://airc.nist.gov/">NIST AI Resource Center</a> provides a broader testing, evaluation, verification and validation framework; these pilot measures are proposed project criteria, not an NIST certification.</p>
 
     <h2>Measure support value, not chat activity</h2>
     <p>The useful measures are operational: time to collect complete evidence, first-assignment accuracy, reduction in repeated investigation, escalation quality, runbook reuse, and safe resolution time. Message count and answer length tell very little about whether the support process improved.</p>
