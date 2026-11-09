@@ -2,7 +2,7 @@
 
 title: Master Data Governance Failure Modes
 layout: default
-description: Prevent recurring SAP master-data defects by tracing ownership, replication and business usability; includes a measured AI trial.
+description: Trace SAP master-data governance failures across ownership, replication and business usability; includes a proposed read-only AI pilot.
 search_intent: "How to find recurring governance failures in SAP MDG and downstream systems"
 permalink: /atlas/data-quality/master-data-governance-failure-modes/
 atlas_section: data-quality
@@ -11,11 +11,11 @@ subdomain: Master data governance
 concept_type: data quality
 sap_area: MDG / master data governance
 business_process: Cross-process operations
-status: reviewed
-verified: true
+status: needs_verification
+verified: false
 level: 2
 last_reviewed: 2026-06-13
-last_modified_at: 2026-11-07
+last_modified_at: 2026-11-09
 
 tags:
   - master-data
@@ -26,8 +26,8 @@ related:
   - "/atlas/sap/sap-partner-determination-failures/"
   - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
   - "/atlas/automation/operational-memory-for-sap-ams/"
-robots: index,follow
-sitemap: true
+robots: noindex,follow
+sitemap: false
 short_title: Governance Failure Modes
 h1: Master data governance failure modes
 subtitle: A bad record is visible. A weak governance system is the reason the same kind of bad record keeps coming back.
@@ -44,7 +44,7 @@ author: Dzmitryi Kharlanau
   <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Data operations</dd></div><div><dt>Type</dt><dd>Data quality</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Data operations</dd></div><div><dt>Type</dt><dd>Data quality</dd></div><div><dt>Earlier review</dt><dd>13 June 2026 (pre-November content)</dd></div></dl></aside>
 
 <div class="note-body">
   <h2>Governance becomes visible when the process fails</h2>
@@ -93,23 +93,35 @@ author: Dzmitryi Kharlanau
   <p>The incident may need an immediate record correction. Governance work asks what should change so the next record does not fail in the same way. Sometimes the answer is a validation rule. Sometimes it is a clearer owner, a better source-system boundary, a different replication design, or the retirement of an obsolete option.</p>
   <p>If every recurring data problem ends with “user trained”, inspect the process again. Training is useful; it is also a remarkably popular place to hide missing system controls.</p>
 
-  <h2>AI experiment: find the repeated governance failure</h2>
-  <p><strong>Simulated situation:</strong> a business partner is changed in a central hub. The outbound message reports success, but the target system still cannot use the partner in the intended sales area. This is not automatically a replication failure: transmission, target application and business usability are different states.</p>
-  <p>Start with a small <strong>read-only evidence set</strong> instead of an AI agent that updates partners:</p>
+  <h2>AI experiment: distinguish replication from an unusable business partner</h2>
+  <p><strong>Synthetic diagnostic scenario — not a production finding:</strong> an MDG Business Partner change is activated in the hub, and an outbound replication message is reported as sent. The target may still lack the customer role or sales-area extension required for a sales process. Distinguish (1) source activation, (2) outbound transmission, (3) target inbound application, (4) the relevant BP/customer role, and (5) the intended organisational extension. A successful outbound status alone cannot establish target usability; an extension that was never in the approved scope is not automatically a replication defect.</p>
+  <p>Collect a <strong>read-only, time-stamped evidence snapshot</strong> from authorised sources. This JSON is a proposed diagnostic schema with entirely synthetic identifiers, <em>not</em> an SAP API response or evidence from a customer system:</p>
   <pre><code class="language-json">{
-  "object_type": "business_partner",
-  "object_reference": "synthetic-or-pseudonymous-id",
-  "source_change_state": "completed",
-  "outbound_delivery_state": "reported_success",
-  "target_read_state": "not_checked",
-  "required_org_extension": "not_checked",
-  "responsible_owner": "unassigned",
-  "proposed_action": "verify the target business role and sales-area extension",
+  "case_ref": "SYNTH-MDG-001",
+  "source_system": "MDG_HUB_EXAMPLE",
+  "target_system": "S4_TARGET_EXAMPLE",
+  "required_sales_area": "1000/10/00",
+  "source_activation": {
+    "state": "confirmed",
+    "observed_at": "2026-11-07T10:00:00Z",
+    "evidence_ref": "approved-source-snapshot-01"
+  },
+  "outbound_delivery": {
+    "state": "reported_sent",
+    "message_ref": "synthetic-message-01",
+    "evidence_ref": "approved-outbound-log-01"
+  },
+  "target_inbound_state": "unknown",
+  "target_role_state": "not_checked",
+  "target_sales_area_state": "not_checked",
+  "extension_in_replication_scope": "unconfirmed",
+  "next_check": "verify target inbound result and approved sales-area scope",
   "write_allowed": false
 }</code></pre>
-  <p>Rules should detect missing identifiers, impossible state sequences, stale snapshots and duplicate alerts. AI can then group similar exceptions, summarise the evidence and suggest the next owner or check. It must not invent a missing business value, infer target readiness from an outbound acknowledgement, or activate a record.</p>
-  <p><strong>Two-week trial:</strong> compare 30 anonymised examples with a manually labelled baseline. Measure time to locate the first incorrect state, precision of grouped causes, false-positive escalation rate and repeated defects after the proposed rule change. Include negative cases where replication worked but the required organisational extension was never intended. Stop if the source/target status cannot be proved from approved evidence.</p>
-  <p><strong>SAP-specific check:</strong> the replication channel affects which attributes can be transferred. SAP's <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/6fe343fea9b943f4875eb4425f19ed43.html">S/4HANA 2025 FPS01 MDG documentation</a> recommends SOA-based replication for S/4HANA targets because ALE does not cover all BP-related attributes. Verify the actual release, interface contract and target role/organisation scope before diagnosing a missing field.</p>
+  <p>First apply deterministic checks to identifiers, source/target timestamps, message correlation, missing evidence and duplicate alerts. Compare event order only when the timestamps and status semantics are comparable. AI may then group recurring causes and suggest the next authorised diagnostic check. Missing inbound evidence must remain <em>unknown</em>: neither the model nor an outbound acknowledgement can prove target posting or supply an unspecified business value.</p>
+  <p><strong>Two-week, offline feasibility pilot:</strong> select 30 appropriately de-identified historical cases, including successful replication, target-side data gaps and genuinely failed inbound processing. Have an SAP reviewer label the evidence and root-cause category before comparing a rules-only triage with rules plus AI grouping on the same snapshots. Measure agreement with the reference labels, precision of suggested groups, false escalations, and analyst time to the first useful check; report denominators and the small sample size. Treat any observation of fewer recurring incidents <em>after</em> a future, separately approved control change as a follow-up study, not a proven outcome of this no-write pilot. Stop if source/target states cannot be evidenced, access boundaries fail, or review costs outweigh the benefit.</p>
+  <p><strong>SAP interface nuance:</strong> SAP's <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/6fe343fea9b943f4875eb4425f19ed43.html">Data Replication of Business Partner Master Data Using ALE (SAP S/4HANA 2025 FPS01)</a> recommends SOA-based replication for S/4HANA targets because ALE does not comprise all BP-related attributes. This does <em>not</em> prove that any particular absent role or sales-area record was caused by ALE, nor that SOA guarantees target business readiness. Verify the product release, interface mapping, replication filter/scope and inbound application result.</p>
+  <p><strong>Review boundary:</strong> this November 2026 section is a proposal pending human technical and editorial approval. The review recorded on 13 June 2026 applies to the earlier article, not to the experiment, example or new SAP-specific interpretation.</p>
 
   <h2>The practical test</h2>
   <p>Take a recent master-data incident and ask four questions: who owned the value, where it should have been checked, why the invalid state was allowed, and what changed afterwards to prevent recurrence. If the fourth answer is “nothing”, you have a support fix, not governance.</p>
