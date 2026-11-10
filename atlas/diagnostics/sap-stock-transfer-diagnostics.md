@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Stock Transfer Diagnostics"
-description: "A conservative diagnostic frame for stock transfer and in-transit issues in SAP."
+description: "Trace STO goods issue, stock in transit, goods receipt and safe correction options in SAP S/4HANA."
 permalink: /atlas/diagnostics/sap-stock-transfer-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -42,7 +42,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP stock transfer diagnostics</h1>
-    <p class="note-subtitle">A process-first guide to SAP stock transfer gaps: trace GI, stock in transit, GR, valuation, and safe resolution options.</p>
+    <p class="note-subtitle">Identify the posting route before treating stock in transit as lost stock.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
