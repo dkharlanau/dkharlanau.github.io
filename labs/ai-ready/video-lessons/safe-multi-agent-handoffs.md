@@ -18,6 +18,8 @@ career_skills: [ai-agents-mcp, integration-recovery, integration-ownership]
 
 # Your Subagents Are a Distributed System. Act Like It.
 
+**Operating context:** Several subagents may inspect the same business object or invoke the same middleware. Their text replies are not proof that a write completed or that a retry is safe.
+
 **Source:** Girish Konda (Microsoft), *“Your Sub-Agents Are a Distributed System. Treat Them Like One”*, AI Engineer, 10 November 2026 (23 min). [Transcript with timestamps](https://ainotes.us/summary/your-sub-agents-are-a-distributed-system-treat-them-like-one-girish-konda) · [AI Engineer channel](https://www.youtube.com/@aiDotEngineer).
 
 An orchestrator asks three AI workers to investigate an incident. One returns a diagnosis, one times out, and one quietly created a support ticket before its result was lost. Can the orchestrator declare the task finished? Can it safely retry?
