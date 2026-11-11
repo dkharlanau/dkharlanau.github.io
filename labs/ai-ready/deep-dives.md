@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-09-29
+last_modified_at: 2026-11-11
 hide_global_cta: true
 tags: [ai, architecture, mcp, rag, agents, evals, security]
 ---
@@ -31,6 +31,7 @@ These pages start from architecture. Each topic asks the same questions: what pr
 | Tools and MCP | When is a direct tool enough, and when does MCP create real reuse? | [Tools and MCP](/labs/ai-ready/tools-mcp/) |
 | Agent architecture | When should the system choose the next action instead of following a fixed workflow? | [Agent Architecture](/labs/ai-ready/agent-architecture/) |
 | Standard Agents course | When do small specialist agents outperform one general agent, and how do we test safe composition? | [Standard Agents: SAP Practice](/labs/ai-ready/standard-agents/) |
+| AI Engineer video lessons | A practical 22-lesson route through AI tools, agent architecture, data, evaluation, governance and SAP examples. | [AI Engineer Video Curriculum (working study series)](/labs/ai-ready/video-lessons/) |
 | Evals | How do we know a model, prompt, retrieval, or tool change is better? | [Evals and Reliability](/labs/ai-ready/evals-reliability/) |
 | Security | How do we keep untrusted content away from permissions and sensitive actions? | [Security and Governance](/labs/ai-ready/security-governance/) |
 | Production | How do we deploy, observe, version, and roll back an AI service? | [Build and Operate](/labs/ai-ready/build-operate/) |
