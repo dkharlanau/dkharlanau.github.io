@@ -77,6 +77,18 @@ A [dependency-free evaluation example](https://github.com/dkharlanau/dkharlanau.
 
 **Count note:** The original Standard Agents guide is a prerequisite, not one of the 22 video-lesson pages above. The page catalog contains **22 new and previously prepared video lessons** (7 architecture + 6 data + 4 evaluation + 5 engineering/product), plus the Standard Agents prerequisite and a separate Tool Selection Playbook.
 
+## 5. Additional November research — verified agenda, not video transcripts
+
+The original 22 video lessons remain the **video-sourced** track. The following three pages are a separate **conference-agenda research track**. The 2–4 November [AI Native DevCon programme](https://tessl.io/devcon) confirms their topic and speaker context; the complete talks have not been independently reviewed here. The articles therefore explain practical architecture choices without attributing specific technical conclusions to the speakers.
+
+| Applied research lesson | What you will be able to do |
+| --- | --- |
+| [**Context Is Not Memory: Five Lifecycles**](/labs/ai-ready/video-lessons/context-lifecycle-engineering/) | Separate policy, task, source evidence, domain knowledge and preference by authority, scope and freshness. |
+| [**AI Coding in Legacy Systems: Small Changes, Strong Evidence**](/labs/ai-ready/video-lessons/agentic-coding-in-legacy-sap/) | Write a bounded change contract and prove that a refactor preserves business behavior. |
+| [**From AI Coding to an Agentic SDLC**](/labs/ai-ready/video-lessons/agentic-sdlc-governance/) | Connect business intent to tests, exact commits, approvals, release and operating outcomes. |
+
+**Recommended sequence:** context lifecycle → legacy change envelope → agentic SDLC. The output is one small, testable migration-validation change with an evidence ledger and an explicit owner.
+
 ## A four-week practice path
 
 **Week 1 — Prove the architecture.** Compare one agent and several specialists for a synthetic SAP incident. Model the tool scope, identity, stop states, and retry after an unknown outcome. Deliver an architecture decision record.
