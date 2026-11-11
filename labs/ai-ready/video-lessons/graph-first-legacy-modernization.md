@@ -18,6 +18,8 @@ career_skills: [integration-ownership, integration-recovery, ai-data-governance]
 
 # AI Can Translate Code. Can It Preserve the Whole Business Process?
 
+**The modernization problem:** A translated function can pass unit tests while changing a downstream posting, field meaning or restart behavior. Business parity requires evidence beyond source-code equivalence.
+
 A legacy billing formula is translated to modern Java. Every unit test passes. After deployment, some invoices differ by one cent and an overnight reconciliation job silently fails. The error may not be the formula. It may be the **record layout, rounding mode, batch order, or one of the downstream consumers**.
 
 In [How We Mapped a 35-Million-Line Mainframe in 4 Days](https://aietalks.com/talks/how-we-mapped-a-35-million-line-mainframe-in-4-days), Stephen Chin (Neo4j) and Neeraj Deshmukh (Blitzy) describe mapping a legacy estate as a graph before replacing code. The reported project speed and scale are **presenter claims**; the reusable method is dependency discovery plus continuous parity testing.
