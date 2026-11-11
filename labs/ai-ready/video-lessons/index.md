@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "AI Engineer Video Lessons — Applied AI Systems, Not Just Demos"
-description: "22 source-backed lessons from October–November 2026 on agent architecture, tools, data, RAG, graph engineering, costs, evaluations and operating AI in SAP environments."
+description: "22 practical AI Engineer lessons on agent architecture, AI tools, data, RAG, graph engineering, cost, evaluation and SAP operations."
 permalink: /labs/ai-ready/video-lessons/
 status: draft
 verified: false
