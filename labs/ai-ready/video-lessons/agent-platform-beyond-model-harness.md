@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "The Agent Was Fine. The Platform Failed."
-description: "Practical AI Engineer lesson about sandboxes, orchestration, tenancy, resilience, agent operations, applied to synthetic SAP decisions and reproducible evaluation."
+description: "How to build reliable agent platforms with sandboxes, durable state, scheduling, tenancy and recovery for enterprise work."
 permalink: /labs/ai-ready/video-lessons/agent-platform-beyond-model-harness/
 status: draft
 verified: false
