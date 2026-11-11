@@ -18,6 +18,8 @@ career_skills: [ai-data-governance, ai-business-value, integration-ownership]
 
 # One Changed Cell, One Defensible Decision
 
+**Problem and context:** In bulk master-data migration, a detected difference is not an approved correction. A reviewer needs the authoritative source, a versioned business rule and the owner of each proposed value.
+
 A bulk spreadsheet contains 15,000 records. Some cells are wrong, some are blank, and some are legitimately different between systems. A tool can find differences in seconds. **Deciding which differences should be changed** is a different job.
 
 In [How Agents Cut Hour-Long Data Checks to 5 Minutes](https://aietalks.com/talks/how-agents-cut-hour-long-data-checks-to-5-minutes), Amol Kapoor and Clifford Ressel (Nori Agentic) describe an AI-assisted review process for complex financial master data: collect evidence, explain each proposed cell change and ask an accountable owner to accept or reject it. The reported time reduction is their case study, not a generic productivity forecast.
