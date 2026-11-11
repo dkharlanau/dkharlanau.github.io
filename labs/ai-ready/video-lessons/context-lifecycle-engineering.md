@@ -89,6 +89,22 @@ Create three synthetic snapshots for the same Ship-To: source at 09:00, target a
 
 Then change one condition: the target snapshot is fresh, but route determination still fails. Which evidence now distinguishes master-data failure from configuration failure?
 
+### Run the evidence gate locally
+
+The repository now contains a [dependency-free Python exercise](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/labs/ai-ready/video-lessons/examples/context-evidence-gate.py) and [three synthetic cases](https://github.com/dkharlanau/dkharlanau.github.io/blob/main/labs/ai-ready/video-lessons/examples/context-cases.json). These links resolve on `main` **after this PR is merged**; in the meantime, inspect them on the PR branch.
+
+From the repository root:
+
+~~~bash
+python3 labs/ai-ready/video-lessons/examples/context-evidence-gate.py --gate
+~~~
+
+Case 01 contains fresh, authenticated source and target snapshots with different zones; it should return `diagnostic_ready` and `source_target_mismatch`. Case 02 contains a stale target observation; Case 03 uses an untrusted document as supposed target evidence. Both must stop at `insufficient_evidence`. All three return `write_allowed: false`.
+
+**Change one variable:** edit the target snapshot in Case 02 to expire after the evaluation time. Does the diagnosis change? Explain why the absence of stale evidence changes the conclusion but still does **not** authorize a resend.
+
+This lab tests **evidence hygiene**, not route determination, SAP connectivity or a model's diagnostic accuracy.
+
 ## A practical architecture decision
 
 Use a layered context builder, not one unlimited conversation:
