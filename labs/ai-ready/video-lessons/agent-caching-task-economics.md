@@ -18,6 +18,8 @@ career_skills: [ai-business-value, ai-evaluation, delivery-observability]
 
 # A Cheap Model Can Still Run an Expensive Agent
 
+**The cost problem:** A low token price can hide repeated context, unnecessary model turns and human rework. Compare total cost per accepted task, not price per call.
+
 A model's advertised price per million tokens is a poor answer to "How much does my agent cost?" The agent may call the model dozens of times, repeat most of its context, invoke tools, fail, retry, and need a human to check its work.
 
 In [Without Caching, Your AI Agent Costs 10x More](https://aietalks.com/talks/without-caching-your-ai-agent-costs-10x-more), George Cameron (Artificial Analysis) discusses task-level benchmarks and prompt-cache effects. A reported benchmark task costing over $200 without effective caching versus around $21 with caching is a **particular workload observation**, not a normal multiplier for every agent.
