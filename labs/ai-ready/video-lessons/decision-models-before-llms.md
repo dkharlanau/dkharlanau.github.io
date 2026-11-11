@@ -18,6 +18,8 @@ career_skills: [ai-business-value, ai-evaluation, ai-agents-mcp]
 
 # Not Every Agent Decision Needs a Language Model
 
+**The decision problem:** Calling a large model for exact checks adds expense and uncertainty without improving correctness. Use code for known rules and reserve generation for ambiguous work.
+
 **Source:** Raymond Weitekamp (OpenProse), *“Your Agent Doesn't Need an LLM for Every Decision”*, AI Engineer, 10 November 2026 (52 min). [Searchable transcript](https://ainotes.us/summary/your-agent-doesn-t-need-an-llm-for-every-decision-raymond-weitekamp-openprose) · [AI Engineer channel](https://www.youtube.com/@aiDotEngineer).
 
 Ask a large model: *“Is the interface message status equal to FAILED?”* It might answer correctly. But a string comparison could do the same job faster, cheaper and with predictable behavior.
