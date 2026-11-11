@@ -18,6 +18,8 @@ career_skills: [ai-agents-mcp, ai-security, integration-ownership]
 
 # Stop Exposing Every API Method as an Agent Tool
 
+**The interface problem:** Exposing every low-level endpoint separately makes a model invent orchestration and business checks that should be owned by code. A task-oriented tool keeps the boundary clear.
+
 A SAP integration has twenty technical endpoints. It is tempting to expose all twenty to an LLM and ask it to assemble a customer-update workflow. The demonstration looks impressive; the first real user says only "fix this customer's address," and the agent builds a workflow that nobody can explain.
 
 That is close to the failure described by Abhi Arya (Reducto) in [Why We Deleted Our MCP Server and Rebuilt It](https://aietalks.com/talks/why-we-deleted-our-mcp-server-and-rebuilt-it). A related talk by Mikyo King (Arize AI), [Stop Giving Your Agent Tools. Give It a Sandbox](https://aietalks.com/talks/stop-giving-your-agent-tools-give-it-a-sandbox), explores **code mode**: let the agent discover and compose tools in an isolated programming environment instead of placing huge tool menus and results into the prompt.
