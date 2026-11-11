@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Three Graphs Behind a Dependable Agent"
-description: "Practical AI Engineer video lesson on graph engineering, processes, state, provenance; includes decisions, a synthetic SAP case, evaluation and implementation steps."
+description: "Three graphs for predictable agents: execution, context and procedure, with a synthetic SAP exception walkthrough."
 permalink: /labs/ai-ready/video-lessons/graph-engineering-execution-context/
 status: draft
 verified: false
@@ -17,6 +17,8 @@ career_skills: [ai-agents-mcp, integration-ownership, ai-retrieval]
 [AI Ready](/labs/ai-ready/) / [Video Lessons](/labs/ai-ready/video-lessons/)
 
 # Three Graphs Behind a Dependable Agent
+
+**The graph problem:** A diagram of connected systems does not prove which execution step is allowed next. We need clear edge meaning, evidence and ownership before using a graph to drive an agent.
 
 A graph of SAP systems looks impressive. But does it help an agent **choose and verify the next action**? If the answer is no, it may be only a diagram.
 
