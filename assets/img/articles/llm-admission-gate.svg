@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 510" role="img" aria-labelledby="t d">
+<title id="t">LLM inference admission gate for competing SAP workloads</title>
+<desc id="d">SAP urgent incident diagnosis and low-priority batch data labeling approach an admission controller. A policy checks session priority, token budget, expected memory cost, queue length and time to deadline. Requests are admitted to GPU capacity, deferred with retry advice, or rejected early. The GPU never handles rejected requests.</desc>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#142338}.heading{font-size:26px;font-weight:700}.h{font-size:19px;font-weight:700}.p{font-size:16px}.s{font-size:14px;fill:#52647b}.white{fill:white;stroke:#bac5d1;stroke-width:2}.blue{fill:#f4f8ff;stroke:#1254f5;stroke-width:2}.red{fill:#fff8f8;stroke:#b33a48;stroke-width:2}.line{fill:none;stroke:#1254f5;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}</style>
+<rect width="1200" height="510" fill="#fff"/>
+<text class="heading" x="33" y="50">Protect the task before admitting the model request</text><path d="M33 66 H1166" stroke="#cbd5e1" />
+<rect class="white" x="35" y="118" width="277" height="111" rx="6"/>
+<text class="h" x="57" y="150">Urgent SAP incident</text><text class="p" x="57" y="180">Short deadline / high priority</text><text class="s" x="57" y="205">Read-only diagnostics</text>
+<rect class="white" x="35" y="266" width="277" height="111" rx="6"/>
+<text class="h" x="57" y="299">Batch data labelling</text><text class="p" x="57" y="329">Flexible deadline / lower priority</text><text class="s" x="57" y="355">Many concurrent requests</text>
+<path class="line" d="M313 173 H363 V243 H411 M313 320 H363 V243" />
+<rect class="blue" x="411" y="125" width="325" height="250" rx="7"/>
+<text class="h" x="443" y="165">Admission controller</text>
+<text class="p" x="443" y="200">Priority and deadline</text>
+<text class="p" x="443" y="234">Estimated token / KV load</text>
+<text class="p" x="443" y="268">Queue and active sessions</text>
+<text class="p" x="443" y="302">Per-tenant limits</text>
+<text class="s" x="443" y="345">Decision BEFORE GPU allocation</text>
+<path class="line" d="M737 176 H788"/>
+<path class="line" d="M779 167 L789 176 L779 185"/>
+<rect class="blue" x="795" y="122" width="372" height="120" rx="6"/>
+<text class="h" x="820" y="157">ADMIT</text><text class="p" x="820" y="186">Allocate serving capacity</text><text class="s" x="820" y="217">Track latency, KV memory and success</text>
+<path class="line" d="M737 285 H788"/>
+<path class="line" d="M779 276 L789 285 L779 294"/>
+<rect class="white" x="795" y="259" width="372" height="70" rx="6"/>
+<text class="h" x="820" y="291">DEFER</text><text class="s" x="916" y="290">Retry when capacity permits</text>
+<path class="line" d="M737 355 H788"/>
+<path class="line" d="M779 346 L789 355 L779 364"/>
+<rect class="red" x="795" y="342" width="372" height="68" rx="6"/>
+<text class="h" x="820" y="370">REJECT</text><text class="s" x="920" y="368">Fast failure, no GPU use</text>
+<text class="s" x="35" y="466">Measure: admitted goodput, end-to-end task completion, P95 latency, fairness and rejected/deferred work.</text>
+<text class="s" x="35" y="490">Synthetic SAP workload. Admission policy and figures are engineering examples, not a packaged SAP feature.</text>
+</svg>

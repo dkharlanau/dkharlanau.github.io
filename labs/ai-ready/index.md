@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-10-04
+last_modified_at: 2026-11-11
 hide_global_cta: true
 tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
 last_reviewed: 2026-08-16
@@ -97,6 +97,7 @@ semantic_links:
       <a href="/labs/ai-ready/data-rag/"><span>02</span><strong>Data and RAG</strong><small>Sources, metadata, lexical/vector/hybrid retrieval, reranking, citations, permissions.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
       <a href="/labs/ai-ready/tools-mcp/"><span>03</span><strong>Tools and MCP</strong><small>Typed tools, resources, prompts, transport, authorization, write safety, reuse.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/ai-ready/agent-architecture/"><span>04</span><strong>Agent Architecture</strong><small>Workflow, router, bounded tool loop, workers, budgets, termination, approval.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/ai-ready/video-lessons/"><span>VID</span><strong>AI Engineer Practical Video Curriculum (Draft)</strong><small>22 evidence-bound lessons with SAP exercises: identity, autonomy, multi-agent reliability, skills, PR proof and cost.</small><i class="material-symbols-outlined" aria-hidden="true">ondemand_video</i></a>
       <a href="/labs/ai-ready/evals-reliability/"><span>05</span><strong>Evals and Reliability</strong><small>Golden cases, deterministic graders, model graders, trajectory tests, regressions.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/ai-ready/security-governance/"><span>06</span><strong>Security and Governance</strong><small>Prompt injection, least privilege, secrets, sensitive data, approvals, audit.</small><i class="material-symbols-outlined" aria-hidden="true">shield</i></a>
       <a href="/labs/ai-ready/build-operate/"><span>07</span><strong>Build and Operate</strong><small>Versions, deployment, traces, budgets, token economics, retries, degraded modes, rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
