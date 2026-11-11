@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Fix Retrieval Before Buying a Smarter Model"
-description: "Practical AI Engineer video lesson on RAG, multimodal retrieval, citations, evals; includes decisions, a synthetic SAP case, evaluation and implementation steps."
+description: "Improve retrieval before upgrading models: evidence quality, multimodal search, source freshness and SAP RAG evaluation."
 permalink: /labs/ai-ready/video-lessons/retrieval-before-model-upgrade/
 status: draft
 verified: false
@@ -17,6 +17,8 @@ career_skills: [ai-retrieval, ai-evaluation, ai-data-governance]
 [AI Ready](/labs/ai-ready/) / [Video Lessons](/labs/ai-ready/video-lessons/)
 
 # Fix Retrieval Before Buying a Smarter Model
+
+**Problem and context:** In an enterprise RAG assistant, the model can only work with evidence that survives ingestion, search and version filtering. Missing or stale evidence often matters more than model size.
 
 An AI agent answers a question about a supplier contract. It produces a reasonable answer, but quotes conditions from **last year's version**. A larger model may make the answer sound better without finding the right document.
 
