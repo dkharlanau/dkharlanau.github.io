@@ -18,6 +18,8 @@ career_skills: [ai-agents-mcp, ai-evaluation, ai-readiness]
 
 # We Built Ten Agents. Then We Went Back to One.
 
+**The design problem:** Every additional specialist introduces coordination, duplicated context and more failure paths. First prove that separate agents outperform one bounded owner.
+
 *What two years of rebuilding an AI agent can teach an SAP architect.*
 
 **Source:** [Fuad Ali (Arize AI), “We Kept Rebuilding Our AI Agent. Here's What Survived” — AI Engineer, 27 October 2026](https://www.youtube.com/watch?v=YIhvrvHtonk) (20 min). [Searchable transcript](https://ainotes.us/summary/we-kept-rebuilding-our-ai-agent-here-s-what-survived-fuad-ali-arize-ai).
