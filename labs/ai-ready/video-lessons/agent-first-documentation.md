@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Documentation for Humans and Agents: Small, Clear, Verifiable"
-description: "Practical AI Engineer video lesson on documentation, retrieval, agent-ready interfaces; includes decisions, a synthetic SAP case, evaluation and implementation steps."
+description: "How to write documentation for humans and AI agents from one source, with clear evidence, compact structure and measured retrieval tests."
 permalink: /labs/ai-ready/video-lessons/agent-first-documentation/
 status: draft
 verified: false
