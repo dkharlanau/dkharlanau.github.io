@@ -90,6 +90,17 @@ hide_global_cta: true
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="independent-recommendations" data-reveal aria-labelledby="recommendations-title">
+    <header>
+      <p class="research-canvas__eyebrow">Architecture decisions</p>
+      <h2 id="recommendations-title">Independent recommendations</h2>
+      <p>Evidence-based points of view that compare alternatives, show the trade-offs, and make a decision—not a vendor ranking or a product brochure.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/research/recommendations/"><span>POV</span><strong>Read independent architecture recommendations</strong><small>Starting with CRM: Buy, Build, or Augment? Explore SAP Sales Cloud, other CRM platforms, integration boundaries, and AI agents.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__method" data-reveal>
     <div><p class="research-canvas__eyebrow">Method</p><h2>What happens before a finding becomes public guidance.</h2></div>
     <ol>
