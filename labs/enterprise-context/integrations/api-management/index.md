@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP API Management Explained — Proxies, Products, Applications, Protocols and Cost"
-description: "A practical SAP Integration Suite API Management guide: REST vs OData vs SOAP, API Provider, Proxy, Product, Application, API Portal, Developer Hub, Business Accelerator Hub, setup, security and pricing."
+title: "SAP API Management: Proxies, Products, Security and Cost"
+description: "Learn SAP API Management with step-by-step proxy setup, API Products, consumer Applications, REST/OData/SOAP, security policies and pricing."
 permalink: /labs/enterprise-context/integrations/api-management/
 status: needs_verification
 verified: false
@@ -118,7 +118,7 @@ source_links:
     <header>
       <p class="research-canvas__eyebrow">02 / Business value</p>
       <h2>When a managed entry point pays for itself.</h2>
-      <p>Imagine that several external distributors need access to order and delivery data in S/4HANA. Direct exposure gives each consumer its own technical dependency on the backend. A managed API layer can reduce that dependency.</p>
+      <p><strong>Problem:</strong> exposing S/4HANA services directly to several distributors couples consumers to backend endpoints and makes access, traffic limits and changes harder to govern consistently. A managed API layer can reduce these dependencies.</p>
     </header>
     <div class="ecg-decision-columns">
       <div><h3>Control access</h3><p>Apply consumer-facing policies, credential validation and approved access rules before requests reach ERP. Still enforce object and business authorization in the backend.</p></div>
@@ -221,16 +221,15 @@ Accept: application/json
       <a href="https://help.sap.com/docs/integration-suite/sap-integration-suite/important-concepts-of-api-management" target="_blank" rel="noopener"><span>07</span><strong>Register a consumer Application</strong><small>In the applicable Developer Hub flow, create an Application, associate/subscribe to the Product and obtain the permitted credentials. Store secrets outside browser code and source control. Confirm the access and approval model.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="#verification" ><span>08</span><strong>Prove the outcome and prepare operations</strong><small>Call the proxy with a controlled test client. Confirm routing, response, analytics, backend authorization, trace ID, quota behavior, failure handling and the real ERP read result. Repeat in QA before production promotion.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
     </div>
-    <p><strong>Illustrative managed call:</strong> host, path and API-key header depend on the deployed proxy and selected policy.</p>
+    <p><strong>Illustrative managed call:</strong> host, path and credential header depend on the deployed proxy and its policy. In a directory outside source control, prepare <code>test-api-headers.txt</code> with the configured header name (often <code>APIKey</code>) and a short-lived QA credential; restrict file permissions. Never commit or log the file.</p>
     <pre><code>curl --request GET \
   'https://api.example.invalid/partner-orders/v1/orders/demo-100' \
-  --header 'APIKey: demo' \
+  --header @./test-api-headers.txt \
   --header 'Accept: application/json'
 
-# Synthetic host and deliberately invalid key 'demo'; replace only in a secure test client.
-# Do not paste real keys into logs or docs.
-# For OAuth-based security, acquire a valid token and use the required
-# Authorization header instead of assuming an API key is enough.</code></pre>
+# Run from the directory containing the private header file.
+# The .invalid host is synthetic; use an authorized QA proxy URL.
+# For OAuth security, use the required Authorization header instead.</code></pre>
     <p class="ecg-caption"><strong>Connection distinction:</strong> an <em>API Provider</em> is the API Management target-system abstraction. A <em>BTP Destination</em> is a different reusable connection concept, typically used by applications and integrations. Do not assume creating one automatically configures the other. Choose the supported connectivity mechanism for the selected runtime and backend.</p>
   </section>
 
