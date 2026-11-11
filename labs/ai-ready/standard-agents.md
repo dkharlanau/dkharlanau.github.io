@@ -96,6 +96,20 @@ These claims refer to different levels. *Vendor-agnostic* means an agent should 
 
 A model switch is a **behavioral change**: it can alter tool selection, extraction quality, latency, and error patterns. Record the tested version and rerun evaluations before release. Even an identical configuration does **not** guarantee deterministic LLM output.
 
+### The less obvious mechanisms in the talk
+
+**A prompt can act as a tool.** In the proposed contract, a tool can run normal code, call a smaller model-backed prompt, or delegate to a complete subagent. A short classification call does not always need a second persistent agent. For SAP, a bounded prompt might classify an error description while a normal API call fetches the actual state.
+
+**Both conversation sides can be automated.** A producer and a reviewer may exchange turns, each with its own prompt. This creates a useful quality-control pattern for text or image generation. It does **not** independently prove a business fact: two language models can agree on the same wrong interpretation. For SAP decisions, validate critical facts against authoritative system observations.
+
+**Parent hooks can change composition behavior.** The specification allows a child agent to contribute lifecycle hooks when installed under a parent. This can simplify integration, but it also makes package trust important. Review the hooks, tool access, and sensitive-data handling before installing a third-party agent into a privileged runtime.
+
+**Threads carry more than chat history.** The proposal includes scoped files, key-value state, code execution, decisions, and endpoints. Some runtimes may provide these through database-backed or virtual storage rather than a physical file system. Code execution and external endpoints need sandboxing, authentication, resource limits, and operational ownership; simply packaging them does not make them safe.
+
+**A well-chosen small model can win on one bounded task.** The speaker calls model ability *jagged*: a smaller model may perform very well at one specialized job and poorly elsewhere. The practical test is not a brand comparison. Run the same golden set with the same permitted tools, then compare quality, latency, review effort, and total cost. Improve the prompt and tool contract before assuming model fine-tuning is necessary.
+
+These mechanisms help explain the **harness** concept: not an intelligent prompt alone, but the controlled software around nondeterministic model calls.
+
 ## 4. SAP case: why did an order lose its route?
 
 **Synthetic training example — not a customer incident or a claim about a particular SAP release.**
