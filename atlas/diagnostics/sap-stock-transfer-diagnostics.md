@@ -9,10 +9,9 @@ subdomain: Inventory management
 concept_type: diagnostic guide
 sap_area: "MM inventory management"
 business_process: Inventory / Logistics
-status: reviewed
-verified: true
-level: 2
-last_reviewed: 2026-06-13
+status: needs_verification
+verified: false
+level: 1
 author: Dzmitryi Kharlanau
 
 tags:
@@ -25,8 +24,8 @@ related:
   - /atlas/diagnostics/sap-material-document-diagnostics/
   - /atlas/diagnostics/sap-goods-receipt-diagnostics/
   - /atlas/concepts/sap-stock-exists-not-promisable/
-robots: index,follow
-sitemap: true
+robots: noindex,follow
+sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -50,7 +49,7 @@ sitemap: true
     <dl>
       <div><dt>Process</dt><dd>Inventory / Logistics</dd></div>
       <div><dt>SAP area</dt><dd>MM inventory management</dd></div>
-      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
+      <div><dt>Indexing</dt><dd>Noindex; human review pending</dd></div>
     </dl>
   </aside>
 
