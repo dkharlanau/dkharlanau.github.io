@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" role="img" aria-labelledby="t d">
+<title id="t">SAP diagnosis with a hard human-approval boundary before any change</title>
+<desc id="d">A read-only agent gathers data, checks competing hypotheses and proposes a specific correction. A policy gate requires a named owner, authorization and approval before a narrow SAP operation. Outcome and trace are verified after execution.</desc>
+<style>
+text{font-family:Arial,Helvetica,sans-serif;fill:#15263c}.title{font-size:25px;font-weight:700}.head{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#516478}.blue{fill:#f4f8ff;stroke:#1254f5;stroke-width:2}.paper{fill:#fff;stroke:#b6c3d1;stroke-width:2}.risk{fill:#fff7f7;stroke:#b2303d;stroke-width:2.5}.arrow{fill:none;stroke:#1254f5;stroke-width:3;stroke-linecap:round}.redarrow{stroke:#b2303d;stroke-dasharray:7 6}</style>
+<rect width="1200" height="460" fill="#fff"/>
+<text class="title" x="36" y="47">The safe boundary: the model investigates; controlled software changes SAP.</text>
+<line x1="36" y1="63" x2="1164" y2="63" stroke="#cbd5e1" stroke-width="2"/>
+<text class="small" x="52" y="101">ADAPTIVE INVESTIGATION</text><text class="small" x="704" y="101">DETERMINISTIC EXECUTION</text>
+<rect class="blue" x="47" y="128" width="232" height="138" rx="7"/>
+<text class="head" x="69" y="168">1. Read evidence</text>
+<text class="small" x="69" y="197">Sales status and items</text>
+<text class="small" x="69" y="220">BP and master data</text>
+<text class="small" x="69" y="243">Interface traces</text>
+<path class="arrow" d="M283 195 H320"/><path class="arrow" d="M311 187 L321 195 L311 203"/>
+<rect class="blue" x="332" y="128" width="220" height="138" rx="7"/>
+<text class="head" x="355" y="168">2. Diagnose</text>
+<text class="small" x="355" y="197">Compare causes</text><text class="small" x="355" y="220">Keep source IDs</text><text class="small" x="355" y="243">Return uncertainty</text>
+<path class="arrow" d="M554 195 H586"/><path class="arrow" d="M578 187 L588 195 L578 203"/>
+<rect class="paper" x="597" y="128" width="210" height="138" rx="7"/>
+<text class="head" x="620" y="168">3. Propose</text>
+<text class="small" x="620" y="197">Typed change request</text><text class="small" x="620" y="220">Impact + rollback</text><text class="small" x="620" y="243">No direct write</text>
+<path class="arrow redarrow" d="M810 195 H836"/><path d="M827 187 L837 195 L827 203" fill="none" stroke="#b2303d" stroke-width="3"/>
+<rect class="risk" x="846" y="128" width="299" height="138" rx="7"/>
+<text class="head" x="868" y="165">4. Authorization gate</text>
+<text class="small" x="868" y="197">Named human owner + approval</text><text class="small" x="868" y="220">Scope, role, policy and audit</text><text class="small" x="868" y="243">Reject unsafe or ambiguous work</text>
+<path class="arrow" d="M996 266 V306"/><path class="arrow" d="M987 297 L996 307 L1005 297"/>
+<rect class="paper" x="846" y="310" width="299" height="95" rx="7"/>
+<text class="head" x="865" y="343">5. Execute and verify</text><text class="small" x="865" y="368">Narrow API • idempotency • trace</text><text class="small" x="865" y="391">Evidence of downstream outcome</text>
+<rect fill="#f4f8ff" stroke="#1254f5" x="46" y="305" width="752" height="99" rx="7"/>
+<text class="head" x="69" y="343">Stop states are successful control outcomes too</text><text class="small" x="69" y="373">insufficient_evidence  •  approval_required  •  tool_failure  •  budget_exhausted</text>
+<text class="small" x="47" y="443">Illustrative pattern for SAP operations; actual authorizations and change controls depend on the landscape.</text>
+</svg>

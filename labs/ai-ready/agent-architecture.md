@@ -208,4 +208,6 @@ More autonomy should solve a real uncertainty. Otherwise it is only more moving 
 - [OpenAI — A practical guide to building AI agents](https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/)
 - [Anthropic — Building Effective AI Agents](https://www.anthropic.com/engineering/building-effective-agents)
 
+Learn to package and evaluate bounded specialists in the [Standard Agents practical course](/labs/ai-ready/standard-agents/). This is a proposed specification, not a required architecture for SAP.
+
 Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [System Boundaries](/labs/ai-ready/system-boundaries/) · [Token Economics](/labs/ai-ready/build-operate/#token-economics) · [Agent with Approval Lab](/labs/ai-ready/labs/agent-approval/)

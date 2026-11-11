@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 610" role="img" aria-labelledby="t d">
+<title id="t">General-purpose agent compared with a team of bounded SAP agents</title>
+<desc id="d">On the left one general agent has broad access to Sales, Master Data, Integration and write operations. On the right an orchestrator delegates read-only diagnosis to three specialists with separate contexts, and writes require an approval gate.</desc>
+<style>
+text{font-family:Arial,Helvetica,sans-serif;fill:#15263c} .title{font-size:24px;font-weight:700} .head{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#52647b}.line{fill:none;stroke:#1254f5;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}.risk{stroke:#b2303d}.blue{fill:#f6f9ff;stroke:#1254f5;stroke-width:2}.neutral{fill:#fff;stroke:#b9c4d1;stroke-width:2}.muted{fill:#f8fafc;stroke:#d0d8e0;stroke-width:2}.red{fill:#fff7f7;stroke:#b2303d;stroke-width:2}</style>
+<rect width="1200" height="610" fill="#ffffff"/>
+<text class="title" x="42" y="51">The architecture decision: concentrate access or distribute responsibility?</text>
+<line x1="42" y1="68" x2="1158" y2="68" stroke="#cbd5e1" stroke-width="2"/>
+<text class="head" x="62" y="115">One general-purpose agent</text>
+<text class="head" x="634" y="115">Composable domain agents</text>
+<rect class="red" x="52" y="145" width="495" height="375" rx="8"/>
+<rect class="neutral" x="193" y="178" width="210" height="95" rx="7"/>
+<text class="head" x="223" y="211">General agent</text>
+<text class="small" x="221" y="239">One large context</text>
+<path class="risk" d="M298 273 V310 M125 330 H467" fill="none" stroke-width="2.7"/>
+<path class="risk" d="M125 330 V348 M295 330 V348 M467 330 V348" fill="none" stroke-width="2.7"/>
+<rect class="neutral" x="72" y="351" width="122" height="63" rx="5"/><text class="body" x="96" y="388">Sales</text>
+<rect class="neutral" x="222" y="351" width="142" height="63" rx="5"/><text class="body" x="245" y="388">Master Data</text>
+<rect class="neutral" x="388" y="351" width="139" height="63" rx="5"/><text class="body" x="407" y="388">Integration</text>
+<rect class="red" x="193" y="437" width="210" height="50" rx="5"/><text class="body" x="218" y="468">Broad write access</text>
+<text class="small" x="75" y="542">Harder to isolate errors, context and permissions.</text>
+<rect class="muted" x="619" y="145" width="527" height="375" rx="8"/>
+<rect class="blue" x="783" y="171" width="206" height="76" rx="6"/>
+<text class="head" x="818" y="202">Orchestrator</text><text class="small" x="812" y="226">Routes and combines</text>
+<path class="line" d="M886 247 V279 M712 279 H1052 M712 279 V308 M886 279 V308 M1052 279 V308"/>
+<rect class="blue" x="635" y="310" width="153" height="93" rx="6"/><text class="body" x="674" y="343">Sales</text><text class="small" x="655" y="368">Read only</text><text class="small" x="655" y="387">Own context</text>
+<rect class="blue" x="810" y="310" width="153" height="93" rx="6"/><text class="body" x="835" y="343">Master Data</text><text class="small" x="831" y="368">Read only</text><text class="small" x="831" y="387">Own context</text>
+<rect class="blue" x="983" y="310" width="147" height="93" rx="6"/><text class="body" x="1006" y="343">Integration</text><text class="small" x="1004" y="368">Read only</text><text class="small" x="1004" y="387">Own context</text>
+<path class="line" d="M886 403 V430"/>
+<rect class="red" x="780" y="431" width="215" height="55" rx="6"/>
+<text class="body" x="815" y="464">Approval before write</text>
+<text class="small" x="633" y="542">Explicit task, tools, owner, stop state and evidence.</text>
+<text class="small" x="46" y="592">Synthetic SAP example • Specialist agents are a design option, not a requirement for every workflow.</text>
+</svg>
