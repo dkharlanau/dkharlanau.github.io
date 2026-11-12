@@ -1,7 +1,8 @@
 ---
 layout: default
 title: "SAP Master Data Duplicate Diagnostics"
-description: "A conservative diagnostic frame for duplicate master data issues in SAP."
+description: "Diagnose SAP BP duplicate candidates with identity evidence, MDG controls, safe remediation and a read-only AI review experiment."
+search_intent: "How to investigate SAP Business Partner duplicate candidates without merging different entities"
 permalink: /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -12,6 +13,7 @@ business_process: Master data governance
 status: needs_verification
 verified: false
 last_reviewed: 2026-06-05
+last_modified_at: 2026-11-12
 author: Dzmitryi Kharlanau
 
 tags:
@@ -41,7 +43,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP master data duplicate diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for finding why duplicate master data records exist, how to identify them, and how to prevent recurrence.</p>
+    <p class="note-subtitle">A matching score is a lead, not proof. Follow the creation path, identity evidence and downstream references before correcting a Business Partner.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -49,100 +51,66 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Master data governance</dd></div>
       <div><dt>SAP area</dt><dd>Master data quality / duplicates</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until master data duplicate behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Noindex. Revised guidance awaits independent human SAP and editorial review.</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Duplicate master data records create confusion in transactions, reporting, and interfaces. They often arise from manual entry, replication without key mapping, number range overlaps, or missing validation. The support goal is to identify the duplicate records, understand how they were created, assess the business impact, and determine whether merge, deactivation, or re-keying is the right next step.</p>
+    <h2>The failed control: a possible match is treated as a confirmed duplicate</h2>
+    <p>A supplier appears twice in a Business Partner (BP) search. Both entries have a similar name and address. It is tempting to select the newer one, block it and call the incident solved. That can be a costly mistake: a shared address, group brand or payment service can create a strong match between two different legal entities.</p>
+    <p>The business control is not “remove every similar record”. It is <strong>decide whether two technical records represent the same governed business identity before an approved creation, migration or consolidation step changes data</strong>. A duplicate-search result is a candidate for investigation, not permission to merge, block or change existing transactions.</p>
+    <p><strong>Product boundary:</strong> the examples below focus on SAP S/4HANA Business Partner and SAP Master Data Governance (MDG). Search methods, matching attributes, rules, thresholds, roles and consolidation availability depend on the release and configuration. Do not apply BP-specific steps to materials without checking their own model.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>Multiple records exist for the same business entity (supplier, customer, material, business partner).</li>
-      <li>Transactions reference different duplicates for the same real-world entity.</li>
-      <li>Reporting shows inflated counts or split data for what should be one entity.</li>
-      <li>Replication or interface creates a new record instead of updating the existing one.</li>
-      <li>Users complain that master data search returns multiple similar results.</li>
-    </ul>
-
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Manual creation without search:</strong> the user created a new record without checking if one already existed.</li>
-      <li><strong>Replication without key mapping:</strong> the interface or replication did not find the existing target record and created a new one.</li>
-      <li><strong>Number range overlap:</strong> different systems or number range intervals created records with colliding keys.</li>
-      <li><strong>Missing duplicate check:</strong> the system does not enforce uniqueness on critical fields (tax number, email, bank account).</li>
-      <li><strong>Data migration residue:</strong> legacy migration created duplicates that were never cleaned up.</li>
-    </ul>
-
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>Standard master data search — use search by name, tax number, or other identifying fields to find duplicates.</li>
-      <li>MDG duplicate check — if MDG is used, check the duplicate check log.</li>
-      <li>Data quality reports — many organizations have custom reports for duplicate detection.</li>
-      <li>Interface logs — check if replication or interface created the duplicate.</li>
-      <li>Change documents — review creation history to identify who or what created the duplicate.</li>
-    </ul>
-
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>BUT000</strong> — BP header (for duplicate BP detection).</li>
-      <li><strong>KNA1 / LFA1</strong> — customer / vendor general data.</li>
-      <li><strong>MARA</strong> — material master.</li>
-      <li><strong>CDHDR / CDPOS</strong> — change documents.</li>
-    </ul>
-
-    <h2>Diagnostic workflow</h2>
+    <h2>Trace the end-to-end path, not just the two names</h2>
     <ol>
-      <li>Identify the object type and the business entity that appears duplicated.</li>
-      <li>Search for duplicates using name, tax number, email, bank account, or other identifying fields.</li>
-      <li>Compare the duplicates: creation date, creator, source system, and data differences.</li>
-      <li>Determine which record is the 'master' and which are duplicates based on usage and data quality.</li>
-      <li>Check if transactions, documents, or interfaces reference the duplicate records.</li>
-      <li>Assess the impact of merge, deactivation, or re-keying before taking action.</li>
+      <li><strong>Origin:</strong> a business owner requests an entity; an external system, migration load or user supplies the identity evidence.</li>
+      <li><strong>Preventive check:</strong> the active BP or MDG creation process runs its configured search, validation and duplicate checks, if available and enabled. A candidate should reach an authorised reviewer before approval.</li>
+      <li><strong>Governed decision:</strong> the steward decides whether to reuse an existing BP, create a genuinely separate BP, or investigate an unresolved match. A workflow approval does not prove legal identity by itself.</li>
+      <li><strong>Distribution:</strong> source-to-target key mapping and interface processing determine which target record receives updates. An empty or wrong mapping can make the apparent duplicate a replication problem instead.</li>
+      <li><strong>Consumption:</strong> Sales, Procurement, Finance and analytics may already reference either BP or its customer/supplier role. The remediation must protect these references and the audit trail.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
-    <ul>
-      <li>Merge duplicate records if a merge tool or process is available and safe.</li>
-      <li>Deactivate or block the duplicate record if merge is not possible.</li>
-      <li>Re-key existing transactions to reference the master record if the duplicate was used.</li>
-      <li>Update key mapping to prevent future replication from creating the same duplicate.</li>
-      <li>Implement or strengthen duplicate checks at creation time.</li>
-    </ul>
+    <h2>Three explanations that need different evidence</h2>
+    <div class="decision-table"><table><thead><tr><th>Hypothesis</th><th>What would distinguish it?</th><th>Control and owner</th></tr></thead><tbody>
+      <tr><td>True duplicate created during migration or local maintenance</td><td>Two BPs are confirmed to be the same legal/business identity; creation batch, request and registration evidence agree.</td><td>Business steward approves identity; migration owner checks source-to-target crosswalk and load exceptions.</td></tr>
+      <tr><td>False positive: two valid entities with similar data</td><td>Different verified registration identities, business purposes or authorised legal-entity records; shared name or address is not decisive.</td><td>Business/legal owner resolves the entity distinction; match-rule owner reviews the alert quality.</td></tr>
+      <tr><td>Replication or key-mapping gap</td><td>The intended source object and existing target key do not match the interface mapping or target creation history.</td><td>MDG/integration owner verifies governed identity, logical-system context and target application result before a mapping correction.</td></tr>
+    </tbody></table></div>
+    <p><strong>SAP standard versus local design:</strong> SAP documentation for S/4HANA 2025 FPS01 describes configurable duplicate checks with selected attributes and scored potential matches. It does not establish that one email, bank account or tax value must be globally unique in every deployment. Which evidence is mandatory, where the check is activated, and who can approve an exception are <em>local governance decisions</em>. See <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/74b0b157c81944ffaac6ebc07245b9dc/dd32582b161d4dd390ef994735e6af1d-155.html">SAP Help: Configure and Check Potential Duplicates of Master Data Records</a>.</p>
 
-    <h2>Support takeaway</h2>
-    <p>Duplicate master data is usually a process or integration gap, not a system bug. A useful ticket should include: object type, duplicate keys, identifying fields (name, tax number), creation history, which record is the master, and the business impact of the duplication.</p>
+    <h2>Where is the source of truth?</h2>
+    <div class="decision-table"><table><thead><tr><th>Question</th><th>Authoritative evidence to request</th><th>Check point</th></tr></thead><tbody>
+      <tr><td>Are these legally or operationally the same entity?</td><td>Approved identity documents or a trusted business registry, as permitted by policy; business owner decision.</td><td>Before accepting or rejecting a match candidate. A fuzzy score is not the source of truth.</td></tr>
+      <tr><td>Which BP should be maintained?</td><td>Approved creation request, MDG active record, governance scope, role/organisation assignments and change history.</td><td>Before authorising a create, extend or consolidation action.</td></tr>
+      <tr><td>Which key does another system use?</td><td>Owned migration crosswalk or active replication/key-mapping evidence, with source and target system IDs.</td><td>Before resending data or changing cross-system mapping.</td></tr>
+      <tr><td>What would break if one BP is retired?</td><td>Actual target objects and referenced orders, POs, invoices, payments, contracts and interface subscriptions.</td><td>Before any block, consolidation or cutover; confirm again afterwards.</td></tr>
+    </tbody></table></div>
+    <p>The authoritative source can differ by attribute and process. An external register may support legal identity; MDG may govern the active BP; a target system owns its processed transactions. <strong>No single table proves all three.</strong> In SAP, <code>BUT000</code> is useful for BP core identity, while <code>KNA1</code> and <code>LFA1</code> relate to customer/supplier data; <code>CDHDR</code>/<code>CDPOS</code> may help where change documents exist. These are investigation aids, not a universal duplicate or lineage report.</p>
 
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame, not a master data merge or de-duplication tool guide. It does not cover MDG duplicate check configuration, data migration cleanup, or merge program design. It does not replace SAP's master data governance documentation.</p>
+    <h2>Worked example: two supplier candidates, one risky shortcut</h2>
+    <p><strong>Entirely synthetic:</strong> BP <code>BP-100</code> and <code>BP-200</code> share the trading name “Northshore Parts” and an office address. A migration report flags a 92% name-and-address similarity. However, their approved legal registration IDs differ, and BP-200 has an open purchasing document. The percentage here is invented for illustration, not an SAP threshold or a measured production result.</p>
+    <p><strong>Decision:</strong> label the pair <em>needs identity review</em>, not <em>confirmed duplicate</em>. The business owner checks whether these are separate companies, branches or one entity recorded twice. The data steward records the decision and source evidence. The integration team separately checks whether the migration crosswalk and target mapping created an unintended second object. No user should re-key the open PO as an informal cleanup.</p>
 
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>Three safe outcomes</h2>
+    <ol>
+      <li><strong>Two valid entities:</strong> retain both records, document why the candidate is a false positive and improve the review criteria if similar alerts repeat. Do not suppress all shared-address matches without checking missed duplicates.</li>
+      <li><strong>Confirmed duplicate:</strong> use the supported, configured and approved MDG cleansing/consolidation process where available. Review the proposed best record, field provenance, roles, downstream documents and rollback/reconciliation plan. There is no universal “merge BP” operation that safely rewrites every existing business document.</li>
+      <li><strong>Identity or mapping defect:</strong> repair the owned migration crosswalk, creation gate or replication mapping only after the source and target identities are confirmed. Test the next authorised create/replicate scenario, then reconcile both keys and dependent references. Do not use a blind resend to resolve a disputed identity.</li>
+    </ol>
+    <p>SAP describes MDG consolidation as a configurable sequence and matching as producing candidate groups for review. These features are not proof that consolidation is installed or suitable in your landscape. See <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5c1f0c571db4124ce10000000a4450e5.html">SAP Help: Consolidating Master Data</a> and <a href="https://help.sap.com/docs/PRODUCT_ID/6d52de87aa0d4fb6a90924720a5b0549/aebd1cbd6ee04e79970f3076af689204.html">SAP Help: Configure Matching for Business Partner</a>. Match review and governance approval are separate from technical similarity.</p>
 
-    <h2>Next diagnostic steps</h2>
-    <ul>
-      <li><a href="/atlas/data-quality/master-data-governance-failure-modes/">Master Data Governance Failure Modes</a> — use this to understand why duplicates recur and how governance can prevent them.</li>
-      <li><a href="/atlas/diagnostics/sap-key-mapping-diagnostics/">SAP Key Mapping Diagnostics</a> — go here when duplicates came from replication without key mapping.</li>
-      <li><a href="/atlas/diagnostics/sap-number-range-diagnostics/">SAP Number Range Diagnostics</a> — check this if number range overlap caused duplicate keys.</li>
-      <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a> — use this for broader data quality signals and governance context.</li>
-    </ul>
+    <h2>Read-only AI experiment: group evidence before the steward decides</h2>
+    <p><strong>Proposal, not a delivered tool:</strong> run a 10-business-day offline review on 40 synthetic or properly de-identified BP candidate pairs with independently recorded decisions: confirmed same entity, separate entities and unresolved. Keep the same cases, evidence packet and reviewer for the baseline and AI-assisted trial; randomise the order to reduce learning bias. Remove personal and financial identifiers before any model use.</p>
+    <div class="decision-table"><table><thead><tr><th>Baseline (no AI)</th><th>Assistant task</th><th>Human control</th></tr></thead><tbody>
+      <tr><td>Deterministic rules group pairs by equal identifiers, normalised name/address, mapping presence and missing evidence. A reviewer opens the evidence in a fixed checklist.</td><td>Read-only assistant clusters the already approved evidence, lists conflicts and missing proofs, and suggests the next verification question with evidence references.</td><td>Steward approves or rejects candidate grouping and owns all create, merge, blocking and mapping decisions; model has no SAP credentials or write-back.</td></tr>
+    </tbody></table></div>
+    <p><strong>Measure both value and harm:</strong> precision of “same entity” suggestions = correctly suggested confirmed pairs / all suggested same-entity pairs; recall = correctly suggested confirmed pairs / all confirmed pairs in the labelled set; false-positive rate = separate-entity pairs wrongly suggested as same / all labelled separate-entity pairs. Also record unresolved/abstained pairs, missing or fabricated evidence links, median reviewer minutes per case and correction minutes. Publish actual numerators, denominators and median times; do not claim improvement from this proposed pilot.</p>
+    <p><strong>Stop conditions:</strong> stop if any source record leaves the approved environment, if the assistant invents a reference or implies an SAP write, or if a false-positive “same entity” recommendation would be treated as automatic action. Do not advance beyond a feasibility test if false-positive rate exceeds 5% on the small labelled set, or reviewer time does not improve without loss of decision quality. A 40-pair pilot cannot establish a production safety rate.</p>
 
-    <h2>Practical checklist</h2>
-    <div markdown="1">
-- [ ] Collect object type, duplicate keys, and identifying fields. **Synthetic example:** BP 1234567890 and 1234567891 share tax number XX1234567890.
-
-- [ ] Search for duplicates by name, tax number, email, bank account, or other identifying fields.
-
-- [ ] Compare creation date, creator, source system, and field differences between duplicates.
-
-- [ ] Check CDHDR/CDPOS change documents and interface logs for the creation source.
-
-- [ ] Determine which record is the master based on usage and data quality.
-
-- [ ] Assess transaction, document, and interface references before merge, deactivation, or re-keying.
-
-- [ ] Safety limit: do not merge or deactivate master data records without a backup and a tested rollback plan.
-</div>
+    <h2>Control proof and sources</h2>
+    <p>Keep a small evidence record: object category, both BP IDs, source systems, creation channel, match rule/version, candidate score if available, approved identity evidence reference, mapping check, downstream usage check, reviewer, decision, and approval timestamp. Redact the identity content in any public example. Track <em>candidate-to-confirmed conversion</em>, false-positive review cost and post-migration unmatched keys by batch, not only the number of alerts.</p>
+    <p>SAP's <a href="https://help.sap.com/docs/SAP_ERP_SPV/de1b9c94c8594d6f94fe66ae423d5d70/4d523f354bf74b049cfd5f59aa56aac4.html">MDG Duplicate Check</a> explains why a potential-match score is a warning rather than a final decision (older ERP MDG documentation; do not reuse its configuration path for all S/4HANA releases). The S/4HANA 2025 FPS01 SAP Help pages linked above support the newer configurable check, matching and consolidation boundaries. The controls, experiment thresholds and synthetic example in this article are editorial proposals, not SAP-delivered defaults.</p>
+    <p><strong>Editorial state — 12 November 2026:</strong> source links were researched for this draft revision; the new diagnosis and AI experiment still require independent SAP and editorial approval by Dzmitryi Kharlanau. The earlier <code>last_reviewed</code> value is historical and does not certify this revision. This page remains <code>needs_verification</code>, <code>verified: false</code>, <code>noindex</code> and excluded from the sitemap.</p>
   </div>
 
   <section class="atlas-related">
