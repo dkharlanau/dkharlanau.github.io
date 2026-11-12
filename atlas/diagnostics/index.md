@@ -1,6 +1,7 @@
 ---
 author: "Dzmitryi Kharlanau"
 layout: default
+content_model: landing_page
 title: "Atlas Diagnostics — SAP Support and AMS Diagnostics"
 description: "Curated diagnostic patterns for SAP AMS, support tickets, operational blockers, and repeat incidents."
 permalink: /atlas/diagnostics/
@@ -50,6 +51,8 @@ related:
   </ol>
   <details><summary>Evidence and escalation boundaries <span class="material-symbols-outlined" aria-hidden="true">add</span></summary><div><p><strong>Collect:</strong> document and item or object key; current status and history; organisational data; generalized master-data keys; error text, log reference, or IDoc/queue number; and business impact.</p><p>These pages help locate the failure condition. They do not replace functional consultation, change control, or official SAP documentation. Escalate when a fix changes configuration, affects financial reporting, crosses legal entities, or could create duplicate data.</p></div></details>
 </section>
+
+{% include atlas/reviewed-directory.html prefix="/atlas/diagnostics/" title="Reviewed SAP troubleshooting guides" description="Choose the failed object or processing step. Linked guides have reviewed status; check their scope and limits before changing a system." %}
 
 <section class="diagnostic-desk__hubs" id="diagnostic-hubs" data-reveal>
   <header class="section-heading">

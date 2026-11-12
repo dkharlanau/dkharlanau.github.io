@@ -30,7 +30,6 @@
 {% assign meta_description = page.description | default: content_fallback | default: default_description | strip_html |
 normalize_whitespace %}
 {% assign social_title = computed_title %}
-{% assign meta_description_short = meta_description | truncatewords: 24, '…' %}
 {% assign social_description = meta_description | truncatewords: 32, '…' %}
 {% assign social_type = 'website' %}
 {% if page.collection == 'notes' or page.layout == 'blog' or page.collection == 'blog' or page.collection == 'radar' or page.collection == 'news' %}
@@ -43,7 +42,7 @@ normalize_whitespace %}
 {% assign social_type = 'article' %}
 {% endif %}
 
-<title>{{ computed_title | strip_html | normalize_whitespace }}</title>
+<title>{{ computed_title | strip_html | normalize_whitespace | escape }}</title>
 
 {% include analytics.html %}
 
@@ -53,10 +52,10 @@ normalize_whitespace %}
 <meta name="theme-color" content="#f5f2ea" />
 <meta name="msapplication-TileColor" content="#f5f2ea" />
 <meta name="author" content="{{ site.author.name | default: site_name }}" />
-<meta name="description" content="{{ meta_description_short }}" />
+<meta name="description" content="{{ meta_description | escape }}" />
 <meta name="robots" content="{{ page.robots | default: 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1' }}" />
 
-<link rel="canonical" href="{{ canonical_url }}" />
+<link rel="canonical" href="{{ canonical_url | escape }}" />
 <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}" />
 <link rel="alternate" type="application/atom+xml" title="{{ site.title }} blog" href="{{ '/blog/feed.xml' | absolute_url }}" />
 <!-- GitHub Pages cannot set HTTP Link response headers, so these HTML links are the static-site fallback for agent discovery. -->
@@ -107,17 +106,17 @@ normalize_whitespace %}
 <meta property="og:type" content="{{ social_type }}" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="{{ site_name }}" />
-<meta property="og:title" content="{{ social_title | strip_html | normalize_whitespace }}" />
-<meta property="og:description" content="{{ social_description }}" />
-<meta property="og:url" content="{{ canonical_url }}" />
+<meta property="og:title" content="{{ social_title | strip_html | normalize_whitespace | escape }}" />
+<meta property="og:description" content="{{ social_description | escape }}" />
+<meta property="og:url" content="{{ canonical_url | escape }}" />
 <meta property="og:image" content="{{ og_image }}" />
 <meta property="og:image:width" content="{{ page.og_image_width | default: 1200 }}" />
 <meta property="og:image:height" content="{{ page.og_image_height | default: 630 }}" />
-<meta property="og:image:alt" content="{{ page.og_image_alt | default: social_title | strip_html | normalize_whitespace }}" />
+<meta property="og:image:alt" content="{{ page.og_image_alt | default: social_title | strip_html | normalize_whitespace | escape }}" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@{{ site.twitter.username | default: 'dkharlanau' }}" />
-<meta name="twitter:title" content="{{ social_title | strip_html | normalize_whitespace }}" />
-<meta name="twitter:description" content="{{ social_description }}" />
+<meta name="twitter:title" content="{{ social_title | strip_html | normalize_whitespace | escape }}" />
+<meta name="twitter:description" content="{{ social_description | escape }}" />
 <meta name="twitter:image" content="{{ og_image }}" />
 <meta name="twitter:image:alt" content="{{ page.og_image_alt | default: social_title | strip_html | normalize_whitespace }}" />
 {% assign modified_raw = page.significant_lastmod | default: page.content_updated_at | default: page.schema_updated_at | default: page.last_modified_at | default: page.updated %}

@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import html
+import hashlib
 import json
 import re
 import subprocess
@@ -35,6 +36,7 @@ from lib.content_model import (  # noqa: E402
     stable_fingerprint,
     word_count,
 )
+from lib.content_signals import rendered_review, source_review_signals  # noqa: E402
 
 
 CONFIG_PATH = REPO_ROOT / "config" / "content-quality.yml"
@@ -73,6 +75,9 @@ def load_config() -> dict[str, Any]:
     missing = required - set(config)
     if missing:
         raise ValueError(f"content-quality.yml missing required sections: {', '.join(sorted(missing))}")
+    unknown = {signal for model in config["content_models"].values() for signal in model.get("required_signals", [])} - set(semantic_signal_groups(None))
+    if unknown:
+        raise ValueError(f"content-quality.yml has unsupported semantic signals: {', '.join(sorted(unknown))}")
     return config
 
 
@@ -82,8 +87,7 @@ def add_finding(findings: list[Finding], page: ContentPage | None, rule_id: str,
     findings.append(Finding(rule_id, severity, message, source, location, remediation, safe_fixable, fingerprint))
 
 
-def semantic_signal_groups(page: ContentPage) -> dict[str, tuple[str, ...]]:
-    model = page.content_model
+def semantic_signal_groups(page: ContentPage | None) -> dict[str, tuple[str, ...]]:
     base = {
         "problem": ("problem", "pain", "symptom", "why it matters", "objective", "goal"),
         "context": ("context", "scope", "prerequisite", "when to use", "assumption"),
@@ -116,6 +120,17 @@ def semantic_signal_groups(page: ContentPage) -> dict[str, tuple[str, ...]]:
         "process_context": ("process context", "business process", "order to cash", "procure to pay"),
         "touchpoints": ("sap touchpoint", "transaction", "table", "interface", "integration"),
         "solution": ("solution", "pattern", "approach", "improvement"),
+        "steps": ("step", "sequence", "workflow", "procedure", "check"),
+        "constraints": ("constraint", "limitation", "boundary", "prerequisite", "depends"),
+        "next_action": ("next action", "next step", "check", "try", "verify", "choose"),
+        "evidence": ("evidence", "source", "reference", "observed", "measured", "tested"),
+        "purpose": ("purpose", "used for", "use this", "helps", "provides", "describes"),
+        "interface": ("interface", "input", "output", "parameter", "endpoint"),
+        "definition": ("means", "refers to", "defined", " is ", " are "),
+        "support": ("evidence", "because", "example", "observed", "source"),
+        "title": ("title",),
+        "description": ("description",),
+        "navigation": ("related", "explore", "browse", "start", "continue", "href", "]("),
     }
     return base
 
@@ -222,7 +237,9 @@ def check_source_pages(pages: list[ContentPage], parse_errors: list[dict[str, An
         if not page.topics and page.content_model in {"diagnostic", "technical_guide", "architecture", "research", "opinion"}:
             add_finding(findings, page, "FM008_MISSING_TOPIC_TAGS", "warning", "Substantial page has no tags or topic signals.", remediation="Add a small, accurate topic set.")
         groups = semantic_signal_groups(page)
-        missing = [name for name, terms in groups.items() if name in config["content_models"].get(page.content_model, {}).get("required_signals", []) and not any(term in text for term in terms)]
+        present = {name: any(term in text for term in terms) for name, terms in groups.items()}
+        present.update(title=bool(page.title), description=bool(page.description))
+        missing = [name for name in config["content_models"].get(page.content_model, {}).get("required_signals", []) if not present[name]]
         for signal in missing:
             add_finding(findings, page, f"CONTENT_{signal.upper()}", "warning", f"Missing semantic content signal: {signal}.", remediation=f"Add a useful section or paragraph covering {signal}; do not copy a template mechanically.")
         if page.expert_context_enabled:
@@ -441,9 +458,16 @@ def run_audit(site_dir: Path | None = None, changed_from: str | None = None) -> 
     config = load_config()
     pages, parse_errors = discover_pages(REPO_ROOT, config.get("excluded_paths", []))
     findings, context = check_source_pages(pages, parse_errors, config)
+    semantic_review = source_review_signals(pages)
+    page_lookup = {page.relative_path: page for page in pages}
+    for signal in semantic_review["findings"]:
+        add_finding(findings, page_lookup[signal["path"]], signal["rule_id"], signal["severity"], signal["message"], location=signal["location"], remediation=signal["remediation"])
     link_graph = build_link_graph(pages, findings, site_dir)
     built = audit_built_site(site_dir, findings) if site_dir else {"html_files": 0}
     artifacts = audit_generated_artifacts(findings, pages)
+    rendered = rendered_review(site_dir, pages, BASE_URL) if site_dir else {"coverage": "not_run: production build required"}
+    for signal in rendered.get("issues", []):
+        add_finding(findings, None, signal["rule_id"], signal["severity"], "Rendered discovery contract needs review; inspect the sitemap receipt.", path=signal["path"], remediation="Repair the owning shared route or sitemap rule; preserve intentional noindex policy.")
     by_page: dict[str, list[Finding]] = defaultdict(list)
     for finding in findings:
         by_page[finding.path].append(finding)
@@ -477,7 +501,16 @@ def run_audit(site_dir: Path | None = None, changed_from: str | None = None) -> 
         except json.JSONDecodeError:
             baseline_fingerprints = set()
     summary["new_regressions"] = sum(item.severity == "warning" and item.fingerprint not in baseline_fingerprints and (not changed or item.path in changed) for item in findings)
-    return {"generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "config": str(CONFIG_PATH.relative_to(REPO_ROOT)), "summary": summary, "pages": page_records, "findings": [finding.as_dict() for finding in findings], "built_site": built, "artifacts": artifacts, "link_graph": link_graph}
+    digest = hashlib.sha256()
+    for page in sorted(pages, key=lambda item: item.relative_path):
+        source = REPO_ROOT / page.source_path
+        digest.update(page.relative_path.encode() + b"\0" + source.read_bytes())
+    provenance = {"source_manifest_sha256": digest.hexdigest(), "config_sha256": hashlib.sha256(CONFIG_PATH.read_bytes()).hexdigest(), "source_pages": len(pages), "built_html_sha256": rendered.get("html_manifest_sha256"), "build_directory": str(site_dir) if site_dir else None}
+    summary["review_signals"] = len(semantic_review["findings"])
+    summary["exact_body_duplicate_groups"] = len(semantic_review["exact_body_candidates"])
+    summary["repeated_paragraph_groups"] = len(semantic_review["repeated_paragraph_candidates"])
+    summary["rendered_contextual_orphan_candidates"] = sum(p["contextual_inbound_pages"] == 0 for p in rendered.get("pages", []) if p["model"] not in {"landing_page", "profile", "dataset"})
+    return {"generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "config": str(CONFIG_PATH.relative_to(REPO_ROOT)), "provenance": provenance, "summary": summary, "pages": page_records, "findings": [finding.as_dict() for finding in findings], "built_site": built, "artifacts": artifacts, "link_graph": link_graph, "semantic_review": semantic_review, "rendered_discovery": rendered, "interpretation": "Scores and signals prioritize human review; they do not establish article quality, truth, search ranking, AI citation, or recommendation eligibility."}
 
 
 def write_reports(audit: dict[str, Any]) -> None:
@@ -486,6 +519,8 @@ def write_reports(audit: dict[str, Any]) -> None:
     (REPORT_DIR / "content-quality.json").write_text(json.dumps(audit, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (REPORT_DIR / "content-quality-summary.json").write_text(json.dumps({"generated_at": audit["generated_at"], **summary}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (REPORT_DIR / "content-link-graph.json").write_text(json.dumps(audit["link_graph"], indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (REPORT_DIR / "content-semantic-review.json").write_text(json.dumps(audit["semantic_review"], indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (REPORT_DIR / "content-rendered-discovery.json").write_text(json.dumps(audit["rendered_discovery"], indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     queue = sorted((finding for finding in audit["findings"] if finding["severity"] in {"error", "warning"}), key=lambda item: (0 if item["severity"] == "error" else 1, item["source_path"], item["rule_id"]))
     queue_lines = ["# Content Review Queue", "", "Generated by `python scripts/content_quality.py audit`.", ""]
     for finding in queue[:500]:
@@ -553,7 +588,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "check":
         changed = set(audit["summary"].get("changed_paths", []))
-        errors = [item for item in audit["findings"] if item["severity"] == "error" and (not changed or item["source_path"] in changed or item["source_path"] in {"reports/content-quality.json", "llms-full.txt"})]
+        # A changed-source filter narrows editorial warnings, never hard safety
+        # or emitted-site failures (whose paths need not be source filenames).
+        errors = [item for item in audit["findings"] if item["severity"] == "error"]
         baseline_path = REPO_ROOT / "config" / "content-quality-baseline.json"
         baseline_items = set()
         if baseline_path.exists():

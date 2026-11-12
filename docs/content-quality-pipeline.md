@@ -93,6 +93,44 @@ draft
 
 The quality command verifies that the metadata and artifacts describe this process consistently. It cannot replace the human decisions in the process.
 
+## Bulk integrity, meaning and discovery review
+
+The same `audit --site-dir _site` command also produces
+`reports/content-semantic-review.json` and `reports/content-rendered-discovery.json`.
+It reuses `ContentPage`; it does not create a second definition of indexability or
+human verification. Each run records source/config hashes and a hash of the
+complete HTML inventory. Run it against the final production build.
+
+Source review flags unmatched fenced examples, empty final sections, standalone
+draft markers, generation preambles, and table-header mismatches. Fenced examples
+are excluded from residue detection. It also inventories opening paragraphs,
+examples, decision cues, boundaries, evidence URLs, exact body duplicates and
+substantial paragraphs shared by at least three indexable articles. Duplicate
+receipts contain hashes and paths, not copied text. These are review candidates,
+including for intentionally short reference pages, not claims of plagiarism or
+low quality. Every configured semantic signal has an implementation; unknown
+signals cause a configuration failure instead of silently skipping a check.
+
+The rendered pass follows the sitemap index recursively, checks emitted targets
+and noindex/canonical consistency, and builds a graph from actual main-content
+links. Global navigation, footer, sidebar, scripts and styles do not create
+contextual inbound credit. Relative, query and fragment links resolve to the
+same destination. Source-only orphan candidates and rendered orphan candidates
+remain separate, because includes can emit useful links absent from Markdown.
+
+For source-indexable pages it reports visible main-text coverage, snippet controls,
+JSON-LD block counts, crawler policy from the built robots.txt, Open Graph image
+URLs and large-image-preview permission. These are observable prerequisites,
+not an AI or recommendation score. Remote image dimensions/relevance, CDN access,
+actual indexing, source accuracy and search intent still require separate review.
+The existing rendered SEO/schema tests remain the release checks for those contracts.
+
+Read a stratified sample of flagged and unflagged pages in full before editing.
+Check whether the page answers its title, explains an actual decision, provides
+usable examples, states limits, and supports factual claims. Do not add headings,
+word count, schema types or keywords solely to clear a heuristic. No articles,
+review dates or publication states are rewritten by this audit.
+
 ## Adding rules
 
 Keep policy in `config/content-quality.yml` where possible. Add a stable rule identifier, a concise explanation, a remediation, and a test fixture in `tests/test_content_quality.py`. Hard safety rules must not have suppression comments or baseline exceptions. Prefer warnings for heuristics that cannot establish a fact, and redact sensitive values from messages.
