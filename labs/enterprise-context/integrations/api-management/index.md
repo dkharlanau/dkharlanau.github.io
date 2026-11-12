@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP API Management Explained — Proxies, Products, Applications, Protocols and Cost"
-description: "A practical SAP Integration Suite API Management guide: REST vs OData vs SOAP, API Provider, Proxy, Product, Application, API Portal, Developer Hub, Business Accelerator Hub, setup, security and pricing."
+title: "SAP API Management — Proxies, Products and Applications"
+description: "Trace API gateway symptoms in SAP Integration Suite and see how proxies, products, applications, protocols, security and pricing fit together."
 permalink: /labs/enterprise-context/integrations/api-management/
 status: needs_verification
 verified: false
@@ -222,12 +222,13 @@ Accept: application/json
       <a href="#verification" ><span>08</span><strong>Prove the outcome and prepare operations</strong><small>Call the proxy with a controlled test client. Confirm routing, response, analytics, backend authorization, trace ID, quota behavior, failure handling and the real ERP read result. Repeat in QA before production promotion.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
     </div>
     <p><strong>Illustrative managed call:</strong> host, path and API-key header depend on the deployed proxy and selected policy.</p>
-    <pre><code>curl --request GET \
+    <pre><code># Set DEMO_API_HEADER to the complete test header in your test client.
+curl --request GET \
   'https://api.example.invalid/partner-orders/v1/orders/demo-100' \
-  --header 'APIKey: demo' \
+  --header "${DEMO_API_HEADER:?Set the test header}" \
   --header 'Accept: application/json'
 
-# Synthetic host and deliberately invalid key 'demo'; replace only in a secure test client.
+# Replace the synthetic host only in a secure test client.
 # Do not paste real keys into logs or docs.
 # For OAuth-based security, acquire a valid token and use the required
 # Authorization header instead of assuming an API key is enough.</code></pre>

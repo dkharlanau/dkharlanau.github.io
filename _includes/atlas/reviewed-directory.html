@@ -1,0 +1,44 @@
+{% comment %}Reuse page-owned review metadata; this directory never promotes a page.{% endcomment %}
+{% assign directory_pages = site.pages | sort: 'title' %}
+{% assign directory_prefix_length = include.prefix | size %}
+{% assign directory_count = 0 %}
+{% assign directory_items_json = '' %}
+<section class="section" aria-labelledby="reviewed-directory-title">
+  <header class="section-heading">
+    <h2 id="reviewed-directory-title">{{ include.title | escape }}</h2>
+    <p>{{ include.description | escape }}</p>
+  </header>
+  <div class="atlas-card-grid">
+    {% for entry in directory_pages %}
+      {% assign entry_route = entry.permalink | default: entry.url %}
+      {% assign entry_prefix = entry_route | slice: 0, directory_prefix_length %}
+      {% if entry_prefix == include.prefix and entry_route != include.prefix and entry.verified == true and entry.status == 'reviewed' and entry.sitemap != false %}
+        {% unless entry.robots contains 'noindex' %}
+        {% assign directory_count = directory_count | plus: 1 %}
+        {% capture directory_items_json %}{{ directory_items_json }}{% if directory_count > 1 %},{% endif %}{"@type":"ListItem","position":{{ directory_count }},"name":{{ entry.short_title | default: entry.title | jsonify }},"url":{{ entry_route | absolute_url | jsonify }}}{% endcapture %}
+        <a class="atlas-card" href="{{ entry_route | relative_url }}">
+          <h3>{{ entry.short_title | default: entry.title | escape }}</h3>
+          <p>{{ entry.description | escape }}</p>
+          <span class="link-arrow">Read the checks and limits</span>
+        </a>
+        {% endunless %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% if directory_count > 0 and page.verified == true and page.status == 'reviewed' and page.sitemap != false %}
+  {% unless page.robots contains 'noindex' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": {{ page.url | absolute_url | append: '#reviewed-directory' | jsonify }},
+    "name": {{ include.title | jsonify }},
+    "mainEntityOfPage": {"@id": {{ page.url | absolute_url | append: '#webpage' | jsonify }}},
+    "itemListOrder": "https://schema.org/ItemListUnordered",
+    "numberOfItems": {{ directory_count }},
+    "itemListElement": [{{ directory_items_json }}]
+  }
+  </script>
+  {% endunless %}
+{% endif %}

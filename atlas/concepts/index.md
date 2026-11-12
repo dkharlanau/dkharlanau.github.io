@@ -1,6 +1,7 @@
 ---
 author: "Dzmitryi Kharlanau"
 layout: default
+content_model: landing_page
 title: "Atlas Concepts — Business and SAP Concepts"
 description: "Curated business and SAP concept explanations, decision frameworks, and operating models for operational analysis and support work."
 permalink: /atlas/concepts/
@@ -30,6 +31,8 @@ related:
   <h1>Concepts explained from the business problem outward.</h1>
   <p class="lead">This section holds reviewed concept pages for SAP-heavy operations. Each page focuses on what the concept means, why it matters, what usually breaks, and how to reason about it without pretending every SAP landscape behaves the same way.</p>
 </section>
+
+{% include atlas/reviewed-directory.html prefix="/atlas/concepts/" title="Reviewed SAP concepts and decision frameworks" description="Browse the currently reviewed process explanations and decision frameworks. Review status belongs to each linked page." %}
 
 <section class="section">
   <header class="section-heading">

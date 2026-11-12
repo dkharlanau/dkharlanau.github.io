@@ -162,6 +162,47 @@ def test_rendered_jsonld_is_valid_json():
         _jsonld_blocks(content, html_path.relative_to(SITE_DIR))
 
 
+def test_reviewed_directories_match_visible_links_and_indexable_targets():
+    class DirectoryLinks(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.active = False
+            self.links = []
+
+        def handle_starttag(self, tag, attrs):
+            attrs = dict(attrs)
+            if tag == "section" and attrs.get("aria-labelledby") == "reviewed-directory-title":
+                self.active = True
+            elif self.active and tag == "a":
+                self.links.append(attrs["href"])
+
+        def handle_endtag(self, tag):
+            if tag == "section":
+                self.active = False
+
+    site = _require_site()
+    for route in ("atlas/diagnostics", "atlas/concepts"):
+        content = (site / route / "index.html").read_text()
+        parser = DirectoryLinks()
+        parser.feed(content)
+        lists = [block for block in _jsonld_blocks(content, Path(route))
+                 if block.get("@id", "").endswith("#reviewed-directory")]
+        assert len(lists) == 1, route
+        directory = lists[0]
+        entries = directory["itemListElement"]
+        assert directory["@type"] == "ItemList"
+        assert directory["numberOfItems"] == len(parser.links) == len(entries) > 0
+        assert len(set(parser.links)) == len(parser.links)
+        assert [urlparse(entry["url"]).path for entry in entries] == parser.links
+        assert [entry["position"] for entry in entries] == list(range(1, len(entries) + 1))
+        for entry in entries:
+            target = site / urlparse(entry["url"]).path.strip("/") / "index.html"
+            rendered = target.read_text()
+            robots = ROBOTS_RE.search(rendered)
+            assert robots and "noindex" not in robots.group(1).lower()
+            assert html.unescape(CANONICAL_RE.search(rendered).group(1)) == entry["url"]
+
+
 def test_no_rich_jsonld_on_noindex_pages():
     failures = []
     for html_path in _html_files():
