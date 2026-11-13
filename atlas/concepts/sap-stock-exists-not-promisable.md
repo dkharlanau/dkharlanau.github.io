@@ -112,15 +112,15 @@ author: Dzmitryi Kharlanau
 
 <li data-atlas-task-part="method">Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result.</li>
 
-<li data-atlas-task-part="check">Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.</li>
+<li id="verify-schedule-line" data-atlas-cite data-atlas-task-part="check">Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.</li>
 
 </ol>
 
 <h3>Case from SAP Support</h3>
 
-<p data-atlas-task-part="example"><a href="https://userapps.support.sap.com/sap/support/knowledge/en/3701626">SAP KBA 3701626</a> documents different availability results in Create Sales Order and Change Sales Order in SAP S/4HANA Cloud Public Edition. SAP attributes the difference to how the apps count parallel requirements. The create app uses open quantities. The change app uses confirmed quantities.</p>
+<p id="public-edition-atp-case" data-atlas-cite data-atlas-task-part="example"><a href="https://userapps.support.sap.com/sap/support/knowledge/en/3701626">SAP KBA 3701626</a> documents different availability results in Create Sales Order and Change Sales Order in SAP S/4HANA Cloud Public Edition. SAP attributes the difference to how the apps count parallel requirements. The create app uses open quantities. The change app uses confirmed quantities.</p>
 
-<p data-atlas-task-part="limits">The case describes a difference between two apps in Public Edition. The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less.</p>
+<p id="atp-case-limits" data-atlas-cite data-atlas-task-part="limits">The case describes a difference between two apps in Public Edition. The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less.</p>
 </section>
 
 <h2>Evidence to retain</h2>
