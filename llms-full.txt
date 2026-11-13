@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-11-11T00:00:00Z
+Generated: 2026-11-13T00:00:00Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -1269,6 +1269,8 @@ SAP AREA: ATP / availability / stock status
 BUSINESS PROCESS: Order to cash
 TAGS: order-to-cash, sap-sd, diagnostics, retail
 REVIEWED: 2026-06-13
+CITABLE SECTION: Diagnostic sequence — https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/#diagnostic-sequence
+SECTION SOURCE: https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html
 ----------------------------------------
 **Sources:** [SAP scope of availability check](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html), [SAP availability-check levels](https://help.sap.com/docs/SAP_S4HANA_CLOUD/32da8359c8ee4e8b8e8c5e15cacba5aa/199d86d0f85e4ea982a529c6e0409660.html?locale=en-us), and [SAP stock protection with product allocation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9905622a5c1f49ba84e9076fc83a9c2c/e7582f68181d476ab37550c6ebe6d25e.html).
 **Date checked:** 2026-08-11
@@ -1317,13 +1319,15 @@ Capture the material, plant, storage location if relevant, batch or stock segmen
 
 Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.
 
-Confirm the material's checking group, the process checking rule, and the resulting scope of check. SAP documentation defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.
+Confirm the material's checking group, the process checking rule, and the resulting scope of check. The SAP S/4HANA aATP guide defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.
 
 Review relevant supply and demand by date. Determine whether another requirement consumes the quantity or whether a future receipt falls outside the requested date or configured horizon.
 
 Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result.
 
 Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.
+
+The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less.
 
 Evidence to retain
 

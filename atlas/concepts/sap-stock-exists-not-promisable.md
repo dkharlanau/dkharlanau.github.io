@@ -28,6 +28,7 @@ related:
   - "/atlas/concepts/store-receiving-sap-retail/"
 robots: index,follow
 sitemap: true
+citation_sections: [diagnostic-sequence]
 short_title: Stock Exists but Is Not Promisable
 h1: SAP Stock Exists but Is Not Promisable
 subtitle: A practical explanation of why visible stock can still fail availability, ATP, allocation, or channel commitment checks.
@@ -91,6 +92,7 @@ author: Dzmitryi Kharlanau
 
 </ul>
 
+<section id="diagnostic-sequence">
 <h2>Diagnostic sequence</h2>
 
 <ol>
@@ -99,7 +101,7 @@ author: Dzmitryi Kharlanau
 
 <li>Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.</li>
 
-<li>Confirm the material's checking group, the process checking rule, and the resulting scope of check. SAP documentation defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.</li>
+<li>Confirm the material's checking group, the process checking rule, and the resulting scope of check. The <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html">SAP S/4HANA aATP guide</a> defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.</li>
 
 <li>Review relevant supply and demand by date. Determine whether another requirement consumes the quantity or whether a future receipt falls outside the requested date or configured horizon.</li>
 
@@ -108,6 +110,9 @@ author: Dzmitryi Kharlanau
 <li>Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.</li>
 
 </ol>
+
+<p>The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less.</p>
+</section>
 
 <h2>Evidence to retain</h2>
 

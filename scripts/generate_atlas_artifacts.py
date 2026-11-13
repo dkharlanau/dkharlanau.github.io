@@ -34,8 +34,10 @@ from pathlib import Path
 
 try:
     from scripts.lib.content_model import effective_frontmatter, infer_permalink, is_indexable_frontmatter, is_retrieval_eligible_frontmatter
+    from scripts.lib.atlas_citation_sections import read_atlas_citation_sections
 except ModuleNotFoundError:
     from lib.content_model import effective_frontmatter, infer_permalink, is_indexable_frontmatter, is_retrieval_eligible_frontmatter
+    from lib.atlas_citation_sections import read_atlas_citation_sections
 
 try:
     import yaml
@@ -920,6 +922,10 @@ def generate_verified_inventory(all_pages, check_mode=False):
             "author": fm.get("author", ""),
             "tags": fm.get("tags", []) or [],
         }
+        if page_type == "atlas" and _is_retrieval_eligible(fm):
+            sections = read_atlas_citation_sections(body, fm.get("citation_sections"), entry["url"])
+            if sections:
+                entry["citation_sections"] = sections
         if expert_context:
             entry["expert_context"] = _expert_public_metadata(expert_context)
         entries.append(entry)
@@ -1053,6 +1059,9 @@ def generate_llms_full(all_pages, atlas_files, check_mode=False):
         lines.append(f"BUSINESS PROCESS: {fm.get('business_process', '')}")
         lines.append(f"TAGS: {', '.join(tags)}")
         lines.append(f"REVIEWED: {serialize_value(fm.get('last_reviewed', ''))}")
+        for citation in read_atlas_citation_sections(body, fm.get("citation_sections"), url):
+            lines.append(f"CITABLE SECTION: {citation['heading']} — {citation['section_url']}")
+            lines.extend(f"SECTION SOURCE: {source}" for source in citation["sources"])
         lines.append("-" * 40)
 
         clean_body = strip_jekyll_and_html(body)

@@ -286,3 +286,43 @@ def test_compact_signal_index_entries_have_required_fields():
         assert entry["url"].startswith("https://dkharlanau.github.io/atlas/"), f"Invalid Atlas URL: {entry.get('url')}"
         assert (REPO_ROOT / entry["path"]).exists(), f"Missing source page: {entry['path']}"
         assert entry["matching_terms"], f"Missing matching terms: {entry['path']}"
+
+
+def test_citable_section_is_extracted_from_the_reviewed_article():
+    from scripts.generate_atlas_artifacts import parse_frontmatter
+    from scripts.lib.atlas_citation_sections import read_atlas_citation_sections
+
+    path = REPO_ROOT / "atlas/concepts/sap-stock-exists-not-promisable.md"
+    frontmatter, body = parse_frontmatter(path)
+    url = "https://dkharlanau.github.io" + frontmatter["permalink"]
+    [section] = read_atlas_citation_sections(body, frontmatter["citation_sections"], url)
+    index = json.loads((REPO_ROOT / "ai/verified-pages.json").read_text())
+    [entry] = [row for row in index["entries"] if row["url"] == url]
+    assert entry["citation_sections"] == [section]
+    assert section["section_url"] == url + "#diagnostic-sequence"
+    assert "inventory report alone cannot establish the reason" in section["paragraphs"][-1]
+    assert all(row.get("citation_sections") is None for row in index["entries"] if "openui5-odata-" in row["url"])
+    changed = body.replace("The relevant checks depend", "The appropriate checks depend", 1)
+    [changed_section] = read_atlas_citation_sections(changed, frontmatter["citation_sections"], url)
+    assert changed_section["sha256"] != section["sha256"]
+
+
+def test_citable_section_requires_the_declared_fragment_and_a_source():
+    import pytest
+
+    from scripts.generate_atlas_artifacts import parse_frontmatter
+    from scripts.lib.atlas_citation_sections import read_atlas_citation_sections
+
+    path = REPO_ROOT / "atlas/concepts/sap-stock-exists-not-promisable.md"
+    frontmatter, body = parse_frontmatter(path)
+    url = "https://dkharlanau.github.io" + frontmatter["permalink"]
+    with pytest.raises(ValueError, match="heading, visible text and an HTTPS source"):
+        read_atlas_citation_sections(body.replace('id="diagnostic-sequence"', ""), frontmatter["citation_sections"], url)
+    hidden = body.replace('id="diagnostic-sequence"', 'id="diagnostic-sequence" hidden')
+    with pytest.raises(ValueError, match="Expected one visible section"):
+        read_atlas_citation_sections(hidden, frontmatter["citation_sections"], url)
+    [section] = read_atlas_citation_sections(body, frontmatter["citation_sections"], url)
+    for source_url in section["sources"]:
+        body = body.replace(source_url, "/")
+    with pytest.raises(ValueError, match="heading, visible text and an HTTPS source"):
+        read_atlas_citation_sections(body, frontmatter["citation_sections"], url)
