@@ -3,240 +3,126 @@ name: IndexNow Submit
 on:
   pull_request:
     paths:
-      - "scripts/indexnow_submit.py"
+      - "scripts/indexnow_*.py"
+      - "scripts/lib/indexnow_release.py"
       - "tests/test_indexnow*.py"
       - ".github/workflows/indexnow.yml"
-  workflow_run:
-    workflows:
-      - CI
-    types:
-      - completed
+  deployment_status:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: "Run in dry-run mode (no network submission)"
-        required: false
-        default: false
+        description: "Preview the production delta without submitting"
         type: boolean
-      use_all:
-        description: "Submit all indexable URLs instead of only changed URLs from git diff"
-        required: false
-        default: false
-        type: boolean
+        default: true
       max_urls:
-        description: "Maximum number of URLs to submit"
-        required: false
-        default: 100
+        description: "Maximum number of changed HTML URLs in one request"
         type: number
+        default: 100
 
 permissions:
-  contents: read
   actions: read
+  contents: read
+  deployments: read
 
 concurrency:
-  group: indexnow-${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.ref }}
-  cancel-in-progress: true
+  group: indexnow-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
+  cancel-in-progress: false
 
 jobs:
   indexnow:
     if: >-
-      github.event_name != 'workflow_run' ||
-      (
-        github.event.workflow_run.conclusion == 'success' &&
-        github.event.workflow_run.head_branch == 'main'
-      )
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'deployment_status' &&
+       github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'github-pages' &&
+       github.event.deployment.ref == 'main')
     runs-on: ubuntu-latest
     env:
+      GH_TOKEN: ${{ github.token }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      GITHUB_TOKEN: ${{ github.token }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
-          fetch-depth: 0
-
-      - name: Setup Ruby
-        if: github.event_name != 'workflow_run'
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3"
-          bundler-cache: true
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+          ref: ${{ github.event_name == 'deployment_status' && github.event.deployment.sha || github.sha }}
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Generate DAMA pages
-        if: github.event_name != 'workflow_run'
-        run: node scripts/generate_dama_pages.js
-
-      - name: Build Jekyll site
-        if: github.event_name != 'workflow_run'
-        run: bundle exec jekyll build
-
-      - name: Reuse validated CI site
-        if: github.event_name == 'workflow_run'
-        shell: bash
+      - name: Verify IndexNow release contracts
+        if: github.event_name == 'pull_request'
         run: |
-          set -euo pipefail
-          rm -rf _site
-          mkdir -p _site
-          gh run download "${{ github.event.workflow_run.id }}" \
-            --name ci-built-site \
-            --dir _site
-          test -f _site/index.html
-          echo "Reused validated site artifact from CI run ${{ github.event.workflow_run.id }}."
+          python -m pip install pytest pyyaml
+          python -m pytest tests/test_indexnow*.py tests/test_search_workflow_policy.py tests/test_search_pipeline_routing.py
 
-      - name: Check local links
-        run: python3 scripts/check_links.py _site
-
-      - name: Check SEO metadata
-        run: python3 scripts/check_seo.py _site
-
-      - name: Determine URL scope
-        id: scope
-        shell: bash
+      - name: Prepare the successful Pages deployment
+        if: github.event_name != 'pull_request'
         run: |
-          set -euo pipefail
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.use_all }}" = "true" ]; then
-            echo "flag=--all" >> "$GITHUB_OUTPUT"
-            echo "scope=all indexable URLs" >> "$GITHUB_OUTPUT"
-          else
-            echo "flag=--from-git-diff HEAD~1 HEAD" >> "$GITHUB_OUTPUT"
-            echo "scope=changed URLs from git diff (HEAD~1..HEAD)" >> "$GITHUB_OUTPUT"
-          fi
+          python scripts/indexnow_pages.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --event "$GITHUB_EVENT_PATH" \
+            --output "$RUNNER_TEMP/indexnow-pages"
 
-      - name: Check IndexNow key availability
-        id: key
-        if: github.event_name != 'pull_request' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run == true)
-        env:
-          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-        shell: bash
+      - name: Preview production delta
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run
         run: |
-          set -euo pipefail
-          if [ -n "$INDEXNOW_KEY" ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-            echo "IndexNow key secret is present."
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "::error::INDEXNOW_KEY secret is required for a real IndexNow submission."
-            exit 1
-          fi
-
-      - name: Report IndexNow intent
-        id: mode
-        shell: bash
-        run: |
-          echo "Event: ${{ github.event_name }}"
-          echo "URL scope: ${{ steps.scope.outputs.scope }}"
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "Mode: DRY RUN (no network submission; pull request)"
-            echo "status=dry_run" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
-            echo "Mode: DRY RUN (manual dispatch)"
-            echo "status=dry_run" >> "$GITHUB_OUTPUT"
-          elif [ "${{ steps.key.outputs.present }}" = "true" ]; then
-            echo "Mode: REAL SUBMISSION ELIGIBLE"
-            echo "status=submit_eligible" >> "$GITHUB_OUTPUT"
-          else
-            echo "Mode: BLOCKED"
-            echo "status=blocked" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Dry-run IndexNow submission
-        if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == true)
-        env:
-          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-          INDEXNOW_KEY_LOCATION: ${{ vars.INDEXNOW_KEY_LOCATION }}
-        run: |
-          python3 scripts/indexnow_submit.py \
-            --site-dir _site \
-            --report indexnow-report.json \
-            --max-urls ${{ github.event_name == 'workflow_dispatch' && inputs.max_urls || 100 }} \
-            ${{ steps.scope.outputs.flag }}
+          python scripts/indexnow_submit.py \
+            --pages-release "$RUNNER_TEMP/indexnow-pages" \
+            --verify-live \
+            --report "$RUNNER_TEMP/indexnow-report.json"
 
       - name: Real IndexNow submission
-        if: steps.key.outputs.present == 'true' && (github.event_name == 'workflow_run' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
+        id: release
+        if: github.event_name == 'deployment_status' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)
         env:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-          INDEXNOW_KEY_LOCATION: ${{ vars.INDEXNOW_KEY_LOCATION }}
+          INPUT_MAX_URLS: ${{ inputs.max_urls }}
         run: |
-          python3 scripts/indexnow_submit.py \
-            --submit \
-            --require-key-file \
-            --site-dir _site \
-            --report indexnow-report.json \
-            --max-urls ${{ github.event_name == 'workflow_dispatch' && inputs.max_urls || 100 }} \
-            ${{ steps.scope.outputs.flag }}
-
-      - name: Resolve IndexNow result
-        id: result
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          intent="${{ steps.mode.outputs.status }}"
-          submitted=0
-          if [ -f indexnow-report.json ]; then
-            submitted=$(python3 -c "import json; print(len(json.load(open('indexnow-report.json')).get('submitted',[])))" 2>/dev/null || echo 0)
+          python scripts/indexnow_submit.py \
+            --pages-release "$RUNNER_TEMP/indexnow-pages" \
+            --report "$RUNNER_TEMP/indexnow-report.json" \
+            --submit --require-key-file \
+            --max-urls "${INPUT_MAX_URLS:-100}"
+          if test -f "$RUNNER_TEMP/indexnow-pages/manifest.json"; then
+            echo "manifest=true" >> "$GITHUB_OUTPUT"
           fi
 
-          if [ "$intent" = "dry_run" ]; then
-            status="dry_run"
-            network="no"
-          elif [ "$intent" = "blocked" ] || [ -z "$intent" ]; then
-            status="blocked"
-            network="no"
-          elif [ "$submitted" -gt 0 ]; then
-            status="submitted"
-            network="yes"
-          else
-            status="no_changes"
-            network="no"
-          fi
-
-          echo "status=$status" >> "$GITHUB_OUTPUT"
-          echo "network=$network" >> "$GITHUB_OUTPUT"
-          echo "submitted=$submitted" >> "$GITHUB_OUTPUT"
-          echo "IndexNow result: $status; network request: $network; URLs: $submitted"
-
-      - name: Upload IndexNow report
-        if: always()
+      - name: Preserve the production release manifest
+        if: steps.release.outputs.manifest == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: indexnow-report-${{ github.run_id }}
-          path: indexnow-report.json
+          name: indexnow-production-release
+          path: ${{ runner.temp }}/indexnow-pages/manifest.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 90
+
+      - name: Upload IndexNow report
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/indexnow-report.json
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: IndexNow status
-        if: always()
+      - name: Summarize IndexNow result
+        if: always() && github.event_name != 'pull_request'
         run: |
-          echo "IndexNow status: ${{ steps.result.outputs.status }}"
-          echo "Network request: ${{ steps.result.outputs.network }}"
+          python - "$RUNNER_TEMP/indexnow-report.json" <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import sys
 
-      - name: IndexNow report summary
-        if: always()
-        shell: bash
-        run: |
-          echo "## IndexNow Report" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          if [ -f indexnow-report.json ]; then
-            mode=$(python3 -c "import json; print(json.load(open('indexnow-report.json')).get('mode','unknown'))")
-            submitted=$(python3 -c "import json; print(len(json.load(open('indexnow-report.json')).get('submitted',[])))" 2>/dev/null || echo 0)
-            skipped=$(python3 -c "import json; print(len(json.load(open('indexnow-report.json')).get('skipped',[])))" 2>/dev/null || echo 0)
-            echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
-            echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
-            echo "| Status | ${{ steps.result.outputs.status }} |" >> "$GITHUB_STEP_SUMMARY"
-            echo "| Network request | ${{ steps.result.outputs.network }} |" >> "$GITHUB_STEP_SUMMARY"
-            echo "| Mode | $mode |" >> "$GITHUB_STEP_SUMMARY"
-            echo "| Submitted URLs | $submitted |" >> "$GITHUB_STEP_SUMMARY"
-            echo "| Skipped URLs | $skipped |" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Status: ${{ steps.result.outputs.status }}" >> "$GITHUB_STEP_SUMMARY"
-            echo "Network request: ${{ steps.result.outputs.network }}" >> "$GITHUB_STEP_SUMMARY"
-            echo "No report was generated for this run." >> "$GITHUB_STEP_SUMMARY"
-          fi
+          report = Path(sys.argv[1])
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
+              if report.exists():
+                  data = json.loads(report.read_text())
+                  print(f"IndexNow status: {data['status']}", file=summary)
+                  print(f"URLs accepted: {len(data['submitted'])}", file=summary)
+                  print(f"Provider HTTP status: {data['http_status']}", file=summary)
+              else:
+                  print("No IndexNow receipt. See the Pages preparation step.", file=summary)
+          PY

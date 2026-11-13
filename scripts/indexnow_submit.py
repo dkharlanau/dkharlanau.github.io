@@ -19,6 +19,7 @@ Rules:
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 import re
@@ -29,6 +30,14 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import urlparse
+
+
+if __package__:
+    from . import indexnow_pages
+    from .lib import indexnow_release
+else:
+    import indexnow_pages
+    from lib import indexnow_release
 
 
 BASE_URL = "https://dkharlanau.github.io"
@@ -430,7 +439,7 @@ def write_report(
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
 
 
-def submit(urls: list[str], key: str, dry_run: bool) -> None:
+def submit(urls: list[str], key: str, dry_run: bool) -> int | None:
     if dry_run:
         print("[DRY RUN] Would submit the following URLs to IndexNow:")
         for url in urls:
@@ -455,14 +464,119 @@ def submit(urls: list[str], key: str, dry_run: bool) -> None:
             print(f"IndexNow response: {response.status}")
             if body:
                 print(body)
+            return response.status
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
         print(f"IndexNow HTTP error: {exc.code}\n{detail}", file=sys.stderr)
         raise
 
 
+def process_release(args, site_dir, report_path):
+    """Replay a build or deliver an exact production delta, with a durable report."""
+    dry_run = not args.submit
+    report = {"mode": "dry-run" if dry_run else "submit", "status": "blocked",
+              "submitted": [], "skipped": [], "http_status": None}
+    manifest_file = None
+    try:
+        if args.pages_release:
+            root = args.pages_release
+            context = json.loads((root / "release.json").read_text(encoding="utf-8"))
+            report["release"] = context
+            if context["state"] == "superseded":
+                report["status"] = "superseded"
+                return 0
+            if context["state"] != "ready":
+                raise ValueError("Pages release is not ready")
+            manifest_file = root / "manifest.json"
+            if not dry_run and manifest_file.exists():
+                manifest_file.unlink()
+            current = indexnow_release.build_manifest(root / "current", BASE_URL, context["commit"], context["artifact"])
+            previous = None
+            if context["baseline"] == "accepted_manifest":
+                previous = indexnow_release.load_manifest(root / "previous" / "manifest.json", BASE_URL)
+            elif context["baseline"] == "pages_artifact":
+                prior = context["prior"]
+                previous = indexnow_release.build_manifest(root / "previous-site", BASE_URL, prior["commit"], prior["artifact"])
+            elif not dry_run and context["baseline"] != "initialize":
+                raise ValueError("Production release has no baseline disposition")
+        else:
+            previous = indexnow_release.build_manifest(args.replay_base, BASE_URL, args.base_commit)
+            current = indexnow_release.build_manifest(site_dir, BASE_URL, args.candidate_commit)
+
+        report["candidate"] = current["digest"]
+        report["candidate_commit"] = current["commit"]
+        report["canonical_html"] = len(current["pages"])
+        report["generator"] = current["generator"]
+        report["baseline"] = previous["digest"] if previous else None
+        report["baseline_commit"] = previous["commit"] if previous else None
+        delta = indexnow_release.compare(previous, current) if previous else None
+        report["delta"] = delta
+        urls = [*delta["added"], *delta["changed"], *delta["deleted"]] if delta else []
+        report["candidates"] = urls
+        if dry_run:
+            if args.verify_live:
+                verified = verify_release_urls(urls, current)
+                report["live_verified"] = len(verified)
+                report["skipped"] = release_skips(urls, verified)
+            report["status"] = "dry_run"
+            return 0
+
+        if not 1 <= args.max_urls <= 10_000 or len(urls) > args.max_urls:
+            raise ValueError(f"Release contains {len(urls)} candidates outside the configured batch limit")
+        if urls:
+            key = load_key()
+            if not key or (args.require_key_file and not (REPO_ROOT / f"{key}.txt").is_file()):
+                raise ValueError("IndexNow key or its verification file is unavailable")
+            verified = verify_release_urls(urls, current)
+            report["live_verified"] = len(verified)
+            report["skipped"] = release_skips(urls, verified)
+            urls = verified
+        # A newer deployment can finish while this job is reading pages.
+        verify_active_pages(context, current)
+        if urls:
+            report["http_status"] = submit(urls, key, dry_run=False)
+            if report["http_status"] not in {200, 202}:
+                raise ValueError(f"Unexpected IndexNow receipt: {report['http_status']}")
+            report["submitted"] = urls
+            report["status"] = "submitted"
+        else:
+            report["status"] = ("no_eligible_changes" if report["skipped"]
+                                else "no_changes" if previous else "baseline_initialized")
+        manifest_file.write_text(json.dumps(current, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return 0
+    except (KeyError, ValueError, OSError, ET.ParseError, subprocess.CalledProcessError) as exc:
+        report["error"] = str(exc)
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+    finally:
+        report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        print(f"IndexNow release: {report['status']}, {len(report['submitted'])} submitted")
+
+
+def verify_release_urls(urls, manifest):
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        verified = executor.map(lambda url: indexnow_release.verify_live(url, manifest["pages"].get(url)), urls)
+        return [url for url, eligible in zip(urls, verified) if eligible]
+
+
+def release_skips(candidates, verified):
+    return [{"url": url, "reason": "delisted_but_live"} for url in sorted(set(candidates) - set(verified))]
+
+
+def verify_active_pages(context, manifest):
+    active, *_ = indexnow_pages.deployed(os.environ["GITHUB_REPOSITORY"], limit=1)
+    deployment = active[0]
+    if (deployment["id"], deployment["sha"]) != (context["deployment"], manifest["commit"]):
+        raise ValueError("Pages production changed during IndexNow verification")
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--pages-release", type=Path, help="Prepared GitHub Pages release directory")
+    parser.add_argument("--replay-base", type=Path, help="Baseline HTML for a dry-run replay")
+    parser.add_argument("--base-commit", help="Baseline commit for a dry-run replay")
+    parser.add_argument("--candidate-commit", help="Candidate commit for a dry-run replay")
+    parser.add_argument("--verify-live", action="store_true", help="Check replay candidates at the live origin")
     parser.add_argument(
         "--submit",
         action="store_true",
@@ -509,6 +623,13 @@ def main(argv=None) -> int:
 
     site_dir = REPO_ROOT / args.site_dir
     report_path = REPO_ROOT / args.report
+
+    if args.pages_release or args.replay_base:
+        if args.urls is not None or args.all or args.from_git_diff:
+            parser.error("Release manifests cannot be combined with path-based scopes")
+        if args.replay_base and (args.pages_release or args.submit or not args.base_commit or not args.candidate_commit):
+            parser.error("Replays need both commit SHAs and dry-run mode")
+        return process_release(args, site_dir, report_path)
 
     key_required = args.submit or args.require_key_file
     key = load_key()
