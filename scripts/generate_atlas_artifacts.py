@@ -35,9 +35,11 @@ from pathlib import Path
 try:
     from scripts.lib.content_model import effective_frontmatter, infer_permalink, is_indexable_frontmatter, is_retrieval_eligible_frontmatter
     from scripts.lib.atlas_citation_sections import read_atlas_citation_sections
+    from scripts.lib.atlas_claim_review import review_atlas_claims
 except ModuleNotFoundError:
     from lib.content_model import effective_frontmatter, infer_permalink, is_indexable_frontmatter, is_retrieval_eligible_frontmatter
     from lib.atlas_citation_sections import read_atlas_citation_sections
+    from lib.atlas_claim_review import review_atlas_claims
 
 try:
     import yaml
@@ -1591,7 +1593,20 @@ def main():
         action="store_true",
         help="Validate existing artifacts without regenerating.",
     )
+    parser.add_argument("--claims-only", action="store_true", help="Report claim review without writing artifacts.")
+    parser.add_argument("--claim-source-html", type=Path, help="Saved public SAP KBA HTML for claim review.")
     args = parser.parse_args()
+
+    try:
+        claims = review_atlas_claims(REPO_DIR, parse_frontmatter, args.claim_source_html)
+    except (OSError, KeyError, TypeError, ValueError) as error:
+        parser.exit(2, f"Atlas claim review: {error}\n")
+    flagged = [claim for claim in claims if claim["state"] == "needs_review"]
+    if args.claims_only:
+        print(json.dumps(claims, ensure_ascii=False, indent=2))
+        sys.exit(1 if flagged else 0)
+    if flagged:
+        parser.exit(1, "Atlas claim review required: " + ", ".join(claim["id"] for claim in flagged) + "\n")
 
     print("Atlas Artifact Generator")
     print("=" * 40)
