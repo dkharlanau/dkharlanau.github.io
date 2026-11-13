@@ -40,3 +40,53 @@ def test_robots_change_survives_sitemap_filter(tmp_path: Path):
     assert reason is None
     assert set(expected).issubset(selected)
     assert f"{indexnow_submit.BASE_URL}/robots.txt" in skipped
+
+
+def test_release_waits_for_live_parity_and_keeps_failed_baseline(tmp_path, monkeypatch):
+    import json
+
+    release = indexnow_submit.indexnow_release
+    page = release.SearchDocument(
+        '<html><head><title>SAP ATP Is Not Inventory</title>'
+        '<link rel="canonical" href="https://dkharlanau.github.io/atlas/concepts/sap-atp-is-not-inventory/">'
+        '</head><body><main><h1>SAP ATP is not inventory</h1></main></body></html>'
+    )
+    url = page.canonicals[0]
+    base = {"commit": "a" * 40, "pages": {}}
+    candidate = {"commit": "b" * 40, "generator": release.GENERATOR, "digest": "c" * 64,
+                 "pages": {url: {"signature": release.digest(page.parts), "lastmod": None}}}
+    root = tmp_path / "release"
+    root.mkdir()
+    (root / "release.json").write_text(json.dumps({
+        "state": "ready", "baseline": "accepted_manifest", "deployment": 1,
+        "commit": candidate["commit"], "artifact": {},
+    }))
+    base["digest"] = "d" * 64
+    monkeypatch.setattr(release, "load_manifest", lambda *args: base)
+    monkeypatch.setattr(release, "build_manifest", lambda *args: candidate)
+    monkeypatch.setattr(indexnow_submit, "load_key", lambda: "test-key")
+    monkeypatch.setattr(indexnow_submit, "verify_active_pages", lambda *args: None)
+    sent = []
+    monkeypatch.setattr(indexnow_submit, "submit", lambda urls, key, dry_run: sent.extend(urls) or 200)
+    report = tmp_path / "report.json"
+    args = ["--pages-release", str(root), "--submit", "--report", str(report)]
+    # The deployed response still exposes the old signature.
+    def stale(*args):
+        raise ValueError("Live canonical HTML differs from the release")
+
+    monkeypatch.setattr(release, "verify_live", stale)
+    assert indexnow_submit.main(args) == 1
+    assert not sent
+    assert not (root / "manifest.json").exists()
+    assert json.loads(report.read_text())["status"] == "blocked"
+
+    monkeypatch.setattr(release, "verify_live", lambda *args: True)
+    assert indexnow_submit.main(args) == 0
+    assert sent == [url]
+    assert json.loads(report.read_text())["http_status"] == 200
+    assert json.loads((root / "manifest.json").read_text()) == candidate
+
+    monkeypatch.setattr(release, "load_manifest", lambda *args: candidate)
+    assert indexnow_submit.main(args) == 0
+    assert sent == [url]
+    assert json.loads(report.read_text())["status"] == "no_changes"

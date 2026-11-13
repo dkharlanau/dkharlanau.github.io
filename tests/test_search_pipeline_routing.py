@@ -101,8 +101,9 @@ def test_post_deploy_search_audit_and_safe_indexnow_gate():
     assert "post-deploy priority refresh" in google
     assert "GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT" in google
 
-    # Real IndexNow submissions still require a successful CI built-site artifact.
-    assert "      - CI" in indexnow
-    assert "github.event.workflow_run.conclusion == 'success'" in indexnow
-    assert "ci-built-site" in indexnow
+    # Both pipelines start from a successful production Pages deployment.
+    assert "deployment_status:" in indexnow
+    assert "github.event.deployment_status.state == 'success'" in indexnow
+    assert "github.event.deployment.sha" in indexnow
+    assert "indexnow-production-release" in indexnow
     assert "--require-key-file" in indexnow

@@ -39,25 +39,25 @@ def test_google_search_workflow_builds_indexation_recovery_queue():
     assert "indexation-recovery.md" in text
 
 
-def test_indexnow_production_waits_for_successful_ci_and_reuses_site_artifact():
+def test_indexnow_waits_for_a_successful_pages_deployment():
     text = (ROOT / ".github/workflows/indexnow.yml").read_text(encoding="utf-8")
-    assert "workflow_run:" in text
-    assert "- CI" in text
-    assert "github.event.workflow_run.conclusion == 'success'" in text
-    assert "--name ci-built-site" in text
-    assert "Reuse validated CI site" in text
+    assert "deployment_status:" in text
+    assert "workflow_run:" not in text
+    assert "github.event.deployment_status.state == 'success'" in text
+    assert "github.event.deployment.environment == 'github-pages'" in text
+    assert "github.event.deployment.ref == 'main'" in text
+    assert "scripts/indexnow_pages.py" in text
+    assert '--pages-release "$RUNNER_TEMP/indexnow-pages"' in text
     assert "Real IndexNow submission" in text
 
 
 def test_indexnow_reports_no_changes_without_claiming_network_submission():
     text = (ROOT / ".github/workflows/indexnow.yml").read_text(encoding="utf-8")
-    assert "Resolve IndexNow result" in text
-    assert 'status="no_changes"' in text
-    assert 'network="no"' in text
-    assert 'status="submitted"' in text
-    assert 'network="yes"' in text
-    assert "steps.result.outputs.status" in text
-    assert "steps.result.outputs.network" in text
+    assert "Summarize IndexNow result" in text
+    assert "data['submitted']" in text
+    assert "data['http_status']" in text
+    assert "data['status']" in text
+    assert "--from-git-diff" not in text
 
 
 def test_ci_publishes_built_site_for_search_workflows():
