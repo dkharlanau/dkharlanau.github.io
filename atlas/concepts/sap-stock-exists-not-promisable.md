@@ -4,8 +4,7 @@ title: SAP Stock Exists but Is Not Promisable
 layout: default
 description: A source-backed SAP guide to why visible stock can remain unpromisable because of ATP scope, demand, location, dates, allocation, or protection.
 permalink: /atlas/concepts/sap-stock-exists-not-promisable/
-last_modified_at: 2026-08-11
-content_updated_at: 2026-11-13
+last_modified_at: 2026-11-13
 atlas_section: concepts
 domain: SAP operations
 subdomain: Availability and fulfillment
