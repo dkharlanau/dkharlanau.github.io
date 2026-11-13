@@ -416,12 +416,8 @@ def patch_layout(text: str) -> str:
         if anchor not in text:
             raise RuntimeError("default layout content anchor not found")
         text = text.replace(anchor, insert, 1)
-    if "{% include seo/structured-data-sitewide-graph.html %}" not in text:
-        anchor = "  {% include seo/lab-breadcrumb-data.html %}\n"
-        insert = anchor + "  {% include seo/structured-data-sitewide-graph.html %}\n"
-        if anchor not in text:
-            raise RuntimeError("default layout schema anchor not found")
-        text = text.replace(anchor, insert, 1)
+    # The dispatcher supplies the resolved type before adding page relations.
+    text = text.replace("  {% include seo/structured-data-sitewide-graph.html %}\n", "")
     return text
 
 
