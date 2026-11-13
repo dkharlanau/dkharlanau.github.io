@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-11-11T00:00:00Z
+Generated: 2026-11-13T00:00:00Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -1271,6 +1271,7 @@ TAGS: order-to-cash, sap-sd, diagnostics, retail
 REVIEWED: 2026-06-13
 CITABLE SECTION: Diagnostic sequence — https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/#diagnostic-sequence
 SECTION SOURCE: https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html
+SECTION SOURCE: https://userapps.support.sap.com/sap/support/knowledge/en/3701626
 ----------------------------------------
 **Sources:** [SAP scope of availability check](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html), [SAP availability-check levels](https://help.sap.com/docs/SAP_S4HANA_CLOUD/32da8359c8ee4e8b8e8c5e15cacba5aa/199d86d0f85e4ea982a529c6e0409660.html?locale=en-us), and [SAP stock protection with product allocation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9905622a5c1f49ba84e9076fc83a9c2c/e7582f68181d476ab37550c6ebe6d25e.html).
 **Date checked:** 2026-08-11
@@ -1315,6 +1316,10 @@ A receipt exists but falls after the requested date, is excluded by the scope, o
 
 Diagnostic sequence
 
+Investigate why a sales order confirms less than the stock report appears to show.
+
+Start with the sales order item, the inventory report and the availability-check result for the same material and requested date.
+
 Capture the material, plant, storage location if relevant, batch or stock segment, document/item, requested date, requested quantity, confirmed date, and confirmed quantity.
 
 Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.
@@ -1327,7 +1332,11 @@ Check product allocation, supply protection, and other aATP controls only when t
 
 Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.
 
-The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less.
+Case from SAP Support
+
+SAP KBA 3701626 documents different availability results in Create Sales Order and Change Sales Order in SAP S/4HANA Cloud Public Edition. SAP attributes the difference to how the apps count parallel requirements. The create app uses open quantities. The change app uses confirmed quantities.
+
+The case describes a difference between two apps in Public Edition. The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less.
 
 Evidence to retain
 

@@ -295,7 +295,8 @@ def test_citable_section_is_extracted_from_the_reviewed_article():
     path = REPO_ROOT / "atlas/concepts/sap-stock-exists-not-promisable.md"
     frontmatter, body = parse_frontmatter(path)
     url = "https://dkharlanau.github.io" + frontmatter["permalink"]
-    [section] = read_atlas_citation_sections(body, frontmatter["citation_sections"], url)
+    args = {"task_anchors": frontmatter["task_pack_sections"]}
+    [section] = read_atlas_citation_sections(body, frontmatter["citation_sections"], url, **args)
     index = json.loads((REPO_ROOT / "ai/verified-pages.json").read_text())
     [entry] = [row for row in index["entries"] if row["url"] == url]
     assert entry["citation_sections"] == [section]
@@ -303,8 +304,18 @@ def test_citable_section_is_extracted_from_the_reviewed_article():
     assert "inventory report alone cannot establish the reason" in section["paragraphs"][-1]
     assert all(row.get("citation_sections") is None for row in index["entries"] if "openui5-odata-" in row["url"])
     changed = body.replace("The relevant checks depend", "The appropriate checks depend", 1)
-    [changed_section] = read_atlas_citation_sections(changed, frontmatter["citation_sections"], url)
+    [changed_section] = read_atlas_citation_sections(changed, frontmatter["citation_sections"], url, **args)
     assert changed_section["sha256"] != section["sha256"]
+    pack = section["task_pack"]
+    assert pack["schema"] == "atlas.read_only_task.v1"
+    assert pack["canonical"] == section["section_url"]
+    assert changed_section["task_pack"]["version"] != pack["version"]
+    assert len(pack["method"]) == 5
+    assert pack["sources"] == section["sources"]
+    assert "https://userapps.support.sap.com/sap/support/knowledge/en/3701626" in pack["sources"]
+    for value in [pack["task"], *pack["conditions"], *pack["method"], *pack["example"], *pack["check"], *pack["limits"]]:
+        assert value in section["paragraphs"]
+    assert not any("openui5-odata-" in row["url"] for row in index["entries"])
 
 
 def test_citable_section_requires_the_declared_fragment_and_a_source():
@@ -316,13 +327,29 @@ def test_citable_section_requires_the_declared_fragment_and_a_source():
     path = REPO_ROOT / "atlas/concepts/sap-stock-exists-not-promisable.md"
     frontmatter, body = parse_frontmatter(path)
     url = "https://dkharlanau.github.io" + frontmatter["permalink"]
+    args = {"task_anchors": frontmatter["task_pack_sections"]}
     with pytest.raises(ValueError, match="heading, visible text and an HTTPS source"):
         read_atlas_citation_sections(body.replace('id="diagnostic-sequence"', ""), frontmatter["citation_sections"], url)
     hidden = body.replace('id="diagnostic-sequence"', 'id="diagnostic-sequence" hidden')
     with pytest.raises(ValueError, match="Expected one visible section"):
         read_atlas_citation_sections(hidden, frontmatter["citation_sections"], url)
-    [section] = read_atlas_citation_sections(body, frontmatter["citation_sections"], url)
+    [section] = read_atlas_citation_sections(body, frontmatter["citation_sections"], url, **args)
     for source_url in section["sources"]:
         body = body.replace(source_url, "/")
     with pytest.raises(ValueError, match="heading, visible text and an HTTPS source"):
-        read_atlas_citation_sections(body, frontmatter["citation_sections"], url)
+        read_atlas_citation_sections(body, frontmatter["citation_sections"], url, **args)
+
+
+def test_task_pack_requires_complete_visible_sections():
+    import pytest
+
+    from scripts.generate_atlas_artifacts import parse_frontmatter
+    from scripts.lib.atlas_citation_sections import read_atlas_citation_sections
+
+    frontmatter, body = parse_frontmatter(REPO_ROOT / "atlas/concepts/sap-stock-exists-not-promisable.md")
+    url = "https://dkharlanau.github.io" + frontmatter["permalink"]
+    anchors = frontmatter["citation_sections"]
+    with pytest.raises(ValueError, match="declared citation"):
+        read_atlas_citation_sections(body, anchors, url, task_anchors=["unknown"])
+    with pytest.raises(ValueError, match="all six parts"):
+        read_atlas_citation_sections(body.replace(' data-atlas-task-part="check"', ""), anchors, url, task_anchors=anchors)

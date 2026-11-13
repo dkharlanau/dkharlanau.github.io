@@ -1,7 +1,7 @@
 {
   "schema": "dkharlanau.site.verified_pages",
   "schema_version": "2.0",
-  "generated_at": "2026-11-11T00:00:00Z",
+  "generated_at": "2026-11-13T00:00:00Z",
   "canonical_url": "https://dkharlanau.github.io/ai/verified-pages.json",
   "description": "Machine-readable inventory of all reviewed and verified indexable pages across the public site. Intended for AI agents and search crawlers that need to know which pages are trustworthy and retrieval-ready.",
   "source": "scripts/generate_atlas_artifacts.py",
@@ -578,7 +578,7 @@
       "status": "reviewed",
       "verified": true,
       "last_reviewed": "2026-06-13",
-      "last_modified_at": "2026-08-11",
+      "last_modified_at": "2026-11-13",
       "author": "Dzmitryi Kharlanau",
       "tags": [
         "order-to-cash",
@@ -591,18 +591,51 @@
           "section_url": "https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/#diagnostic-sequence",
           "heading": "Diagnostic sequence",
           "paragraphs": [
+            "Investigate why a sales order confirms less than the stock report appears to show.",
+            "Start with the sales order item, the inventory report and the availability-check result for the same material and requested date.",
             "Capture the material, plant, storage location if relevant, batch or stock segment, document/item, requested date, requested quantity, confirmed date, and confirmed quantity.",
             "Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.",
             "Confirm the material's checking group, the process checking rule, and the resulting scope of check. The SAP S/4HANA aATP guide defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.",
             "Review relevant supply and demand by date. Determine whether another requirement consumes the quantity or whether a future receipt falls outside the requested date or configured horizon.",
             "Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result.",
             "Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.",
-            "The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less."
+            "SAP KBA 3701626 documents different availability results in Create Sales Order and Change Sales Order in SAP S/4HANA Cloud Public Edition. SAP attributes the difference to how the apps count parallel requirements. The create app uses open quantities. The change app uses confirmed quantities.",
+            "The case describes a difference between two apps in Public Edition. The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less."
           ],
           "sources": [
-            "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html"
+            "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html",
+            "https://userapps.support.sap.com/sap/support/knowledge/en/3701626"
           ],
-          "sha256": "3f7001b6576b3ad9c3fc82c804c5ffbe9396fab9a3cd8b52188c0aa9ec55145d"
+          "task_pack": {
+            "schema": "atlas.read_only_task.v1",
+            "canonical": "https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/#diagnostic-sequence",
+            "task": "Investigate why a sales order confirms less than the stock report appears to show.",
+            "conditions": [
+              "Start with the sales order item, the inventory report and the availability-check result for the same material and requested date."
+            ],
+            "method": [
+              "Capture the material, plant, storage location if relevant, batch or stock segment, document/item, requested date, requested quantity, confirmed date, and confirmed quantity.",
+              "Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.",
+              "Confirm the material's checking group, the process checking rule, and the resulting scope of check. The SAP S/4HANA aATP guide defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.",
+              "Review relevant supply and demand by date. Determine whether another requirement consumes the quantity or whether a future receipt falls outside the requested date or configured horizon.",
+              "Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result."
+            ],
+            "example": [
+              "SAP KBA 3701626 documents different availability results in Create Sales Order and Change Sales Order in SAP S/4HANA Cloud Public Edition. SAP attributes the difference to how the apps count parallel requirements. The create app uses open quantities. The change app uses confirmed quantities."
+            ],
+            "check": [
+              "Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer."
+            ],
+            "limits": [
+              "The case describes a difference between two apps in Public Edition. The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less."
+            ],
+            "sources": [
+              "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html",
+              "https://userapps.support.sap.com/sap/support/knowledge/en/3701626"
+            ],
+            "version": "3dee9e2a25e46b6b3ea4393e8bdfa82e7d2d7a8c1270cc86bbe0dc59308e8a13"
+          },
+          "sha256": "0faf46ee48edba0d90637cbf3d2433c1f2790c0a1d0ee3674a86d2908b5f04ad"
         }
       ],
       "expert_context": {

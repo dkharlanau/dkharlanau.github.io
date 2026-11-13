@@ -93,6 +93,21 @@ draft
 
 The quality command verifies that the metadata and artifacts describe this process consistently. It cannot replace the human decisions in the process.
 
+### Atlas task packs
+
+Reviewed, verified and indexable Atlas pages can select a visible citation section with
+`task_pack_sections` in front matter. Each selected anchor must also appear in
+`citation_sections`. Mark the relevant paragraphs or list items with
+`data-atlas-task-part` using `task`, `conditions`, `method`, `example`, `check` or
+`limits`. Use one task statement, at least one entry for each other part and at least
+one visible HTTPS source link. Use a documented case and explain the limits of its application.
+
+The existing `/ai/verified-pages.json` inventory attaches an `atlas.read_only_task.v1`
+pack to that citation section. The pack version is a SHA-256 of its canonical URL,
+schema, visible text and source URLs. A consumer can use those fields directly for
+diagnostic context. `scripts/generate_atlas_artifacts.py --check` verifies the generated
+inventory against the eligible source pages.
+
 ## Bulk integrity, meaning and discovery review
 
 The same `audit --site-dir _site` command also produces
