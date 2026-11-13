@@ -153,3 +153,22 @@ Keep policy in `config/content-quality.yml` where possible. Add a stable rule id
 ## CI behavior
 
 Pull requests build the Jekyll site, run `content_quality.py check --changed-from origin/main`, verify generated Atlas artifacts, run the test suite, and preserve the existing link, SEO, indexing, sitemap, accessibility, and AI endpoint checks. The default branch runs the same deterministic checks and can publish the generated reports as workflow artifacts. External URL verification remains separate because remote sites change independently of the repository.
+
+### Review the Atlas ATP case against its source
+
+The Atlas generator checks the published ATP case against three claim bindings.
+The bindings record the visible case paragraph, the supporting SAP passage,
+its fingerprint and the SAP revision last reviewed. Regeneration checks the
+local paragraph. Supply a fresh capture of the public KBA for a source check.
+
+```sh
+python3 scripts/generate_atlas_artifacts.py --claims-only --claim-source-html /path/to/sap-kba-3701626.html
+```
+
+The command reports each claim and its dependent outputs. An edited Atlas
+paragraph or an unavailable or changed passage in a supplied capture requires
+review before regeneration. When the command receives no capture, source status
+is unknown. A new SAP page revision with the same scoped passages is reported
+alongside the reviewed revision. The check reads the article text and metadata
+without updating editorial review dates. The ATP case applies to the Create
+and Change Sales Order comparison in SAP S/4HANA Cloud Public Edition.

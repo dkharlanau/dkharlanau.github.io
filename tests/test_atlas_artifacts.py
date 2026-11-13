@@ -353,3 +353,24 @@ def test_task_pack_requires_complete_visible_sections():
         read_atlas_citation_sections(body, anchors, url, task_anchors=["unknown"])
     with pytest.raises(ValueError, match="all six parts"):
         read_atlas_citation_sections(body.replace(' data-atlas-task-part="check"', ""), anchors, url, task_anchors=anchors)
+
+
+def test_atp_claim_review_checks_visible_context_without_claiming_a_source_observation():
+    from scripts.generate_atlas_artifacts import parse_frontmatter
+    from scripts.lib.atlas_claim_review import review_atlas_claims
+
+    initial = review_atlas_claims(REPO_ROOT, parse_frontmatter)
+    assert [claim["id"] for claim in initial] == [
+        "atp-public-edition",
+        "atp-create-open-quantity",
+        "atp-change-confirmed-quantity",
+    ]
+    assert all(claim["state"] == "source_unknown" for claim in initial)
+    assert all(claim["source"]["observed"] is None for claim in initial)
+
+    def without_edition(path):
+        frontmatter, body = parse_frontmatter(path)
+        return frontmatter, body.replace(" in SAP S/4HANA Cloud Public Edition.", ".", 1)
+
+    changed = review_atlas_claims(REPO_ROOT, without_edition)
+    assert all(claim["state"] == "needs_review" for claim in changed)
