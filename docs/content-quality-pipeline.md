@@ -172,3 +172,11 @@ is unknown. A new SAP page revision with the same scoped passages is reported
 alongside the reviewed revision. The check reads the article text and metadata
 without updating editorial review dates. The ATP case applies to the Create
 and Change Sales Order comparison in SAP S/4HANA Cloud Public Edition.
+
+The ATP section also exposes stable links to its case, verification step and
+limits. Put `data-atlas-cite` and a unique `id` on an existing visible paragraph
+or list item inside a declared citation section. The generator adds its exact
+text, URL, fingerprint and any links found in that passage to the existing
+`ai/verified-pages.json` entry. The text manifest lists the same links.
+A passage with no inline source cites Atlas for that wording. Section-level
+sources still describe the section as a whole.

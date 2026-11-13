@@ -1068,6 +1068,10 @@ def generate_llms_full(all_pages, atlas_files, check_mode=False):
         ):
             lines.append(f"CITABLE SECTION: {citation['heading']} — {citation['section_url']}")
             lines.extend(f"SECTION SOURCE: {source}" for source in citation["sources"])
+            for passage in citation.get("passages", ()):
+                label = passage.get("part", "passage")
+                lines.append(f"CITABLE PASSAGE ({label}): {passage['url']}")
+                lines.extend(f"PASSAGE SOURCE: {source}" for source in passage["sources"])
         lines.append("-" * 40)
 
         clean_body = strip_jekyll_and_html(body)

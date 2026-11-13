@@ -340,6 +340,37 @@ def test_citable_section_requires_the_declared_fragment_and_a_source():
         read_atlas_citation_sections(body, frontmatter["citation_sections"], url, **args)
 
 
+def test_atp_passages_keep_their_own_sources_and_identity():
+    import pytest
+
+    from scripts.generate_atlas_artifacts import parse_frontmatter
+    from scripts.lib.atlas_citation_sections import read_atlas_citation_sections
+
+    frontmatter, body = parse_frontmatter(REPO_ROOT / "atlas/concepts/sap-stock-exists-not-promisable.md")
+    url = "https://dkharlanau.github.io" + frontmatter["permalink"]
+    anchors = frontmatter["citation_sections"]
+    args = {"task_anchors": frontmatter["task_pack_sections"]}
+    [section] = read_atlas_citation_sections(body, anchors, url, **args)
+    verification, case, limits = section["passages"]
+    assert [(row["part"], row["url"].split("#")[-1]) for row in section["passages"]] == [
+        ("check", "verify-schedule-line"),
+        ("example", "public-edition-atp-case"),
+        ("limits", "atp-case-limits"),
+    ]
+    assert case["sources"] == ["https://userapps.support.sap.com/sap/support/knowledge/en/3701626"]
+    assert verification["sources"] == limits["sources"] == []
+    assert [row["text"] for row in section["passages"]] == [
+        section["task_pack"]["check"][0], section["task_pack"]["example"][0], section["task_pack"]["limits"][0],
+    ]
+    changed = body.replace("A different simulation context", "Another simulation context", 1)
+    [updated] = read_atlas_citation_sections(changed, anchors, url, **args)
+    assert updated["passages"][0]["sha256"] != verification["sha256"]
+    assert updated["passages"][1:] == [case, limits]
+    duplicate = body.replace('id="atp-case-limits"', 'id="verify-schedule-line"', 1)
+    with pytest.raises(ValueError, match="duplicate citation passage ID"):
+        read_atlas_citation_sections(duplicate, anchors, url, **args)
+
+
 def test_task_pack_requires_complete_visible_sections():
     import pytest
 
