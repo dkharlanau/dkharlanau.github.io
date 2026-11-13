@@ -8,18 +8,11 @@ so this include deliberately does not emit a second fragment for #article identi
 {% assign graph_entities = site.data.knowledge_entities.entities | default: empty %}
 {% assign graph_primary_key = page.primary_topic | default: page.primary_entity %}
 {% assign graph_primary = graph_entities[graph_primary_key] %}
-{% assign graph_robots = page.robots | default: '' %}
-{% assign graph_indexable = true %}
-{% if graph_robots contains 'noindex' %}{% assign graph_indexable = false %}{% endif %}
-{% assign graph_reviewed = false %}
-{% if page.status == 'reviewed' and page.verified == true %}{% assign graph_reviewed = true %}{% endif %}
-{% assign graph_declared_type = page.structured_data.type | default: '' | downcase %}
-{% assign graph_is_article = false %}
-{% if graph_declared_type == 'article' or graph_declared_type == 'techarticle' %}{% assign graph_is_article = true %}{% endif %}
-{% if page.url contains '/labs/' and graph_reviewed and graph_indexable and page.url != '/labs/' and page.url != '/labs/enterprise-context/' %}{% assign graph_is_article = true %}{% endif %}
 {% assign graph_emit = false %}
-{% if graph_indexable and graph_is_article == false and page.url != '/' %}
+{% if page.url != '/' %}
+{% if include.page_type == 'WebPage' or include.page_type == 'CollectionPage' or include.page_type == 'ProfilePage' %}
   {% if graph_primary or page.entity_mentions or page.ai_sidecar or page.source_links or page.semantic_links %}{% assign graph_emit = true %}{% endif %}
+{% endif %}
 {% endif %}
 
 {% if graph_emit %}
