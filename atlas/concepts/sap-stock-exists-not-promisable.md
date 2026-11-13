@@ -5,6 +5,7 @@ layout: default
 description: A source-backed SAP guide to why visible stock can remain unpromisable because of ATP scope, demand, location, dates, allocation, or protection.
 permalink: /atlas/concepts/sap-stock-exists-not-promisable/
 last_modified_at: 2026-08-11
+content_updated_at: 2026-11-13
 atlas_section: concepts
 domain: SAP operations
 subdomain: Availability and fulfillment
@@ -29,6 +30,7 @@ related:
 robots: index,follow
 sitemap: true
 citation_sections: [diagnostic-sequence]
+task_pack_sections: [diagnostic-sequence]
 short_title: Stock Exists but Is Not Promisable
 h1: SAP Stock Exists but Is Not Promisable
 subtitle: A practical explanation of why visible stock can still fail availability, ATP, allocation, or channel commitment checks.
@@ -95,23 +97,31 @@ author: Dzmitryi Kharlanau
 <section id="diagnostic-sequence">
 <h2>Diagnostic sequence</h2>
 
+<p data-atlas-task-part="task">Investigate why a sales order confirms less than the stock report appears to show.</p>
+
+<p data-atlas-task-part="conditions">Start with the sales order item, the inventory report and the availability-check result for the same material and requested date.</p>
+
 <ol>
 
-<li>Capture the material, plant, storage location if relevant, batch or stock segment, document/item, requested date, requested quantity, confirmed date, and confirmed quantity.</li>
+<li data-atlas-task-part="method">Capture the material, plant, storage location if relevant, batch or stock segment, document/item, requested date, requested quantity, confirmed date, and confirmed quantity.</li>
 
-<li>Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.</li>
+<li data-atlas-task-part="method">Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.</li>
 
-<li>Confirm the material's checking group, the process checking rule, and the resulting scope of check. The <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html">SAP S/4HANA aATP guide</a> defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.</li>
+<li data-atlas-task-part="method">Confirm the material's checking group, the process checking rule, and the resulting scope of check. The <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html">SAP S/4HANA aATP guide</a> defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.</li>
 
-<li>Review relevant supply and demand by date. Determine whether another requirement consumes the quantity or whether a future receipt falls outside the requested date or configured horizon.</li>
+<li data-atlas-task-part="method">Review relevant supply and demand by date. Determine whether another requirement consumes the quantity or whether a future receipt falls outside the requested date or configured horizon.</li>
 
-<li>Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result.</li>
+<li data-atlas-task-part="method">Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result.</li>
 
-<li>Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.</li>
+<li data-atlas-task-part="check">Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.</li>
 
 </ol>
 
-<p>The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less.</p>
+<h3>Case from SAP Support</h3>
+
+<p data-atlas-task-part="example"><a href="https://userapps.support.sap.com/sap/support/knowledge/en/3701626">SAP KBA 3701626</a> documents different availability results in Create Sales Order and Change Sales Order in SAP S/4HANA Cloud Public Edition. SAP attributes the difference to how the apps count parallel requirements. The create app uses open quantities. The change app uses confirmed quantities.</p>
+
+<p data-atlas-task-part="limits">The case describes a difference between two apps in Public Edition. The relevant checks depend on the active availability architecture and the document context. The inventory report alone cannot establish the reason a particular schedule line confirmed less.</p>
 </section>
 
 <h2>Evidence to retain</h2>

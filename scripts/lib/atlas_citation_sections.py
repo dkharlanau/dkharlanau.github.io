@@ -7,14 +7,19 @@ import re
 from urllib.parse import urlsplit
 
 
+TASK_PARTS = ("task", "conditions", "method", "example", "check", "limits")
+
+
 class CitationSections(HTMLParser):
-    def __init__(self, anchors):
+    def __init__(self, anchors, task_anchors):
         super().__init__(convert_charrefs=True)
         self.anchors = set(anchors)
+        self.task_anchors = set(task_anchors)
         self.sections = {}
         self.active = None
         self.element = None
         self.chunks = []
+        self.part = None
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -26,6 +31,8 @@ class CitationSections(HTMLParser):
             if tag != "section" or hidden or anchor in self.sections:
                 raise ValueError(f"Expected one visible section with ID {anchor}")
             self.active = {"anchor": anchor, "heading": "", "paragraphs": [], "sources": []}
+            if anchor in self.task_anchors:
+                self.active["task_parts"] = {part: [] for part in TASK_PARTS}
             self.sections[anchor] = self.active
             return
         if tag in {"section", "script", "style", "template", "details"} or hidden:
@@ -35,6 +42,9 @@ class CitationSections(HTMLParser):
                 raise ValueError(f"Nested citation text in #{self.active['anchor']}")
             self.element = tag
             self.chunks = []
+            self.part = attrs.get("data-atlas-task-part")
+            if self.part and (tag == "h2" or self.part not in self.active.get("task_parts", {})):
+                raise ValueError(f"Unexpected task part {self.part} in #{self.active['anchor']}")
         if tag == "a" and self.element and attrs.get("href"):
             href = attrs["href"]
             parts = urlsplit(href)
@@ -59,22 +69,31 @@ class CitationSections(HTMLParser):
                 self.active["heading"] = text
             elif text:
                 self.active["paragraphs"].append(text)
+                if self.part:
+                    self.active["task_parts"][self.part].append(text)
             self.element = None
+            self.part = None
         if tag == "section":
             if self.element is not None:
                 raise ValueError(f"Unclosed citation text in #{self.active['anchor']}")
             self.active = None
 
 
-def read_atlas_citation_sections(body, anchors, canonical):
-    if anchors is None:
+def read_atlas_citation_sections(body, anchors, canonical, *, task_anchors=None):
+    if anchors is None and task_anchors is None:
         return []
     if not isinstance(anchors, list) or any(
         not isinstance(anchor, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", anchor)
         for anchor in anchors
     ) or len(set(anchors)) != len(anchors):
         raise ValueError(f"{canonical}: invalid or duplicate citation section IDs")
-    parser = CitationSections(anchors)
+    if task_anchors is not None and (
+        not isinstance(task_anchors, list)
+        or any(not isinstance(anchor, str) or anchor not in anchors for anchor in task_anchors)
+        or len(set(task_anchors)) != len(task_anchors)
+    ):
+        raise ValueError(f"{canonical}: task packs must select distinct declared citation sections")
+    parser = CitationSections(anchors, task_anchors or [])
     parser.feed(body)
     parser.close()
     if parser.active is not None:
@@ -85,6 +104,18 @@ def read_atlas_citation_sections(body, anchors, canonical):
         if not match or not all(match[key] for key in ("heading", "paragraphs", "sources")):
             raise ValueError(f"{canonical}#{anchor}: heading, visible text and an HTTPS source are required")
         record = {"section_url": f"{canonical}#{anchor}", **{k: match[k] for k in ("heading", "paragraphs", "sources")}}
+        if "task_parts" in match:
+            parts = match["task_parts"]
+            if any(not values for values in parts.values()) or len(parts["task"]) != 1:
+                raise ValueError(f"{canonical}#{anchor}: task pack needs one task and all six parts")
+            pack = {
+                "schema": "atlas.read_only_task.v1",
+                "canonical": record["section_url"],
+                **{name: values[0] if name == "task" else values for name, values in parts.items()},
+                "sources": record["sources"],
+            }
+            version = sha256(json.dumps(pack, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+            record["task_pack"] = {**pack, "version": version.hexdigest()}
         record["sha256"] = sha256(json.dumps(record, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest()
         sections.append(record)
     return sections
