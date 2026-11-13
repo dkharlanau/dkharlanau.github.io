@@ -162,6 +162,34 @@ def test_rendered_jsonld_is_valid_json():
         _jsonld_blocks(content, html_path.relative_to(SITE_DIR))
 
 
+def test_rendered_article_graph_distinguishes_the_page_from_its_work():
+    article_types = set()
+    for html_path in _html_files():
+        route = html_path.relative_to(SITE_DIR)
+        content = html_path.read_text(encoding="utf-8", errors="ignore")
+        nodes = [node for block in _jsonld_blocks(content, route) for node in _top_level_nodes(block)]
+        for article in (node for node in nodes if node.get("@type") in {"Article", "TechArticle"}):
+            article_types.add(article["@type"])
+            canonical = html.unescape(CANONICAL_RE.search(content).group(1))
+            page_id = canonical + "#webpage"
+            assert article["@id"] == canonical + "#article", route
+            assert article["mainEntityOfPage"]["@id"] == page_id, route
+            pages = [node for node in nodes if node.get("@id") == page_id]
+            assert len(pages) == 1, route
+            webpage = pages[0]
+            assert webpage["@type"] == "WebPage", route
+            assert webpage["url"] == article["url"] == canonical, route
+            assert webpage["mainEntity"]["@id"] == article["@id"], route
+            assert webpage["inLanguage"] == article["inLanguage"], route
+            assert webpage["name"] == article["headline"], route
+            assert all(key not in article for key in ("breadcrumb", "relatedLink")), route
+            assert all(isinstance(mention, dict) for mention in article.get("mentions", [])), route
+            crumbs = [node for node in nodes if node.get("@id") == webpage["breadcrumb"]["@id"]]
+            assert len(crumbs) == 1 and crumbs[0]["@type"] == "BreadcrumbList", route
+            assert crumbs[0]["itemListElement"][-1]["item"] == canonical, route
+    assert article_types == {"Article", "TechArticle"}
+
+
 def test_reviewed_directories_match_visible_links_and_indexable_targets():
     class DirectoryLinks(HTMLParser):
         def __init__(self):

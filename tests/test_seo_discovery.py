@@ -673,10 +673,12 @@ def test_verified_topic_hubs_emit_collection_graphs():
 
 
 def test_verified_articles_connect_author_website_collection_and_related_pages():
+    nodes = _built_jsonld("atlas/diagnostics/sap-idoc-status-diagnostics/index.html")
     article = next(
-        item for item in _built_jsonld("atlas/diagnostics/sap-idoc-status-diagnostics/index.html")
+        item for item in nodes
         if item.get("@type") == "TechArticle"
     )
+    webpage = next(item for item in nodes if item.get("@type") == "WebPage")
     parent_ids = {item["@id"] for item in article["isPartOf"]}
     assert article["author"]["@id"] == "https://dkharlanau.github.io/#dkharlanau"
     assert article["author"]["@type"] == "Person"
@@ -690,9 +692,9 @@ def test_verified_articles_connect_author_website_collection_and_related_pages()
     assert article["articleSection"] == "diagnostics"
     assert "https://dkharlanau.github.io/#website" in parent_ids
     assert "https://dkharlanau.github.io/atlas/diagnostics/#webpage" in parent_ids
-    assert article["breadcrumb"]["@id"].endswith("#breadcrumb")
-    assert all(url.startswith("https://dkharlanau.github.io/") for url in article["relatedLink"])
-    assert "https://dkharlanau.github.io/atlas/diagnostics/idoc-aif-integration-diagnostics/" not in article["relatedLink"]
+    assert webpage["breadcrumb"]["@id"].endswith("#breadcrumb")
+    assert all(url.startswith("https://dkharlanau.github.io/") for url in webpage["relatedLink"])
+    assert "https://dkharlanau.github.io/atlas/diagnostics/idoc-aif-integration-diagnostics/" not in webpage["relatedLink"]
 
 
 def test_llms_manifest_uses_one_person_entity_id():

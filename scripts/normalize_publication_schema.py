@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Normalize the shared JSON-LD publication templates.
 
-The primary dispatcher owns Article identity, core fields and knowledge relations.
-The sitewide graph augments only WebPage/CollectionPage nodes that do not use the Article path.
+The primary dispatcher owns Article identity and the WebPage for an Article.
+The sitewide graph augments standalone page nodes using the resolved dispatcher type.
 Editorial review timestamps are never used as modification timestamps.
 """
 from __future__ import annotations
@@ -32,18 +32,11 @@ so this include deliberately does not emit a second fragment for #article identi
 {% assign graph_entities = site.data.knowledge_entities.entities | default: empty %}
 {% assign graph_primary_key = page.primary_topic | default: page.primary_entity %}
 {% assign graph_primary = graph_entities[graph_primary_key] %}
-{% assign graph_robots = page.robots | default: '' %}
-{% assign graph_indexable = true %}
-{% if graph_robots contains 'noindex' %}{% assign graph_indexable = false %}{% endif %}
-{% assign graph_reviewed = false %}
-{% if page.status == 'reviewed' and page.verified == true %}{% assign graph_reviewed = true %}{% endif %}
-{% assign graph_declared_type = page.structured_data.type | default: '' | downcase %}
-{% assign graph_is_article = false %}
-{% if graph_declared_type == 'article' or graph_declared_type == 'techarticle' %}{% assign graph_is_article = true %}{% endif %}
-{% if page.url contains '/labs/' and graph_reviewed and graph_indexable and page.url != '/labs/' and page.url != '/labs/enterprise-context/' %}{% assign graph_is_article = true %}{% endif %}
 {% assign graph_emit = false %}
-{% if graph_indexable and graph_is_article == false and page.url != '/' %}
+{% if page.url != '/' %}
+{% if include.page_type == 'WebPage' or include.page_type == 'CollectionPage' or include.page_type == 'ProfilePage' %}
   {% if graph_primary or page.entity_mentions or page.ai_sidecar or page.source_links or page.semantic_links %}{% assign graph_emit = true %}{% endif %}
+{% endif %}
 {% endif %}
 
 {% if graph_emit %}
@@ -176,17 +169,8 @@ def normalize_structured(text: str) -> str:
     {% assign entity = knowledge_entities[entity_key] %}
     {% if entity %}{"@id":"{{ entity.id | absolute_url }}"}{% else %}{"@type":"Thing","name":{{ entity_key | replace: '-', ' ' | jsonify }}}{% endif %}{% unless forloop.last %},{% endunless %}
     {% endfor %}
-  ]{% elsif page.tags %},
-  "mentions": {{ page.tags | jsonify }}{% endif %}'''
+  ]{% endif %}'''
     text = patch_once(text, old_about, new_about, "Article entity ownership")
-
-    old_related = '''  {% if page.related %},
-  "relatedLink": ['''
-    new_related = '''  {% if page.semantic_links and page.semantic_links.size > 0 %},
-  "relatedLink": [{% for relation in page.semantic_links %}{{ relation.url | absolute_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}]
-  {% elsif page.related %},
-  "relatedLink": ['''
-    text = patch_once(text, old_related, new_related, "semantic related links")
 
     old_citation = '''  {% if page.sources %},
   "citation": ['''
@@ -238,8 +222,8 @@ def validate_invariants(contents: dict[Path, str]) -> list[str]:
     for forbidden in ('"@type": "Person"', '"@type": "WebSite"', '"dateModified"', '"headline"', '#article'):
         if forbidden in augmentation_exec:
             errors.append(f"sitewide graph must not redefine Article/core node property {forbidden}")
-    if "graph_is_article == false" not in augmentation_exec:
-        errors.append("sitewide graph must be explicitly disabled for Article/TechArticle nodes")
+    if "include.page_type" not in augmentation_exec or "page_type=page_type" not in structured:
+        errors.append("sitewide graph must use the dispatcher's resolved page type")
     return errors
 
 
