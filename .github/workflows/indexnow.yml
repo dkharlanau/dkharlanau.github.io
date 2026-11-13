@@ -102,10 +102,9 @@ jobs:
         if: always() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
-          name: indexnow-report-${{ github.run_id }}
+          name: indexnow-report-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/indexnow-report.json
           if-no-files-found: ignore
-          overwrite: true
           retention-days: 30
 
       - name: Summarize IndexNow result

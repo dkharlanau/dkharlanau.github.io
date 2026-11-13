@@ -515,8 +515,9 @@ def process_release(args, site_dir, report_path):
         report["candidates"] = urls
         if dry_run:
             if args.verify_live:
-                verify_release_urls(urls, current)
-                report["live_verified"] = len(urls)
+                verified = verify_release_urls(urls, current)
+                report["live_verified"] = len(verified)
+                report["skipped"] = release_skips(urls, verified)
             report["status"] = "dry_run"
             return 0
 
@@ -526,8 +527,10 @@ def process_release(args, site_dir, report_path):
             key = load_key()
             if not key or (args.require_key_file and not (REPO_ROOT / f"{key}.txt").is_file()):
                 raise ValueError("IndexNow key or its verification file is unavailable")
-            verify_release_urls(urls, current)
-            report["live_verified"] = len(urls)
+            verified = verify_release_urls(urls, current)
+            report["live_verified"] = len(verified)
+            report["skipped"] = release_skips(urls, verified)
+            urls = verified
         # A newer deployment can finish while this job is reading pages.
         verify_active_pages(context, current)
         if urls:
@@ -537,7 +540,8 @@ def process_release(args, site_dir, report_path):
             report["submitted"] = urls
             report["status"] = "submitted"
         else:
-            report["status"] = "no_changes" if previous else "baseline_initialized"
+            report["status"] = ("no_eligible_changes" if report["skipped"]
+                                else "no_changes" if previous else "baseline_initialized")
         manifest_file.write_text(json.dumps(current, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return 0
     except (KeyError, ValueError, OSError, ET.ParseError, subprocess.CalledProcessError) as exc:
@@ -552,8 +556,11 @@ def process_release(args, site_dir, report_path):
 def verify_release_urls(urls, manifest):
     with ThreadPoolExecutor(max_workers=8) as executor:
         verified = executor.map(lambda url: indexnow_release.verify_live(url, manifest["pages"].get(url)), urls)
-        if not all(verified):
-            raise ValueError("A removed sitemap URL is still an indexable live page")
+        return [url for url, eligible in zip(urls, verified) if eligible]
+
+
+def release_skips(candidates, verified):
+    return [{"url": url, "reason": "delisted_but_live"} for url in sorted(set(candidates) - set(verified))]
 
 
 def verify_active_pages(context, manifest):
