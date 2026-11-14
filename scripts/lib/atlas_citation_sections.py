@@ -126,6 +126,17 @@ def read_atlas_citation_sections(body, anchors, canonical, *, task_anchors=None)
         if not match or not all(match[key] for key in ("heading", "paragraphs", "sources")):
             raise ValueError(f"{canonical}#{anchor}: heading, visible text and an HTTPS source are required")
         record = {"section_url": f"{canonical}#{anchor}", **{k: match[k] for k in ("heading", "paragraphs", "sources")}}
+        parts = match.get("task_parts")
+        pack = None
+        if parts is not None:
+            if any(not values for values in parts.values()) or len(parts["task"]) != 1:
+                raise ValueError(f"{canonical}#{anchor}: task pack needs one task and all six parts")
+            pack = {
+                "schema": "atlas.read_only_task.v1",
+                "canonical": record["section_url"],
+                **{name: values[0] if name == "task" else values for name, values in parts.items()},
+                "sources": record["sources"],
+            }
         if match.get("passages"):
             passages = []
             for passage in match["passages"]:
@@ -139,18 +150,15 @@ def read_atlas_citation_sections(body, anchors, canonical, *, task_anchors=None)
                 }
                 if passage["part"] is not None:
                     row["part"] = passage["part"]
+                if pack is not None and passage["part"] in {"method", "example", "check"}:
+                    row["context"] = {
+                        "section_url": record["section_url"],
+                        "conditions": parts["conditions"],
+                        "limits": parts["limits"],
+                    }
                 passages.append({**row, "sha256": content_digest(row)})
             record["passages"] = passages
-        if "task_parts" in match:
-            parts = match["task_parts"]
-            if any(not values for values in parts.values()) or len(parts["task"]) != 1:
-                raise ValueError(f"{canonical}#{anchor}: task pack needs one task and all six parts")
-            pack = {
-                "schema": "atlas.read_only_task.v1",
-                "canonical": record["section_url"],
-                **{name: values[0] if name == "task" else values for name, values in parts.items()},
-                "sources": record["sources"],
-            }
+        if pack is not None:
             record["task_pack"] = {**pack, "version": content_digest(pack)}
         record["sha256"] = sha256(json.dumps(record, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest()
         sections.append(record)

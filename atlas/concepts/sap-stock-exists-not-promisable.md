@@ -106,11 +106,11 @@ author: Dzmitryi Kharlanau
 
 <li data-atlas-task-part="method">Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.</li>
 
-<li data-atlas-task-part="method">Confirm the material's checking group, the process checking rule, and the resulting scope of check. The <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html">SAP S/4HANA aATP guide</a> defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.</li>
+<li id="check-atp-scope" data-atlas-cite data-atlas-task-part="method">Confirm the material's checking group, the process checking rule, and the resulting scope of check. The <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html">SAP S/4HANA aATP guide</a> defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.</li>
 
 <li data-atlas-task-part="method">Review relevant supply and demand by date. Determine whether another requirement consumes the quantity or whether a future receipt falls outside the requested date or configured horizon.</li>
 
-<li data-atlas-task-part="method">Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result.</li>
+<li id="check-allocation-when-active" data-atlas-cite data-atlas-task-part="method">Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result.</li>
 
 <li id="verify-schedule-line" data-atlas-cite data-atlas-task-part="check">Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.</li>
 
