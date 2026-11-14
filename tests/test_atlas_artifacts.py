@@ -344,28 +344,47 @@ def test_atp_passages_keep_their_own_sources_and_identity():
     import pytest
 
     from scripts.generate_atlas_artifacts import parse_frontmatter
-    from scripts.lib.atlas_citation_sections import read_atlas_citation_sections
+    from scripts.lib.atlas_citation_sections import content_digest, read_atlas_citation_sections
 
     frontmatter, body = parse_frontmatter(REPO_ROOT / "atlas/concepts/sap-stock-exists-not-promisable.md")
     url = "https://dkharlanau.github.io" + frontmatter["permalink"]
     anchors = frontmatter["citation_sections"]
     args = {"task_anchors": frontmatter["task_pack_sections"]}
     [section] = read_atlas_citation_sections(body, anchors, url, **args)
-    verification, case, limits = section["passages"]
+    scope, allocation, verification, case, limits = section["passages"]
     assert [(row["part"], row["url"].split("#")[-1]) for row in section["passages"]] == [
+        ("method", "check-atp-scope"),
+        ("method", "check-allocation-when-active"),
         ("check", "verify-schedule-line"),
         ("example", "public-edition-atp-case"),
         ("limits", "atp-case-limits"),
     ]
+    pack = section["task_pack"]
+    assert scope["sources"] == [pack["sources"][0]]
     assert case["sources"] == ["https://userapps.support.sap.com/sap/support/knowledge/en/3701626"]
-    assert verification["sources"] == limits["sources"] == []
+    assert allocation["sources"] == verification["sources"] == limits["sources"] == []
     assert [row["text"] for row in section["passages"]] == [
-        section["task_pack"]["check"][0], section["task_pack"]["example"][0], section["task_pack"]["limits"][0],
+        pack["method"][2], pack["method"][4], pack["check"][0], pack["example"][0], pack["limits"][0],
     ]
+    for row in (scope, allocation, verification, case):
+        assert row["context"] == {
+            "section_url": section["section_url"],
+            "conditions": pack["conditions"],
+            "limits": pack["limits"],
+        }
+        assert row["sha256"] == content_digest({key: value for key, value in row.items() if key != "sha256"})
+    assert "context" not in limits
+
     changed = body.replace("A different simulation context", "Another simulation context", 1)
     [updated] = read_atlas_citation_sections(changed, anchors, url, **args)
-    assert updated["passages"][0]["sha256"] != verification["sha256"]
-    assert updated["passages"][1:] == [case, limits]
+    assert updated["passages"][2]["sha256"] != verification["sha256"]
+    assert updated["passages"][:2] == [scope, allocation]
+    assert updated["passages"][3:] == [case, limits]
+
+    changed = body.replace("The relevant checks depend", "The appropriate checks depend", 1)
+    [updated] = read_atlas_citation_sections(changed, anchors, url, **args)
+    assert all(before["sha256"] != after["sha256"]
+               for before, after in zip(section["passages"], updated["passages"]))
     duplicate = body.replace('id="atp-case-limits"', 'id="verify-schedule-line"', 1)
     with pytest.raises(ValueError, match="duplicate citation passage ID"):
         read_atlas_citation_sections(duplicate, anchors, url, **args)

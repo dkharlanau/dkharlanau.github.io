@@ -178,5 +178,8 @@ limits. Put `data-atlas-cite` and a unique `id` on an existing visible paragraph
 or list item inside a declared citation section. The generator adds its exact
 text, URL, fingerprint and any links found in that passage to the existing
 `ai/verified-pages.json` entry. The text manifest lists the same links.
-A passage with no inline source cites Atlas for that wording. Section-level
-sources still describe the section as a whole.
+For method, example and verification passages in a task pack, the JSON includes
+the visible conditions and limits under `context`, with their section URL.
+The passage fingerprint covers that context. Inline sources still identify
+links in the cited passage. A passage with no inline source cites Atlas for its
+wording. Section-level sources describe the section as a whole.
