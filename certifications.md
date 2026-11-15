@@ -4,7 +4,7 @@ title: "Certifications | Dzmitryi Kharlanau"
 description: "Public certifications and learning record for Dzmitryi Kharlanau across SAP, AI, data, language, and delivery topics."
 permalink: /certifications/
 sitemap: true
-last_modified_at: 2026-04-24
+last_modified_at: 2026-11-15
 ---
 
 {% assign certifications = site.data.certifications.items %}

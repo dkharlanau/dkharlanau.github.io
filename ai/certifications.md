@@ -4,15 +4,15 @@ title: Certifications Dataset
 description: "Markdown dataset of public certifications and learning records for Dzmitryi Kharlanau."
 permalink: /ai/certifications/
 sitemap: true
-last_modified_at: 2026-04-24
+last_modified_at: 2026-11-15
 hide_global_cta: true
 ---
 
 # Certifications Dataset
 
-Source: LinkedIn profile export (Certifications.csv)
+Source: {{ site.data.certifications.source }}
 
-Updated: 2026-04-24
+Updated: {{ site.data.certifications.updated }}
 
 Privacy note: this public Markdown dataset omits private license numbers and non-public identifiers from the LinkedIn export.
 
