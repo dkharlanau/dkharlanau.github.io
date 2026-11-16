@@ -16,7 +16,7 @@ hide_global_cta: true
   <div class="profile-canvas__hero-copy">
     <p class="profile-canvas__eyebrow">SAP consultant profile</p>
     <h1>Dzmitryi Kharlanau</h1>
-    <p>SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work where SAP operations, transformation, integration, data, and practical AI meet. This website is my personal technical lab and knowledge base. It is not an official EPAM Systems publication and does not represent EPAM Systems, SAP, OpenAI, or other organisations mentioned here.</p>
+    <p>I am an SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work across SAP logistics, integration, master data, support operations, and practical AI. I publish diagnostic guides and tools that connect technical evidence to business outcomes. This website is my personal technical lab and knowledge base. It is not an official EPAM Systems publication and does not represent EPAM Systems, SAP, OpenAI, or other organisations mentioned here.</p>
     <div class="profile-canvas__actions">
       <a class="profile-canvas__button" href="/lab/">Explore the lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
       <a class="profile-canvas__text-link" href="/knowledge/">Open knowledge base <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
@@ -81,15 +81,11 @@ hide_global_cta: true
 
 <section class="section profile-canvas__record" data-reveal>
   <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">Career path</p><h2>Roles represented in the public dataset</h2></header>
+    <header class="section-heading"><p class="eyebrow">Career path</p><h2>SAP delivery and operations experience</h2></header>
     <div class="profile-list">
-      {% for item in resume.experience limit: 6 %}
-      <article class="profile-list__item">
-        <h3>{{ item.title }}</h3>
-        <p>{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{{ item.company }}</a>{% else %}{{ item.company }}{% endif %} · {{ item.start }}{% if item.current %} to present{% elsif item.end %} to {{ item.end }}{% endif %}</p>
-        <p>{{ item.summary }}</p>
-      </article>
-      {% endfor %}
+      <article class="profile-list__item"><h3>SAP consulting and AMS transformation</h3><p>EPAM Systems · 2025 to present</p><p>Work across SAP logistics, data and integration, AMS transformation, operational knowledge, and controlled AI-assisted workflows.</p></article>
+      <article class="profile-list__item"><h3>SAP SD, automotive and ABAP</h3><p>abat · 2019 to 2025</p><p>Supported sales, delivery and billing processes, automotive logistics, integration diagnosis and SAP enhancements.</p></article>
+      <article class="profile-list__item"><h3>SAP SD consulting</h3><p>EPAM Systems · 2013–2014 and 2016–2019</p><p>Worked on SAP SD and MM processes, integration, support and delivery.</p></article>
     </div>
     <p><a class="link-arrow" href="/cv/">Read the full public CV</a></p>
   </div>

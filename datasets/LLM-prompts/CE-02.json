@@ -14,35 +14,33 @@
         "name": "lost_in_the_middle",
         "what_it_means": "Model performance is often highest when relevant info is near the beginning or the end, and degrades when relevant info is placed in the middle.",
         "sources": [
-          "turn0search4",
-          "turn0search12"
+          "https://aclanthology.org/2024.tacl-1.9/"
         ]
       },
       {
         "name": "more_retrieval_is_not_monotonic",
-        "what_it_means": "Adding more retrieved passages can help at first, then hurt (noise + distraction + position effects).",
+        "what_it_means": "In evaluated question-answering tasks, adding more retrieved documents showed diminishing returns; test the choice for the model and task.",
         "sources": [
-          "turn0search9"
+          "https://aclanthology.org/2024.tacl-1.9/"
         ]
       },
       {
         "name": "attention_sink",
-        "what_it_means": "Early tokens can attract disproportionate attention due to transformer dynamics, which interacts with long-context behavior.",
+        "what_it_means": "Some streaming transformer models show attention sinks at initial tokens. This is a distinct observation from lost-in-the-middle performance; do not assume it explains every positional effect.",
         "sources": [
-          "turn0search2",
-          "turn0search10"
+          "https://arxiv.org/abs/2309.17453"
         ]
       },
       {
         "name": "positional_bias_calibration",
         "what_it_means": "There are methods to mitigate middle-position failures by calibrating positional attention biases.",
         "sources": [
-          "turn0search8",
-          "turn0search20"
+          "https://arxiv.org/abs/2406.16008"
         ]
       }
     ],
-    "practical_implication": "If you don't control placement, you are gambling. 'Context engineering' includes ordering, anchoring, and redundancy."
+    "practical_implication": "If you don't control placement, you are gambling. 'Context engineering' includes ordering, anchoring, and redundancy.",
+    "source_note": "References were reconstructed from primary research in November 2026; they are supporting sources, not recovered original search results. Findings are task- and model-dependent."
   },
   "core_rules": [
     {
@@ -104,9 +102,9 @@
         "Retrieve N (e.g., 20) -> rerank -> keep top K (e.g., 5–8) -> ensure topical diversity -> order by relevance"
       ],
       "use_when": "RAG systems, long-context Q&A, research synthesis",
-      "research_hook": "Long-context LLMs in RAG show non-monotonic gains when increasing retrieved passages.",
+      "research_hook": "In the evaluated tasks, adding documents yielded diminishing returns.",
       "sources": [
-        "turn0search9"
+        "https://aclanthology.org/2024.tacl-1.9/"
       ]
     },
     {
@@ -179,21 +177,21 @@
     {
       "name": "Unbounded Retrieval Dump",
       "symptom": "You append 15–50 chunks because the model supports long context.",
-      "damage": "Performance declines due to noise + distraction + position sensitivity.",
+      "damage": "Extra passages can add noise and cost; measure whether they improve the task.",
       "fix": "Top-K + rerank + diversity + ordering.",
-      "research_hook": "Non-monotonic effect of adding passages in RAG with long-context LLMs.",
+      "research_hook": "In the evaluated tasks, adding documents yielded diminishing returns.",
       "sources": [
-        "turn0search9"
+        "https://aclanthology.org/2024.tacl-1.9/"
       ]
     },
     {
       "name": "Middle-Only Critical Detail",
       "symptom": "The only mention of the key constraint sits inside a long evidence chunk.",
-      "damage": "Intermittent constraint violation ('randomness' that is actually position bias).",
+      "damage": "A critical detail may be missed in a long context; position is one possible factor to test.",
       "fix": "Critical Facts Duplication + Query Sandwich.",
       "research_hook": "U-shaped utilization and middle-position drop.",
       "sources": [
-        "turn0search12"
+        "https://aclanthology.org/2024.tacl-1.9/"
       ]
     }
   ],
@@ -222,28 +220,25 @@
     {
       "topic": "lost_in_the_middle",
       "refs": [
-        "turn0search4",
-        "turn0search12"
+        "https://aclanthology.org/2024.tacl-1.9/"
       ]
     },
     {
-      "topic": "rag_non_monotonic_passages",
+      "topic": "diminishing_returns_from_more_passages",
       "refs": [
-        "turn0search9"
+        "https://aclanthology.org/2024.tacl-1.9/"
       ]
     },
     {
       "topic": "attention_sink",
       "refs": [
-        "turn0search2",
-        "turn0search10"
+        "https://arxiv.org/abs/2309.17453"
       ]
     },
     {
       "topic": "positional_bias_mitigation",
       "refs": [
-        "turn0search8",
-        "turn0search20"
+        "https://arxiv.org/abs/2406.16008"
       ]
     }
   ],

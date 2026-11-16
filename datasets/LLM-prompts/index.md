@@ -47,12 +47,12 @@ data_catalog_page: true
 </article>
 <article class="dataset-item" data-id="CE-03" data-title="retrieval as a product: rag refinement, compression, and long-context noise control" data-tags="" data-type="llm_prompt_byte">
   <h2 class="dataset-item__title"><a href="/datasets/view/LLM-prompts/CE-03/">Retrieval as a Product: RAG Refinement, Compression, and Long-Context Noise Control</a></h2>
-  <p class="dataset-item__summary">Retrieval as a Product: RAG Refinement, Compression, and Long-Context Noise Control</p>
+  <p class="dataset-item__summary">Use this guide to select, compress, order, and evaluate retrieved evidence for long-context RAG.</p>
   <div class="dataset-item__meta"><span class="pill pill--type">llm_prompt_byte</span> <span class="pill pill--dataset">LLM-prompts</span> <span class="pill">CE-03</span> <a class="pill" href="/datasets/LLM-prompts/CE-03.json">json</a></div>
 </article>
 <article class="dataset-item" data-id="CE-04" data-title="prompt optimization as engineering: from handcrafted prompts to optimized systems" data-tags="" data-type="llm_prompt_byte">
   <h2 class="dataset-item__title"><a href="/datasets/view/LLM-prompts/CE-04/">Prompt Optimization as Engineering: From Handcrafted Prompts to Optimized Systems</a></h2>
-  <p class="dataset-item__summary">Prompt Optimization as Engineering: From Handcrafted Prompts to Optimized Systems</p>
+  <p class="dataset-item__summary">Use this guide to design, evaluate, and improve modular prompts using task-specific measures.</p>
   <div class="dataset-item__meta"><span class="pill pill--type">llm_prompt_byte</span> <span class="pill pill--dataset">LLM-prompts</span> <span class="pill">CE-04</span> <a class="pill" href="/datasets/LLM-prompts/CE-04.json">json</a></div>
 </article>
     </div>

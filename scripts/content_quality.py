@@ -360,7 +360,7 @@ def audit_built_site(site_dir: Path, findings: list[Finding]) -> dict[str, Any]:
     return result
 
 
-def audit_generated_artifacts(findings: list[Finding], pages: list[ContentPage]) -> dict[str, Any]:
+def audit_generated_artifacts(findings: list[Finding], pages: list[ContentPage], site_dir: Path | None = None) -> dict[str, Any]:
     artifact_result = {"checked": [], "missing": [], "unverified_in_llms": False, "localhost_values": 0, "malformed_json": []}
     generated = ("llms-full.txt", "llms.txt", "ai/expert-evidence.json", "ai/expert-promotion-inventory.json", "ai/markdown-clusters.json", "ai/verified-pages.json", "ai/catalog.json")
     for rel in generated:
@@ -375,13 +375,22 @@ def audit_generated_artifacts(findings: list[Finding], pages: list[ContentPage])
                 # Some JSON endpoints are Markdown-like Liquid sources with a
                 # front matter header. Validate the rendered endpoint when it
                 # exists; the source template is not itself JSON.
-                rendered = (REPO_ROOT / "_site" / rel) if (REPO_ROOT / "_site" / rel).is_file() else path
-                json_text = rendered.read_text(encoding="utf-8", errors="ignore")
-                try:
-                    json.loads(json_text)
-                except json.JSONDecodeError:
+                rendered = site_dir / rel if site_dir else None
+                is_template = text.startswith("---\n")
+                if is_template and (rendered is None or not rendered.is_file()):
                     artifact_result["malformed_json"].append(rel)
-                    add_finding(findings, None, "PUBLICATION003_MALFORMED_JSON", "error", f"Generated artifact is malformed JSON: {rel}", path=rel)
+                    add_finding(findings, None, "PUBLICATION003_MALFORMED_JSON", "error", f"Rendered JSON artifact is missing: {rel}", path=rel)
+                    continue
+                candidates = [rendered] if is_template else [path]
+                if not is_template and rendered is not None and rendered.is_file():
+                    candidates.append(rendered)
+                for candidate in candidates:
+                    try:
+                        json.loads(candidate.read_text(encoding="utf-8", errors="ignore"))
+                    except json.JSONDecodeError:
+                        artifact_result["malformed_json"].append(rel)
+                        add_finding(findings, None, "PUBLICATION003_MALFORMED_JSON", "error", f"Generated artifact is malformed JSON: {rel}", path=rel)
+                        break
         else:
             artifact_result["missing"].append(rel)
             if rel in {"llms-full.txt", "ai/expert-evidence.json", "ai/expert-promotion-inventory.json", "ai/markdown-clusters.json"}:
@@ -464,7 +473,7 @@ def run_audit(site_dir: Path | None = None, changed_from: str | None = None) -> 
         add_finding(findings, page_lookup[signal["path"]], signal["rule_id"], signal["severity"], signal["message"], location=signal["location"], remediation=signal["remediation"])
     link_graph = build_link_graph(pages, findings, site_dir)
     built = audit_built_site(site_dir, findings) if site_dir else {"html_files": 0}
-    artifacts = audit_generated_artifacts(findings, pages)
+    artifacts = audit_generated_artifacts(findings, pages, site_dir)
     rendered = rendered_review(site_dir, pages, BASE_URL) if site_dir else {"coverage": "not_run: production build required"}
     for signal in rendered.get("issues", []):
         add_finding(findings, None, signal["rule_id"], signal["severity"], "Rendered discovery contract needs review; inspect the sitemap receipt.", path=signal["path"], remediation="Repair the owning shared route or sitemap rule; preserve intentional noindex policy.")

@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Personal SAP & AI Lab | Dzmitryi Kharlanau"
-description: "Personal technical lab and knowledge base for SAP, AI agents, integrations, enterprise problem solving, experiments, and technology tracking."
+title: "Dzmitryi Kharlanau | SAP Operations, Integration & AI"
+description: "Explore practical SAP integration diagnostics, operational knowledge, enterprise architecture, and controlled AI workflows by Dzmitryi Kharlanau."
 permalink: /
 locale: en
 home_locale: true

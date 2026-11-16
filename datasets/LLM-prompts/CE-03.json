@@ -13,35 +13,35 @@
     "key_findings": [
       {
         "claim": "Long context alone does not guarantee better RAG; performance depends on how retrieved evidence is assembled.",
-        "evidence": "Large-scale study varying context length across many LLMs in RAG shows benefits and limitations; longer is not automatically better.",
+        "evidence": "Controlled multi-document question-answering experiments show that the placement and number of documents can affect performance.",
         "sources": [
-          "turn0search1"
+          "https://aclanthology.org/2024.tacl-1.9/"
         ]
       },
       {
-        "claim": "Adding more retrieved passages can improve performance initially and then degrade it (non-monotonic).",
-        "evidence": "Long-context LLMs in RAG show that increasing the number of passages does not consistently help; performance can decline after a point.",
+        "claim": "Adding retrieved passages may show diminishing returns; the effect depends on the model and task.",
+        "evidence": "In the evaluated question-answering tasks, additional retrieved documents yielded limited improvements.",
         "sources": [
-          "turn0search4"
+          "https://aclanthology.org/2024.tacl-1.9/"
         ]
       },
       {
         "claim": "Input length itself can hurt LLM performance, independent of distraction from irrelevant content.",
         "evidence": "Findings show degradation from sheer length even under conditions designed to minimize distraction.",
         "sources": [
-          "turn0search14"
+          "https://aclanthology.org/2025.findings-emnlp.1264/"
         ]
       },
       {
         "claim": "Long-context models still suffer position sensitivity, especially with relevant info in the middle.",
         "evidence": "Lost-in-the-middle effect yields U-shaped performance depending on position of evidence in context.",
         "sources": [
-          "turn0search0",
-          "turn0search13"
+          "https://aclanthology.org/2024.tacl-1.9/"
         ]
       }
     ],
-    "practical_implication": "Treat RAG as evidence engineering: control top-K, reduce noise, compress, and place evidence where it will be used."
+    "practical_implication": "Treat RAG as evidence engineering: control top-K, reduce noise, compress, and place evidence where it will be used.",
+    "source_note": "References were reconstructed from primary research in November 2026; they are supporting sources, not recovered original search results. Findings are task- and model-dependent."
   },
   "core_concepts": [
     {
@@ -85,19 +85,19 @@
         "stage": "S4_topK_selection",
         "action": "Keep top K (typical K=5–10). Tune K with evaluation; do not assume bigger K is better.",
         "output": "selected_chunks[]",
-        "research_hook": "Non-monotonic effect in long-context RAG.",
+        "research_hook": "Additional documents can yield diminishing returns in question answering.",
         "sources": [
-          "turn0search4"
+          "https://aclanthology.org/2024.tacl-1.9/"
         ]
       },
       {
         "stage": "S5_compression",
         "action": "Compress each chunk into an atomic evidence card: {fact, scope, exceptions, citation_id}. Keep original text as optional appendix.",
         "output": "evidence_cards[]",
-        "why": "Mitigates length-induced degradation and improves reasoning focus.",
+        "why": "May reduce length and make evidence easier to inspect; verify that compression preserves essential facts and citations.",
         "research_hook": "Input length alone can degrade performance.",
         "sources": [
-          "turn0search14"
+          "https://aclanthology.org/2025.findings-emnlp.1264/"
         ]
       },
       {
@@ -106,8 +106,7 @@
         "output": "ordered_evidence_cards[]",
         "research_hook": "Position sensitivity / lost-in-the-middle.",
         "sources": [
-          "turn0search0",
-          "turn0search13"
+          "https://aclanthology.org/2024.tacl-1.9/"
         ]
       }
     ]
@@ -156,12 +155,12 @@
       "damage": "Noise + length-induced performance drop + position misses.",
       "fix": "Top-K + compression + ordering.",
       "research_hooks": [
-        "Non-monotonic gains when adding passages in long-context RAG",
+        "Diminishing returns from additional passages in question answering",
         "Length alone can hurt performance"
       ],
       "sources": [
-        "turn0search4",
-        "turn0search14"
+        "https://aclanthology.org/2024.tacl-1.9/",
+        "https://aclanthology.org/2025.findings-emnlp.1264/"
       ]
     },
     {
@@ -237,11 +236,12 @@
     },
     "entity_type": "llm_prompt_byte",
     "entity_subtype": "category:context_engineering",
-    "summary": "Retrieval as a Product: RAG Refinement, Compression, and Long-Context Noise Control",
+    "summary": "Use this guide to select, compress, order, and evaluate retrieved evidence for long-context RAG.",
     "doi": {
       "concept": "10.5281/zenodo.18862098",
       "version": "10.5281/zenodo.18862097",
       "repository": "https://github.com/dkharlanau/dkharlanau-datasets"
     }
-  }
+  },
+  "purpose": "Use this guide to select, compress, order, and evaluate retrieved evidence for long-context RAG."
 }

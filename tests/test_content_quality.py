@@ -124,3 +124,46 @@ def test_prompt_injection_example_is_warning_when_explicitly_educational():
 
 def test_safe_fix_requires_safe_flag_and_dry_run_does_not_write():
     assert safe_fix(True) == 0
+
+
+def test_json_template_uses_requested_build_and_rejects_missing_or_invalid_output(tmp_path, monkeypatch):
+    import scripts.content_quality as quality
+
+    source_root = tmp_path / "source"
+    build_root = tmp_path / "custom-build"
+    (source_root / "ai").mkdir(parents=True)
+    (build_root / "ai").mkdir(parents=True)
+    (source_root / "ai" / "catalog.json").write_text('---\nlayout: null\n---\n{"items": {{ site.data | jsonify }}}\n')
+    output = build_root / "ai" / "catalog.json"
+    output.write_text('{"items": []}\n')
+    monkeypatch.setattr(quality, "REPO_ROOT", source_root)
+
+    def errors(site_dir):
+        findings = []
+        quality.audit_generated_artifacts(findings, [], site_dir)
+        return [f for f in findings if f.rule_id == "PUBLICATION003_MALFORMED_JSON"]
+
+    assert errors(build_root) == []
+    output.write_text('{broken')
+    assert len(errors(build_root)) == 1
+    output.unlink()
+    assert len(errors(build_root)) == 1
+
+
+def test_generated_json_checks_both_source_and_rendered_output(tmp_path, monkeypatch):
+    import scripts.content_quality as quality
+
+    source_root = tmp_path / "source"
+    build_root = tmp_path / "custom-build"
+    (source_root / "ai").mkdir(parents=True)
+    (build_root / "ai").mkdir(parents=True)
+    source = source_root / "ai" / "markdown-clusters.json"
+    output = build_root / "ai" / "markdown-clusters.json"
+    (source_root / "ai" / "catalog.json").write_text('{}')
+    source.write_text('{}')
+    output.write_text('{broken')
+    monkeypatch.setattr(quality, "REPO_ROOT", source_root)
+
+    findings = []
+    quality.audit_generated_artifacts(findings, [], build_root)
+    assert any(f.rule_id == "PUBLICATION003_MALFORMED_JSON" and f.path == "ai/markdown-clusters.json" for f in findings)
