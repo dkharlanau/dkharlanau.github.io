@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-11-11
+last_modified_at: 2026-11-17
 hide_global_cta: true
 tags: [ai, video-learning, architecture, sap, evaluation]
 career_impact: mapped
@@ -22,7 +22,7 @@ career_skills: [ai-retrieval, ai-evaluation, ai-data-governance]
 
 An AI agent answers a question about a supplier contract. It produces a reasonable answer, but quotes conditions from **last year's version**. A larger model may make the answer sound better without finding the right document.
 
-In [Better Search Took This AI Agent From 36% to 98% Accuracy](https://aietalks.com/talks/better-search-took-this-ai-agent-from-36-to-98-accuracy), Aamir Shakir (Mixedbread) argues that retrieval is often the bottleneck. He reports a customer's improvement from 36% to 98% after a change to its retrieval stack. This is a **speaker-reported vendor/customer result**, not a benchmark you should expect on SAP content.
+In [Better Search Took This AI Agent From 36% to 98% Accuracy](https://www.youtube.com/watch?v=3Ad73Onx3Aw), Aamir Shakir (Mixedbread) argues that retrieval is often the bottleneck. He reports a customer's improvement from 36% to 98% after a change to its retrieval stack. This is a **speaker-reported vendor/customer result**, not a benchmark you should expect on SAP content.
 
 ## A retrieval pipeline loses information at each boundary
 
@@ -76,7 +76,7 @@ This is an educational output contract, not a SAP API. Never let the model inven
 
 Build a **30-question golden set**: ten exact identifiers, ten semantic questions, five table/figure questions and five version-sensitive questions.
 
-Test three candidates on the same corpus: lexical search, ordinary hybrid RAG, and layout-/multimodal-aware retrieval. Track **Hit@3**, evidence span correctness, answer correctness, stale version errors, median latency and total cost per correct answer. Review the actual citations manually for a subset.
+Test three candidates on the same corpus: lexical search, ordinary hybrid RAG, and layout-/multimodal-aware retrieval. Track **Hit@3**, evidence span correctness, answer correctness, stale version errors, median latency and total cost per correct answer. Review the actual citations manually for a subset. Next, check that each cited result points to the correct document version before comparing the answers.
 
 The key diagnostic is not "which model scored highest?" Ask: "Was the evidence absent from the retrieved set, or did the model misread available evidence?" Those are different root causes and require different fixes.
 

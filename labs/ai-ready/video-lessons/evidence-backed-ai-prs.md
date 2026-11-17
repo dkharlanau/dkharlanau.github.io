@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-11-11
+last_modified_at: 2026-11-17
 hide_global_cta: true
 tags: [ai, pull-requests, github, testing, evidence, provenance, video-learning]
 career_impact: mapped
@@ -18,7 +18,7 @@ career_skills: [delivery-cicd, delivery-testing, lead-evidence]
 
 # Your PR Says Tests Passed. Show the Evidence.
 
-**Source:** Stephen Chin and Cassandra Chin, *“Your PR Says the Tests Passed. Prove It.”*, AI Engineer, 10 November 2026 (23 min). [Talk notes and chapter timestamps](https://qabash.com/bash-tv/74557) · [AI Engineer channel](https://www.youtube.com/@aiDotEngineer).
+**Source:** Stephen Chin and Cassandra Chin, *“Your PR Says the Tests Passed. Prove It.”*, AI Engineer, 10 November 2026 (23 min). [Original talk and presentation](https://ai.engineer/talks/gbeuC0ud1p4-your-pr-says-tests-passed-prove-it).
 
 A coding agent opens a pull request. The description says *“All tests passed.”* That sentence sounds reassuring until you discover the tests ran **before** the final commit—or the agent never captured their output.
 
