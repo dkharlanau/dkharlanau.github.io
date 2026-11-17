@@ -14,6 +14,7 @@ status: reviewed
 verified: true
 level: 2
 last_reviewed: 2026-06-13
+last_modified_at: 2026-11-17
 
 tags:
   - automation
@@ -104,6 +105,19 @@ author: Dzmitryi Kharlanau
 <p>A small closure discipline is usually more useful than a large knowledge programme. When an incident is notable because it recurred, required senior interpretation, affected a critical process, or exposed a control gap, the owner should decide whether it needs a reusable entry. The entry is then linked to the ticket or change, checked by someone who understands the boundary, and reviewed when the underlying process changes.</p>
 
 <p>This matters in SD, MM, master-data, and integration support because the same symptom can be caused by very different things. A blocked document may result from a valid business control, an incomplete record, a replication delay, an enhancement, or an interface state. A useful memory entry helps the next person separate those paths; it does not pretend there is one universal fix.</p>
+
+<h2>Example: a reusable integration handoff</h2>
+
+<p>In this synthetic example, a support team records an integration issue without turning a hypothesis into a confirmed cause:</p>
+<ul>
+<li><strong>Observed:</strong> an expected downstream document was not found after an inbound message; the business process is waiting for it.</li>
+<li><strong>Not yet established:</strong> whether the issue is in the message, receiver processing, master data, or a later process step.</li>
+<li><strong>Next check:</strong> compare permitted message and receiver evidence, then use the <a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">IDoc status diagnostic</a> where applicable. Record what the evidence supports and what remains unresolved.</li>
+<li><strong>Decision boundary:</strong> prepare an escalation for the integration owner; do not replay messages or change business data until the responsible owner approves the action under local controls.</li>
+<li><strong>Review trigger:</strong> revisit the entry after a relevant interface, process, or system change. Store real case evidence only in the team's approved access-controlled system.</li>
+</ul>
+
+<p>Google's <a href="https://sre.google/sre-book/postmortem-culture/">postmortem guidance</a> describes recording an incident, its impact, response, and follow-up actions so teams can learn from failures. It is general reliability guidance; the SAP support example above is an application of the practice, not a Google or SAP incident report. Source checked 17 November 2026.</p>
 
 <h2>What operational memory is not</h2>
 

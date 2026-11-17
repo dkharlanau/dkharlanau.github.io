@@ -480,6 +480,18 @@ A small closure discipline is usually more useful than a large knowledge program
 
 This matters in SD, MM, master-data, and integration support because the same symptom can be caused by very different things. A blocked document may result from a valid business control, an incomplete record, a replication delay, an enhancement, or an interface state. A useful memory entry helps the next person separate those paths; it does not pretend there is one universal fix.
 
+Example: a reusable integration handoff
+
+In this synthetic example, a support team records an integration issue without turning a hypothesis into a confirmed cause:
+
+Observed: an expected downstream document was not found after an inbound message; the business process is waiting for it.
+Not yet established: whether the issue is in the message, receiver processing, master data, or a later process step.
+Next check: compare permitted message and receiver evidence, then use the IDoc status diagnostic where applicable. Record what the evidence supports and what remains unresolved.
+Decision boundary: prepare an escalation for the integration owner; do not replay messages or change business data until the responsible owner approves the action under local controls.
+Review trigger: revisit the entry after a relevant interface, process, or system change. Store real case evidence only in the team's approved access-controlled system.
+
+Google's postmortem guidance describes recording an incident, its impact, response, and follow-up actions so teams can learn from failures. It is general reliability guidance; the SAP support example above is an application of the practice, not a Google or SAP incident report. Source checked 17 November 2026.
+
 What operational memory is not
 
 It is not a repository of copied error messages with no process or owner context.
