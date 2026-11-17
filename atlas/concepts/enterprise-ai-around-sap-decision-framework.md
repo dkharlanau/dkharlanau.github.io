@@ -13,7 +13,7 @@ status: reviewed
 verified: true
 level: 2
 last_reviewed: 2026-07-25
-last_modified_at: 2026-08-11
+last_modified_at: 2026-11-17
 author: Dzmitryi Kharlanau
 tags:
   - concepts
@@ -53,13 +53,13 @@ sitemap: true
       <div><dt>Domain</dt><dd>Business operations</dd></div>
       <div><dt>Type</dt><dd>decision framework</dd></div>
       <div><dt>Reviewed</dt><dd>2026-07-25</dd></div>
-      <div><dt>Updated</dt><dd>2026-08-11</dd></div>
+      <div><dt>Updated</dt><dd>2026-11-17</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <p><strong>Primary sources:</strong> <a href="https://airc.nist.gov/airmf-resources/airmf/5-sec-core/" target="_blank" rel="noopener noreferrer">NIST AI Risk Management Framework Core</a>; <a href="https://airc.nist.gov/airmf-resources/playbook/" target="_blank" rel="noopener noreferrer">NIST AI RMF Playbook</a>; <a href="https://www.oecd.org/en/topics/ai-principles.html" target="_blank" rel="noopener noreferrer">OECD AI Principles</a>; <a href="https://www.nber.org/papers/w31161" target="_blank" rel="noopener noreferrer">NBER, Generative AI at Work</a>.</p>
-    <p><strong>Date checked:</strong> 2026-08-11</p>
+    <p><strong>Primary sources:</strong> <a href="https://airc.nist.gov/airmf-resources/airmf/5-sec-core/" target="_blank" rel="noopener noreferrer">NIST AI Risk Management Framework Core</a>; <a href="https://airc.nist.gov/airmf-resources/playbook/" target="_blank" rel="noopener noreferrer">NIST AI RMF Playbook</a>; <a href="https://www.oecd.org/en/topics/ai-principles.html" target="_blank" rel="noopener noreferrer">OECD AI Principles</a>; <a href="https://doi.org/10.1093/qje/qjae044" target="_blank" rel="noopener noreferrer">Brynjolfsson, Li and Raymond, Generative AI at Work (2025)</a>.</p>
+    <p><strong>Sources checked:</strong> 2026-11-17</p>
     <p><strong>Confidence:</strong> high for the decision and governance structure; medium for any expected benefit because results depend on the workflow, baseline, users, and landscape.</p>
     <p><strong>Practical implication:</strong> Approve an AI initiative only when the team can name the workflow, current cost or service baseline, allowed action boundary, accountable owner, and evidence required to continue.</p>
 
@@ -80,7 +80,7 @@ sitemap: true
 
     <h2>1. Define the business outcome before the AI use case</h2>
     <p>Start with an operational measure that already matters: mean time to diagnose, ticket rework, backlog age, manual evidence-collection time, first-contact resolution, exception leakage, or avoidable escalation. Record the present baseline, measurement window, process owner, and known seasonal effects. “Faster answers” is not a business outcome unless it improves a downstream service or cost measure.</p>
-    <p>A specific customer-support study reported a 14% average productivity increase from a generative-AI assistant, with much larger gains among less-experienced workers. That result is useful evidence that task context and user group matter; it is not a universal ROI forecast. A local pilot still needs its own baseline and comparison design.</p>
+    <p>In a <a href="https://doi.org/10.1093/qje/qjae044">study of 5,172 customer-support agents at one firm</a>, access to AI assistance increased the number of issues resolved per hour by 15% on average, with larger gains among less-experienced workers. This result concerns one tool and workflow; it is not an ROI forecast for SAP support. A local pilot still needs its own baseline and comparison design.</p>
 
     <h2>2. Decompose the workflow into tasks</h2>
     <p>Do not assess “support” or “order management” as one use case. Separate retrieval, classification, recommendation, approval, execution, verification, and exception handling. Then choose a control task by task.</p>
