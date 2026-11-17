@@ -676,7 +676,7 @@ def test_verified_articles_connect_author_website_collection_and_related_pages()
     nodes = _built_jsonld("atlas/diagnostics/sap-idoc-status-diagnostics/index.html")
     article = next(
         item for item in nodes
-        if item.get("@type") == "TechArticle"
+        if item.get("@type") == ["Article", "TechArticle"]
     )
     webpage = next(item for item in nodes if item.get("@type") == "WebPage")
     parent_ids = {item["@id"] for item in article["isPartOf"]}

@@ -298,8 +298,16 @@ def has_lead_or_summary(page: Page) -> bool:
 
 def article_jsonld(page: Page) -> dict | None:
     for block in page.jsonld_blocks:
-        if isinstance(block, dict) and block.get("@type") in {"Article", "TechArticle", "NewsArticle", "BlogPosting"}:
-            return block
+        if isinstance(block, dict):
+            raw_type = block.get("@type")
+            if isinstance(raw_type, str):
+                types = {raw_type}
+            elif isinstance(raw_type, list):
+                types = {value for value in raw_type if isinstance(value, str)}
+            else:
+                types = set()
+            if types & {"Article", "TechArticle", "NewsArticle", "BlogPosting"}:
+                return block
     return None
 
 

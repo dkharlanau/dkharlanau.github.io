@@ -76,3 +76,16 @@ def test_breadcrumb_validator_requires_contiguous_positions():
     value["itemListElement"][-1]["position"] = 4
 
     assert any("positions must be contiguous" in error for error in validate(value))
+
+
+def test_multiple_article_types_still_require_article_fields():
+    value = {"@type": ["Article", "TechArticle"], "url": CANONICAL}
+
+    assert any("Article missing headline" in error for error in validate(value))
+
+
+def test_multiple_article_types_still_check_private_paths():
+    value = {"@type": ["Article", "TechArticle"], "headline": "Example", "url": CANONICAL,
+             "description": "A local file at /Users/example/private"}
+
+    assert any("private path" in error for error in validate(value))

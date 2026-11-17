@@ -84,6 +84,16 @@ def test_minimal_article_passes():
     assert not critical
 
 
+def test_multiple_article_types_are_validated():
+    content = MINIMAL_ARTICLE.replace('"@type": "Article"', '"@type": ["Article", "TechArticle"]', 1)
+    content = content.replace('"author": {"@type": "Person", "name": "Dzmitryi Kharlanau"},',
+                              '"author": {"@type": "Person"},')
+    code, findings = run_on_site({"atlas/good-article/index.html": content}, fail_on_critical=True)
+
+    assert code == 2
+    assert any(f["rule"] == "ARTICLE_AUTHOR_NAME_MISSING" for f in findings)
+
+
 def test_missing_h1_is_critical():
     content = MINIMAL_ARTICLE.replace("<h1>Good Article Title</h1>", "")
     code, findings = run_on_site({"atlas/good-article/index.html": content}, fail_on_critical=True)

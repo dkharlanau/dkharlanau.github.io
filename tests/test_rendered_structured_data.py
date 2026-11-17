@@ -81,6 +81,13 @@ def _top_level_nodes(value):
     return []
 
 
+def _node_types(value):
+    item_type = value.get("@type") if isinstance(value, dict) else None
+    if isinstance(item_type, str):
+        return {item_type}
+    return {item for item in item_type if isinstance(item, str)} if isinstance(item_type, list) else set()
+
+
 def _plain_text(value: str) -> str:
     return " ".join(html.unescape(TAG_RE.sub(" ", value)).split())
 
@@ -185,7 +192,8 @@ def test_priority_article_citations_match_visible_sources(source_path):
 
     links = Links()
     links.feed(content)
-    article = next(block for block in _jsonld_blocks(content, route) if block.get("@type") == "TechArticle")
+    article = next(block for block in _jsonld_blocks(content, route) if "TechArticle" in _node_types(block))
+    assert "Article" in _node_types(article)
     expected = {item["url"]: item.get("schema_type", "WebPage") for item in frontmatter["source_links"]}
     actual = {item["url"]: item["@type"] for item in article["citation"]}
 
@@ -199,8 +207,11 @@ def test_rendered_article_graph_distinguishes_the_page_from_its_work():
         route = html_path.relative_to(SITE_DIR)
         content = html_path.read_text(encoding="utf-8", errors="ignore")
         nodes = [node for block in _jsonld_blocks(content, route) for node in _top_level_nodes(block)]
-        for article in (node for node in nodes if node.get("@type") in {"Article", "TechArticle"}):
-            article_types.add(article["@type"])
+        for article in (node for node in nodes if _node_types(node) & {"Article", "TechArticle"}):
+            types = _node_types(article)
+            article_types.update(types & {"Article", "TechArticle"})
+            if "TechArticle" in types:
+                assert "Article" in types, route
             canonical = html.unescape(CANONICAL_RE.search(content).group(1))
             page_id = canonical + "#webpage"
             assert article["@id"] == canonical + "#article", route
@@ -369,7 +380,7 @@ def test_reviewed_scenario_emits_techarticle_and_product_breadcrumb():
     articles = [
         block
         for block in blocks
-        if isinstance(block, dict) and block.get("@type") == "TechArticle"
+        if "TechArticle" in _node_types(block)
     ]
     breadcrumbs = [
         block for block in blocks if isinstance(block, dict) and block.get("@type") == "BreadcrumbList"

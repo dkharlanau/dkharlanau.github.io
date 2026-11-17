@@ -300,7 +300,7 @@ Rules:
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "{{ page_type }}",
+  "@type": {% if page_type == 'TechArticle' %}["Article", "TechArticle"]{% else %}{{ page_type | jsonify }}{% endif %},
   "@id": "{{ canonical_url }}#article",
   "headline": {{ page_title | jsonify }},
   "description": {{ page_description | truncate: 160, '' | jsonify }},

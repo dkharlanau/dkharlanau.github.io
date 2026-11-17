@@ -163,7 +163,13 @@ def validate_item(
         return
 
     item_type = item.get("@type")
-    if not isinstance(item_type, str):
+    if isinstance(item_type, str):
+        item_types = {item_type}
+    elif isinstance(item_type, list):
+        item_types = {value for value in item_type if isinstance(value, str)}
+    else:
+        item_types = set()
+    if not item_types:
         return
 
     # Generic checks for string values inside this item
@@ -181,7 +187,7 @@ def validate_item(
                     errors.append(f"{file_label}: non-HTTP(S) URL '{key}={value}'")
 
     # Type-specific checks
-    if item_type in {"Article", "TechArticle", "NewsArticle", "BlogPosting"}:
+    if item_types & {"Article", "TechArticle", "NewsArticle", "BlogPosting"}:
         if not item.get("headline"):
             errors.append(f"{file_label}: Article missing headline")
         author = item.get("author")
@@ -193,7 +199,7 @@ def validate_item(
         if not item.get("url"):
             errors.append(f"{file_label}: Article missing url")
 
-    elif item_type == "BreadcrumbList":
+    elif "BreadcrumbList" in item_types:
         elements = item.get("itemListElement")
         if not isinstance(elements, list) or len(elements) < 2:
             errors.append(f"{file_label}: BreadcrumbList needs >= 2 items")
@@ -233,7 +239,7 @@ def validate_item(
                     f"{file_label}: BreadcrumbList ends at '{terminal}', canonical is '{canonical_url}'"
                 )
 
-    elif item_type == "Dataset":
+    elif "Dataset" in item_types:
         if not item.get("name"):
             errors.append(f"{file_label}: Dataset missing name")
         if not item.get("description"):
@@ -242,7 +248,7 @@ def validate_item(
         if not isinstance(distribution, list) or len(distribution) == 0:
             errors.append(f"{file_label}: Dataset missing distribution")
 
-    elif item_type == "Event":
+    elif "Event" in item_types:
         if not item.get("name"):
             errors.append(f"{file_label}: Event missing name")
         if not item.get("startDate"):
@@ -250,7 +256,7 @@ def validate_item(
         if not item.get("location"):
             errors.append(f"{file_label}: Event missing location")
 
-    elif item_type == "Course":
+    elif "Course" in item_types:
         if not item.get("name"):
             errors.append(f"{file_label}: Course missing name")
         if not item.get("description"):
@@ -258,11 +264,12 @@ def validate_item(
         if not item.get("provider"):
             errors.append(f"{file_label}: Course missing provider")
 
-    elif item_type in {"Person", "Organization"}:
+    elif item_types & {"Person", "Organization"}:
         # A bare reference (e.g. {"@type": "Person", "@id": "..."}) is valid.
         # Only descriptive nodes that lack both a name and an identifier are wrong.
         if not item.get("name") and "@id" not in item:
-            errors.append(f"{file_label}: {item_type} missing name")
+            label = "Person" if "Person" in item_types else "Organization"
+            errors.append(f"{file_label}: {label} missing name")
 
 
 RICH_RESULT_TYPES = {
