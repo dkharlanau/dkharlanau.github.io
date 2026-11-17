@@ -1,4 +1,10 @@
 from datetime import datetime, timezone
+import json
+from types import SimpleNamespace
+
+import pytest
+
+from scripts import google_search_pipeline as pipeline
 
 from scripts.google_search_pipeline import (
     analytics_totals,
@@ -7,6 +13,7 @@ from scripts.google_search_pipeline import (
     classify_url_kind,
     compute_delta,
     merge_rolling_page_inventory,
+    load_monitor_urls,
     parse_sitemap_document,
     previous_report_age_hours,
     select_entries_for_inspection,
@@ -173,6 +180,30 @@ def test_rotation_is_stable_for_same_seed():
     assert first == second
 
 
+def test_monitored_urls_are_selected_first_within_existing_budget():
+    entries = [{"url": f"https://example.com/{letter}/", "lastmod": ""} for letter in "abcdef"]
+    monitored = ["https://example.com/e/", "https://example.com/b/"]
+    selected = select_entries_for_inspection(entries, None, max_inspections=4, mode="rotate",
+                                             seed="2026-11-17", monitor_urls=monitored)
+    assert [item["url"] for item in selected[:2]] == monitored
+    assert len({item["url"] for item in selected}) == 4
+    limited = select_entries_for_inspection(entries, None, max_inspections=1, mode="all",
+                                            seed="unused", monitor_urls=monitored)
+    assert [item["url"] for item in limited] == monitored[:1]
+
+
+def test_monitor_file_rejects_missing_duplicate_or_foreign_urls(tmp_path):
+    path = tmp_path / "monitor.json"
+    entries = [{"url": "https://example.com/a/", "lastmod": ""}]
+    for urls in (["https://example.com/a/", "https://example.com/a/"],
+                 ["https://other.example/a/"], ["https://example.com/missing/"]):
+        path.write_text(json.dumps({"urls": urls}), encoding="utf-8")
+        with pytest.raises(ValueError):
+            load_monitor_urls(str(path), "https://example.com/", entries)
+    path.write_text(json.dumps({"urls": ["https://example.com/a/"]}), encoding="utf-8")
+    assert load_monitor_urls(str(path), "https://example.com/", entries) == ["https://example.com/a/"]
+
+
 def test_previous_report_age_hours():
     previous = {
         "generated_at": "2026-08-25T06:00:00Z",
@@ -252,3 +283,56 @@ def test_rolling_inventory_keeps_uninspected_previous_status():
     assert by_url["https://example.com/b/"]["status"] == "crawled_not_indexed"
     assert by_url["https://example.com/b/"]["inspection_source"] == "previous"
     assert by_url["https://example.com/c/"]["status"] == "not_inspected"
+
+
+def test_rolling_inventory_preserves_url_inspection_times_without_guessing():
+    entries = [{"url": f"https://example.com/{letter}/", "lastmod": ""} for letter in "abcd"]
+    current = [{"url": "https://example.com/a/", "kind": "page", "status": "indexed",
+                "inspected_at": "2026-11-17T12:00:05Z"}]
+    previous = {"generated_at": "2026-11-16T14:00:00Z", "urls": [
+        {"url": "https://example.com/b/", "kind": "page", "status": "unknown",
+         "inspected_at": "2026-11-15T12:30:00Z"},
+        {"url": "https://example.com/c/", "kind": "page", "status": "indexed",
+         "last_crawl_time": "2026-11-14T10:00:00Z"},
+    ]}
+    first = merge_rolling_page_inventory(entries, current, previous)
+    by_url = {item["url"]: item for item in first}
+    assert by_url["https://example.com/a/"]["inspected_at"] == "2026-11-17T12:00:05Z"
+    assert by_url["https://example.com/b/"]["inspected_at"] == "2026-11-15T12:30:00Z"
+    assert by_url["https://example.com/c/"]["inspected_at"] is None
+    assert by_url["https://example.com/d/"]["inspected_at"] is None
+    assert by_url["https://example.com/b/"]["stale"] is True
+    second = merge_rolling_page_inventory(entries, [], {"urls": first})
+    assert {row["url"]: row["inspected_at"] for row in second} == {
+        url: row["inspected_at"] for url, row in by_url.items()
+    }
+
+
+def test_run_dates_successful_inspections_but_not_failed_results(monkeypatch):
+    entries = [{"url": f"https://example.com/{name}/", "lastmod": ""} for name in ("ok", "error")]
+    monkeypatch.setattr(pipeline, "collect_sitemap_urls", lambda *a, **kw: (entries, []))
+    monkeypatch.setattr(pipeline, "load_previous_report", lambda path: None)
+    monkeypatch.setattr(pipeline, "create_authorized_session", lambda credentials: object())
+    monkeypatch.setattr(pipeline, "submit_sitemap", lambda *a: {"status": "submitted"})
+    monkeypatch.setattr(pipeline, "collect_search_analytics", lambda *a: {"status": "available"})
+    timestamps = iter(["2026-11-17T12:00:00Z", "2026-11-17T12:00:01Z",
+                       "2026-11-17T12:00:02Z", "2026-11-17T12:00:03Z"])
+    monkeypatch.setattr(pipeline, "utc_now", lambda: next(timestamps))
+
+    def inspect(session, site, url):
+        if url.endswith("/error/"):
+            raise RuntimeError("quota exceeded")
+        return {"inspectionResult": {"indexStatusResult": {"verdict": "PASS"}}}
+
+    monkeypatch.setattr(pipeline, "inspect_url", inspect)
+    args = SimpleNamespace(sitemap_url="https://example.com/sitemap.xml", max_sitemap_depth=4,
+                           previous_report=None, site_url="https://example.com/", credentials="set",
+                           require_credentials=True, include_data=False, min_inspection_interval_hours=0,
+                           max_inspections=2, inspection_mode="all", selection_seed="", request_delay=0)
+    report, exit_code = pipeline.run(args)
+    rows = {item["url"]: item for item in report["urls"]}
+    assert exit_code == 0
+    assert rows["https://example.com/error/"]["inspection_attempted_at"] == "2026-11-17T12:00:01Z"
+    assert rows["https://example.com/error/"]["inspected_at"] is None
+    assert rows["https://example.com/ok/"]["inspection_attempted_at"] == "2026-11-17T12:00:02Z"
+    assert rows["https://example.com/ok/"]["inspected_at"] == "2026-11-17T12:00:03Z"

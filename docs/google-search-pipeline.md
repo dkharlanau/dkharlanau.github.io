@@ -4,7 +4,7 @@ The repository can submit the public sitemap to Google Search Console and audit 
 
 ## What the workflow does
 
-The `Google Search Pipeline` workflow runs after a successful `CI` run on `main`, once per day, and on manual request.
+The `Google Search Pipeline` workflow runs after a successful Pages deployment on `main`, once per day, on relevant pipeline changes, and on manual request.
 
 It:
 
@@ -31,7 +31,7 @@ Do not commit the JSON key to the repository.
 
 Production runs fail closed when the secret is absent or invalid. A green workflow therefore means the Search Console connection was actually used; credential-free sitemap parsing is available only as an explicit local dry run.
 
-The scheduled run inspects a bounded rotating sample, while post-CI runs prioritize new and previously problematic URLs. Use the manual `all` mode for an occasional full baseline, not as a daily crawl. The URL Inspection API has a per-property daily quota, and sitemap submission is a discovery hint rather than a guarantee that Google will index every URL.
+The scheduled run inspects the 12 URLs in `config/google-search-monitor-urls.json` first, then uses the remainder of its bounded budget for a rotating sample. Deployment and pipeline-change runs use the same monitored URLs when their cooldown permits inspection, then prioritize new and previously problematic URLs. All monitored URLs must be page URLs in the property's sitemap; a missing or duplicate entry fails the run for review. A manual budget below 12 inspects only the first URLs that fit. Use the manual `all` mode for an occasional full baseline, not as a daily crawl. The URL Inspection API has a per-property daily quota, and sitemap submission is a discovery hint rather than a guarantee that Google will index every URL.
 
 ## Reports
 
@@ -39,6 +39,8 @@ The workflow creates:
 
 - `reports/seo/google-search/google-indexing.json` — complete machine-readable result.
 - `reports/seo/google-search/google-indexing.md` — compact human review queue.
+
+Each successful URL Inspection records `inspected_at` in UTC. The rolling inventory preserves that timestamp when it carries a result forward; `stale: true` means the URL was not inspected in the current run. A failed attempt records `inspection_attempted_at` and leaves `inspected_at` null. Older results that have no per-URL timestamp remain unknown rather than inheriting the report generation time or Google's last crawl time. These timestamps date the API observation, not the crawl or an indexing request.
 
 Priority meaning:
 

@@ -65,3 +65,17 @@ def test_ci_publishes_built_site_for_search_workflows():
     assert "Upload built site for downstream search workflows" in text
     assert "name: ci-built-site" in text
     assert "path: _site/" in text
+
+
+def test_google_search_workflow_monitors_fixed_article_set():
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    config = json.loads((root / "config/google-search-monitor-urls.json").read_text(encoding="utf-8"))
+    urls = config["urls"]
+    assert len(urls) == len(set(urls)) == 12
+    assert all(url.startswith("https://dkharlanau.github.io/atlas/") for url in urls)
+    workflow = (root / ".github/workflows/google-search.yml").read_text(encoding="utf-8")
+    assert "--monitor-urls-file config/google-search-monitor-urls.json" in workflow
+    assert 'echo "max=120"' in workflow

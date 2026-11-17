@@ -24,6 +24,7 @@ on:
       - "scripts/google_search_pipeline.py"
       - "scripts/indexation_recovery_queue.py"
       - "config/indexation-recovery.json"
+      - "config/google-search-monitor-urls.json"
   deployment_status:
   schedule:
     - cron: "23 5 * * *"
@@ -175,6 +176,7 @@ jobs:
             --max-inspections "$POLICY_MAX"
             --inspection-mode "$POLICY_MODE"
             --min-inspection-interval-hours "$POLICY_COOLDOWN"
+            --monitor-urls-file config/google-search-monitor-urls.json
             --credentials "$CREDENTIALS_PATH"
             --require-credentials
             --output-dir reports/seo/google-search

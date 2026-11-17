@@ -466,6 +466,23 @@ def _stable_order(seed: str, url: str) -> str:
     return hashlib.sha256(f"{seed}|{url}".encode("utf-8")).hexdigest()
 
 
+def load_monitor_urls(path: str | None, site_url: str, entries: list[dict[str, str]]) -> list[str]:
+    """Load explicit pages without inventing dates or inspecting URLs outside the sitemap."""
+    if not path:
+        return []
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    urls = data.get("urls") if isinstance(data, dict) else None
+    if not isinstance(urls, list) or not urls or any(not isinstance(url, str) or not url for url in urls):
+        raise ValueError("Monitor file must contain a nonempty list of URL strings")
+    if len(set(urls)) != len(urls):
+        raise ValueError("Monitor file contains duplicate URLs")
+    available = {entry["url"] for entry in entries if classify_url_kind(entry["url"]) == "page"}
+    for url in urls:
+        if not same_origin(site_url, url) or url not in available:
+            raise ValueError(f"Monitor URL is outside the property or not in its page sitemap: {url}")
+    return urls
+
+
 def select_entries_for_inspection(
     entries: list[dict[str, str]],
     previous: dict[str, Any] | None,
@@ -473,6 +490,7 @@ def select_entries_for_inspection(
     max_inspections: int,
     mode: str,
     seed: str,
+    monitor_urls: tuple[str, ...] | list[str] = (),
 ) -> list[dict[str, str]]:
     if max_inspections <= 0:
         return []
@@ -500,7 +518,10 @@ def select_entries_for_inspection(
     else:
         raise ValueError(f"Unsupported inspection mode: {mode}")
 
-    return ordered[:max_inspections]
+    by_url = {item["url"]: item for item in ordered}
+    monitored = [by_url[url] for url in monitor_urls if url in by_url]
+    monitored_set = set(monitor_urls)
+    return (monitored + [item for item in ordered if item["url"] not in monitored_set])[:max_inspections]
 
 
 def _previous_page_items(previous: dict[str, Any] | None) -> dict[str, dict[str, Any]]:
@@ -528,6 +549,7 @@ def merge_rolling_page_inventory(
             item = dict(current_by_url[url])
             item["inspection_source"] = "current"
             item["stale"] = False
+            item.setdefault("inspected_at", None)
             merged.append(item)
             continue
 
@@ -537,6 +559,9 @@ def merge_rolling_page_inventory(
             item["kind"] = "page"
             item["inspection_source"] = "previous"
             item["stale"] = True
+            # Older reports did not retain a URL-level inspection time. The
+            # report or crawl timestamp cannot reliably reconstruct it.
+            item.setdefault("inspected_at", None)
             merged.append(item)
             continue
 
@@ -550,6 +575,7 @@ def merge_rolling_page_inventory(
                 "recommended_action": "Pending a scheduled URL Inspection pass.",
                 "inspection_source": "none",
                 "stale": True,
+                "inspected_at": None,
             }
         )
 
@@ -679,16 +705,17 @@ def build_markdown(report: dict[str, Any]) -> str:
     else:
         lines.extend(
             [
-                "| Priority | Status | URL | Recommended action |",
-                "| --- | --- | --- | --- |",
+                "| Priority | Status | Inspected at (UTC) | URL | Recommended action |",
+                "| --- | --- | --- | --- | --- |",
             ]
         )
         for item in queue[:75]:
             url = item["url"].replace("|", "%7C")
             action = str(item.get("recommended_action") or "").replace("|", "\\|")
+            inspected_at = str(item.get("inspected_at") or "unknown").replace("|", "\\|")
             lines.append(
                 f"| {item.get('priority', 'REVIEW')} | {item.get('status', 'needs_review')} | "
-                f"[{url}]({url}) | {action} |"
+                f"{inspected_at} | [{url}]({url}) | {action} |"
             )
         if len(queue) > 75:
             lines.append(
@@ -734,6 +761,7 @@ def build_setup_only_items(entries: list[dict[str, str]]) -> list[dict[str, Any]
                 ),
                 "inspection_source": "none",
                 "stale": True,
+                "inspected_at": None,
             }
         )
     return items
@@ -803,6 +831,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     inspectable_entries = list(page_entries_all)
     if args.include_data:
         inspectable_entries.extend(data_entries_all)
+    monitor_urls = load_monitor_urls(getattr(args, "monitor_urls_file", None), args.site_url, page_entries_all)
 
     skipped_reason = ""
     previous_age = previous_report_age_hours(previous)
@@ -823,6 +852,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             max_inspections=args.max_inspections,
             mode=args.inspection_mode,
             seed=args.selection_seed or datetime.now(timezone.utc).date().isoformat(),
+            monitor_urls=monitor_urls,
         )
 
     current_items: list[dict[str, Any]] = []
@@ -831,6 +861,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     for index, entry in enumerate(selected_entries):
         page_url = entry["url"]
         kind = classify_url_kind(page_url)
+        attempted_at = utc_now()
         try:
             response = inspect_url(session, args.site_url, page_url)
             inspection = response.get("inspectionResult", {})
@@ -843,6 +874,8 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 "priority": priority,
                 "status": status,
                 "recommended_action": action,
+                "inspected_at": utc_now(),
+                "inspection_attempted_at": attempted_at,
                 "verdict": index_status.get("verdict"),
                 "coverage_state": index_status.get("coverageState"),
                 "robots_txt_state": index_status.get("robotsTxtState"),
@@ -863,6 +896,8 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 "kind": kind,
                 "priority": "ERROR",
                 "status": "inspection_error",
+                "inspected_at": None,
+                "inspection_attempted_at": attempted_at,
                 "recommended_action": (
                     "Check API permissions, quota, and the Search Console property."
                 ),
@@ -909,6 +944,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                     ),
                     "inspection_source": "none",
                     "stale": False,
+                    "inspected_at": None,
                 }
             )
 
@@ -972,6 +1008,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--previous-report",
         help="Previous JSON report used for rolling status and deltas.",
+    )
+    parser.add_argument(
+        "--monitor-urls-file",
+        help="JSON file with priority page URLs to inspect first within the existing budget.",
     )
     parser.add_argument(
         "--output-dir",
