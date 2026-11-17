@@ -58,11 +58,25 @@ def test_parse_urlset():
 
 def test_data_endpoints_are_not_page_urls():
     assert classify_url_kind("https://example.com/ai/resume.json") == "data"
+    assert classify_url_kind("https://example.com/ai/entity-graph.jsonld") == "data"
+    assert classify_url_kind("https://example.com/ai/entity-graph.JSONLD?version=1") == "data"
     assert classify_url_kind("https://example.com/llms.txt") == "data"
     assert classify_url_kind("https://example.com/assets/app.js") == "data"
     assert classify_url_kind("https://example.com/assets/site.css") == "data"
     assert classify_url_kind("https://example.com/assets/icon.svg") == "data"
     assert classify_url_kind("https://example.com/labs/") == "page"
+
+
+def test_setup_inventory_excludes_jsonld_from_page_inspections():
+    entries = [
+        {"url": "https://example.com/ai/entity-graph.jsonld", "lastmod": ""},
+        {"url": "https://example.com/atlas/example/", "lastmod": ""},
+    ]
+    rows = pipeline.build_setup_only_items(entries)
+    assert [(row["kind"], row["status"]) for row in rows] == [
+        ("data", "data_url_skipped"),
+        ("page", "not_inspected"),
+    ]
 
 
 def test_indexed_status_is_ok():

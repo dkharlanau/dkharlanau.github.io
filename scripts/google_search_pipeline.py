@@ -35,6 +35,7 @@ INSPECTION_ENDPOINT = "https://searchconsole.googleapis.com/v1/urlInspection/ind
 SITEMAP_API_ROOT = "https://www.googleapis.com/webmasters/v3"
 DATA_EXTENSIONS = {
     ".json",
+    ".jsonld",
     ".yml",
     ".yaml",
     ".xml",
@@ -666,7 +667,9 @@ def build_markdown(report: dict[str, Any]) -> str:
             "",
             "Counts combine the latest available result for each URL, including results "
             "carried forward from earlier inspections. Report generation time is not an "
-            "inspection time; see each URL's timestamp in the JSON report.",
+            "inspection time; see each URL's timestamp in the JSON report. Changes may "
+            "also reflect URLs entering or leaving the tracked inventory, rather than "
+            "a change in Google's indexing status.",
             "",
             "| Status | Count | Change |",
             "| --- | ---: | ---: |",
