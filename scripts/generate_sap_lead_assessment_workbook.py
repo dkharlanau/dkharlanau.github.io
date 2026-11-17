@@ -11,10 +11,12 @@ import argparse
 import json
 import re
 import sys
+import tempfile
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
+from xml.etree import ElementTree as ET
 from xml.sax.saxutils import escape
 
 import yaml
@@ -570,13 +572,51 @@ def validate_xlsx(path: Path, expected_sheets: int) -> None:
             raise RuntimeError(f"Expected {expected_sheets} worksheets, found {worksheet_count}")
 
 
+def comparable_core_properties(content: bytes) -> bytes:
+    """Ignore generation timestamps while retaining all other document properties."""
+    root = ET.fromstring(content)
+    namespace = "{http://purl.org/dc/terms/}"
+    for name in ("created", "modified"):
+        for element in root.findall(f"{namespace}{name}"):
+            element.text = ""
+    return ET.tostring(root, encoding="utf-8")
+
+
+def workbook_contents_match(left_path: Path, right_path: Path) -> bool:
+    """Compare every OOXML member, ignoring ZIP metadata and core timestamps."""
+    try:
+        with zipfile.ZipFile(left_path) as left, zipfile.ZipFile(right_path) as right:
+            left_names, right_names = left.namelist(), right.namelist()
+            if (
+                len(left_names) != len(set(left_names))
+                or len(right_names) != len(set(right_names))
+                or set(left_names) != set(right_names)
+            ):
+                return False
+            for name in left_names:
+                left_data, right_data = left.read(name), right.read(name)
+                if name == "docProps/core.xml":
+                    left_data = comparable_core_properties(left_data)
+                    right_data = comparable_core_properties(right_data)
+                if left_data != right_data:
+                    return False
+            return True
+    except (OSError, zipfile.BadZipFile, ET.ParseError, RuntimeError):
+        return False
+
+
 def generate(output: Path = OUTPUT_PATH) -> Path:
     roadmap = load_yaml(ROADMAP_PATH)
     requirements = load_yaml(REQUIREMENTS_PATH)
     factory = load_json(FACTORY_PATH)
     models = build_sheet_model(roadmap, requirements, factory)
-    write_workbook(models, output)
-    validate_xlsx(output, len(models))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=output.parent) as tmp:
+        candidate = Path(tmp) / output.name
+        write_workbook(models, candidate)
+        validate_xlsx(candidate, len(models))
+        if not output.exists() or not workbook_contents_match(candidate, output):
+            candidate.replace(output)
     return output
 
 
@@ -587,24 +627,15 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.check:
-        import tempfile
-
         if not OUTPUT_PATH.exists():
             print(f"Missing generated workbook: {OUTPUT_PATH.relative_to(ROOT)}", file=sys.stderr)
             return 1
         with tempfile.TemporaryDirectory() as tmp:
             candidate = Path(tmp) / OUTPUT_PATH.name
             generate(candidate)
-            # Core timestamps differ by design, so validate both packages and compare canonical sheet XML + workbook XML.
-            with zipfile.ZipFile(candidate) as left, zipfile.ZipFile(OUTPUT_PATH) as right:
-                comparable = [
-                    name for name in left.namelist()
-                    if name.startswith("xl/") and name.endswith(".xml")
-                ]
-                for name in comparable:
-                    if name not in right.namelist() or left.read(name) != right.read(name):
-                        print(f"Generated workbook is stale: {name}", file=sys.stderr)
-                        return 1
+            if not workbook_contents_match(candidate, OUTPUT_PATH):
+                print("Generated workbook is stale or invalid", file=sys.stderr)
+                return 1
         print(f"Workbook is current: {OUTPUT_PATH.relative_to(ROOT)}")
         return 0
 

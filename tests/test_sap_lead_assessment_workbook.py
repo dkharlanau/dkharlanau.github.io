@@ -65,3 +65,78 @@ def test_generator_builds_valid_xlsx_from_current_site_data(tmp_path: Path) -> N
     assert "How to Use" in sheet_names
     assert len(sheet_names) == len(set(sheet_names))
     assert all(len(name) <= 31 and not INVALID.search(name) for name in sheet_names)
+
+
+def test_regeneration_preserves_identical_workbook_despite_timestamp_changes(tmp_path: Path, monkeypatch) -> None:
+    output = tmp_path / "assessment.xlsx"
+    workbook.generate(output)
+    original = output.read_bytes()
+    original_mtime = output.stat().st_mtime_ns
+    core_xml = workbook.core_xml
+
+    def different_timestamp() -> str:
+        return re.sub(r'(xsi:type="dcterms:W3CDTF">)[^<]+', r'\g<1>2000-01-01T00:00:00Z', core_xml())
+
+    monkeypatch.setattr(workbook, "core_xml", different_timestamp)
+    workbook.generate(output)
+
+    assert output.read_bytes() == original
+    assert output.stat().st_mtime_ns == original_mtime
+
+
+def test_regeneration_replaces_workbook_when_metadata_changes(tmp_path: Path, monkeypatch) -> None:
+    output = tmp_path / "assessment.xlsx"
+    workbook.generate(output)
+    core_xml = workbook.core_xml
+    monkeypatch.setattr(workbook, "core_xml", lambda: core_xml().replace(
+        "SAP Lead Assessment Master Workbook", "Updated Assessment Workbook"
+    ))
+
+    workbook.generate(output)
+
+    with zipfile.ZipFile(output) as archive:
+        assert b"Updated Assessment Workbook" in archive.read("docProps/core.xml")
+
+
+def test_check_detects_extra_package_member_and_regeneration_repairs_it(tmp_path: Path, monkeypatch) -> None:
+    output = tmp_path / "assessment.xlsx"
+    workbook.generate(output)
+    with zipfile.ZipFile(output, "a") as archive:
+        archive.writestr("unexpected.txt", "stale")
+    monkeypatch.setattr(workbook, "OUTPUT_PATH", output)
+    monkeypatch.setattr(workbook, "ROOT", tmp_path)
+
+    assert workbook.main(["--check"]) == 1
+    workbook.generate(output)
+    assert workbook.main(["--check"]) == 0
+    with zipfile.ZipFile(output) as archive:
+        assert "unexpected.txt" not in archive.namelist()
+
+
+def test_regeneration_repairs_changed_worksheet(tmp_path: Path) -> None:
+    output = tmp_path / "assessment.xlsx"
+    workbook.generate(output)
+    changed = tmp_path / "changed.xlsx"
+    with zipfile.ZipFile(output) as source, zipfile.ZipFile(changed, "w") as target:
+        for name in source.namelist():
+            data = source.read(name)
+            if name == "xl/worksheets/sheet1.xml":
+                data += b"<!-- altered -->"
+            target.writestr(name, data)
+    changed.replace(output)
+
+    workbook.generate(output)
+
+    with zipfile.ZipFile(output) as archive:
+        assert b"<!-- altered -->" not in archive.read("xl/worksheets/sheet1.xml")
+
+
+def test_regeneration_replaces_invalid_existing_workbook(tmp_path: Path) -> None:
+    output = tmp_path / "assessment.xlsx"
+    output.write_bytes(b"not an xlsx")
+
+    workbook.generate(output)
+
+    with zipfile.ZipFile(output) as archive:
+        assert archive.testzip() is None
+        assert "xl/workbook.xml" in archive.namelist()
