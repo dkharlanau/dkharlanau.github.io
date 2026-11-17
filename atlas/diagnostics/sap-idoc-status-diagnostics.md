@@ -29,6 +29,7 @@ related:
 - /atlas/diagnostics/sap-inbound-processing-diagnostics/
 - /atlas/diagnostics/sap-outbound-processing-diagnostics/
 - /atlas/diagnostics/sap-idoc-diagnostics/
+- /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 robots: index,follow,max-image-preview:large
 sitemap: true
 level: 2
@@ -129,8 +130,8 @@ level: 2
       <li>Map the current status to one layer: inbound partner/profile, inbound application, background or qRFC backlog, or outbound port and transport.</li>
       <li>For status 51, use the detailed status message and the relevant application log to identify the data, configuration, or business-rule failure.</li>
       <li>For status 64, compare the WE20 processing mode with the RBDAPP01 schedule, selection variant, job log, and authorization.</li>
-      <li>For status 75, inspect the inbound qRFC queue in SMQ2 and identify the first blocking entry.</li>
-      <li>For status 02, check the port and underlying destination. For status 03 with a missing receiver message, trace the TID through SM58 or the applicable middleware and receiver monitor.</li>
+      <li>For status 75, inspect the inbound qRFC queue in SMQ2 and identify the first blocking entry. Continue with the <a href="/atlas/diagnostics/sap-qrfc-trfc-diagnostics/">qRFC and tRFC diagnostic</a> when the queue needs further investigation.</li>
+      <li>For status 02, check the port and underlying destination. For status 03 with a missing receiver message, trace the TID through SM58 or the applicable middleware and receiver monitor. The <a href="/atlas/diagnostics/sap-idoc-diagnostics/">end-to-end IDoc diagnostic</a> helps locate the first unconfirmed handoff.</li>
       <li>Confirm the business result before closing the incident: document number, application log, receiver acknowledgement, or another system-specific proof.</li>
     </ol>
 
