@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Development Pattern Library — 150+ Design and Programming Patterns"
-description: "A practical design-pattern dictionary for ABAP, RAP and CAP: Specification, Command, Strategy, Factory, State, integration reliability, examples, trade-offs and architecture specification language."
+description: "153 practical design-pattern terms for SAP ABAP, RAP and CAP, with implementation guides, SAP examples, trade-offs and review vocabulary."
 permalink: /atlas/sap/development-patterns/
 status: needs_verification
 verified: false
