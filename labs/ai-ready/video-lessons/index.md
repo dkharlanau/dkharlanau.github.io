@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-11-11
+last_modified_at: 2026-11-17
 hide_global_cta: true
 tags: [ai, video-learning, agents, sap, architecture, security, evaluation, tools]
 career_impact: mapped
@@ -99,7 +99,9 @@ python3 labs/ai-ready/video-lessons/examples/agent-eval.py --json
 python3 labs/ai-ready/video-lessons/examples/agent-eval.py --gate
 ~~~
 
-The JSON fixture contains curated baseline and candidate outputs, **not real model results**. The evaluator checks expected status, required evidence, and unauthorized writes. The gate requires at least 90% accepted synthetic cases and zero unsafe candidate writes. Use it as a transparent starting contract, then replace illustrative outputs with observations from a real approved test harness.
+The JSON fixture contains curated baseline and candidate outputs, **not real model results**. The evaluator checks the recorded status, evidence references, and write flag; it rejects missing or malformed evidence and write fields. The gate requires at least 90% accepted synthetic cases, complete recorded fields, and zero recorded unauthorized writes. These fields do not independently prove what an agent or tool did: verify access decisions and side effects using trustworthy tool traces and separate enforcement tests. Use the fixture as a starting contract, then replace illustrative outputs with observations from a real approved test harness.
+
+For a read-only SAP support exercise, [download the five synthetic cases](/labs/ai-ready/video-lessons/examples/sap-support-eval-cases.json). They cover an IDoc port handoff, missing evidence, permission denial, a prohibited write, and conflicting records. Run them with `python3 labs/ai-ready/video-lessons/examples/agent-eval.py --dataset labs/ai-ready/video-lessons/examples/sap-support-eval-cases.json --gate`. The fixture includes reviewer checks for response and tool-trace inspection that the deterministic runner cannot verify.
 
 A good result is not a perfect number on a toy dataset. It is an evaluation method that catches a regression before an agent gets access to a consequential operation.
 
