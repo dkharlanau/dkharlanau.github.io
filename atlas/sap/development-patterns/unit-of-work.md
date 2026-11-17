@@ -81,9 +81,9 @@ Unit of Work coordinates local state. Outbox protects event intent across public
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [Unit of Work — Martin Fowler, Patterns of Enterprise Application Architecture](https://martinfowler.com/eaaCatalog/unitOfWork.html)
+- [RAP Business Object Contract — SAP Help](https://help.sap.com/docs/abap-cloud/abap-rap/rap-business-object-contract)
+- [RAP operations — SAP Help](https://help.sap.com/docs/abap-cloud/abap-rap/operations)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

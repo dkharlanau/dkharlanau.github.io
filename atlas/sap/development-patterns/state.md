@@ -80,8 +80,8 @@ Strategy varies algorithm by selection; State varies behavior because the object
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [State — Refactoring.Guru](https://refactoring.guru/design-patterns/state)
+- [RAP BO operations — SAP Help (transaction-specific actions)](https://help.sap.com/docs/abap-cloud/abap-rap/operations)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

@@ -82,8 +82,8 @@ Command describes *what operation to execute*; Strategy swaps *the algorithm use
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [Command — Refactoring.Guru](https://refactoring.guru/design-patterns/command)
+- [SAP RAP operations (when commands use a RAP BO) — SAP Help](https://help.sap.com/docs/abap-cloud/abap-rap/operations)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

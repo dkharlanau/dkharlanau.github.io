@@ -84,8 +84,8 @@ Specification answers *may this happen?* Strategy answers *how?* Command perform
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [Patterns of Enterprise Application Architecture — Martin Fowler](https://martinfowler.com/eaaCatalog/)
+- [SAP Clean ABAP — writing testable business rules](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

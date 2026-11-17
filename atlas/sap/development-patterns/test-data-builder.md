@@ -80,8 +80,8 @@ A Builder creates test values. A Fake implements a test dependency. A Stub retur
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [Object Mother — Martin Fowler (related testing pattern)](https://martinfowler.com/bliki/ObjectMother.html)
+- [SAP Clean ABAP — testing guidance](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

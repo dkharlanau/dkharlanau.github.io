@@ -83,9 +83,9 @@ This is an SAP realization of Separation of Concerns and Dependency Injection, n
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [RAP Business Object Contract — SAP Help](https://help.sap.com/docs/abap-cloud/abap-rap/rap-business-object-contract)
+- [RAP Validations — SAP Help](https://help.sap.com/docs/abap-cloud/abap-rap/validations)
+- [SAP Clean ABAP — designing small testable units](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

@@ -80,9 +80,9 @@ Strategy selects one known algorithm; Chain of Responsibility discovers the firs
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [Chain of Responsibility — Refactoring.Guru](https://refactoring.guru/design-patterns/chain-of-responsibility)
+- [SAP Clean ABAP — responsibilities and error handling](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+- [RAP validations — SAP Help (framework boundary)](https://help.sap.com/docs/abap-cloud/abap-rap/validations)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

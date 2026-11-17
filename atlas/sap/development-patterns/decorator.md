@@ -81,8 +81,8 @@ Decorator adds behavior without changing the interface; Adapter changes the inte
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [Decorator — Refactoring.Guru](https://refactoring.guru/design-patterns/decorator)
+- [SAP Clean ABAP — dependencies and testability](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

@@ -81,8 +81,8 @@ Adapter changes an interface. Decorator preserves the interface and adds behavio
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [Adapter — Refactoring.Guru](https://refactoring.guru/design-patterns/adapter)
+- [ABAP Cloud Development Model — SAP Help (released interface boundary)](https://help.sap.com/docs/abap-cloud/abap-cloud-background-concepts-and-overview/abap-cloud-development-model)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 

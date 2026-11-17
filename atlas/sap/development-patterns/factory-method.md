@@ -79,8 +79,8 @@ Factory Method constructs one implementation. Abstract Factory constructs a fami
 
 ## Sources and constraints
 
-- [${sourceLabel(u)}](${u})
-- [${sourceLabel(u)}](${u})
+- [Factory Method — Refactoring.Guru](https://refactoring.guru/design-patterns/factory-method)
+- [SAP Clean ABAP — dependency injection and constructors](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 This independent educational example uses synthetic scenarios and does not claim official SAP endorsement. The page is pending editorial and release-specific review.
 
