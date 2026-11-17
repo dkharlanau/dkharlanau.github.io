@@ -10,7 +10,7 @@
 .focus-home {
   width: min(calc(100% - 2 * var(--space-5)), 66rem);
   max-width: none;
-  padding-block: var(--space-9) 3.5rem;
+  padding-block: clamp(3rem, 5vw, 4.5rem) 3.5rem;
 }
 
 .focus-page h1 {
@@ -70,21 +70,28 @@
 
 /* The homepage uses a spacious serif title and two direct entry points. */
 .focus-home .focus-intro { max-width: none; margin-bottom: 0; }
-.focus-home .focus-intro .eyebrow { margin-bottom: var(--space-5); font-size: var(--text-base); font-weight: 500; }
 .focus-home h1 {
   max-width: none;
   font-family: "Times New Roman", Times, serif;
-  font-size: clamp(2.5rem, 5.8vw, 5.375rem);
-  font-weight: 700;
-  line-height: 1;
+  font-size: clamp(2.5rem, 4.6vw, 4rem);
+  font-weight: 600;
+  line-height: 1.08;
   letter-spacing: -0.02em;
 }
 .focus-home .focus-lead {
-  max-width: none;
+  max-width: 48rem;
   margin-top: var(--space-4);
-  font-size: clamp(1.2rem, 2vw, 1.75rem);
-  line-height: 1.5;
+  font-family: var(--font-sans);
+  font-size: clamp(1.0625rem, 1.25vw, 1.2rem);
+  line-height: 1.7;
 }
+.focus-identity { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-5); }
+.focus-identity__portrait { flex: 0 0 3rem; width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; }
+.focus-home .focus-identity__copy p { margin: 0; font-family: var(--font-sans); font-size: var(--text-base); line-height: 1.45; }
+.focus-identity__name { font-weight: 650; }
+.focus-identity__role { display: flex; flex-wrap: wrap; column-gap: var(--space-3); color: var(--color-text-muted); }
+.focus-identity a { color: var(--color-accent); text-decoration: none; }
+.focus-identity a:hover { text-decoration: underline; }
 .focus-actions {
   display: flex;
   flex-wrap: wrap;
@@ -93,9 +100,11 @@
   margin-top: var(--space-5);
 }
 .focus-actions .btn--primary { min-height: 3.75rem; padding: var(--space-3) var(--space-6); font-size: var(--text-lg); }
+.focus-home .focus-actions .btn--primary { min-height: 2.75rem; padding: var(--space-2) var(--space-4); font-size: var(--text-base); }
 .focus-actions .btn--quiet { font-size: 1.25rem; font-weight: 500; }
 .focus-actions .material-symbols-outlined { font-size: 1.5rem; }
-.focus-topics { margin-top: 5.5rem; }
+.focus-home .focus-actions .material-symbols-outlined { font-size: 1.15rem; }
+.focus-topics { margin-top: 3.5rem; }
 .focus-topics__header {
   display: flex;
   flex-wrap: wrap;
@@ -104,7 +113,7 @@
   gap: var(--space-2) var(--space-5);
   margin-bottom: var(--space-4);
 }
-.focus-topics__header h2 { font-family: var(--font-serif); font-size: 2rem; font-weight: 600; }
+.focus-topics__header h2 { font-family: var(--font-serif); font-size: clamp(2.25rem, 3.5vw, 2.75rem); font-weight: 650; line-height: 1.15; }
 .focus-topics__search {
   display: inline-flex;
   align-items: center;
@@ -116,6 +125,19 @@
 }
 .focus-topics__search .material-symbols-outlined { font-size: 1.4rem; }
 .focus-topics__search:hover { color: var(--color-accent); text-decoration: underline; }
+.focus-home .focus-explore-links { margin-top: var(--space-4); color: var(--color-text-muted); font-size: var(--text-base); }
+.focus-home .focus-explore-links a { color: var(--color-accent); text-decoration: none; }
+.focus-home .focus-explore-links a:hover { text-decoration: underline; }
+.focus-home .focus-explore-links span { padding-inline: var(--space-2); }
+.focus-home .focus-insights__intro { margin-bottom: var(--space-4); color: var(--color-text-muted); font-size: var(--text-base); }
+.focus-home .focus-insights .focus-topics__search { color: var(--color-accent); font-weight: 600; }
+.focus-home .focus-insights .research-route-list--home > a { padding-block: var(--space-5); }
+.focus-home .focus-insights .research-route-list--home > a strong { font-family: var(--font-serif); font-size: clamp(1.5rem, 2vw, 1.8rem); font-weight: 600; }
+.focus-insights__date { color: var(--color-text-muted); font-family: var(--font-sans); font-size: var(--text-sm); line-height: 1.4; }
+.focus-home .focus-ai-link { margin-top: var(--space-6); color: var(--color-text-muted); font-size: var(--text-base); }
+.focus-home .focus-ai-link a { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--color-accent); text-decoration: none; }
+.focus-home .focus-ai-link a:hover { text-decoration: underline; }
+.focus-home .focus-ai-link .material-symbols-outlined { font-size: 1.15rem; }
 
 /* Two entry routes: quiet hairline blocks, not colored cards. */
 .focus-grid {
@@ -428,15 +450,14 @@
   .focus-search__row { flex-direction: column; }
   .focus-search__row button { align-self: flex-start; }
   .focus-home { padding-block: var(--space-7) var(--space-7); }
-  .focus-home .focus-intro .eyebrow { font-size: var(--text-sm); margin-bottom: var(--space-4); }
   .focus-home h1 { font-size: clamp(2.1rem, 8.8vw, 3.5rem); line-height: 1.12; }
-  .focus-home .focus-lead { font-size: 1.25rem; }
+  .focus-home .focus-lead { font-size: var(--text-base); }
   .focus-actions { gap: var(--space-2) var(--space-5); margin-top: var(--space-5); }
   .focus-actions .btn--primary { font-size: var(--text-md); padding-inline: var(--space-5); }
   .focus-actions .btn--quiet { font-size: var(--text-md); }
   .focus-topics { margin-top: var(--space-7); }
   .focus-topics__header { gap: 0; margin-bottom: var(--space-4); }
-  .focus-topics__header h2 { width: 100%; font-size: 1.65rem; }
+  .focus-topics__header h2 { width: 100%; font-size: 2.1rem; }
   .focus-topics__search { font-size: var(--text-md); }
 }
 

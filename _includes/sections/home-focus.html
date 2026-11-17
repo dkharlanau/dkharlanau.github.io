@@ -1,41 +1,56 @@
 {% comment %}Minimal English entry point for the personal SAP and AI lab.{% endcomment %}
-<link rel="stylesheet" href="{{ '/assets/site-focus.css' | relative_url }}" />
+<link rel="stylesheet" href="{{ '/assets/site-focus.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
 <div class="focus-page focus-home">
   <header class="focus-intro" aria-labelledby="home-title">
-    <p class="eyebrow"><a href="{{ '/about/' | relative_url }}">Dzmitryi Kharlanau</a> / SAP Consultant at EPAM Systems</p>
-    <h1 id="home-title">SAP operations, integration and practical AI.</h1>
-    <p class="focus-lead">I write practical guides and build tools for diagnosing SAP integration failures, improving operational knowledge, and evaluating AI around SAP. This is my personal, independent site.</p>
-    <nav class="focus-actions" aria-label="Explore the lab">
-      <a class="btn btn--primary" href="{{ '/lab/' | relative_url }}">Open practical lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-      <a class="btn btn--quiet" href="{{ '/knowledge/' | relative_url }}">Explore knowledge</a>
+    <h1 id="home-title">SAP logistics, integration and automation.</h1>
+    <p class="focus-lead">I work on complex SAP projects, bringing logistics processes, systems and data together. From understanding the problem and designing a solution through implementation and delivery, I focus on practical automation and solving difficult business and technical challenges.</p>
+    <div class="focus-identity">
+      <img class="focus-identity__portrait" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="" width="48" height="48" />
+      <div class="focus-identity__copy">
+        <p class="focus-identity__name"><a href="{{ '/about/' | relative_url }}">Dzmitryi Kharlanau</a></p>
+        <p class="focus-identity__role"><span>SAP Consultant at <a href="https://www.epam.com/" target="_blank" rel="noopener noreferrer">EPAM Systems</a></span><a href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+      </div>
+    </div>
+    <nav class="focus-actions" aria-label="Contact">
+      <a class="btn btn--primary" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer" aria-label="Contact on LinkedIn">Contact <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
     </nav>
   </header>
 
   <section class="focus-topics" aria-labelledby="focus-start-title">
     <header class="focus-topics__header">
-      <h2 id="focus-start-title">Start with a topic</h2>
-      <a class="focus-topics__search" href="{{ '/search/' | relative_url }}"><span class="material-symbols-outlined" aria-hidden="true">search</span>Search the notebook</a>
+      <h2 id="focus-start-title">Explore the topics</h2>
+      <a class="focus-topics__search" href="{{ '/search/' | relative_url }}"><span class="material-symbols-outlined" aria-hidden="true">search</span>Search the site</a>
     </header>
     <nav class="research-route-list research-route-list--home" aria-label="Choose a topic">
       <a href="{{ '/labs/enterprise-context/' | relative_url }}">
-        <span class="focus-topic-name"><span class="focus-topic-label">SAP</span><strong>SAP Enterprise</strong></span>
-        <small>Processes, logistics, data, and integration.</small>
+        <span class="focus-topic-name"><strong>SAP &amp; enterprise systems</strong><small>Explore logistics processes, integration and data across SAP and enterprise systems.</small></span>
         <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i>
       </a>
       <a href="{{ '/labs/ai-ready/' | relative_url }}">
-        <span class="focus-topic-name"><span class="focus-topic-label">AI</span><strong>AI Ready</strong></span>
-        <small>Agents, retrieval, evaluation, and controls.</small>
+        <span class="focus-topic-name"><strong>AI in the enterprise</strong><small>Explore practical AI and automation use cases for enterprise projects.</small></span>
         <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i>
       </a>
     </nav>
+    <p class="focus-explore-links"><a href="{{ '/lab/' | relative_url }}">Explore tools</a> <span aria-hidden="true">·</span> <a href="{{ '/knowledge/' | relative_url }}">Browse knowledge</a></p>
   </section>
-  <section class="focus-topics" aria-labelledby="selected-work-title">
-    <header class="focus-topics__header"><h2 id="selected-work-title">Selected practical work</h2></header>
-    <nav class="research-route-list research-route-list--home" aria-label="Selected practical work">
-      <a href="/atlas/diagnostics/sap-idoc-status-diagnostics/"><span class="focus-topic-name"><strong>SAP IDoc status diagnostics</strong></span><small>Trace the failure from message status to business outcome.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/atlas/automation/operational-memory-for-sap-ams/"><span class="focus-topic-name"><strong>Operational memory for SAP AMS</strong></span><small>Turn incident knowledge into reusable support evidence.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/atlas/ai-operations/ai-agent-for-sap-support/"><span class="focus-topic-name"><strong>AI agents for SAP support</strong></span><small>Design around evidence, access, and human decisions.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+  <p class="focus-ai-link">Want to explore this work with an AI assistant? <a href="{{ '/machine/#agent-setup' | relative_url }}">See how to use this site with AI <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p>
+  <section class="focus-topics focus-insights" aria-labelledby="insights-title">
+    <header class="focus-topics__header">
+      <h2 id="insights-title">Insights</h2>
+      <a class="focus-topics__search" href="{{ '/labs/ai-ready/video-lessons/' | relative_url }}">View all <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </header>
+    <p class="focus-insights__intro">Working notes on AI, architecture and delivery.</p>
+    <nav class="research-route-list research-route-list--home" aria-label="Insights">
+      {% for insight in site.data.home_insights %}
+      {% assign insight_page = site.pages | where: 'url', insight.url | first %}
+      <a href="{{ insight.url | relative_url }}">
+        <span class="focus-topic-name">
+          {% if insight_page.last_modified_at %}<time class="focus-insights__date" datetime="{{ insight_page.last_modified_at | date: '%Y-%m-%d' }}">Updated {{ insight_page.last_modified_at | date: '%-d %b %Y' }}</time>{% endif %}
+          <strong>{{ insight.title | escape }}</strong><small>{{ insight.summary | escape }}</small>
+        </span>
+        <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i>
+      </a>
+      {% endfor %}
     </nav>
   </section>
-  {% include agent-connection.html %}
 </div>

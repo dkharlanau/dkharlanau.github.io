@@ -186,16 +186,20 @@ diagrams).
   line breaks in technical hero titles: a title that fits should stay on one
   line, while longer titles wrap naturally. Body sections keep the normal
   editorial measure.
-- **Home** (`focus-home`): blue identity line, two-line serif headline, short
-  serif explanation, a primary `/lab/` button and quiet `/knowledge/` link,
-  then two topic rows for SAP Enterprise and AI Ready. The headline is capped at
-  5.375rem on desktop and uses Times New Roman for the selected display treatment.
+- **Home** (`focus-home`): serif headline, short sans-serif explanation, a compact
+  portrait and identity with employer and LinkedIn links, and a compact LinkedIn
+  contact button. Below, two plain-language topic
+  rows lead to SAP and enterprise AI; tools and knowledge remain secondary links.
+  An insights list identifies its unreviewed material as working notes, shows
+  each page's actual update date, and links to the full collection.
+  The headline is capped at
+  4rem on desktop and uses Times New Roman for the selected display treatment.
   It scales down on mobile; this display treatment is scoped to
   the home entry point. The search link sits beside the topic heading and stacks
-  below it on mobile. Use the registered route-list homepage projection rather
+  below it on mobile. Each route's title and explanation stay together for easier
+  scanning. Use the registered route-list homepage projection rather
   than separate cards. The compact homepage footer shows identity, personal and
-  independent project attribution, GitHub, and LinkedIn. No portrait or additional
-  promotional sections compete with these entry points. Other routes retain the
+  independent project attribution, GitHub, and LinkedIn. Other routes retain the
   full footer and their existing heading scale.
 
 ## Responsive and accessibility rules
@@ -219,10 +223,9 @@ viewport-height heroes. Do not reintroduce them.
 
 ### Agent entry and profile reflow
 
-The homepage adds one quiet agent connection entry after the topic routes: a
-serif heading, short explanation, secondary copy action, setup link, and native
-prompt disclosure. Reuse the candidate `agent-connection` component; detailed
-web-access and local MCP instructions live on `/machine/#agent-setup`.
+The homepage offers one plain-language link after the topic routes for readers
+who want to use its public knowledge with an AI assistant. Detailed setup and
+the candidate `agent-connection` component live on `/machine/#agent-setup`.
 
 The compact profile hero keeps one column through 800px. Desktop grid overrides
 must not restore the portrait column after the mobile reflow rule. Preserve body

@@ -31,7 +31,10 @@ def test_home_routes_to_practice_knowledge_and_topics_without_replacing_the_bran
     assert "'/labs/ai-ready/' | relative_url" in topic_routes
     assert home.count("<h1 ") == 1
     assert "'/search/' | relative_url" in home
-    assert "<img" not in home
+    assert home.count("<img ") == 1
+    assert 'class="focus-identity__portrait"' in home
+    assert "DzmitryiKharlanau.webp" in home
+    assert 'aria-label="Contact on LinkedIn"' in home
     header = read("_includes/header.html")
     assert "/assets/img/logo-d.svg" in header
     assert "page_locale" not in header

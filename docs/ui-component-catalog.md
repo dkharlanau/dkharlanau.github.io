@@ -112,10 +112,11 @@ One row equals one destination. The row should contain enough information to cho
 the route without adding a duplicate button. Do not use route lists for facts that
 are not links.
 
-The homepage uses `.research-route-list--home`: a small category above a serif
-title, a short destination hint, and a decorative arrow. At narrow widths the hint
-stacks below the title. The whole row is one link. This projection shares the
-route-list owner in `assets/research-canvas.css`.
+The homepage uses `.research-route-list--home`: a readable title and short
+destination hint grouped together, with a decorative arrow. The whole row is one
+link at desktop and mobile widths. This projection shares the route-list owner in
+`assets/research-canvas.css`. For dated insights, the update date comes from the
+destination page's `last_modified_at` and is omitted when no date is available.
 
 Reference implementation:
 /labs/enterprise-context/pricing/
@@ -339,7 +340,7 @@ These are information-design problems, not styling opportunities.
 Status: candidate.
 
 Purpose: let readers give the site's public sources to their own agent. Reuse
-`_includes/agent-connection.html` on the homepage and machine hub. The native
+`_includes/agent-connection.html` on the machine hub. The native
 disclosure keeps the prompt inspectable without filling the landing page with
 configuration. A shared `data-copy-target` action copies it; `data-copy-status`
 points to a live region. Clipboard failure opens and selects the prompt for manual
@@ -350,7 +351,7 @@ present the static site as a hosted MCP endpoint. Preserve review and retrieval
 eligibility when describing public sources.
 
 Owner: `assets/agent-connection.css`; copy behavior: `assets/lab-toolkit.js`.
-Reference routes: `/`, `/machine/#agent-setup`. The guide target keeps a header
+Reference route: `/machine/#agent-setup`. The guide target keeps a header
 offset for fragment navigation; its secondary link opens the technical sources
 on the same page.
 
