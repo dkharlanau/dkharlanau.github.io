@@ -26,7 +26,7 @@ expert_context:
     - /atlas/ai-operations/ai-ready-process-documentation/
     - /atlas/automation/operational-memory-for-sap-ams/
 last_reviewed: 2026-05-06
-last_modified_at: 2026-08-15
+last_modified_at: 2026-11-17
 author: Dzmitryi Kharlanau
 
 tags:
@@ -109,11 +109,16 @@ sitemap: true
     <h2>What the agent should say when evidence is weak</h2>
     <p>Uncertainty should be visible in the output. A good response can state: what is known, what is only likely, which source supports the conclusion, what evidence is missing, and which next check would reduce uncertainty. That is far more useful in SAP support than a polished paragraph that quietly mixes facts and guesses.</p>
 
+    <h2>Check the retrieval boundary</h2>
+    <p>Before loading support documents into a retrieval system, decide which information is permitted there and who may retrieve it. SAP's <a href="https://help.sap.com/docs/sap-ai-core/generative-ai/preparing-data-using-vector-api-2a9f1493456d40daafe1a0006a8c7058">Vector API documentation</a> cautions that its document grounding capability does not identify or filter confidential information. That warning applies to the documented capability; assess the controls in your own implementation and version.</p>
+    <p>Retrieved text can also contain instructions that attempt to redirect the model. <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP's prompt injection guidance</a> notes that retrieval alone does not fully prevent this risk. Treat retrieved content as evidence rather than authority to invoke tools; enforce permissions and approval outside the model.</p>
+
     <h2>Measure support value, not chat activity</h2>
     <p>The useful measures are operational: time to collect complete evidence, first-assignment accuracy, reduction in repeated investigation, escalation quality, runbook reuse, and safe resolution time. Message count and answer length tell very little about whether the support process improved.</p>
 
     <h2>The boundary that matters</h2>
     <p>An SAP support agent should make the team better at diagnosis before it is allowed to make the system different. If the architecture cannot explain who saw what, which evidence supported the recommendation, who approved the action, and what changed afterwards, the automation boundary is too loose.</p>
+    <p>For a broader governance reference, the <a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST Generative AI Profile</a> discusses oversight, documentation, and risk management across the AI lifecycle. The control choices above are an application of that broader guidance to a support workflow, not a NIST certification of this design. Sources checked 17 November 2026.</p>
   </div>
 
   <section class="atlas-related">

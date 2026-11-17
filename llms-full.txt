@@ -77,11 +77,16 @@ Home
     What the agent should say when evidence is weak
     Uncertainty should be visible in the output. A good response can state: what is known, what is only likely, which source supports the conclusion, what evidence is missing, and which next check would reduce uncertainty. That is far more useful in SAP support than a polished paragraph that quietly mixes facts and guesses.
 
+    Check the retrieval boundary
+    Before loading support documents into a retrieval system, decide which information is permitted there and who may retrieve it. SAP's Vector API documentation cautions that its document grounding capability does not identify or filter confidential information. That warning applies to the documented capability; assess the controls in your own implementation and version.
+    Retrieved text can also contain instructions that attempt to redirect the model. OWASP's prompt injection guidance notes that retrieval alone does not fully prevent this risk. Treat retrieved content as evidence rather than authority to invoke tools; enforce permissions and approval outside the model.
+
     Measure support value, not chat activity
     The useful measures are operational: time to collect complete evidence, first-assignment accuracy, reduction in repeated investigation, escalation quality, runbook reuse, and safe resolution time. Message count and answer length tell very little about whether the support process improved.
 
     The boundary that matters
     An SAP support agent should make the team better at diagnosis before it is allowed to make the system different. If the architecture cannot explain who saw what, which evidence supported the recommendation, who approved the action, and what changed afterwards, the automation boundary is too loose.
+    For a broader governance reference, the NIST Generative AI Profile discusses oversight, documentation, and risk management across the AI lifecycle. The control choices above are an application of that broader guidance to a support workflow, not a NIST certification of this design. Sources checked 17 November 2026.
 
 
 
