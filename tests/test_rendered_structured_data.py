@@ -1,6 +1,7 @@
 import html
 import json
 import re
+from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
@@ -199,6 +200,42 @@ def test_priority_article_citations_match_visible_sources(source_path):
 
     assert actual == expected
     assert expected.keys() <= links.hrefs
+
+
+def test_priority_article_update_dates_are_visible_and_match_jsonld():
+    site = _require_site()
+    urls = json.loads((REPO_ROOT / "config/google-search-monitor-urls.json").read_text())["urls"]
+    for url in urls:
+        route = Path(urlparse(url).path.strip("/")) / "index.html"
+        content = (site / route).read_text(encoding="utf-8")
+        article = next(block for block in _jsonld_blocks(content, route) if "TechArticle" in _node_types(block))
+        header = re.search(r'<header class="note-header">(.*?)</header>', content, re.DOTALL)
+        assert header, route
+        updated = re.findall(r'<time\s+datetime="([^"]+)"[^>]*>Updated ([^<]+)</time>', header.group(1))
+        modified = article.get("dateModified")
+        if modified:
+            assert len(updated) == 1, route
+            assert updated[0][0] == modified, route
+            assert updated[0][1] == datetime.fromisoformat(modified.replace("Z", "+00:00")).strftime("%d %b %Y"), route
+        else:
+            assert not updated, route
+        source = (REPO_ROOT / (str(route.parent) + ".md")).read_text(encoding="utf-8")
+        frontmatter = yaml.safe_load(source.split("---", 2)[1])
+        reviewed = frontmatter.get("last_reviewed_at") or frontmatter.get("last_reviewed")
+        provenance = re.search(r'<aside class="atlas-author atlas-trust article-provenance".*?</aside>', content, re.DOTALL)
+        assert provenance, route
+        review_time = re.search(r'<time datetime="([^"]+)">Reviewed ', provenance.group(0))
+        assert review_time and review_time.group(1) == str(reviewed)[:10], route
+        assert "A recorded human review does not automatically cover later updates." in provenance.group(0)
+        assert "Public vendor sources are used to verify facts" not in content
+
+
+def test_provenance_does_not_turn_modification_date_into_review_date():
+    content = (_require_site() / "atlas/index.html").read_text(encoding="utf-8")
+    provenance = re.search(r'<aside class="atlas-author atlas-trust article-provenance".*?</aside>', content, re.DOTALL)
+    assert provenance
+    assert "<time" not in provenance.group(0)
+    assert "Claims and wording checked before publication." not in provenance.group(0)
 
 
 def test_rendered_article_graph_distinguishes_the_page_from_its_work():

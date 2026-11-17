@@ -1,6 +1,6 @@
 {% assign atlas_status = include.status | default: page.status | default: 'needs_verification' %}
 {% assign atlas_verified = include.verified | default: page.verified %}
-{% assign atlas_reviewed = page.last_reviewed | default: page.last_modified_at | default: page.updated %}
+{% assign atlas_reviewed = page.last_reviewed_at | default: page.last_reviewed %}
 
 {% if page.url contains '/atlas/' %}
 <div class="atlas-verification" aria-label="Atlas content verification status">

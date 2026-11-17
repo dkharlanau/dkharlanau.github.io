@@ -44,6 +44,44 @@
   ],
   "components": [
     {
+      "id": "atlas-provenance",
+      "title": "Atlas provenance",
+      "status": "domain",
+      "scope": "reviewed knowledge pages",
+      "intent": "Show review status and genuine modification dates without conflating them.",
+      "selectors": [
+        ".atlas-pill-row",
+        ".article-provenance"
+      ],
+      "source_files": [
+        "_includes/atlas/status-badge.html",
+        "_includes/atlas/verification-badge.html",
+        "_includes/atlas/trust-block.html",
+        "_includes/atlas/disclaimer.html",
+        "assets/css/layout.css"
+      ],
+      "use_when": [
+        "A reviewed knowledge page has recorded review or modification metadata."
+      ],
+      "avoid_when": [
+        "A date would imply a human review that is not recorded.",
+        "A working draft would be presented as verified."
+      ],
+      "accessibility": [
+        "Use textual status labels and semantic time elements; do not rely on color alone."
+      ],
+      "responsive": [
+        "Let the metadata row wrap naturally without shrinking text."
+      ],
+      "examples": [
+        {
+          "route": "/atlas/ai-operations/ai-agent-for-sap-support/",
+          "source_file": "atlas/ai-operations/ai-agent-for-sap-support.md"
+        }
+      ],
+      "documentation_anchor": "atlas-provenance"
+    },
+    {
       "id": "study-table",
       "title": "Study table",
       "status": "stable",

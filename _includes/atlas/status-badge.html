@@ -12,3 +12,10 @@
 {% if atlas_verified == false or atlas_verified == 'false' %}
 <span class="atlas-status atlas-status--limited">Conservative summary</span>
 {% endif %}
+{% assign atlas_modified = page.significant_lastmod | default: page.content_updated_at | default: page.schema_updated_at | default: page.last_modified_at | default: page.updated %}
+{% assign atlas_modified_test = atlas_modified | date: '%s' %}
+{% unless page.robots contains 'noindex' %}
+  {% if atlas_verified == true and atlas_status == 'reviewed' and atlas_modified_test != atlas_modified %}
+<span class="atlas-status atlas-status--updated"><time datetime="{{ atlas_modified | date_to_xmlschema }}">Updated {{ atlas_modified | date: '%d %b %Y' }}</time></span>
+  {% endif %}
+{% endunless %}

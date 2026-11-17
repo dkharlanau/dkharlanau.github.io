@@ -19,6 +19,7 @@ Choose from the reader task, not from visual similarity.
 | Choose among three to six peer destinations with similar weight | faceted-route-grid (candidate) |
 | Remember and choose a compact skill family | skill-memory-grid (candidate) |
 | Inspect provenance and evidence | source-register |
+| Distinguish review history from updates in Atlas | atlas-provenance |
 | Compare two or three concepts | comparison-group |
 | Trace one SAP determination in depth | determination-detail |
 | Offer secondary deep-dive links | context-links |
@@ -267,6 +268,22 @@ and keep the same soft cobalt selection treatment on each line.
 
 Reference implementation:
 /skill-hub/architecture/capability-mapping-working-skill/
+
+## atlas-provenance
+
+Purpose: show a reviewed knowledge page's status and its recorded update date
+without presenting the update as a new human review. The shared Atlas status and
+trust includes own the labels. Modification dates use the same precedence as
+article JSON-LD; review dates come only from explicit review metadata. Omit an
+unknown date rather than substituting another kind of date. The independent research
+disclosure points readers to sources without claiming that every fact was verified.
+
+Status remains text, and dates use semantic `time` elements. The metadata row wraps
+on small screens. An update after the recorded review does not imply that the new
+content has been human reviewed.
+
+Reference implementation:
+/atlas/ai-operations/ai-agent-for-sap-support/
 
 ## site-share
 
