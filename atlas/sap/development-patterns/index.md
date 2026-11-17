@@ -1,100 +1,211 @@
 ---
 layout: default
-title: "SAP Development Pattern Library — ABAP, RAP, CAP and Integration"
-description: "16 practical design patterns for SAP developers: architecture vocabulary, implementation moves, failure modes and design review phrases."
+title: "SAP Development Pattern Library — 150+ Design and Programming Patterns"
+description: "A practical design-pattern dictionary for ABAP, RAP and CAP: Specification, Command, Strategy, Factory, State, integration reliability, examples, trade-offs and architecture specification language."
 permalink: /atlas/sap/development-patterns/
-author: "Dzmitryi Kharlanau"
 status: needs_verification
 verified: false
 robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-11-17
 hide_global_cta: true
-tags:
-  - sap
-  - abap
-  - software-architecture
-  - design-patterns
+tags: [sap, abap, rap, cap, clean-core, design-patterns, programming-patterns, architecture]
+related:
+  - /labs/enterprise-context/development/
+  - /atlas/sap/rap/
+  - /atlas/sap/abap-cloud/
 ---
 
-<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
-  <li><a href="/">Home</a></li><li><a href="/atlas/">Atlas</a></li><li><a href="/atlas/sap/">SAP</a></li>
-  <li aria-current="page">Development Patterns</li>
-</ol></nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/atlas/">Atlas</a></li>
+    <li><a href="/atlas/sap/">SAP</a></li>
+    <li aria-current="page">Pattern Library</li>
+  </ol>
+</nav>
+
 <div class="research-canvas">
   <header class="research-canvas__hero">
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">SAP engineering · Shared architecture language</p>
-      <h1>Give the design a name.<br />Make the trade-off discussable.</h1>
-      <p>ABAP enhancements, RAP business objects, CAP services and IDoc integrations are easier to maintain when developers share precise names for recurring design decisions. Not a checklist of fashionable patterns: a compact working vocabulary for real SAP constraints.</p>
-      <a class="research-canvas__button" href="#choose">Find a pattern <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">SAP Development / Pattern Language</p>
+      <h1>Give the design a name.<br>Then explain the trade-off.</h1>
+      <p>A practical programming-pattern dictionary for ABAP, RAP and CAP. Begin with the recurring problem, choose a pattern, name the interfaces and classes, and document what the pattern must <em>not</em> do.</p>
+      <p><a class="research-canvas__button" href="#pattern-catalog">Browse patterns <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></p>
     </div>
-    <div class="research-canvas__signal" aria-label="Pattern library inventory">
-      <p>First edition · 17 November 2026</p>
-      <div class="research-canvas__signal-line"><span>16</span><strong>Pattern notes</strong><small>Stable IDs</small></div>
-      <div class="research-canvas__signal-line"><span>5</span><strong>Architecture lenses</strong><small>ABAP · RAP · CAP · Integration · Core</small></div>
-      <div class="research-canvas__signal-line"><span>1</span><strong>Review language</strong><small>When · why · risk · proof</small></div>
-      <em>Public working edition. Articles are available to read but noindex until editorial verification.</em>
+    <div class="research-canvas__signal" aria-label="Catalog scope">
+      <p>Design vocabulary</p>
+      <div class="research-canvas__signal-line"><span>{{ site.data.development_patterns.patterns.size }}</span><strong>Patterns &amp; idioms</strong><small>Short, practical entries</small></div>
+      <div class="research-canvas__signal-line"><span>08</span><strong>Families</strong><small>From GoF to SAP implementation</small></div>
+      <div class="research-canvas__signal-line"><span>16</span><strong>Deep dives</strong><small>Implementation specifications</small></div>
+      <em>Working reference · pending editorial verification</em>
     </div>
   </header>
-  <section class="research-canvas__boundary">
-    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Pattern is a decision, not a badge.</strong> Naming Strategy, Managed RAP or Outbox does not validate a design. State the problem, transaction owner, alternatives, risks and one test that can falsify the proposal. SAP CAP means Cloud Application Programming Model; RAP and CAP are programming models, not interchangeable design patterns.</p>
+
+  <section class="research-canvas__boundary" aria-label="Classification boundary">
+    <span class="material-symbols-outlined" aria-hidden="true">category</span>
+    <p><strong>Not all names describe the same level of design.</strong> GoF patterns are object-level design solutions. DDD/PoEAA patterns shape domain and data ownership. Enterprise Integration Patterns shape messaging. RAP and CAP idioms explain where to apply those ideas inside SAP framework contracts. We label each family rather than pretending all entries are GoF patterns.</p>
   </section>
-  <section class="research-canvas__inventory" id="choose">
-    <header><p class="research-canvas__eyebrow">Start from the pain</p><h2>Which design problem are you solving?</h2><p>Pick a symptom, then open a pattern. Every page includes a small SAP example and a sentence you can use during code review.</p></header>
-    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Architecture problem to pattern mapping">
+
+  <section class="research-canvas__inventory" id="choose-pattern">
+    <header>
+      <p class="research-canvas__eyebrow">Fast selection</p>
+      <h2>Which problem do you actually have?</h2>
+      <p>A pattern is useful when it reduces a recurring design risk—not when it makes a three-line function look sophisticated.</p>
+    </header>
+    <div class="table-scroll study-table" role="region" tabindex="0" aria-label="Programming pattern chooser">
       <table class="study-table__table">
-        <thead><tr><th scope="col">What keeps going wrong?</th><th scope="col">Pattern to discuss</th><th scope="col">First question</th></tr></thead>
+        <thead><tr><th scope="col">I need to…</th><th scope="col">Start with</th><th scope="col">Distinguishing question</th></tr></thead>
         <tbody>
-          <tr><td>One enhancement does everything</td><td><a href="/atlas/sap/development-patterns/thin-entry-point/">Thin Entry Point</a></td><td>What can be tested without the runtime?</td></tr>
-          <tr><td>Country and sales org IF forests</td><td><a href="/atlas/sap/development-patterns/strategy-policy/">Strategy</a> / <a href="/atlas/sap/development-patterns/decision-table/">Decision Table</a></td><td>Is variation an algorithm or just data?</td></tr>
-          <tr><td>External and target keys differ</td><td><a href="/atlas/sap/development-patterns/anti-corruption-layer/">Anti-Corruption Layer</a></td><td>Where does translation finish?</td></tr>
-          <tr><td>Delta IDoc wipes existing values</td><td><a href="/atlas/sap/development-patterns/delta-aware-merge/">Delta-Aware Merge</a></td><td>What counts as absent vs cleared?</td></tr>
-          <tr><td>New custom transactional app</td><td><a href="/atlas/sap/development-patterns/managed-rap-business-object/">Managed RAP BO</a></td><td>Who owns the persistence?</td></tr>
-          <tr><td>Existing transaction needs modern API</td><td><a href="/atlas/sap/development-patterns/unmanaged-rap-facade/">Unmanaged RAP Facade</a></td><td>Who controls save and COMMIT?</td></tr>
-          <tr><td>Cloud app exposes ERP schema</td><td><a href="/atlas/sap/development-patterns/cap-service-facade/">CAP Service Facade</a></td><td>What contract does the consumer need?</td></tr>
-          <tr><td>Retries create duplicate changes</td><td><a href="/atlas/sap/development-patterns/idempotent-consumer/">Idempotent Consumer</a></td><td>What uniquely identifies the business intent?</td></tr>
-          <tr><td>DB update succeeds but event is lost</td><td><a href="/atlas/sap/development-patterns/transactional-outbox/">Transactional Outbox</a></td><td>Is intent stored with the transaction?</td></tr>
-          <tr><td>Extension relies on internal SAP APIs</td><td><a href="/atlas/sap/development-patterns/released-api-boundary/">Released API Boundary</a></td><td>Is the object released for this edition?</td></tr>
+          <tr><td>Compose reusable yes/no business rules</td><td><a href="/atlas/sap/development-patterns/specification/">Specification</a></td><td>Is the output a decision, with no side effects?</td></tr>
+          <tr><td>Turn an operation into a named executable object</td><td><a href="/atlas/sap/development-patterns/command/">Command</a></td><td>Do we need dispatch, audit, retry, queueing or undo?</td></tr>
+          <tr><td>Switch between several algorithms</td><td><a href="/atlas/sap/development-patterns/strategy/">Strategy</a></td><td>Is the choice about <em>how</em> to do one job?</td></tr>
+          <tr><td>Try handlers in priority order</td><td><a href="/atlas/sap/development-patterns/chain-of-responsibility/">Chain of Responsibility</a></td><td>Can one handler decline and pass the request on?</td></tr>
+          <tr><td>Control lifecycle transitions</td><td><a href="/atlas/sap/development-patterns/state/">State</a></td><td>Are actions legal in some states but not others?</td></tr>
+          <tr><td>Translate incompatible models</td><td><a href="/atlas/sap/development-patterns/adapter/">Adapter</a> / <a href="/atlas/sap/development-patterns/anti-corruption-layer/">Anti-Corruption Layer</a></td><td>Just an API shape mismatch—or a semantic mismatch?</td></tr>
+          <tr><td>Prevent duplicate integration effects</td><td><a href="/atlas/sap/development-patterns/idempotent-consumer/">Idempotent Consumer</a></td><td>What identifies one logical operation across retries?</td></tr>
+          <tr><td>Keep SAP transactional logic safe</td><td><a href="/atlas/sap/development-patterns/thin-rap-handler/">Thin RAP Handler</a> / <a href="/atlas/sap/development-patterns/unit-of-work/">Unit of Work</a></td><td>Who owns commit and rollback in this runtime?</td></tr>
         </tbody>
       </table>
     </div>
   </section>
-<section class="research-canvas__inventory" id="abap-oo"><header><p class="research-canvas__eyebrow">ABAP OO</p><h2>Make enhancements and rules understandable</h2><p>Extract behavior from SAP hooks, choose how rules vary, and keep data access testable.</p></header><div class="research-route-list">
-<a href="/atlas/sap/development-patterns/thin-entry-point/"><span>SDP-01</span><strong>Thin Entry Point</strong><small>A BAdI, user exit or IDoc hook should route work, not become the application.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/strategy-policy/"><span>SDP-02</span><strong>Strategy / Policy Resolver</strong><small>Replace a forest of country, channel or organization CASE branches with named policies.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/repository-and-dependency-injection/"><span>SDP-03</span><strong>Repository + Dependency Injection</strong><small>Hide database and SAP API calls behind a testable boundary.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/anti-corruption-layer/"><span>SDP-04</span><strong>Anti-Corruption Layer (ACL)</strong><small>Translate legacy or external meanings once, before they reach core rules.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/decision-table/"><span>SDP-06</span><strong>Decision Table / Rules as Data</strong><small>When the business owns many combinations, stop encoding them as nested IF statements.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-</div></section>
-<section class="research-canvas__inventory" id="rap"><header><p class="research-canvas__eyebrow">RAP</p><h2>Design business-object contracts</h2><p>Start from ownership, then choose managed/unmanaged, business behavior and draft.</p></header><div class="research-route-list">
-<a href="/atlas/sap/development-patterns/managed-rap-business-object/"><span>SDP-08</span><strong>Managed RAP Business Object</strong><small>Let the RAP runtime own ordinary persistence, locking and transactional plumbing for custom data.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/unmanaged-rap-facade/"><span>SDP-09</span><strong>Unmanaged RAP Facade</strong><small>Modernize the service contract around proven transactional logic without rewriting the engine first.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/behavior-rule-placement/"><span>SDP-10</span><strong>RAP Validation vs Determination vs Action</strong><small>Use the RAP behavior concept that matches the business meaning.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/draft-workflow/"><span>SDP-11</span><strong>RAP Draft Workflow</strong><small>Separate 'I am editing' from 'the active business state has changed'.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-</div></section>
-<section class="research-canvas__inventory" id="cap"><header><p class="research-canvas__eyebrow">CAP</p><h2>Keep cloud services business-oriented</h2><p>Let CDS and the CAP runtime handle ordinary service work; put custom logic at the right lifecycle boundary.</p></header><div class="research-route-list">
-<a href="/atlas/sap/development-patterns/cap-service-facade/"><span>SDP-12</span><strong>CAP Service Facade</strong><small>Expose a purpose-built service contract instead of publishing the database model verbatim.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/cap-event-handler/"><span>SDP-13</span><strong>CAP Event Handler / Lifecycle Hook</strong><small>Add custom logic around CAP's service events while keeping the service contract in charge.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-</div></section>
-<section class="research-canvas__inventory" id="integration"><header><p class="research-canvas__eyebrow">Integration</p><h2>Build for partial updates, replay and failure</h2><p>Interpret deltas correctly, handle duplicate delivery and design observable recovery.</p></header><div class="research-route-list">
-<a href="/atlas/sap/development-patterns/delta-aware-merge/"><span>SDP-05</span><strong>Delta-Aware Merge / Patch Semantics</strong><small>A missing field, an explicitly cleared field and a deleted segment must not mean the same thing.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/idempotent-consumer/"><span>SDP-14</span><strong>Idempotent Consumer</strong><small>A retry must not create a second business effect.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/transactional-outbox/"><span>SDP-15</span><strong>Transactional Outbox / Commit-Then-Publish</strong><small>Never claim an event was delivered just because business code reached its last line.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-<a href="/atlas/sap/development-patterns/retry-and-dead-letter/"><span>SDP-16</span><strong>Retry + Dead Letter / Quarantine</strong><small>Retry a temporary outage; quarantine bad data; never run an infinite retry storm.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-</div></section>
-<section class="research-canvas__inventory" id="clean-core"><header><p class="research-canvas__eyebrow">Clean Core</p><h2>Protect the SAP lifecycle boundary</h2><p>Choose released contracts and make exceptions visible.</p></header><div class="research-route-list">
-<a href="/atlas/sap/development-patterns/released-api-boundary/"><span>SDP-07</span><strong>Released API Boundary (Clean Core)</strong><small>Depend on an intentional SAP contract, not on a convenient internal table or implementation detail.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-</div></section>
-  <section class="research-canvas__inventory">
-    <header><p class="research-canvas__eyebrow">Use the vocabulary</p><h2>Make patterns visible in tickets, ADRs and pull requests.</h2><p>Write the ID, the architectural boundary, why it fits, the rejected alternative and the proof. A name alone is not an architecture review.</p></header>
-    <div class="research-route-list">
-      <a href="/atlas/sap/development-patterns/design-review/"><span>ADR</span><strong>Design review template &amp; phrases</strong><small>Copy a concrete review structure. Compare good architecture language with empty buzzwords.</small><i class="material-symbols-outlined" aria-hidden="true">article</i></a>
-      <a href="/atlas/sap/development-patterns/manifest.json"><span>JSON</span><strong>Machine-readable pattern manifest</strong><small>Stable IDs, slugs, category, summary and canonical URL for tools and agents.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/labs/enterprise-context/development/"><span>LAB</span><strong>RAP vs CAP vs ABAP Cloud architecture guide</strong><small>Choose the runtime and transaction boundary before choosing an implementation pattern.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+
+  <section class="research-canvas__inventory" id="architecture-specification">
+    <header>
+      <p class="research-canvas__eyebrow">Write it into the technical specification</p>
+      <h2>One shared vocabulary for architects and developers.</h2>
+      <p>Keep the specification short enough to review. Name the design intention, the SAP entry point and the contract.</p>
+    </header>
+
+```text
+Context: Inbound business-partner message
+Intent: Normalize, decide, then execute
+Patterns: Adapter + Specification + Strategy + Command
+Entry point: Inbound adapter / permitted extension point
+Interfaces:
+  ZIF_MSG_NORMALIZER=>NORMALIZE( )
+  ZIF_BP_SPECIFICATION=>IS_SATISFIED_BY( )
+  ZIF_ORG_STRATEGY=>TRANSFORM( )
+  ZIF_BP_COMMAND=>EXECUTE( )
+Application service:
+  ZCL_BP_INBOUND_PROCESSOR=>PROCESS( )
+Persistence:
+  ZIF_BP_GATEWAY (released API or supported legacy contract)
+Configuration:
+  Mapping registry + explicit fallback and missing-value behavior
+Transaction owner:
+  Framework/service boundary; no hidden COMMIT in rules
+Failure contract:
+  Log correlation, preserve business errors, reject unknown mappings
+Tests:
+  Specification truth table; strategy selection; command idempotency
+```
+
+    <p><strong>Important:</strong> The names above illustrate a design, not copy-paste SAP APIs or a documented customer implementation. In RAP, the behavior implementation contract governs which operations are permitted. ABAP Cloud requires checking the release state of APIs. Do not silently carry classic ABAP techniques into a restricted runtime.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="pattern-catalog">
+    <header>
+      <p class="research-canvas__eyebrow">Full catalog · {{ site.data.development_patterns.patterns.size }} entries</p>
+      <h2>Search by name, problem or SAP use case.</h2>
+      <p>Each entry says what the pattern solves, where it fits and when it is the wrong choice. Selected patterns link to deeper implementation specifications.</p>
+    </header>
+    <div class="table-scroll" role="group" aria-label="Catalog controls">
+      <label for="pattern-search">Find a pattern</label>
+      <input id="pattern-search" type="search" placeholder="Try: IDoc, Command, validation, mapping, retry…" autocomplete="off" aria-controls="pattern-results" />
+      <label for="pattern-group">Family</label>
+      <select id="pattern-group" aria-controls="pattern-results">
+        <option value="">All families</option>
+        {% for group in site.data.development_patterns.groups %}
+        <option value="{{ group.id }}">{{ group.title }}</option>
+        {% endfor %}
+      </select>
+      <p id="pattern-count" role="status" aria-live="polite">{{ site.data.development_patterns.patterns.size }} entries. Search requires JavaScript; all rows are visible without it.</p>
+    </div>
+    <div id="pattern-results">
+    {% for group in site.data.development_patterns.groups %}
+      {% assign items = site.data.development_patterns.patterns | where: "category", group.id %}
+      <section data-pattern-group="{{ group.id }}" aria-labelledby="group-{{ group.id }}">
+        <h3 id="group-{{ group.id }}">{{ group.title }} · {{ items.size }}</h3>
+        <p>{{ group.description }}</p>
+        <div class="table-scroll study-table" role="region" tabindex="0" aria-label="{{ group.title }} patterns">
+          <table class="study-table__table">
+            <thead><tr><th scope="col">Pattern</th><th scope="col">Problem and solution</th><th scope="col">Example in SAP</th><th scope="col">Avoid when…</th></tr></thead>
+            <tbody>
+            {% for pattern in items %}
+              <tr id="pattern-{{ pattern.slug }}" data-pattern-row data-pattern-category="{{ group.id }}" data-pattern-search="{{ pattern.name | escape }} {{ pattern.problem | escape }} {{ pattern.solution | escape }} {{ pattern.sap_example | escape }} {{ pattern.pitfall | escape }}">
+                <th scope="row">
+                {% if pattern.profile %}
+                  <a href="{{ pattern.profile | relative_url }}">{{ pattern.name }}</a> <small>↗</small>
+                {% else %}
+                  {{ pattern.name }}
+                {% endif %}
+                </th>
+                <td>{{ pattern.problem }} <strong>Approach:</strong> {{ pattern.solution }}</td>
+                <td>{{ pattern.sap_example }}</td>
+                <td>{{ pattern.pitfall }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <p><small>Family: {{ group.family }} · <a href="{{ group.source }}" rel="noopener noreferrer">Background reference</a></small></p>
+      </section>
+    {% endfor %}
     </div>
   </section>
-  <section class="research-canvas__boundary"><span class="material-symbols-outlined" aria-hidden="true">verified_user</span><p><strong>Trust boundary:</strong> Synthetic examples and conceptual code sketches only. These pages are independent learning notes, not SAP-certified code or official employer/client guidance. Confirm released APIs, RAP contracts, IDoc semantics and CAP runtime behavior in the specific SAP release before implementation.</p></section>
-  <div class="research-canvas__support">{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+
+  <section class="research-canvas__inventory" id="featured-specifications">
+    <header>
+      <p class="research-canvas__eyebrow">Implementation specifications</p>
+      <h2>Start with a concrete case and class contract.</h2>
+      <p>The deeper pages explain class roles, method signatures, code sketches, trade-offs, tests and how to reference the pattern in a development specification.</p>
+    </header>
+    <div class="research-route-list">
+    {% assign detailed = site.data.development_patterns.patterns | where_exp: "item", "item.profile" %}
+    {% for pattern in detailed %}
+      <a href="{{ pattern.profile | relative_url }}">
+        <span>{{ forloop.index }}</span>
+        <strong>{{ pattern.name }}</strong>
+        <small>{{ pattern.solution }}</small>
+        <i class="material-symbols-outlined" aria-hidden="true">menu_book</i>
+      </a>
+    {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pattern-selection-review">
+    <header>
+      <p class="research-canvas__eyebrow">Architecture review</p>
+      <h2>Five questions before approving a pattern.</h2>
+    </header>
+    <ol>
+      <li><strong>Variation:</strong> What actually changes—algorithm, rule, state, operation, data source or transport?</li>
+      <li><strong>Ownership:</strong> Which class owns the invariant and which runtime owns the transaction?</li>
+      <li><strong>Boundary:</strong> Is this a released SAP API, BAdI, RAP BO contract or side-by-side API?</li>
+      <li><strong>Failure:</strong> What happens on duplicate, timeout, partial failure and missing configuration?</li>
+      <li><strong>Proof:</strong> Can ABAP Unit or contract tests demonstrate the behavior without the real remote system?</li>
+    </ol>
+  </section>
+
+  <section class="research-canvas__inventory" id="patterns-references">
+    <header><p class="research-canvas__eyebrow">Evidence and scope</p><h2>Reference families, not invented standards.</h2></header>
+    <p>Definitions and examples here are original summaries and synthetic SAP scenarios. GoF, PoEAA, EIP, DDD, cloud resilience, and SAP runtime idioms are intentionally labeled separately. Validate exact framework behavior against the target product version and released APIs before using an example in production.</p>
+    <ul>
+      <li><a href="https://refactoring.guru/design-patterns/catalog">GoF design pattern catalog</a> — classification and terminology.</li>
+      <li><a href="https://www.martinfowler.com/eaaCatalog/index.html">Patterns of Enterprise Application Architecture</a> — domain, persistence, application boundaries.</li>
+      <li><a href="https://www.enterpriseintegrationpatterns.com/patterns/messaging/index.html">Enterprise Integration Patterns</a> — routing, message transformation and reliability.</li>
+      <li><a href="https://learn.microsoft.com/azure/architecture/patterns/">Azure Architecture Center patterns</a> — resilience and migration trade-offs.</li>
+      <li><a href="https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md">SAP Clean ABAP</a> — ABAP naming, responsibilities, injection, testing.</li>
+      <li><a href="https://help.sap.com/docs/abap-cloud/abap-rap/rap-business-object-contract">SAP RAP Business Object Contract</a> — handler and save-sequence boundaries.</li>
+      <li><a href="https://help.sap.com/docs/abap-cloud/abap-rap/validations">SAP RAP validations</a> — no EML modify inside validations.</li>
+      <li><a href="https://cap.cloud.sap/docs/node.js/core-services">SAP CAP Core Services</a> — <code>before</code>, <code>on</code>, <code>after</code> handlers.</li>
+    </ul>
+    <p><small>Publication maturity: working reference, pending editorial verification. This independent personal knowledge base is not official SAP guidance.</small></p>
+  </section>
+  <div class="research-canvas__support">
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
 </div>
+<script src="{{ '/assets/pattern-library.js' | relative_url }}" defer></script>

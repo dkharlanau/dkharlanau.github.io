@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-24
+last_modified_at: 2026-11-17
 hide_global_cta: true
 tags:
   - sap
@@ -95,6 +95,17 @@ source_links:
       <em>Reviewed together {{ topic.reviewed_together_at }}</em>
     </div>
   </header>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Implementation vocabulary</p>
+      <h2>From architecture choices to reusable class designs.</h2>
+      <p>Use a named pattern in a technical specification so that its responsibilities, failure boundaries and trade-offs are reviewable.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/atlas/sap/development-patterns/"><span>153</span><strong>SAP Development Pattern Library</strong><small>Specification, Command, Strategy, State, GoF, DDD, integration and SAP programming idioms with ABAP/RAP/CAP examples.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+    </div>
+  </section>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">architecture</span>
