@@ -15,6 +15,12 @@ level: 2
 last_reviewed: 2026-07-25
 last_modified_at: 2026-11-17
 author: Dzmitryi Kharlanau
+source_links:
+  - title: "SAP: Custom Code Migration Guide for SAP S/4HANA 2025"
+    url: https://help.sap.com/doc/9dcbc5e47ba54a5cbb509afaa49dd5a1/2025.000/en-US/CustomCodeMigration_EndtoEnd.pdf
+    schema_type: DigitalDocument
+  - title: "SAP: Usage Data Collection"
+    url: https://help.sap.com/docs/sap_netweaver_as_abap_for_soh_740/ba879a6e2ea04d9bb94c7ccd7cdac446/ca200f7002394c809d90873e19e5ac84.html
 tags:
   - concepts
   - architecture

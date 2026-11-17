@@ -31,6 +31,9 @@ short_title: Operational Memory for SAP AMS
 h1: Operational memory for SAP AMS
 subtitle: AMS improves when support knowledge is structured as reusable memory, not trapped in tickets, chats, and individual consultants.
 author: Dzmitryi Kharlanau
+source_links:
+  - title: "Google SRE: Postmortem Culture: Learning from Failure"
+    url: https://sre.google/sre-book/postmortem-culture/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/atlas/">Knowledge Atlas</a></li><li><a href="/atlas/automation/">Automation</a></li><li aria-current="page">Operational Memory for SAP AMS</li></ol></nav>

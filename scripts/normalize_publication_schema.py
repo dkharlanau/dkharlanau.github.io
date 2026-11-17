@@ -53,7 +53,7 @@ so this include deliberately does not emit a second fragment for #article identi
   ]{% endif %}{% if page.ai_sidecar %},
   "subjectOf": {"@type":"DataDownload","contentUrl":"{{ page.ai_sidecar | absolute_url }}","encodingFormat":"application/json"}{% endif %}{% if page.source_links and page.source_links.size > 0 %},
   "citation": [
-    {% for source in page.source_links %}{"@type":"WebPage","name":{{ source.title | default: source.url | jsonify }},"url":{{ source.url | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}
+    {% for source in page.source_links %}{"@type":{{ source.schema_type | default: 'WebPage' | jsonify }},"name":{{ source.title | default: source.url | jsonify }},"url":{{ source.url | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}
   ]{% endif %}{% if page.semantic_links and page.semantic_links.size > 0 %},
   "relatedLink": [{% for relation in page.semantic_links %}{{ relation.url | absolute_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}]{% endif %}
 }
@@ -177,7 +177,7 @@ def normalize_structured(text: str) -> str:
     new_citation = '''  {% if page.source_links and page.source_links.size > 0 %},
   "citation": [
     {% for source in page.source_links %}
-    {"@type":"WebPage","name":{{ source.title | default: source.url | jsonify }},"url":{{ source.url | jsonify }}}{% unless forloop.last %},{% endunless %}
+    {"@type":{{ source.schema_type | default: 'WebPage' | jsonify }},"name":{{ source.title | default: source.url | jsonify }},"url":{{ source.url | jsonify }}}{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ]
   {% elsif page.sources %},

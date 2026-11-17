@@ -162,6 +162,37 @@ def test_rendered_jsonld_is_valid_json():
         _jsonld_blocks(content, html_path.relative_to(SITE_DIR))
 
 
+@pytest.mark.parametrize("source_path", [
+    "atlas/ai-operations/ai-agent-for-sap-support.md",
+    "atlas/concepts/sap-extension-retain-rebuild-retire-framework.md",
+    "atlas/automation/operational-memory-for-sap-ams.md",
+])
+def test_priority_article_citations_match_visible_sources(source_path):
+    site = _require_site()
+    source = (REPO_ROOT / source_path).read_text(encoding="utf-8")
+    frontmatter = yaml.safe_load(source.split("---", 2)[1])
+    route = Path(frontmatter["permalink"].strip("/")) / "index.html"
+    content = (site / route).read_text(encoding="utf-8")
+
+    class Links(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.hrefs = set()
+
+        def handle_starttag(self, tag, attrs):
+            if tag == "a":
+                self.hrefs.add(dict(attrs).get("href"))
+
+    links = Links()
+    links.feed(content)
+    article = next(block for block in _jsonld_blocks(content, route) if block.get("@type") == "TechArticle")
+    expected = {item["url"]: item.get("schema_type", "WebPage") for item in frontmatter["source_links"]}
+    actual = {item["url"]: item["@type"] for item in article["citation"]}
+
+    assert actual == expected
+    assert expected.keys() <= links.hrefs
+
+
 def test_rendered_article_graph_distinguishes_the_page_from_its_work():
     article_types = set()
     for html_path in _html_files():

@@ -28,6 +28,13 @@ expert_context:
 last_reviewed: 2026-05-06
 last_modified_at: 2026-11-17
 author: Dzmitryi Kharlanau
+source_links:
+  - title: "SAP: Preparing Data Using the Vector API"
+    url: https://help.sap.com/docs/sap-ai-core/generative-ai/preparing-data-using-vector-api-2a9f1493456d40daafe1a0006a8c7058
+  - title: "OWASP: LLM01 Prompt Injection"
+    url: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+  - title: "NIST: Generative Artificial Intelligence Profile"
+    url: https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence
 
 tags:
   - ai-operations
