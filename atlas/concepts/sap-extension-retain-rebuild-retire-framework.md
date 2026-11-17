@@ -13,6 +13,7 @@ status: reviewed
 verified: true
 level: 2
 last_reviewed: 2026-07-25
+last_modified_at: 2026-11-17
 author: Dzmitryi Kharlanau
 tags:
   - concepts
@@ -86,6 +87,11 @@ sitemap: true
       <li><strong>Replace with standard:</strong> use current SAP capability because the historic custom difference no longer justifies itself.</li>
       <li><strong>Retire:</strong> remove the logic because it protects no meaningful business outcome and mostly preserves old habits.</li>
     </ul>
+
+    <h2>Use evidence before proposing retirement</h2>
+    <p>SAP's <a href="https://help.sap.com/doc/9dcbc5e47ba54a5cbb509afaa49dd5a1/2025.000/en-US/CustomCodeMigration_EndtoEnd.pdf">Custom Code Migration Guide for SAP S/4HANA 2025</a> describes using collected usage data to scope ABAP custom code for a system conversion. SAP also documents <a href="https://help.sap.com/docs/sap_netweaver_as_abap_for_soh_740/ba879a6e2ea04d9bb94c7ccd7cdac446/ca200f7002394c809d90873e19e5ac84.html">usage-data collection</a> for identifying when an ABAP program or procedure was used. These sources concern ABAP analysis in the documented versions; they do not decide the business value of every extension or cover every side-by-side application.</p>
+    <p><strong>Synthetic example:</strong> a custom report has no recorded use in a three-month observation window, but its owner says it supports a year-end reconciliation. That observation alone does not justify retirement. Check the monitoring coverage and the relevant reporting cycle, identify downstream consumers, and ask the owner to confirm whether a standard alternative meets the requirement. Record the decision and evidence before scheduling a change.</p>
+    <p>This framework is a decision aid, not an SAP retirement procedure. Tool availability, collected data, dependencies, and change controls vary by landscape and release. Sources checked 17 November 2026.</p>
 
     <h2>Architecture and organisational implications</h2>
     <p>An extension decision is not complete until someone owns the capability, the data consequences, the integration consequences, and the run-state support model. A technically clean rebuild on BTP can still make the operating landscape worse if it adds another runtime with no owner, weak monitoring, and unclear retirement rules.</p>

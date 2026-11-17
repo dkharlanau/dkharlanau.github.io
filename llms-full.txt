@@ -1221,6 +1221,11 @@ Home
       Retire: remove the logic because it protects no meaningful business outcome and mostly preserves old habits.
 
 
+    Use evidence before proposing retirement
+    SAP's Custom Code Migration Guide for SAP S/4HANA 2025 describes using collected usage data to scope ABAP custom code for a system conversion. SAP also documents usage-data collection for identifying when an ABAP program or procedure was used. These sources concern ABAP analysis in the documented versions; they do not decide the business value of every extension or cover every side-by-side application.
+    Synthetic example: a custom report has no recorded use in a three-month observation window, but its owner says it supports a year-end reconciliation. That observation alone does not justify retirement. Check the monitoring coverage and the relevant reporting cycle, identify downstream consumers, and ask the owner to confirm whether a standard alternative meets the requirement. Record the decision and evidence before scheduling a change.
+    This framework is a decision aid, not an SAP retirement procedure. Tool availability, collected data, dependencies, and change controls vary by landscape and release. Sources checked 17 November 2026.
+
     Architecture and organisational implications
     An extension decision is not complete until someone owns the capability, the data consequences, the integration consequences, and the run-state support model. A technically clean rebuild on BTP can still make the operating landscape worse if it adds another runtime with no owner, weak monitoring, and unclear retirement rules.
 
