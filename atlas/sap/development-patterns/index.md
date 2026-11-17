@@ -77,18 +77,17 @@ related:
       <p>Keep the specification short enough to review. Name the design intention, the SAP entry point and the contract.</p>
     </header>
 
-```text
-Context: Inbound business-partner message
+    <pre><code>Context: Inbound business-partner message
 Intent: Normalize, decide, then execute
 Patterns: Adapter + Specification + Strategy + Command
 Entry point: Inbound adapter / permitted extension point
 Interfaces:
-  ZIF_MSG_NORMALIZER=>NORMALIZE( )
-  ZIF_BP_SPECIFICATION=>IS_SATISFIED_BY( )
-  ZIF_ORG_STRATEGY=>TRANSFORM( )
-  ZIF_BP_COMMAND=>EXECUTE( )
+  ZIF_MSG_NORMALIZER=&gt;NORMALIZE( )
+  ZIF_BP_SPECIFICATION=&gt;IS_SATISFIED_BY( )
+  ZIF_ORG_STRATEGY=&gt;TRANSFORM( )
+  ZIF_BP_COMMAND=&gt;EXECUTE( )
 Application service:
-  ZCL_BP_INBOUND_PROCESSOR=>PROCESS( )
+  ZCL_BP_INBOUND_PROCESSOR=&gt;PROCESS( )
 Persistence:
   ZIF_BP_GATEWAY (released API or supported legacy contract)
 Configuration:
@@ -98,8 +97,7 @@ Transaction owner:
 Failure contract:
   Log correlation, preserve business errors, reject unknown mappings
 Tests:
-  Specification truth table; strategy selection; command idempotency
-```
+  Specification truth table; strategy selection; command idempotency</code></pre>
 
     <p><strong>Important:</strong> The names above illustrate a design, not copy-paste SAP APIs or a documented customer implementation. In RAP, the behavior implementation contract governs which operations are permitted. ABAP Cloud requires checking the release state of APIs. Do not silently carry classic ABAP techniques into a restricted runtime.</p>
   </section>
