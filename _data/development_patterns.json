@@ -72,7 +72,7 @@
       "solution": "Put construction behind a method that returns an interface.",
       "sap_example": "Choose an ABAP mapping strategy per source system.",
       "pitfall": "One implementation with no likely variation.",
-      "profile": "/atlas/sap/development-patterns/factory-method/"
+      "profile": null
     },
     {
       "slug": "abstract-factory",
@@ -182,7 +182,7 @@
       "solution": "Translate the old contract behind the interface the client expects.",
       "sap_example": "Wrap a legacy function module behind an ABAP interface.",
       "pitfall": "Copying all legacy quirks into the new contract.",
-      "profile": "/atlas/sap/development-patterns/adapter/"
+      "profile": null
     },
     {
       "slug": "bridge",
@@ -215,7 +215,7 @@
       "solution": "Wrap a component with another component exposing the same interface.",
       "sap_example": "Add logging or timing around a mapper without changing its result.",
       "pitfall": "Wrapper order silently changes business semantics.",
-      "profile": "/atlas/sap/development-patterns/decorator/"
+      "profile": null
     },
     {
       "slug": "facade",
@@ -347,7 +347,7 @@
       "solution": "Define one algorithm interface and select a concrete strategy.",
       "sap_example": "Apply org-specific BP enrichment or validation.",
       "pitfall": "Two branches are simple and unlikely to grow.",
-      "profile": "/atlas/sap/development-patterns/strategy/"
+      "profile": "/atlas/sap/development-patterns/strategy-policy/"
     },
     {
       "slug": "specification",
@@ -358,7 +358,7 @@
       "solution": "Represent a rule as a predicate that can be combined with other predicates.",
       "sap_example": "Check whether a BP is eligible for replication.",
       "pitfall": "The rule needs ordered side effects rather than a true or false answer.",
-      "profile": "/atlas/sap/development-patterns/specification/"
+      "profile": null
     },
     {
       "slug": "command",
@@ -369,7 +369,7 @@
       "solution": "Represent one requested operation as an object with execute behavior.",
       "sap_example": "Model create, change and skip actions for inbound IDoc handling.",
       "pitfall": "A direct method call is sufficient.",
-      "profile": "/atlas/sap/development-patterns/command/"
+      "profile": null
     },
     {
       "slug": "chain-of-responsibility",
@@ -380,7 +380,7 @@
       "solution": "Pass a request along an explicit chain until handled.",
       "sap_example": "Try specific mapping exception then generic org mapping.",
       "pitfall": "The business rule requires all handlers to run.",
-      "profile": "/atlas/sap/development-patterns/chain-of-responsibility/"
+      "profile": null
     },
     {
       "slug": "state",
@@ -391,7 +391,7 @@
       "solution": "Represent transitions explicitly rather than scattering status checks.",
       "sap_example": "Control approval, locked and ready-to-replicate states.",
       "pitfall": "Status is only read, not behavior-changing.",
-      "profile": "/atlas/sap/development-patterns/state/"
+      "profile": null
     },
     {
       "slug": "template-method",
@@ -666,7 +666,7 @@
       "solution": "Expose collection-like access behind a persistence interface.",
       "sap_example": "Read custom mapping policies without SQL in every rule.",
       "pitfall": "Direct table access bypasses RAP BO behavior and authorization.",
-      "profile": "/atlas/sap/development-patterns/repository/"
+      "profile": "/atlas/sap/development-patterns/repository-and-dependency-injection/"
     },
     {
       "slug": "unit-of-work",
@@ -677,7 +677,7 @@
       "solution": "Track a transactional change set and commit it once.",
       "sap_example": "Coordinate one permitted custom transaction in classic ABAP.",
       "pitfall": "Implementing custom COMMIT inside RAP handler methods.",
-      "profile": "/atlas/sap/development-patterns/unit-of-work/"
+      "profile": null
     },
     {
       "slug": "identity-map",
@@ -1359,7 +1359,7 @@
       "solution": "Depend on released interfaces supported in the target context.",
       "sap_example": "Access business objects through released APIs or EML when appropriate.",
       "pitfall": "A classic internal table is assumed clean-core safe.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/released-api-boundary/"
     },
     {
       "slug": "thin-rap-handler",
@@ -1370,7 +1370,7 @@
       "solution": "Delegate pure rules and coordination to focused service classes.",
       "sap_example": "Call a specification service from a RAP validation.",
       "pitfall": "Delegation hides prohibited transaction operations.",
-      "profile": "/atlas/sap/development-patterns/thin-rap-handler/"
+      "profile": null
     },
     {
       "slug": "rap-managed-bo",
@@ -1381,7 +1381,7 @@
       "solution": "Use managed behavior where its transactional model fits.",
       "sap_example": "Create a custom application object with validation and action.",
       "pitfall": "Managed mode is chosen for existing complex legacy persistence.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/managed-rap-business-object/"
     },
     {
       "slug": "rap-unmanaged-bo",
@@ -1392,7 +1392,7 @@
       "solution": "Implement required RAP behavior contracts explicitly.",
       "sap_example": "Expose a custom legacy document safely via RAP.",
       "pitfall": "Assuming unmanaged supports every managed trigger.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/unmanaged-rap-facade/"
     },
     {
       "slug": "rap-draft-handling",
@@ -1403,7 +1403,7 @@
       "solution": "Use framework draft behavior instead of custom shadow tables.",
       "sap_example": "Support review before activating a custom request.",
       "pitfall": "Draft is mistaken for an approval workflow.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/draft-workflow/"
     },
     {
       "slug": "rap-validation",
@@ -1414,7 +1414,7 @@
       "solution": "Validate at supported trigger points and populate FAILED/REPORTED.",
       "sap_example": "Reject a custom request missing a mandatory key.",
       "pitfall": "Trying to MODIFY entities in a validation.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/behavior-rule-placement/"
     },
     {
       "slug": "rap-determination",
@@ -1425,7 +1425,7 @@
       "solution": "Define a framework determination with idempotent logic.",
       "sap_example": "Derive an optional attribute from stable request fields.",
       "pitfall": "Relying on determination order.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/behavior-rule-placement/"
     },
     {
       "slug": "rap-action",
@@ -1436,7 +1436,7 @@
       "solution": "Expose the operation as a typed behavior action.",
       "sap_example": "Offer an approve operation on a custom object.",
       "pitfall": "Putting the action's semantics into the UI only.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/behavior-rule-placement/"
     },
     {
       "slug": "rap-feature-control",
@@ -1502,7 +1502,7 @@
       "solution": "Load versioned customizing and select a typed rule implementation.",
       "sap_example": "Configure which customer attributes may be updated per org.",
       "pitfall": "Configuration allows arbitrary executable behavior.",
-      "profile": "/atlas/sap/development-patterns/configuration-driven-policy/"
+      "profile": "/atlas/sap/development-patterns/strategy-policy/"
     },
     {
       "slug": "cap-before-handler",
@@ -1513,7 +1513,7 @@
       "solution": "Register a before handler for validation and normalization.",
       "sap_example": "Validate custom request fields in CAP.",
       "pitfall": "Mutating unrelated state on every request.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/cap-event-handler/"
     },
     {
       "slug": "cap-on-handler",
@@ -1524,7 +1524,7 @@
       "solution": "Implement an explicit on handler for a custom action.",
       "sap_example": "Handle a submitForReview CAP action.",
       "pitfall": "Overriding generic CRUD without business need.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/cap-event-handler/"
     },
     {
       "slug": "cap-after-handler",
@@ -1535,7 +1535,7 @@
       "solution": "Enrich returned data after generic handling.",
       "sap_example": "Add calculated display metadata to CAP reads.",
       "pitfall": "Confusing output decoration with durable persistence.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/cap-event-handler/"
     },
     {
       "slug": "side-by-side-extension",
@@ -1557,7 +1557,7 @@
       "solution": "Normalize segments and function codes before selecting command.",
       "sap_example": "Convert generic inbound record into create/change/skip intent.",
       "pitfall": "Using MSGFN as a substitute for business key validation.",
-      "profile": null
+      "profile": "/atlas/sap/development-patterns/delta-aware-merge/"
     },
     {
       "slug": "deterministic-mapping-lookup",
@@ -1634,7 +1634,7 @@
       "solution": "Provide focused defaults with readable overrides.",
       "sap_example": "Create synthetic BP inputs with only relevant exceptions.",
       "pitfall": "Tests rely on many hidden defaults.",
-      "profile": "/atlas/sap/development-patterns/test-data-builder/"
+      "profile": null
     },
     {
       "slug": "characterization-test",

@@ -162,15 +162,30 @@ Tests:
       <p>The deeper pages explain class roles, method signatures, code sketches, trade-offs, tests and how to reference the pattern in a development specification.</p>
     </header>
     <div class="research-route-list">
-    {% assign detailed = site.data.development_patterns.patterns | where_exp: "item", "item.profile" %}
-    {% for pattern in detailed %}
-      <a href="{{ pattern.profile | relative_url }}">
-        <span>{{ forloop.index }}</span>
-        <strong>{{ pattern.name }}</strong>
-        <small>{{ pattern.solution }}</small>
-        <i class="material-symbols-outlined" aria-hidden="true">menu_book</i>
-      </a>
-    {% endfor %}
+      <a href="/atlas/sap/development-patterns/thin-entry-point/"><span>SDP-01</span><strong>Thin Entry Point</strong><small>A BAdI, user exit or IDoc hook should route work, not become the application.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/strategy-policy/"><span>SDP-02</span><strong>Strategy / Policy Resolver</strong><small>Replace a forest of country, channel or organization CASE branches with named policies.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/repository-and-dependency-injection/"><span>SDP-03</span><strong>Repository + Dependency Injection</strong><small>Hide database and SAP API calls behind a testable boundary.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/anti-corruption-layer/"><span>SDP-04</span><strong>Anti-Corruption Layer (ACL)</strong><small>Translate legacy or external meanings once, before they reach core rules.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/delta-aware-merge/"><span>SDP-05</span><strong>Delta-Aware Merge / Patch Semantics</strong><small>A missing field, an explicitly cleared field and a deleted segment must not mean the same thing.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/decision-table/"><span>SDP-06</span><strong>Decision Table / Rules as Data</strong><small>When the business owns many combinations, stop encoding them as nested IF statements.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/released-api-boundary/"><span>SDP-07</span><strong>Released API Boundary (Clean Core)</strong><small>Depend on an intentional SAP contract, not on a convenient internal table or implementation detail.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/managed-rap-business-object/"><span>SDP-08</span><strong>Managed RAP Business Object</strong><small>Let the RAP runtime own ordinary persistence, locking and transactional plumbing for custom data.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/unmanaged-rap-facade/"><span>SDP-09</span><strong>Unmanaged RAP Facade</strong><small>Modernize the service contract around proven transactional logic without rewriting the engine first.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/behavior-rule-placement/"><span>SDP-10</span><strong>RAP Validation vs Determination vs Action</strong><small>Use the RAP behavior concept that matches the business meaning.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/draft-workflow/"><span>SDP-11</span><strong>RAP Draft Workflow</strong><small>Separate 'I am editing' from 'the active business state has changed'.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/cap-service-facade/"><span>SDP-12</span><strong>CAP Service Facade</strong><small>Expose a purpose-built service contract instead of publishing the database model verbatim.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/cap-event-handler/"><span>SDP-13</span><strong>CAP Event Handler / Lifecycle Hook</strong><small>Add custom logic around CAP's service events while keeping the service contract in charge.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/idempotent-consumer/"><span>SDP-14</span><strong>Idempotent Consumer</strong><small>A retry must not create a second business effect.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/transactional-outbox/"><span>SDP-15</span><strong>Transactional Outbox / Commit-Then-Publish</strong><small>Never claim an event was delivered just because business code reached its last line.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/retry-and-dead-letter/"><span>SDP-16</span><strong>Retry + Dead Letter / Quarantine</strong><small>Retry a temporary outage; quarantine bad data; never run an infinite retry storm.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="architecture-review-template">
+    <header><p class="research-canvas__eyebrow">Common language</p><h2>Write the pattern into an architecture decision.</h2><p>A name helps only when the transaction owner, contract, rejected alternative and acceptance tests are explicit.</p></header>
+    <div class="research-route-list">
+      <a href="/atlas/sap/development-patterns/design-review/"><span>ADR</span><strong>Design review template</strong><small>Copy a structured architecture decision with context, failure model, alternatives and test contract.</small><i class="material-symbols-outlined" aria-hidden="true">article</i></a>
+      <a href="/atlas/sap/development-patterns/manifest.json"><span>JSON</span><strong>16 worked patterns manifest</strong><small>Stable pattern IDs and canonical detail URLs for developer tools and assistants.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
