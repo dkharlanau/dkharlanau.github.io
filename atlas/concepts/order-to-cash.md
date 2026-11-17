@@ -4,7 +4,7 @@ layout: default
 title: "SAP Order-to-Cash Process"
 description: "A source-backed explanation of the SAP order-to-cash process from sales order and ATP through delivery, billing, accounting, and clearing."
 permalink: /atlas/concepts/order-to-cash/
-last_modified_at: 2026-09-24
+last_modified_at: 2026-11-17
 atlas_section: concepts
 domain: Business operations
 subdomain: Sales fulfillment
@@ -25,6 +25,8 @@ related:
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /services/sap-o2c-process-audit/
   - /atlas/concepts/sap-stock-exists-not-promisable/
+  - /atlas/diagnostics/sap-idoc-status-diagnostics/
+  - /atlas/diagnostics/sap-business-partner-replication-diagnostics/
 robots: index,follow
 sitemap: true
 ---
@@ -109,6 +111,9 @@ sitemap: true
       <li>Route the incident with the evidence needed by the owning team, not only the symptom reported by the user.</li>
       <li>Close the incident only after the expected downstream document or settlement evidence exists.</li>
     </ol>
+
+    <h3>When a handoff crosses systems</h3>
+    <p>If the missing transition uses an IDoc, start with the message direction and status history, then check the expected document in the receiving system. The <a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">IDoc status diagnostic</a> helps separate transport and application processing from the business outcome. If the issue involves a Business Partner that should have been replicated to the receiving system, follow the <a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">Business Partner replication diagnostic</a> from selection through delivery and target-object evidence. These paths depend on the landscape; a blocked order or delivery does not by itself establish an integration failure.</p>
 
     <h3>Evidence to capture before routing</h3>
     <ul>

@@ -856,6 +856,9 @@ REVIEWED: 2026-05-06
       Close the incident only after the expected downstream document or settlement evidence exists.
 
 
+    When a handoff crosses systems
+    If the missing transition uses an IDoc, start with the message direction and status history, then check the expected document in the receiving system. The IDoc status diagnostic helps separate transport and application processing from the business outcome. If the issue involves a Business Partner that should have been replicated to the receiving system, follow the Business Partner replication diagnostic from selection through delivery and target-object evidence. These paths depend on the landscape; a blocked order or delivery does not by itself establish an integration failure.
+
     Evidence to capture before routing
 
       Sales document and item, document type, customer, product, plant, requested date, and confirmed date.
@@ -903,9 +906,9 @@ Related practice: https://dkharlanau.github.io/services/sap-integration-reliabil
 Related evidence:
 - https://dkharlanau.github.io/atlas/concepts/sap-atp-is-not-inventory/
 - https://dkharlanau.github.io/atlas/concepts/sap-stock-exists-not-promisable/
+- https://dkharlanau.github.io/atlas/diagnostics/sap-idoc-status-diagnostics/
+- https://dkharlanau.github.io/atlas/diagnostics/sap-business-partner-replication-diagnostics/
 - https://dkharlanau.github.io/atlas/concepts/sap-transformation-recovery-framework/
-- https://dkharlanau.github.io/atlas/diagnostics/sap-ale-distribution-model-diagnostics/
-- https://dkharlanau.github.io/atlas/diagnostics/sap-idoc-diagnostics/
 
 ==================================================
 
