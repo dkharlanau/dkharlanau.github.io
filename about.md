@@ -3,8 +3,8 @@ layout: default
 title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
 description: "Public professional profile of Dzmitryi Kharlanau, SAP consultant at EPAM Systems, and the owner of this personal SAP and AI technical lab."
 permalink: /about/
-last_modified_at: 2026-10-05
-content_updated_at: 2026-11-17
+last_modified_at: 2026-11-17
+last_reviewed: 2026-10-05
 profile_page: true
 hide_global_cta: true
 ---
@@ -27,7 +27,7 @@ hide_global_cta: true
   <dl class="profile-canvas__facts">
     <div><dt>Current context</dt><dd>SAP Consultant · <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a> · ex‑abat</dd></div>
     <div><dt>Working scope</dt><dd>SD, MM, O2C, P2P, MDG-related work, master data, integration troubleshooting, AMS, and ABAP-backed analysis.</dd></div>
-    <div><dt>Last reviewed</dt><dd>{{ page.last_modified_at | date: "%B %-d, %Y" }}</dd></div>
+    <div><dt>Last reviewed</dt><dd>{{ page.last_reviewed | date: "%B %-d, %Y" }}</dd></div>
   </dl>
 </section>
 

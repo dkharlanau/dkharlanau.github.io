@@ -1,0 +1,53 @@
+SAP IDOC EVIDENCE CHECKLIST
+
+Use this worksheet to prepare an IDoc investigation or handover. Adapt the
+checks to the actual systems, authorizations, interfaces and processing path.
+Do not put customer data in a public copy. This is a diagnostic aid, not an
+authorization to reprocess or resend messages.
+
+1. Business symptom and scope
+[ ] Expected business result and affected process: __________________________
+[ ] Observed result, first occurrence and business impact: ___________________
+[ ] Source and receiver systems; isolated issue or backlog: _________________
+
+2. Identify each message separately
+[ ] IDoc number and direction in each system: ________________________________
+[ ] Message type, sender, receiver and timestamp: ___________________________
+[ ] Current status, complete status history and exact message text: __________
+[ ] Business reference and other landscape-specific correlation evidence: _____
+[ ] If applicable, transaction ID and related queue or job: __________________
+
+3. Follow the evidence
+[ ] Confirm that source and receiver records refer to the same business event.
+[ ] Identify the last confirmed handoff and the first step not yet proven.
+[ ] Check the relevant application object, log, transport, queue or background
+    job according to the actual processing path.
+[ ] Record observed facts separately from hypotheses and missing evidence.
+
+Status boundary: outbound 03 indicates handoff to the port, not proof of
+receiver posting. Inbound 53 indicates an application document was posted;
+inspect the referenced object to determine whether it is the expected result.
+Neither status establishes that two records are the same business message.
+
+4. Before any recovery action
+[ ] Establish whether the original message already produced a business object.
+[ ] Confirm sequencing, duplicate handling, ownership and recovery authority.
+[ ] Agree the correction and validation with the appropriate owners.
+[ ] Record how the business result and any downstream effects will be checked.
+
+SYNTHETIC EXAMPLE — TRAINING ONLY
+A source team reports outbound IDoc 800001 with status 03. A receiver team
+reports inbound IDoc 900004 with status 53. A user cannot find an order. The
+records are not yet correlated; the numbers and situation are fictional.
+
+Known: each team reports one status. Unknown: whether both messages concern
+the same business event, and which application object was posted.
+Next: compare sender, receiver, message type, business reference and timing;
+use the system-specific correlation evidence. If they match, inspect the
+referenced application object and its business state. Do not resend while the
+original outcome and duplicate risk remain unconfirmed.
+
+Guide and references:
+https://dkharlanau.github.io/atlas/diagnostics/sap-idoc-status-diagnostics/
+https://help.sap.com/docs/SUPPORT_CONTENT/abapconn/3354079745.html
+https://support.sap.com/en/alm/solution-manager/expert-portal/monitoring-of-integration-scenarios/idoc-channel.html

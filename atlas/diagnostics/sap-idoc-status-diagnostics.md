@@ -3,7 +3,7 @@ layout: default
 title: SAP IDoc Status Diagnostics
 description: A source-backed SAP IDoc guide for statuses 51, 53, 56, 64, 75, 02, and 03, with safe checks before reprocessing.
 permalink: /atlas/diagnostics/sap-idoc-status-diagnostics/
-last_modified_at: 2026-09-12
+last_modified_at: 2026-11-17
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
@@ -145,6 +145,9 @@ level: 2
 
     <h2>What to capture first</h2>
     <p>Before routing the issue, capture the IDoc number, direction, message type, sender and receiver partner, timestamps, current status, full status history, and exact error text. Record whether the failure is isolated or part of a backlog. For status 03, include the transaction ID when available; for status 53, include the referenced application document.</p>
+
+    <h2>Reusable evidence checklist</h2>
+    <p><a href="/assets/downloads/sap-idoc-evidence-checklist.txt" download>Download the IDoc evidence checklist</a> to record the business symptom, message correlation, recovery boundary, and verification of the outcome. It includes a clearly labelled synthetic example; adapt the checks to your landscape and keep customer details out of public copies.</p>
 
     <h2>Safe reprocessing boundary</h2>
     <p>Do not use BD87, restart an RFC entry, or request a resend merely to see whether the error clears. First establish whether the original message already produced a business object, whether sequencing matters, and which team owns the failing layer. This avoids duplicate documents and hides fewer intermittent failures.</p>
