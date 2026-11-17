@@ -4,6 +4,7 @@ title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
 description: "Public professional profile of Dzmitryi Kharlanau, SAP consultant at EPAM Systems, and the owner of this personal SAP and AI technical lab."
 permalink: /about/
 last_modified_at: 2026-10-05
+content_updated_at: 2026-11-17
 profile_page: true
 hide_global_cta: true
 ---
@@ -96,7 +97,7 @@ hide_global_cta: true
     <header class="section-heading"><p class="eyebrow">Evidence routes</p><h2>How to examine the positioning</h2></header>
     <div class="decision-table"><table><thead><tr><th>Question</th><th>Public evidence</th></tr></thead><tbody>
       <tr><td>What roles and domains are on record?</td><td><a href="/cv/">CV</a> and the canonical <a href="/ai/resume.yml">resume dataset</a>.</td></tr>
-      <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/lab/">Executable lab tools</a>, <a href="/scenarios/">business scenarios</a>, and the <a href="/atlas/">Knowledge Atlas</a>.</td></tr>
+      <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc status diagnostics</a>, <a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">business partner replication diagnostics</a>, and <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent design for SAP support</a>.</td></tr>
       <tr><td>What has been published publicly?</td><td><a href="/publications/">Publications</a> and <a href="/datasets/">datasets</a>.</td></tr>
       <tr><td>Which credentials are linkable?</td><td><a href="/education/">Education and credentials</a> and the public profile audit.</td></tr>
     </tbody></table></div>

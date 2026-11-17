@@ -6,7 +6,6 @@ permalink: /cv/
 ---
 
 {%- assign resume = site.data.resume -%}
-{%- assign resume_links = resume.links | where_exp: "link", "link.url contains 'http'" -%}
 {%- assign skills_primary = resume.skills | slice: 0, 24 -%}
 {%- assign primary_education = resume.education | first -%}
 
@@ -189,12 +188,13 @@ permalink: /cv/
 </main>
 
 
-{% assign same_as = resume_links | map: 'url' %}
+{% assign same_as = resume.schema.sameAs %}
 {% assign knowledge_topics = skills_primary | slice: 0, 12 %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "{{ '/' | absolute_url }}#dkharlanau",
   "name": {{ resume.name | jsonify }},
   "jobTitle": {{ resume.headline | jsonify }},
   "url": {{ resume.contact.site | jsonify }},
@@ -218,10 +218,10 @@ permalink: /cv/
   {% if resume.contact.email %}
   "email": {{ resume.contact.email | prepend: 'mailto:' | jsonify }},
   {% endif %}
-  {% if primary_education %}
+  {% if primary_education.school %}
   "alumniOf": {
     "@type": "EducationalOrganization",
-    "name": {{ primary_education.notes | default: primary_education.school | jsonify }}
+    "name": {{ primary_education.school | jsonify }}
   },
   {% endif %}
   "knowsAbout": {{ knowledge_topics | jsonify }}

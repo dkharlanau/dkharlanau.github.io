@@ -4,7 +4,7 @@ title: "Publications | Dzmitryi Kharlanau"
 description: "Public articles, SAP technical notes, architecture writing, and machine-readable knowledge surfaces by Dzmitryi Kharlanau."
 permalink: /publications/
 sitemap: true
-last_modified_at: 2026-04-24
+last_modified_at: 2026-11-17
 ---
 
 {% assign publications = site.data.publications.items %}
@@ -43,6 +43,16 @@ last_modified_at: 2026-04-24
       <article><span>02</span><div><h3>Architecture and delivery</h3><p>Event-driven systems, bounded contexts, and implementation choices.</p></div></article>
       <article><span>03</span><div><h3>Public knowledge assets</h3><p>Structured material for readers, search, and AI retrieval.</p></div></article>
     </div>
+  </section>
+
+  <section class="evidence-canvas__section section" aria-labelledby="selected-site-writing">
+    <header class="evidence-canvas__heading"><p class="evidence-canvas__eyebrow">Selected site articles</p><h2 id="selected-site-writing">Practical guides and architecture</h2></header>
+    <p>For example, the IDoc guide follows a synthetic handover where an outbound status 03 and an inbound status 53 must be correlated before concluding that an order was posted. A limitation of the exercise is that it does not describe a customer incident or replace checks in the actual SAP landscape. For another public technical example, see <a href="https://community.sap.com/t5/enterprise-resource-planning-blog-posts-by-members/how-to-debug-a2a-inbound-service-call-from-sap-tm-in-sap-s4/ba-p/13533349">how to debug an A2A inbound service call from SAP TM</a> on SAP Community.</p>
+    <ul>
+      <li><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc status diagnostics</a> — trace the status to application and business evidence.</li>
+      <li><a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">SAP business partner replication diagnostics</a> — find the first unproven handoff.</li>
+      <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent for SAP support</a> — design retrieval, decision and action boundaries.</li>
+    </ul>
   </section>
 
   <section class="evidence-canvas__section section" id="publication-register" aria-labelledby="publication-register-title">
