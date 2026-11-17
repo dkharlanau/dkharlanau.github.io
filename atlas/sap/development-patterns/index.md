@@ -37,7 +37,7 @@ related:
       <p>Design vocabulary</p>
       <div class="research-canvas__signal-line"><span>{{ site.data.development_patterns.patterns.size }}</span><strong>Patterns &amp; idioms</strong><small>Short, practical entries</small></div>
       <div class="research-canvas__signal-line"><span>08</span><strong>Families</strong><small>From GoF to SAP implementation</small></div>
-      <div class="research-canvas__signal-line"><span>16</span><strong>Deep dives</strong><small>Implementation specifications</small></div>
+      <div class="research-canvas__signal-line"><span>26</span><strong>Deep dives</strong><small>Implementation specifications</small></div>
       <em>Working reference · pending editorial verification</em>
     </div>
   </header>
@@ -59,7 +59,7 @@ related:
         <tbody>
           <tr><td>Compose reusable yes/no business rules</td><td><a href="/atlas/sap/development-patterns/specification/">Specification</a></td><td>Is the output a decision, with no side effects?</td></tr>
           <tr><td>Turn an operation into a named executable object</td><td><a href="/atlas/sap/development-patterns/command/">Command</a></td><td>Do we need dispatch, audit, retry, queueing or undo?</td></tr>
-          <tr><td>Switch between several algorithms</td><td><a href="/atlas/sap/development-patterns/strategy/">Strategy</a></td><td>Is the choice about <em>how</em> to do one job?</td></tr>
+          <tr><td>Switch between several algorithms</td><td><a href="/atlas/sap/development-patterns/strategy-policy/">Strategy</a></td><td>Is the choice about <em>how</em> to do one job?</td></tr>
           <tr><td>Try handlers in priority order</td><td><a href="/atlas/sap/development-patterns/chain-of-responsibility/">Chain of Responsibility</a></td><td>Can one handler decline and pass the request on?</td></tr>
           <tr><td>Control lifecycle transitions</td><td><a href="/atlas/sap/development-patterns/state/">State</a></td><td>Are actions legal in some states but not others?</td></tr>
           <tr><td>Translate incompatible models</td><td><a href="/atlas/sap/development-patterns/adapter/">Adapter</a> / <a href="/atlas/sap/development-patterns/anti-corruption-layer/">Anti-Corruption Layer</a></td><td>Just an API shape mismatch—or a semantic mismatch?</td></tr>
@@ -160,6 +160,16 @@ Tests:
       <p>The deeper pages explain class roles, method signatures, code sketches, trade-offs, tests and how to reference the pattern in a development specification.</p>
     </header>
     <div class="research-route-list">
+      <a href="/atlas/sap/development-patterns/specification/"><span>DP-01</span><strong>Specification</strong><small>Turn a business eligibility rule into a reusable yes/no question.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/command/"><span>DP-02</span><strong>Command</strong><small>Represent an operation as an object with one execution contract.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/chain-of-responsibility/"><span>DP-03</span><strong>Chain of Responsibility</strong><small>Try a defined sequence of handlers until one can answer.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/state/"><span>DP-04</span><strong>State</strong><small>Model legal behavior and transitions around lifecycle state.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/adapter/"><span>DP-05</span><strong>Adapter</strong><small>Provide one business-facing interface over incompatible provider contracts.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/decorator/"><span>DP-06</span><strong>Decorator</strong><small>Add logging, metrics or policy around a service without rewriting it.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/factory-method/"><span>DP-07</span><strong>Factory Method</strong><small>Centralize creation of interchangeable implementations.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/unit-of-work/"><span>DP-08</span><strong>Unit of Work</strong><small>Coordinate one logical change set at its legitimate transaction boundary.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/test-data-builder/"><span>DP-09</span><strong>Test Data Builder</strong><small>Make tests show the business difference, not 40 fields of fixture setup.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      <a href="/atlas/sap/development-patterns/thin-rap-handler/"><span>DP-10</span><strong>Thin RAP Handler</strong><small>Keep behavior handlers about framework contracts; delegate pure business rules.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
       <a href="/atlas/sap/development-patterns/thin-entry-point/"><span>SDP-01</span><strong>Thin Entry Point</strong><small>A BAdI, user exit or IDoc hook should route work, not become the application.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
       <a href="/atlas/sap/development-patterns/strategy-policy/"><span>SDP-02</span><strong>Strategy / Policy Resolver</strong><small>Replace a forest of country, channel or organization CASE branches with named policies.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
       <a href="/atlas/sap/development-patterns/repository-and-dependency-injection/"><span>SDP-03</span><strong>Repository + Dependency Injection</strong><small>Hide database and SAP API calls behind a testable boundary.</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
