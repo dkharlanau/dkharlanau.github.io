@@ -451,6 +451,18 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Patterns in practice</p>
+      <h2>Give recurring design choices a stable name.</h2>
+      <p>The development model answers where the code lives. The Pattern Library answers how to structure its boundaries, behavior, replay and testability.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/atlas/sap/development-patterns/"><span>16</span><strong>SAP Development Pattern Library</strong><small>ABAP OO, RAP, CAP, IDoc and Clean Core: practical patterns, review phrases, trade-offs and examples.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/atlas/sap/development-patterns/design-review/"><span>ADR</span><strong>Architecture review language</strong><small>Explain the business reason, contract, alternatives, release limits and acceptance tests when naming a pattern.</small><i class="material-symbols-outlined" aria-hidden="true">rate_review</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Architecture smells</p>
       <h2>Patterns that look modern and age badly.</h2>
       <p>Most bad architecture is not technically impossible. That is the problem.</p>

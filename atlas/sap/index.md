@@ -33,6 +33,17 @@ related:
 
 <section class="section">
   <header class="section-heading">
+    <p class="eyebrow">Development Architecture</p>
+    <h2>A common pattern vocabulary for SAP code</h2>
+    <p class="lead">Practical designs for ABAP enhancements, RAP business objects, CAP services and resilient integration: the problem, a named solution, its trade-offs and a review question.</p>
+  </header>
+  <div class="research-route-list">
+    <a href="/atlas/sap/development-patterns/"><span>16</span><strong>SAP Development Pattern Library</strong><small>Architecture patterns that make code reviews more precise: Strategy, Delta-Aware Merge, Managed RAP, CAP Facade, Idempotent Consumer and more.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
     <p class="eyebrow">Pilot Page</p>
     <h2>Reviewed SAP topic</h2>
   </header>

@@ -1,0 +1,154 @@
+{
+  "schema": "dkharlanau.sap-development-patterns.v1",
+  "version": "0.1.0",
+  "updated": "2026-11-17",
+  "editorial_status": "needs_verification",
+  "purpose": "Stable, public architecture vocabulary for SAP ABAP OO, RAP, CAP, clean core and integration design reviews.",
+  "note": "Patterns are independent explanations, not an SAP-certified reference implementation. Sources and applicability are in linked human pages.",
+  "patterns": [
+    {
+      "id": "SDP-01",
+      "name": "Thin Entry Point",
+      "slug": "thin-entry-point",
+      "category": "ABAP OO",
+      "summary": "A BAdI, user exit or IDoc hook should route work, not become the application.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/thin-entry-point/",
+      "review_phrase": "Use a Thin Entry Point: the enhancement should translate the SAP contract and delegate to an application service."
+    },
+    {
+      "id": "SDP-02",
+      "name": "Strategy / Policy Resolver",
+      "slug": "strategy-policy",
+      "category": "ABAP OO",
+      "summary": "Replace a forest of country, channel or organization CASE branches with named policies.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/strategy-policy/",
+      "review_phrase": "Use Strategy with a Policy Resolver; the organization rule is a replaceable decision, not a new IF in the transport layer."
+    },
+    {
+      "id": "SDP-03",
+      "name": "Repository + Dependency Injection",
+      "slug": "repository-and-dependency-injection",
+      "category": "ABAP OO",
+      "summary": "Hide database and SAP API calls behind a testable boundary.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/repository-and-dependency-injection/",
+      "review_phrase": "Use Repository + DI. The business decision should not know whether its input came from SQL, EML or a released API."
+    },
+    {
+      "id": "SDP-04",
+      "name": "Anti-Corruption Layer (ACL)",
+      "slug": "anti-corruption-layer",
+      "category": "ABAP OO",
+      "summary": "Translate legacy or external meanings once, before they reach core rules.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/anti-corruption-layer/",
+      "review_phrase": "Put an Anti-Corruption Layer in front of the domain; source-system codes must not control downstream business rules."
+    },
+    {
+      "id": "SDP-05",
+      "name": "Delta-Aware Merge / Patch Semantics",
+      "slug": "delta-aware-merge",
+      "category": "Integration",
+      "summary": "A missing field, an explicitly cleared field and a deleted segment must not mean the same thing.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/delta-aware-merge/",
+      "review_phrase": "We need Delta-Aware Merge: resolve MSGFN and field presence before lookup or write, then protect fields explicitly."
+    },
+    {
+      "id": "SDP-06",
+      "name": "Decision Table / Rules as Data",
+      "slug": "decision-table",
+      "category": "ABAP OO",
+      "summary": "When the business owns many combinations, stop encoding them as nested IF statements.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/decision-table/",
+      "review_phrase": "Make this a Decision Table. The rule combinations belong in governed data; the evaluator should stay boring."
+    },
+    {
+      "id": "SDP-07",
+      "name": "Released API Boundary (Clean Core)",
+      "slug": "released-api-boundary",
+      "category": "Clean Core",
+      "summary": "Depend on an intentional SAP contract, not on a convenient internal table or implementation detail.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/released-api-boundary/",
+      "review_phrase": "We need a Released API Boundary. Please show the API's release status and the extension ownership model."
+    },
+    {
+      "id": "SDP-08",
+      "name": "Managed RAP Business Object",
+      "slug": "managed-rap-business-object",
+      "category": "RAP",
+      "summary": "Let the RAP runtime own ordinary persistence, locking and transactional plumbing for custom data.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/managed-rap-business-object/",
+      "review_phrase": "This is custom owned persistence: start with Managed RAP rather than hand-written CRUD."
+    },
+    {
+      "id": "SDP-09",
+      "name": "Unmanaged RAP Facade",
+      "slug": "unmanaged-rap-facade",
+      "category": "RAP",
+      "summary": "Modernize the service contract around proven transactional logic without rewriting the engine first.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/unmanaged-rap-facade/",
+      "review_phrase": "Use an Unmanaged RAP Facade so the existing engine stays the single writer; prove the save-sequence contract first."
+    },
+    {
+      "id": "SDP-10",
+      "name": "RAP Validation vs Determination vs Action",
+      "slug": "behavior-rule-placement",
+      "category": "RAP",
+      "summary": "Use the RAP behavior concept that matches the business meaning.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/behavior-rule-placement/",
+      "review_phrase": "This needs a Determination, not an Action; the user did not request an explicit command. Keep the invariant in Validation."
+    },
+    {
+      "id": "SDP-11",
+      "name": "RAP Draft Workflow",
+      "slug": "draft-workflow",
+      "category": "RAP",
+      "summary": "Separate 'I am editing' from 'the active business state has changed'.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/draft-workflow/",
+      "review_phrase": "Use RAP Draft if the real requirement is safe multi-step editing; do not invent an extra 'temporary' active status."
+    },
+    {
+      "id": "SDP-12",
+      "name": "CAP Service Facade",
+      "slug": "cap-service-facade",
+      "category": "CAP",
+      "summary": "Expose a purpose-built service contract instead of publishing the database model verbatim.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/cap-service-facade/",
+      "review_phrase": "Use a CAP Service Facade. Let the consumer see a stable use-case contract, not the underlying storage or remote ERP schema."
+    },
+    {
+      "id": "SDP-13",
+      "name": "CAP Event Handler / Lifecycle Hook",
+      "slug": "cap-event-handler",
+      "category": "CAP",
+      "summary": "Add custom logic around CAP's service events while keeping the service contract in charge.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/cap-event-handler/",
+      "review_phrase": "Use a CAP Event Handler for the service lifecycle; do not create a second controller that bypasses CAP authorization and transaction rules."
+    },
+    {
+      "id": "SDP-14",
+      "name": "Idempotent Consumer",
+      "slug": "idempotent-consumer",
+      "category": "Integration",
+      "summary": "A retry must not create a second business effect.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/idempotent-consumer/",
+      "review_phrase": "Add an Idempotent Consumer. We must tolerate duplicate delivery, not hope the broker sends once."
+    },
+    {
+      "id": "SDP-15",
+      "name": "Transactional Outbox / Commit-Then-Publish",
+      "slug": "transactional-outbox",
+      "category": "Integration",
+      "summary": "Never claim an event was delivered just because business code reached its last line.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/transactional-outbox/",
+      "review_phrase": "Use a Transactional Outbox or platform-managed event queue, and make the consumer idempotent."
+    },
+    {
+      "id": "SDP-16",
+      "name": "Retry + Dead Letter / Quarantine",
+      "slug": "retry-and-dead-letter",
+      "category": "Integration",
+      "summary": "Retry a temporary outage; quarantine bad data; never run an infinite retry storm.",
+      "canonical_url": "https://dkharlanau.github.io/atlas/sap/development-patterns/retry-and-dead-letter/",
+      "review_phrase": "Add a Retry Budget and Dead Letter policy: operators must know what failed, why it stopped and how to replay safely."
+    }
+  ]
+}
