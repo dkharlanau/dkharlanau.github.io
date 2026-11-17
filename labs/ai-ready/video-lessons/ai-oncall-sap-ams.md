@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-11-11
+last_modified_at: 2026-11-17
 hide_global_cta: true
 tags: [ai, operations, sap, ams, incident, autonomy, evaluation, video-learning]
 career_impact: mapped
@@ -18,7 +18,7 @@ career_skills: [delivery-ams, ai-security, ai-business-value]
 
 # Give Your On-Call an AI Teammate, Not a Production Password
 
-**Source:** Swaapnika Motapothula, Chinmay Gandhi and Vlad Tsvang (Meta), *“Give Your On-Call Its Own AI Teammate”*, AI Engineer, 10 November 2026 (15 min). [Talk overview](https://www.vibeleaderboard.ai/intel/9dbe16ee-174f-4b86-9b44-aa7ad0503051) · [AI Engineer channel](https://www.youtube.com/@aiDotEngineer).
+**Source:** Swaapnika Motapothula, Chinmay Gandhi and Vlad Tsvang (Meta), *“Give Your On-Call Its Own AI Teammate”*, AI Engineer, 10 November 2026 (15 min). [Original talk and presentation](https://ai.engineer/talks/_NBx2NNOuA4-give-your-on-call-its-own-ai).
 
 Imagine starting an on-call shift with an assistant that already knows the recurring failure patterns, gathers useful logs and prepares an investigation before you open six monitoring tools. That is a much more credible first goal than promising the agent will automatically repair every production incident.
 
