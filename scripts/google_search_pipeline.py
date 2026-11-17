@@ -664,6 +664,10 @@ def build_markdown(report: dict[str, Any]) -> str:
             "",
             "## Indexing status",
             "",
+            "Counts combine the latest available result for each URL, including results "
+            "carried forward from earlier inspections. Report generation time is not an "
+            "inspection time; see each URL's timestamp in the JSON report.",
+            "",
             "| Status | Count | Change |",
             "| --- | ---: | ---: |",
         ]

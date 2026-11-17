@@ -1,5 +1,6 @@
 from scripts.indexation_recovery_queue import (
     LiveCheck,
+    build_markdown,
     build_recovery,
     recovery_action,
 )
@@ -133,3 +134,25 @@ def test_manual_queue_is_capped_and_ranked_by_business_tier():
     assert recovery["summary"]["manual_request_candidates"] == 2
     assert recovery["summary"]["manual_queue_size"] == 1
     assert recovery["manual_request_queue"][0]["url"] == "https://example.com/atlas/problem/"
+
+
+def test_recovery_preserves_actual_inspection_times_in_json_and_markdown():
+    cfg = config()
+    cfg["priority_routes"] = cfg["priority_routes"][:2]
+    report = {
+        "generated_at": "2026-11-17T12:20:00Z",
+        "urls": [
+            {"url": "https://example.com/service/", "kind": "page", "status": "unknown",
+             "inspection_source": "previous", "stale": True, "inspected_at": "2026-11-15T09:00:00Z"},
+            {"url": "https://example.com/atlas/problem/", "kind": "page", "status": "unknown",
+             "inspection_source": "previous", "stale": True, "inspected_at": None},
+        ],
+    }
+    recovery = build_recovery(report, cfg, live_checker=good)
+    by_url = {row["url"]: row for row in recovery["priority_corpus"]}
+    assert by_url["https://example.com/service/"]["inspected_at"] == "2026-11-15T09:00:00Z"
+    assert by_url["https://example.com/atlas/problem/"]["inspected_at"] is None
+    markdown = build_markdown(recovery)
+    assert markdown.count("2026-11-15T09:00:00Z") == 2
+    assert markdown.count("| unknown | unknown |") == 2
+    assert "source report date is not the inspection date" in markdown

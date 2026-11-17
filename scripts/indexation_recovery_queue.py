@@ -236,6 +236,7 @@ def build_recovery(
             "gsc_priority": item.get("priority", ""),
             "inspection_source": item.get("inspection_source", ""),
             "stale": bool(item.get("stale", False)),
+            "inspected_at": item.get("inspected_at"),
             "last_crawl_time": item.get("last_crawl_time"),
             "user_canonical": item.get("user_canonical"),
             "google_canonical": item.get("google_canonical"),
@@ -291,6 +292,9 @@ def build_markdown(recovery: dict[str, Any]) -> str:
         "This report does **not** submit URLs to Google. It narrows the site's already "
         "indexable/search-tracked corpus to business-priority pages, checks the live "
         "rendered technical gate, and produces a short Search Console operator queue.",
+        "Statuses may be carried forward from earlier inspections; the source report "
+        "date is not the inspection date. A missing inspection date is unknown. "
+        "Inspect the URL again before acting on an old or undated status.",
         "",
         "## Priority corpus KPI",
         "",
@@ -314,16 +318,17 @@ def build_markdown(recovery: dict[str, Any]) -> str:
     if queue:
         lines.extend(
             [
-                "| Rank | Tier | Focus | Status | URL | Reason |",
-                "| ---: | --- | --- | --- | --- | --- |",
+                "| Rank | Tier | Focus | Status | Inspected at (UTC) | URL | Reason |",
+                "| ---: | --- | --- | --- | --- | --- | --- |",
             ]
         )
         for rank, row in enumerate(queue, start=1):
             url = str(row["url"]).replace("|", "%7C")
             reason = str(row.get("reason") or "").replace("|", "\\|")
             focus = str(row.get("focus") or "").replace("|", "\\|")
+            inspected_at = str(row.get("inspected_at") or "unknown").replace("|", "\\|")
             lines.append(
-                f"| {rank} | {row['tier']} | {focus} | {row['status']} | "
+                f"| {rank} | {row['tier']} | {focus} | {row['status']} | {inspected_at} | "
                 f"[{url}]({url}) | {reason} |"
             )
     else:
@@ -355,8 +360,8 @@ def build_markdown(recovery: dict[str, Any]) -> str:
             "",
             "## Full priority corpus",
             "",
-            "| Tier | Focus | Status | Action | Live gate | URL |",
-            "| --- | --- | --- | --- | --- | --- |",
+            "| Tier | Focus | Status | Inspected at (UTC) | Action | Live gate | URL |",
+            "| --- | --- | --- | --- | --- | --- | --- |",
         ]
     )
     for row in recovery.get("priority_corpus") or []:
@@ -365,8 +370,9 @@ def build_markdown(recovery: dict[str, Any]) -> str:
         if row.get("live_check") is None:
             live_gate = "not checked"
         url = str(row["url"]).replace("|", "%7C")
+        inspected_at = str(row.get("inspected_at") or "unknown").replace("|", "\\|")
         lines.append(
-            f"| {row['tier']} | {row.get('focus','')} | {row['status']} | "
+            f"| {row['tier']} | {row.get('focus','')} | {row['status']} | {inspected_at} | "
             f"{row['action']} | {live_gate} | [{url}]({url}) |"
         )
 
