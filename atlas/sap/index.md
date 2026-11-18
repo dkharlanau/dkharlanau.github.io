@@ -4,7 +4,7 @@ layout: default
 title: "Atlas SAP Section — Configuration and Support Concepts"
 description: "Curated SAP support and configuration explanations with conservative boundaries."
 permalink: /atlas/sap/
-last_modified_at: 2026-07-14
+last_modified_at: 2026-11-17
 status: reviewed
 verified: true
 tags:
@@ -29,6 +29,33 @@ related:
   <p class="eyebrow">SAP Section</p>
   <h1>SAP concepts with enough context to diagnose, not enough false certainty to mislead.</h1>
   <p class="lead">This section is for practical SAP support and configuration explanations. It avoids release-specific certainty unless a claim has been verified against public vendor documentation.</p>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Programming Architecture</p>
+    <h2>Speak the same pattern language.</h2>
+    <p class="lead">A searchable reference for 150+ programming patterns with ABAP, RAP and CAP use cases, implementation specifications and trade-offs.</p>
+  </header>
+  <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/sap/development-patterns/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">account_tree</span>
+      <h2>SAP Development Pattern Library</h2>
+      <p>Specification, Command, Strategy, State, adapters, integration patterns and more. Start with the problem and choose a named solution.</p>
+      <span class="link-arrow">Explore the pattern catalog</span>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Development Architecture</p>
+    <h2>A common pattern vocabulary for SAP code</h2>
+    <p class="lead">Practical designs for ABAP enhancements, RAP business objects, CAP services and resilient integration: the problem, a named solution, its trade-offs and a review question.</p>
+  </header>
+  <div class="research-route-list">
+    <a href="/atlas/sap/development-patterns/"><span>16</span><strong>SAP Development Pattern Library</strong><small>Architecture patterns that make code reviews more precise: Strategy, Delta-Aware Merge, Managed RAP, CAP Facade, Idempotent Consumer and more.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+  </div>
 </section>
 
 <section class="section">
