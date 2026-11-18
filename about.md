@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
-description: "Public professional profile of Dzmitryi Kharlanau, SAP consultant at EPAM Systems, and the owner of this personal SAP and AI technical lab."
+description: "Dzmitryi Kharlanau, Senior SAP Consultant at EPAM Systems, works on SAP projects across logistics, integration, master data and automation."
 permalink: /about/
-last_modified_at: 2026-11-17
+last_modified_at: 2026-11-18
 last_reviewed: 2026-10-05
 profile_page: true
 hide_global_cta: true
@@ -17,7 +17,7 @@ hide_global_cta: true
   <div class="profile-canvas__hero-copy">
     <p class="profile-canvas__eyebrow">SAP consultant profile</p>
     <h1>Dzmitryi Kharlanau</h1>
-    <p>I am an SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work across SAP logistics, integration, master data, support operations, and practical AI. I publish diagnostic guides and tools that connect technical evidence to business outcomes. This website is my personal technical lab and knowledge base. It is not an official EPAM Systems publication and does not represent EPAM Systems, SAP, OpenAI, or other organisations mentioned here.</p>
+    <p>I’m an SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work on complex SAP projects where logistics processes, system integration and master data meet. My work spans problem definition, solution design, implementation and support, with practical automation and AI where they help teams solve a specific problem. This website is my independent technical lab and knowledge base.</p>
     <div class="profile-canvas__actions">
       <a class="profile-canvas__button" href="/lab/">Explore the lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
       <a class="profile-canvas__text-link" href="/knowledge/">Open knowledge base <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
