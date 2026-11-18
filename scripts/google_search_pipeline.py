@@ -612,6 +612,29 @@ def build_markdown(report: dict[str, Any]) -> str:
     if summary.get("inspection_skipped_reason"):
         lines.append(f"- Inspection note: {summary['inspection_skipped_reason']}")
 
+    monitor_urls = report.get("monitor_urls", [])
+    if monitor_urls:
+        by_url = {item["url"]: item for item in report["urls"]}
+        lines.extend([
+            "",
+            "## Monitored articles",
+            "",
+            "| URL | Google status | Inspected at (UTC) | Evidence |",
+            "| --- | --- | --- | --- |",
+        ])
+        for url in monitor_urls:
+            item = by_url.get(url, {})
+            inspected_at = item.get("inspected_at")
+            status = item.get("status", "unavailable")
+            if inspected_at:
+                evidence = "This run" if item.get("inspection_source") == "current" else "Carried forward"
+            elif status == "inspection_error":
+                evidence = "Inspection failed"
+            else:
+                evidence = "No dated inspection"
+            safe_url = url.replace("|", "%7C")
+            lines.append(f"| [{safe_url}]({safe_url}) | {status} | {inspected_at or '—'} | {evidence} |")
+
     lines.extend(
         [
             "",
@@ -780,6 +803,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         max_depth=args.max_sitemap_depth,
     )
     previous = load_previous_report(args.previous_report)
+    monitor_urls = load_monitor_urls(getattr(args, "monitor_urls_file", None), args.site_url, entries)
 
     report: dict[str, Any] = {
         "generated_at": utc_now(),
@@ -790,6 +814,7 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         "sitemap_submission": {"status": "not_configured"},
         "search_analytics": {"status": "not_configured"},
         "last_inspection_at": None,
+        "monitor_urls": monitor_urls,
         "summary": {},
         "urls": [],
     }
@@ -838,8 +863,6 @@ def run(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     inspectable_entries = list(page_entries_all)
     if args.include_data:
         inspectable_entries.extend(data_entries_all)
-    monitor_urls = load_monitor_urls(getattr(args, "monitor_urls_file", None), args.site_url, page_entries_all)
-
     skipped_reason = ""
     previous_age = previous_report_age_hours(previous)
     if (

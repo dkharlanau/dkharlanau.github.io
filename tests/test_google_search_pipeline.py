@@ -322,10 +322,16 @@ def test_rolling_inventory_preserves_url_inspection_times_without_guessing():
     }
 
 
-def test_run_dates_successful_inspections_but_not_failed_results(monkeypatch):
-    entries = [{"url": f"https://example.com/{name}/", "lastmod": ""} for name in ("ok", "error")]
+def test_run_reports_fresh_carried_forward_and_unavailable_monitor_results(monkeypatch, tmp_path):
+    entries = [{"url": f"https://example.com/{name}/", "lastmod": ""}
+               for name in ("error", "ok", "old", "new")]
+    monitor_urls = [entry["url"] for entry in entries]
+    monitor_file = tmp_path / "monitor.json"
+    monitor_file.write_text(json.dumps({"urls": monitor_urls}), encoding="utf-8")
     monkeypatch.setattr(pipeline, "collect_sitemap_urls", lambda *a, **kw: (entries, []))
-    monkeypatch.setattr(pipeline, "load_previous_report", lambda path: None)
+    monkeypatch.setattr(pipeline, "load_previous_report", lambda path: {"urls": [{
+        "url": monitor_urls[2], "kind": "page", "status": "unknown", "inspected_at": "2026-11-15T12:30:00Z",
+    }]})
     monkeypatch.setattr(pipeline, "create_authorized_session", lambda credentials: object())
     monkeypatch.setattr(pipeline, "submit_sitemap", lambda *a: {"status": "submitted"})
     monkeypatch.setattr(pipeline, "collect_search_analytics", lambda *a: {"status": "available"})
@@ -341,6 +347,7 @@ def test_run_dates_successful_inspections_but_not_failed_results(monkeypatch):
     monkeypatch.setattr(pipeline, "inspect_url", inspect)
     args = SimpleNamespace(sitemap_url="https://example.com/sitemap.xml", max_sitemap_depth=4,
                            previous_report=None, site_url="https://example.com/", credentials="set",
+                           monitor_urls_file=str(monitor_file),
                            require_credentials=True, include_data=False, min_inspection_interval_hours=0,
                            max_inspections=2, inspection_mode="all", selection_seed="", request_delay=0)
     report, exit_code = pipeline.run(args)
@@ -350,3 +357,11 @@ def test_run_dates_successful_inspections_but_not_failed_results(monkeypatch):
     assert rows["https://example.com/error/"]["inspected_at"] is None
     assert rows["https://example.com/ok/"]["inspection_attempted_at"] == "2026-11-17T12:00:02Z"
     assert rows["https://example.com/ok/"]["inspected_at"] == "2026-11-17T12:00:03Z"
+    assert report["monitor_urls"] == monitor_urls
+    monitored = pipeline.build_markdown(report).split("## Monitored articles", 1)[1].split("##", 1)[0]
+    assert [line for line in monitored.splitlines() if line.startswith("| [")] == [
+        "| [https://example.com/error/](https://example.com/error/) | inspection_error | — | Inspection failed |",
+        "| [https://example.com/ok/](https://example.com/ok/) | indexed | 2026-11-17T12:00:03Z | This run |",
+        "| [https://example.com/old/](https://example.com/old/) | unknown | 2026-11-15T12:30:00Z | Carried forward |",
+        "| [https://example.com/new/](https://example.com/new/) | not_inspected | — | No dated inspection |",
+    ]

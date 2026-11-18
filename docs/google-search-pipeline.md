@@ -38,7 +38,7 @@ The scheduled run inspects the 12 URLs in `config/google-search-monitor-urls.jso
 The workflow creates:
 
 - `reports/seo/google-search/google-indexing.json` — complete machine-readable result.
-- `reports/seo/google-search/google-indexing.md` — compact human review queue.
+- `reports/seo/google-search/google-indexing.md` — monitored articles with their latest inspection times and a sitewide review queue. The same table appears in the GitHub Actions run summary.
 
 Each successful URL Inspection records `inspected_at` in UTC. The rolling inventory preserves that timestamp when it carries a result forward; `stale: true` means the URL was not inspected in the current run. A failed attempt records `inspection_attempted_at` and leaves `inspected_at` null. Older results that have no per-URL timestamp remain unknown rather than inheriting the report generation time or Google's last crawl time. These timestamps date the API observation, not the crawl or an indexing request.
 
