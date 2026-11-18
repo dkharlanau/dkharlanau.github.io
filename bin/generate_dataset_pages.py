@@ -21,6 +21,7 @@ import os
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
 DATASETS_DIR = ROOT / "datasets"
@@ -58,6 +59,43 @@ def safe_text(s: Any) -> str:
 
 def esc(s: Any) -> str:
     return html.escape("" if s is None else str(s), quote=True)
+
+
+def research_references(raw_json_text: str) -> str:
+    """Render explicit research sources as links, preserving their evidence boundary."""
+    try:
+        data = json.loads(raw_json_text)
+    except (ValueError, TypeError):
+        return ""
+    basis = data.get("research_basis") if isinstance(data, dict) else None
+    if not isinstance(basis, dict):
+        return ""
+    urls = []
+    for key in ("key_findings", "phenomena"):
+        entries = basis.get(key, [])
+        if not isinstance(entries, list):
+            continue
+        for entry in entries:
+            if not isinstance(entry, dict) or not isinstance(entry.get("sources"), list):
+                continue
+            for url in entry["sources"]:
+                if not isinstance(url, str) or any(c.isspace() or ord(c) < 32 for c in url):
+                    continue
+                try:
+                    parts = urlsplit(url)
+                    valid = parts.scheme == "https" and bool(parts.hostname) and not parts.username and not parts.password
+                except ValueError:
+                    valid = False
+                if valid and url not in urls:
+                    urls.append(url)
+    if not urls:
+        return ""
+    note = basis.get("source_note")
+    content = '<section class="neub-card" aria-labelledby="research-references">\n<h2 id="research-references">Research references</h2>\n'
+    if isinstance(note, str) and note.strip():
+        content += f'<p>{esc(note)}</p>\n'
+    content += '<ul>\n' + ''.join(f'<li><a href="{esc(url)}">{esc(url)}</a></li>\n' for url in urls)
+    return content + '</ul>\n</section>\n\n'
 
 
 def slug(s: str) -> str:
@@ -642,6 +680,9 @@ def main() -> int:
                 "  </div>\n"
                 "</div>\n\n"
             )
+
+            if dataset_name == "LLM-prompts":
+                content += research_references(raw_json_text)
 
             content += json_ld_dataset(
                 site_url=site_url,
