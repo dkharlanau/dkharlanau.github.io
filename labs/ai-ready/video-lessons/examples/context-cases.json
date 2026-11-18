@@ -1,0 +1,98 @@
+[
+  {
+    "case_id": "SYN-CONTEXT-01",
+    "required_keys": [
+      "source_zone",
+      "target_zone"
+    ],
+    "expected_status": "diagnostic_ready",
+    "evidence": [
+      {
+        "key": "source_zone",
+        "case_id": "SYN-CONTEXT-01",
+        "kind": "source_evidence",
+        "trust": "authenticated_tool_result",
+        "source_system": "synthetic-mdg",
+        "source_ref": "snap/source/01",
+        "value": "DE-01",
+        "observed_at": "2026-11-11T10:25:00Z",
+        "expires_at": "2026-11-11T11:00:00Z"
+      },
+      {
+        "key": "target_zone",
+        "case_id": "SYN-CONTEXT-01",
+        "kind": "source_evidence",
+        "trust": "authenticated_tool_result",
+        "source_system": "synthetic-s4",
+        "source_ref": "snap/target/01",
+        "value": "DE-02",
+        "observed_at": "2026-11-11T10:26:00Z",
+        "expires_at": "2026-11-11T11:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": "SYN-CONTEXT-02",
+    "required_keys": [
+      "source_zone",
+      "target_zone"
+    ],
+    "expected_status": "insufficient_evidence",
+    "evidence": [
+      {
+        "key": "source_zone",
+        "case_id": "SYN-CONTEXT-02",
+        "kind": "source_evidence",
+        "trust": "authenticated_tool_result",
+        "source_system": "synthetic-mdg",
+        "source_ref": "snap/source/02",
+        "value": "DE-01",
+        "observed_at": "2026-11-11T10:25:00Z",
+        "expires_at": "2026-11-11T11:00:00Z"
+      },
+      {
+        "key": "target_zone",
+        "case_id": "SYN-CONTEXT-02",
+        "kind": "source_evidence",
+        "trust": "authenticated_tool_result",
+        "source_system": "synthetic-s4",
+        "source_ref": "snap/target/02",
+        "value": "DE-01",
+        "observed_at": "2026-11-11T09:00:00Z",
+        "expires_at": "2026-11-11T09:30:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": "SYN-CONTEXT-03",
+    "required_keys": [
+      "source_zone",
+      "target_zone"
+    ],
+    "expected_status": "insufficient_evidence",
+    "evidence": [
+      {
+        "key": "source_zone",
+        "case_id": "SYN-CONTEXT-03",
+        "kind": "source_evidence",
+        "trust": "authenticated_tool_result",
+        "source_system": "synthetic-mdg",
+        "source_ref": "snap/source/03",
+        "value": "DE-01",
+        "observed_at": "2026-11-11T10:25:00Z",
+        "expires_at": "2026-11-11T11:00:00Z"
+      },
+      {
+        "key": "target_zone",
+        "case_id": "SYN-CONTEXT-03",
+        "kind": "source_evidence",
+        "trust": "untrusted_document",
+        "source_system": "synthetic-s4",
+        "source_ref": "doc/untrusted/03",
+        "value": "DE-01",
+        "observed_at": "2026-11-11T10:25:00Z",
+        "expires_at": "2026-11-11T11:00:00Z"
+      }
+    ]
+  }
+]
