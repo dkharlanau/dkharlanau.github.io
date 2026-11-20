@@ -23,6 +23,12 @@ verified: true
   <p class="lead">Practical working skills for solution architects, enterprise architects, and integration architects who need to <mark class="key-idea">map capabilities, review designs, record decisions, and define system boundaries with clarity.</mark></p>
   <div class="atlas-hero__actions">
     <a class="button button--primary" href="/skill-hub/sap-architecture-course/">Start the SAP Architect Field Course</a>
+    <a class="facet-route-card" href="/skill-hub/architecture/data-architecture-selection-working-skill/">
+      <span class="facet-route-card__index" aria-hidden="true">06</span>
+      <h3>Data Architecture Selection</h3>
+      <p>Review candidate · Turn warehouse, lakehouse, fabric and mesh proposals into an evidence-based decision and validation plan.</p>
+      <span class="facet-route-card__arrow" aria-hidden="true">→</span>
+    </a>
   </div>
 </section>
 
