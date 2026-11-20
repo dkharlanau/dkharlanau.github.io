@@ -7,7 +7,11 @@ description: Use when selecting or reviewing a warehouse, lakehouse, data fabric
 
 Select a data architecture for a defined business decision, not for a technology label. This is the agent-facing companion to the [human skill](../../../skill-hub/architecture/data-architecture-selection-working-skill.md).
 
-## When to use
+## Purpose
+
+Produce an evidence-backed architecture decision and verification plan, keeping governance, ownership, storage, and data movement explicit.
+
+## Use when
 
 - A team needs a defensible choice between a warehouse, lakehouse, virtualized access, fabric capabilities or a mesh operating model.
 - An integration or reporting design lacks freshness, history, ownership or reconciliation requirements.
