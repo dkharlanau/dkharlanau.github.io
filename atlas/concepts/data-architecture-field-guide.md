@@ -43,8 +43,8 @@ related:
     <p>James Serra's <a href="https://www.oreilly.com/library/view/deciphering-data-architectures/9781098150754/">Deciphering Data Architectures</a> is the starting point for this independent guide. Its most transferable lesson is that architecture selection is a trade-off, not a popularity contest.</p>
 
     <h2 id="choose">Choose the architecture by the job</h2>
-    <div class="study-table">
-      <table>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Comparison of data architecture patterns">
+      <table class="study-table__table">
         <thead><tr><th scope="col">Pattern</th><th scope="col">Start here when…</th><th scope="col">Watch out for…</th></tr></thead>
         <tbody>
           <tr><th scope="row">Relational warehouse (RDW)</th><td>Business users need stable, governed SQL reporting and historical comparisons.</td><td>Rigid ingestion and modeling can slow exploration; complex ETL has a cost.</td></tr>
@@ -69,8 +69,8 @@ related:
     </ol>
 
     <h2 id="data-models">Modeling: choose the question, not the diagram</h2>
-    <div class="study-table">
-      <table>
+    <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Comparison of data modeling concepts">
+      <table class="study-table__table">
         <thead><tr><th>Concept</th><th>Useful test</th></tr></thead>
         <tbody>
           <tr><th>3NF</th><td>Can we update a customer's core attributes without fixing duplicate copies?</td></tr>
@@ -94,7 +94,7 @@ related:
       <li><strong>Choose the platform:</strong> compare a managed warehouse plus raw zone against a lakehouse and logical/virtual access. Evaluate SAP Datasphere's semantic and federation capabilities where available; validate licensing, connectivity and deployment scope.</li>
       <li><strong>Prove the result:</strong> sample customer IDs reconcile across systems; role and historical joins work; restricted data remains restricted; refresh meets SLA; failure recovery does not duplicate records.</li>
     </ol>
-    <p>For SAP-specific context, see <a href="https://help.sap.com/docs/PRODUCT_ID/d4f3c5a0bb074d09ae9b42b2b9bd7a08/2377bb6efedb42d9a6796f0d7d68f1a4.html?locale=en-US">SAP Datasphere's data-integration and semantic-modeling capabilities</a> and <a href="https://help.sap.com/docs/portfolio-category/data-cloud">SAP Business Data Cloud</a>. Product capability is not proof that a given landscape is configured or licensed for it.</p>
+    <p>For SAP-specific context, see <a href="https://help.sap.com/docs/SAP_DATASPHERE/c8a54ee704e94e15926551293243fd1d/11f9c5c5273e4a7bacfe01bb188a26e8.html">SAP Datasphere's data-integration and semantic-modeling capabilities</a> and <a href="https://help.sap.com/docs/portfolio-category/data-cloud">SAP Business Data Cloud</a>. Product capability is not proof that a given landscape is configured or licensed for it.</p>
 
     <h2>Four traps to reject in an architecture review</h2>
     <ul>
