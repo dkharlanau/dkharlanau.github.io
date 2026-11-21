@@ -93,6 +93,56 @@ def _plain_text(value: str) -> str:
     return " ".join(html.unescape(TAG_RE.sub(" ", value)).split())
 
 
+def test_integration_diagnostics_use_resolvable_topics_and_links():
+    site = _require_site()
+    home = "https://dkharlanau.github.io"
+    hub = "/labs/enterprise-context/integration-operations/"
+    topics = {
+        "/atlas/diagnostics/sap-idoc-diagnostics/": "sap-idoc",
+        "/atlas/diagnostics/sap-idoc-status-diagnostics/": "sap-idoc-status",
+        "/atlas/diagnostics/sap-qrfc-trfc-diagnostics/": "sap-rfc-monitoring",
+    }
+    registry = (site / "entities/index.html").read_text(encoding="utf-8")
+    entity_ids = {
+        node["@id"]
+        for block in _jsonld_blocks(registry, Path("entities/index.html"))
+        for node in _top_level_nodes(block)
+        if node.get("name") and node.get("description") and "@id" in node
+    }
+    for route in (hub, *topics):
+        file = Path(route.strip("/")) / "index.html"
+        content = (site / file).read_text(encoding="utf-8")
+        nodes = [
+            node for block in _jsonld_blocks(content, file)
+            for node in _top_level_nodes(block)
+        ]
+        article = next(node for node in nodes if node.get("@id") == f"{home}{route}#article")
+        page = next(node for node in nodes if node.get("@id") == f"{home}{route}#webpage")
+        topic = topics.get(route, "sap-integration")
+        assert article["about"]["@id"] == f"{home}/entities/#{topic}"
+        assert {item["@id"] for item in [article["about"], *article.get("mentions", [])]} <= entity_ids
+        assert f'id="{topic}"' in registry
+        assert article["author"]["@id"] == f"{home}/#dkharlanau"
+        for target in topics if route == hub else (hub,):
+            assert f"{home}{target}" in page["relatedLink"]
+            assert f'href="{target}"' in content
+
+    sidecar = json.loads((site / "ai/pages/labs--enterprise-context--integration-operations.json").read_text(encoding="utf-8"))
+    links = {link["url"]: link["type"] for link in sidecar["relationships"]}
+    assert all(links.get(route) == "diagnose_with" for route in topics)
+    assert len(links) == 6
+
+    profile_path = Path("about/index.html")
+    profile = (site / profile_path).read_text(encoding="utf-8")
+    export = json.loads((site / "ai/entity-graph.jsonld").read_text(encoding="utf-8"))
+    about_person = next(node for node in _jsonld_blocks(profile, profile_path) if node.get("@type") == "Person")
+    export_person = next(node for node in export["@graph"] if node.get("@type") == "Person")
+    authored_topics = {f"{home}/entities/#{key}" for key in ("sap-integration", "sap-idoc", "sap-rfc-monitoring")}
+    for person in (about_person, export_person):
+        assert person["@id"] == f"{home}/#dkharlanau"
+        assert {item["@id"] for item in person["knowsAbout"] if isinstance(item, dict)} == authored_topics
+
+
 def test_intent_starting_points_use_real_rendered_resources():
     site = _require_site()
     data = yaml.safe_load((REPO_ROOT / "_data/discovery_map.yml").read_text(encoding="utf-8"))

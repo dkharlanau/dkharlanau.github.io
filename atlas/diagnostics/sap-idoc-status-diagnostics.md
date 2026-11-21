@@ -4,6 +4,21 @@ title: SAP IDoc Status Diagnostics
 description: A source-backed SAP IDoc guide for statuses 51, 53, 56, 64, 75, 02, and 03, with safe checks before reprocessing.
 permalink: /atlas/diagnostics/sap-idoc-status-diagnostics/
 last_modified_at: 2026-11-17
+schema_updated_at: 2026-11-21
+primary_entity: sap-idoc-status
+entity_mentions:
+  - sap-idoc
+  - sap-rfc-monitoring
+semantic_links:
+  - type: parent_context
+    title: SAP Integration Operations and Recovery
+    url: /labs/enterprise-context/integration-operations/
+  - type: diagnose_with
+    title: Trace an IDoc from trigger to application posting
+    url: /atlas/diagnostics/sap-idoc-diagnostics/
+  - type: diagnose_with
+    title: Diagnose SAP qRFC and tRFC queues
+    url: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces

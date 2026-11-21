@@ -1,0 +1,10 @@
+[
+  {% for label in include.labels %}
+    {{ label | jsonify }}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+  {% for key in site.data.identity.expertise_topics %}
+    {% assign topic = site.data.knowledge_entities.entities[key] %}
+    {% if include.labels.size > 0 or forloop.index > 1 %},{% endif %}
+    {"@id": {{ topic.id | absolute_url | jsonify }}}
+  {% endfor %}
+]

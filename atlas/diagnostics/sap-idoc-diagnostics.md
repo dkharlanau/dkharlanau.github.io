@@ -26,6 +26,21 @@ expert_context:
     - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 last_reviewed: '2026-06-13'
 last_modified_at: 2026-09-12
+schema_updated_at: 2026-11-21
+primary_entity: sap-idoc
+entity_mentions:
+  - sap-idoc-status
+  - sap-rfc-monitoring
+semantic_links:
+  - type: parent_context
+    title: SAP Integration Operations and Recovery
+    url: /labs/enterprise-context/integration-operations/
+  - type: diagnose_with
+    title: Interpret SAP IDoc status records
+    url: /atlas/diagnostics/sap-idoc-status-diagnostics/
+  - type: diagnose_with
+    title: Diagnose SAP qRFC and tRFC queues
+    url: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 author: Dzmitryi Kharlanau
 article_visual: idoc-evidence-boundaries
 og_image: /assets/img/articles/idoc-evidence-boundaries.webp
@@ -155,9 +170,7 @@ sitemap: true
 
     <h2>Related diagnostics</h2>
     <ul>
-      <li><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc Status Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-ale-distribution-model-diagnostics/">SAP ALE Distribution Model Diagnostics</a></li>
-      <li><a href="/atlas/diagnostics/sap-qrfc-trfc-diagnostics/">SAP qRFC / tRFC Diagnostics</a></li>
     </ul>
   </div>
 </article>

@@ -384,6 +384,8 @@ Rules:
 
 {% comment %} ProfilePage entities {% endcomment %}
 {% if page_type == 'ProfilePage' %}
+{% assign author_scope = resume.schema.knowsAbout | default: resume.skills | slice: 0, 25 %}
+{% capture author_topics %}{% include seo/author-topics.html labels=author_scope %}{% endcapture %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -399,7 +401,7 @@ Rules:
     "@id": "{{ organization_id }}"
   },
   "sameAs": {{ resume.schema.sameAs | jsonify }},
-  "knowsAbout": {{ resume.schema.knowsAbout | default: resume.skills | slice: 0, 25 | jsonify }},
+  "knowsAbout": {{ author_topics }},
   "alumniOf": {{ resume.schema.alumniOf | jsonify }},
   "subjectOf": [
     {"@id": "{{ '/ai/' | absolute_url }}#webpage"},

@@ -142,8 +142,8 @@ def main() -> int:
             target = str(relation.get("url") or "").strip()
             if relation_type not in ALLOWED_RELATION_TYPES:
                 errors.append(f"{route}: unsupported semantic relation type {relation_type!r}")
-            if not target.startswith("/labs/"):
-                errors.append(f"{route}: semantic relation target must be a Lab route ({target})")
+            if not target.startswith(("/labs/", "/atlas/")):
+                errors.append(f"{route}: semantic relation target must be a Lab or Atlas route ({target})")
             else:
                 relation_targets.append((route, target))
         if primary and primary not in entities:
@@ -178,8 +178,16 @@ def main() -> int:
 
         strict_records.append((route, title, description, intent))
 
+    reviewed_atlas_routes = set()
+    for path in (ROOT / "atlas").rglob("*"):
+        if path.suffix not in {".md", ".html"}:
+            continue
+        parsed = parse_page(path)
+        if parsed and not parsed.get("error") and strict_page(parsed["front"]):
+            reviewed_atlas_routes.add(route_for(path, parsed["front"]))
+
     for source, target in relation_targets:
-        if target not in strict_routes:
+        if target not in strict_routes and target not in reviewed_atlas_routes:
             errors.append(f"{source}: semantic relation points to non-public/non-reviewed route {target}")
 
     for label, index in (("title", 1), ("description", 2), ("search_intent", 3)):

@@ -22,7 +22,7 @@ last_modified_at: 2026-09-10
         {{ site.data.identity.profiles.github | jsonify }},
         {{ site.data.identity.profiles.x | jsonify }}
       ],
-      "knowsAbout": {{ site.data.identity.scope | jsonify }},
+      "knowsAbout": {% include seo/author-topics.html labels=site.data.identity.scope %},
       "mainEntityOfPage": {
         "@id": "{{ site.data.identity.canonical_url }}#webpage"
       },

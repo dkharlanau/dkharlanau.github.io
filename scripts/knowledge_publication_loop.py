@@ -155,11 +155,18 @@ def main() -> int:
                 target = str(relation.get("to") or "").strip()
                 if relation_type not in ALLOWED_RELATION_TYPES:
                     raise RuntimeError(f"{route}: unsupported semantic relation type {relation_type!r}")
-                if target not in titles:
+                target_fm = page_meta.get(target, {})
+                if target in titles:
+                    title = titles[target]
+                elif target.startswith("/atlas/") and base.is_public_reviewed(target_fm):
+                    title = str(target_fm.get("title") or "").strip()
+                else:
+                    title = ""
+                if not title:
                     raise RuntimeError(f"{route}: semantic relation target is not a public knowledge route: {target}")
                 if target == route or target in seen_targets:
                     continue
-                selected.append({"type": relation_type, "title": titles[target], "url": target})
+                selected.append({"type": relation_type, "title": title, "url": target})
                 seen_targets.add(target)
                 if len(selected) >= 6:
                     break

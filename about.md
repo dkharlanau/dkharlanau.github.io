@@ -4,6 +4,7 @@ title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
 description: "Dzmitryi Kharlanau, Senior SAP Consultant at EPAM Systems, works on SAP projects across logistics, integration, master data and automation."
 permalink: /about/
 last_modified_at: 2026-11-18
+schema_updated_at: 2026-11-21
 last_reviewed: 2026-10-05
 profile_page: true
 hide_global_cta: true
@@ -61,7 +62,7 @@ hide_global_cta: true
     <div class="evidence-grid">
       <article class="evidence-card"><h3>Commercial and logistics flow</h3><p>SD, O2C, delivery, billing, pricing, inventory-facing logistics, and the operational controls around them.</p></article>
       <article class="evidence-card"><h3>Procurement and data</h3><p>MM, P2P touchpoints, Business Partner and MDG-related work, replication, data quality, and governance boundaries.</p></article>
-      <article class="evidence-card"><h3>Integration and architecture</h3><p>IDoc, RFC, web services, APIs, OData, AIF, event-driven patterns, interface ownership, and recoverability.</p></article>
+      <article class="evidence-card"><h3>Integration and architecture</h3><p><a href="/atlas/diagnostics/sap-idoc-diagnostics/">IDoc</a>, <a href="/atlas/diagnostics/sap-qrfc-trfc-diagnostics/">RFC</a>, web services, APIs, OData, AIF, event-driven patterns, interface ownership, and recoverability.</p></article>
       <article class="evidence-card"><h3>Operations and change</h3><p>AMS-heavy delivery, incident diagnosis, ABAP-backed troubleshooting, testing, handover, operational memory, and side-by-side automation.</p></article>
     </div>
     <p class="lead">Industry context in the public record includes Automotive, Retail and apparel, Manufacturing, and IT services and consulting.</p>

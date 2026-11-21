@@ -4,6 +4,18 @@ title: SAP qRFC and tRFC Diagnostics
 description: A source-backed SAP qRFC and tRFC guide for blocked SMQ1, SMQ2, and SM58 entries, with safe recovery boundaries.
 permalink: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 last_modified_at: 2026-09-12
+schema_updated_at: 2026-11-21
+primary_entity: sap-rfc-monitoring
+entity_mentions:
+  - sap-integration
+  - sap-idoc
+semantic_links:
+  - type: parent_context
+    title: SAP Integration Operations and Recovery
+    url: /labs/enterprise-context/integration-operations/
+  - type: diagnose_with
+    title: Interpret SAP IDoc status records
+    url: /atlas/diagnostics/sap-idoc-status-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
@@ -205,7 +217,6 @@ level: 2
     <h2>Related Atlas Pages</h2>
     <ul>
       <li><a href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">Idoc Aif Integration Diagnostics</a></li>
-      <li><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP Idoc Status Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">SAP RFC Destination Diagnostics</a></li>
     </ul>
