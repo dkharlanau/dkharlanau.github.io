@@ -127,6 +127,7 @@ semantic_links:
       <p>A SEPA mandate gives authority to debit the payer's account. The payment process then selects a valid mandate and creates the collection instruction. Pre-notification is a separate communication step that informs the payer about the planned debit.</p>
     </header>
     <p>In SAP Sales, mandates used for SEPA direct debit are managed in FI-AR and can be assigned to sales documents. SAP also recommends the FI-AR pre-notification function when more precise transfer-date and amount handling is needed. See <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/ad0bef26b37045ddb256f0bcfb8ff445.html" target="_blank" rel="noopener">SEPA Direct Debits in SD</a>.</p>
+    <p><strong>Follow the complete FI-AR scenario:</strong> <a href="/blog/sepa-direct-debit-sap-s4hana-customer-mandate-migration/">SEPA Mandates — Sales Order to Bank Collection</a> explains exactly what breaks when a mandate is missing, how to inspect FSEPA_M4 and SEPA_MANDATE, and how to reconcile a mandate migration.</p>
     <p>FI-CA has its own pre-notification run. SAP S/4HANA 2025 FPS01 documents that the run selects and groups items, chooses payment method and bank data, selects the mandate, and creates pre-notification data without posting documents or creating payment orders. See <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9442486404b54071b4ebeab6a16628e7/bc874f2966d4434cb4b6a6794f0fac70.html" target="_blank" rel="noopener">Pre-Notification of SEPA Direct Debits</a>.</p>
   </section>
 
