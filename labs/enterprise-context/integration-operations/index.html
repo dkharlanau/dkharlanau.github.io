@@ -1,13 +1,15 @@
 ---
 layout: default
 title: "Integration Operations & Recovery — Enterprise Context Lab"
-description: "A practical SAP integration operations model for tracing one business message across transport, application processing, retries, ordering, duplicate handling, and business reconciliation."
+seo_title: "SAP Integration Troubleshooting: IDocs and RFC Queues"
+description: "Interpret SAP IDoc statuses 03 and 53, choose between SMQ1, SMQ2 and SM58, and verify receiver posting before replaying a failed message."
 permalink: /labs/enterprise-context/integration-operations/
 status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
 last_modified_at: 2026-09-24
+content_updated_at: 2026-11-21
 schema_updated_at: 2026-11-21
 significant_lastmod: 2026-11-21
 hide_global_cta: true
@@ -36,10 +38,10 @@ semantic_links:
     title: "SAP IDoc Diagnostics"
     url: "/atlas/diagnostics/sap-idoc-diagnostics/"
   - type: "diagnose_with"
-    title: "SAP IDoc Status Diagnostics"
+    title: "SAP IDoc Status Codes: 03, 51, 53, 56 and 64"
     url: "/atlas/diagnostics/sap-idoc-status-diagnostics/"
   - type: "diagnose_with"
-    title: "SAP qRFC and tRFC Diagnostics"
+    title: "SAP qRFC and tRFC Troubleshooting: SMQ1, SMQ2 and SM58"
     url: "/atlas/diagnostics/sap-qrfc-trfc-diagnostics/"
   - type: "deep_dive"
     title: "SAP AIF — Monitoring, Error Handling and Reprocessing"
@@ -88,9 +90,10 @@ source_links:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Cross-process / Integration Operations</p>
-      <h1>A successful message is only one checkpoint.</h1>
-      <p>An integration incident is closed only when the intended business state exists in the receiver. Middleware, queues, IDocs and AIF can each prove part of the path, but none of them alone proves that the business process completed correctly.</p>
-      <a class="research-canvas__button" href="#runtime">Trace the path end to end <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>SAP integration troubleshooting</h1>
+      <p>Follow a failed IDoc, RFC queue or middleware message from the sending system to the expected business document. Use the last confirmed checkpoint to choose the next monitor and collect receiver evidence before deciding whether to replay.</p>
+      <p>By <a href="/about/">{{ site.data.identity.name }}</a>, {{ site.data.identity.role.title }} at {{ site.data.identity.role.organization }}.</p>
+      <a class="research-canvas__button" href="#idoc-rfc-diagnostics">Choose the next check <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
   </header>
 
@@ -101,6 +104,27 @@ source_links:
       <p>A message can be technically delivered while the receiver rejects it, or application processing can finish while the resulting document is still wrong for the business process.</p>
     </div>
     <a href="/labs/enterprise-context/data/integration-operations-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="idoc-rfc-diagnostics" data-reveal>
+    <header>
+      <h2>What do IDoc statuses 03 and 53 prove?</h2>
+      <p>In the IDoc flows covered here, outbound status <strong>03</strong> records that the sender passed data to the port. Inbound status <strong>53</strong> records that the receiving application posted a document. Match the receiver document and its business reference to the original message. <a href="https://help.sap.com/docs/SUPPORT_CONTENT/sewm/3900061692.html?locale=en-US">SAP Help on shipping and receiving IDocs</a>.</p>
+    </header>
+    <h3>Which monitor should you check?</h3>
+    <div class="decision-table">
+      <table>
+        <thead><tr><th scope="col">Observation</th><th scope="col">Next evidence to collect</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Outbound status 03, receiver outcome unknown</th><td>Identify the interface and its transport mechanism. Correlate the sender and receiver records by a shared reference. See <a href="/atlas/diagnostics/sap-idoc-diagnostics/">how to trace one IDoc end to end</a>.</td></tr>
+          <tr><th scope="row">A transactional or queued RFC is waiting</th><td>Use <strong>SM58</strong> for tRFC, <strong>SMQ1</strong> for outbound qRFC, or <strong>SMQ2</strong> for inbound qRFC. Read the error on the tRFC entry or the first blocking qRFC unit before deciding what to retry. See the <a href="/atlas/diagnostics/sap-qrfc-trfc-diagnostics/">qRFC and tRFC diagnostic guide</a>.</td></tr>
+          <tr><th scope="row">A matching inbound IDoc has status 53</th><td>Open the posted business document and compare its reference and expected values. See the <a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">IDoc status guide and its evidence checklist</a>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Synthetic example: a delivery is missing in the warehouse</h3>
+    <p>The sender shows IDoc status 03. Warehouse support has no matching delivery record for the available reference. Record <strong>receiver posting unconfirmed</strong> and hand over the sender IDoc number, timestamp, destination and delivery reference. Integration support checks the configured route. The receiving team checks the same reference and reports the receiver document number or the next evidence it needs. Keep replay on hold while the receiver outcome is uncertain.</p>
+    <p>Use that handoff as a checklist. The <a href="/atlas/ai-operations/ai-agent-for-sap-support/">read-only SAP support evaluation</a> includes a synthetic IDoc case that tests the same distinction between a port handoff and receiver posting.</p>
   </section>
 
   <section class="research-canvas__inventory" id="runtime" data-reveal>

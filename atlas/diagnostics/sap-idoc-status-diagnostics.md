@@ -1,9 +1,10 @@
 ---
 layout: default
-title: SAP IDoc Status Diagnostics
+title: "SAP IDoc Status Codes: 03, 51, 53, 56 and 64"
 description: A source-backed SAP IDoc guide for statuses 51, 53, 56, 64, 75, 02, and 03, with safe checks before reprocessing.
 permalink: /atlas/diagnostics/sap-idoc-status-diagnostics/
 last_modified_at: 2026-11-17
+content_updated_at: 2026-11-21
 schema_updated_at: 2026-11-21
 primary_entity: sap-idoc-status
 entity_mentions:
@@ -69,7 +70,7 @@ level: 2
 <article class="section note-detail atlas-page">
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
-    <h1>SAP IDoc status diagnostics</h1>
+    <h1>SAP IDoc status codes</h1>
     <p class="note-subtitle">A status-led workflow for locating an IDoc failure without confusing transport success with application success.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>

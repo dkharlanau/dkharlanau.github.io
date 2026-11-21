@@ -1,9 +1,10 @@
 ---
 layout: default
-title: SAP qRFC and tRFC Diagnostics
+title: "SAP qRFC and tRFC Troubleshooting: SMQ1, SMQ2 and SM58"
 description: A source-backed SAP qRFC and tRFC guide for blocked SMQ1, SMQ2, and SM58 entries, with safe recovery boundaries.
 permalink: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 last_modified_at: 2026-09-12
+content_updated_at: 2026-11-21
 schema_updated_at: 2026-11-21
 primary_entity: sap-rfc-monitoring
 entity_mentions:
@@ -64,7 +65,7 @@ level: 2
 <article class="section note-detail atlas-page">
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
-    <h1>SAP qRFC and tRFC diagnostics</h1>
+    <h1>SAP qRFC and tRFC troubleshooting</h1>
     <p class="note-subtitle">A direction-first workflow for blocked transactional and queued RFC calls in SM58, SMQ1, and SMQ2.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>

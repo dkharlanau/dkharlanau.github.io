@@ -4,6 +4,7 @@ title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
 description: "Dzmitryi Kharlanau, Senior SAP Consultant at EPAM Systems, works on SAP projects across logistics, integration, master data and automation."
 permalink: /about/
 last_modified_at: 2026-11-18
+content_updated_at: 2026-11-21
 schema_updated_at: 2026-11-21
 last_reviewed: 2026-10-05
 profile_page: true
@@ -12,6 +13,7 @@ hide_global_cta: true
 
 {% assign resume = site.data.resume %}
 {% assign social_links = site.data.social.links %}
+{% assign odata_article = site.data.publications.items | where: "name", "How to Test SAP Sales Cloud OData API with Postman" | first %}
 
 <div class="profile-canvas">
 <section class="profile-canvas__hero" id="person" data-reveal>
@@ -98,7 +100,8 @@ hide_global_cta: true
     <header class="section-heading"><p class="eyebrow">Evidence routes</p><h2>How to examine the positioning</h2></header>
     <div class="decision-table"><table><thead><tr><th>Question</th><th>Public evidence</th></tr></thead><tbody>
       <tr><td>What roles and domains are on record?</td><td><a href="/cv/">CV</a> and the canonical <a href="/ai/resume.yml">resume dataset</a>.</td></tr>
-      <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc status diagnostics</a>, <a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">business partner replication diagnostics</a>, and <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent design for SAP support</a>.</td></tr>
+      <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/labs/enterprise-context/integration-operations/#idoc-rfc-diagnostics">SAP integration troubleshooting</a>, <a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc status codes</a>, <a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">Business Partner replication diagnostics</a>, and <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent design for SAP support</a>.</td></tr>
+      <tr><td>Where else is my SAP integration work published?</td><td><a href="{{ odata_article.url | split: '?' | first | escape }}">Testing the SAP Sales Cloud OData API with Postman on LinkedIn</a>.</td></tr>
       <tr><td>What has been published publicly?</td><td><a href="/publications/">Publications</a> and <a href="/datasets/">datasets</a>.</td></tr>
       <tr><td>Which credentials are linkable?</td><td><a href="/education/">Education and credentials</a> and the public profile audit.</td></tr>
     </tbody></table></div>
