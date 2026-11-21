@@ -187,6 +187,7 @@ def main() -> int:
     def sidecar_payload(record, relations, sources, readiness, entities):
         payload = original_payload(record, relations, sources, readiness, entities)
         fm = page_meta.get(record["route"], {})
+        payload["title"] = fm.get("seo_title") or payload["title"]
         publication = payload.setdefault("publication", {})
         publication["date_published"] = base.iso(fm.get("date_published") or fm.get("date") or fm.get("published"))
         publication["content_updated_at"] = base.iso(fm.get("content_updated_at") or fm.get("last_modified_at") or fm.get("updated"))

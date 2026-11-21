@@ -131,6 +131,11 @@ def test_integration_diagnostics_use_resolvable_topics_and_links():
     links = {link["url"]: link["type"] for link in sidecar["relationships"]}
     assert all(links.get(route) == "diagnose_with" for route in topics)
     assert len(links) == 6
+    hub_file = Path(hub.strip("/")) / "index.html"
+    hub_html = (site / hub_file).read_text(encoding="utf-8")
+    hub_article = next(node for node in _jsonld_blocks(hub_html, hub_file) if "TechArticle" in _node_types(node))
+    html_title = re.search(r"<title>(.*?)</title>", hub_html, re.DOTALL).group(1)
+    assert hub_article["headline"] == sidecar["title"] == _plain_text(html_title)
 
     profile_path = Path("about/index.html")
     profile = (site / profile_path).read_text(encoding="utf-8")
