@@ -6,14 +6,14 @@
   "source": "scripts/generate_atlas_artifacts.py",
   "description": "Cluster-aware Markdown inventory for AI search routing. Readiness is structural; retrieval eligibility still requires the repository's reviewed, verified, indexable policy.",
   "summary": {
-    "markdown_pages": 991,
+    "markdown_pages": 994,
     "indexable_pages": 415,
     "reviewed_retrieval_pages": 201,
     "routing_pages": 7,
     "ready_pages": 411,
     "needs_metadata": 1,
     "needs_depth": 3,
-    "deferred_pages": 576
+    "deferred_pages": 579
   },
   "clusters": [
     {
@@ -268,7 +268,7 @@
     {
       "id": "sap-integration",
       "label": "SAP integration and interoperability",
-      "page_count": 229,
+      "page_count": 232,
       "indexable_count": 68,
       "retrieval_count": 50,
       "ready_count": 67,
@@ -419,7 +419,10 @@
         "https://dkharlanau.github.io/labs/enterprise-context/integrations/api-management/",
         "https://dkharlanau.github.io/labs/enterprise-context/integrations/business-partner-api/",
         "https://dkharlanau.github.io/labs/enterprise-context/integrations/drf/",
+        "https://dkharlanau.github.io/labs/enterprise-context/integrations/event-brokers/",
         "https://dkharlanau.github.io/labs/enterprise-context/integrations/",
+        "https://dkharlanau.github.io/labs/enterprise-context/integrations/kafka/",
+        "https://dkharlanau.github.io/labs/enterprise-context/integrations/rabbitmq/",
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/architecture/",
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/",
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/interfaces/",
@@ -636,7 +639,7 @@
     {
       "id": "sap-process-operations",
       "label": "SAP process and logistics operations",
-      "page_count": 136,
+      "page_count": 139,
       "indexable_count": 36,
       "retrieval_count": 26,
       "ready_count": 35,
@@ -741,7 +744,10 @@
         "https://dkharlanau.github.io/labs/enterprise-context/",
         "https://dkharlanau.github.io/labs/enterprise-context/industries/",
         "https://dkharlanau.github.io/labs/enterprise-context/integrations/api-management/",
+        "https://dkharlanau.github.io/labs/enterprise-context/integrations/event-brokers/",
         "https://dkharlanau.github.io/labs/enterprise-context/integrations/",
+        "https://dkharlanau.github.io/labs/enterprise-context/integrations/kafka/",
+        "https://dkharlanau.github.io/labs/enterprise-context/integrations/rabbitmq/",
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/assessment/",
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/domains/material/entity-map/",
         "https://dkharlanau.github.io/labs/enterprise-context/mdg/domains/material/",
@@ -34779,6 +34785,51 @@
       }
     },
     {
+      "source_file": "labs/enterprise-context/integrations/event-brokers/index.md",
+      "canonical_url": "https://dkharlanau.github.io/labs/enterprise-context/integrations/event-brokers/",
+      "title": "Kafka vs RabbitMQ — Architecture Decision Guide for SAP and Logistics",
+      "description": "Choose event streaming, work queues, API, or SAP event services by requirements. Compare replay, consumer groups, acknowledgements, cost, monitoring, and recovery.",
+      "content_type": "labs",
+      "section": "enterprise-context",
+      "clusters": [
+        "sap-integration",
+        "sap-process-operations"
+      ],
+      "primary_cluster": "sap-integration",
+      "tags": [
+        "kafka",
+        "rabbitmq",
+        "amqp",
+        "sap-event-mesh",
+        "integration-architecture",
+        "logistics",
+        "architecture-decisions"
+      ],
+      "related_urls": [],
+      "permalink": "/labs/enterprise-context/integrations/event-brokers/",
+      "status": "needs_verification",
+      "verified": false,
+      "sitemap": false,
+      "readiness": {
+        "title_present": true,
+        "description_present": true,
+        "permalink_present": true,
+        "h1_present": true,
+        "substantive": true,
+        "body_characters": 9840,
+        "heading_count": 1,
+        "headings": [
+          "Explain it in English (B2)"
+        ],
+        "internal_link_count": 12,
+        "decision": "deferred",
+        "reason": "Noindex or sitemap-disabled content is not exposed as a retrieval candidate.",
+        "indexable": false,
+        "reviewed_retrieval_eligible": false,
+        "routing_eligible": false
+      }
+    },
+    {
       "source_file": "labs/enterprise-context/integrations/index.md",
       "canonical_url": "https://dkharlanau.github.io/labs/enterprise-context/integrations/",
       "title": "SAP Integration Architecture — Logistics, Events and Data Distribution",
@@ -34809,9 +34860,10 @@
         "permalink_present": true,
         "h1_present": true,
         "substantive": true,
-        "body_characters": 11699,
+        "body_characters": 12774,
         "heading_count": 16,
         "headings": [
+          "Kafka and RabbitMQ: learn the behavior, then make the design decision.",
           "How should a signed document change an SAP business process?",
           "Explain the dependency before the platform.",
           "Do not freeze the interface list in Discover.",
@@ -34826,14 +34878,102 @@
           "Capabilities solve different parts of the integration problem.",
           "Start from the dependency you need.",
           "Apply the same rules to real process boundaries.",
-          "Distribute deliberately, then reconcile.",
-          "Architecture starts where the happy path ends."
+          "Distribute deliberately, then reconcile."
         ],
-        "internal_link_count": 11,
+        "internal_link_count": 14,
         "decision": "ready",
         "reason": "Markdown has the minimum title, description, permalink, heading, and substantive-content signals.",
         "indexable": true,
         "reviewed_retrieval_eligible": true,
+        "routing_eligible": false
+      }
+    },
+    {
+      "source_file": "labs/enterprise-context/integrations/kafka/index.md",
+      "canonical_url": "https://dkharlanau.github.io/labs/enterprise-context/integrations/kafka/",
+      "title": "Apache Kafka — Events, Topics, Consumer Groups and a Working Local Lab",
+      "description": "Learn Kafka by running one broker, sending keyed logistics events, replaying them, and designing a reliable SAP integration boundary.",
+      "content_type": "labs",
+      "section": "enterprise-context",
+      "clusters": [
+        "sap-integration",
+        "sap-process-operations"
+      ],
+      "primary_cluster": "sap-integration",
+      "tags": [
+        "apache-kafka",
+        "event-streaming",
+        "sap-integration",
+        "event-driven-architecture",
+        "logistics",
+        "docker"
+      ],
+      "related_urls": [],
+      "permalink": "/labs/enterprise-context/integrations/kafka/",
+      "status": "needs_verification",
+      "verified": false,
+      "sitemap": false,
+      "readiness": {
+        "title_present": true,
+        "description_present": true,
+        "permalink_present": true,
+        "h1_present": true,
+        "substantive": true,
+        "body_characters": 10366,
+        "heading_count": 3,
+        "headings": [
+          "Publish two events for one delivery",
+          "Read with two independent consumer groups",
+          "Options you must distinguish"
+        ],
+        "internal_link_count": 8,
+        "decision": "deferred",
+        "reason": "Noindex or sitemap-disabled content is not exposed as a retrieval candidate.",
+        "indexable": false,
+        "reviewed_retrieval_eligible": false,
+        "routing_eligible": false
+      }
+    },
+    {
+      "source_file": "labs/enterprise-context/integrations/rabbitmq/index.md",
+      "canonical_url": "https://dkharlanau.github.io/labs/enterprise-context/integrations/rabbitmq/",
+      "title": "RabbitMQ — Exchanges, Queues, Acknowledgements and a Working Local Lab",
+      "description": "Install RabbitMQ, route a synthetic logistics event to two queues, acknowledge work, test dead-letter handling, and make SAP integration decisions.",
+      "content_type": "labs",
+      "section": "enterprise-context",
+      "clusters": [
+        "sap-integration",
+        "sap-process-operations"
+      ],
+      "primary_cluster": "sap-integration",
+      "tags": [
+        "rabbitmq",
+        "amqp",
+        "messaging",
+        "dead-letter-queue",
+        "sap-integration",
+        "logistics",
+        "docker"
+      ],
+      "related_urls": [],
+      "permalink": "/labs/enterprise-context/integrations/rabbitmq/",
+      "status": "needs_verification",
+      "verified": false,
+      "sitemap": false,
+      "readiness": {
+        "title_present": true,
+        "description_present": true,
+        "permalink_present": true,
+        "h1_present": true,
+        "substantive": true,
+        "body_characters": 11954,
+        "heading_count": 0,
+        "headings": [],
+        "internal_link_count": 7,
+        "decision": "deferred",
+        "reason": "Noindex or sitemap-disabled content is not exposed as a retrieval candidate.",
+        "indexable": false,
+        "reviewed_retrieval_eligible": false,
         "routing_eligible": false
       }
     },
