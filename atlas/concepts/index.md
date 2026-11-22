@@ -5,7 +5,7 @@ content_model: landing_page
 title: "Atlas Concepts — Business and SAP Concepts"
 description: "Curated business and SAP concept explanations, decision frameworks, and operating models for operational analysis and support work."
 permalink: /atlas/concepts/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-11-22
 status: reviewed
 verified: true
 tags:
