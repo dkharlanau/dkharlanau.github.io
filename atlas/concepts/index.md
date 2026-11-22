@@ -5,7 +5,7 @@ content_model: landing_page
 title: "Atlas Concepts — Business and SAP Concepts"
 description: "Curated business and SAP concept explanations, decision frameworks, and operating models for operational analysis and support work."
 permalink: /atlas/concepts/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-11-22
 status: reviewed
 verified: true
 tags:
@@ -33,6 +33,21 @@ related:
 </section>
 
 {% include atlas/reviewed-directory.html prefix="/atlas/concepts/" title="Reviewed SAP concepts and decision frameworks" description="Browse the currently reviewed process explanations and decision frameworks. Review status belongs to each linked page." %}
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Data engineering · working guide</p>
+    <h2>Choose a data format for the work it needs to do.</h2>
+    <p>CSV, JSON, Parquet, ORC, Avro and more — with SAP examples, S3 and dbt boundaries, plus a runnable local lab. This guide is pending editorial review.</p>
+  </header>
+  <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/concepts/data-file-formats/">
+      <h2>Data File Formats: What to Use, When and Why</h2>
+      <p>A practical decision table covering exchange, streaming, analytics, lake tables, data quality and schema controls.</p>
+      <span class="link-arrow">Open field guide</span>
+    </a>
+  </div>
+</section>
 
 <section class="section">
   <header class="section-heading">

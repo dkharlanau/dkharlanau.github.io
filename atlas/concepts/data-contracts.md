@@ -17,7 +17,7 @@ robots: noindex, follow
 sitemap: false
 verified: false
 last_reviewed: 2026-09-24
-last_modified_at: 2026-09-24
+last_modified_at: 2026-11-22
 author: Dzmitryi Kharlanau
 related:
   - /atlas/maps/data-mesh-architecture-map/
@@ -95,6 +95,7 @@ A practical contract therefore has two layers: **machine-checkable guarantees fo
 
 ## Related Atlas pages
 
+- [Data File Formats: CSV, JSON, Parquet, ORC and Avro](/atlas/concepts/data-file-formats/) — choose the data representation before defining the contract.
 - [API Contracts](/atlas/concepts/api-contracts/)
 - [Event Contracts](/atlas/concepts/event-contracts/)
 - [Data Product](/atlas/concepts/data-product/)
