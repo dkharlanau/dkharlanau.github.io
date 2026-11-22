@@ -4,7 +4,6 @@ title: "Data File Formats: CSV, JSON, Parquet, ORC, Avro and Beyond"
 description: "A practical guide to choosing data file formats for SAP exports, APIs, S3 data lakes, analytics, dbt and AI: comparisons, design trade-offs, and a runnable DuckDB lab."
 permalink: /atlas/concepts/data-file-formats/
 parent: Concepts
-content_model: article
 author: Dzmitryi Kharlanau
 status: needs_verification
 verified: false
