@@ -103,22 +103,17 @@ dbt models + tests  --------> curated analytical tables
   <p>In a dbt project, a <em>source</em> describes data already available in your data platform. The example below assumes an Athena-accessible table named <code>raw.orders_events</code>, with typed <code>updated_at</code> and <code>amount</code> columns. Creating and loading this source is a separate step.</p>
 
   <p><strong>models/sources.yml</strong> — tell dbt where the raw data lives:</p>
-{% raw %}
-~~~yaml
-version: 2
+<pre><code class="language-yaml">version: 2
 
 sources:
   - name: erp
     schema: raw
     tables:
       - name: orders_events
-~~~
-{% endraw %}
+</code></pre>
 
   <p><strong>models/int_latest_order.sql</strong> — one current row per order:</p>
-{% raw %}
-~~~sql
-with ranked as (
+<pre><code class="language-sql">with ranked as (
     select
         order_id,
         status,
@@ -128,32 +123,26 @@ with ranked as (
             partition by order_id
             order by updated_at desc
         ) as row_num
-    from {{ source('erp', 'orders_events') }}
+    from &#123;&#123; source('erp', 'orders_events') &#125;&#125;
 )
 
 select order_id, status, amount, updated_at
 from ranked
 where row_num = 1
-~~~
-{% endraw %}
+</code></pre>
 
   <p><strong>models/fct_shipped_order_value.sql</strong> — build a clearly named metric:</p>
-{% raw %}
-~~~sql
-select
+<pre><code class="language-sql">select
     count(*) as shipped_orders,
     sum(amount) as shipped_order_value
-from {{ ref('int_latest_order') }}
+from &#123;&#123; ref('int_latest_order') &#125;&#125;
 where status = 'shipped'
-~~~
-{% endraw %}
+</code></pre>
 
   <p>The <code>source()</code> call marks the upstream input. The <code>ref()</code> call marks a dependency on another dbt model. A dbt model is primarily a SQL <code>select</code> statement; the configured materialisation determines how the data platform creates its output.</p>
 
   <p><strong>models/properties.yml</strong> — record a minimum guarantee about the current-order model:</p>
-{% raw %}
-~~~yaml
-version: 2
+<pre><code class="language-yaml">version: 2
 
 models:
   - name: int_latest_order
@@ -166,15 +155,11 @@ models:
       - name: status
         data_tests:
           - not_null
-~~~
-{% endraw %}
+</code></pre>
 
   <p>Then use the appropriate installed dbt CLI and adapter:</p>
-{% raw %}
-~~~bash
-dbt build --select +fct_shipped_order_value
-~~~
-{% endraw %}
+<pre><code class="language-bash">dbt build --select +fct_shipped_order_value
+</code></pre>
 
   <p>This builds the selected model and its upstream dependencies and runs relevant tests. The snippets illustrate the modelling pattern; they are <strong>not a complete deployable Athena project</strong>. Connection profiles, IAM, S3 query-result location, source table creation, adapter/version compatibility, and environment configuration must be supplied for the target account. See the dbt Athena adapter documentation below.</p>
 
