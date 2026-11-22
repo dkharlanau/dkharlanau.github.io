@@ -32,6 +32,10 @@ Start with [**Tool Selection Playbook**](/labs/ai-ready/video-lessons/tool-selec
 
 A [dependency-free evaluation example](https://github.com/dkharlanau/dkharlanau.github.io/tree/main/labs/ai-ready/video-lessons/examples) shows how to score 12 synthetic SAP diagnostic outcomes. No production access is required.
 
+## November follow-up: AI engineering skills
+
+[**AI Engineering Skills to Practise and Retest**](/labs/ai-ready/video-lessons/ai-engineering-skills-refresh/) turns five talks into a working stack and a read-only SAP exercise. Compare the same tasks with an agent skill available and absent, inspect the tool receipts, and record when to keep, revise, or retire the skill. Sources checked 22 November 2026.
+
 ## New tool study: OpenDashboards (22 November 2026)
 
 A separate practical lesson, inspired by [this OpenDashboards video](https://www.youtube.com/watch?v=ypLpjnnHSZw): [**Build AI-Generated Operational Dashboards with OpenDashboards**](/skill-hub/ai-assisted-analysis/ai-generated-dashboards-with-opendashboards/). Try the tool with eight synthetic SAP-style migration records, validate its counts with SQL, and decide whether the cloud boundary is acceptable. This is an additional Skill Hub study, not part of the 22-talk series below.
