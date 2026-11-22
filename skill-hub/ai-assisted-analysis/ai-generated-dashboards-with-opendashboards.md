@@ -108,16 +108,16 @@ tags: [ai, data-analytics, dashboards, sap, integration, architecture, skills]
     </ol>
 
     <h3>Self-hosted application: quick start</h3>
-    <p>As of 22 November 2026, the official README specifies Node.js 20.9+, pnpm, Docker and a Thesys API key. Run the application separately from the example dataset.</p>
+    <p>As of 22 November 2026, the official setup guide specifies Node.js 20.9+, pnpm, Docker and a Thesys API key. Run the application separately from the example dataset.</p>
     <pre><code>git clone https://github.com/thesysdev/opendashboards.git
 cd opendashboards
 pnpm install
-cp .env.example .env.local
-# Add THESYS_API_KEY to .env.local (never commit this file).
+# Configure THESYS_API_KEY locally using the linked setup guide.
 pnpm db:up
 pnpm db:reset
 pnpm dev
 # Open http://localhost:3000</code></pre>
+    <p>Follow the <a href="https://github.com/thesysdev/opendashboards#run-it-yourself">official OpenDashboards setup</a> to place the key in local configuration. Keep that configuration out of Git.</p>
     <p>The README warns that local development uses a shared dev identity and stores connection credentials without production encryption. This setup is for a private development machine and synthetic data only. A production deployment needs an authentication provider, proper secret management and a separate security review.</p>
   </section>
 
