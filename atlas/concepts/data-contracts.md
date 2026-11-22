@@ -17,7 +17,7 @@ robots: noindex, follow
 sitemap: false
 verified: false
 last_reviewed: 2026-09-24
-last_modified_at: 2026-09-24
+last_modified_at: 2026-11-22
 author: Dzmitryi Kharlanau
 related:
   - /atlas/maps/data-mesh-architecture-map/
