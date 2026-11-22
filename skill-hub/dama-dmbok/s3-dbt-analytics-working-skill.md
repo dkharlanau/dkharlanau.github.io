@@ -88,6 +88,17 @@ EVIDENCE:          Source completeness + key tests + metric reconciliation
 
   <p><strong>Important:</strong> a <code>unique</code> test on the raw event table would be wrong if multiple legitimate events can share one order ID. Test the declared grain, not your wish that every table have unique order IDs.</p>
 
+  <h2>Copy a safe five-row sample</h2>
+  <p>Save this as <code>orders_events.csv</code>. These are fabricated values. In Athena, register <code>order_id</code> as an integer, <code>amount</code> as a suitable numeric type, and <code>updated_at</code> as a timestamp (or explicitly parse it in a staging model after validating the source format).</p>
+  <pre><code>order_id,status,updated_at,amount
+101,open,2026-11-19 08:00:00,120
+101,shipped,2026-11-20 09:00:00,120
+102,cancelled,2026-11-20 08:10:00,80
+103,shipped,2026-11-20 12:00:00,50
+103,shipped,2026-11-21 08:00:00,50
+</code></pre>
+  <p>Check your result against this expected output: <strong>three latest orders, two currently shipped, shipped order value 170</strong>. If you get three shipped rows and 220 instead, you counted events rather than latest orders.</p>
+
   <h2>How to make this a real AWS lab</h2>
   <ol>
     <li>Start with an approved <strong>synthetic CSV</strong> and a private S3 bucket. Organise separate prefixes for <code>raw/</code>, <code>curated/</code>, and Athena query results. Set retention and cost limits.</li>
