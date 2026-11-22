@@ -102,7 +102,7 @@ docker exec kafka-lab /opt/kafka/bin/kafka-console-consumer.sh \
   --group analytics-demo-v1 --from-beginning --max-messages 2 \
   --property print.key=true --property 'key.separator= | '</code></pre>
 <p><strong>Expected:</strong> each group reads both records. A new group may read from the beginning when <code>--from-beginning</code> is specified; an existing group with committed offsets will normally resume at its stored position. Change the group name for a clean replay.</p>
-<p>When finished: <pre><code class="language-bash">docker rm -f kafka-lab</code></pre></p></section>
+<p>When finished, stop and remove the disposable broker:</p><pre><code class="language-bash">docker rm -f kafka-lab</code></pre></section>
 <section class="research-canvas__inventory" id="experiments" data-reveal><header><p class="research-canvas__eyebrow">03 / Test the failure model</p><h2>Three changes that teach more than a diagram</h2><p>Run these small experiments before using Kafka in an SAP solution design.</p></header>
 <ol>
 <li><strong>Scale consumers.</strong> Start two consumers with the same group ID while producing more events. With three partitions, assignment is split across active consumers; one partition is assigned to at most one consumer in a group at a time. Stop one consumer and observe reassignment.</li>
