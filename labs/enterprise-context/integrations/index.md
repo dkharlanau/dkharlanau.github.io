@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-24
+last_modified_at: 2026-11-22
 hide_global_cta: true
 tags:
   - sap
@@ -101,6 +101,20 @@ source_links:
     <p><strong>Problem:</strong> integration discussions often mix business meaning, protocols, brokers, middleware, and products in one sentence.</p>
     <p><strong>Working rule.</strong> First define the business meaning and interaction. Then define the contract, transport, mediation, broker or stream, application owner, and recovery model.</p>
     <a href="/labs/enterprise-context/data/topics.json">Open machine-readable topic data <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="event-broker-guides" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Messaging / practical labs</p>
+      <h2>Kafka and RabbitMQ: learn the behavior, then make the design decision.</h2>
+      <p>Run an event stream and a work queue locally. Follow producer, broker, consumer, failure and recovery before placing either technology in an SAP architecture.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/integrations/kafka/"><span>01</span><strong>Apache Kafka — Events, Partitions, Consumer Groups and Replay</strong><small>Use Docker to publish logistics events with a business key, compare two consumer groups and examine SAP connectivity, ordering and idempotency.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/integrations/rabbitmq/"><span>02</span><strong>RabbitMQ — Exchanges, Queues, ACK and Dead Letters</strong><small>Set up RabbitMQ, route messages to two queues, run Python consumers, and investigate rejected deliveries and SAP adapter options.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/integrations/event-brokers/"><span>03</span><strong>Kafka vs RabbitMQ — SAP Integration Decision Guide</strong><small>Compare event history, task queues, replay, routing, recovery, operations and costs through realistic logistics cases and workshop questions.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+    <p class="ecg-caption">Working learning guides. Sample implementations and release-specific integration settings require local and tenant verification.</p>
   </section>
 
   <section class="research-canvas__inventory" id="agreement-signatures" data-reveal>
