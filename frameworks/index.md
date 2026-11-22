@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Frameworks — Practical Methods for Digital Systems"
-description: "Reusable methods for contradiction solving, decision design, opportunity qualification, repeatable data work, and operational analysis."
+description: "Reusable methods for contradiction solving, decision design, living documentation, opportunity qualification, repeatable data work, and operational analysis."
 permalink: /frameworks/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-25
+last_modified_at: 2026-11-06
 hide_global_cta: true
 tags:
   - architecture
@@ -39,6 +39,7 @@ tags:
       <div class="research-canvas__signal-line"><span>02</span><strong>DDD</strong><small>Decisions</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>RDP</strong><small>Repeatable data work</small></div>
       <div class="research-canvas__signal-line"><span>04</span><strong>MEDDPICC</strong><small>Opportunity qualification</small></div>
+      <div class="research-canvas__signal-line"><span>05</span><strong>LDC</strong><small>Living documentation</small></div>
       <em>Frameworks stay independent from the domains where they are applied.</em>
     </div>
   </header>
@@ -54,6 +55,7 @@ tags:
       <a href="/ddd/"><span>DDD</span><strong>Decision Design</strong><small>Structure architecture and operating decisions so assumptions, options, evidence, constraints, and consequences remain inspectable.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/reusable-data-procedures/"><span>RDP</span><strong>Reusable Data Procedures</strong><small>Turn repeated file discovery, mapping, validation, and transformation into governed procedures that can be run again.</small><i class="material-symbols-outlined" aria-hidden="true">repeat</i></a>
       <a href="/frameworks/meddpicc/"><span>MEDDPICC</span><strong>Opportunity Qualification</strong><small>Separate technical interest from a qualified business opportunity by testing value, authority, decision path, internal support, commercial process, and alternatives.</small><i class="material-symbols-outlined" aria-hidden="true">filter_alt</i></a>
+      <a href="/frameworks/living-documentation/"><span>LDC</span><strong>Living Documentation Contract</strong><small>A compact, human-first specification for self-describing tools, generated diagrams, testable examples, and controlled documentation updates.</small><i class="material-symbols-outlined" aria-hidden="true">description</i></a>
       <a href="/labs/templates/"><span>OPS</span><strong>Operational Protocols</strong><small>Practical templates for RCA, integration failure analysis, runbooks, change impact, cutover, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
     </div>
   </section>
