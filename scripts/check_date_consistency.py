@@ -2,7 +2,7 @@
 """Detect date drift between source frontmatter, built HTML, JSON-LD, and sitemap.
 
 Checks:
-- Source frontmatter date (last_modified_at, updated, date, last_reviewed)
+- Source modification date using the same precedence as publication metadata
 - HTML <meta property="article:modified_time">
 - JSON-LD dateModified / datePublished
 - Sitemap <lastmod>
@@ -128,8 +128,16 @@ def extract_html_dates(html_path: Path) -> dict[str, str]:
 
 
 def source_date(fm: dict) -> str:
-    """Pick the most appropriate source date from frontmatter."""
-    for key in ("last_modified_at", "updated", "last_reviewed", "date"):
+    """Resolve the source date in the order used by HTML and sitemap templates."""
+    for key in (
+        "significant_lastmod",
+        "content_updated_at",
+        "schema_updated_at",
+        "last_modified_at",
+        "updated",
+        "date",
+        "last_reviewed",
+    ):
         value = fm.get(key)
         if value:
             return str(value).strip()
