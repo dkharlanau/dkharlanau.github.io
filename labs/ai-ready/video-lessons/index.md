@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-11-17
+last_modified_at: 2026-11-22
 hide_global_cta: true
 tags: [ai, video-learning, agents, sap, architecture, security, evaluation, tools]
 career_impact: mapped
@@ -31,6 +31,10 @@ Each article is an original, B2-English interpretation of its source talk. It in
 Start with [**Tool Selection Playbook**](/labs/ai-ready/video-lessons/tool-selection-playbook/). It compares LangGraph, Phoenix, Braintrust, DSPy/GEPA, Neo4j GraphRAG, LiteLLM, vLLM, Standard Agents and reusable source-owned data tools. It includes three bounded experiments with cost, quality and risk decisions.
 
 A [dependency-free evaluation example](https://github.com/dkharlanau/dkharlanau.github.io/tree/main/labs/ai-ready/video-lessons/examples) shows how to score 12 synthetic SAP diagnostic outcomes. No production access is required.
+
+## New tool study: OpenDashboards (22 November 2026)
+
+A separate practical lesson, inspired by [this OpenDashboards video](https://www.youtube.com/watch?v=ypLpjnnHSZw): [**Build AI-Generated Operational Dashboards with OpenDashboards**](/skill-hub/ai-assisted-analysis/ai-generated-dashboards-with-opendashboards/). Try the tool with eight synthetic SAP-style migration records, validate its counts with SQL, and decide whether the cloud boundary is acceptable. This is an additional Skill Hub study, not part of the 22-talk series below.
 
 ## 1. Agent architecture and safe execution
 

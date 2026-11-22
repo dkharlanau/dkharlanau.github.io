@@ -4,7 +4,7 @@ layout: default
 title: "AI-Assisted Analysis — Skill Group Index"
 description: "Practical skills for using AI safely and effectively in professional analysis work: validating AI output, converting notes to requirements, turning problems into backlogs, and defining accountability."
 permalink: /skill-hub/ai-assisted-analysis/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-11-22
 status: reviewed
 verified: true
 ---
@@ -51,6 +51,10 @@ verified: true
     <h2>Skills in this group</h2>
   </header>
   <div class="topic-grid">
+    <div class="topic-card">
+      <h3><a href="/skill-hub/ai-assisted-analysis/ai-generated-dashboards-with-opendashboards/">AI-Generated Operational Dashboards with OpenDashboards</a></h3>
+      <p>Build and validate a live, read-only dashboard on synthetic migration data. Includes setup commands, SQL, an SAP integration boundary, and a decision checklist. <em>Review candidate.</em></p>
+    </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/ai-assisted-analysis/ai-accountability-working-skill/">AI Accountability</a></h3>
       <p>Define who owns AI-generated output, how it is reviewed, and what happens when it is wrong so that AI assistance does not become blame avoidance.</p>
@@ -104,6 +108,7 @@ verified: true
     <li><a href="/skill-hub/ai-assisted-analysis/convert-notes-to-requirements-working-skill/">Convert Notes to Requirements</a> — Turn raw stakeholder input into structured requirements with AI assistance.</li>
     <li><a href="/skill-hub/ai-assisted-analysis/validate-ai-generated-requirements-working-skill/">Validate AI-Generated Requirements</a> — Check the AI-generated requirements for hallucinations and gaps before they go to stakeholders.</li>
     <li><a href="/skill-hub/ai-assisted-analysis/ai-output-review-working-skill/">AI Output Review</a> — Apply general review discipline to any AI-generated output before it is used for decisions.</li>
+    <li><a href="/skill-hub/ai-assisted-analysis/ai-generated-dashboards-with-opendashboards/">AI-Generated Operational Dashboards</a> — Practice a controlled dashboard build, verify each metric with SQL, and review the cloud data boundary before a pilot.</li>
     <li><a href="/skill-hub/ai-assisted-analysis/ai-assisted-documentation-review-working-skill/">AI-Assisted Documentation Review</a> — Use AI to pre-review large documents and human judgment to confirm every finding.</li>
     <li><a href="/skill-hub/ai-assisted-analysis/ai-assisted-test-case-generation-working-skill/">AI-Assisted Test Case Generation</a> — Generate test cases with AI and validate coverage, edge cases, and traceability before adding them to the test plan.</li>
     <li><a href="/skill-hub/ai-assisted-analysis/ai-assisted-meeting-synthesis-working-skill/">AI-Assisted Meeting Synthesis</a> — Turn meeting transcripts and notes into structured decisions, actions, and risks.</li>
