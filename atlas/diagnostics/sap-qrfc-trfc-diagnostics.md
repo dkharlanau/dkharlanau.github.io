@@ -221,6 +221,7 @@ level: 2
       <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">SAP RFC Destination Diagnostics</a></li>
     </ul>
+    <p>For recurring queue stalls, start by recording the queue age and the first blocking unit. The application owner can use those details to check whether replay is safe. Use the <a href="/atlas/concepts/sap-ams-cost-reduction-framework/#first-year-cost">SAP support automation cost calculator</a> to compare the cost of monitoring and human review with the time spent checking queues manually.</p>
   </section>
 
   {% include atlas/author-block.html %}

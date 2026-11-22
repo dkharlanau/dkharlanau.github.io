@@ -22,13 +22,14 @@ hide_global_cta: true
     <h1>Dzmitryi Kharlanau</h1>
     <p>I’m an SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work on complex SAP projects where logistics processes, system integration and master data meet. My work spans problem definition, solution design, implementation and support, with practical automation and AI where they help teams solve a specific problem. This website is my independent technical lab and knowledge base.</p>
     <div class="profile-canvas__actions">
-      <a class="profile-canvas__button" href="/lab/">Explore the lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="profile-canvas__button" href="/skill-hub/#current-skills">See skills and practice cases <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <a class="profile-canvas__text-link" href="/lab/">Explore the lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
       <a class="profile-canvas__text-link" href="/knowledge/">Open knowledge base <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </div>
   <div class="profile-canvas__portrait"><img src="/assets/img/DzmitryiKharlanau.webp" alt="Dzmitryi Kharlanau" width="720" height="720" fetchpriority="high" /><span aria-hidden="true"></span></div>
   <dl class="profile-canvas__facts">
-    <div><dt>Current context</dt><dd>SAP Consultant · <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a> · ex‑abat</dd></div>
+    <div><dt>Current role</dt><dd>SAP Consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a></dd></div>
     <div><dt>Working scope</dt><dd>SD, MM, O2C, P2P, MDG-related work, master data, integration troubleshooting, AMS, and ABAP-backed analysis.</dd></div>
     <div><dt>Last reviewed</dt><dd>{{ page.last_reviewed | date: "%B %-d, %Y" }}</dd></div>
   </dl>
@@ -73,7 +74,7 @@ hide_global_cta: true
 
 <section class="section profile-canvas__outputs" data-reveal>
   <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">What a manager can expect</p><h2>Useful outputs, not generic advice</h2></header>
+    <header class="section-heading"><h2>Working documents I use</h2></header>
     <div class="deliverable-grid">
       <article class="deliverable-card"><h3>Diagnostic brief</h3><p>A clear statement of the business symptom, scope boundary, evidence needed, likely failure classes, and open decisions.</p></article>
       <article class="deliverable-card"><h3>Decision and ownership map</h3><p>A practical view of who owns the business outcome, data, integration contract, technical control, and recovery action.</p></article>
@@ -97,7 +98,7 @@ hide_global_cta: true
 
 <section class="section profile-canvas__evidence" data-reveal>
   <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">Evidence routes</p><h2>How to examine the positioning</h2></header>
+    <header class="section-heading"><h2>Published examples and sources</h2></header>
     <div class="decision-table"><table><thead><tr><th>Question</th><th>Public evidence</th></tr></thead><tbody>
       <tr><td>What roles and domains are on record?</td><td><a href="/cv/">CV</a> and the canonical <a href="/ai/resume.yml">resume dataset</a>.</td></tr>
       <tr><td>How does the diagnostic approach translate into practice?</td><td><a href="/labs/enterprise-context/integration-operations/#idoc-rfc-diagnostics">SAP integration troubleshooting</a>, <a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc status codes</a>, <a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">Business Partner replication diagnostics</a>, and <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent design for SAP support</a>.</td></tr>
@@ -138,7 +139,7 @@ hide_global_cta: true
       <article class="profile-card"><h3>Audit registry</h3><p>Confidence levels, credential registry, publication themes, and verification issues.</p><p><a href="/ai/profile-audit.json">Profile audit JSON</a></p></article>
       <article class="profile-card"><h3>LLM access manifest</h3><p>Retrieval guidance for AI systems and links to canonical public surfaces.</p><p><a href="/llms.txt">llms.txt</a></p></article>
     </div>
-    <p>The source-of-truth audit for confidence levels and credential status is available at <a href="/ai/profile-audit.json">/ai/profile-audit.json</a>. These files support verification; the sections above are intended for a manager assessing fit.</p>
+    <p>The source-of-truth audit for confidence levels and credential status is available at <a href="/ai/profile-audit.json">/ai/profile-audit.json</a>. The records document roles, publications and credentials.</p>
   </div>
 </section>
 

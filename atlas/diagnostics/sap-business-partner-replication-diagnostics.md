@@ -143,6 +143,11 @@ sitemap: true
   </div>
 
   <section class="atlas-related">
+    <h2>Verify the target before replaying replication</h2>
+    <p>If outbound Business Partner replication times out, use the source reference and key mapping to look up the partner in the target. If the target partner is present, compare roles and required organizational data and reconcile the result. If the target state is unknown, send the comparison to the replication owner before allowing another write. Track how often this read-only check resolves the incident and how often it needs review. <a href="/labs/enterprise-context/decisions/retry-idempotency/">Check when an integration replay is safe</a>.</p>
+
+    <p>For example, source partner BP-100 maps to target partner BP-900. The target record exists, but the company-code segment expected by the replication contract is missing. Record the partial result and ask the owner of that segment to investigate before replaying the whole partner message.</p>
+
     <h2>Related Atlas Pages</h2>
     <ul>
       <li><a href="/atlas/diagnostics/sap-vendor-master-replication-diagnostics/">SAP Vendor Master Replication Diagnostics</a></li>

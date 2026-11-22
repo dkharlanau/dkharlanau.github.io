@@ -1,0 +1,64 @@
+sources_checked_on: 2026-11-22
+tracks:
+  - id: low-tco-automation
+    title: SAP automation with low TCO
+    summary: Price the workflow, the exceptions, and the work your team will still own.
+    signal: SAP Build Process Automation supports rules and human approval tasks in the same workflow.
+    source:
+      label: SAP Build approval workflows
+      url: https://help.sap.com/docs/build-process-automation/sap-build-process-automation/create-approval-form
+    judgment: Check whether an existing SAP workflow can handle the rule. Include platform fees, support, and time spent resolving exceptions in the first estimate.
+    exercise: A supplier master-data change needs a manual review when required evidence is missing. Sketch the automatic checks, the exception queue, and the conditions an approver needs to see.
+    output: A workflow sketch and a cost per completed request, with the period, annual volume and exception rate recorded.
+    materials:
+      - label: Compare one- and three-year costs with the SAP cost calculator
+        url: /atlas/concepts/sap-ams-cost-reduction-framework/#first-year-cost
+      - label: Discover and document business rules
+        url: /skill-hub/business-analysis/business-rules-discovery-working-skill/
+      - label: Record the architecture decision
+        url: /skill-hub/architecture/architecture-decision-record-working-skill/
+  - id: event-driven-sap-integration
+    title: SAP APIs and event-driven integration
+    summary: Choose when a process needs an immediate answer and when an event can trigger downstream work.
+    signal: SAP Integration Suite's advanced event mesh supports publishing and subscribing to business events across systems.
+    source:
+      label: SAP Advanced Event Mesh
+      url: https://www.sap.com/products/technology-platform/integration-suite/advanced-event-mesh.html
+    judgment: I choose the contract from the business timing and failure behavior. A managed broker can reduce infrastructure work, and the design still needs an owner for duplicates, replay, and alerting.
+    exercise: A sales order approval needs a current credit decision, and a separate reporting service needs to learn when approval completes. Assign each interaction a contract, then describe how duplicate delivery and consumer downtime are handled.
+    output: A decision record with an API and event boundary, a recovery owner, and operating cost assumptions.
+    materials:
+      - label: SAP API and event decision card
+        url: /labs/enterprise-context/decisions/idoc-api-event/
+      - label: Event-driven architecture working skill
+        url: /skill-hub/integration-architecture/event-driven-architecture-working-skill/
+  - id: sap-clean-core
+    title: SAP clean core and ABAP Cloud
+    summary: Choose an extension that fits the transaction and can be supported through upgrades.
+    signal: At TechEd 2026, SAP covered ABAP Cloud, clean core, and how to operate side-by-side extensions.
+    source:
+      label: SAP TechEd 2026 sessions
+      url: https://developers.sap.com/teched
+    judgment: I check the transaction boundary, the released interface, and the cost of regression testing. Every extra runtime also needs an operating owner.
+    exercise: A sales order must be blocked when a required business condition fails. Compare standard configuration, a released on-stack extension, and a side-by-side option. Check which choice can enforce the rule at save time in your SAP edition and release.
+    output: A short architecture decision record covering placement, upgrade testing, and support ownership.
+    materials:
+      - label: Clean core extension placement decision card
+        url: /labs/enterprise-context/decisions/clean-core-extension-placement/
+      - label: Architecture decision record template
+        url: /skill-hub/architecture/architecture-decision-record-working-skill/
+  - id: enterprise-ai-evaluation
+    title: AI automation you can evaluate
+    summary: Measure task completion, human review effort, and whether the agent stays within its permissions.
+    signal: OpenAI's agent evaluation guidance uses traces, datasets, and grading to test the steps an agent takes as well as the answer it produces.
+    source:
+      label: OpenAI agent workflow evaluations
+      url: https://developers.openai.com/api/docs/guides/agent-evals
+    judgment: For an assistant that classifies invoice exceptions, I want source evidence and a clear handoff. I count model runs, retries, and review time when comparing cost per accepted case.
+    exercise: Give a read-only assistant three synthetic invoices. One matches the purchase order, one lacks receipt evidence, and one comes with a request to release payment. Specify what the assistant may read, how it should route each case, and which actions require a human.
+    output: Three test cases with pass conditions for evidence, routing, and permissions, plus a cost per accepted case.
+    materials:
+      - label: AI output review checklist
+        url: /skill-hub/ai-assisted-analysis/ai-output-review-working-skill/
+      - label: AI accountability working skill
+        url: /skill-hub/ai-assisted-analysis/ai-accountability-working-skill/
