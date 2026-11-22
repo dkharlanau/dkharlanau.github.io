@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP AMS Cost Reduction Framework"
-description: "A management-level framework for separating true SAP AMS cost reduction from cost movement, ticket optics, and hidden operating complexity."
+description: "Compare one- and three-year SAP support automation costs, including setup, support and exception handling. Estimate cost per request and break-even volume."
 permalink: /atlas/concepts/sap-ams-cost-reduction-framework/
 atlas_section: concepts
 domain: Business operations
@@ -25,6 +25,7 @@ expert_context:
     - /atlas/ai-operations/ai-agent-for-sap-support/
     - /scenarios/sap-support-costs-growing-without-ticket-growth/
 last_reviewed: 2026-07-25
+last_modified_at: 2026-11-22
 author: Dzmitryi Kharlanau
 tags:
   - concepts
@@ -68,6 +69,69 @@ sitemap: true
     <p>AMS cost rarely rises because one queue received more tickets. It rises because the landscape needs more coordination, more rework, more manual control, more integration handling, and more rediscovery than management can see in the incident report. A cost programme should therefore start by separating visible ticket demand from hidden operating demand.</p>
 
     {% include atlas/expert-context.html %}
+
+    <h2 id="first-year-cost">Cost of SAP support automation over one or three years</h2>
+    <p>Compare the cost per completed request for one workflow. Separate what you pay once to build and roll it out from what you pay each year for the platform and support. Include usage charges and the exceptions people still handle.</p>
+    <p>For a worked example of what can be handled automatically and what needs review, <a href="/skill-hub/integration-architecture/integration-error-handling-working-skill/#order-retry-practice">practise deciding when to retry a failed order</a>.</p>
+    <p>The example uses 12,000 requests a year, four minutes of manual work per request and $30 per hour. Automation costs $6,000 to set up and $3,000 each year for the platform and support. Ten percent of requests need a five-minute review.</p>
+
+    <link rel="stylesheet" href="{{ '/assets/sap-ams-cost-estimate.css' | relative_url }}" />
+    <script defer src="{{ '/assets/sap-ams-cost-estimate.js' | relative_url }}"></script>
+    <form id="ams-cost-inputs" class="ams-cost-inputs" aria-describedby="ams-cost-assumption" hidden>
+      <fieldset>
+        <legend>Compare workflow costs in USD</legend>
+        <div class="ams-cost-fields">
+          <label>Comparison period
+            <select name="years">
+              <option value="1" selected>1 year</option>
+              <option value="3">3 years</option>
+            </select>
+          </label>
+          <label>Requests in one year
+            <input type="number" name="volume" value="12000" min="1" max="1000000000" required />
+          </label>
+          <label>Manual minutes per request
+            <input type="number" name="manualMinutes" value="4" min="0" max="100000" step="0.01" required />
+          </label>
+          <label>Labor cost per hour (USD)
+            <input type="number" name="hourly" value="30" min="0" max="10000000" step="0.01" required />
+          </label>
+          <label>One-time setup and rollout (USD)
+            <input type="number" name="setup" value="6000" min="0" max="10000000000" step="0.01" required />
+          </label>
+          <label>Annual platform fees and support (USD)
+            <input type="number" name="annual" value="3000" min="0" max="10000000000" step="0.01" required />
+          </label>
+          <label>Usage cost per automated request (USD)
+            <input type="number" name="usageUnit" value="0" min="0" max="1000000" step="0.01" required />
+          </label>
+          <label>Requests needing exception review (%)
+            <input type="number" name="exceptionRate" value="10" min="0" max="100" step="0.01" required />
+          </label>
+          <label>Minutes to review an exception
+            <input type="number" name="exceptionMinutes" value="5" min="0" max="100000" step="0.01" required />
+          </label>
+        </div>
+        <button type="submit" class="btn btn--primary">Calculate cost</button>
+      </fieldset>
+    </form>
+
+    <dl id="ams-cost-results" aria-live="polite" aria-atomic="true">
+      <dt>Comparison period</dt>
+      <dd data-cost-result="period">1 year</dd>
+      <dt>Manual handling</dt>
+      <dd data-cost-result="manual">$24,000.00 total · $2.00 per request</dd>
+      <dt>Automated workflow</dt>
+      <dd data-cost-result="automated">$12,000.00 total · $1.00 per request</dd>
+      <dt>Cost difference</dt>
+      <dd data-cost-result="difference">$12,000.00 lower with automation</dd>
+      <dt>Break-even annual volume</dt>
+      <dd data-cost-result="breakEven">5,143 requests per year</dd>
+    </dl>
+    <p>Over three years, the same example costs $72,000 with manual handling and $24,000 with automation. At the same annual volume, setup is spread across more requests. If every request still needs a five-minute review, automation costs $105,000 over three years and there is no break-even volume.</p>
+    <p id="ams-cost-assumption">Use the same completion standard for both options. The figures are illustrative and assume the same volume, rates and exception share each year, with no discounting. Include retries in the average usage cost per request. Check your actual SAP entitlements, usage rates and support costs before choosing a design. <a href="https://www.finops.org/framework/capabilities/unit-economics/">FinOps Unit Economics</a> · <a href="https://www.sap.com/products/technology-platform/pricing.html">SAP BTP pricing</a></p>
+
+    <p><a href="{{ '/skill-hub/#low-tco-automation' | relative_url }}">Work through the SAP automation case</a></p>
 
     <h2>What management usually sees</h2>
     <ul>

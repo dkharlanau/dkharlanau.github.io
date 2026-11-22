@@ -96,16 +96,53 @@ verified: true
   <section>
     <h2>Decision rules</h2>
     <ul>
-      <li>If the failure is a network error or timeout, retry with exponential backoff and jitter.</li>
+      <li>For a timed-out write, use a bounded retry with backoff and jitter only after the receiver confirms there was no commit or in-flight attempt, or when it rejects duplicates for the same business key. Verify the result after the retry.</li>
       <li><mark class="key-idea">If the failure is a schema mismatch or data validation error, send to dead letter immediately; do not retry.</mark></li>
       <li>If retry count exceeds three without success, escalate to human review and stop automatic retry.</li>
       <li>If the dead letter queue grows by more than ten messages per day, trigger a process review.</li>
       <li>If the consumer is external, provide explicit error codes distinguishing retryable from non-retryable failures.</li>
       <li>If SAP IDoc fails, use AIF for structured error handling, categorization, and reprocessing.</li>
-      <li>If message ordering matters, retry in sequence or use idempotency so out-of-order reprocessing is safe.</li>
+      <li>If message ordering matters, preserve the required sequence before replay. Check duplicate protection separately.</li>
       <li>If a downstream system is recovering, use circuit breaker or rate-limited retry to prevent thundering herds.</li>
       <li>If a message fails with the same permanent error on every retry, classify it as a poison message and quarantine it.</li>
     </ul>
+  </section>
+
+  <section aria-labelledby="order-retry-practice">
+    <h2 id="order-retry-practice">Practice deciding whether to retry a failed order</h2>
+    <p>In this training example, SAP Integration Suite times out after sending order <code>TRAINING-1042</code>. Choose what to do with the evidence you receive, then open each case to compare your decision with the worked answer.</p>
+    <details>
+      <summary>The order exists in the receiving system</summary>
+      <p><strong>Reconcile and close.</strong> Check the order number, quantities and any delivery or billing messages that should follow. Record the receiving order number against the original alert and close it after the evidence agrees.</p>
+    </details>
+    <details>
+      <summary>The receiver’s state is unknown and it has no duplicate protection</summary>
+      <p><strong>Hold and verify.</strong> Ask the receiver owner to check the source order reference and any in-flight request. Keep the original event and reference. A timeout or an empty result from a delayed search index cannot establish that no order was created.</p>
+    </details>
+    <details>
+      <summary>The receiver confirms there was no write and no request is in flight</summary>
+      <p><strong>Allow a bounded retry once the cause clears.</strong> Reuse the same business key, preserve per-order sequencing and use the interface’s retry limit and backoff. Then verify that exactly one business order exists and that expected downstream effects occurred.</p>
+    </details>
+    <details>
+      <summary>The receiver enforces a stable idempotency key</summary>
+      <p><strong>Allow a bounded retry with the same key.</strong> Check that duplicate protection applies to this operation, covers the full retry window and writes its record in the same transaction as the order. Confirm the same payload and required ordering, then check the receiver’s business result.</p>
+    </details>
+    <details>
+      <summary>The receiver explicitly rejects the material mapping</summary>
+      <p><strong>Send the case to the data owner.</strong> Correct and validate the mapping first. Route reprocessing through the same receiver-state, identity and ordering checks.</p>
+    </details>
+  </section>
+
+  <section>
+    <h2>Start with automated triage</h2>
+    <ol>
+      <li>Use SAP Cloud ALM Integration &amp; Exception Monitoring to raise an alert for the flow and start the configured follow-up action.</li>
+      <li>Enrich the case with the business reference, receiving system, message log ID and the latest attempt. Use an approved read-only lookup where the receiver supports it.</li>
+      <li>Route unknown receiver outcomes, rejected data and sequence conflicts to a named owner. Enable automatic replay for a specific failure class after testing the receiver guarantee.</li>
+      <li>In a test tenant, exercise the lost-acknowledgment case by committing the example order while withholding the response. Reconcile by business key and verify that the receiver still contains exactly one order after the recovery procedure.</li>
+    </ol>
+    <p>Cloud ALM events can trigger follow-up automation. The Cloud Integration Idempotent Process Call records successful subprocesses. If the receiver commits but its response is lost, middleware alone can still miss the duplicate. <a href="https://help.sap.com/docs/cloud-alm/applicationhelp/configuring-events">Cloud ALM events</a> · <a href="https://help.sap.com/docs/cloud-integration/sap-cloud-integration/define-idempotent-process-call">Cloud Integration duplicate handling</a></p>
+    <p>To decide whether to automate the triage, compare time per incident, the share sent for review and the support cost in the <a href="/atlas/concepts/sap-ams-cost-reduction-framework/#first-year-cost">SAP support automation cost calculator</a>.</p>
   </section>
 
   <section>
@@ -119,10 +156,10 @@ verified: true
     </ul>
   </section>
 
-  <section>
+  <section style="min-inline-size:0">
     <h2>Templates</h2>
     <h3>Error Handling Policy</h3>
-    <pre><code>---
+    <pre tabindex="0" aria-label="Error handling policy template"><code>---
 artifact: Error Handling Policy
 id: EHP-001
 interface: Interface ID
@@ -136,7 +173,7 @@ status: draft | reviewed | approved
 
 | Failure Type | Symptom | Root Cause | Retryable | Max Retries | Backoff | Action After Max |
 |--------------|---------|------------|-----------|-------------|---------|------------------|
-| Transient timeout | HTTP 504, connection reset | Network, downstream restart | Yes | 3 | Exponential 1s→8s | Dead letter + alert |
+| Timeout after a write | HTTP 504, connection reset | Commit state uncertain | Check receiver state and duplicate protection | Per interface | Backoff with jitter after approval | Hold and reconcile |
 | Schema mismatch | HTTP 400, validation error | Contract change, bad payload | No | 0 | N/A | Dead letter + alert |
 | Auth failure | HTTP 401, 403 | Expired token, permission change | Yes* | 2 | Fixed 5s | Dead letter + alert |
 | Rate limit | HTTP 429 | Consumer over limit | Yes | 5 | Exponential 1s→30s | Dead letter + alert |

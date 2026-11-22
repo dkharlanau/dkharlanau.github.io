@@ -4,7 +4,7 @@ layout: default
 title: "Skill Hub — Practical Working Skills for Enterprise Consultants and AI Agents"
 description: "A library of practical working skills for enterprise consultants, business analysts, data consultants, solution architects, integration architects, SAP AMS consultants, and AI agents. Not a glossary. Not a framework encyclopedia. Usable work skills."
 permalink: /skill-hub/
-last_modified_at: 2026-09-05
+last_modified_at: 2026-11-22
 status: reviewed
 verified: true
 ---
@@ -21,7 +21,8 @@ verified: true
   <h1>Working methods for enterprise delivery.</h1>
   <p class="lead">Methods, decision rules, checklists, and artifact templates for consultants, analysts, architects, and AI agents.</p>
   <div class="atlas-hero__actions">
-    <a class="button button--primary" href="#skill-task-paths">Choose a task and output</a>
+    <a class="button button--primary" href="#current-skills">See current skills and cases</a>
+    <a class="button" href="#skill-task-paths">Choose a task and output</a>
     <a class="button" href="/skill-hub/problem-solving-operations/">Problem solving &amp; operations</a>
     <a class="button" href="/skill-hub/dama-dmbok/">Data &amp; DAMA skills</a>
     <a class="button" href="/skill-hub/business-analysis/">Business analysis skills</a>
@@ -32,6 +33,8 @@ verified: true
     <a class="button" href="/skill-hub/ai-assisted-development/">AI-assisted development skills</a>
   </div>
 </section>
+
+{% include current-skills.html %}
 
 {% include knowledge-task-paths.html scope="skill" %}
 
@@ -90,6 +93,7 @@ verified: true
       </tr>
     </tbody>
   </table>
+  <p>For the clean-core exercise, check <a href="https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/ef0301f6b908409c8e0802270a96a316.html">SAP’s guide to released APIs</a> for your target system.</p>
   <p>Atlas explains <em>why a sales order is blocked</em>. Skill Hub explains <em>how to run a stakeholder interview that produces requirements instead of complaints</em>. They complement each other.</p>
 </section>
 

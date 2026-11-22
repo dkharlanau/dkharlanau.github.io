@@ -34,7 +34,10 @@ def test_home_routes_to_practice_knowledge_and_topics_without_replacing_the_bran
     assert home.count("<img ") == 1
     assert 'class="focus-identity__portrait"' in home
     assert "DzmitryiKharlanau.webp" in home
-    assert 'aria-label="Contact on LinkedIn"' in home
+    assert 'aria-label="Start exploring"' in home
+    assert "Try the SAP cost calculator" in home
+    assert "'/atlas/concepts/sap-ams-cost-reduction-framework/#first-year-cost' | relative_url" in home
+    assert 'aria-label="Contact on LinkedIn"' not in home
     header = read("_includes/header.html")
     assert "/assets/img/logo-d.svg" in header
     assert "page_locale" not in header
