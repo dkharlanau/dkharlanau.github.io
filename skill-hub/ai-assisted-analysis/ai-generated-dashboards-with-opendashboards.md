@@ -129,7 +129,7 @@ pnpm dev
     <pre><code>docker run -d --name sap-dashboard-demo \
   -e POSTGRES_PASSWORD=demo_only_password \
   -e POSTGRES_DB=demo_migration \
-  -p 54330:5432 postgres:16
+  -p 127.0.0.1:54330:5432 postgres:16
 
 docker exec -it sap-dashboard-demo psql \
   -U postgres -d demo_migration</code></pre>
