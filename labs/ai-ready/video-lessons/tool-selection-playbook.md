@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-11-11
+last_modified_at: 2026-11-22
 hide_global_cta: true
 tags: [ai, tools, technology, langgraph, phoenix, graphrag, evals, sap, video-learning]
 career_impact: mapped
@@ -21,6 +21,8 @@ career_skills: [ai-agents-mcp, ai-evaluation, ai-business-value]
 **A practical field guide, checked 11 November 2026.** The talks in this series are useful because they show *which problem a tool is supposed to solve*. This page converts that into an adoption decision you can make without committing a project to a new platform.
 
 The default is deliberately conservative: **start with Python/TypeScript, JSON, a small test set and a read-only adapter.** Add a framework after a test shows exactly which missing capability it provides.
+
+Use the [AI engineering skills refresh](/labs/ai-ready/video-lessons/ai-engineering-skills-refresh/) for the November source pass and a lab on retesting a skill after a model or runtime change.
 
 ## Tool map: what to try, what to check
 

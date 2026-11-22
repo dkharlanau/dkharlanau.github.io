@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Build AI-Generated Operational Dashboards with OpenDashboards"
-description: "A practical OpenDashboards skill: create a live dashboard from synthetic data, assess the OpenUI Cloud boundary, and design a safe SAP migration-monitoring pilot."
+description: "Build a live OpenDashboards view with synthetic data, verify the counts in SQL, and assess the OpenUI Cloud boundary for SAP migration monitoring."
 permalink: /skill-hub/ai-assisted-analysis/ai-generated-dashboards-with-opendashboards/
 last_modified_at: 2026-11-22
 author: "Dzmitryi Kharlanau"
@@ -30,7 +30,7 @@ tags: [ai, data-analytics, dashboards, sap, integration, architecture, skills]
 
   <section>
     <h2>1. What this skill is for</h2>
-    <p>You have operational data in a database, but every new management question seems to require another BI ticket. Use this skill to build a <strong>read-only exploration dashboard</strong>, check the numbers against source queries, and decide whether the result deserves a permanent reporting solution.</p>
+    <p>The problem is familiar to migration teams with operational data in a database. Each new management question starts another BI ticket. Use this skill to build a <strong>read-only exploration dashboard</strong>, check the numbers against source queries, and decide whether the result deserves a permanent reporting solution.</p>
     <p><strong>Target outcome:</strong> a working synthetic dashboard, an explicit metric definition, a documented data-access boundary, and a go/no-go decision for a pilot.</p>
   </section>
 
@@ -108,16 +108,16 @@ tags: [ai, data-analytics, dashboards, sap, integration, architecture, skills]
     </ol>
 
     <h3>Self-hosted application: quick start</h3>
-    <p>As of 22 November 2026, the official README specifies Node.js 20.9+, pnpm, Docker and a Thesys API key. Run the application separately from the example dataset.</p>
+    <p>As of 22 November 2026, the official setup guide specifies Node.js 20.9+, pnpm, Docker and a Thesys API key. Run the application separately from the example dataset.</p>
     <pre><code>git clone https://github.com/thesysdev/opendashboards.git
 cd opendashboards
 pnpm install
-cp .env.example .env.local
-# Add THESYS_API_KEY to .env.local (never commit this file).
+# Configure THESYS_API_KEY locally using the linked setup guide.
 pnpm db:up
 pnpm db:reset
 pnpm dev
 # Open http://localhost:3000</code></pre>
+    <p>Follow the <a href="https://github.com/thesysdev/opendashboards#run-it-yourself">official OpenDashboards setup</a> to place the key in local configuration. Keep that configuration out of Git.</p>
     <p>The README warns that local development uses a shared dev identity and stores connection credentials without production encryption. This setup is for a private development machine and synthetic data only. A production deployment needs an authentication provider, proper secret management and a separate security review.</p>
   </section>
 

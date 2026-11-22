@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "SAP Lead Interview Questions — 42 Skills, 168 Questions"
-description: "SAP Lead interview question bank with 168 questions across 42 roadmap skills: Sales, Logistics, Integration, AI, Delivery, and leadership judgment."
+title: "SAP Lead Interview Questions — Four Ways to Test Each Skill"
+description: "Practise each SAP Lead roadmap skill with an explanation, diagnosis, design, and challenge question."
 permalink: /labs/interview-readiness/questions/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-18
+last_modified_at: 2026-11-22
 hide_global_cta: true
 tags:
   - sap
@@ -18,6 +18,11 @@ tags:
   - ai
 ---
 
+{% assign skill_count = site.data.career.question_bank.skills.size %}
+{% assign question_count = 0 %}
+{% for group in site.data.career.question_bank.skills %}
+  {% assign question_count = question_count | plus: group.questions.size %}
+{% endfor %}
 <link rel="stylesheet" href="/assets/css/interview-readiness.css" />
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/interview-readiness/">Interview Readiness</a></li><li aria-current="page">Questions</li></ol></nav>
@@ -27,8 +32,8 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Interview Readiness / Question Bank 2.0</p>
       <h1>One roadmap.<br />Four ways to be tested.</h1>
-      <p>The bank now follows all 42 SAP Lead roadmap skills. Every skill has four question types: explain the model, diagnose a failure, design a solution, and challenge a weak requirement.</p>
-      <a class="research-canvas__button" href="#question-bank">Open 168 questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p>The bank now follows all {{ skill_count }} SAP Lead roadmap skills. Every skill has four question types: explain the model, diagnose a failure, design a solution, and challenge a weak requirement.</p>
+      <a class="research-canvas__button" href="#question-bank">Open {{ question_count }} questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
       <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Overview</a><a href="/labs/interview-readiness/roadmap/">Roadmap</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
     <div class="research-canvas__signal" aria-label="Question depth">
@@ -47,11 +52,11 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" id="question-bank" data-reveal>
-    <header><p class="research-canvas__eyebrow">42 skills / 168 questions</p><h2>Filter by area, skill, or interview pressure.</h2><p id="ir-question-count">Loading question bank.</p></header>
+    <header><p class="research-canvas__eyebrow">{{ skill_count }} skills / {{ question_count }} questions</p><h2>Filter by area, skill, or interview pressure.</h2><p id="ir-question-count">Loading question bank.</p></header>
     <div class="ir-filter-stack">
       <div class="ir-filter-group"><strong>Area</strong><div class="ir-filter" id="ir-question-filter" aria-label="Question area filters"></div></div>
       <div class="ir-filter-group"><strong>Type</strong><div class="ir-filter" id="ir-type-filter" aria-label="Question type filters"></div></div>
-      <label class="ir-select-label" for="ir-skill-filter"><strong>Skill</strong><select id="ir-skill-filter"><option value="all">All 42 roadmap skills</option></select></label>
+      <label class="ir-select-label" for="ir-skill-filter"><strong>Skill</strong><select id="ir-skill-filter"><option value="all">All {{ skill_count }} roadmap skills</option></select></label>
     </div>
     <div class="ir-question-list" id="ir-question-list"></div>
   </section>
@@ -69,7 +74,7 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Next step</p><h2>Turn a weak answer into a roadmap action.</h2><p>Do not just repeat the same question until it sounds familiar. Open the evidence source, rebuild the skill, then answer a different question type for the same skill.</p></header>
     <div class="research-route-list">
-      <a href="/labs/interview-readiness/roadmap/"><span>42</span><strong>Update Roadmap</strong><small>Record what you can really explain, diagnose, design, and defend.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/interview-readiness/roadmap/"><span>{{ skill_count }}</span><strong>Update Roadmap</strong><small>Record what you can really explain, diagnose, design, and defend.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       <a href="/labs/interview-readiness/practice/"><span>12</span><strong>Run Interview Mode</strong><small>Use a balanced session across all six SAP Lead tracks.</small><i class="material-symbols-outlined" aria-hidden="true">timer</i></a>
       <a href="/labs/assessment/mock/"><span>MOCK</span><strong>Run Assessment Mock</strong><small>Use scored case practice when you want a stricter reasoning check.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
     </div>
