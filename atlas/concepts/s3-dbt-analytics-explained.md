@@ -76,6 +76,7 @@ related:
   <p>Five rows are <em>events</em>, not five different orders. There are three distinct order IDs. To answer “What is the current value of shipped orders?”, first keep the latest event for each order. The answer for this miniature dataset is <strong>170</strong> (120 + 50), not 220 or 340. This is <strong>shipped order value</strong>, not recognised revenue or payment received.</p>
 
   <p>The difficult concept here is <strong>grain</strong>: what does one row represent? Raw grain is “one event”. The reporting grain is “one latest order state”. Mixing them creates false totals even when SQL executes successfully.</p>
+  <p><strong>The SAP connection:</strong> one customer can have several sales areas or partner assignments. If you join an order to every matching master-data row using only the customer ID, the order amount may multiply. Check the business key and join cardinality before blaming the dashboard.</p>
 
   <h2>3. Where the work actually happens</h2>
 
