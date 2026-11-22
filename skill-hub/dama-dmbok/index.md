@@ -4,7 +4,7 @@ layout: default
 title: "DAMA / Data — Practical Working Skills"
 description: "Practical working skills for data governance, quality root cause, metadata, master data, lineage, reference data, and integration interoperability. Usable tomorrow."
 permalink: /skill-hub/dama-dmbok/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-11-22
 status: reviewed
 verified: true
 ---
@@ -78,6 +78,10 @@ verified: true
       <h3><a href="/skill-hub/dama-dmbok/data-integration-interoperability-working-skill/">Data Integration &amp; Interoperability</a></h3>
       <p>Diagnose integration failures caused by data mismatch, schema drift, or mapping errors. Define data contracts and validation rules at interface boundaries.</p>
     </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/dama-dmbok/s3-dbt-analytics-working-skill/">S3 + dbt Analytics Working Skill</a></h3>
+      <p>Working draft — learn how to turn files in S3 into tested SQL models with Athena and dbt, then defend the result when source events are duplicated.</p>
+    </div>
   </div>
 </section>
 
@@ -99,6 +103,13 @@ verified: true
     <li><a href="/skill-hub/dama-dmbok/data-integration-interoperability-working-skill/">Data Integration &amp; Interoperability</a></li>
     <li><a href="/skill-hub/dama-dmbok/reference-data-management-working-skill/">Reference Data Management</a> — if code values mismatch</li>
     <li><a href="/skill-hub/dama-dmbok/data-lineage-working-skill/">Data Lineage</a> — if the data path is unclear</li>
+  </ol>
+
+  <h3>Data analytics learning path (under review)</h3>
+  <ol>
+    <li><a href="/atlas/concepts/s3-dbt-analytics-explained/">S3 and dbt, explained</a> — understand storage, catalog, SQL compute, and transformation control.</li>
+    <li><a href="/skill-hub/dama-dmbok/s3-dbt-analytics-working-skill/">S3 + dbt Analytics Working Skill</a> — apply the model to a synthetic ERP-style order dataset.</li>
+    <li><a href="/skill-hub/dama-dmbok/data-lineage-working-skill/">Data Lineage</a> — verify every source-to-report hop.</li>
   </ol>
 
   <h3>AI readiness path</h3>
