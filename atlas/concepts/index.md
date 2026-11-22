@@ -36,6 +36,21 @@ related:
 
 <section class="section">
   <header class="section-heading">
+    <p class="eyebrow">Data engineering · working guide</p>
+    <h2>Choose a data format for the work it needs to do.</h2>
+    <p>CSV, JSON, Parquet, ORC, Avro and more — with SAP examples, S3 and dbt boundaries, plus a runnable local lab. This guide is pending editorial review.</p>
+  </header>
+  <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/concepts/data-file-formats/">
+      <h2>Data File Formats: What to Use, When and Why</h2>
+      <p>A practical decision table covering exchange, streaming, analytics, lake tables, data quality and schema controls.</p>
+      <span class="link-arrow">Open field guide</span>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
     <p class="eyebrow">Pilot Concepts</p>
     <h2>Reviewed pages and new decision frameworks</h2>
   </header>
