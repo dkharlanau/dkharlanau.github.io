@@ -95,6 +95,7 @@ A practical contract therefore has two layers: **machine-checkable guarantees fo
 
 ## Related Atlas pages
 
+- [Data File Formats: CSV, JSON, Parquet, ORC and Avro](/atlas/concepts/data-file-formats/) — choose the data representation before defining the contract.
 - [API Contracts](/atlas/concepts/api-contracts/)
 - [Event Contracts](/atlas/concepts/event-contracts/)
 - [Data Product](/atlas/concepts/data-product/)
