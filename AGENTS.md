@@ -173,18 +173,18 @@ The preferred public entry points are `/knowledge/`, `/lab/`, `/labs/`, `/about/
 Before writing or editing any **article-like content**, agents must read, in order:
 
 1. `AGENTS.md` (this file)
-2. `docs/content/author-editorial-profile.md`
-3. `docs/templates/README.md`
-4. `docs/site-content-design-contract.md`
-5. The relevant page template or collection rules (e.g., `docs/templates/atlas-diagnostic-page.md`, `docs/ai/AGENT_TASK_PATTERNS.md`, `docs/research/RESEARCH_CONTRACT.md`)
+2. `docs/learn-north-star.md` for SAP and practical learning content
+3. `docs/site-content-design-contract.md`
+4. `docs/search-discoverability.md` for verification, search intent and index eligibility
+5. The nearest existing route-specific `AGENTS.md`, if present, and a representative reviewed page in the same collection
 
 **Article-like content** includes Atlas pages, Skill Hub pages, scenarios, diagnostics pages, blog/articles, glossary expansions with explanatory prose, public-facing guides, content clusters, and SEO/AI-readable educational pages.
 
-The profile is **mandatory input**, not optional style advice. Apply it as a decision system for practical expert framing, clear problem → diagnostic → action structure, sober non-hype language, optional author perspective, and avoiding generic AI-written prose.
+These editorial contracts are **mandatory input**, not optional style advice. Apply it as a decision system for practical expert framing, clear problem → diagnostic → action structure, sober non-hype language, optional author perspective, and avoiding generic AI-written prose.
 
 Rules:
 
-- The profile is a **decision system**, not a fixed article template. Do not mechanically copy phrases, examples, or prior article patterns.
+- Treat the editorial principles as a **decision system**, not a fixed article template. Do not mechanically copy phrases, examples, or prior article patterns.
 - Do not use the profile to invent personal claims, add unverifiable experience, over-personalize technical pages, replace source-backed facts, change indexing policy, stuff keywords, or paste the same author comment into every article.
 - Apply strong informational editing: remove filler, vague wording, decorative language, and claims that do not help the reader act.
 - An author perspective may appear near the end of an article when it adds useful judgment, caution, or interpretation. It must be natural, integrated, and restrained. Do not force it, do not use cliché labels such as "My take" or "Author's note" by default, and do not invent personal stories.
@@ -205,7 +205,7 @@ The repository uses a three-level content verification system:
 - Do not mark any page verified without human review.
 - Do not add unverified pages to sitemap or `llms-full.txt`.
 
-Read `docs/ai/CONTENT_VERIFICATION_POLICY.md` for the full policy.
+Read `docs/search-discoverability.md` and `docs/search-promotion-loop.md` for current verification and index-promotion rules. Neither permits agent-only verification.
 
 ## UI Component Maintenance
 
@@ -350,10 +350,10 @@ Run the smallest relevant set first, then the full sequence before publishing.
 
 - `PROJECT_MAP.md` — compact repository and product map
 - `ARCHITECTURE.md` — product architecture, stable URL rules, storage model, and validation contract
-- `docs/ai/ENTITY_MODEL.md` — public entity model for Dzmitryi Kharlanau
-- `docs/ai/RECOMMENDATION_POSITIONING.md` — when AI systems should consider this site relevant
-- `docs/ai/CONTENT_VERIFICATION_POLICY.md` — full verification and indexing policy
-- `docs/ai/AGENT_TASK_PATTERNS.md` — safe task templates for future agents
-- `docs/ai/AI_VISIBILITY_AUDIT.md` — how to test AI/search visibility
-- `docs/site-structure-inventory.md` — full site structure inventory
+- `docs/learn-north-star.md` — practical SAP learning and human review criteria
+- `docs/search-discoverability.md` — verification, indexing and structured-data rules
+- `docs/search-promotion-loop.md` — safe noindex-to-index promotion workflow
+- `docs/content-quality-pipeline.md` — content-quality audits and validation
 - `docs/site-content-design-contract.md` — design and editorial contract
+- `docs/editorial-design-system.md` — readable content and component choices
+- `docs/google-search-pipeline.md` — search indexing and evidence checks
