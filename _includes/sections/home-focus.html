@@ -3,7 +3,7 @@
 <div class="focus-page focus-home">
   <header class="focus-intro" aria-labelledby="home-title">
     <h1 id="home-title">SAP logistics, integration and automation.</h1>
-    <p class="focus-lead">I work on complex SAP projects, bringing logistics processes, systems and data together. From understanding the problem and designing a solution through implementation and delivery, I focus on practical automation and solving difficult business and technical challenges.</p>
+    <p class="focus-lead">My independent technical lab and knowledge base. I share worked examples and tools for comparing SAP operating costs and deciding what to automate.</p>
     <div class="focus-identity">
       <img class="focus-identity__portrait" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="" width="48" height="48" />
       <div class="focus-identity__copy">
@@ -11,10 +11,25 @@
         <p class="focus-identity__role"><span>SAP Consultant at <a href="https://www.epam.com/" target="_blank" rel="noopener noreferrer">EPAM Systems</a></span><a href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
       </div>
     </div>
-    <nav class="focus-actions" aria-label="Contact">
-      <a class="btn btn--primary" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer" aria-label="Contact on LinkedIn">Contact <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
+    <nav class="focus-actions" aria-label="Start exploring">
+      <a class="btn btn--primary" href="{{ '/atlas/concepts/sap-ams-cost-reduction-framework/#first-year-cost' | relative_url }}" data-open-same-tab="true">Try the SAP cost calculator <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </nav>
   </header>
+
+  <section class="focus-topics" aria-labelledby="focus-skills-title">
+    <header class="focus-topics__header">
+      <h2 id="focus-skills-title">Automation and architecture skills</h2>
+      <a class="focus-topics__search" href="{{ '/skill-hub/#current-skills' | relative_url }}">Practice cases <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </header>
+    <nav class="research-route-list research-route-list--home" aria-label="Current skills">
+      {% for track in site.data.expert_skills.tracks %}
+      <a href="{{ '/skill-hub/#' | append: track.id | relative_url }}">
+        <span class="focus-topic-name"><strong>{{ track.title | escape }}</strong><small>{{ track.summary | escape }}</small></span>
+        <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i>
+      </a>
+      {% endfor %}
+    </nav>
+  </section>
 
   <section class="focus-topics" aria-labelledby="focus-start-title">
     <header class="focus-topics__header">

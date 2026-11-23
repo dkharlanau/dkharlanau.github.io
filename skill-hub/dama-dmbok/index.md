@@ -112,6 +112,9 @@ verified: true
     <li><a href="/skill-hub/dama-dmbok/data-lineage-working-skill/">Data Lineage</a> — verify every source-to-report hop.</li>
   </ol>
 
+  <h4>Example: why five order events are not five orders</h4>
+  <p><strong>Steps:</strong> open the synthetic S3 + dbt learning example above, identify the three latest order states, and reconcile the shipped value of 170 against a naive event-level total of 220. Test the declared business grain before trusting a dashboard. See the <a href="https://docs.getdbt.com/docs/build/data-tests">official dbt data-tests guide</a> for the difference between key assertions and metric-level checks.</p>
+
   <h3>AI readiness path</h3>
   <ol>
     <li><a href="/skill-hub/dama-dmbok/metadata-management-working-skill/">Metadata Management</a></li>

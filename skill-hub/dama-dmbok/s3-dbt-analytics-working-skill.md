@@ -48,7 +48,7 @@ related:
   <h2>Inputs to prepare</h2>
   <ul>
     <li>The business question — for example, “What was the current shipped order value at the end of the day?”</li>
-    <li>Example source columns: <code>order_id</code>, <code>status</code>, <code>updated_at</code>, <code>amount</code>.</li>
+    <li>Example source columns: <code>order_id</code>, <code>status</code>, <code>updated_at</code>, <code>amount</code>, and <code>event_seq</code> (stable per-order sequence).</li>
     <li>Definition of one raw row, the update sequence, source owner, and expected refresh frequency.</li>
     <li>For a real implementation only: approved AWS account, region, S3/IAM access, Glue/Athena configuration, dbt adapter, and budget.</li>
   </ul>
@@ -58,14 +58,14 @@ related:
     <li><strong>Minutes 0–8 — Write the decision.</strong> What should the report say? Define <em>shipped order value</em>, the reporting cut-off, currency, and the meaning of “current”. Do not call this revenue.</li>
     <li><strong>Minutes 8–15 — Draw the boundary.</strong> Sketch <code>Source → S3 → Glue Catalog → Athena ↔ dbt → curated model → dashboard</code>. Assign an owner to extraction, storage, query execution, SQL logic, and metric sign-off. Explain why dbt does not extract from SAP.</li>
     <li><strong>Minutes 15–25 — Set the grain.</strong> Use the five event rows in the <a href="/atlas/concepts/s3-dbt-analytics-explained/">companion example</a>. Distinguish “one event per update” from “one latest state per order”. The correct sample result is two shipped orders, value <strong>170</strong>.</li>
-    <li><strong>Minutes 25–35 — Add checks.</strong> Declare the source in dbt. Make a latest-order model using <code>row_number()</code>. Add <code>not_null</code> and <code>unique</code> tests on its <code>order_id</code>. Include a source-vs-model count reconciliation. Record which business assumptions tests cannot prove.</li>
+    <li><strong>Minutes 25–35 — Add checks.</strong> Declare the source in dbt. Make a latest-order model using <code>row_number()</code> ordered by timestamp and source sequence. Add <code>not_null</code> and <code>unique</code> tests on its <code>order_id</code>, plus status, timestamp, amount, and sequence checks. Include a source-vs-model count reconciliation. Record which business assumptions tests cannot prove.</li>
     <li><strong>Minutes 35–45 — Challenge the design.</strong> A late-arriving correction changes order 101 from shipped to cancelled. What changes in the metric? How would you detect the correction and rebuild affected results? Explain the change without using SQL jargon.</li>
   </ol>
 
   <h2>Deliverables: the four-line design card</h2>
   <pre><code>BUSINESS QUESTION: Current shipped order value, as of a defined cut-off
-RAW GRAIN:         One row per order status event
-CURATED GRAIN:     One latest state per order (with tie-breaking rule)
+RAW GRAIN:         One row per order status event (stable event_seq)
+CURATED GRAIN:     One latest state per order (timestamp + event_seq)
 EVIDENCE:          Source completeness + key tests + metric reconciliation
 </code></pre>
 
@@ -89,20 +89,23 @@ EVIDENCE:          Source completeness + key tests + metric reconciliation
   <p><strong>Important:</strong> a <code>unique</code> test on the raw event table would be wrong if multiple legitimate events can share one order ID. Test the declared grain, not your wish that every table have unique order IDs.</p>
 
   <h2>Copy a safe five-row sample</h2>
-  <p>Save this as <code>orders_events.csv</code>. These are fabricated values. In Athena, register <code>order_id</code> as an integer, <code>amount</code> as a suitable numeric type, and <code>updated_at</code> as a timestamp (or explicitly parse it in a staging model after validating the source format).</p>
-  <pre><code>order_id,status,updated_at,amount
-101,open,2026-11-19 08:00:00,120
-101,shipped,2026-11-20 09:00:00,120
-102,cancelled,2026-11-20 08:10:00,80
-103,shipped,2026-11-20 12:00:00,50
-103,shipped,2026-11-21 08:00:00,50
+  <p>Save this as <code>orders_events.csv</code>. All values are fabricated. The <code>event_seq</code> value increases within each order and breaks timestamp ties. In Athena, register <code>order_id</code> and <code>event_seq</code> as integers, <code>amount</code> as decimal, and <code>updated_at</code> as timestamp. These timestamps have no offset: choose a business time zone for the lab.</p>
+  <pre><code>order_id,status,updated_at,amount,event_seq
+101,open,2026-11-19 08:00:00,120,1
+101,shipped,2026-11-20 09:00:00,120,2
+102,cancelled,2026-11-20 08:10:00,80,1
+103,shipped,2026-11-20 12:00:00,50,1
+103,shipped,2026-11-21 08:00:00,50,2
 </code></pre>
+  <p>If the real source has no <code>event_seq</code>, use an authoritative event ID or change sequence instead; a tied timestamp without a stable key is ambiguous. For historical cutoffs, filter raw events <em>before</em> ranking them.</p>
   <p>Check your result against this expected output: <strong>three latest orders, two currently shipped, shipped order value 170</strong>. If you get three shipped rows and 220 instead, you counted events rather than latest orders.</p>
+
+  <p><strong>Offline exercise (no AWS account):</strong> run <code>python3 -m unittest discover -s tests -p 'test_s3_dbt_learning_example.py' -v</code> at the repository root. It executes the two published SQL models on SQLite and checks 170, duplicate events, a late cancellation, equal timestamps, and empty shipped selections. It does not claim Athena execution or dbt adapter compatibility.</p>
 
   <h2>How to make this a real AWS lab</h2>
   <ol>
     <li>Start with an approved <strong>synthetic CSV</strong> and a private S3 bucket. Organise separate prefixes for <code>raw/</code>, <code>curated/</code>, and Athena query results. Set retention and cost limits.</li>
-    <li>Register the raw file schema and S3 location in Glue Data Catalog (manually or with an appropriate controlled discovery method). Confirm you can query it in Athena.</li>
+    <li>Register the raw file schema and S3 location in Glue Data Catalog. For this quote-free CSV with human-readable timestamps, use Athena's default LazySimpleSerDe, not OpenCSVSerDe (which requires epoch milliseconds for timestamp fields). Skip the header with <code>TBLPROPERTIES ("skip.header.line.count"="1")</code> and preserve the shown column order. Confirm Athena reads exactly five rows. See <a href="https://docs.aws.amazon.com/athena/latest/ug/serde-csv-choices.html">AWS guidance on CSV SerDe selection</a>.</li>
     <li>Install a compatible dbt version and <a href="https://docs.getdbt.com/docs/local/connect-data-platform/athena-setup">dbt Athena adapter</a>; configure access, region, workgroup and S3 result location following the current adapter documentation. Do not put secrets in Git.</li>
     <li>Implement the two SQL models from the <a href="/atlas/concepts/s3-dbt-analytics-explained/">explainer</a> and a YAML data test; run <code>dbt build</code> in the configured environment.</li>
     <li>Inspect the test results and the SQL generated by dbt. Compare the analytical result with the hand-calculated answer, then change one record and repeat.</li>

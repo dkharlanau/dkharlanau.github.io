@@ -183,6 +183,9 @@ level: 2
   </div>
 
   <section class="atlas-related">
+    <h2>Automate the CVI readiness check</h2>
+    <p>When the same CVI error recurs, start with a read-only check for the affected Business Partner role, account group mapping and required fields. Send the failing record and rule to the data owner. Run the check alongside manual work first and record how often it finds a real problem or needs manual review. Then compare the time saved with the effort to maintain the rules. <a href="/atlas/automation/rule-based-automation-vs-ai/">Choose between rules and AI for this check</a>.</p>
+
     <h2>Related Atlas Pages</h2>
     <ul>
       <li><a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">SAP Business Partner Replication Diagnostics</a></li>

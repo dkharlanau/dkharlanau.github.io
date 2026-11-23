@@ -200,6 +200,7 @@ level: 2
       <li><a href="/atlas/diagnostics/sap-inbound-processing-diagnostics/">SAP Inbound Processing Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-outbound-processing-diagnostics/">SAP Outbound Processing Diagnostics</a></li>
     </ul>
+    <p>If the same status 51 error keeps returning, group it by message type and affected process before automating any recovery. A read-only check can collect this evidence while the recovery owner decides whether to reprocess the IDoc. Use the <a href="/atlas/concepts/sap-ams-cost-reduction-framework/#first-year-cost">SAP support automation cost calculator</a> to compare time saved on triage with setup, maintenance and exception review.</p>
   </section>
 
   {% include atlas/author-block.html %}

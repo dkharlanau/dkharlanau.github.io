@@ -62,16 +62,18 @@ related:
 
   <div class="table-scroll study-table" tabindex="0" role="region" aria-label="Synthetic order status events">
     <table class="study-table__table">
-      <thead><tr><th scope="col">Order</th><th scope="col">Updated</th><th scope="col">Status</th><th scope="col">Amount</th></tr></thead>
+      <thead><tr><th scope="col">Order</th><th scope="col">Updated</th><th scope="col">Event #</th><th scope="col">Status</th><th scope="col">Amount</th></tr></thead>
       <tbody>
-        <tr><th scope="row">101</th><td>Nov 19, 08:00</td><td>open</td><td>120</td></tr>
-        <tr><th scope="row">101</th><td>Nov 20, 09:00</td><td>shipped</td><td>120</td></tr>
-        <tr><th scope="row">102</th><td>Nov 20, 08:10</td><td>cancelled</td><td>80</td></tr>
-        <tr><th scope="row">103</th><td>Nov 20, 12:00</td><td>shipped</td><td>50</td></tr>
-        <tr><th scope="row">103</th><td>Nov 21, 08:00</td><td>shipped</td><td>50</td></tr>
+        <tr><th scope="row">101</th><td>Nov 19, 08:00</td><td>1</td><td>open</td><td>120</td></tr>
+        <tr><th scope="row">101</th><td>Nov 20, 09:00</td><td>2</td><td>shipped</td><td>120</td></tr>
+        <tr><th scope="row">102</th><td>Nov 20, 08:10</td><td>1</td><td>cancelled</td><td>80</td></tr>
+        <tr><th scope="row">103</th><td>Nov 20, 12:00</td><td>1</td><td>shipped</td><td>50</td></tr>
+        <tr><th scope="row">103</th><td>Nov 21, 08:00</td><td>2</td><td>shipped</td><td>50</td></tr>
       </tbody>
     </table>
   </div>
+
+  <p>The <code>event_seq</code> column (“Event #”) is a fictional source sequence that increases within each order. It breaks equal-timestamp ties; a real source must provide an authoritative ordering key, not an invented one.</p>
 
   <p>Five rows are <em>events</em>, not five different orders. There are three distinct order IDs. To answer “What is the current value of shipped orders?”, first keep the latest event for each order. The answer for this miniature dataset is <strong>170</strong> (120 + 50), not 220 or 340. This is <strong>shipped order value</strong>, not recognised revenue or payment received.</p>
 
@@ -101,7 +103,7 @@ dbt models + tests  --------> curated analytical tables
   <p>dbt tells Athena which SQL models to build and in what dependency order. Athena performs the computation. Depending on materialisation and configuration, results can become tables or views; the physical storage of an Athena table may remain in S3. The pipeline still needs a separate, reliable extraction or ingestion step before dbt starts.</p>
 
   <h2>4. See the SQL without getting lost in tooling</h2>
-  <p>In a dbt project, a <em>source</em> describes data already available in your data platform. The example below assumes an Athena-accessible table named <code>raw.orders_events</code>, with typed <code>updated_at</code> and <code>amount</code> columns. Creating and loading this source is a separate step.</p>
+  <p>In a dbt project, a <em>source</em> describes data already available in your data platform. The example below assumes an Athena-accessible table named <code>raw.orders_events</code>, with typed <code>updated_at</code>, <code>amount</code>, and <code>event_seq</code> columns. Creating and loading this source is a separate step.</p>
 
   <p><strong>models/sources.yml</strong> — tell dbt where the raw data lives:</p>
 <pre><code class="language-yaml">version: 2
@@ -120,14 +122,15 @@ sources:
         status,
         amount,
         updated_at,
+        event_seq,
         row_number() over (
             partition by order_id
-            order by updated_at desc
+            order by updated_at desc, event_seq desc
         ) as row_num
     from &#123;&#123; source('erp', 'orders_events') &#125;&#125;
 )
 
-select order_id, status, amount, updated_at
+select order_id, status, amount, updated_at, event_seq
 from ranked
 where row_num = 1
 </code></pre>
@@ -135,10 +138,12 @@ where row_num = 1
   <p><strong>models/fct_shipped_order_value.sql</strong> — build a clearly named metric:</p>
 <pre><code class="language-sql">select
     count(*) as shipped_orders,
-    sum(amount) as shipped_order_value
+    coalesce(sum(amount), 0) as shipped_order_value
 from &#123;&#123; ref('int_latest_order') &#125;&#125;
 where status = 'shipped'
 </code></pre>
+
+  <p><strong>Time boundary:</strong> the base model uses the latest state from all available events. To reproduce a report as of 2026-11-21 23:59:59, add <code>where updated_at &lt;= timestamp '2026-11-21 23:59:59'</code> inside the <code>ranked</code> CTE, <em>before</em> applying <code>row_number()</code>. Define a time zone and verify that the source extract is complete through the cutoff. Filtering after the window would incorrectly omit earlier valid states whenever a later correction exists.</p>
 
   <p>The <code>source()</code> call marks the upstream input. The <code>ref()</code> call marks a dependency on another dbt model. A dbt model is primarily a SQL <code>select</code> statement; the configured materialisation determines how the data platform creates its output.</p>
 
@@ -156,7 +161,21 @@ models:
       - name: status
         data_tests:
           - not_null
+          - accepted_values:
+              arguments:
+                values: ['open', 'shipped', 'cancelled']
+      - name: amount
+        data_tests:
+          - not_null
+      - name: updated_at
+        data_tests:
+          - not_null
+      - name: event_seq
+        data_tests:
+          - not_null
 </code></pre>
+
+  <p><code>accepted_values.arguments</code> requires a compatible dbt release (dbt Core 1.10.5 or newer); older releases use legacy test-argument syntax. These checks do not prove source completeness or reconcile a business metric.</p>
 
   <p>Then use the appropriate installed dbt CLI and adapter:</p>
 <pre><code class="language-bash">dbt build --select +fct_shipped_order_value
@@ -167,7 +186,7 @@ models:
   <h2>5. Three decisions that matter more than the commands</h2>
   <ol>
     <li><strong>Choose the grain.</strong> Do users need events, latest order state, or one row per order item? Write that down before aggregating.</li>
-    <li><strong>Choose the source of truth.</strong> Is the extract complete? Do late events arrive? Can records be corrected or deleted? If two updates have the same timestamp, a stable change sequence or ingestion ID is needed to break the tie. Without it, “latest” is not deterministic.</li>
+    <li><strong>Choose the source of truth.</strong> Is the extract complete? Do late events arrive? Can records be corrected or deleted? The synthetic example uses source-provided <code>event_seq</code> to break equal-timestamp ties. If a production source lacks a trusted sequence or ingestion ID, detect and reject ambiguous ties instead of silently reporting an arbitrary latest state.</li>
     <li><strong>Choose the business meaning.</strong> Shipped order value is not revenue. Net values may depend on cancellations, returns, currency, taxes, and business rules. A passing technical test cannot approve a metric definition.</li>
   </ol>
 
@@ -199,12 +218,14 @@ models:
     <li><strong>A new file lands in S3, but Athena cannot see it. What next?</strong> Inspect the registered table's S3 location, partitions, schema and permissions before changing the dbt SQL.</li>
   </ol>
 
+  <h2>9. Related practice</h2>
   <p><strong>Try it:</strong> use the companion <a href="/skill-hub/dama-dmbok/s3-dbt-analytics-working-skill/">S3 + dbt Analytics Working Skill</a> to design the same pipeline, perform the checks, and explain one failure to a business stakeholder.</p>
 
   <h2>Source references and version boundary</h2>
   <ul>
     <li><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html">AWS: What is Amazon S3?</a> — object storage and access model.</li>
     <li><a href="https://docs.aws.amazon.com/athena/latest/ug/data-sources-glue.html">AWS: Athena with Glue Data Catalog</a> — queryable metadata and registered tables.</li>
+    <li><a href="https://docs.aws.amazon.com/athena/latest/ug/serde-csv-choices.html">AWS: CSV SerDe choices</a> — reading timestamps from the sample.</li>
     <li><a href="https://docs.getdbt.com/docs/introduction">dbt: What is dbt?</a> — models, dependencies and supported engines.</li>
     <li><a href="https://docs.getdbt.com/docs/build/sources">dbt: Sources</a> — model lineage and upstream tables.</li>
     <li><a href="https://docs.getdbt.com/docs/build/data-tests">dbt: Data tests</a> — assertions and test behaviour.</li>

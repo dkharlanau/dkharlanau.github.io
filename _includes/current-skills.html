@@ -1,0 +1,19 @@
+<section class="section" id="current-skills" aria-labelledby="current-skills-title">
+  <header class="section-heading">
+    <h2 id="current-skills-title">Current skills and practice cases</h2>
+    <p>Sources checked <time datetime="{{ site.data.expert_skills.sources_checked_on | date: '%Y-%m-%d' }}">{{ site.data.expert_skills.sources_checked_on | date: '%-d %B %Y' }}</time>. The exercises use illustrative scenarios.</p>
+  </header>
+  {% for track in site.data.expert_skills.tracks %}
+  <article class="prose" aria-labelledby="{{ track.id }}">
+    <h3 id="{{ track.id }}">{{ track.title | escape }}</h3>
+    <p>{{ track.signal | escape }} <a href="{{ track.source.url | escape }}">{{ track.source.label | escape }}</a></p>
+    <p>{{ track.judgment | escape }}</p>
+    <p><strong>Try it.</strong> {{ track.exercise | escape }} <strong>Keep.</strong> {{ track.output | escape }}</p>
+    <ul>
+      {% for material in track.materials %}
+      <li><a href="{{ material.url | relative_url }}">{{ material.label | escape }}</a></li>
+      {% endfor %}
+    </ul>
+  </article>
+  {% endfor %}
+</section>
