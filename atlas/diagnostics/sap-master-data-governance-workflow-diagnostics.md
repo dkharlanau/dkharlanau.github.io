@@ -121,6 +121,7 @@ sitemap: false
     <ul>
       <li><a href="/atlas/diagnostics/sap-mdg-to-s4-replication-diagnostics/">SAP MDG to S/4 Replication Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-master-data-activation-diagnostics/">SAP Master Data Activation Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-workflow-diagnostics/#workflow-recovery">SAP Workflow Work Item Error Handling: SWIA, SWPC, SWPR</a> — distinguish an in-process background step from a failed workflow, then choose a controlled recovery.</li>
       <li><a href="/atlas/data-quality/sap-mdg-governance-patterns/">SAP MDG Governance Patterns</a></li>
     </ul>
   </div>
