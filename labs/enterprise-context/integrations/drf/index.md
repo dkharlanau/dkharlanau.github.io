@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-09-03
+last_modified_at: 2026-11-03
 last_reviewed: 2026-09-03
 publication_wave: "sap-integration-review-2026-09"
 review_method: "current SAP primary sources + deployment-boundary review + page-level factual review"
@@ -236,6 +236,7 @@ semantic_links:
       <div><h3>Layer 5 · Business result</h3><ul><li>Object exists once?</li><li>Correct status and attributes?</li><li>Expected downstream process works?</li><li>Reconciliation complete?</li></ul></div>
     </div>
     <p class="ecg-caption"><strong>Tool boundary:</strong> if the outbound implementation uses IDoc, queues, SOAP, or Integration Suite, use the monitor for that technology after DRF. DRFLOG is only one part of the evidence chain.</p>
+    <p><strong>Where AIF fits:</strong> for a standard SOAP/IDoc outbound interface, first verify whether AIF can monitor the existing messages without changing DRF. If you find <code>/AIF/CL_ENABLER_XML=&gt;TRANSFER_TO_AIF</code> in a custom outbound implementation, it is a processing handoff to the AIF XML runtime, not a passive log statement. This is an implementation-specific extension, not required standard DRF configuration. The AIF action, source and AIF transaction boundaries, queue, target connection, failure reporting and duplicate handling must be verified as part of the replication path before productive use. Follow the <a href="/labs/enterprise-context/aif/#drf-aif">DRFOUT → AIF configuration walkthrough</a> before introducing such a call.</p>
   </section>
 
   <section class="research-canvas__inventory" id="troubleshooting" data-reveal>
