@@ -118,8 +118,11 @@
   {% if page.url == '/labs/assessment/sales-certification/' %}
   <link rel="stylesheet" href="{{ '/assets/sales-certification.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   {% endif %}
-  {% if page.url contains '/labs/enterprise-context/' %}
+  {% if page.url contains '/labs/enterprise-context/' or page.sepa_lab %}
   <link rel="stylesheet" href="{{ '/assets/enterprise-context-polish.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
+  {% endif %}
+  {% if page.sepa_lab %}
+  <link rel="stylesheet" href="{{ '/assets/sepa-mandate-lab.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
   {% endif %}
   {% if page.signavio_reader or page.btp_reader %}
   <link rel="stylesheet" href="{{ '/assets/sap-signavio-reader.css' | relative_url }}?v={{ site.time | date: '%s' }}" />
