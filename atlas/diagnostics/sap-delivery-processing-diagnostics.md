@@ -78,7 +78,7 @@ related:
     <p>For the sales order use VA03, and for the outbound delivery use VL03N where these transactions are available. CO09 may help investigate the availability situation in classic ATP scenarios; use the availability tool appropriate to your release and checking model. Transaction and app availability depends on edition, release and authorizations. Do not use a production PGI attempt as a diagnostic probe: it may succeed and post real stock and financial changes.</p>
 
     <h2>Worked example: 10 ordered, 8 picked</h2>
-    <p><em>Synthetic example, not a project incident.</em> A delivery contains 10 units. The inventory snapshot shows 10 units, the warehouse task plan covers 10, but confirmed picking is only 8. PGI is open. The two missing confirmations are the first gap in the evidence. The snapshot alone cannot tell us whether the remaining stock is in the wrong bin, unavailable for picking, or simply not yet confirmed.</p>
+    <p><em>Synthetic example, not a project incident.</em> A delivery contains 10 units. The inventory snapshot shows 10 units, the warehouse task plan covers 10, but confirmed picking is only 8. PGI is open. The two unconfirmed units are the first gap in the evidence. The snapshot alone cannot tell us whether the remaining stock is in the wrong bin, unavailable for picking, or simply not yet confirmed.</p>
     <p>Now change one condition: all 10 units are confirmed and EWM records goods issue, but the S/4HANA delivery still shows PGI open. The next check is the goods issue confirmation and its processing result, not a stock transfer or a new goods issue. A status lag is a possible explanation, not a confirmed root cause.</p>
 
     <h2>Three ways to resolve the case</h2>
