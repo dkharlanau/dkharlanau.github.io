@@ -67,7 +67,7 @@ A logistics company wants AI to investigate delivery and master-data errors and 
 
 Design a read-only first phase. Then explain the changes required to permit draft ticket creation and, separately, production data changes. Decide whether a shared service identity is appropriate. Identify the owner of every control, the expected test evidence and how to stop the pilot.
 
-Use the [portable agent skill source](https://github.com/dkharlanau/dkharlanau.github.io/tree/main/agent-skills/skills/enterprise-ai-deployment-review) after the change is merged.
+Open the [portable agent skill source](https://github.com/dkharlanau/dkharlanau.github.io/tree/main/agent-skills/skills/enterprise-ai-deployment-review) for the operational instructions and reusable templates.
 
 ## Related methods
 
