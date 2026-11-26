@@ -426,6 +426,81 @@ tags: [business-ai, discovery, software-delivery, codex, sap, presales]
     <p><strong>Interview exercise:</strong> The customer says, “We spend too long investigating CI failures, and releases are slipping.” Give a 45-second value narrative that identifies the engineering task, the affected stakeholder, the proposed role for Codex, and one measurable test. Avoid any promise of a fixed productivity gain.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="developer-productivity-system" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Developer productivity / The whole delivery system</p>
+      <h2>Measure movement through the work, not code produced per hour</h2>
+      <p>Writing a change is only one step in engineering. A developer may finish the code quickly while the change waits for missing business rules, a reviewer, a working test system, or approval to release. Treat productivity as the ability to complete useful, accepted work with less unnecessary delay and rework.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Hidden cost</th><th scope="col">What to look for</th><th scope="col">Possible measurable improvement</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Repeated investigation</th><td>Engineers keep tracing similar errors without reusable evidence.</td><td>Less total investigation and review time per accepted fix.</td></tr>
+          <tr><th scope="row">Specialist dependency</th><td>A small group repeatedly explains the same enhancements and dependencies.</td><td>More independently completed onboarding tasks, with expert corrections tracked.</td></tr>
+          <tr><th scope="row">Inconsistent delivery artifacts</th><td>Test evidence, PR descriptions, and documentation quality change across teams.</td><td>Fewer review cycles caused by missing or incorrect information.</td></tr>
+          <tr><th scope="row">Waiting between steps</th><td>Work sits in queues despite developers being available.</td><td>Reduced queue time, if the proposed intervention actually addresses that queue.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Example (fictional SAP project):</strong> an ABAP enhancement takes two hours to modify but three days to reach an accepted transport because the team must reconstruct the mapping rule, prepare test data, and clarify review ownership. Faster code generation is not the main productivity opportunity until the real constraint is understood.</p>
+    <p><strong>Consulting judgment:</strong> automation that prepares accurate dependency notes or regression evidence might help; a better approval process might help more. Measure accepted outcomes and the human time needed to reach them. See the <a href="#value-measurement">workflow measurement section</a> for related guardrails.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="select-productivity-use-case" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Prioritization / Find the first useful experiment</p>
+      <h2>Choose the task that is valuable and testable, not merely impressive</h2>
+      <p>A frequent task with a clear owner and reliable verification is often a better starting point than a spectacular demonstration with no path to reuse. Use these checks to compare candidates rather than treating them as a mandatory scorecard.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Decision factor</th><th scope="col">Question</th><th scope="col">Warning sign</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Frequency</th><td>Does the work recur enough for improvement to matter?</td><td>An exceptional incident is presented as the normal process.</td></tr>
+          <tr><th scope="row">Reach</th><td>Would solving it help several engineers or a critical shared workflow?</td><td>Only a narrow personal inconvenience is described, with no wider effect.</td></tr>
+          <tr><th scope="row">Business consequence</th><td>What measurable delivery outcome or risk changes?</td><td>Value is expressed only as “more AI usage.”</td></tr>
+          <tr><th scope="row">Need for reasoning</th><td>Does the task require understanding context and testing options, or would a simple deterministic rule suffice?</td><td>A small script would solve it more cheaply and reliably.</td></tr>
+          <tr><th scope="row">Control and proof</th><td>Can the team provide context, keep scope bounded, review the result, and compare it against today's process?</td><td>No representative data, test environment, human reviewer, or acceptance criteria.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Selection example:</strong> start with proposing unit tests for one stable mapping enhancement rather than promising an agent that handles an entire SAP migration. The narrower task has a clearer artifact, verification path, and ownership. Cross-team reach increases potential value but is not required for a small, well-justified pilot.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="cost-per-accepted-task" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Model economics / Quality-adjusted cost</p>
+      <h2>A cheaper token is not always a cheaper engineering result</h2>
+      <p>Model price is only one part of the cost of finishing a task. A lower-priced model can require more attempts, more tool calls, or more human corrections. A higher-priced model may be justified when it reliably produces acceptable work with fewer repeats. You must measure this rather than assume it.</p>
+    </header>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
+      <div>
+        <p><strong>Practical cost metric:</strong> total model and tool costs, plus human review and rework cost, divided by the number of tasks accepted against the same criteria.</p>
+        <p><strong>Practical speed metric:</strong> elapsed time until an accepted result, including reruns, tool execution, and human checks. Token generation speed alone does not capture this.</p>
+      </div>
+    </div>
+    <div class="research-canvas__table-wrap">
+      <h3>Run a fair comparison</h3>
+      <table>
+        <thead><tr><th scope="col">Hold constant</th><th scope="col">Record for each candidate</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Work and scope</th><td>Same representative engineering tasks, repository snapshot, instructions, and allowed tools.</td></tr>
+          <tr><th scope="row">Acceptance</th><td>Same tests, review rubric, reviewer independence, and failure rules.</td></tr>
+          <tr><th scope="row">Execution</th><td>Model/version, reasoning setting, processing tier, environment, repetitions, and failures.</td></tr>
+          <tr><th scope="row">Resources</th><td>Input/output and reasoning usage where available, tool costs, elapsed time, and human review or repair effort.</td></tr>
+          <tr><th scope="row">Decision</th><td>Acceptance rate, cost per accepted task, time to acceptance, and regressions. Report sample limitations.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Service-tier caution:</strong> Ultrafast is a processing option, not a separate model. It can lower latency at a higher price, so only include it when waiting time matters and the selected product surface supports it. Availability, workspace permission, and regional processing requirements must be checked before testing.</p>
+    <p><strong>Documentation check (26 November 2026):</strong> OpenAI's current model and speed guidance includes GPT-6.2 Astra and GPT-6.2 Sol alongside older options. GPT-6.1 Sol is also listed for Ultrafast; older training material saying that tier is unavailable for that model should not be repeated as a current fact. Codex model selection depends on the experience and workspace configuration, so avoid blanket statements about all cloud or local tasks.</p>
+    <p>Use the live <a href="https://developers.openai.com/api/docs/pricing">API pricing table</a>, <a href="https://developers.openai.com/api/docs/guides/ultrafast-mode">Ultrafast guide</a>, <a href="https://developers.openai.com/api/docs/guides/model-selection">model selection guidance</a>, and <a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex">Work and Codex availability guide</a> rather than fixed prices copied into this article.</p>
+    <p><strong>Exercise:</strong> Model A costs less per run but needs twice as much human correction for the same mapping test task. Model B costs more per run but passes more checks on the first attempt. Which would you recommend? Explain what data you need before making the choice.</p>
+  </section>
+
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">source</span>
     <div>
