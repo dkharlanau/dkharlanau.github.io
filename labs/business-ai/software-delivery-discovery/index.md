@@ -502,6 +502,14 @@ tags: [business-ai, discovery, software-delivery, codex, sap, presales]
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <div>
+      <p><strong>Next: stakeholder trust and adoption.</strong> Engineering, platform, product, and governance teams need different evidence from the same coding-agent evaluation. Explore access and context concerns, agent review boundaries, visibility, and human accountability before promising rollout.</p>
+      <a href="/labs/business-ai/software-delivery-discovery/stakeholder-trust/">Stakeholder Trust in AI-Assisted Engineering <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">source</span>
     <div>
       <p><strong>Editorial note:</strong> original synthesis and SAP examples prepared from learning notes on identifying and qualifying engineering AI opportunities. This is not a transcript or an official OpenAI qualification framework.</p>
