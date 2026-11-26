@@ -228,6 +228,102 @@ tags: [enterprise-ai, codex, software-delivery, operating-model, governance, sap
     <p><strong>Non-negotiable distinction:</strong> a passing local unit test does not by itself prove S/4HANA business behavior, organizational customization, or transport readiness. When the necessary SAP validation is unavailable, label the result as not verified.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="collaboration-patterns" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Engineering collaboration / Match autonomy to the task</p>
+      <h2>Not every task should be delegated</h2>
+      <p>Useful AI collaboration is a choice about the amount of human steering, not simply a choice of product. Start from how uncertain the work is, how easily it can be verified, and how costly a wrong action would be.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Pattern</th><th scope="col">When it helps</th><th scope="col">Human role</th><th scope="col">Failure to watch</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Local suggestion</th><td>Small mechanical edits where the developer already knows the target.</td><td>Engineer chooses and applies each suggestion.</td><td>Speeding up typing while ignoring the real delivery constraint.</td></tr>
+          <tr><th scope="row">Interactive investigation</th><td>Debugging, unfamiliar code, or requirements that need frequent clarification.</td><td>Engineer guides each step and adjusts the hypothesis.</td><td>Exploration expands beyond the relevant system or change.</td></tr>
+          <tr><th scope="row">Evidence preparation</th><td>Review summaries, test inventories, and documentation needed at an approval checkpoint.</td><td>Reviewer checks the facts and makes the decision.</td><td>Unverified statements become authoritative review evidence.</td></tr>
+          <tr><th scope="row">Bounded delegation</th><td>A reproducible, multi-step job with a known result and reliable checks.</td><td>Owner defines limits; reviewer validates changes and exceptions.</td><td>Missing dependencies or broad permissions create false confidence.</td></tr>
+          <tr><th scope="row">Human-only decision</th><td>Production release approval, ambiguous business policy, and high-impact unresolved risks.</td><td>Authorized people make the decision using suitable evidence.</td><td>Agents are mistakenly given authority they do not hold.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Practical heuristic:</strong> more autonomy requires clearer objectives, stricter action boundaries, stronger verification, and a definite path back to a person. Do not treat all five patterns as separate Codex products: they describe ways of working.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="task-brief" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Reusable skill / Task design</p>
+      <h2>Give the agent a result to reach and a boundary it must respect</h2>
+      <p>“Please fix the test suite” does not tell an engineer or agent what is broken, which files may change, or when to stop. A strong task brief is concise but precise enough to distinguish investigation from approved implementation.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Brief field</th><th scope="col">Decision to make explicit</th><th scope="col">SAP example: IDoc field rule</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Result</th><td>What observable condition would make the work complete?</td><td>Explain why one retained customer field is overwritten in a reproducible test.</td></tr>
+          <tr><th scope="row">Evidence sources</th><td>Which code, tickets, logs, requirements, and conventions are authoritative?</td><td>Approved mapping rule, enhancement implementation, sample IDoc, and existing tests.</td></tr>
+          <tr><th scope="row">Change boundary</th><td>Which files and operations are permitted, and which are forbidden?</td><td>Initially inspect only; no changes to business mappings or productive SAP data.</td></tr>
+          <tr><th scope="row">Deliverable</th><td>What report, patch, test proposal, or question list is expected?</td><td>Likely failing path, evidence references, minimal change options, and unresolved questions.</td></tr>
+          <tr><th scope="row">Proof and handoff</th><td>Which checks can run, who validates them, and what must trigger escalation?</td><td>Existing ABAP tests where available, functional sign-off on rule interpretation, and explicit unverified system dependencies.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Phase A — Investigate without editing</h3>
+        <p>“Inspect the approved mapping rule and related implementation. Trace the failing scenario and explain the most likely cause with source references. Do not edit files or change any rule. Report missing system context and recommend a narrow validation test.”</p>
+        <p><strong>Checkpoint:</strong> the owner confirms the diagnosis and decides whether the change is authorized.</p>
+      </div>
+      <div>
+        <h3>Phase B — Prepare an authorized patch</h3>
+        <p>“Only after approval, update the agreed implementation and associated tests. Preserve unrelated mappings and existing interfaces. Return the diff, executed checks, failures, and anything that could not be tested. Stop before publishing or merging.”</p>
+        <p><strong>Checkpoint:</strong> a human checks both the technical change and intended SAP behavior.</p>
+      </div>
+    </div>
+    <p><strong>Important:</strong> a no-edit instruction remains in force until the owner changes the task. A request for a diagnosis never implicitly grants permission to refactor, push, merge, alter configuration, or update business data.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="review-routes" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Code review / Choose the correct route</p>
+      <h2>Reviewing local changes is different from reviewing a repository pull request</h2>
+      <p>Both can produce useful feedback, but they have different context, integration, and permission requirements. Choose the route based on where the change lives and who must receive the evidence.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Route</th><th scope="col">Typical trigger</th><th scope="col">Evidence and control question</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Local review</th><td>Developer asks for a review of an uncommitted or local change.</td><td>Which working tree and baseline are in scope? Who inspects findings before a commit or PR?</td></tr>
+          <tr><th scope="row">In-app PR review</th><td>Engineer opens an accessible repository PR in a supported code-review experience.</td><td>Are repository access and review permissions available? Which diff, checks, and comments are visible?</td></tr>
+          <tr><th scope="row">Repository-triggered review</th><td>A configured GitHub review is requested or triggered according to repository setup.</td><td>Who configures the integration, where is feedback posted, and are findings checked before action?</td></tr>
+          <tr><th scope="row">Custom review automation</th><td>A company uses its own CI runner or integration for review assistance.</td><td>Who owns the runner, model invocation, data path, comment posting, and recovery from errors?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Repository rules:</strong> project-specific constraints can be documented in <code>AGENTS.md</code> where the chosen Codex review workflow supports them. Use narrow rules for non-obvious invariants, such as preserving a field's external contract or excluding customer data from logs. Keep mechanical checks in CI.</p>
+    <p><strong>Verification exercise:</strong> choose one PR that should violate the rule, one compliant PR, and one unrelated PR. If every PR triggers the same warning, the rule is too broad. Codex review findings add evidence; tests, branch protection, and required human approvals remain independent controls.</p>
+    <p>Check the latest <a href="https://help.openai.com/en/articles/20001552-review-pull-requests-with-codex">Codex pull-request review guidance</a> and <a href="https://developers.openai.com/blog/custom-code-review-rules-for-codex">repository review rules guidance</a> before committing to a specific route. Product permissions and available review triggers may change.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="collaboration-assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture exercise / Make a choice</p>
+      <h2>Which collaboration pattern would you recommend?</h2>
+      <p>In a fictional SAP team, an outbound IDoc enhancement intermittently produces an unexpected field value. The functional specification is available, but the failure cannot be reproduced outside an internal SAP test client. The delivery manager asks for a fully delegated cloud fix.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Recommendation</h3>
+        <p>Start with a locally controlled, interactive investigation using the source and non-sensitive evidence already accessible to the developer. Ask for a trace of likely code paths and a proposed test. Do not claim end-to-end reproduction or a verified fix until the required SAP system tests are possible.</p>
+      </div>
+      <div>
+        <h3>Decision boundary</h3>
+        <p>Move to delegated implementation only after the team confirms the cause, authorizes a bounded change, prepares a suitable test environment, and identifies an ABAP and functional reviewer. An asynchronous cloud workflow is not automatically suitable for dependencies unavailable to that environment.</p>
+      </div>
+    </div>
+    <p><strong>Interview challenge (B2):</strong> Explain your recommendation to a CIO in 45 seconds. Cover context availability, the correct collaboration pattern, required proof, and what remains a human decision.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="pilot-decision-brief" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Workshop output / One-page architecture brief</p>
