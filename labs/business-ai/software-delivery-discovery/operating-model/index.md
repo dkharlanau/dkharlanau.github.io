@@ -149,6 +149,31 @@ tags: [enterprise-ai, codex, software-delivery, operating-model, governance, sap
     <p>These are candidate selection criteria, not evidence that Codex will outperform the existing workflow. That conclusion requires an evaluation with a fair baseline and quality safeguards.</p>
   </section>
 
+  <section class="research-canvas__inventory" id="value-context-fit" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Pilot choice / Business value and operating reality</p>
+      <h2>The most promising task is not always the best first pilot</h2>
+      <p>Similar engineering delays can require different AI approaches. Value matters, but access, testability, review capacity, and team practices determine whether a pilot can produce trustworthy evidence. Use these constraints to choose where to begin rather than starting from a product feature.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">SAP engineering scenario (fictional)</th><th scope="col">Opportunity</th><th scope="col">Customer-specific constraint</th><th scope="col">Suitable starting approach</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">New developers need help navigating custom ABAP code.</th><td>Reduce repeated explanations from senior engineers.</td><td>Approved repository and technical documentation are accessible.</td><td>Interactive exploration; check accuracy with a senior reviewer.</td></tr>
+          <tr><th scope="row">The team repeatedly updates regression tests after small mapping changes.</th><td>Reduce preparation effort and missed scenarios.</td><td>A stable test harness, isolated branch, and responsible engineer exist.</td><td>Evaluate limited delegation using the same tests and review standards as the current workflow.</td></tr>
+          <tr><th scope="row">Developers investigate recurrent IDoc failures.</th><td>Shorten diagnosis and improve handoff quality.</td><td>Critical logs and reproduction steps depend on restricted SAP access.</td><td>Begin with approved, sanitized examples and guided investigation; do not claim complete verification.</td></tr>
+          <tr><th scope="row">Productive master-data errors need urgent correction.</th><td>Reduce disruption and operational rework.</td><td>High consequence of error and separate business authorization requirements.</td><td>Keep changes human-controlled; consider bounded read-only evidence preparation.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>Prove value</h3><p>Use recent examples to establish frequency, consequences, stakeholder ownership, and a comparable baseline. A requested demo alone does not justify a rollout.</p></div>
+      <div><h3>Prove readiness</h3><p>Check repository access, approved data, reproducible tests, available reviewers, permission limits, and a reliable way to detect failure.</p></div>
+    </div>
+    <p><strong>Architectural choice:</strong> start where potential benefit and operational readiness overlap. A high-impact scenario with inaccessible dependencies may belong in a later evaluation. Avoid classifying an organization solely by industry; assess its actual environment and policies. Continue with <a href="/labs/business-ai/software-delivery-discovery/operating-model/governance/">risk-based controls</a> and <a href="/labs/business-ai/software-delivery-discovery/stakeholder-trust/#adoption-confidence">adoption readiness</a>.</p>
+    <p><strong>Practice (B2):</strong> The CIO prefers automatic investigation of production defects because of its potential savings. The engineering lead proposes regression-test preparation because it is easier to verify. Which pilot would you choose first, and what evidence would change your decision?</p>
+  </section>
+
   <section class="research-canvas__inventory" id="responsibility-split" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Accountability / Design before delegation</p>
