@@ -324,6 +324,110 @@ tags: [enterprise-ai, codex, software-delivery, operating-model, governance, sap
     <p><strong>Interview challenge (B2):</strong> Explain your recommendation to a CIO in 45 seconds. Cover context availability, the correct collaboration pattern, required proof, and what remains a human decision.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="sdlc-ownership-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SDLC / Responsibility matrix</p>
+      <h2>Decide what Codex prepares, what engineers decide, and what the workflow checks</h2>
+      <p>The question is not whether an agent can contribute at every lifecycle stage. It is whether the particular activity has useful context, an acceptable action boundary, a reliable check, and someone accountable for the result. Start with one stage rather than deploying assistance across the entire delivery chain.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Work stage</th><th scope="col">Possible agent contribution</th><th scope="col">Human decision</th><th scope="col">Evidence or safeguard</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Planning</th><td>Connect ticket details with repository context; expose missing assumptions or affected dependencies.</td><td>Product owner and architect settle requirements, trade-offs, priority, and the definition of done.</td><td>Approved ticket sources, open-question list, scope owner, and a stop before inventing business rules.</td></tr>
+          <tr><th scope="row">Implementation</th><td>Explain an existing path, propose options, or prepare a small authorized diff with related tests.</td><td>Engineer selects the design, evaluates compatibility, accepts code, and decides on merge.</td><td>File limits, project conventions, diff review, targeted checks, and no unrelated refactoring.</td></tr>
+          <tr><th scope="row">Review</th><td>Summarize changes and flag likely missing tests, behavioral risks, or uncertain assumptions.</td><td>Named reviewers decide feedback, approval, risk acceptance, and merge authorization.</td><td>Correct local or repository review route, relevant PR context, traceable findings, and independent branch protections.</td></tr>
+          <tr><th scope="row">Testing</th><td>Propose cases, update test code, and execute permitted checks in a prepared environment.</td><td>Test owner judges coverage, business acceptance, and release risk.</td><td>Record commands actually run, pass/fail results, missing environments, and unverified scenarios separately.</td></tr>
+          <tr><th scope="row">Debugging</th><td>Inspect approved logs, narrow a suspected cause, and suggest a reproducible experiment or limited fix.</td><td>Engineering owner confirms root cause and authorizes any production-sensitive action.</td><td>Redacted input, reproducible case, restrictions on side effects, and explicit escalation if evidence conflicts.</td></tr>
+          <tr><th scope="row">Documentation</th><td>Prepare explanations of changed behavior, technical notes, and handoff drafts from approved sources.</td><td>Documentation or process owner verifies facts, policy-sensitive language, and publication.</td><td>Source links, version context, editorial review, and no unsupported customer-specific claims.</td></tr>
+          <tr><th scope="row">Extended or asynchronous work</th><td>Complete a bounded repository investigation, dependency inventory, or other approved multi-step job and return a result package.</td><td>Task owner decides whether to continue, accept, re-scope, or escalate.</td><td>Prepared execution environment, measurable goal, checkpoints, command boundaries, test evidence, and a reviewer.</td></tr>
+          <tr><th scope="row">Continuity and handoff</th><td>Summarize inspected files, decisions, changes, tests, uncertainties, and next actions for a new engineer or resumed task.</td><td>Team decides which notes become authoritative and whether the work can be resumed safely.</td><td>Durable record with source references, task and commit identity, verified/unverified status, and explicit ownership.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Architecture insight:</strong> the same agent may be useful in several stages, but its authority should not expand merely because a task has moved forward. A draft implementation is not permission to merge, and a proposed test is not evidence that it passed.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="asynchronous-follow-through" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Extended tasks / Execution contract</p>
+      <h2>When an engineer is not steering every step, the task needs an explicit contract</h2>
+      <p>Longer-running work can save interruptions, but it amplifies mistakes in scope, environment assumptions, and completion reporting. The instruction must say whether the agent may only investigate or is authorized to edit and validate. Neither elapsed time nor a reassuring progress message is proof of completion.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Before starting</h3>
+        <ol>
+          <li>Name one expected result and the files or repository it concerns.</li>
+          <li>Confirm the exact environment and the dependencies that can run there.</li>
+          <li>Set permissions, disallowed actions, and the point where human input is required.</li>
+          <li>Define the checks and evidence the reviewer expects back.</li>
+          <li>Specify what the agent must do when tests fail or information is missing.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Before accepting</h3>
+        <ol>
+          <li>Inspect the proposed diff and changed-file list.</li>
+          <li>Check which tests actually ran, with the relevant results.</li>
+          <li>Read failures, unresolved dependencies, and assumptions.</li>
+          <li>Compare the result with the original scope and acceptance criteria.</li>
+          <li>Accept, request corrections, or stop through the normal approval path.</li>
+        </ol>
+      </div>
+    </div>
+    <p><strong>Codex Cloud boundary:</strong> a published environment can supply reusable dependencies and access settings, but each new cloud task has a separate workspace and working files. Another task's uncommitted edits are not carried across automatically. Record and commit important artifacts before a handoff; confirm the environment owner and approved external service access. See <a href="https://help.openai.com/en/articles/20001545-using-codex-cloud">Using Codex Cloud</a> for current details.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="context-continuity-contract" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Continuity / Evidence that survives a handoff</p>
+      <h2>Make progress resumable without turning summaries into a new source of truth</h2>
+      <p>When work changes hands, the next engineer needs more than “investigation complete.” A useful handoff distinguishes established observations from conclusions and unfinished checks. It also identifies the specific repository revision, environment, and artifacts behind the claims.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Handoff field</th><th scope="col">Example for an SAP mapping change (simulation)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Objective and boundary</th><td>Investigate one customer-field retention scenario; do not modify mappings or production data.</td></tr>
+          <tr><th scope="row">Evidence inspected</th><td>Approved rule specification, enhancement revision, a sanitized test IDoc, and existing test cases.</td></tr>
+          <tr><th scope="row">What changed</th><td>No files changed during diagnosis; any subsequent authorized patch is linked by branch and commit.</td></tr>
+          <tr><th scope="row">Checks performed</th><td>Local tests and static checks listed with actual outcomes; SAP integration test recorded as not run if the system is unavailable.</td></tr>
+          <tr><th scope="row">Open questions</th><td>Whether organizational context changes the expected rule and which owner can confirm it.</td></tr>
+          <tr><th scope="row">Next decision owner</th><td>ABAP engineer validates technical diagnosis; SAP functional lead decides whether the business rule is correct.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Storage rule:</strong> save this record in an approved team location with references to the authoritative code and requirements. A generated summary should never silently replace configuration, source control, a validated test report, or a signed decision.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="lifecycle-control-check" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Workshop checklist / Readiness to collaborate</p>
+      <h2>Seven questions before introducing the next agent workflow</h2>
+      <p>Use this short decision gate when moving between planning, coding, review, testing, and handoff. If a critical answer is missing, clarify the task or keep the decision human-led.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <ol>
+          <li>What exact task, artifact, and environment are included?</li>
+          <li>Which systems, data, commands, or changes are excluded?</li>
+          <li>What source context must the agent use?</li>
+          <li>Which tests or independent evidence must be returned?</li>
+        </ol>
+      </div>
+      <div>
+        <ol start="5">
+          <li>Who inspects and accepts the result?</li>
+          <li>What needs explicit permission, and when should the agent stop?</li>
+          <li>What outcome and guardrails would justify using this approach again?</li>
+        </ol>
+      </div>
+    </div>
+    <p><strong>Exercise (B2 English):</strong> An SAP integration manager wants Codex to investigate, correct, and deploy recurring IDoc failures overnight. The issue is reproducible only in a restricted quality system. In 60 seconds, identify the safe starting workflow, runtime constraints, evidence requirements, and decisions that must remain human-owned.</p>
+  </section>
+
   <section class="research-canvas__inventory" id="pilot-decision-brief" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Workshop output / One-page architecture brief</p>
