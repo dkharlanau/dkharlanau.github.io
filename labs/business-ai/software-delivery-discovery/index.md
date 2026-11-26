@@ -115,6 +115,84 @@ tags: [business-ai, discovery, software-delivery, codex, sap, presales]
     <p><strong>Exercise:</strong> Explain why this is a discovery conversation rather than an implementation workshop. Then name one observation that would make you recommend ordinary process improvement instead of a coding agent.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="workflow-led-conversation" data-reveal>
+    <header><p class="research-canvas__eyebrow">Workshop method / From interest to evidence</p><h2>Trace one real change before discussing an AI tool</h2>
+      <p>Broad interviews collect opinions. A useful discovery workshop reconstructs an actual delivery incident: what was supposed to happen, what happened instead, where work stopped, and who had to intervene. Only then should the team discuss whether an engineering assistant is relevant.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>The six-turn conversation</h3>
+        <ol>
+          <li><strong>Agree on the outcome.</strong> Ask which delivery commitment has become difficult to meet.</li>
+          <li><strong>Follow the work.</strong> Ask participants to reconstruct one recent change from request through validation and release.</li>
+          <li><strong>Look for recurrence.</strong> Compare that incident with other changes or releases rather than assuming it is typical.</li>
+          <li><strong>Connect the consequence.</strong> Establish whether the delay created extra cost, delayed delivery, more defects, or another observable effect.</li>
+          <li><strong>Find the accountable person.</strong> Distinguish the people experiencing the delay from the person authorized to improve the workflow.</li>
+          <li><strong>Define a candidate experiment.</strong> Identify one task, available inputs, a target output, and the expert who can check it.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>How to follow up without leading the witness</h3>
+        <p>Instead of: <em>“Would automated testing solve your problem?”</em></p>
+        <p>Try: <em>“Think of the most recent release where validation ran late. What was the last completed step before the delay began?”</em></p>
+        <p>Then ask who waited, which artifact was incomplete, what the team did next, and how they eventually knew the change was acceptable.</p>
+        <p><strong>Facilitation rule:</strong> collect concrete examples before discussing a product, agent workflow, or target architecture. Do not turn uncertainty into an assumed root cause.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="workflow-map" data-reveal>
+    <header><p class="research-canvas__eyebrow">Workflow mapping</p><h2>Find the constraint, not the loudest complaint</h2>
+      <p>“Testing is slow” may refer to code coverage, test data, environment stability, approvals, or changing requirements. Record the steps in order and look for the point where progress actually stops.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table><thead><tr><th scope="col">Step in an illustrative SAP change</th><th scope="col">What to observe</th><th scope="col">Possible evidence</th></tr></thead><tbody>
+        <tr><th scope="row">Requirement and specification</th><td>Does the team agree on expected field behavior and edge cases?</td><td>Approved specification and clarification history.</td></tr>
+        <tr><th scope="row">ABAP implementation</th><td>Is time spent writing changes or discovering existing enhancement behavior?</td><td>Change history, dependencies, developer notes.</td></tr>
+        <tr><th scope="row">Unit and integration checks</th><td>Are test cases missing, or do test environments fail independently of the code?</td><td>Test results, environment incidents, defect examples.</td></tr>
+        <tr><th scope="row">Review and release</th><td>Is completion blocked by missing evidence, ownership, or approval queues?</td><td>Review timestamps, transport records, release decisions.</td></tr>
+      </tbody></table>
+    </div>
+    <p><strong>Diagnostic fork:</strong> when the bottleneck is an unstable test system, generating more code is unlikely to help. When engineers repeatedly spend time creating or reviewing bounded tests with reliable inputs, an AI coding evaluation may be sensible. Both remain hypotheses until checked.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="stakeholder-perspectives" data-reveal>
+    <header><p class="research-canvas__eyebrow">Stakeholder triangulation</p><h2>Five perspectives, one shared delivery story</h2>
+      <p>Different roles see different failure points. Reconcile the accounts using artifacts and timelines rather than choosing the most senior person's explanation.</p></header>
+    <div class="research-canvas__table-wrap">
+      <table><thead><tr><th scope="col">Voice</th><th scope="col">Useful contribution</th><th scope="col">Evidence to request</th></tr></thead><tbody>
+        <tr><th scope="row">Engineering lead</th><td>Capacity, technical constraints, and quality priorities.</td><td>Recurring change types, defect trends, ownership.</td></tr>
+        <tr><th scope="row">Platform or developer enablement</th><td>Shared tools, developer workflows, ability to run evaluations.</td><td>Available repositories, approved environments, evaluation owner.</td></tr>
+        <tr><th scope="row">Product or delivery owner</th><td>Commercial deadlines and user impact.</td><td>Release milestones, missed commitments, business consequences.</td></tr>
+        <tr><th scope="row">ABAP developer and SAP functional consultant</th><td>Actual workarounds, dependencies, and verification steps.</td><td>One change request, code and configuration context, review result.</td></tr>
+        <tr><th scope="row">Security or governance contact</th><td>Whether a safe assessment is possible and who must be involved later.</td><td>Known restrictions and required specialist follow-up; not a full security design.</td></tr>
+      </tbody></table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="evidence-snapshot" data-reveal>
+    <header><p class="research-canvas__eyebrow">Reusable output / Discovery record</p><h2>Leave the meeting with decisions, not a transcript</h2>
+      <p>Use four labels to prevent an early sales assumption from becoming an architectural fact.</p></header>
+    <div class="research-canvas__table-wrap">
+      <table><thead><tr><th scope="col">Field</th><th scope="col">Hypothetical SAP release example</th></tr></thead><tbody>
+        <tr><th scope="row">Observed or reported</th><td>The delivery manager reports repeated validation delays on customer master integration changes. This is a customer statement, not independently verified frequency.</td></tr>
+        <tr><th scope="row">Possible explanation</th><td>Missing mapping regression cases may be driving rework. Alternative causes include incomplete requirements, environment issues, and review delays.</td></tr>
+        <tr><th scope="row">Qualification judgment</th><td>Worth investigating as a delivery problem; Codex suitability remains unproven until a repeatable engineering task is isolated.</td></tr>
+        <tr><th scope="row">Missing proof / next owner</th><td>Obtain two recent defects, representative code and test artifacts, affected release dates, and a named engineering reviewer. Ask the delivery owner to arrange a focused follow-up.</td></tr>
+      </tbody></table>
+    </div>
+    <div class="ecg-decision-columns">
+      <div><h3>One-page meeting record</h3>
+        <ul><li>Delivery outcome under pressure and source of the claim.</li><li>Workflow steps and observed waiting point.</li><li>Evidence of recurrence and business impact.</li><li>Accountable owner and evaluation participants.</li><li>Candidate task, inputs and tools, target artifact, and reviewer.</li><li>Assumptions, missing evidence, next question, and owner of the follow-up.</li></ul>
+      </div>
+      <div><h3>What to say next</h3>
+        <blockquote><p>“We have a credible release-delivery concern, but we do not yet know where most of the rework originates. Could we examine two recent changes with the people who implemented and validated them? Then we can decide whether one engineering task is suitable for a small, measurable AI evaluation.”</p></blockquote>
+        <p><strong>Decision:</strong> advance only when the team can explain the candidate task and a realistic way to assess it. Otherwise gather evidence, select a different solution direction, or stop.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">source</span>
     <div>
