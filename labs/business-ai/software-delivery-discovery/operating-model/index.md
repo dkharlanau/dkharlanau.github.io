@@ -50,6 +50,61 @@ tags: [enterprise-ai, codex, software-delivery, operating-model, governance, sap
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="workflow-first-visual" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture framing / Visual comparison</p>
+      <h2>From a feature demo to a controlled delivery practice</h2>
+      <p>The product capability may be identical in both conversations. What changes is the reasoning: start with the work that needs to improve, define an agent-sized contribution, and decide how engineers will verify it.</p>
+    </header>
+    <div class="ecg-decision-columns" aria-label="Feature-led and workflow-led engineering conversations">
+      <div>
+        <h3>Feature-first conversation</h3>
+        <p><strong>Starting point:</strong> What can the agent demonstrate?</p>
+        <ol>
+          <li>Show that it can inspect repository files.</li>
+          <li>Demonstrate code editing and test execution.</li>
+          <li>Present review suggestions.</li>
+          <li>Compare editor, terminal, and cloud options.</li>
+          <li>Suggest broad adoption after a successful demo.</li>
+        </ol>
+        <p><strong>Missing:</strong> the customer bottleneck, acceptance standards, action boundaries, and accountable reviewer are still undefined.</p>
+      </div>
+      <div>
+        <h3>Workflow-first conversation</h3>
+        <p><strong>Starting point:</strong> Which engineering job repeatedly creates delay?</p>
+        <ol>
+          <li>Trace a recent change and identify the costly handoff.</li>
+          <li>Choose a narrow task with relevant repository context.</li>
+          <li>Specify the exact artifact the agent may prepare.</li>
+          <li>Require test evidence, open questions, and human review.</li>
+          <li>Choose an execution surface that fits access and risk.</li>
+        </ol>
+        <p><strong>Decision:</strong> compare accepted work, reviewer effort, and quality before considering wider use.</p>
+      </div>
+    </div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward"></span>
+      <div>
+        <p><strong>The shift:</strong> product capability → delivery bottleneck → bounded agent task → independent verification → accountable decision.</p>
+        <p>The agent does not acquire release authority just because it can prepare a correct-looking patch or review summary.</p>
+      </div>
+    </div>
+    <div class="research-canvas__table-wrap">
+      <h3>Example: prepare a pull request for engineering review</h3>
+      <table>
+        <thead><tr><th scope="col">Operating element</th><th scope="col">Hypothetical SAP enhancement example</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Problem</th><td>Reviewers spend repeated cycles reconstructing why a mapping rule changed and whether tests cover the affected fields.</td></tr>
+          <tr><th scope="row">Agent's limited job</th><td>Read the approved change request and repository diff; draft an intent summary, highlight uncertain logic, and identify missing test evidence.</td></tr>
+          <tr><th scope="row">Workflow requirement</th><td>Provide the expected field behavior, test references, and unverified assumptions before a reviewer is asked to approve the change.</td></tr>
+          <tr><th scope="row">Human responsibility</th><td>The assigned engineer confirms the business logic, checks the proposed findings, and decides whether the change may proceed.</td></tr>
+          <tr><th scope="row">Evaluation</th><td>Measure review preparation effort, useful findings, false alarms, rework, and time to an accepted change against a comparable baseline.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <blockquote><p>“Rather than evaluating Codex on a general coding demonstration, I suggest trying it on one recurring review-preparation task. We can provide the approved change context, ask for an inspectable review package, and have the engineering owner validate its usefulness. That will show whether the workflow improves without changing approval authority.”</p></blockquote>
+  </section>
+
   <section class="research-canvas__inventory" id="three-lenses" data-reveal>
     <header><p class="research-canvas__eyebrow">Three operating lenses</p><h2>Context, execution, and evidence are separate design problems</h2></header>
     <div class="ecg-decision-columns">
