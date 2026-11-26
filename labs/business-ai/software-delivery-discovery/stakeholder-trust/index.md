@@ -127,6 +127,147 @@ tags: [business-ai, ai-governance, codex, stakeholder-management, presales, solu
     <p><strong>Practice:</strong> a security lead, a VP of Engineering, and a product owner all ask, “What will Codex be allowed to change?” Give each a different 30-second answer. Separate what is known, what remains undecided, and who owns the decision.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="adoption-confidence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Enterprise adoption / Beyond technical fit</p>
+      <h2>A working demo is not an operating model</h2>
+      <p>A team can prove that an agent solves a sample issue yet remain unable to use it in regular delivery. People need a repeatable way to choose tasks, prepare context, inspect results, handle mistakes, and learn from real usage. Technical success and adoption confidence are therefore two different decisions.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Confidence question</th><th scope="col">What could reveal a gap</th><th scope="col">Evidence to collect</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Will engineers choose to use it?</th><td>Developers test the demo but return to their old process.</td><td>Task-level repeat use, feedback from actual users, and reasons for non-use.</td></tr>
+          <tr><th scope="row">Can teams change their routines?</th><td>Agent output is produced, but nobody knows who reviews or accepts it.</td><td>A documented task-to-review workflow with named decision owners.</td></tr>
+          <tr><th scope="row">Can leaders see what is happening?</th><td>Usage counts exist, but quality, rework, and operational consequences are invisible.</td><td>Agreed measures of accepted work, errors, human effort, and follow-up actions.</td></tr>
+          <tr><th scope="row">Can objections be resolved?</th><td>Security, engineering, and management raise concerns without a clear route to a decision.</td><td>Concern log, accountable owner, required proof, and decision status.</td></tr>
+          <tr><th scope="row">Can the scope expand safely?</th><td>The pilot worked in one repository, but other teams have different tools and constraints.</td><td>Prerequisites and verification for each proposed new team or workflow.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Key distinction:</strong> adoption is not the number of activated accounts, and trust is not the absence of reported complaints. Look for people repeatedly completing meaningful, accepted work with a clear understanding of responsibility and limitations.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="pilot-to-practice" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Controlled expansion / Decision gates</p>
+      <h2>Earn the right to scale in small steps</h2>
+      <p>Each stage should close a different uncertainty. Moving forward is a decision based on evidence, not simply the end of a calendar period.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Stage</th><th scope="col">What to learn</th><th scope="col">Go / adjust / stop decision</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Select</th><td>Identify one valuable, recurring engineering job and the team responsible for it.</td><td>Proceed only if task boundaries and reviewers are clear.</td></tr>
+          <tr><th scope="row">Rehearse</th><td>Try representative work with approved code, tools, environment, and a baseline for comparison.</td><td>Inspect whether outputs are correct and reviewers can recognize failure.</td></tr>
+          <tr><th scope="row">Use with a small team</th><td>Observe whether engineers voluntarily reuse the workflow in ordinary tasks.</td><td>Check accepted outcomes, review burden, friction, and user concerns.</td></tr>
+          <tr><th scope="row">Expand carefully</th><td>Test whether the same pattern works in another repository, team, or task family.</td><td>Reconfirm prerequisites, ownership, approval paths, and expected outcomes.</td></tr>
+          <tr><th scope="row">Operate</th><td>Keep reviewing costs, quality, incidents, training needs, and whether the original business problem improved.</td><td>Maintain, narrow, retrain, or stop the workflow when evidence changes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Design boundary:</strong> this is an adoption decision model, not an implementation or security architecture. Permissions, data processing, runtime controls, monitoring availability, and region requirements need validation for the selected product, workspace, and customer's policies before broader operation.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="adoption-evidence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Adoption metrics / Separate activity from impact</p>
+      <h2>Measure three different things before celebrating a rollout</h2>
+      <p>A high number of agent sessions can reflect curiosity or repeated failure. A useful adoption assessment distinguishes participation, effective use, and business outcomes.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Evidence layer</th><th scope="col">Illustrative measure</th><th scope="col">Interpretation risk</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Engagement</th><td>Share of eligible engineers who choose the tool again on relevant tasks.</td><td>Mandatory use or one-off experiments can inflate apparent acceptance.</td></tr>
+          <tr><th scope="row">Effective work</th><td>Accepted tasks per eligible task, including review time, corrections, and discarded outputs.</td><td>Counting generated patches without acceptance overstates the result.</td></tr>
+          <tr><th scope="row">Delivery impact</th><td>Change lead time, rework frequency, or release confidence for the affected workflow.</td><td>Parallel process or staffing changes may explain the outcome.</td></tr>
+          <tr><th scope="row">Guardrails</th><td>Defects, security or data-handling incidents, unauthorized actions, and reviewer overrides.</td><td>“No incidents” is weak evidence when observation and reporting are incomplete.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Evaluation rule:</strong> define denominators, a baseline, review ownership, and acceptable limits before testing. The first pilot may only justify a second experiment, not a claim of enterprise ROI.</p>
+    <p><strong>Related:</strong> <a href="/labs/business-ai/software-delivery-discovery/#cost-per-accepted-task">cost per accepted engineering task</a> provides a more meaningful economic view than cost per model call.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="adoption-resistance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Change management / Learn from resistance</p>
+      <h2>Do not treat every objection as fear of AI</h2>
+      <p>Developer hesitation can be rational: unclear task scope, unreliable suggestions, extra review effort, lack of approved access, or concern about how individual performance will be judged. Ask what made the last attempt inconvenient or risky before planning more training.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Typical resistance signals</h3>
+        <ul>
+          <li>“The patch looks plausible, but verifying it takes longer than doing the task.”</li>
+          <li>“The agent cannot see the test harness that reproduces our failures.”</li>
+          <li>“I do not know whether I am allowed to provide this repository.”</li>
+          <li>“We are being measured on tool usage rather than accepted delivery work.”</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Useful responses</h3>
+        <p><strong>Quality gap:</strong> narrow the task and strengthen acceptance checks.</p>
+        <p><strong>Environment gap:</strong> validate available context, tools, and approved execution location.</p>
+        <p><strong>Policy gap:</strong> route access questions to the authorized owner rather than improvising permission.</p>
+        <p><strong>Incentive gap:</strong> measure accepted results and developer experience instead of activity volume.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="executive-adoption-narrative" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Executive conversation / Proposal without overclaiming</p>
+      <h2>Offer a controlled path to evidence, not a transformation promise</h2>
+      <div class="ecg-decision-columns">
+        <div>
+          <h3>Product demonstration alone</h3>
+          <p>“The model performed well on a sample task, so we should deploy it to every engineer.”</p>
+          <p>This skips operational readiness, everyday acceptance, workload fit, controls, and the cost of changes to current processes.</p>
+        </div>
+        <div>
+          <h3>Decision-ready recommendation</h3>
+          <blockquote><p>“We can start with one recurring engineering task and a small group of reviewers. We will check whether the work is genuinely easier to complete, how often the result is accepted, and what control gaps remain. If the evidence is positive, we can test the same approach with another team before proposing wider adoption.”</p></blockquote>
+          <p>This gives leaders a useful next decision without suggesting that a pilot has already proved organization-wide benefit.</p>
+        </div>
+      </div>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <h3>Redirect a feature discussion</h3>
+      <table>
+        <thead><tr><th scope="col">Conversation starts with</th><th scope="col">Reframe around</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Autocomplete and editor convenience</th><td>Which repeatable engineering job is most costly today?</td></tr>
+          <tr><th scope="row">Model benchmark rankings</th><td>Which accepted-result measure would make the customer change its workflow?</td></tr>
+          <tr><th scope="row">Vendor feature inventory</th><td>Which option can meet the actual task, review, and operating requirements?</td></tr>
+          <tr><th scope="row">Positive developer feedback</th><td>Does usage persist, deliver acceptable quality, and fit the organization's decision process?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Partner role:</strong> help the client isolate the workflow, define success, involve technical and governance owners, observe adoption, and recommend the next decision. Product or compliance claims still require authoritative evidence and specialist validation.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="adoption-sap-case" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP simulation / Workshop exercise</p>
+      <h2>One ABAP team accepts the pilot. Another refuses.</h2>
+      <p>A fictional SAP program tests AI assistance for documenting enhancements and proposing regression cases. The first development team reports useful output. A second team declines because its critical dependencies are only available inside a restricted SAP system.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Weak program response</h3>
+        <p>Assume the second team is resistant to change, mandate tool usage, and report the first team's successful tasks as proof that the approach can scale.</p>
+      </div>
+      <div>
+        <h3>Stronger architecture response</h3>
+        <p>Identify which source context is absent, whether an approved evaluation environment can be made available, and how the required behavior would be checked. If not, exclude that task family from the rollout and choose a different candidate instead.</p>
+      </div>
+    </div>
+    <p><strong>Interview prompt (B2):</strong> “Your sponsor wants enterprise-wide adoption after a successful pilot, but developers in another SAP team report missing system context and higher review effort. How would you advise the sponsor, and what evidence would you require before expansion?”</p>
+  </section>
+
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
     <div>
