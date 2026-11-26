@@ -83,7 +83,7 @@ tags: [enterprise-ai, codex, software-delivery, operating-model, governance, sap
       </div>
     </div>
     <div class="research-canvas__boundary">
-      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward"></span>
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
       <div>
         <p><strong>The shift:</strong> product capability → delivery bottleneck → bounded agent task → independent verification → accountable decision.</p>
         <p>The agent does not acquire release authority just because it can prepare a correct-looking patch or review summary.</p>
