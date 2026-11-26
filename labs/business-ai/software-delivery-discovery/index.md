@@ -3,10 +3,10 @@ layout: default
 title: "Qualifying AI for Software Delivery — From Friction to a Testable Task"
 description: "An evidence-led discovery playbook for identifying real software delivery bottlenecks, checking AI coding fit, and defining a verifiable first engineering task with SAP examples."
 permalink: /labs/business-ai/software-delivery-discovery/
-status: draft
+status: reviewed
 verified: false
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-11-26
 tags: [business-ai, discovery, software-delivery, codex, sap, presales]
 ---
