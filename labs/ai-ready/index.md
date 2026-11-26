@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-11-11
+last_modified_at: 2026-11-26
 hide_global_cta: true
 tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
 last_reviewed: 2026-08-16
@@ -88,6 +88,12 @@ semantic_links:
       <a href="/labs/ai-ready/use-cases/#automation"><span>05</span><strong>Automation and integrations</strong><small>Connect models to APIs and applications through typed tools, workflows, events, and MCP.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/ai-ready/use-cases/#agents"><span>06</span><strong>Agents and operations</strong><small>Use bounded loops when the next useful action depends on evidence found during the task.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
     </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+    <div><p><strong>Before building an AI coding pilot:</strong> qualify the recurring engineering task, business effect, accountable owner, available context, and reviewable result.</p>
+      <a href="/labs/business-ai/software-delivery-discovery/">Use the software delivery discovery playbook <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
   </section>
 
   <section class="research-canvas__inventory" id="architecture-map" data-reveal>
