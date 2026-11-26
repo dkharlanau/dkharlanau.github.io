@@ -510,6 +510,14 @@ tags: [business-ai, discovery, software-delivery, codex, sap, presales]
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <div>
+      <p><strong>Next: design the pilot operating model.</strong> After opportunity qualification and stakeholder discovery, define the agent's context, execution environment, human decision rights, evidence, and safeguards before choosing a Codex surface.</p>
+      <a href="/labs/business-ai/software-delivery-discovery/operating-model/">Codex Pilot Operating Model <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">source</span>
     <div>
       <p><strong>Editorial note:</strong> original synthesis and SAP examples prepared from learning notes on identifying and qualifying engineering AI opportunities. This is not a transcript or an official OpenAI qualification framework.</p>

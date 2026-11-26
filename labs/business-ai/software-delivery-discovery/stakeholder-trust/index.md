@@ -271,7 +271,7 @@ tags: [business-ai, ai-governance, codex, stakeholder-management, presales, solu
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
     <div>
-      <p><strong>Read further:</strong> <a href="/labs/business-ai/software-delivery-discovery/">Software delivery AI qualification</a> · <a href="/labs/ai-ready/">AI Ready: architecture, security and governance</a>.</p>
+      <p><strong>Read further:</strong> <a href="/labs/business-ai/software-delivery-discovery/">Software delivery AI qualification</a> · <a href="/labs/business-ai/software-delivery-discovery/operating-model/">Codex Pilot Operating Model</a> · <a href="/labs/ai-ready/">AI Ready: architecture, security and governance</a>.</p>
       <p>For product-specific verification, use OpenAI's current <a href="https://help.openai.com/en/articles/12289294-managing-your-tenant-in-admin-console">workspace administration guidance</a>, <a href="https://help.openai.com/en/articles/20001510-manage-browser-and-computer-use-in-your-enterprise-workspace">enterprise computer and browser controls</a>, and <a href="https://help.openai.com/en/articles/20001407-managing-admin-keys-in-admin-console">admin API permissions documentation</a>. The controls available depend on product, workspace, and permissions; these links are not proof of a customer's configuration.</p>
       <p><strong>Editorial note:</strong> independent learning synthesis and fictional examples. Not an official OpenAI script, a compliance statement, or a reproduction of course content.</p>
     </div>
