@@ -256,6 +256,108 @@ tags: [business-ai, discovery, software-delivery, codex, sap, presales]
     <p><strong>Practice question:</strong> A client has a critical deadline, an engaged CIO, and enthusiasm for AI, but no defined engineering task or reviewer. Would you advance the Codex opportunity? Explain what evidence must be collected first, in 45 seconds of professional English.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="workflow-based-positioning" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Positioning / After qualification</p>
+      <h2>Explain the improvement before naming the product</h2>
+      <p>Good positioning is a short argument tied to the customer's work. You should be able to explain the delivery bottleneck, where it sits, why the owner cares, and why a coding agent is worth assessing. If that argument is weak, adding more product features will not fix it.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <h3>The positioning chain</h3>
+      <table>
+        <thead><tr><th scope="col">Step</th><th scope="col">Evidence to carry forward</th><th scope="col">Illustrative SAP case</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1. Friction</th><td>Name a recurring interruption in real engineering work.</td><td>Custom inbound field mapping changes spend too long in review.</td></tr>
+          <tr><th scope="row">2. Delivery stage</th><td>Identify the step affected: planning, implementation, tests, reviews, or maintenance.</td><td>Review of enhancement changes and regression coverage.</td></tr>
+          <tr><th scope="row">3. Business priority</th><td>Connect the delay to a goal owned by a stakeholder.</td><td>The SAP development lead wants fewer rework cycles before UAT.</td></tr>
+          <tr><th scope="row">4. Fit reasoning</th><td>Explain why a repeatable, bounded software engineering task may benefit from agent assistance.</td><td>Reviewing mappings against expected field behavior involves inspectable code and test artifacts.</td></tr>
+          <tr><th scope="row">5. Positioning</th><td>Describe a possible role for Codex without promising the outcome.</td><td>Investigate changes, propose tests, and prepare a reviewable patch for engineers.</td></tr>
+          <tr><th scope="row">6. Evidence next</th><td>Request the smallest task, context, and check that could validate the idea.</td><td>Choose one enhancement change, its tests, reviewer, and baseline effort.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <blockquote><p>“The main delay appears to be checking each mapping change against existing logic and regression cases, rather than writing ABAP alone. A coding agent might help prepare that analysis for review. I would compare one representative change with your normal process before recommending wider use.”</p></blockquote>
+    <p><strong>Do not skip the fit reasoning.</strong> A backlog, a sponsor, and a popular product name do not establish a coding-agent opportunity. The justification must connect a repeatable engineering activity with accessible inputs and a verifiable result.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="sdlc-positioning" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SDLC / Practical messages</p>
+      <h2>Position against a stage of work, not against generic developer productivity</h2>
+      <p>Different problems require different evaluations. Match the proposed assistance to the step where engineers lose time, and keep success criteria and human accountability visible.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Where work slows</th><th scope="col">Positioning to test</th><th scope="col">What would count as useful proof?</th><th scope="col">Claim to avoid</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Planning to implementation</th><td>Help engineers understand a ticket, find relevant repository paths, and prepare a bounded change.</td><td>Correct scope, fewer clarification cycles, and an understandable proposed diff.</td><td>“Any business ticket becomes working software.”</td></tr>
+          <tr><th scope="row">Testing and investigation</th><td>Assist with reproducing a defect, explaining a failure, or updating focused tests.</td><td>Reproducible findings and passing relevant checks, reviewed by engineers.</td><td>“Testing will find every defect.”</td></tr>
+          <tr><th scope="row">Pull request review</th><td>Provide an additional review pass and flag plausible risks with repository context.</td><td>Actionable findings, acceptable false-positive rate, and reduced reviewer effort.</td><td>“Reviewers and approvals are no longer needed.”</td></tr>
+          <tr><th scope="row">Documentation and onboarding</th><td>Support code-path explanations and maintenance of developer documentation.</td><td>New team members can independently complete a representative task more accurately.</td><td>“The agent knows the entire legacy system.”</td></tr>
+          <tr><th scope="row">Targeted modernization</th><td>Explore dependencies, propose a limited refactor, and retain existing behavior through tests.</td><td>Bounded changes, documented assumptions, and verified compatibility.</td><td>“The whole landscape can be modernized automatically.”</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Important distinction:</strong> a PR queue may result from missing reviewer capacity or delayed approvals rather than repetitive analysis. In that situation, AI-generated review findings alone may not improve the lead time. Validate the cause before attaching the Codex label.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="delegated-engineering-task" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Hands-on concept / Engineering delegation</p>
+      <h2>From “suggest a fix” to “prepare a change I can inspect”</h2>
+      <p>There is a meaningful difference between requesting advice about code and assigning a bounded engineering job. The second requires a reproducible starting point, access to the necessary files and tools, an explicit output boundary, and evidence that the proposed change works.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Suggestion-only interaction</h3>
+        <p>An engineer shares an error and receives possible code changes. The engineer still has to locate the issue, adapt the suggestion, change files, execute tests, and confirm that it solves the reported failure.</p>
+        <p><strong>Useful when:</strong> source context is unavailable, the task is exploratory, or a human needs options before modifying a repository.</p>
+      </div>
+      <div>
+        <h3>Bounded delegated work</h3>
+        <p>The engineer provides a codebase and a narrow acceptance target. The agent investigates, proposes or edits files, runs available checks, and returns an inspectable diff with results and unresolved assumptions.</p>
+        <p><strong>Useful when:</strong> the required code, dependencies, tests, and permitted tools are present in the chosen execution environment.</p>
+      </div>
+    </div>
+    <div class="research-canvas__table-wrap">
+      <h3>Simulation: an inbound customer mapping regression</h3>
+      <table>
+        <thead><tr><th scope="col">Work item</th><th scope="col">Bounded example</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Reported failure</th><td>A field intended to remain unchanged is overwritten after a customer IDoc update in a controlled test case.</td></tr>
+          <tr><th scope="row">Starting context</th><td>Relevant enhancement source, field-control rules, sample IDoc payloads, expected results, and existing unit tests, provided through approved means.</td></tr>
+          <tr><th scope="row">Delegated task</th><td>Trace the failing path, identify the discrepancy, propose a minimal correction, and add a regression case without broad refactoring.</td></tr>
+          <tr><th scope="row">Output</th><td>Diff or patch, explanation of the reasoning, test evidence, and a list of items not verified.</td></tr>
+          <tr><th scope="row">Human decision</th><td>An ABAP developer and functional consultant confirm the logic; the normal SAP transport and quality gates remain in force.</td></tr>
+          <tr><th scope="row">Stop condition</th><td>If reproducing the issue depends on a live SAP environment that is not available, report the limitation rather than claiming the fix has been proven.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Environment reality:</strong> local Codex work needs the files, dependencies, and tools available to that local session. Codex Cloud uses a separately prepared project environment; a local dependency does not become available in the cloud merely because a task was delegated. Evaluate the proposed execution location before promising runnable results.</p>
+    <p>For current capabilities, consult <a href="https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan">OpenAI's Codex usage guide</a> and <a href="https://help-lb.openai.com/en/articles/20001545-using-codex-cloud">Codex Cloud environment guidance</a>. Availability and setup can change by plan and workspace.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="tool-comparison-workflow" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Comparison / Evidence before assumptions</p>
+      <h2>Compare engineering workflows, not labels on a tool chart</h2>
+      <p>Do not claim that a competing assistant cannot handle a task without checking. Ask the customer to run the same representative workflow with the options under consideration and judge what engineers can inspect.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table><thead><tr><th scope="col">Comparison dimension</th><th scope="col">Question for the team</th></tr></thead><tbody>
+        <tr><th scope="row">Task scope</th><td>Can the tool handle the selected multi-step job without silently expanding the requested change?</td></tr>
+        <tr><th scope="row">Context</th><td>Does it use the required repository paths, tickets, instructions, and tests appropriately?</td></tr>
+        <tr><th scope="row">Execution setting</th><td>Can the selected local or cloud environment actually run the required commands and dependencies?</td></tr>
+        <tr><th scope="row">Artifact quality</th><td>Is the output a focused, understandable diff with assumptions and test evidence?</td></tr>
+        <tr><th scope="row">Review model</th><td>Can the responsible engineer inspect findings, reject edits, and retain approval and merge authority?</td></tr>
+        <tr><th scope="row">Outcome</th><td>Does it improve elapsed time or quality without moving hidden effort into review and rework?</td></tr>
+      </tbody></table>
+    </div>
+    <p>For Codex code review, OpenAI describes automated review as an additional layer; deterministic checks and required approvals still provide independent controls. See <a href="https://developers.openai.com/blog/custom-code-review-rules-for-codex">OpenAI's code review guidance</a>.</p>
+    <p><strong>Practice:</strong> an engineering director asks, “Why should we consider Codex if our developers already have a coding assistant?” Respond with the target workflow, comparison evidence, and a controlled experiment — not an unsupported claim about the other product.</p>
+  </section>
+
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">source</span>
     <div>
