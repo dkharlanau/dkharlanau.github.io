@@ -358,6 +358,74 @@ tags: [business-ai, discovery, software-delivery, codex, sap, presales]
     <p><strong>Practice:</strong> an engineering director asks, “Why should we consider Codex if our developers already have a coding assistant?” Respond with the target workflow, comparison evidence, and a controlled experiment — not an unsupported claim about the other product.</p>
   </section>
 
+
+  <section class="research-canvas__inventory" id="business-value-translation" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Value narrative / After positioning</p>
+      <h2>Connect an engineering activity to a result the business cares about</h2>
+      <p>A tool capability is not a business case. Engineers may value less repetitive investigation, while delivery leaders care about reliable dates and fewer surprises. Translate between these views without claiming that a new assistant will automatically improve either one.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <h3>Build a value argument in six moves</h3>
+      <table>
+        <thead><tr><th scope="col">Move</th><th scope="col">What to establish</th><th scope="col">Example: SAP delivery team (fictional)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Business goal</th><td>The outcome that leadership needs to protect or improve.</td><td>Keep the agreed integration release window.</td></tr>
+          <tr><th scope="row">Engineering constraint</th><td>The recurring work consuming time or creating rework.</td><td>Developers repeatedly investigate mapping defects discovered during late testing.</td></tr>
+          <tr><th scope="row">Specific task</th><td>A small engineering activity whose quality can be inspected.</td><td>Trace one inbound mapping failure and propose a regression test.</td></tr>
+          <tr><th scope="row">Stakeholder reason</th><td>Why this matters to different people.</td><td>ABAP lead: review burden; test lead: coverage; delivery manager: release uncertainty.</td></tr>
+          <tr><th scope="row">Possible contribution</th><td>How Codex might assist, stated as a hypothesis.</td><td>Prepare a focused investigation, candidate test, and diff for expert review.</td></tr>
+          <tr><th scope="row">Desired result</th><td>The improvement to measure, not a guaranteed promise.</td><td>Reduce investigation effort while maintaining correct behavior and review quality.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>The causal link matters:</strong> finishing an isolated coding task faster does not prove the overall release became faster. A reduction in engineering effort creates business value only when that saved capacity addresses a real delivery constraint and does not increase defects, review effort, or rework elsewhere.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="value-measurement" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence / Metrics and guardrails</p>
+      <h2>Measure the workflow, including the work AI creates for humans</h2>
+      <p>Choose one immediate task measure, one wider delivery outcome, and quality safeguards. Capture the current baseline before comparing an AI-assisted approach.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table>
+        <thead><tr><th scope="col">Measure</th><th scope="col">What it tells you</th><th scope="col">What could mislead you</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Time to produce an acceptable change</th><td>Elapsed time from a defined task start to a review-accepted artifact.</td><td>Counting draft generation time but excluding debugging or reviewer corrections.</td></tr>
+          <tr><th scope="row">Human review and rework effort</th><td>Whether assistance removes effort or transfers it to another role.</td><td>A fast patch that takes longer to validate than the original task.</td></tr>
+          <tr><th scope="row">Defects and regression results</th><td>Whether the change still meets agreed behavior and test expectations.</td><td>More passing tests that do not cover meaningful failure scenarios.</td></tr>
+          <tr><th scope="row">Release predictability</th><td>Whether the broader delivery outcome eventually improves.</td><td>Attributing a release improvement to Codex when scope, staffing, or environment availability also changed.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Evaluation approach:</strong> select comparable tasks, record baseline effort and quality, review the assisted output with the same acceptance criteria, and document differences in scope. If the sample is too small to support a causal claim, report observations rather than estimated ROI.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="value-conversation" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Communication / Customer-ready explanation</p>
+      <h2>Speak about the customer's bottleneck, then offer a test</h2>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>What not to lead with</h3>
+        <p>“Our assistant writes code quickly, so your development team will deliver releases faster.”</p>
+        <p>This jumps from a product capability to an unproven business outcome. It ignores testing, integration, reviews, and release dependencies.</p>
+        <h3>A more credible SAP narrative</h3>
+        <blockquote><p>“Your release team is losing time when integration defects are found close to UAT. If repeated code investigation is part of that delay, Codex could be worth testing on one mapping change. We would check the proposed analysis and tests with your engineers, then compare total effort and quality with the current process.”</p></blockquote>
+      </div>
+      <div>
+        <h3>Adapt the same story to the audience</h3>
+        <p><strong>Engineering lead:</strong> focus on reproducibility, useful diffs, tests, and reviewer workload.</p>
+        <p><strong>Delivery or product lead:</strong> focus on rework, critical-path delays, and release confidence.</p>
+        <p><strong>Executive sponsor:</strong> focus on delivery risk, cost of repeated work, and the evidence required before scaling.</p>
+        <p><strong>Architectural judgment:</strong> if review coordination rather than engineering investigation is the true constraint, fix that process first. A coding agent is not the answer to every delivery problem.</p>
+      </div>
+    </div>
+    <p><strong>Interview exercise:</strong> The customer says, “We spend too long investigating CI failures, and releases are slipping.” Give a 45-second value narrative that identifies the engineering task, the affected stakeholder, the proposed role for Codex, and one measurable test. Avoid any promise of a fixed productivity gain.</p>
+  </section>
+
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">source</span>
     <div>
