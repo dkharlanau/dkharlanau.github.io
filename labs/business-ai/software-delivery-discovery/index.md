@@ -193,6 +193,69 @@ tags: [business-ai, discovery, software-delivery, codex, sap, presales]
     </div>
   </section>
 
+
+  <section class="research-canvas__inventory" id="progression-decision" data-reveal>
+    <header><p class="research-canvas__eyebrow">After discovery / Decision gate</p><h2>Choose the next move, not the product pitch</h2>
+      <p>Discovery is useful only if it changes what the team does next. A promising conversation is not automatically a qualified opportunity, and a qualified opportunity is not an approved implementation. Decide whether there is enough evidence to bring in technical specialists for a more focused assessment.</p>
+    </header>
+    <div class="research-canvas__table-wrap">
+      <table><thead><tr><th scope="col">Decision</th><th scope="col">Use it when</th><th scope="col">Practical next action</th></tr></thead><tbody>
+        <tr><th scope="row">Advance</th><td>The issue repeats, its consequences matter, the right owner participates, and a reviewable engineering task can be framed with plausible access to its inputs.</td><td>Arrange a focused technical evaluation discussion, with the task owner and a specialist who can test feasibility.</td></tr>
+        <tr><th scope="row">Investigate further</th><td>The delivery concern is credible, but its bottleneck, accountable owner, scale, or candidate task remains uncertain.</td><td>Request one recent change or defect, map the timeline, and assign a person to close the most important evidence gap.</td></tr>
+        <tr><th scope="row">Put on hold</th><td>Interest is genuine, but the organization has no current priority, capacity, or commitment to examine the workflow.</td><td>Record the reason and a concrete condition that would justify revisiting the conversation.</td></tr>
+        <tr><th scope="row">Remove from the Codex path</th><td>The need is outside software engineering, no verifiable task exists, or the business case does not justify further effort.</td><td>Explain the mismatch; redirect to a better approach when warranted, or close the thread.</td></tr>
+      </tbody></table>
+    </div>
+    <p><strong>Boundary:</strong> removing a prospect from the coding-agent path is not the same as rejecting its business need. Search and knowledge work, internal productivity, and AI-powered product features may warrant different solutions or no AI at all.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="technical-handoff" data-reveal>
+    <header><p class="research-canvas__eyebrow">Readiness / Seller to architect</p><h2>Make the technical handoff specific enough to be useful</h2>
+      <p>A seller does not need to settle deployment, permissions, or governance architecture. The seller does need to show that the proposed evaluation has a coherent job, usable material, an expected result, and somebody qualified to review it.</p></header>
+    <div class="research-canvas__table-wrap">
+      <table><thead><tr><th scope="col">Handoff item</th><th scope="col">Minimum useful answer</th><th scope="col">Example for SAP ABAP</th></tr></thead><tbody>
+        <tr><th scope="row">Task</th><td>One bounded activity that can be completed and inspected.</td><td>Produce or revise regression tests for one defined inbound mapping change.</td></tr>
+        <tr><th scope="row">Inputs and tools</th><td>Identify the sources, code, documentation, tickets, and tooling the activity needs. Record access uncertainties.</td><td>Versioned mapping logic, specification, test harness, and prior defect cases; confirm what can be shared with the evaluation team.</td></tr>
+        <tr><th scope="row">Output boundary</th><td>A named artifact or safe working environment, with a known extent of change.</td><td>Suggested tests and a reviewed patch in an isolated development branch; no production transport.</td></tr>
+        <tr><th scope="row">Proof</th><td>Checks that can fail, plus the expert who will interpret the result.</td><td>Existing tests still pass, new tests cover agreed scenarios, and ABAP and functional reviewers accept the behavior.</td></tr>
+        <tr><th scope="row">Open concerns</th><td>Identify which specialists must address access, security, governance, or review questions later.</td><td>Client data handling and repository access are flagged for the designated technical and security owners.</td></tr>
+      </tbody></table>
+    </div>
+    <p><strong>Decision rule:</strong> uncertain access may still justify a specialist conversation if there is a realistic route to checking feasibility. Unknown inputs, no target artifact, and no possible verification mean the candidate task is not yet ready.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="recommendation-brief" data-reveal>
+    <header><p class="research-canvas__eyebrow">Practical output / Recommendation</p><h2>Make the recommendation easy to challenge</h2>
+      <p>An actionable recommendation is short enough to discuss, but explicit enough that another person can check its evidence.</p></header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Five statements to complete</h3>
+        <ol>
+          <li><strong>Problem:</strong> name the recurring activity and where it breaks down.</li>
+          <li><strong>Effect:</strong> identify the operational or business consequence and its evidence.</li>
+          <li><strong>Owner:</strong> specify who is accountable and who will validate the work.</li>
+          <li><strong>Reason to act:</strong> identify the current release, priority, or measurable reason for timing.</li>
+          <li><strong>Next step:</strong> explain the candidate task, prerequisites, verification method, and people required.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Example recommendation (fictional)</h3>
+        <p>Repeated rework on a customer integration enhancement is delaying release validation. The delivery manager has supplied examples from recent iterations, and the SAP development lead has agreed to examine test coverage. A specific change and existing test suite could support a controlled coding-assistant assessment, provided repository access is approved and a functional reviewer can check the result. Recommend a joint technical discovery session, not immediate rollout.</p>
+        <p><strong>What is still unproven?</strong> Whether an AI-assisted approach improves completion time or defect detection against the team's current practice.</p>
+      </div>
+    </div>
+    <div class="research-canvas__table-wrap">
+      <h3>Counterexample: not ready to advance</h3>
+      <table><thead><tr><th scope="col">Observed situation</th><th scope="col">Appropriate response</th></tr></thead><tbody>
+        <tr><th scope="row">A stakeholder asks for a Codex demonstration but cannot identify a recurring task.</th><td>Explore workflow examples first; do not treat the demo request as proof of fit.</td></tr>
+        <tr><th scope="row">Engineering reports significant delays, but the cause and owner are unknown.</th><td>Keep discovery open with an assigned evidence request and follow-up date.</td></tr>
+        <tr><th scope="row">The urgent issue is an unavailable SAP test client.</th><td>Investigate infrastructure and environment recovery before proposing code generation.</td></tr>
+        <tr><th scope="row">Employees need to find approved instructions in many documents.</th><td>Consider knowledge-search and productivity options rather than forcing a coding-agent use case.</td></tr>
+      </tbody></table>
+    </div>
+    <p><strong>Practice question:</strong> A client has a critical deadline, an engaged CIO, and enthusiasm for AI, but no defined engineering task or reviewer. Would you advance the Codex opportunity? Explain what evidence must be collected first, in 45 seconds of professional English.</p>
+  </section>
+
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">source</span>
     <div>
