@@ -455,6 +455,14 @@ tags: [enterprise-ai, codex, software-delivery, operating-model, governance, sap
   </section>
 
   <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">shield</span>
+    <div>
+      <p><strong>Next: decide which controls the pilot actually needs.</strong> Compare task risk, context sensitivity, execution permissions, customer approvals, validation evidence, and escalation. Includes a practical SAP control record.</p>
+      <a href="/labs/business-ai/software-delivery-discovery/operating-model/governance/">Codex Governance Decisions: Risk & Operating Boundaries <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
     <div>
       <p><strong>Continue learning:</strong> <a href="/labs/business-ai/software-delivery-discovery/">AI Delivery Discovery</a> · <a href="/labs/business-ai/software-delivery-discovery/stakeholder-trust/">Stakeholder Trust and Adoption</a> · <a href="/labs/ai-ready/">AI Ready Architecture Lab</a>.</p>
