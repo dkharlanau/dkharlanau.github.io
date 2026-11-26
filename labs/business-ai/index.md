@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-22
+last_modified_at: 2026-11-26
 hide_global_cta: true
 tags:
   - business-ai
@@ -89,6 +89,12 @@ semantic_links:
     <p><strong>Context:</strong> this lab covers corporate scenarios across commercial, supply-chain, manufacturing, finance, people, service, IT, legal, data, and knowledge processes. Failed pilots and bad outcomes are part of the evidence model, not an embarrassing appendix.</p>
     <p><strong>Working rule.</strong> A model or platform name is metadata, not a use case. First define the process step, business job, system boundary, KPI, cost of error, and control model.</p>
     <a href="/labs/business-ai/processes/">Start from end-to-end processes <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+    <div><p><strong>New practical guide:</strong> Explore how to qualify software delivery problems for AI-assisted engineering without mistaking tool curiosity for a real project. Includes five evidence checks, a Codex-fit boundary, a scoped SAP evaluation example, and workshop questions.</p>
+      <a href="/labs/business-ai/software-delivery-discovery/">Software delivery AI discovery playbook <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
   </section>
 
   <section class="research-canvas__inventory" id="ai-opportunity-qualification" data-reveal>
