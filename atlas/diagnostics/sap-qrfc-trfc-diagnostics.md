@@ -4,7 +4,7 @@ title: "SAP qRFC and tRFC Troubleshooting: SMQ1, SMQ2 and SM58"
 description: A source-backed SAP qRFC and tRFC guide for blocked SMQ1, SMQ2, and SM58 entries, with safe recovery boundaries.
 permalink: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 last_modified_at: 2026-09-12
-content_updated_at: 2026-11-21
+content_updated_at: 2026-11-26
 schema_updated_at: 2026-11-21
 primary_entity: sap-rfc-monitoring
 entity_mentions:
@@ -173,6 +173,23 @@ level: 2
       <p>Before controlled recovery, establish the original outcome, the correction, dependencies and owner. Verify both queue progress and the intended business state afterwards. Deleting the first unit to shorten the queue would not prove successful processing.</p>
       <p><strong>Change the condition:</strong> the first unit has no application error and the queue is waiting on another queue. Follow that dependency before proposing a payload correction or scheduler restart.</p>
     </details>
+
+    <h2 id="queue-check-payback">When does a read-only qRFC queue check pay for itself?</h2>
+    <p>Suppose a support engineer opens SMQ2 and finds one inbound unit in SYSFAIL with three updates waiting behind it. Today the engineer records the first error, finds the application owner and opens a ticket. Which part would you automate?</p>
+    <p><strong>Automate observation and routing.</strong> A read-only monitor can record the queue, first blocked unit, age and error status. Send one ticket to the assigned team when its agreed alert threshold is met. If the same unit is still blocking on the next check, update that ticket. Three waiting updates behind one blocker call for one investigation.</p>
+    <p><strong>Keep recovery with the owner.</strong> The application owner reads the error, checks the business document and decides whether a correction and controlled replay are safe. A quiet monitor is insufficient to close the incident. Verify queue progress and the intended business result. The example assigns no automatic restart or deletion rights.</p>
+
+    <h3>Price one scheduled check</h3>
+    <p>These are illustrative USD inputs. Count one queue checked at one scheduled interval, including healthy checks. Assume 2,400 checks a year, six minutes per manual check and $60 per engineer-hour. The monitor costs $4,500 to set up, $1,800 a year to run and $0.25 per check. One in four checks still takes eight minutes of human triage. Subsequent repair work is the same in both paths and is excluded.</p>
+    <table class="study-table">
+      <thead><tr><th scope="col">Year one</th><th scope="col">Calculation</th><th scope="col">Cost</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Manual checks</th><td>2,400 × 6 minutes × $1/minute</td><td>$14,400</td></tr>
+        <tr><th scope="row">Read-only monitor</th><td>$4,500 setup + $1,800 running cost + $600 usage + $4,800 triage</td><td>$11,700</td></tr>
+      </tbody>
+    </table>
+    <p>The modeled first-year saving is <strong>$2,700</strong>. Each check frees $3.75 of capacity after usage and average triage ($6 − $0.25 − $2). Covering $6,300 in first-year fixed costs takes <strong>1,680 checks a year</strong>. At 200 checks every month, the recurring benefit after running costs is $600 per month. That recovers the $4,500 setup cost in <strong>7.5 months</strong>, assuming steady volume from launch. Realizing a cash saving also depends on how the team uses the released time.</p>
+    <p><strong>What changes the decision?</strong> If half the checks need eight minutes of triage, year-one automation costs $16,500, which is $2,100 more than the manual process. Before buying tooling, sample actual check time and the share needing review. Enter both in the <a href="/atlas/concepts/sap-ams-cost-reduction-framework/#first-year-cost">SAP support automation cost calculator</a> to find your threshold.</p>
 
     <h2>Safe recovery boundary</h2>
     <p>A restart is justified only when the failure cause is corrected, the original execution outcome is known, and the relevant application owner agrees with the replay path. Deletion requires an explicit recovery and reconciliation decision; it is not a diagnostic shortcut.</p>
