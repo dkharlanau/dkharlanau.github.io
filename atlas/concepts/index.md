@@ -32,6 +32,15 @@ related:
   <p class="lead">This section holds reviewed concept pages for SAP-heavy operations. Each page focuses on what the concept means, why it matters, what usually breaks, and how to reason about it without pretending every SAP landscape behaves the same way.</p>
 </section>
 
+<section class="section" aria-labelledby="data-architecture-review-heading">
+  <header class="section-heading">
+    <p class="eyebrow">In editorial review</p>
+    <h2 id="data-architecture-review-heading">Data architecture: a decision-led field guide</h2>
+    <p>Original practical synthesis of data warehouse, lakehouse, fabric and mesh choices, with SAP examples and a working skill. Review candidate; not yet a verified Atlas article.</p>
+  </header>
+  <p><a href="/atlas/concepts/data-architecture-field-guide/">Open the Data Architecture Field Guide</a> · <a href="/skill-hub/architecture/data-architecture-selection-working-skill/">Practice the selection skill</a></p>
+</section>
+
 {% include atlas/reviewed-directory.html prefix="/atlas/concepts/" title="Reviewed SAP concepts and decision frameworks" description="Browse the currently reviewed process explanations and decision frameworks. Review status belongs to each linked page." %}
 
 <section class="section">
