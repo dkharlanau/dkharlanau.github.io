@@ -52,6 +52,10 @@ verified: true
   </header>
   <div class="topic-grid">
     <div class="topic-card">
+      <h3><a href="/skill-hub/ai-assisted-analysis/enterprise-ai-deployment-review/">Enterprise AI Deployment Review</a></h3>
+      <p>Turn a rollout into six accountable design decisions, a permission map, a cost model and an evidence-based launch recommendation. <em>Review candidate.</em></p>
+    </div>
+    <div class="topic-card">
       <h3><a href="/skill-hub/ai-assisted-analysis/ai-generated-dashboards-with-opendashboards/">AI-Generated Operational Dashboards with OpenDashboards</a></h3>
       <p>Build and validate a live, read-only dashboard on synthetic migration data. Includes setup commands, SQL, an SAP integration boundary, and a decision checklist. <em>Review candidate.</em></p>
     </div>
