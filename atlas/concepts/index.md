@@ -110,6 +110,15 @@ related:
 
 <section class="section">
   <header class="section-heading">
+    <p class="eyebrow">Learning guide — under review</p>
+    <h2>From stored files to trustworthy analytics</h2>
+  </header>
+  <p><a href="/atlas/concepts/s3-dbt-analytics-explained/">Amazon S3 and dbt: from raw files to a number you can defend</a> explains storage, SQL compute, transformation, and test responsibilities with a synthetic order example.</p>
+  <p>Continue with the <a href="/skill-hub/dama-dmbok/s3-dbt-analytics-working-skill/">S3 + dbt analytics exercise</a> to practise grain, reconciliation, and decision-making. Both new pages are review candidates, not yet verified Atlas content.</p>
+</section>
+
+<section class="section">
+  <header class="section-heading">
     <p class="eyebrow">Related</p>
     <h2>Related Atlas pages</h2>
   </header>
